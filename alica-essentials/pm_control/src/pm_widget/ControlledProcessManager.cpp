@@ -13,10 +13,10 @@ using std::string;
 namespace pm_widget
 {
 ControlledProcessManager::ControlledProcessManager(string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* parentLayout)
-    : name(processManagerName)
-    , id(processManagerId)
-    , pmRegistry( essentials::RobotExecutableRegistry::get())
-    , parentLayout(parentLayout)
+        : name(processManagerName)
+        , id(processManagerId)
+        , pmRegistry(essentials::RobotExecutableRegistry::get())
+        , parentLayout(parentLayout)
 {
     essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->msgTimeOut = duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));

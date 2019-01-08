@@ -1,38 +1,40 @@
-#include <process_manager/ProcessStats.h>
 #include <process_manager/ProcessCommand.h>
+#include <process_manager/ProcessStats.h>
 
-#include <ros/ros.h>
-#include <QFrame>
 #include <QBoxLayout>
+#include <QFrame>
+#include <chrono>
+#include <ros/ros.h>
 #include <string>
 #include <utility>
-#include <chrono>
 
 #include <essentials/AgentID.h>
 
-namespace  essentials {
+namespace essentials
+{
 class SystemConfig;
 class RobotExecutableRegistry;
-}  // namespace  essentials
+} // namespace  essentials
 
-namespace pm_control {
+namespace pm_control
+{
 class PMControl;
 }
 
-namespace pm_widget {
+namespace pm_widget
+{
 class ControlledRobot;
 
-class ControlledProcessManager : public QObject {
+class ControlledProcessManager : public QObject
+{
     Q_OBJECT
 
 public:
-    ControlledProcessManager(std::string processManagerName, const essentials::AgentID* processManagerId,
-            QBoxLayout* pmHorizontalLayout);
+    ControlledProcessManager(std::string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
     virtual ~ControlledProcessManager();
 
     void updateGUI(std::chrono::system_clock::time_point now);
-    void handleProcessStats(
-            std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
+    void handleProcessStats(std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair);
     void addRobot(QFrame* robot);
     void removeRobot(QFrame* robot);
 
@@ -40,11 +42,10 @@ public:
     void show();
 
     std::chrono::duration<double> msgTimeOut;
-    std::chrono::system_clock::time_point
-            timeLastMsgReceived;      /* < Time point, when the last message have been received */
-    std::string name;                 /* < Hostname under which this process manager is running */
-    const essentials::AgentID* id; /* < The id of the host */
-     essentials::RobotExecutableRegistry* pmRegistry;
+    std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
+    std::string name;                                          /* < Hostname under which this process manager is running */
+    const essentials::AgentID* id;                             /* < The id of the host */
+    essentials::RobotExecutableRegistry* pmRegistry;
 
 private:
     std::map<const essentials::AgentID*, ControlledRobot*, essentials::AgentIDComparator>

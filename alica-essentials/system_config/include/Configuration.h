@@ -18,7 +18,7 @@ namespace essentials
 {
 class Configuration
 {
-  protected:
+protected:
     static const char LIST_ELEMENT_SEPERATOR = ',';
     std::string filename;
     void collect(ConfigNode* node, std::vector<std::string>* params, size_t offset, std::vector<ConfigNode*>* result);
@@ -46,7 +46,7 @@ class Configuration
         throw std::runtime_error(errMsg);
     }
 
-  public:
+public:
     Configuration();
     Configuration(std::string filename);
     Configuration(std::string filename, const std::string content);

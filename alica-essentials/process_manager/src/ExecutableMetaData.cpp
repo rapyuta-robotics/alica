@@ -5,20 +5,22 @@ using std::map;
 using std::string;
 using std::vector;
 
-namespace  essentials {
+namespace essentials
+{
 
-ExecutableMetaData::ExecutableMetaData(
-        string name, int id, string mode, string execName, string rosPackage, string prefixCmd, string absExecName)
+ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, string absExecName)
         : name(name)
         , id(id)
         , mode(mode)
         , execName(execName)
         , rosPackage(rosPackage)
         , prefixCmd(prefixCmd)
-        , absExecName(absExecName) {}
+        , absExecName(absExecName)
+{
+}
 
-ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage,
-        string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName)
+ExecutableMetaData::ExecutableMetaData(
+        string name, int id, string mode, string execName, string rosPackage, string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName)
         : name(name)
         , id(id)
         , mode(mode)
@@ -26,16 +28,20 @@ ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string 
         , rosPackage(rosPackage)
         , prefixCmd(prefixCmd)
         , parameterMap(parameterMap)
-        , absExecName(absExecName) {}
+        , absExecName(absExecName)
+{
+}
 
-void ExecutableMetaData::addParameterSet(int paramSetId, vector<char*> paramSetValues) {
+void ExecutableMetaData::addParameterSet(int paramSetId, vector<char*> paramSetValues)
+{
     this->parameterMap[paramSetId] = paramSetValues;
 }
 
 /**
  * Checks whether the first parts match the executables prefixCmd, rosPackage and absExecName.
  */
-bool ExecutableMetaData::matchSplittedCmdLine(vector<string>& splittedCmdLine) {
+bool ExecutableMetaData::matchSplittedCmdLine(vector<string>& splittedCmdLine)
+{
     // check for prefixCmd, e.g., for roslaunch stuff
     int checkIdx = 0;
     if (this->prefixCmd != "NOT-FOUND") {
@@ -81,7 +87,8 @@ bool ExecutableMetaData::matchSplittedCmdLine(vector<string>& splittedCmdLine) {
     return true;
 }
 
-ExecutableMetaData::~ExecutableMetaData() {
+ExecutableMetaData::~ExecutableMetaData()
+{
     for (auto paramMapEntry : parameterMap) {
         free(paramMapEntry.second[0]);
         for (int i = 1; i < paramMapEntry.second.size(); i++) {

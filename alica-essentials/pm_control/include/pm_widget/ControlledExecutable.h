@@ -11,31 +11,35 @@
 #include <process_manager/ProcessStat.h>
 #include <qt5/QtWidgets/QWidget>
 
+#include <chrono>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include <chrono>
 
-namespace Ui {
+namespace Ui
+{
 class ProcessWidget;
 class RobotProcessesWidget;
-}  // namespace Ui
+} // namespace Ui
 
-namespace  essentials {
+namespace essentials
+{
 class ExecutableMetaData;
 class RobotExecutableRegistry;
-}  // namespace  essentials
+} // namespace  essentials
 
 using namespace std;
 
-namespace pm_widget {
+namespace pm_widget
+{
 class ControlledRobot;
 
-class ControlledExecutable : public QObject {
+class ControlledExecutable : public QObject
+{
     Q_OBJECT
 
 public:
-    ControlledExecutable( essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
+    ControlledExecutable(essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
     virtual ~ControlledExecutable();
 
     void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
@@ -53,7 +57,7 @@ public:
     long int memory;
     bool publishing;
 
-     essentials::ExecutableMetaData* metaExec;
+    essentials::ExecutableMetaData* metaExec;
     QWidget* processWidget;
     Ui::ProcessWidget* _processWidget;
 
@@ -69,7 +73,7 @@ private:
     static const string greenBackground;
     static const string grayBackground;
     ControlledRobot* parentRobot;
-     essentials::RobotExecutableRegistry* pmRegistry;
+    essentials::RobotExecutableRegistry* pmRegistry;
 };
 
 } /* namespace pm_widget */

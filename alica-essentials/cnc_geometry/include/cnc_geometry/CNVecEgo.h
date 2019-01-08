@@ -2,13 +2,15 @@
 
 #include "CNVecTemplate.h"
 
-namespace geometry {
+namespace geometry
+{
 
 class CNVecAllo;
 class CNPositionAllo;
 class CNVecAllo;
 
-class CNVecEgo : public CNVecTemplate<CNVecEgo> {
+class CNVecEgo : public CNVecTemplate<CNVecEgo>
+{
 public:
     CNVecEgo()
             : CNVecEgo(0, 0, 0){};

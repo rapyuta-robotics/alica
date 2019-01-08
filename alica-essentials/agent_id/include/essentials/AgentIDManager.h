@@ -1,15 +1,17 @@
 #pragma once
 
-#include "essentials/AgentIDFactory.h"
 #include "essentials/AgentID.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <mutex>
 #include <unordered_set>
 #include <vector>
 
-namespace essentials {
+namespace essentials
+{
 
-class AgentIDManager {
+class AgentIDManager
+{
 public:
     // static AgentIDManager *getInstance();
     AgentIDManager(AgentIDFactory* idFactory);
@@ -36,10 +38,11 @@ private:
  * a pointer to a corresponding AgentID object.
  */
 template <class Prototype>
-const AgentID* AgentIDManager::getID(Prototype& idPrototype) {
+const AgentID* AgentIDManager::getID(Prototype& idPrototype)
+{
     // little-endian encoding
     std::vector<uint8_t> idByteVector;
-    //TODO: replace with memcpy or std copy
+    // TODO: replace with memcpy or std copy
     for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
         idByteVector.push_back(*(((uint8_t*) &idPrototype) + i));
     }

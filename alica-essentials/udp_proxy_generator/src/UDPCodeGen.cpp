@@ -14,7 +14,6 @@
 
 using boost::filesystem::exists;
 
-
 // trim from start
 inline std::string& ltrim(std::string& s)
 {

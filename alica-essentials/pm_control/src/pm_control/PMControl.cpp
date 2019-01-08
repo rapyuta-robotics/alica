@@ -12,9 +12,9 @@
 namespace pm_control
 {
 PMControl::PMControl()
-    : rqt_gui_cpp::Plugin()
-    , widget_(0)
-    , guiUpdateTimer(nullptr)
+        : rqt_gui_cpp::Plugin()
+        , widget_(0)
+        , guiUpdateTimer(nullptr)
 {
     setObjectName("PMControl");
     rosNode = new ros::NodeHandle();
@@ -23,7 +23,7 @@ PMControl::PMControl()
 
     this->msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
-    this->pmRegistry =  essentials::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
      * with data from Globals.conf and ProcessManaging.conf file. */
@@ -56,7 +56,7 @@ void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
 
     // Initialise the ROS Communication
     string statTopic = (*this->sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
-    processStateSub = rosNode->subscribe(statTopic, 10, &PMControl::receiveProcessStats, (PMControl*)this);
+    processStateSub = rosNode->subscribe(statTopic, 10, &PMControl::receiveProcessStats, (PMControl*) this);
 
     // Initialise the GUI refresh timer
     this->guiUpdateTimer = new QTimer();

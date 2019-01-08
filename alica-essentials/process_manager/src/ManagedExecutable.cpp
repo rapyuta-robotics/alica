@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <vector>
 
-namespace  essentials
+namespace essentials
 {
 
 using std::cerr;
@@ -34,23 +34,23 @@ using std::vector;
 long ManagedExecutable::kernelPageSize = 0;
 
 ManagedExecutable::ManagedExecutable(ExecutableMetaData const* const metaExec, long pid, string robotName, ProcessManager* procMan)
-    : metaExec(metaExec)
-    , managedPid(pid)
-    , state('X')
-    , lastUTime(0)
-    , lastSTime(0)
-    , currentUTime(0)
-    , currentSTime(0)
-    , memory(0)
-    , starttime(0)
-    , desiredRunState(RunState::SHOULDNT_RUN)
-    , cpu(0)
-    , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-    , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-    , procMan(procMan)
-    , need2ReadParams(true)
-    , publishing(false)
-    , shouldPublish(false)
+        : metaExec(metaExec)
+        , managedPid(pid)
+        , state('X')
+        , lastUTime(0)
+        , lastSTime(0)
+        , currentUTime(0)
+        , currentSTime(0)
+        , memory(0)
+        , starttime(0)
+        , desiredRunState(RunState::SHOULDNT_RUN)
+        , cpu(0)
+        , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+        , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+        , procMan(procMan)
+        , need2ReadParams(true)
+        , publishing(false)
+        , shouldPublish(false)
 {
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Constructor of executable " << metaExec->name << endl;
@@ -63,7 +63,7 @@ ManagedExecutable::~ManagedExecutable()
 {
     // TODO: check whether the cleanup is right -> valgrind
     for (auto param : this->runningParams) {
-        free((char*)param);
+        free((char*) param);
     }
 }
 
@@ -131,10 +131,10 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
                         }
 
                         if (this->desiredParamSet == this->runningParamSet ||
-                            this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running with the
-                                                                                 // right parameters, or is started
-                                                                                 // manually
-                                                                                 // -> so kill all others
+                                this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running with the
+                                                                                     // right parameters, or is started
+                                                                                     // manually
+                                                                                     // -> so kill all others
 
                             if (this->shouldPublish && !this->publishing) { // start the log publishing threads if necessary
                                 startPublishingLogs();
@@ -374,7 +374,7 @@ void ManagedExecutable::readProcParams(string pidString)
             i++;
             for (; i < this->runningParams.size(); i++) {
                 if (paramEntry.second[i] == nullptr &&
-                    this->runningParams[i] == nullptr) { // this case is for the ending null pointer in the command line parameters
+                        this->runningParams[i] == nullptr) { // this case is for the ending null pointer in the command line parameters
                     continue;
                 } else if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0) { // we have miss matching parameters
                     break;
@@ -611,7 +611,7 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
             int charsRead = ifs.readsome(buf + idx, bufSize - idx);
             if (charsRead > 0) {
                 int charsToBeConsumed = charsRead;
-                while (char* newLine = (char*)memchr(buf + idx, '\n', charsToBeConsumed)) {
+                while (char* newLine = (char*) memchr(buf + idx, '\n', charsToBeConsumed)) {
                     idx = newLine - buf + 1;
                     charsToBeConsumed = idxLast + charsRead - idx;
                 }

@@ -22,7 +22,7 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-namespace  essentials
+namespace essentials
 {
 
 RobotExecutableRegistry* RobotExecutableRegistry::get()
@@ -32,8 +32,8 @@ RobotExecutableRegistry* RobotExecutableRegistry::get()
 }
 
 RobotExecutableRegistry::RobotExecutableRegistry()
-    : sc(essentials::SystemConfig::getInstance())
-    , agentIDManager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
+        : sc(essentials::SystemConfig::getInstance())
+        , agentIDManager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
 {
 }
 
@@ -58,7 +58,7 @@ const map<string, vector<pair<int, int>>>* const RobotExecutableRegistry::getBun
         for (auto bundleName : (*bundlesSections)) {
             vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
             vector<string> processParamsList =
-                (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
+                    (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
             if (processList.size() != processParamsList.size()) {
                 cerr << "RobotExecutableReg: Number of processes does not match the number of parameter sets for the "
                         "bundle '"
@@ -174,7 +174,7 @@ const essentials::AgentID* RobotExecutableRegistry::addRobot(string agentName)
         int tmpID = (*sc)["Globals"]->get<int>("Globals.Team", agentName.c_str(), "ID", NULL);
         std::vector<uint8_t> agentIDVector;
         for (int i = 0; i < sizeof(int); i++) {
-            agentIDVector.push_back(*(((uint8_t*)&tmpID) + i));
+            agentIDVector.push_back(*(((uint8_t*) &tmpID) + i));
         }
         agentID = this->agentIDManager->getIDFromBytes(agentIDVector);
     } catch (const std::runtime_error* e) {
@@ -303,8 +303,8 @@ int RobotExecutableRegistry::addExecutable(string execSectionName)
         for (string paramSetKeyString : (*paramSets)) {
             try {
                 int paramSetKey = stoi(paramSetKeyString);
-                auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>("Processes.ProcessDescriptions", execSectionName.c_str(), "paramSets",
-                                                                                paramSetKeyString.c_str(), NULL);
+                auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>(
+                        "Processes.ProcessDescriptions", execSectionName.c_str(), "paramSets", paramSetKeyString.c_str(), NULL);
 
                 // first param is always the executable name
                 vector<char*> currentParams;

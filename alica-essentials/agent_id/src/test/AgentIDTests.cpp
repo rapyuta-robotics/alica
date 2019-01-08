@@ -6,7 +6,8 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-TEST(AgentID, ConstructorCopiesBytes) {
+TEST(AgentID, ConstructorCopiesBytes)
+{
     std::vector<uint8_t> bytes1;
     for (int i = 0; i < 20; i++) {
         bytes1.push_back(i);
@@ -18,7 +19,8 @@ TEST(AgentID, ConstructorCopiesBytes) {
     delete id1;
 }
 
-TEST(AgentID, ConstructionOfHugeID) {
+TEST(AgentID, ConstructionOfHugeID)
+{
     std::vector<uint8_t> bytes1;
     int size = 100;
     for (int i = 0; i < size; i++) {
@@ -31,7 +33,8 @@ TEST(AgentID, ConstructionOfHugeID) {
     delete id1;
 }
 
-TEST(AgentID, ToByteVectorReturnsCopy) {
+TEST(AgentID, ToByteVectorReturnsCopy)
+{
     std::vector<uint8_t> bytes1;
     int size = 100;
     for (int i = 0; i < size; i++) {
@@ -45,7 +48,8 @@ TEST(AgentID, ToByteVectorReturnsCopy) {
     delete id1;
 }
 
-TEST(AgentID, HashEqualForSameIDs) {
+TEST(AgentID, HashEqualForSameIDs)
+{
     std::vector<uint8_t> bytes1;
     std::vector<uint8_t> bytes2;
     for (int i = 0; i < 20; i++) {
@@ -61,7 +65,8 @@ TEST(AgentID, HashEqualForSameIDs) {
     delete id2;
 }
 
-TEST(AgentID, EqualWithSameID) {
+TEST(AgentID, EqualWithSameID)
+{
     std::vector<uint8_t> bytes1;
     std::vector<uint8_t> bytes2;
     for (int i = 0; i < 20; i++) {
@@ -77,7 +82,8 @@ TEST(AgentID, EqualWithSameID) {
     delete id2;
 }
 
-TEST(AgentID, NotEqualWithDifferentID) {
+TEST(AgentID, NotEqualWithDifferentID)
+{
     std::vector<uint8_t> bytes1;
     std::vector<uint8_t> bytes2;
     for (int i = 0; i < 20; i++) {
@@ -94,7 +100,8 @@ TEST(AgentID, NotEqualWithDifferentID) {
     delete id2;
 }
 
-TEST(BroadCastID, NotEqualWithNormalID) {
+TEST(BroadCastID, NotEqualWithNormalID)
+{
     std::vector<uint8_t> bytes1;
     for (int i = 0; i < 20; i++) {
         bytes1.push_back(i);
@@ -109,14 +116,13 @@ TEST(BroadCastID, NotEqualWithNormalID) {
     delete broadcastID;
 }
 
-TEST(BroadCastID, EqualWithBroadcastID) {
+TEST(BroadCastID, EqualWithBroadcastID)
+{
     std::vector<uint8_t> bytesBroadcast1;
     bytesBroadcast1.push_back(1);
-    essentials::AgentID* broadcastID1 =
-            new essentials::BroadcastID(bytesBroadcast1.data(), bytesBroadcast1.size());
+    essentials::AgentID* broadcastID1 = new essentials::BroadcastID(bytesBroadcast1.data(), bytesBroadcast1.size());
     std::vector<uint8_t> bytesBroadcast2;
-    essentials::AgentID* broadcastID2 =
-            new essentials::BroadcastID(bytesBroadcast2.data(), bytesBroadcast2.size());
+    essentials::AgentID* broadcastID2 = new essentials::BroadcastID(bytesBroadcast2.data(), bytesBroadcast2.size());
 
     ASSERT_TRUE(*broadcastID1 == *broadcastID2);
 
@@ -124,7 +130,8 @@ TEST(BroadCastID, EqualWithBroadcastID) {
     delete broadcastID2;
 }
 
-TEST(AgentIDFactory, GenerateIDsOfVariousLength) {
+TEST(AgentIDFactory, GenerateIDsOfVariousLength)
+{
     essentials::AgentIDFactory factory;
 
     auto id1 = factory.generateID(1);
@@ -140,14 +147,16 @@ TEST(AgentIDFactory, GenerateIDsOfVariousLength) {
     ASSERT_EQ(id18->getSize(), 18);
 }
 
-TEST(AgentIDFactory, DuplicateIDs) {
+TEST(AgentIDFactory, DuplicateIDs)
+{
     essentials::AgentIDFactory factory;
     auto id18 = factory.generateID(18);
     auto id18Copy = factory.create(id18->toByteVector());
     ASSERT_TRUE(*id18 == *id18Copy);
 }
 
-TEST(AgentIDManager, CreateIDsFromIntegralTypes) {
+TEST(AgentIDManager, CreateIDsFromIntegralTypes)
+{
     essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
     essentials::AgentIDManager idManager(factory);
     int idInt = 5;
@@ -163,7 +172,8 @@ TEST(AgentIDManager, CreateIDsFromIntegralTypes) {
     ASSERT_TRUE(*intId5 == *referenceId5);
 }
 
-TEST(AgentIDManager, GuarenteeSingleEntities) {
+TEST(AgentIDManager, GuarenteeSingleEntities)
+{
     essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
     essentials::AgentIDManager idManager(factory);
     int idInt = 5;
@@ -173,7 +183,8 @@ TEST(AgentIDManager, GuarenteeSingleEntities) {
     ASSERT_EQ(intId1, intId2);
 }
 
-TEST(AgentIDManager, GenerateIDsOfVariousLength) {
+TEST(AgentIDManager, GenerateIDsOfVariousLength)
+{
     essentials::AgentIDFactory* factory = new essentials::AgentIDFactory();
     essentials::AgentIDManager idManager(factory);
 
@@ -190,7 +201,8 @@ TEST(AgentIDManager, GenerateIDsOfVariousLength) {
     ASSERT_EQ(id18->getSize(), 18);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

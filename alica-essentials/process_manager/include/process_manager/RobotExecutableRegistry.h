@@ -1,9 +1,9 @@
 #pragma once
 
+#include <SystemConfig.h>
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
 #include <essentials/AgentIDManager.h>
-#include <SystemConfig.h>
 
 #include <map>
 #include <stdint.h>
@@ -22,7 +22,7 @@ class ExecutableMetaData;
  */
 class RobotExecutableRegistry
 {
-  public:
+public:
     static RobotExecutableRegistry* get();
     const std::map<const essentials::AgentID*, RobotMetaData*, essentials::AgentIDComparator>& getRobots() const;
     void addRobot(std::string agentName, const essentials::AgentID* agentID);
@@ -48,7 +48,7 @@ class RobotExecutableRegistry
     bool executableExists(int execId);
     bool executableExists(std::string execName);
 
-  private:
+private:
     RobotExecutableRegistry();
     virtual ~RobotExecutableRegistry();
 

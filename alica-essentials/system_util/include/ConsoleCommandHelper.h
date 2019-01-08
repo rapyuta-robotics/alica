@@ -10,9 +10,11 @@
 
 #include <string>
 
-namespace essentials {
+namespace essentials
+{
 
-class ConsoleCommandHelper {
+class ConsoleCommandHelper
+{
 public:
     ConsoleCommandHelper();
     virtual ~ConsoleCommandHelper();

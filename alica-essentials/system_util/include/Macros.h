@@ -4,7 +4,8 @@
 
 #pragma once
 
-namespace essentials {
+namespace essentials
+{
 
 #ifdef __GNUC__
 #define DEPRECATED __attribute__((deprecated))

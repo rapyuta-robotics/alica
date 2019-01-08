@@ -21,7 +21,7 @@ namespace essentials
 class SystemConfig
 {
 
-  protected:
+protected:
     static std::string rootPath;
     static std::string logPath;
     static std::string configPath;
@@ -30,7 +30,7 @@ class SystemConfig
     static std::map<std::string, std::shared_ptr<Configuration>> configs;
     static const char NODE_NAME_SEPERATOR = '_';
 
-  public:
+public:
     static SystemConfig* getInstance();
     static void shutdown();
     static std::string robotNodeName(const std::string& nodeName);
@@ -48,7 +48,7 @@ class SystemConfig
     void setConfigPath(std::string configPath);
     static std::string getEnv(const std::string& var);
 
-  private:
+private:
     SystemConfig();
     ~SystemConfig(){};
 };

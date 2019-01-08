@@ -7,13 +7,16 @@
 
 #define WORKER_DEBUG
 
-namespace std {
+namespace std
+{
 class thread;
 }
 
-namespace essentials {
+namespace essentials
+{
 class Timer;
-class Worker {
+class Worker
+{
 public:
     Worker(std::string name);
     virtual ~Worker();
@@ -31,7 +34,7 @@ protected:
     bool started; /** < Is always true except when the worker is shutting down. */
     bool running; /** < Tells us whether the worker is currently running (or active). */
 
-    std::thread* runThread;      /** < Executes the runInternal and thereby the abstract run method. */
+    std::thread* runThread;   /** < Executes the runInternal and thereby the abstract run method. */
     essentials::Timer* timer; /** < Triggers the condition_variable of the runThread. */
 
 private:
@@ -40,4 +43,4 @@ private:
     std::mutex runCV_mtx;
 };
 
-}  // namespace essentials
+} // namespace essentials

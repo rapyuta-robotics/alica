@@ -25,17 +25,17 @@ const string ControlledExecutable::redBackground = "background-color:#FF4719;";
 const string ControlledExecutable::greenBackground = "background-color:#66FF66;";
 const string ControlledExecutable::grayBackground = "background-color:gray;";
 
-ControlledExecutable::ControlledExecutable( essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot)
-    : metaExec(metaExec)
-    , memory(0)
-    , state('U')
-    , cpu(0)
-    , _processWidget(new Ui::ProcessWidget())
-    , processWidget(new QWidget())
-    , parentRobot(parentRobot)
-    , runningParamSet( essentials::ExecutableMetaData::UNKNOWN_PARAMS)
-    , desiredParamSet(INT_MAX)
-    , publishing(false)
+ControlledExecutable::ControlledExecutable(essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot)
+        : metaExec(metaExec)
+        , memory(0)
+        , state('U')
+        , cpu(0)
+        , _processWidget(new Ui::ProcessWidget())
+        , processWidget(new QWidget())
+        , parentRobot(parentRobot)
+        , runningParamSet(essentials::ExecutableMetaData::UNKNOWN_PARAMS)
+        , desiredParamSet(INT_MAX)
+        , publishing(false)
 {
     for (auto paramEntry : this->metaExec->parameterMap) {
         if (this->desiredParamSet > paramEntry.first) {
@@ -55,9 +55,9 @@ ControlledExecutable::ControlledExecutable( essentials::ExecutableMetaData* meta
     connect(this->processWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 
     this->msgTimeOut = chrono::duration<double>(
-        (*essentials::SystemConfig::getInstance())["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+            (*essentials::SystemConfig::getInstance())["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
-    this->pmRegistry =  essentials::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     this->parentRobot->addExec(processWidget);
     this->processWidget->show();
@@ -132,7 +132,7 @@ void ControlledExecutable::updateGUI(chrono::system_clock::time_point now)
         this->_processWidget->processName->setText(QString(this->metaExec->name.c_str()));
         this->_processWidget->cpuState->setText(QString("C: -- %"));
         this->_processWidget->memState->setText(QString("M: -- MB"));
-        this->runningParamSet =  essentials::ExecutableMetaData::UNKNOWN_PARAMS;
+        this->runningParamSet = essentials::ExecutableMetaData::UNKNOWN_PARAMS;
         this->processWidget->setToolTip(QString(""));
         this->processWidget->setStyleSheet(redBackground.c_str());
     } else { // message arrived before timeout, update its GUI
@@ -157,7 +157,7 @@ void ControlledExecutable::updateGUI(chrono::system_clock::time_point now)
         case 'T': // traced, or stopped
             this->processWidget->setStyleSheet(redBackground.c_str());
             this->processWidget->setToolTip(QString(""));
-            this->runningParamSet =  essentials::ExecutableMetaData::UNKNOWN_PARAMS;
+            this->runningParamSet = essentials::ExecutableMetaData::UNKNOWN_PARAMS;
             break;
         case 'U':
         default:
@@ -212,7 +212,7 @@ void ControlledExecutable::handleBundleComboBoxChanged(QString bundle)
             if (this->metaExec->id == processParamSetPair.first) {
                 found = true;
                 this->desiredParamSet = processParamSetPair.second;
-                if (processParamSetPair.second == this->runningParamSet || this->runningParamSet ==  essentials::ExecutableMetaData::UNKNOWN_PARAMS) {
+                if (processParamSetPair.second == this->runningParamSet || this->runningParamSet == essentials::ExecutableMetaData::UNKNOWN_PARAMS) {
                     if (this->metaExec->name != "roscore") {
                         this->_processWidget->checkBox->setEnabled(true);
                     }

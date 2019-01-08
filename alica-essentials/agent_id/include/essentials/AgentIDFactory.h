@@ -2,9 +2,11 @@
 
 #include "AgentID.h"
 
-namespace essentials {
+namespace essentials
+{
 
-class AgentIDFactory {
+class AgentIDFactory
+{
 public:
     AgentIDFactory();
     virtual ~AgentIDFactory();

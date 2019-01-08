@@ -5,11 +5,11 @@
 #include "ui_RobotProcessesWidget.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentID.h>
+#include <essentials/BroadcastID.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>
-#include <essentials/AgentID.h>
-#include <essentials/BroadcastID.h>
 
 #include <limits.h>
 #include <ros/ros.h>
@@ -17,14 +17,14 @@ namespace pm_widget
 {
 // Second Constructor is for robot_control
 ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* robotId, const essentials::AgentID* parentPMid)
-    : RobotMetaData(robotName, robotId)
-    , robotProcessesQFrame(new QFrame())
-    , _robotProcessesWidget(new Ui::RobotProcessesWidget())
-    , parentPMid(parentPMid)
+        : RobotMetaData(robotName, robotId)
+        , robotProcessesQFrame(new QFrame())
+        , _robotProcessesWidget(new Ui::RobotProcessesWidget())
+        , parentPMid(parentPMid)
 {
     // setup gui stuff
     this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-    auto pmRegistry =  essentials::RobotExecutableRegistry::get();
+    auto pmRegistry = essentials::RobotExecutableRegistry::get();
     if (dynamic_cast<const essentials::BroadcastID*>(parentPMid)) {
         // don't show in robot_control
         this->_robotProcessesWidget->robotHostLabel->hide();
@@ -47,7 +47,7 @@ ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* ro
     }
 
     // construct all known executables
-    const vector< essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
+    const vector<essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
     ControlledExecutable* controlledExec;
     for (auto execMetaDataEntry : execMetaDatas) {
         controlledExec = new ControlledExecutable(execMetaDataEntry, this);
@@ -70,8 +70,8 @@ ControlledRobot::~ControlledRobot()
     delete robotProcessesQFrame;
 }
 
-void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                                        const essentials::AgentID* parentPMid)
+void ControlledRobot::handleProcessStat(
+        chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const essentials::AgentID* parentPMid)
 {
     this->parentPMid = parentPMid;
 

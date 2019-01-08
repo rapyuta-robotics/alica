@@ -26,10 +26,10 @@ std::string FileSystem::getSelfPath()
 {
     int size = 100;
     char* buff = NULL;
-    buff = (char*)malloc(size);
+    buff = (char*) malloc(size);
 
     while (1) {
-        buff = (char*)realloc(buff, size);
+        buff = (char*) realloc(buff, size);
         ssize_t len = ::readlink("/proc/self/exe", buff, size);
 
         if (len < 0) {

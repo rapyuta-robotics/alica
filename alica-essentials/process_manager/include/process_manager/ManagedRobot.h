@@ -4,18 +4,20 @@
 
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
-#include "process_manager/RobotMetaData.h"
 #include "process_manager/RobotExecutableRegistry.h"
+#include "process_manager/RobotMetaData.h"
 
 #include <map>
 #include <string>
 #include <vector>
 
-namespace  essentials {
+namespace essentials
+{
 class ManagedExecutable;
 class ProcessManager;
 
-class ManagedRobot : public RobotMetaData {
+class ManagedRobot : public RobotMetaData
+{
 public:
     ManagedRobot(std::string robotName, const essentials::AgentID* agentID, ProcessManager* procMan);
     virtual ~ManagedRobot();

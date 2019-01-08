@@ -21,7 +21,7 @@
 #include <thread>
 #include <unistd.h>
 
-namespace  essentials
+namespace essentials
 {
 
 using std::cerr;
@@ -41,18 +41,18 @@ int ProcessManager::numCPUs = 0;
  * @param argv
  */
 ProcessManager::ProcessManager(int argc, char** argv)
-    : iterationTime(1000000)
-    , mainThread(NULL)
-    , spinner(NULL)
-    , rosNode(NULL)
-    , lastTotalCPUTime(0)
-    , currentTotalCPUTime(0)
-    , simMode(false)
-    , ownId(nullptr)
+        : iterationTime(1000000)
+        , mainThread(NULL)
+        , spinner(NULL)
+        , rosNode(NULL)
+        , lastTotalCPUTime(0)
+        , currentTotalCPUTime(0)
+        , simMode(false)
+        , ownId(nullptr)
 {
     this->sc = essentials::SystemConfig::getInstance();
     this->ownHostname = this->sc->getHostname();
-    this->pmRegistry =  essentials::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise some data structures for better performance in searchProcFS-Method with
      * data from Globals.conf and Processes.conf file. */
@@ -233,7 +233,7 @@ void ProcessManager::initCommunication(int argc, char** argv)
     this->processCmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
     this->processStatsTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
 
-    processCommandSub = rosNode->subscribe(this->processCmdTopic, 10, &ProcessManager::handleProcessCommand, (ProcessManager*)this);
+    processCommandSub = rosNode->subscribe(this->processCmdTopic, 10, &ProcessManager::handleProcessCommand, (ProcessManager*) this);
     processStatePub = rosNode->advertise<process_manager::ProcessStats>(this->processStatsTopic, 10);
     spinner->start();
 }
@@ -677,13 +677,13 @@ void ProcessManager::pmSigchildHandler(int sig)
 int main(int argc, char** argv)
 {
     // Set kernel page size for human readable memory consumption
-     essentials::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
+    essentials::ManagedExecutable::kernelPageSize = sysconf(_SC_PAGESIZE);
     // Determine number of cores
-    while (essentials::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + std::to_string( essentials::ProcessManager::numCPUs))) {
-         essentials::ProcessManager::numCPUs++;
+    while (essentials::FileSystem::pathExists("/sys/devices/system/cpu/cpu" + std::to_string(essentials::ProcessManager::numCPUs))) {
+        essentials::ProcessManager::numCPUs++;
     }
 
-     essentials::ProcessManager* pm = new  essentials::ProcessManager(argc, argv);
+    essentials::ProcessManager* pm = new essentials::ProcessManager(argc, argv);
     if (pm->selfCheck()) {
         try {
             pm->initCommunication(argc, argv);
@@ -692,9 +692,9 @@ int main(int argc, char** argv)
             return -1;
         }
         // has to be set after ProcessManager::initCommunication() , in order to override the ROS signal handler
-        signal(SIGINT,  essentials::ProcessManager::pmSigintHandler);
+        signal(SIGINT, essentials::ProcessManager::pmSigintHandler);
 
-        signal(SIGCHLD,  essentials::ProcessManager::pmSigchildHandler);
+        signal(SIGCHLD, essentials::ProcessManager::pmSigchildHandler);
 
         pm->start();
 

@@ -9,7 +9,7 @@ class AgentID
 {
     friend struct std::hash<essentials::AgentID>;
 
-  public:
+public:
     AgentID(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
     virtual ~AgentID();
     virtual bool operator==(const AgentID& obj) const;
@@ -32,16 +32,16 @@ class AgentID
             for (int i = 0; i < static_cast<int>(sizeof(int) - obj.id.size()); i++) {
                 tmpLong.push_back(0);
             }
-            os << (int)(*tmpLong.data());
+            os << (int) (*tmpLong.data());
         } else {
             std::vector<uint8_t> tmpShort;
             tmpShort.push_back(obj.id[0]);
             tmpShort.push_back(obj.id[1]);
-            os << (short)(*tmpShort.data()) << "[...]";
+            os << (short) (*tmpShort.data()) << "[...]";
             tmpShort.clear();
             tmpShort.push_back(obj.id[obj.id.size() - 2]);
             tmpShort.push_back(obj.id[obj.id.size() - 1]);
-            os << (short)(*tmpShort.data());
+            os << (short) (*tmpShort.data());
         }
         return os;
     }
@@ -52,7 +52,7 @@ class AgentID
     static const uint8_t BC_TYPE = 1;
     static const uint8_t UUID_TYPE = 2;
 
-  private:
+private:
     std::vector<uint8_t> id;
 };
 

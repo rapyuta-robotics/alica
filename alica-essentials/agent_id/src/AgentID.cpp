@@ -1,9 +1,11 @@
 #include "essentials/AgentID.h"
 
-namespace essentials {
+namespace essentials
+{
 
 AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type)
-        : TYPE(type) {
+        : TYPE(type)
+{
     for (int i = 0; i < idSize; i++) {
         this->id.push_back(idBytes[i]);
     }
@@ -11,11 +13,13 @@ AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type)
 
 AgentID::~AgentID(){};
 
-uint8_t AgentID::getType() const {
+uint8_t AgentID::getType() const
+{
     return this->TYPE;
 }
 
-bool AgentID::operator==(const AgentID& other) const {
+bool AgentID::operator==(const AgentID& other) const
+{
     if (this->id.size() != other.id.size()) {
         return false;
     }
@@ -27,11 +31,13 @@ bool AgentID::operator==(const AgentID& other) const {
     return true;
 }
 
-bool AgentID::operator!=(const AgentID& other) const {
+bool AgentID::operator!=(const AgentID& other) const
+{
     return !(*this == other);
 }
 
-bool AgentID::operator<(const AgentID& other) const {
+bool AgentID::operator<(const AgentID& other) const
+{
     if (this->id.size() < other.id.size()) {
         return true;
     } else if (this->id.size() > other.id.size()) {
@@ -48,7 +54,8 @@ bool AgentID::operator<(const AgentID& other) const {
     return false;
 }
 
-bool AgentID::operator>(const AgentID& other) const {
+bool AgentID::operator>(const AgentID& other) const
+{
     if (this->id.size() > other.id.size()) {
         return true;
     } else if (this->id.size() < other.id.size()) {
@@ -65,15 +72,18 @@ bool AgentID::operator>(const AgentID& other) const {
     return false;
 }
 
-const uint8_t* AgentID::getRaw() const {
+const uint8_t* AgentID::getRaw() const
+{
     return this->id.data();
 }
 
-int AgentID::getSize() const {
+int AgentID::getSize() const
+{
     return this->id.size();
 }
 
-std::vector<uint8_t> AgentID::toByteVector() const {
+std::vector<uint8_t> AgentID::toByteVector() const
+{
     return this->id;
 }
 
@@ -82,7 +92,8 @@ std::vector<uint8_t> AgentID::toByteVector() const {
  * https://en.wikipedia.org/wiki/MurmurHash
  * https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
  */
-std::size_t AgentID::hash() const {
+std::size_t AgentID::hash() const
+{
     const uint8_t* key = this->id.data();
     int len = this->id.size();
     uint32_t h = 13;

@@ -1,23 +1,25 @@
 #pragma once
 
-#define PM_DEBUG  // for toggling debug output
+#define PM_DEBUG // for toggling debug output
 
 #include "process_manager/ProcessCommand.h"
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
+#include <SystemConfig.h>
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
-#include <SystemConfig.h>
 
-#include <ros/ros.h>
 #include <chrono>
+#include <ros/ros.h>
 
-namespace std {
+namespace std
+{
 class thread;
 }
 
-namespace  essentials {
+namespace essentials
+{
 
 class ManagedRobot;
 class ManagedExecutable;
@@ -25,7 +27,8 @@ class RobotMetaData;
 class ExecutableMetaData;
 class RobotExecutableRegistry;
 
-class ProcessManager {
+class ProcessManager
+{
 public:
     ProcessManager(int argc, char** argv);
     virtual ~ProcessManager();
@@ -75,4 +78,4 @@ private:
     void report();
 };
 
-}  // namespace  essentials
+} // namespace  essentials

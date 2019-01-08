@@ -4,9 +4,11 @@
 
 #include <iostream>
 
-namespace essentials {
+namespace essentials
+{
 
-class BroadcastID : public essentials::AgentID {
+class BroadcastID : public essentials::AgentID
+{
 public:
     BroadcastID(const uint8_t* idBytes, int idSize);
     virtual ~BroadcastID();
