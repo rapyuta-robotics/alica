@@ -9,12 +9,12 @@ class AlicaEngine;
 class AlicaTime;
 } // namespace alica
 
-namespace supplementary 
+namespace supplementary
 {
 
 class WorldModel
 {
-  public:
+public:
     WorldModel(); /* <-- Attention: Derived World Models should implement the singleton pattern */
     virtual ~WorldModel();
     virtual void init();
@@ -24,10 +24,8 @@ class WorldModel
     const essentials::AgentID* getOwnId();
     bool setEngine(alica::AlicaEngine* ae);
     alica::AlicaEngine* getEngine();
-    essentials::SystemConfig* getSystemConfig();
 
-  protected:
-    essentials::SystemConfig* sc;
+protected:
     alica::AlicaEngine* alicaEngine;
     bool maySendMessages;
     const essentials::AgentID* ownID;

@@ -6,9 +6,9 @@
 #include <ros/macros.h>
 #include <ros/ros.h>
 
+#include <SystemConfig.h>
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
-#include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 
 #include <alica_msgs/AlicaEngineInfo.h>
@@ -31,13 +31,12 @@ class RobotsControl : public rqt_gui_cpp::Plugin
 {
     Q_OBJECT
 
-  public:
+public:
     RobotsControl();
     virtual void initPlugin(qt_gui_cpp::PluginContext& context);
     virtual void shutdownPlugin();
     virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
-    virtual void restoreSettings(
-            const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
+    virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
     void addRobot();
     void removeRobot();
@@ -51,15 +50,12 @@ class RobotsControl : public rqt_gui_cpp::Plugin
     essentials::RobotExecutableRegistry* pmRegistry;
     ros::NodeHandle* rosNode;
 
-  private:
+private:
     ros::Subscriber processStateSub;
     ros::Subscriber alicaInfoSub;
 
-    essentials::SystemConfig* sc;
-
     std::map<const essentials::AgentID*, Robot*, essentials::AgentIDComparator> controlledRobotsMap;
-    std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>>
-            processStatMsgQueue;
+    std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
     std::mutex processStatsMsgQueueMutex;
     std::queue<std::pair<std::chrono::system_clock::time_point, alica_msgs::AlicaEngineInfoConstPtr>> alicaInfoMsgQueue;
     std::mutex alicaInfoMsgQueueMutex;
@@ -71,7 +67,7 @@ class RobotsControl : public rqt_gui_cpp::Plugin
 
     QTimer* guiUpdateTimer;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void run();
     void updateGUI();
     void showContextMenu(const QPoint& pos);

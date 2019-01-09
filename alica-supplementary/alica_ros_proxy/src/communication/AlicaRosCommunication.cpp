@@ -36,14 +36,14 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
     spinner = new ros::AsyncSpinner(4);
 
     // read topic strings from AlicaRosProxy.conf
-    this->sc = essentials::SystemConfig::getInstance();
-    this->allocationAuthorityInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.allocationAuthorityInfoTopic", NULL);
-    this->ownRoleTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.ownRoleTopic", NULL);
-    this->alicaEngineInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.alicaEngineInfoTopic", NULL);
-    this->planTreeInfoTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.planTreeInfoTopic", NULL);
-    this->syncReadyTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.syncReadyTopic", NULL);
-    this->syncTalkTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.syncTalkTopic", NULL);
-    this->solverResultTopic = (*sc)["AlicaRosProxy"]->get<string>("Topics.solverResultTopic", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    this->allocationAuthorityInfoTopic = sc["AlicaRosProxy"]->get<string>("Topics.allocationAuthorityInfoTopic", NULL);
+    this->ownRoleTopic = sc["AlicaRosProxy"]->get<string>("Topics.ownRoleTopic", NULL);
+    this->alicaEngineInfoTopic = sc["AlicaRosProxy"]->get<string>("Topics.alicaEngineInfoTopic", NULL);
+    this->planTreeInfoTopic = sc["AlicaRosProxy"]->get<string>("Topics.planTreeInfoTopic", NULL);
+    this->syncReadyTopic = sc["AlicaRosProxy"]->get<string>("Topics.syncReadyTopic", NULL);
+    this->syncTalkTopic = sc["AlicaRosProxy"]->get<string>("Topics.syncTalkTopic", NULL);
+    this->solverResultTopic = sc["AlicaRosProxy"]->get<string>("Topics.solverResultTopic", NULL);
 
     AllocationAuthorityInfoPublisher = rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(this->allocationAuthorityInfoTopic, 2);
     AllocationAuthorityInfoSubscriber =

@@ -24,7 +24,6 @@ using alica::reasoner::CGSolver;
 class AlicaVariableHandlingTest : public ::testing::Test
 {
 protected:
-    essentials::SystemConfig* sc;
     alica::AlicaEngine* ae1;
     alica::AlicaEngine* ae2;
     alica::BehaviourCreator* bc1;
@@ -45,10 +44,10 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
+        sc.setHostname("nase");
 
         // setup the engine
         ae1 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
@@ -60,7 +59,7 @@ protected:
         ae1->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae1));
         ae1->addSolver(new CGSolver(ae1));
 
-        sc->setHostname("hairy");
+        sc.setHostname("hairy");
 
         ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
         bc2 = new alica::BehaviourCreator();
@@ -91,7 +90,7 @@ protected:
         delete cc2;
         delete bc2;
 
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
     }
 };
 
