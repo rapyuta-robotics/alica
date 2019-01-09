@@ -4,9 +4,9 @@
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/parser/PlanParser.h>
+#include <essentials/AgentIDFactory.h>
 #include <gtest/gtest.h>
 #include <ros/ros.h>
-#include <essentials/AgentIDFactory.h>
 #include <vector>
 
 using alica::Assignment;
@@ -26,10 +26,10 @@ TEST(Assignment, RobotsInserted)
     nh.param<std::string>("/rootPath", path, ".");
 
     // bring up the SystemConfig with the corresponding path
-    essentials::SystemConfig* sc =essentials::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
-    sc->setHostname("nase");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setRootPath(path);
+    sc.setConfigPath(path + "/etc");
+    sc.setHostname("nase");
 
     AgentIDFactory idfac;
     std::vector<uint8_t> b1 = {0x2, 0, 0, 0};

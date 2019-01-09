@@ -44,12 +44,12 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        cout << sc->getConfigPath() << endl;
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
+        cout << sc.getConfigPath() << endl;
 
-        sc->setHostname("nase");
+        sc.setHostname("nase");
         ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
@@ -62,7 +62,7 @@ protected:
     virtual void TearDown()
     {
         ae->shutdown();
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
         delete bc;
         delete cc;
         delete uc;

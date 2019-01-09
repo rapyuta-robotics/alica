@@ -18,8 +18,8 @@
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <gtest/gtest.h>
 #include <essentials/AgentIDManager.h>
+#include <gtest/gtest.h>
 #include <test_alica.h>
 
 class AlicaMultiAgent : public AlicaTestFixtureBase
@@ -35,9 +35,9 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         std::cout << "rootPath " << path << std::endl;
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
         // setup the engine
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
@@ -51,7 +51,7 @@ protected:
         ae2->shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
         delete cc;
         delete bc;
         delete uc;
@@ -65,13 +65,14 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
     ASSERT_NO_SIGNAL
 
-    sc->setHostname("nase");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setHostname("nase");
     ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     ASSERT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
-    sc->setHostname("hairy");
+    sc.setHostname("hairy");
     ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));

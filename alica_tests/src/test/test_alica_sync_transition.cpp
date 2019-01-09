@@ -32,10 +32,10 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
+        sc.setHostname("nase");
 
         // setup the engine
         bc = new alica::BehaviourCreator();
@@ -48,7 +48,7 @@ protected:
     {
         ae->shutdown();
         ae2->shutdown();
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
         delete cc;
         delete bc;
         delete uc;
@@ -67,13 +67,14 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
 
-    sc->setHostname("hairy");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setHostname("hairy");
     ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
-    sc->setHostname("nase");
+    sc.setHostname("nase");
     ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
