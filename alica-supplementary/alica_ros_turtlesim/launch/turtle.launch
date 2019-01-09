@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="name" default="turtle1" />
+    <arg name="master_plan" default="Master" />
+    <arg name="roleset"     default="Roleset" />
+    <arg name="alica_path"  default="$(find alica_ros_turtlesim)/alica" />
+    <arg name="launch-prefix" default="" />
+
+    <node name="$(arg name)" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch-prefix)">
+        <param name="name"         value="$(arg name)" />
+        <param name="master_plan"  value="$(arg master_plan)" />
+        <param name="roleset"      value="$(arg roleset)" />
+        <param name="alica_path"   value="$(arg alica_path)" />
+    </node>
+</launch>
