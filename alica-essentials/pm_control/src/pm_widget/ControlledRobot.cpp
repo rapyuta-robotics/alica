@@ -5,11 +5,11 @@
 #include "ui_RobotProcessesWidget.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentID.h>
+#include <essentials/BroadcastID.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>
-#include <essentials/AgentID.h>
-#include <essentials/BroadcastID.h>
 
 #include <limits.h>
 #include <ros/ros.h>
@@ -24,7 +24,7 @@ ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* ro
 {
     // setup gui stuff
     this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-    auto pmRegistry =  essentials::RobotExecutableRegistry::get();
+    auto pmRegistry = essentials::RobotExecutableRegistry::get();
     if (dynamic_cast<const essentials::BroadcastID*>(parentPMid)) {
         // don't show in robot_control
         this->_robotProcessesWidget->robotHostLabel->hide();
@@ -47,18 +47,18 @@ ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* ro
     }
 
     // construct all known executables
-    const vector< essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
+    const vector<essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
     ControlledExecutable* controlledExec;
     for (auto execMetaDataEntry : execMetaDatas) {
         controlledExec = new ControlledExecutable(execMetaDataEntry, this);
         this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
     }
 
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    this->msgTimeOut = chrono::duration<double>(sc["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
     ros::NodeHandle* nh = new ros::NodeHandle();
-    string cmdTopic = (*essentials::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+    string cmdTopic = sc["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
     processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
 }
 

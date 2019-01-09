@@ -19,25 +19,25 @@ PMControl::PMControl()
     setObjectName("PMControl");
     rosNode = new ros::NodeHandle();
 
-    this->sc = essentials::SystemConfig::getInstance();
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
 
-    this->msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+    this->msgTimeOut = chrono::duration<double>(sc["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
-    this->pmRegistry =  essentials::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
      * with data from Globals.conf and ProcessManaging.conf file. */
 
     // Register robots from Globals.conf
     const essentials::AgentID* tmpAgentID;
-    auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
+    auto robotNames = sc["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
     }
 
     // Register executables from ProcessManaging.conf
     int tmpExecID;
-    auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
+    auto processDescriptions = sc["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
     for (auto processSectionName : (*processDescriptions)) {
         tmpExecID = this->pmRegistry->addExecutable(processSectionName);
     }
@@ -55,7 +55,8 @@ void PMControl::initPlugin(qt_gui_cpp::PluginContext& context)
     context.addWidget(widget_);
 
     // Initialise the ROS Communication
-    string statTopic = (*this->sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    string statTopic = sc["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
     processStateSub = rosNode->subscribe(statTopic, 10, &PMControl::receiveProcessStats, (PMControl*)this);
 
     // Initialise the GUI refresh timer

@@ -14,22 +14,14 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-// Initialize static variables
-std::string SystemConfig::rootPath;
-std::string SystemConfig::logPath;
-std::string SystemConfig::configPath;
-std::string SystemConfig::hostname;
-std::mutex SystemConfig::configsMapMutex;
-std::map<std::string, std::shared_ptr<Configuration>> SystemConfig::configs;
-
 /**
  * The method for getting the singleton instance.
  * @return A pointer to the SystemConfig object, you must not delete.
  */
-SystemConfig* SystemConfig::getInstance()
+SystemConfig& SystemConfig::getInstance()
 {
     static SystemConfig instance;
-    return &instance;
+    return instance;
 }
 
 /**
@@ -157,7 +149,7 @@ int SystemConfig::getOwnRobotID()
 int SystemConfig::getRobotID(const string& name)
 {
     // TODO this should be optional for dynamic teams (is it ok to return ints?)
-    Configuration* tmp = (*SystemConfig::getInstance())["Globals"];
+    Configuration* tmp = (SystemConfig::getInstance())["Globals"];
     int ownRobotID = tmp->get<int>("Globals", "Team", name.c_str(), "ID", NULL);
     return ownRobotID;
 }

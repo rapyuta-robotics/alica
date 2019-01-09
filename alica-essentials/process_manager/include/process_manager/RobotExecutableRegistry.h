@@ -1,9 +1,9 @@
 #pragma once
 
+#include <SystemConfig.h>
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
 #include <essentials/AgentIDManager.h>
-#include <SystemConfig.h>
 
 #include <map>
 #include <stdint.h>
@@ -56,7 +56,6 @@ class RobotExecutableRegistry
     std::vector<ExecutableMetaData*> executableList;
     std::vector<std::string> interpreter;
     std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
-    essentials::SystemConfig* sc;
     essentials::AgentIDManager* agentIDManager;
 };
 
