@@ -20,17 +20,17 @@ PlanParser::PlanParser(PlanRepository* rep)
     this->masterPlan = nullptr;
     this->rep = rep;
     this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
-    this->sc = essentials::SystemConfig::getInstance();
-    this->domainConfigFolder = this->sc->getConfigPath();
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    std::string domainConfigFolder = sc.getConfigPath();
 
     try {
-        this->planDir = (*this->sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+        this->planDir = sc["Alica"]->get<string>("Alica.PlanDir", NULL);
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("PP: Plan Directory does not exist.\n", error.what());
     }
 
     try {
-        this->roleDir = (*this->sc)["Alica"]->get<string>("Alica.RoleDir", NULL);
+        this->roleDir = sc["Alica"]->get<string>("Alica.RoleDir", NULL);
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("PP: Role Directory does not exist.\n", error.what());
     }
