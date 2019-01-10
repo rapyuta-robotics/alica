@@ -31,10 +31,10 @@ namespace alica
  */
 ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
 {
-    this->ae = ae;
-    this->conditionCreator = cc;
-    this->utilityCreator = uc;
-    this->constraintCreator = crc;
+    this->_ae = ae;
+    this->_conditionCreator = cc;
+    this->_utilityCreator = uc;
+    this->_constraintCreator = crc;
 }
 
 ExpressionHandler::~ExpressionHandler()
@@ -47,16 +47,16 @@ ExpressionHandler::~ExpressionHandler()
  */
 void ExpressionHandler::attachAll()
 {
-    PlanRepository* pr = ae->getPlanRepository();
+    PlanRepository* pr = _ae->getPlanRepository();
     for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
         Plan* p = it.second;
 
-        auto ufGen = utilityCreator->createUtility(p->getId());
+        auto ufGen = _utilityCreator->createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->_preCondition->setBasicCondition(this->conditionCreator->createConditions(p->getPreCondition()->getId()));
+                p->_preCondition->setBasicCondition(this->_conditionCreator->createConditions(p->getPreCondition()->getId()));
                 attachConstraint(p->_preCondition);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
@@ -64,14 +64,14 @@ void ExpressionHandler::attachAll()
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->_runtimeCondition->setBasicCondition(this->conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
+            p->_runtimeCondition->setBasicCondition(this->_conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
             attachConstraint(p->_runtimeCondition);
         }
 
         for (const Transition* t : p->_transitions) {
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
-                    t->_preCondition->setBasicCondition(this->conditionCreator->createConditions(t->getPreCondition()->getId()));
+                    t->_preCondition->setBasicCondition(this->_conditionCreator->createConditions(t->getPreCondition()->getId()));
                     attachConstraint(t->_preCondition);
                 } else {
                     t->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
@@ -104,7 +104,7 @@ void ExpressionHandler::attachConstraint(Condition* c)
     if (c->getVariables().size() == 0 && c->getQuantifiers().size() == 0) {
         c->setBasicConstraint(make_shared<DummyConstraint>());
     } else {
-        c->setBasicConstraint(this->constraintCreator->createConstraint(c->getId()));
+        c->setBasicConstraint(this->_constraintCreator->createConstraint(c->getId()));
     }
 }
 

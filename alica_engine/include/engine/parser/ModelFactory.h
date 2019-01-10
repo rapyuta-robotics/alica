@@ -8,13 +8,14 @@
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
 
-#include <memory>
 #include <list>
 #include <map>
+#include <memory>
 
 #include "tinyxml2.h"
 
-namespace alica {
+namespace alica
+{
 class PlanParser;
 class PlanRepository;
 class Plan;
@@ -46,7 +47,8 @@ class Parameter;
 /**
  * Constructs Model elements, i.e., objects inheriting from <see cref="PlanElement"/> given their XML representation.
  */
-class ModelFactory {
+class ModelFactory
+{
 public:
     ModelFactory(PlanParser* p, PlanRepository* rep);
     virtual ~ModelFactory();
@@ -109,31 +111,31 @@ private:
     static const std::string waitPlan;
     static const std::string alternativePlan;
 
-    PlanParser* parser;
-    PlanRepository* rep;
-    std::map<int64_t, AlicaElement*> elements;
+    PlanParser* _parser;
+    PlanRepository* _rep;
+    std::map<int64_t, AlicaElement*> _elements;
 
     using ReferenceList = std::list<std::pair<int64_t, int64_t>>;
 
-    ReferenceList stateInTransitionReferences;
-    ReferenceList stateOutTransitionReferences;
-    ReferenceList statePlanReferences;
-    ReferenceList transitionSynchReferences;
-    ReferenceList transitionAimReferences;
-    ReferenceList paramSubPlanReferences;
-    ReferenceList paramSubVarReferences;
-    ReferenceList paramVarReferences;
-    ReferenceList conditionVarReferences;
-    ReferenceList quantifierScopeReferences;
-    ReferenceList epStateReferences;
-    ReferenceList epTaskReferences;
-    ReferenceList planTypePlanReferences;
-    ReferenceList rtmRoleReferences;
-    ReferenceList charCapReferences;
-    ReferenceList charCapValReferences;
-    ReferenceList planningProblemPlanReferences;
-    ReferenceList planningProblemPlanWaitReferences;
-    ReferenceList planningProblemPlanAlternativeReferences;
+    ReferenceList _stateInTransitionReferences;
+    ReferenceList _stateOutTransitionReferences;
+    ReferenceList _statePlanReferences;
+    ReferenceList _transitionSynchReferences;
+    ReferenceList _paramSubPlanReferences;
+    ReferenceList _transitionAimReferences;
+    ReferenceList _paramSubVarReferences;
+    ReferenceList _paramVarReferences;
+    ReferenceList _conditionVarReferences;
+    ReferenceList _quantifierScopeReferences;
+    ReferenceList _epStateReferences;
+    ReferenceList _epTaskReferences;
+    ReferenceList _planTypePlanReferences;
+    ReferenceList _rtmRoleReferences;
+    ReferenceList _charCapReferences;
+    ReferenceList _charCapValReferences;
+    ReferenceList _planningProblemPlanReferences;
+    ReferenceList _planningProblemPlanWaitReferences;
+    ReferenceList _planningProblemPlanAlternativeReferences;
 
     void setAlicaElementAttributes(AlicaElement* ae, tinyxml2::XMLElement* ele);
     EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
@@ -160,6 +162,6 @@ private:
     void createVariableTemplates();
     void removeRedundancy();
 };
-}  // namespace alica
+} // namespace alica
 
 #endif /* MODELFACTORY_H_ */
