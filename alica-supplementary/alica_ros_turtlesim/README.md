@@ -6,8 +6,8 @@ This tutorial is extension of ros turtlesim. By following this tutorial, you wil
 
 In this tutorial, you will create application as below. ALICA will assign “Leader” task to one turtle and “Follower” to the other turtles. ALICA move turtles to the goal position based on the distance constraints.
 
-![overview](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/overview.png)
-![alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/alica_ros_turtlesim.gif)
+![overview](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/overview.png)
+![alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/alica_ros_turtlesim.gif)
 
 ### 2. Prerequisite
 You need to be familiar with following tools.
@@ -15,7 +15,7 @@ You need to be familiar with following tools.
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
 ### 3. ALICA basics and Core concepts
-Brief explanation on ALICA core concepts. Please refere to ?? for the detailed information.
+Brief explanation on ALICA core concepts. Please refere to [ALICA](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/alica.html) for the detailed information.
 ##### Plan
 Plan is state machine in tree structure. Plan can include plans and states and each states have `Behaviour`s. ALICA  assign entrypoint of the  state tree to the agent, e.g. robot based on `Role`, `Task`, `Constraints` and `Utility function`.
 ALICA  manage state transitions based on user code. The alica-plan-designer generates code strucutre and developer implement state transition logics. 
@@ -30,7 +30,7 @@ Task is assign  based on `Role` and `Utility function` by ALICA. Tassk is entry 
 Developer can set constraints to the plans. ALICA can solve constraints and return answer. In this tutorial, turtles align circle by constraints.
 Worldmodel: World model represents agent model in the world. World model is a interface between ALICA and other software, e.g. ROS and lower API.
 
-![coreconcept](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/coreconcept.png)
+![coreconcept](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/coreconcept.png)
 
 ### 4. Set up workspace
 Creating workspace by following steps in Ubuntu16.04 terminal.
@@ -62,23 +62,23 @@ Plan designer is a user interface to design application with ALICA.
 cd catkin_ws/src/alica-plan-designer
 ./bin/start.sh
 ```
-![plan-designer_project_config](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/plan-designer_project_config.png)
+![plan-designer_project_config](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan-designer_project_config.png)
 ##### Plan designer setting
 Create project: input root path to your alica ws and change expr as well.
 #todo add image
 Window -> Preference -> Plan Designer -> Condition plugin
 /home/yu/alica_ws/src/alica-plan-designer/ should be path to alica-plan-designer
-![plan-designer_condition_plugin](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/plan-designer_condition_plugin.png)
+![plan-designer_condition_plugin](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan-designer_condition_plugin.png)
 
 ### 6. Create plan using plan desginer
  In this section, you will create plan using plan designer. This tutorial has two plans, `Master` and `Move`. `Master` plan has `Init` and `Move` state. `Move` plan has `Move2Center` and `AlignCircle` state.
  In the `Init` state, turtle is teleported to the random state(`Go2RandomPosition` behaviour) and transit to the `Move` state. 
-![plan](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/plan.png)
+![plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan.png)
 
 
 ##### 6.1 Plan design		
 ###### 6.1.1 Master plan
-![master_plan](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/master_plan.png)
+![master_plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/master_plan.png)
 1. right click on Explore -> New -> Plan
 2. input Filename with `Master` then plan will open.
 3. click top blue `Master` and change `Master Plan` true in the Properties.(top bar become red from blue)
@@ -89,7 +89,7 @@ Window -> Preference -> Plan Designer -> Condition plugin
 8. Add `Move` plan to `Move` state under /Plans
 
 ###### 6.1.2 Move plan
-![move_plan](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/move_plan.png)
+![move_plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/move_plan.png)
 1. Add `Move2Center` state and `AlignCircle` state
 2. Add `GoTo` behaivour to  `Move2Center` state and `AlignCircle` state under /Plans/behaviours
 3. Add “Entry point” and Task.
@@ -97,7 +97,7 @@ Change Task name to `Leader` and `Follower`.
 4. Add “Runtime Condition” to the plan.
 5. Add “x, y” “Quantifiers” in Runtime condition properties
 				* these quantifiers will be used in writing constraints.
-![runtime_condition](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/runtime_condition.png)
+![runtime_condition](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/runtime_condition.png)
 
 ###### 6.1.3 Add Role
 1. Define Role -> “Add Role” -> input “Turtle”
@@ -106,7 +106,7 @@ Change Task name to `Leader` and `Follower`.
 3. Open Roleset.rset -> Expand all -> auto layout, then you will see
 #todo add iamge
 Change Default to true as above image.
-![roleset](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/roleset.png)
+![roleset](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/roleset.png)
 
 
 4. Generate code by open any plan -> right click -> Codegeneration -> Generate all expression validators
@@ -115,17 +115,17 @@ Change Default to true as above image.
 After ALICA generate code structure, developer need to modify/implement logic. In this section, necessary code changes are explained. 
 #### 7.1 World model
 We will explain only `base_node.cpp` which is related to ALICA. 
-![base](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/base.png)
-    - Line 13: initialize World model. Since one agent has one world model, this method is class static method
-    - Line 15~19: Setting up ALICA-supplementray. ALICA supplementary is supporting class of ALICA.
-    - Line 21~31: Setting up ALICA Engine. 
+![base](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/base.png)
+- L13: initialize World model. Since one agent has one world model, this method is class static method
+- L15~19: Setting up ALICA-supplementray. ALICA supplementary is supporting class of ALICA.
+- L21~31: Setting up ALICA Engine. 
 
 #### 7.2 Plan
 <plan name>.cpp file has "evaluate" function runs with specific frequency which is set in Alica.conf. "evaluate" function has state transition logic. constraints/<plan name>.cpp has "getConstraints" function which is used to provide constraints.
 
 - Expr/src/Plans/Master***.cpp(*** is a id number which is generated by alica-plan-designer)
     In this file, you need to implement state transition logic.
-    ![master](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/master.png)
+    ![master](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/master.png)
     - L3 : include world model since state transition happen depends on world model
 
     - L47:  This is state transition condition from ‘Init’ to ‘Move’. This success condition is met by setSuccess in behaviour logic which is explained later in behaviour.
@@ -133,7 +133,7 @@ We will explain only `base_node.cpp` which is related to ALICA.
 			
 - Expr/src/Plans/constraints/Move***.cpp
 	In this file, you need to implement constraints logic.
-    ![constraints](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/constraints.png)
+    ![constraints](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/constraints.png)
 
     - L5~6: include alica engine related header files and world model.    
     - L48~106: Iterate all agents and add constraints
@@ -145,7 +145,7 @@ We will explain only `base_node.cpp` which is related to ALICA.
 <behaviour name>.cpp file has `run` function which keep running at specific frequency which is set in Alica.conf.
 - Expr/src/Behaviours/Go2RandomPosition.cpp
     In this file, implement turtle teleportation
-	![go2randomposition](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/go2randomposition.png)
+	![go2randomposition](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/go2randomposition.png)
 
     - L6: include world model
 	- L20-29: generate random value and teleport turtle via world model.
@@ -153,13 +153,13 @@ We will explain only `base_node.cpp` which is related to ALICA.
 
 - Expr/src/Behaviours/GoTo.hpp
 
-    ![gotohpp](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/gotohpp.png)
+    ![gotohpp](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/gotohpp.png)
     - L6: include Qurty
     - L24-25: add query and result which are used to get solver result.
 
 - Expr/src/Behaviours/GoTo.cpp
     
-    ![gotocpp](https://github.com/rapyuta-robotics/alica-supplementary/blob/add_turtlesim/alica_ros_turtlesim/doc/gotocpp.png)
+    ![gotocpp](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/gotocpp.png)
     - L5: include world model
     - L27~30: In `run` function,  get result from solver. CGSolver solve constraints defined in the  Expr/src/Plans/constraints/Move***.cpp
     - L32~33: move turtle to the solver result position via world model.
