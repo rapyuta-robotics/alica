@@ -35,17 +35,17 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
 {
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount", NULL);
-    enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled", NULL);
-    minimalOverrideTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
-    maximalOverrideTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
-    overrideShoutInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
-    overrideWaitInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
-    int historySize = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    maxAllocationCycles = sc["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount", NULL);
+    enabled = sc["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled", NULL);
+    minimalOverrideTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    maximalOverrideTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
+    overrideShoutInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
+    overrideWaitInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
+    int historySize = sc["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
 
-    this->intervalIncFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
-    this->intervalDecFactor = (*sc)["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
+    this->intervalIncFactor = sc["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
+    this->intervalDecFactor = sc["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
 
     _allocationHistory.resize(historySize);
 

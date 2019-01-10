@@ -44,7 +44,6 @@ public:
     int64_t parserId(tinyxml2::XMLElement* node);
 
 private:
-    essentials::SystemConfig* sc;
     std::shared_ptr<ModelFactory> mf;
     PlanRepository* rep;
     Plan* masterPlan;
@@ -53,7 +52,6 @@ private:
     std::string basePlanPath;
     std::string baseRolePath;
     std::string currentDirectory;
-    std::string domainConfigFolder;
     std::string currentFile;
     void parseTaskFile(const std::string& currentFile);
     void parseRoleDefFile(const std::string& currentFile);

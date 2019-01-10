@@ -15,14 +15,14 @@
 namespace alica
 {
 VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-    : _ae(ae)
-    , _running(false)
-    , _timer(nullptr)
-    , _distThreshold(0)
-    , _communicator(nullptr)
-    , _ttl4Communication(AlicaTime::zero())
-    , _ttl4Usage(AlicaTime::zero())
-    , _ownResults(nullptr)
+        : _ae(ae)
+        , _running(false)
+        , _timer(nullptr)
+        , _distThreshold(0)
+        , _communicator(nullptr)
+        , _ttl4Communication(AlicaTime::zero())
+        , _ttl4Usage(AlicaTime::zero())
+        , _ownResults(nullptr)
 {
 }
 
@@ -38,11 +38,11 @@ void VariableSyncModule::init()
         return;
     }
     _running = true;
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    bool communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
-    _ttl4Communication = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
-    _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
-    _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    bool communicationEnabled = sc["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
+    _ttl4Communication = AlicaTime::milliseconds(sc["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
+    _ttl4Usage = AlicaTime::milliseconds(sc["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
+    _distThreshold = sc["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
     AgentIDConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
     {
@@ -55,7 +55,7 @@ void VariableSyncModule::init()
 
     if (communicationEnabled) {
         _communicator = _ae->getCommunicator();
-        double communicationFrequency = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
+        double communicationFrequency = sc["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
             _timer = new essentials::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
@@ -99,10 +99,8 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
     if (re == nullptr) {
         std::unique_ptr<ResultEntry> new_entry(new ResultEntry(msg.senderID));
         std::lock_guard<std::mutex> lock(_mutex);
-        auto agent_sorted_loc = std::upper_bound(_store.begin(), _store.end(), new_entry, 
-            [](const std::unique_ptr<ResultEntry>& a, const std::unique_ptr<ResultEntry>& b) {
-                return (a->getId() < b->getId());
-            });
+        auto agent_sorted_loc = std::upper_bound(_store.begin(), _store.end(), new_entry,
+                [](const std::unique_ptr<ResultEntry>& a, const std::unique_ptr<ResultEntry>& b) { return (a->getId() < b->getId()); });
         agent_sorted_loc = _store.insert(agent_sorted_loc, std::move(new_entry));
         re = (*agent_sorted_loc).get();
     }
@@ -139,10 +137,10 @@ void VariableSyncModule::postResult(int64_t vid, Variant result)
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
-    : _values(std::move(vs))
-    , _supporterCount(_values.size())
-    , _hash(0)
-    , _totalSupCount(0)
+        : _values(std::move(vs))
+        , _supporterCount(_values.size())
+        , _hash(0)
+        , _totalSupCount(0)
 {
     assert(_values.size() == _supporterCount.size());
     for (const Variant& v : _values) {
@@ -153,10 +151,10 @@ VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(VotedSeed&& o)
-    : _values(std::move(o._values))
-    , _supporterCount(std::move(o._supporterCount))
-    , _hash(o._hash)
-    , _totalSupCount(o._totalSupCount)
+        : _values(std::move(o._values))
+        , _supporterCount(std::move(o._supporterCount))
+        , _hash(o._hash)
+        , _totalSupCount(o._totalSupCount)
 {
 }
 

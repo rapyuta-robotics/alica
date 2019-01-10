@@ -34,10 +34,10 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
+        sc.setHostname("nase");
 
         // setup the engine parts
         bc = new alica::BehaviourCreator();
@@ -50,7 +50,7 @@ protected:
     {
         ae->shutdown();
         ae2->shutdown();
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
         delete ae->getCommunicator();
         delete ae2->getCommunicator();
         delete cc;
@@ -107,14 +107,14 @@ TEST(AllocationDifference, MessageCancelsUtil)
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-
-    sc->setHostname("nase");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setHostname("nase");
     ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
-    sc->setHostname("hairy");
+    sc.setHostname("hairy");
     ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));

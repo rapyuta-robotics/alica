@@ -5,9 +5,9 @@
 #include "engine/constraintmodul/ISolver.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentIDManager.h>
 #include <list>
 #include <string>
-#include <essentials/AgentIDManager.h>
 
 #include <unordered_map>
 
@@ -158,7 +158,6 @@ private:
 
     const Plan* masterPlan;
     std::unordered_map<size_t, ISolverBase*> _solvers;
-    essentials::SystemConfig* sc;
 };
 
 /**

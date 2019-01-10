@@ -41,7 +41,7 @@ AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
 void RunningPlan::init()
 {
     assignmentProtectionTime =
-            AlicaTime::milliseconds((*essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+            AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
