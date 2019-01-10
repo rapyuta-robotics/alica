@@ -25,7 +25,6 @@
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    essentials::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;
     alica::ConditionCreator* cc;
@@ -47,14 +46,13 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = essentials::SystemConfig::getInstance();
-        sc->setRootPath(path);
-        sc->setConfigPath(path + "/etc");
-        sc->setHostname("nase");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        sc.setRootPath(path);
+        sc.setConfigPath(path + "/etc");
+        sc.setHostname("nase");
 
         // setup the engine
-        ae = new alica::AlicaEngine(
-                new essentials::AgentIDManager(new essentials::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
+        ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -68,7 +66,7 @@ protected:
     void TearDown() override
     {
         ae->shutdown();
-        sc->shutdown();
+        essentials::SystemConfig::getInstance().shutdown();
         delete ae->getCommunicator();
         delete cc;
         delete bc;

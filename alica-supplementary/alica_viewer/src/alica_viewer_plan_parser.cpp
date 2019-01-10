@@ -20,24 +20,24 @@ void sortPlanTrees(std::vector<std::unique_ptr<PlanTree>>& planTrees)
 } // namespace
 
 PlanTree::PlanTree(AlicaTime creationTime)
-    : _parent(nullptr)
-    , _state(nullptr)
-    , _entryPoint(nullptr)
-    , _numOfChildren(0)
-    , _time(creationTime)
-    , _x(0)
-    , _y(0)
+        : _parent(nullptr)
+        , _state(nullptr)
+        , _entryPoint(nullptr)
+        , _numOfChildren(0)
+        , _time(creationTime)
+        , _x(0)
+        , _y(0)
 {
 }
 
 PlanTree::PlanTree(const PlanTree& other, const PlanTree& parent)
-    : _state(other._state)
-    , _entryPoint(other._entryPoint)
-    , _robotIds(other._robotIds)
-    , _time(other._time)
-    , _numOfChildren(0)
-    , _x(other._x)
-    , _y(other._y)
+        : _state(other._state)
+        , _entryPoint(other._entryPoint)
+        , _robotIds(other._robotIds)
+        , _time(other._time)
+        , _numOfChildren(0)
+        , _x(other._x)
+        , _y(other._y)
 {
     setParent(parent);
     for (const auto& ptvMapPair : other._children) {
@@ -128,7 +128,7 @@ void PlanTree::mergePlanTree(const PlanTree& src)
         PlanTreeVectorMap::iterator ptvEntry = _children.find(planId);
         if (ptvEntry != _children.end()) {
             std::vector<std::unique_ptr<PlanTree>>::iterator iter =
-                std::find_if(ptvEntry->second.begin(), ptvEntry->second.end(), [&](const std::unique_ptr<PlanTree>& pt) { return *pt == src; });
+                    std::find_if(ptvEntry->second.begin(), ptvEntry->second.end(), [&](const std::unique_ptr<PlanTree>& pt) { return *pt == src; });
             if (iter != ptvEntry->second.end()) {
                 (*iter)->mergeRobots(src.getRobots());
                 for (const auto& ptvMapPair : src._children) {
@@ -151,9 +151,9 @@ void PlanTree::getRobotsSorted(AgentGrp& robotIds) const
 }
 
 AlicaPlan::AlicaPlan(int argc, char* argv[])
-    : _planParser(&_planRepository)
-    , _combinedPlanTree(nullptr)
-    , _agentIDManager(new essentials::AgentIDFactory())
+        : _planParser(&_planRepository)
+        , _combinedPlanTree(nullptr)
+        , _agentIDManager(new essentials::AgentIDFactory())
 {
     if (argc < 2) {
         std::cout << "Usage: Base -m [Masterplan] -r [roleset]" << std::endl;
@@ -181,7 +181,7 @@ AlicaPlan::AlicaPlan(int argc, char* argv[])
 
     _planParser.parsePlanTree(masterPlanName);
 
-    _teamTimeOut = AlicaTime::milliseconds((*essentials::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
+    _teamTimeOut = AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
 }
 
 void AlicaPlan::combinePlanTree(PlanTree& planTree) const

@@ -44,12 +44,12 @@ using std::vector;
 int CNSMTGSolver::fcounter = 0;
 
 CNSMTGSolver::CNSMTGSolver()
-    : dim(0)
-    , utilityThreshold(1.0)
-    , begin()
-    , runs(0)
-    , fevals(0)
-    , seedWithUtilOptimum(true)
+        : dim(0)
+        , utilityThreshold(1.0)
+        , begin()
+        , runs(0)
+        , fevals(0)
+        , seedWithUtilOptimum(true)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
@@ -58,9 +58,9 @@ CNSMTGSolver::CNSMTGSolver()
 
     ip = make_shared<intervalpropagation::IntervalPropagator>();
 
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
+    maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     rPropConvergenceStepSize = 0;
     useIntervalProp = true;
     optimize = false;
@@ -112,14 +112,14 @@ void CNSMTGSolver::closeLog()
     sw.close();
 }
 
-shared_ptr<vector<double>> CNSMTGSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, shared_ptr<vector<shared_ptr<vector<double>>>>& limits,
-                                               double& util)
+shared_ptr<vector<double>> CNSMTGSolver::solve(
+        autodiff::TermPtr equation, autodiff::TermHolder& holder, shared_ptr<vector<shared_ptr<vector<double>>>>& limits, double& util)
 {
     return solve(equation, holder, limits, nullptr, std::numeric_limits<double>::max(), util);
 }
 
 shared_ptr<vector<double>> CNSMTGSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, shared_ptr<vector<shared_ptr<vector<double>>>>& limits,
-                                               shared_ptr<vector<shared_ptr<vector<double>>>> seeds, double sufficientUtility, double& util)
+        shared_ptr<vector<shared_ptr<vector<double>>>> seeds, double sufficientUtility, double& util)
 {
 #ifdef CNSMTGSolver_DEBUG
     cout << "CNSMTGSolver::solve() " << useIntervalProp << endl;
@@ -262,7 +262,7 @@ bool CNSMTGSolver::intervalPropagate(shared_ptr<vector<shared_ptr<cnsat::Var>>> 
             shared_ptr<cnsat::Clause> learnt = make_shared<cnsat::Clause>();
             for (shared_ptr<cnsat::Var>& v : *offending) {
                 shared_ptr<cnsat::Lit> lit =
-                    make_shared<cnsat::Lit>(v, v->assignment == cnsat::Assignment::TRUE ? cnsat::Assignment::FALSE : cnsat::Assignment::TRUE);
+                        make_shared<cnsat::Lit>(v, v->assignment == cnsat::Assignment::TRUE ? cnsat::Assignment::FALSE : cnsat::Assignment::TRUE);
                 learnt->add(lit);
             }
             ss->addIClause(learnt);
@@ -306,7 +306,7 @@ bool CNSMTGSolver::probeForSolution(std::shared_ptr<std::vector<std::shared_ptr<
         shared_ptr<cnsat::Clause> learnt = make_shared<cnsat::Clause>();
         for (shared_ptr<cnsat::Var> v : *(ss->decisions)) {
             shared_ptr<cnsat::Lit> lit =
-                make_shared<cnsat::Lit>(v, v->assignment == cnsat::Assignment::TRUE ? cnsat::Assignment::FALSE : cnsat::Assignment::TRUE);
+                    make_shared<cnsat::Lit>(v, v->assignment == cnsat::Assignment::TRUE ? cnsat::Assignment::FALSE : cnsat::Assignment::TRUE);
             learnt->add(lit);
         }
         ss->addTClause(learnt);
@@ -456,8 +456,8 @@ shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropFindFeasible(shared_ptr
 }
 
 shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropOptimizeFeasible(shared_ptr<vector<shared_ptr<cnsat::Var>>> constraints, TermPtr ut,
-                                                                          // shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
-                                                                          shared_ptr<vector<double>>& seed, bool precise)
+        // shared_ptr<vector<shared_ptr<autodiff::Variable>>> args,
+        shared_ptr<vector<double>>& seed, bool precise)
 {
 #ifdef CNSMTGSolver_DEBUG
     cout << "CNSMTGSolver::rPropOptimizeFeasible()" << endl;
@@ -589,8 +589,8 @@ shared_ptr<CNSMTGSolver::RpropResult> CNSMTGSolver::rPropOptimizeFeasible(shared
     return ret;
 }
 
-void CNSMTGSolver::differentiate(shared_ptr<vector<shared_ptr<cnsat::Var>>> constraints, shared_ptr<vector<double>>& val, shared_ptr<vector<double>>& gradient,
-                                 double& util)
+void CNSMTGSolver::differentiate(
+        shared_ptr<vector<shared_ptr<cnsat::Var>>> constraints, shared_ptr<vector<double>>& val, shared_ptr<vector<double>>& gradient, double& util)
 {
 #ifdef CNSMTGSolver_DEBUG
     cout << "CNSMTGSolver::differentiate()" << endl;
@@ -618,8 +618,8 @@ void CNSMTGSolver::differentiate(shared_ptr<vector<shared_ptr<cnsat::Var>>> cons
 #endif
 }
 
-shared_ptr<vector<double>> CNSMTGSolver::initialPointFromSeed(shared_ptr<vector<shared_ptr<cnsat::Var>>> constraints, shared_ptr<CNSMTGSolver::RpropResult> res,
-                                                              shared_ptr<vector<double>>& seed)
+shared_ptr<vector<double>> CNSMTGSolver::initialPointFromSeed(
+        shared_ptr<vector<shared_ptr<cnsat::Var>>> constraints, shared_ptr<CNSMTGSolver::RpropResult> res, shared_ptr<vector<double>>& seed)
 {
 #ifdef CNSMTGSolver_DEBUG
     cout << "CNSMTGSolver::initialPointFromSeed()" << endl;
@@ -638,7 +638,7 @@ shared_ptr<vector<double>> CNSMTGSolver::initialPointFromSeed(shared_ptr<vector<
 #ifdef CNSMTGSolver_DEBUG
                 cout << "\tstd::isnan(seed->at(i) => THEN" << endl;
 #endif
-                res->initialValue->at(i) = ((double)rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
+                res->initialValue->at(i) = ((double) rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
             } else {
 #ifdef CNSMTGSolver_DEBUG
                 cout << "\tstd::isnan(seed->at(i) => ELSE" << endl;
@@ -711,7 +711,7 @@ shared_ptr<vector<double>> CNSMTGSolver::initialPoint(shared_ptr<vector<shared_p
         found = true;
         res->initialUtil = 1;
         for (int i = 0; i < dim; ++i) {
-            res->initialValue->at(i) = ((double)rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
+            res->initialValue->at(i) = ((double) rand() / RAND_MAX) * ranges[i] + limits->at(i)->at(0);
             //					cout << "if (TMPVAR == " << TMPVAR++ << ") { res.initialValue[i] = " <<
             // res->initialValue->at(i)
             //<< "; }" << endl;

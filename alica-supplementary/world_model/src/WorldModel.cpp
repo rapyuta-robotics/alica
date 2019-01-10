@@ -8,12 +8,12 @@
 namespace supplementary
 {
 WorldModel::WorldModel()
-    : maySendMessages(true)
-    , alicaEngine(nullptr)
-    , ownID(nullptr)
+        : maySendMessages(true)
+        , alicaEngine(nullptr)
+        , ownID(nullptr)
 {
-    this->sc = essentials::SystemConfig::getInstance();
-    this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    this->maySendMessages = sc["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }
 
 WorldModel::~WorldModel() {}
@@ -66,8 +66,4 @@ const essentials::AgentID* WorldModel::getOwnId()
     return this->ownID;
 }
 
-essentials::SystemConfig* WorldModel::getSystemConfig()
-{
-    return this->sc;
-}
 } // namespace supplementary

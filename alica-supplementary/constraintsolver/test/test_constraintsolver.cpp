@@ -33,9 +33,9 @@ TEST(AutoDiffTest, GSOLVER)
 {
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test";
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setRootPath(path);
+    sc.setConfigPath(path + "/etc");
 
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
@@ -116,9 +116,9 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 {
     std::string path = ros::package::getPath("constraintsolver");
     path = path + "/test";
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setRootPath(path);
+    sc.setConfigPath(path + "/etc");
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;

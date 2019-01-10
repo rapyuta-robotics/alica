@@ -2,9 +2,9 @@
 #include <ros/master.h>
 
 #include <SystemConfig.h>
+#include <essentials/AgentID.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <robot_control/RobotsControl.h>
-#include <essentials/AgentID.h>
 
 #include <QMenu>
 
@@ -21,37 +21,36 @@ using std::vector;
 std::chrono::duration<double> RobotsControl::msgTimeOut = std::chrono::duration<double>(0);
 
 RobotsControl::RobotsControl()
-    : rqt_gui_cpp::Plugin()
-    , widget_(0)
-    , guiUpdateTimer(nullptr)
+        : rqt_gui_cpp::Plugin()
+        , widget_(0)
+        , guiUpdateTimer(nullptr)
 {
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
-    this->sc = essentials::SystemConfig::getInstance();
-
-    RobotsControl::msgTimeOut = std::chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    RobotsControl::msgTimeOut = std::chrono::duration<double>(sc["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
     this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
      * with data from Globals.conf and Processes.conf file. */
 
     // Register robots from Globals.conf
-    auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
+    auto robotNames = sc["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         this->pmRegistry->addRobot(robotName);
     }
 
     // Register executables from ProcessManaging.conf
-    auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
+    auto processDescriptions = sc["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
     for (auto processSectionName : (*processDescriptions)) {
         this->pmRegistry->addExecutable(processSectionName);
     }
 
     // Read bundles from ProcessManaging.conf
-    auto bundlesSections = (*this->sc)["ProcessManaging"]->getSections("Processes.Bundles", NULL);
+    auto bundlesSections = sc["ProcessManaging"]->getSections("Processes.Bundles", NULL);
     for (auto bundleName : (*bundlesSections)) {
-        vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
-        vector<string> processParamsList = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
+        vector<int> processList = sc["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
+        vector<string> processParamsList = sc["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
         if (processList.size() != processParamsList.size()) {
             std::cerr << "PMControl: Number of processes does not match the number of parameter sets for the bundle '" << bundleName
                       << "' in the Processes.conf!" << std::endl;
@@ -84,8 +83,8 @@ void RobotsControl::initPlugin(qt_gui_cpp::PluginContext& context)
     }
 
     // Initialise the ROS Communication
-    processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats, (RobotsControl*)this);
-    alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo, (RobotsControl*)this);
+    processStateSub = rosNode->subscribe("/process_manager/ProcessStats", 10, &RobotsControl::receiveProcessStats, (RobotsControl*) this);
+    alicaInfoSub = rosNode->subscribe("/AlicaEngine/AlicaEngineInfo", 10, &RobotsControl::receiveAlicaInfo, (RobotsControl*) this);
 
     // Initialise the GUI refresh timer
     this->guiUpdateTimer = new QTimer();

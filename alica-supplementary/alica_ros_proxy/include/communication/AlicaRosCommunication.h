@@ -75,8 +75,6 @@ protected:
     std::string solverResultTopic;
 
     bool isRunning;
-
-    essentials::SystemConfig* sc;
 };
 
 } /* namespace alicaRosProxy */
