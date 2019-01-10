@@ -49,21 +49,19 @@ private:
     AlicaEngine* _ae;
     std::vector<AllocationDifference> _allocationHistory;
     int _newestAllocationDifference;
-    int maxAllocationCycles;
-    bool enabled;
-
-    AgentIDConstPtr myID;
-
-    AlicaTime overrideTimestamp;
-    double intervalIncFactor;
-    double intervalDecFactor;
-    AlicaTime minimalOverrideTimeInterval;
-    AlicaTime maximalOverrideTimeInterval;
-    AlicaTime overrideShoutInterval;
-    AlicaTime overrideWaitInterval;
-    AlicaTime overrideShoutTime;
+    int _maxAllocationCycles;
+    bool _enabled;
+    AgentIDConstPtr _myID;
+    AlicaTime _overrideTimestamp;
+    double _intervalIncFactor;
+    double _intervalDecFactor;
+    AlicaTime _minimalOverrideTimeInterval;
+    AlicaTime _maximalOverrideTimeInterval;
+    AlicaTime _overrideShoutInterval;
+    AlicaTime _overrideWaitInterval;
+    AlicaTime _overrideShoutTime;
     CycleState _state;
-    RunningPlan* rp;
+    RunningPlan* _rp;
     AllocationAuthorityInfo _fixedAllocation;
 };
 

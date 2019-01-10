@@ -61,9 +61,9 @@ public:
     tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(const TaskRepository* tr);
 
 private:
-    PlanRepository* rep;
-    std::string currentFile;
-    static int objectCounter;
+    PlanRepository* _rep;
+    std::string _currentFile;
+    static int s_objectCounter;
 
     std::string getRelativeFileName(const std::string& file);
     std::string getRelativeFileName(const AbstractPlan* p);
