@@ -585,7 +585,8 @@ TEST_F(AlicaEngineTest, planWriter)
     for (const alica::Plan* plan : plans) {
         cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
         pw.saveSinglePlan(plan);
-        string temp = essentials::FileSystem::combinePaths(sc->getConfigPath(), "plans/tmp");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        string temp = essentials::FileSystem::combinePaths(sc.getConfigPath(), "plans/tmp");
         temp = essentials::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
         string test = exec((string("diff ") + plan->getFileName() + string(" ") + temp).c_str());
         EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;

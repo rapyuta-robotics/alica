@@ -18,15 +18,15 @@ RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& n
  */
 void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::string& name)
 {
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
 
-    std::shared_ptr<std::vector<std::string>> caps = (*sc)["Globals"]->getNames("Globals", "Team", name.c_str(), NULL);
+    std::shared_ptr<std::vector<std::string>> caps = sc["Globals"]->getNames("Globals", "Team", name.c_str(), NULL);
     for (const std::string& s : *caps) {
         if (s.compare("ID") == 0 || s.compare("DefaultRole") == 0) {
             continue;
         }
         std::string key = s;
-        std::string kvalue = (*sc)["Globals"]->get<std::string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
+        std::string kvalue = sc["Globals"]->get<std::string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
         for (const Capability* cap : engine->getPlanRepository()->getCapabilities()) {
             if (cap->getName().compare(key) == 0) {
                 for (const CapValue* val : cap->getCapValues()) {
@@ -38,7 +38,7 @@ void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::strin
             }
         }
     }
-    _defaultRole = (*sc)["Globals"]->tryGet<std::string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
+    _defaultRole = sc["Globals"]->tryGet<std::string>("NOROLESPECIFIED", "Globals", "Team", name.c_str(), "DefaultRole", NULL);
 }
 
 RobotProperties::~RobotProperties() {}

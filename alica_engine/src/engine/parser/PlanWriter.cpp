@@ -51,11 +51,9 @@ int PlanWriter::objectCounter = 0;
 PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep)
 {
     this->ae = ae;
-    string path = essentials::SystemConfig::getInstance()->getConfigPath();
+    string path = essentials::SystemConfig::getInstance().getConfigPath();
     this->tempPlanDir = essentials::FileSystem::combinePaths(path, "plans/tmp/");
     this->rep = rep;
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    this->configPath = sc->getConfigPath();
 }
 
 PlanWriter::~PlanWriter() {}
@@ -70,11 +68,6 @@ const std::string& PlanWriter::getTempPlanDir() const
 void PlanWriter::setTempPlanDir(const std::string& directory)
 {
     this->tempPlanDir = directory;
-}
-
-const std::string& PlanWriter::getConfigPath() const
-{
-    return configPath;
 }
 
 /**
@@ -546,21 +539,22 @@ std::string PlanWriter::getRelativeFileName(const std::string& file)
     if (essentials::FileSystem::isPathRooted(file)) {
         ufile = file;
     } else {
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        std::string configPath = sc.getConfigPath();
         if (file.substr(file.size() - 4, 4) == ".beh" || file.substr(file.size() - 4, 4) == ".pty" || file.substr(file.size() - 4, 4) == ".pml" ||
                 file.substr(file.size() - 3, 3) == ".pp") {
-            essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-            std::string tfile = (*sc)["Alica"]->get<string>("Alica.PlanDir", NULL);
+
+            std::string tfile = sc["Alica"]->get<string>("Alica.PlanDir", NULL);
             // tfile = essentials::FileSystem::combinePaths(tfile, file);
             if (!essentials::FileSystem::isPathRooted(tfile)) {
-                tfile = essentials::FileSystem::combinePaths(this->configPath, tfile);
+                tfile = essentials::FileSystem::combinePaths(configPath, tfile);
             }
             ufile = tfile;
         } else if (file.substr(file.size() - 4, 4) == ".tsk") {
-            essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-            std::string tfile = (*sc)["Alica"]->get<string>("Alica.MiscDir", NULL);
+            std::string tfile = sc["Alica"]->get<string>("Alica.MiscDir", NULL);
             // tfile = essentials::FileSystem::combinePaths(tfile, file);
             if (!essentials::FileSystem::isPathRooted(tfile)) {
-                tfile = essentials::FileSystem::combinePaths(this->configPath, tfile);
+                tfile = essentials::FileSystem::combinePaths(configPath, tfile);
             }
             ufile = tfile;
         } else {

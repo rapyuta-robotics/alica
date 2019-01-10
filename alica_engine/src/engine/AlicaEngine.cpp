@@ -43,7 +43,6 @@ AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::strin
         , planBase(nullptr)
         , communicator(nullptr)
         , alicaClock(nullptr)
-        , sc(essentials::SystemConfig::getInstance())
         , terminating(false)
         , expressionHandler(nullptr)
         , log(nullptr)
@@ -52,9 +51,10 @@ AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::strin
         , stepEngine(stepEngine)
         , agentIDManager(idManager)
 {
-    _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
-    this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
+    this->useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
+    PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
     this->planParser = new PlanParser(this->planRepository);
@@ -273,7 +273,7 @@ void AlicaEngine::setStepEngine(bool stepEngine)
  */
 std::string AlicaEngine::getRobotName() const
 {
-    return sc->getHostname();
+    return essentials::SystemConfig::getInstance().getHostname();
 }
 
 void AlicaEngine::setLog(Logger* log)
