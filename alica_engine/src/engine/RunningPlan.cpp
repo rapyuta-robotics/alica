@@ -502,7 +502,7 @@ bool RunningPlan::isAnyChildTaskSuccessful() const
     return false;
 }
 
-bool RunningPlan::AmISuccessful() const
+bool RunningPlan::amISuccessful() const
 {
     if (isBehaviour()) { // behaviors only have a simple success flag
         return getStatus() == PlanStatus::Success;
@@ -510,10 +510,10 @@ bool RunningPlan::AmISuccessful() const
     return getAssignment().isAgentSuccessful(_ae->getTeamManager()->getLocalAgentID(), _activeTriple.entryPoint);
 }
 
-bool RunningPlan::AmISuccesfulInAnyChild() const
+bool RunningPlan::amISuccesfulInAnyChild() const
 {
     for (const RunningPlan* child : _children) {
-        if (child->AmISuccessful()) {
+        if (child->amISuccessful()) {
             return true;
         }
     }
