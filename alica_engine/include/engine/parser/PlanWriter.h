@@ -63,7 +63,7 @@ public:
 private:
     PlanRepository* _rep;
     std::string _currentFile;
-    static int s_objectCounter;
+    int _objectCounter;
 
     std::string getRelativeFileName(const std::string& file);
     std::string getRelativeFileName(const AbstractPlan* p);
@@ -84,10 +84,10 @@ private:
     tinyxml2::XMLElement* createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc);
 
 protected:
-    AlicaEngine* ae;
-    std::string tempPlanDir;
-    AlicaElementGrp plansToSave;
-    AlicaElementGrp plansSaved;
+    AlicaEngine* _ae;
+    std::string _tempPlanDir;
+    AlicaElementGrp _plansToSave;
+    AlicaElementGrp _plansSaved;
 };
 
 } /* namespace alica */

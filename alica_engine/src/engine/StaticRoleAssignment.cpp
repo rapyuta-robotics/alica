@@ -17,8 +17,8 @@ namespace alica
 
 StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
         : IRoleAssignment()
-        , ae(ae)
-        , updateRoles(false)
+        , _ae(ae)
+        , _updateRoles(false)
 {
 }
 
@@ -35,8 +35,8 @@ void StaticRoleAssignment::init()
  */
 void StaticRoleAssignment::tick()
 {
-    if (this->updateRoles) {
-        this->updateRoles = false;
+    if (this->_updateRoles) {
+        this->_updateRoles = false;
         this->calculateRoles();
     }
 }
@@ -46,7 +46,7 @@ void StaticRoleAssignment::tick()
  */
 void StaticRoleAssignment::update()
 {
-    this->updateRoles = true;
+    this->_updateRoles = true;
 }
 
 /**
@@ -58,10 +58,10 @@ void StaticRoleAssignment::calculateRoles()
     this->robotRoleMapping.clear();
 
     // get data for "calculations"
-    const PlanRepository::Accessor<Role>& roles = ae->getPlanRepository()->getRoles();
+    const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository()->getRoles();
 
     // assign a role for each robot if you have match
-    for (const Agent* agent : ae->getTeamManager()->getActiveAgents()) {
+    for (const Agent* agent : _ae->getTeamManager()->getActiveAgents()) {
         const RobotProperties& prop = agent->getProperties();
         bool roleIsAssigned = false;
 
@@ -72,7 +72,7 @@ void StaticRoleAssignment::calculateRoles()
                 this->robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
+                if (agent->getId() == this->_ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
                     this->ownRole = role;
                     // probably nothing is reacting on this message, but anyway we send it
                     if (this->communication != nullptr) {
