@@ -8,9 +8,9 @@
 #ifndef MODELFACTORY_H_
 #define MODELFACTORY_H_
 
-#include <list>
 #include <map>
 #include <memory>
+#include <vector>
 
 #include "tinyxml2.h"
 
@@ -57,7 +57,7 @@ public:
     bool getIgnoreMasterPlanId();
     void setIgnoreMasterPlanId(bool value);
     Plan* createPlan(tinyxml2::XMLDocument* node);
-    std::map<int64_t, AlicaElement*>* getElements();
+    bool isUniqueElement(int64_t elementId);
     void setElements(const std::map<int64_t, AlicaElement*>& elements);
     std::string getNameOfNode(tinyxml2::XMLElement* node);
     void createTasks(tinyxml2::XMLDocument* node);
@@ -115,7 +115,7 @@ private:
     PlanRepository* _rep;
     std::map<int64_t, AlicaElement*> _elements;
 
-    using ReferenceList = std::list<std::pair<int64_t, int64_t>>;
+    using ReferenceList = std::vector<std::pair<int64_t, int64_t>>;
 
     ReferenceList _stateInTransitionReferences;
     ReferenceList _stateOutTransitionReferences;
@@ -161,6 +161,8 @@ private:
 
     void createVariableTemplates();
     void removeRedundancy();
+    template <class ff, class ss>
+    void iterateAndClear(ReferenceList& l, std::function<void(ff*, ss*)> func);
 };
 } // namespace alica
 

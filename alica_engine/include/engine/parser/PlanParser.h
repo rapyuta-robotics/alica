@@ -6,19 +6,15 @@
 #include <list>
 #include <stdio.h>
 #include <string>
+#include <vector>
 
+#include "engine/parser/ModelFactory.h"
 #include <FileSystem.h>
 #include <SystemConfig.h>
-
-namespace tinyxml2
-{
-class XMLElement;
-}
 
 namespace alica
 {
 
-class ModelFactory;
 class PlanRepository;
 class Plan;
 class RoleSet;
@@ -35,7 +31,7 @@ public:
 
     const Plan* parsePlanTree(const std::string& masterplan);
     void ignoreMasterPlanId(bool val);
-    std::map<int64_t, AlicaElement*>* getParsedElements();
+    bool isUniqueElement(int64_t elementId);
 
     const std::string& getCurrentFile() const { return _currentFile; }
     void setCurrentFile(const std::string& currentFile);
@@ -44,7 +40,7 @@ public:
     int64_t parserId(tinyxml2::XMLElement* node);
 
 private:
-    std::shared_ptr<ModelFactory> _mf;
+    ModelFactory _mf;
     PlanRepository* _rep;
     Plan* _masterPlan;
     std::string _planDir;
@@ -54,8 +50,9 @@ private:
     std::string _currentDirectory;
     std::string _currentFile;
     std::list<std::string> _filesToParse;
-    std::list<std::string> _filesParsed;
+    std::vector<std::string> _filesParsed;
 
+    void parseFile(const std::string& currentFile, tinyxml2::XMLDocument& doc);
     void parseTaskFile(const std::string& currentFile);
     void parseRoleDefFile(const std::string& currentFile);
     void parseCapabilityDefFile(const std::string& currentFile);
