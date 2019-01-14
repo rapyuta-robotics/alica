@@ -184,7 +184,7 @@ int TeamObserver::successesInPlan(const Plan* plan)
     const EntryPointGrp* suc = nullptr;
     for (const Agent* agent : _tm->getActiveAgents()) {
         {
-            lock_guard<mutex> lock(this->_successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
         }
         if (suc != nullptr) {
@@ -208,7 +208,7 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
             continue;
         }
         {
-            lock_guard<mutex> lock(this->_successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
         }
         if (suc != nullptr) {
@@ -236,7 +236,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
             continue;
         }
         {
-            lock_guard<mutex> lock(this->_successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(p);
         }
         if (suc != nullptr) {
