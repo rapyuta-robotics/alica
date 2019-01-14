@@ -39,41 +39,41 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
-        : stepCalled(false)
-        , planBase(nullptr)
-        , communicator(nullptr)
-        , alicaClock(nullptr)
-        , terminating(false)
-        , expressionHandler(nullptr)
-        , log(nullptr)
-        , auth(nullptr)
-        , variableSyncModule(nullptr)
-        , stepEngine(stepEngine)
-        , agentIDManager(idManager)
+        : _stepCalled(false)
+        , _planBase(nullptr)
+        , _communicator(nullptr)
+        , _alicaClock(nullptr)
+        , _terminating(false)
+        , _expressionHandler(nullptr)
+        , _log(nullptr)
+        , _auth(nullptr)
+        , _variableSyncModule(nullptr)
+        , _stepEngine(stepEngine)
+        , _agentIDManager(idManager)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
-    this->useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
+    _useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
     PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
-    this->planRepository = new PlanRepository();
-    this->planParser = new PlanParser(this->planRepository);
-    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-    this->roleSet = this->planParser->parseRoleSet(roleSetName);
+    _planRepository = new PlanRepository();
+    _planParser = new PlanParser(_planRepository);
+    _masterPlan = _planParser->parsePlanTree(masterPlanName);
+    _roleSet = _planParser->parseRoleSet(roleSetName);
     _teamManager = new TeamManager(this, true);
     _teamManager->init();
-    this->behaviourPool = new BehaviourPool(this);
-    this->teamObserver = new TeamObserver(this);
-    if (this->useStaticRoles) {
-        this->roleAssignment = new StaticRoleAssignment(this);
+    _behaviourPool = new BehaviourPool(this);
+    _teamObserver = new TeamObserver(this);
+    if (_useStaticRoles) {
+        _roleAssignment = new StaticRoleAssignment(this);
     } else {
         AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
     // the communicator is expected to be set before init() is called
-    this->roleAssignment->setCommunication(communicator);
-    this->syncModul = new SyncModule(this);
+    _roleAssignment->setCommunication(_communicator);
+    _syncModul = new SyncModule(this);
 
-    if (!planRepository->verifyPlanBase()) {
+    if (!_planRepository->verifyPlanBase()) {
         abort("Error in parsed plans.");
     }
     ALICA_DEBUG_MSG("AE: Constructor finished!");
@@ -81,7 +81,7 @@ AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::strin
 
 AlicaEngine::~AlicaEngine()
 {
-    if (!terminating) {
+    if (!_terminating) {
         shutdown();
     }
 }
@@ -97,30 +97,30 @@ AlicaEngine::~AlicaEngine()
  */
 bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
 {
-    if (!this->expressionHandler) {
-        this->expressionHandler = new ExpressionHandler(this, cc, uc, crc);
+    if (!_expressionHandler) {
+        _expressionHandler = new ExpressionHandler(this, cc, uc, crc);
     }
 
-    this->stepCalled = false;
+    _stepCalled = false;
     bool everythingWorked = true;
-    everythingWorked &= this->behaviourPool->init(bc);
-    this->auth = new AuthorityManager(this);
-    this->log = new Logger(this);
-    this->roleAssignment->init();
-    this->auth->init();
-    this->planBase = new PlanBase(this, this->masterPlan);
+    everythingWorked &= _behaviourPool->init(bc);
+    _auth = new AuthorityManager(this);
+    _log = new Logger(this);
+    _roleAssignment->init();
+    _auth->init();
+    _planBase = new PlanBase(this, _masterPlan);
 
-    this->expressionHandler->attachAll();
+    _expressionHandler->attachAll();
     UtilityFunction::initDataStructures(this);
-    this->syncModul->init();
-    if (!this->variableSyncModule) {
-        this->variableSyncModule = new VariableSyncModule(this);
+    _syncModul->init();
+    if (!_variableSyncModule) {
+        _variableSyncModule = new VariableSyncModule(this);
     }
-    if (this->communicator) {
-        this->communicator->startCommunication();
+    if (_communicator) {
+        _communicator->startCommunication();
     }
-    if (this->variableSyncModule) {
-        this->variableSyncModule->init();
+    if (_variableSyncModule) {
+        _variableSyncModule->init();
     }
     RunningPlan::init();
     return everythingWorked;
@@ -131,78 +131,78 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
  */
 void AlicaEngine::shutdown()
 {
-    if (this->communicator != nullptr) {
-        this->communicator->stopCommunication();
+    if (_communicator != nullptr) {
+        _communicator->stopCommunication();
     }
-    this->terminating = true;
+    _terminating = true;
     _maySendMessages = false;
 
-    if (this->behaviourPool != nullptr) {
-        this->behaviourPool->stopAll();
-        this->behaviourPool->terminateAll();
-        delete this->behaviourPool;
-        this->behaviourPool = nullptr;
+    if (_behaviourPool != nullptr) {
+        _behaviourPool->stopAll();
+        _behaviourPool->terminateAll();
+        delete _behaviourPool;
+        _behaviourPool = nullptr;
     }
 
-    if (this->planBase != nullptr) {
-        this->planBase->stop();
-        delete this->planBase;
-        this->planBase = nullptr;
+    if (_planBase != nullptr) {
+        _planBase->stop();
+        delete _planBase;
+        _planBase = nullptr;
     }
 
-    if (this->auth != nullptr) {
-        this->auth->close();
-        delete this->auth;
-        this->auth = nullptr;
+    if (_auth != nullptr) {
+        _auth->close();
+        delete _auth;
+        _auth = nullptr;
     }
 
-    if (this->syncModul != nullptr) {
-        this->syncModul->close();
-        delete this->syncModul;
-        this->syncModul = nullptr;
+    if (_syncModul != nullptr) {
+        _syncModul->close();
+        delete _syncModul;
+        _syncModul = nullptr;
     }
 
-    if (this->teamObserver != nullptr) {
-        this->teamObserver->close();
-        delete this->teamObserver;
-        this->teamObserver = nullptr;
+    if (_teamObserver != nullptr) {
+        _teamObserver->close();
+        delete _teamObserver;
+        _teamObserver = nullptr;
     }
 
-    if (this->log != nullptr) {
-        this->log->close();
-        delete this->log;
-        this->log = nullptr;
+    if (_log != nullptr) {
+        _log->close();
+        delete _log;
+        _log = nullptr;
     }
 
-    if (this->planRepository != nullptr) {
-        delete this->planRepository;
-        this->planRepository = nullptr;
+    if (_planRepository != nullptr) {
+        delete _planRepository;
+        _planRepository = nullptr;
     }
 
-    if (this->planParser != nullptr) {
-        delete this->planParser;
-        this->planParser = nullptr;
+    if (_planParser != nullptr) {
+        delete _planParser;
+        _planParser = nullptr;
     }
 
-    this->roleSet = nullptr;
-    this->masterPlan = nullptr;
+    _roleSet = nullptr;
+    _masterPlan = nullptr;
 
-    if (this->expressionHandler != nullptr) {
-        delete this->expressionHandler;
-        this->expressionHandler = nullptr;
+    if (_expressionHandler != nullptr) {
+        delete _expressionHandler;
+        _expressionHandler = nullptr;
     }
 
-    if (this->variableSyncModule != nullptr) {
-        delete this->variableSyncModule;
-        this->variableSyncModule = nullptr;
+    if (_variableSyncModule != nullptr) {
+        delete _variableSyncModule;
+        _variableSyncModule = nullptr;
     }
-    if (this->roleAssignment != nullptr) {
-        delete this->roleAssignment;
-        this->roleAssignment = nullptr;
+    if (_roleAssignment != nullptr) {
+        delete _roleAssignment;
+        _roleAssignment = nullptr;
     }
 
-    delete alicaClock;
-    alicaClock = nullptr;
+    delete _alicaClock;
+    _alicaClock = nullptr;
 }
 
 /**
@@ -218,53 +218,53 @@ void AlicaEngine::iterationComplete()
  */
 void AlicaEngine::start()
 {
-    this->planBase->start();
+    _planBase->start();
     std::cout << "AE: Engine started" << std::endl;
 }
 
 void AlicaEngine::setStepCalled(bool stepCalled)
 {
-    this->stepCalled = stepCalled;
+    _stepCalled = stepCalled;
 }
 
 bool AlicaEngine::getStepCalled() const
 {
-    return this->stepCalled;
+    return _stepCalled;
 }
 
 bool AlicaEngine::getStepEngine() const
 {
-    return this->stepEngine;
+    return _stepEngine;
 }
 
 void AlicaEngine::setAlicaClock(AlicaClock* clock)
 {
-    this->alicaClock = clock;
+    _alicaClock = clock;
 }
 
 void AlicaEngine::setTeamObserver(TeamObserver* teamObserver)
 {
-    this->teamObserver = teamObserver;
+    _teamObserver = teamObserver;
 }
 
 void AlicaEngine::setSyncModul(SyncModule* syncModul)
 {
-    this->syncModul = syncModul;
+    _syncModul = syncModul;
 }
 
 void AlicaEngine::setAuth(AuthorityManager* auth)
 {
-    this->auth = auth;
+    _auth = auth;
 }
 
 void AlicaEngine::setRoleAssignment(IRoleAssignment* roleAssignment)
 {
-    this->roleAssignment = roleAssignment;
+    _roleAssignment = roleAssignment;
 }
 
 void AlicaEngine::setStepEngine(bool stepEngine)
 {
-    this->stepEngine = stepEngine;
+    _stepEngine = stepEngine;
 }
 
 /**
@@ -278,12 +278,12 @@ std::string AlicaEngine::getRobotName() const
 
 void AlicaEngine::setLog(Logger* log)
 {
-    this->log = log;
+    _log = log;
 }
 
 bool AlicaEngine::isTerminating() const
 {
-    return terminating;
+    return _terminating;
 }
 
 void AlicaEngine::setMaySendMessages(bool maySendMessages)
@@ -293,12 +293,12 @@ void AlicaEngine::setMaySendMessages(bool maySendMessages)
 
 void AlicaEngine::setCommunicator(IAlicaCommunication* communicator)
 {
-    this->communicator = communicator;
+    _communicator = communicator;
 }
 
 void AlicaEngine::setResultStore(VariableSyncModule* resultStore)
 {
-    this->variableSyncModule = resultStore;
+    _variableSyncModule = resultStore;
 }
 
 /**
@@ -309,8 +309,8 @@ void AlicaEngine::setResultStore(VariableSyncModule* resultStore)
  */
 void AlicaEngine::stepNotify()
 {
-    this->setStepCalled(true);
-    this->getPlanBase()->getStepModeCV()->notify_all();
+    setStepCalled(true);
+    getPlanBase()->getStepModeCV()->notify_all();
 }
 
 /**
@@ -322,7 +322,7 @@ void AlicaEngine::stepNotify()
  */
 AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector) const
 {
-    return AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
+    return AgentIDConstPtr(_agentIDManager->getIDFromBytes(idByteVector));
 }
 
 } // namespace alica

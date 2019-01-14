@@ -27,7 +27,7 @@ StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
  */
 void StaticRoleAssignment::init()
 {
-    this->calculateRoles();
+    calculateRoles();
 }
 
 /**
@@ -35,9 +35,9 @@ void StaticRoleAssignment::init()
  */
 void StaticRoleAssignment::tick()
 {
-    if (this->_updateRoles) {
-        this->_updateRoles = false;
-        this->calculateRoles();
+    if (_updateRoles) {
+        _updateRoles = false;
+        calculateRoles();
     }
 }
 
@@ -46,7 +46,7 @@ void StaticRoleAssignment::tick()
  */
 void StaticRoleAssignment::update()
 {
-    this->_updateRoles = true;
+    _updateRoles = true;
 }
 
 /**
@@ -55,7 +55,7 @@ void StaticRoleAssignment::update()
 void StaticRoleAssignment::calculateRoles()
 {
     // clear current map
-    this->robotRoleMapping.clear();
+    _robotRoleMapping.clear();
 
     // get data for "calculations"
     const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository()->getRoles();
@@ -69,16 +69,16 @@ void StaticRoleAssignment::calculateRoles()
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
                 ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
-                this->robotRoleMapping.emplace(agent->getId(), role);
+                _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (agent->getId() == this->_ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
-                    this->ownRole = role;
+                if (agent->getId() == _ae->getTeamManager()->getLocalAgentID() && _ownRole != role) {
+                    _ownRole = role;
                     // probably nothing is reacting on this message, but anyway we send it
-                    if (this->communication != nullptr) {
+                    if (_communication != nullptr) {
                         RoleSwitch rs;
                         rs.roleID = role->getId();
-                        this->communication->sendRoleSwitch(rs);
+                        _communication->sendRoleSwitch(rs);
                     }
                 }
                 roleIsAssigned = true;

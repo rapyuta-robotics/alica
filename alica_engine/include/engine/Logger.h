@@ -80,20 +80,20 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    AlicaEngine* ae;
-    TeamObserver* to;
-    TeamManager* tm;
-    AlicaTime startTime;
-    AlicaTime endTime;
-    AlicaTime time;
+    AlicaEngine* _ae;
+    TeamObserver* _to;
+    TeamManager* _tm;
+    AlicaTime _startTime;
+    AlicaTime _endTime;
+    AlicaTime _time;
     std::ofstream _fileWriter;
     std::stringstream _sBuild;
-    std::list<std::string> eventStrings;
-    int itCount;
+    std::list<std::string> _eventStrings;
+    int _itCount;
 
     bool _active;
-    bool receivedEvent;
-    bool inIteration;
+    bool _receivedEvent;
+    bool _inIteration;
 };
 
 } /* namespace alica */
