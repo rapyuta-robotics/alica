@@ -43,23 +43,23 @@ private:
     friend std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
 
 protected:
-    AlicaEngine* ae;
-    std::mutex syncMutex;
-    std::mutex rowOkMutex;
-    SyncModule* syncModul;
-    const SyncTransition* syncTransition;
-    AgentIDConstPtr myID;
-    SyncData* lastTalkData;
-    AlicaTime lastTalkTime;
-    AlicaTime syncStartTime;
-    bool readyForSync;
-    uint64_t lastTick;
-    std::vector<std::shared_ptr<SyncReady>> receivedSyncReadys;
-    std::vector<int64_t> connectedTransitions;
-    RunningPlan* runningPlan;
-    std::vector<SyncRow*> rowsOK;
-    std::vector<SyncRow*> syncMatrix;
-    SyncRow* myRow;
+    AlicaEngine* _ae;
+    std::mutex _syncMutex;
+    std::mutex _rowOkMutex;
+    SyncModule* _syncModul;
+    const SyncTransition* _syncTransition;
+    AgentIDConstPtr _myID;
+    SyncData* _lastTalkData;
+    AlicaTime _lastTalkTime;
+    AlicaTime _syncStartTime;
+    bool _readyForSync;
+    uint64_t _lastTick;
+    std::vector<std::shared_ptr<SyncReady>> _receivedSyncReadys;
+    std::vector<int64_t> _connectedTransitions;
+    RunningPlan* _runningPlan;
+    std::vector<SyncRow*> _rowsOK;
+    std::vector<SyncRow*> _syncMatrix;
+    SyncRow* _myRow;
 
     void sendTalk(const SyncData& sd);
     void sendSyncReady();
