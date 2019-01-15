@@ -42,7 +42,6 @@ private:
     bool allSyncReady() const;
     friend std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
 
-protected:
     AlicaEngine* _ae;
     std::mutex _syncMutex;
     std::mutex _rowOkMutex;
