@@ -510,7 +510,7 @@ bool RunningPlan::amISuccessful() const
     return getAssignment().isAgentSuccessful(_ae->getTeamManager()->getLocalAgentID(), _activeTriple.entryPoint);
 }
 
-bool RunningPlan::amISuccesfulInAnyChild() const
+bool RunningPlan::amISuccessfulInAnyChild() const
 {
     for (const RunningPlan* child : _children) {
         if (child->amISuccessful()) {

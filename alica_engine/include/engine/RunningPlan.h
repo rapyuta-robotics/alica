@@ -195,7 +195,7 @@ public:
     bool areAllChildrenStatus(PlanStatus ps) const;
     bool isAnyChildTaskSuccessful() const;
     bool amISuccessful() const;
-    bool amISuccesfulInAnyChild() const;
+    bool amISuccessfulInAnyChild() const;
 
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
     void limitToRobots(const AgentGrp& robots);
