@@ -49,7 +49,7 @@ private:
     std::string _baseRolePath;
     std::string _currentDirectory;
     std::string _currentFile;
-    std::list<std::string> _filesToParse;
+    std::vector<std::string> _filesToParse;
     std::vector<std::string> _filesParsed;
 
     void parseFile(const std::string& currentFile, tinyxml2::XMLDocument& doc);

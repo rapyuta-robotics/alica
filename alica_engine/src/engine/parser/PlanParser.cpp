@@ -104,9 +104,9 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
 
     _filesParsed.push_back(roleSetLocation);
 
-    while (!_filesToParse.empty()) {
-        const std::string fileToParse = _filesToParse.front();
-        _filesToParse.pop_front();
+    // This vector will grow while parsing and will be cleared at end of loop
+    for (size_t count = 0; count < _filesToParse.size(); ++count) {
+        const std::string fileToParse = _filesToParse[count];
         _currentDirectory = essentials::FileSystem::getParent(fileToParse);
         _currentFile = fileToParse;
 
@@ -122,6 +122,7 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
         }
         _filesParsed.push_back(fileToParse);
     }
+    _filesToParse.clear();
 
     _mf.attachRoleReferences();
     _mf.attachCharacteristicReferences();
@@ -212,9 +213,9 @@ const Plan* PlanParser::parsePlanTree(const std::string& masterplan)
 
 void PlanParser::parseFileLoop()
 {
-    while (!_filesToParse.empty()) {
-        const std::string fileToParse = _filesToParse.front();
-        _filesToParse.pop_front();
+    // This vector will grow while parsing and will be cleared at end of loop
+    for (size_t count = 0; count < _filesToParse.size(); ++count) {
+        const std::string fileToParse = _filesToParse[count];
         _currentDirectory = essentials::FileSystem::getParent(fileToParse);
         _currentFile = fileToParse;
 
@@ -236,6 +237,7 @@ void PlanParser::parseFileLoop()
         }
         _filesParsed.push_back(fileToParse);
     }
+    _filesToParse.clear();
     _mf.attachPlanReferences();
 }
 
@@ -403,7 +405,6 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
             }
         }
 
-        // list<string>::iterator findIterToParse = find(_filesToParse.begin(), _filesToParse.end(), pathNew);
         if (!found) {
             for (const auto& it : _filesToParse) {
                 temp2 = realpath(it.c_str(), nullptr);
