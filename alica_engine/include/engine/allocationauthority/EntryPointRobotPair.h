@@ -22,7 +22,7 @@ public:
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
-protected:
+private:
     const EntryPoint* _entryPoint;
     AgentIDConstPtr _robot;
 };
