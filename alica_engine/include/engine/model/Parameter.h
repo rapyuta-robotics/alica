@@ -4,9 +4,11 @@
 
 #include <engine/model/AlicaElement.h>
 
-namespace alica {
+namespace alica
+{
 
-class Parameter : public AlicaElement {
+class Parameter : public AlicaElement
+{
 public:
     Parameter();
     virtual ~Parameter();
@@ -15,7 +17,7 @@ public:
     const std::string& getValue() const { return _value; }
     void setValue(const std::string& value) { _value = value; }
 
-protected:
+private:
     std::string _key;
     std::string _value;
 };
