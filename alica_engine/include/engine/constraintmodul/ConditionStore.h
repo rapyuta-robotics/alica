@@ -35,7 +35,6 @@ public:
 private:
     ConditionGrp _activeConditions;
     std::map<const Variable*, ConditionGrp> _activeVar2CondMap;
-
     mutable std::mutex _mtx;
 };
 

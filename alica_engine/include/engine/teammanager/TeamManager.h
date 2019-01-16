@@ -36,8 +36,8 @@ public:
     const AgentMap& getAllAgents() const { return _agents; }
 
     AgentIDConstPtr getLocalAgentID() const;
-    const Agent* getLocalAgent() const { return localAgent; }
-    Agent* editLocalAgent() { return localAgent; }
+    const Agent* getLocalAgent() const { return _localAgent; }
+    Agent* editLocalAgent() { return _localAgent; }
 
     ActiveAgentIdView getActiveAgentIds() const;
     ActiveAgentView getActiveAgents() const;
@@ -54,11 +54,11 @@ public:
     const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
 private:
-    AlicaTime teamTimeOut;
-    Agent* localAgent;
-    AlicaEngine* engine;
+    AlicaTime _teamTimeOut;
+    Agent* _localAgent;
+    AlicaEngine* _engine;
     AgentMap _agents;
-    bool useConfigForTeam;
+    bool _useConfigForTeam;
 
     void readTeamFromConfig();
 };

@@ -5,15 +5,15 @@
 namespace alica
 {
 IRoleAssignment::IRoleAssignment()
-        : ownRole(nullptr)
-        , communication(nullptr)
+        : _ownRole(nullptr)
+        , _communication(nullptr)
 {
 }
 
 const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId)
 {
-    auto iter = this->robotRoleMapping.find(robotId);
-    if (iter != this->robotRoleMapping.end()) {
+    auto iter = _robotRoleMapping.find(robotId);
+    if (iter != _robotRoleMapping.end()) {
         return iter->second;
     } else {
         std::stringstream ss;
@@ -25,7 +25,7 @@ const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId)
 
 void IRoleAssignment::setCommunication(const IAlicaCommunication* communication)
 {
-    this->communication = communication;
+    _communication = communication;
 }
 
 } /* namespace alica */

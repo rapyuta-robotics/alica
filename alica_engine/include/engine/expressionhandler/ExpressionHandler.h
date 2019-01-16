@@ -8,7 +8,8 @@
 #ifndef EXPRESSIONHANDLER_H_
 #define EXPRESSIONHANDLER_H_
 
-namespace alica {
+namespace alica
+{
 class RunningPlan;
 class Plan;
 class Condition;
@@ -21,7 +22,8 @@ class AlicaEngine;
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
  */
-class ExpressionHandler {
+class ExpressionHandler
+{
 public:
     ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
     virtual ~ExpressionHandler();
@@ -31,10 +33,10 @@ public:
     bool dummyFalse(RunningPlan* rp);
 
 private:
-    IConditionCreator* conditionCreator;
-    IUtilityCreator* utilityCreator;
-    IConstraintCreator* constraintCreator;
-    AlicaEngine* ae;
+    IConditionCreator* _conditionCreator;
+    IUtilityCreator* _utilityCreator;
+    IConstraintCreator* _constraintCreator;
+    AlicaEngine* _ae;
     //		void attachPlanConditions(Plan* p, T exprType, T consType);
     //		void attachTransConditions(Transition* t, T exprType, T consType);
     void attachConstraint(Condition* c);

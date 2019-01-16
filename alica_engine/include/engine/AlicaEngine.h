@@ -60,19 +60,19 @@ public:
     std::string getRobotName() const;
 
     // Module Access:
-    AuthorityManager* getAuth() const { return auth; }
-    BehaviourPool* getBehaviourPool() const { return behaviourPool; }
-    const IAlicaCommunication* getCommunicator() const { return communicator; }
-    Logger* getLog() const { return log; }
-    PlanBase* getPlanBase() const { return planBase; }
-    PlanParser* getPlanParser() const { return planParser; }
-    PlanRepository* getPlanRepository() const { return planRepository; }
-    VariableSyncModule* getResultStore() const { return variableSyncModule; }
-    IRoleAssignment* getRoleAssignment() const { return roleAssignment; }
-    SyncModule* getSyncModul() const { return syncModul; }
+    AuthorityManager* getAuth() const { return _auth; }
+    BehaviourPool* getBehaviourPool() const { return _behaviourPool; }
+    const IAlicaCommunication* getCommunicator() const { return _communicator; }
+    Logger* getLog() const { return _log; }
+    PlanBase* getPlanBase() const { return _planBase; }
+    PlanParser* getPlanParser() const { return _planParser; }
+    PlanRepository* getPlanRepository() const { return _planRepository; }
+    VariableSyncModule* getResultStore() const { return _variableSyncModule; }
+    IRoleAssignment* getRoleAssignment() const { return _roleAssignment; }
+    SyncModule* getSyncModul() const { return _syncModul; }
     TeamManager* getTeamManager() const { return _teamManager; }
-    TeamObserver* getTeamObserver() const { return teamObserver; }
-    AlicaClock* getAlicaClock() const { return alicaClock; }
+    TeamObserver* getTeamObserver() const { return _teamObserver; }
+    AlicaClock* getAlicaClock() const { return _alicaClock; }
 
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
@@ -84,7 +84,7 @@ public:
 
     // Data Access:
 
-    const RoleSet* getRoleSet() const { return roleSet; }
+    const RoleSet* getRoleSet() const { return _roleSet; }
 
     // Setters:
     void setMaySendMessages(bool maySendMessages);
@@ -113,25 +113,25 @@ public:
 private:
     void setStepEngine(bool stepEngine);
 
-    PlanBase* planBase;
-    TeamObserver* teamObserver;
-    ExpressionHandler* expressionHandler;
-    BehaviourPool* behaviourPool;
-    const RoleSet* roleSet;
-    VariableSyncModule* variableSyncModule;
-    AuthorityManager* auth;
+    PlanBase* _planBase;
+    TeamObserver* _teamObserver;
+    ExpressionHandler* _expressionHandler;
+    BehaviourPool* _behaviourPool;
+    const RoleSet* _roleSet;
+    VariableSyncModule* _variableSyncModule;
+    AuthorityManager* _auth;
     TeamManager* _teamManager;
-    SyncModule* syncModul;
-    PlanRepository* planRepository;
+    SyncModule* _syncModul;
+    PlanRepository* _planRepository;
     BlackBoard _blackboard;
 
-    essentials::AgentIDManager* agentIDManager;
-    Logger* log;
-    PlanParser* planParser;
+    essentials::AgentIDManager* _agentIDManager;
+    Logger* _log;
+    PlanParser* _planParser;
 
-    IRoleAssignment* roleAssignment;
-    IAlicaCommunication* communicator;
-    AlicaClock* alicaClock;
+    IRoleAssignment* _roleAssignment;
+    IAlicaCommunication* _communicator;
+    AlicaClock* _alicaClock;
 
     /**
      * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
@@ -142,21 +142,21 @@ private:
     /**
      * Set to have the engine's main loop wait on a signal via MayStep
      */
-    bool stepEngine;
+    bool _stepEngine;
     /**
      * Indicates whether the engine is shutting down.
      */
-    bool terminating;
+    bool _terminating;
 
     /**
      * Indicates whether the engine should run with a static role assignment
      * that is based on default roles, or not.
      */
-    bool useStaticRoles;
+    bool _useStaticRoles;
 
-    bool stepCalled;
+    bool _stepCalled;
 
-    const Plan* masterPlan;
+    const Plan* _masterPlan;
     std::unordered_map<size_t, ISolverBase*> _solvers;
 };
 
@@ -171,7 +171,7 @@ private:
 template <class Prototype>
 AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
 {
-    return AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
+    return AgentIDConstPtr(_agentIDManager->getID<Prototype>(idPrototype));
 }
 
 template <typename T>

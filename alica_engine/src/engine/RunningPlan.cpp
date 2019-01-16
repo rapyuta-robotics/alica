@@ -36,11 +36,11 @@
 namespace alica
 {
 
-AlicaTime RunningPlan::assignmentProtectionTime = AlicaTime::zero();
+AlicaTime RunningPlan::s_assignmentProtectionTime = AlicaTime::zero();
 
 void RunningPlan::init()
 {
-    assignmentProtectionTime =
+    s_assignmentProtectionTime =
             AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
@@ -577,8 +577,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (isBehaviour()) {
         return false;
     }
-    const bool keepTask = _status.planStartTime + assignmentProtectionTime > now;
-    const bool keepState = _status.stateStartTime + assignmentProtectionTime > now;
+    const bool keepTask = _status.planStartTime + s_assignmentProtectionTime > now;
+    const bool keepState = _status.stateStartTime + s_assignmentProtectionTime > now;
     const bool auth = _cycleManagement.haveAuthority();
 
     // if keepTask, the task Assignment should not be changed!
