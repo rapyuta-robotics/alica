@@ -235,7 +235,7 @@ private:
 
     mutable std::mutex _accessMutex;
 
-    static AlicaTime assignmentProtectionTime;
+    static AlicaTime s_assignmentProtectionTime;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

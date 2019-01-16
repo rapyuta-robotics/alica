@@ -12,9 +12,9 @@ namespace alica
 {
 
 TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
-        : localAgent(nullptr)
-        , useConfigForTeam(useConfigForTeam)
-        , engine(engine)
+        : _localAgent(nullptr)
+        , _useConfigForTeam(useConfigForTeam)
+        , _engine(engine)
 {
 }
 
@@ -28,29 +28,28 @@ TeamManager::~TeamManager()
 void TeamManager::init()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    this->teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
+    _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
 
-    if (useConfigForTeam) {
-        this->readTeamFromConfig();
+    if (_useConfigForTeam) {
+        readTeamFromConfig();
     }
 }
 
 void TeamManager::readTeamFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    std::string localAgentName = this->engine->getRobotName();
+    std::string localAgentName = _engine->getRobotName();
     std::shared_ptr<std::vector<std::string>> agentNames = sc["Globals"]->getSections("Globals.Team", NULL);
 
-    Agent* agent;
     bool foundSelf = false;
     for (const std::string& agentName : *agentNames) {
         int id = sc["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
 
-        agent = new Agent(this->engine, this->teamTimeOut, this->engine->getId(id), agentName);
+        Agent* agent = new Agent(_engine, _teamTimeOut, _engine->getId(id), agentName);
         if (!foundSelf && agentName.compare(localAgentName) == 0) {
             foundSelf = true;
-            this->localAgent = agent;
-            this->localAgent->setLocal(true);
+            _localAgent = agent;
+            _localAgent->setLocal(true);
         } else {
             for (auto& agentEntry : _agents) {
                 if (*(agentEntry.first) == *(agent->getId())) {
@@ -104,7 +103,7 @@ const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
 
 AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
-    return this->localAgent->getId();
+    return _localAgent->getId();
 }
 
 void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
@@ -114,7 +113,7 @@ void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime time
         mapIter->second->setTimeLastMsgReceived(timeLastMsgReceived);
     } else {
         // TODO alex robot properties protokoll anstoßen
-        Agent* agent = new Agent(this->engine, this->teamTimeOut, agentId);
+        Agent* agent = new Agent(_engine, _teamTimeOut, agentId);
         agent->setTimeLastMsgReceived(timeLastMsgReceived);
         _agents.emplace(agentId, agent);
     }

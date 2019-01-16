@@ -25,88 +25,88 @@ using std::shared_ptr;
 using std::vector;
 
 SyncModule::SyncModule(AlicaEngine* ae)
-        : myId(nullptr)
-        , ae(ae)
-        , pr(nullptr)
-        , running(false)
-        , ticks(0)
-        , communicator(nullptr)
+        : _myId(nullptr)
+        , _ae(ae)
+        , _pr(nullptr)
+        , _running(false)
+        , _ticks(0)
+        , _communicator(nullptr)
 {
 }
 
 SyncModule::~SyncModule()
 {
-    for (auto iter : this->synchSet) {
+    for (auto iter : _synchSet) {
         delete iter.second;
     }
 }
 void SyncModule::init()
 {
-    lock_guard<mutex> lock(lomutex);
-    this->ticks = 0;
-    this->running = true;
-    this->myId = ae->getTeamManager()->getLocalAgentID();
-    this->pr = this->ae->getPlanRepository();
-    this->communicator = this->ae->getCommunicator();
+    lock_guard<mutex> lock(_lomutex);
+    _ticks = 0;
+    _running = true;
+    _myId = _ae->getTeamManager()->getLocalAgentID();
+    _pr = _ae->getPlanRepository();
+    _communicator = _ae->getCommunicator();
 }
 void SyncModule::close()
 {
-    this->running = false;
+    _running = false;
     cout << "SynchModul: Closed SynchModul" << endl;
 }
 void SyncModule::tick()
 {
     list<Synchronisation*> failedSyncs;
-    lock_guard<mutex> lock(lomutex);
-    for (auto iter : this->synchSet) {
-        if (!iter.second->isValid(ticks)) {
+    lock_guard<mutex> lock(_lomutex);
+    for (auto iter : _synchSet) {
+        if (!iter.second->isValid(_ticks)) {
             failedSyncs.push_back(iter.second);
         }
-        ticks++;
+        _ticks++;
         for (const Synchronisation* s : failedSyncs) {
-            delete this->synchSet[s->getSyncTransition()];
+            delete _synchSet[s->getSyncTransition()];
             // was without iter before
-            this->synchSet.erase(s->getSyncTransition());
+            _synchSet.erase(s->getSyncTransition());
         }
     }
 }
 void SyncModule::setSynchronisation(const Transition* trans, bool holds)
 {
     Synchronisation* s;
-    map<const SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(trans->getSyncTransition());
-    if (i != this->synchSet.end()) {
-        i->second->setTick(this->ticks);
+    map<const SyncTransition*, Synchronisation*>::iterator i = _synchSet.find(trans->getSyncTransition());
+    if (i != _synchSet.end()) {
+        i->second->setTick(_ticks);
         i->second->changeOwnData(trans->getId(), holds);
     } else {
-        s = new Synchronisation(ae, myId, trans->getSyncTransition(), this);
-        s->setTick(this->ticks);
+        s = new Synchronisation(_ae, _myId, trans->getSyncTransition(), this);
+        s->setTick(_ticks);
         s->changeOwnData(trans->getId(), holds);
-        lock_guard<mutex> lock(this->lomutex);
-        synchSet.insert(pair<const SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
+        lock_guard<mutex> lock(_lomutex);
+        _synchSet.insert(pair<const SyncTransition*, Synchronisation*>(trans->getSyncTransition(), s));
     }
 }
 void SyncModule::sendSyncTalk(SyncTalk& st)
 {
-    if (!this->ae->maySendMessages())
+    if (!_ae->maySendMessages())
         return;
-    st.senderID = this->myId;
-    this->communicator->sendSyncTalk(st);
+    st.senderID = _myId;
+    _communicator->sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
 {
-    if (!this->ae->maySendMessages())
+    if (!_ae->maySendMessages())
         return;
-    sr.senderID = this->myId;
-    communicator->sendSyncReady(sr);
+    sr.senderID = _myId;
+    _communicator->sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 {
-    if (!this->ae->maySendMessages())
+    if (!_ae->maySendMessages())
         return;
     SyncTalk st;
-    st.senderID = this->myId;
+    st.senderID = _myId;
     st.syncData = syncDataList;
-    this->communicator->sendSyncTalk(st);
+    _communicator->sendSyncTalk(st);
 }
 void SyncModule::synchronisationDone(const SyncTransition* st)
 {
@@ -117,28 +117,28 @@ void SyncModule::synchronisationDone(const SyncTransition* st)
 #ifdef SM_SUCCES
     cout << "Remove synchronisation object for syntransID: " << st->getId() << endl;
 #endif
-    delete this->synchSet[st];
-    this->synchSet.erase(st);
-    this->synchedTransitions.push_back(st);
+    delete _synchSet[st];
+    _synchSet.erase(st);
+    _synchedTransitions.push_back(st);
 #ifdef SM_SUCCES
-    cout << "SM: SYNC TRIGGER TIME:" << this->ae->getAlicaClock()->now().inMilliseconds() << endl;
+    cout << "SM: SYNC TRIGGER TIME:" << _ae->getAlicaClock()->now().inMilliseconds() << endl;
 #endif
 }
 
 bool SyncModule::followSyncTransition(const Transition* trans)
 {
-    list<const SyncTransition*>::iterator it = find(this->synchedTransitions.begin(), this->synchedTransitions.end(), trans->getSyncTransition());
-    if (it != this->synchedTransitions.end()) {
-        this->synchedTransitions.remove(trans->getSyncTransition());
+    list<const SyncTransition*>::iterator it = find(_synchedTransitions.begin(), _synchedTransitions.end(), trans->getSyncTransition());
+    if (it != _synchedTransitions.end()) {
+        _synchedTransitions.remove(trans->getSyncTransition());
         return true;
     }
     return false;
 }
 void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 {
-    if (!this->running || st->senderID == this->myId)
+    if (!_running || st->senderID == _myId)
         return;
-    if (this->ae->getTeamManager()->isAgentIgnored(st->senderID))
+    if (_ae->getTeamManager()->isAgentIgnored(st->senderID))
         return;
 
 #ifdef SM_SUCCES
@@ -154,7 +154,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
         cout << "SyncModul: ACK" << sd.ack << endl;
 #endif
 
-        const Transition* trans = this->pr->getTransitions().find(sd.transitionID);
+        const Transition* trans = _pr->getTransitions().find(sd.transitionID);
         const SyncTransition* syncTrans = nullptr;
 
         if (trans != nullptr) {
@@ -172,16 +172,16 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
         Synchronisation* sync = nullptr;
         bool doAck = true;
         {
-            lock_guard<mutex> lock(lomutex);
-            map<const SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(syncTrans);
+            lock_guard<mutex> lock(_lomutex);
+            map<const SyncTransition*, Synchronisation*>::iterator i = _synchSet.find(syncTrans);
 
-            if (i != this->synchSet.end()) {
+            if (i != _synchSet.end()) {
                 sync = i->second;
-                sync->integrateSyncTalk(st, this->ticks);
+                sync->integrateSyncTalk(st, _ticks);
             } else {
-                sync = new Synchronisation(ae, this->myId, syncTrans, this);
-                synchSet.insert(pair<const SyncTransition*, Synchronisation*>(syncTrans, sync));
-                doAck = sync->integrateSyncTalk(st, this->ticks);
+                sync = new Synchronisation(_ae, _myId, syncTrans, this);
+                _synchSet.insert(pair<const SyncTransition*, Synchronisation*>(syncTrans, sync));
+                doAck = sync->integrateSyncTalk(st, _ticks);
             }
         }
         if (!sd.ack && *(st->senderID) == *(sd.robotID) && doAck) {
@@ -197,20 +197,20 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 }
 void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 {
-    if (!this->running || *(sr->senderID) == *(this->myId))
+    if (!_running || *(sr->senderID) == *(_myId))
         return;
-    if (this->ae->getTeamManager()->isAgentIgnored(sr->senderID))
+    if (_ae->getTeamManager()->isAgentIgnored(sr->senderID))
         return;
-    const SyncTransition* syncTrans = this->pr->getSyncTransitions().find(sr->syncTransitionID);
+    const SyncTransition* syncTrans = _pr->getSyncTransitions().find(sr->syncTransitionID);
 
     if (syncTrans == nullptr) {
         cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID << endl;
         return;
     }
     {
-        lock_guard<mutex> lock(lomutex);
-        map<const SyncTransition*, Synchronisation*>::iterator i = this->synchSet.find(syncTrans);
-        if (i != this->synchSet.end()) {
+        lock_guard<mutex> lock(_lomutex);
+        map<const SyncTransition*, Synchronisation*>::iterator i = _synchSet.find(syncTrans);
+        if (i != _synchSet.end()) {
             i->second->integrateSyncReady(sr);
         }
     }

@@ -6,19 +6,15 @@
 #include <list>
 #include <stdio.h>
 #include <string>
+#include <vector>
 
+#include "engine/parser/ModelFactory.h"
 #include <FileSystem.h>
 #include <SystemConfig.h>
-
-namespace tinyxml2
-{
-class XMLElement;
-}
 
 namespace alica
 {
 
-class ModelFactory;
 class PlanRepository;
 class Plan;
 class RoleSet;
@@ -35,24 +31,28 @@ public:
 
     const Plan* parsePlanTree(const std::string& masterplan);
     void ignoreMasterPlanId(bool val);
-    std::map<int64_t, AlicaElement*>* getParsedElements();
+    bool isUniqueElement(int64_t elementId);
 
-    const std::string& getCurrentFile() const { return currentFile; }
+    const std::string& getCurrentFile() const { return _currentFile; }
     void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
     const RoleSet* parseRoleSet(std::string roleSetName);
     int64_t parserId(tinyxml2::XMLElement* node);
 
 private:
-    std::shared_ptr<ModelFactory> mf;
-    PlanRepository* rep;
-    Plan* masterPlan;
-    std::string planDir;
-    std::string roleDir;
-    std::string basePlanPath;
-    std::string baseRolePath;
-    std::string currentDirectory;
-    std::string currentFile;
+    ModelFactory _mf;
+    PlanRepository* _rep;
+    Plan* _masterPlan;
+    std::string _planDir;
+    std::string _roleDir;
+    std::string _basePlanPath;
+    std::string _baseRolePath;
+    std::string _currentDirectory;
+    std::string _currentFile;
+    std::vector<std::string> _filesToParse;
+    std::vector<std::string> _filesParsed;
+
+    void parseFile(const std::string& currentFile, tinyxml2::XMLDocument& doc);
     void parseTaskFile(const std::string& currentFile);
     void parseRoleDefFile(const std::string& currentFile);
     void parseCapabilityDefFile(const std::string& currentFile);
@@ -62,8 +62,5 @@ private:
     Plan* parsePlanFile(const std::string& planFile);
     int64_t fetchId(const std::string& idString, int64_t id);
     std::string findDefaultRoleSet(std::string dir);
-
-    std::list<std::string> filesToParse;
-    std::list<std::string> filesParsed;
 };
 } // namespace alica
