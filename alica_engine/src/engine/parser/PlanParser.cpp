@@ -1,7 +1,6 @@
 #include "engine/parser/PlanParser.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/Plan.h"
-#include "engine/parser/ModelFactory.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -16,21 +15,21 @@ using std::string;
  * @param A PlanRepository, in which parsed elements are stored.
  */
 PlanParser::PlanParser(PlanRepository* rep)
+        : _mf(this, rep)
+        , _masterPlan(nullptr)
+        , _rep(rep)
 {
-    this->masterPlan = nullptr;
-    this->rep = rep;
-    this->mf = shared_ptr<ModelFactory>(new ModelFactory(this, rep));
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     std::string domainConfigFolder = sc.getConfigPath();
 
     try {
-        this->planDir = sc["Alica"]->get<string>("Alica.PlanDir", NULL);
+        _planDir = sc["Alica"]->get<string>("Alica.PlanDir", NULL);
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("PP: Plan Directory does not exist.\n", error.what());
     }
 
     try {
-        this->roleDir = sc["Alica"]->get<string>("Alica.RoleDir", NULL);
+        _roleDir = sc["Alica"]->get<string>("Alica.RoleDir", NULL);
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("PP: Role Directory does not exist.\n", error.what());
     }
@@ -38,32 +37,31 @@ PlanParser::PlanParser(PlanRepository* rep)
     if (domainConfigFolder.find_last_of(essentials::FileSystem::PATH_SEPARATOR) != domainConfigFolder.length() - 1) {
         domainConfigFolder = domainConfigFolder + essentials::FileSystem::PATH_SEPARATOR;
     }
-    if (planDir.find_last_of(essentials::FileSystem::PATH_SEPARATOR) != planDir.length() - 1) {
-        planDir = planDir + essentials::FileSystem::PATH_SEPARATOR;
+    if (_planDir.find_last_of(essentials::FileSystem::PATH_SEPARATOR) != _planDir.length() - 1) {
+        _planDir = _planDir + essentials::FileSystem::PATH_SEPARATOR;
     }
-    if (roleDir.find_last_of(essentials::FileSystem::PATH_SEPARATOR) != roleDir.length() - 1) {
-        roleDir = roleDir + essentials::FileSystem::PATH_SEPARATOR;
+    if (_roleDir.find_last_of(essentials::FileSystem::PATH_SEPARATOR) != _roleDir.length() - 1) {
+        _roleDir = _roleDir + essentials::FileSystem::PATH_SEPARATOR;
     }
-    if (!(essentials::FileSystem::isPathRooted(this->planDir))) {
-        basePlanPath = domainConfigFolder + planDir;
+    if (!(essentials::FileSystem::isPathRooted(_planDir))) {
+        _basePlanPath = domainConfigFolder + _planDir;
     } else {
-        basePlanPath = planDir;
+        _basePlanPath = _planDir;
     }
-    if (!(essentials::FileSystem::isPathRooted(this->roleDir))) {
-        baseRolePath = domainConfigFolder + roleDir;
+    if (!(essentials::FileSystem::isPathRooted(_roleDir))) {
+        _baseRolePath = domainConfigFolder + _roleDir;
     } else {
-        baseRolePath = roleDir;
+        _baseRolePath = _roleDir;
     }
 
-    ALICA_DEBUG_MSG("PP: basePlanPath: " << basePlanPath);
-    ALICA_DEBUG_MSG("PP: baseRolePath: " << baseRolePath);
-    ;
+    ALICA_DEBUG_MSG("PP: basePlanPath: " << _basePlanPath);
+    ALICA_DEBUG_MSG("PP: baseRolePath: " << _baseRolePath);
 
-    if (!(essentials::FileSystem::pathExists(basePlanPath))) {
-        AlicaEngine::abort("PP: BasePlanPath does not exist " + basePlanPath);
+    if (!(essentials::FileSystem::pathExists(_basePlanPath))) {
+        AlicaEngine::abort("PP: BasePlanPath does not exist " + _basePlanPath);
     }
-    if (!(essentials::FileSystem::pathExists(baseRolePath))) {
-        AlicaEngine::abort("PP: BaseRolePath does not exist " + baseRolePath);
+    if (!(essentials::FileSystem::pathExists(_baseRolePath))) {
+        AlicaEngine::abort("PP: BaseRolePath does not exist " + _baseRolePath);
     }
 }
 
@@ -79,13 +77,13 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
 {
     std::string roleSetLocation;
     if (roleSetName.empty()) {
-        roleSetLocation = findDefaultRoleSet(baseRolePath);
+        roleSetLocation = findDefaultRoleSet(_baseRolePath);
     } else {
         if (!essentials::FileSystem::endsWith(roleSetName, ".rset")) {
             roleSetName = roleSetName + ".rset";
         }
 
-        essentials::FileSystem::findFile(this->baseRolePath, roleSetName, roleSetLocation);
+        essentials::FileSystem::findFile(_baseRolePath, roleSetName, roleSetLocation);
     }
 
     if (!essentials::FileSystem::pathExists(roleSetLocation)) {
@@ -94,7 +92,7 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
 
     ALICA_DEBUG_MSG("PP: Parsing RoleSet " << roleSetLocation);
 
-    this->currentDirectory = essentials::FileSystem::getParent(roleSetLocation);
+    _currentDirectory = essentials::FileSystem::getParent(roleSetLocation);
 
     tinyxml2::XMLDocument doc;
     doc.LoadFile(roleSetLocation.c_str());
@@ -102,15 +100,15 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
         AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
 
-    RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
+    RoleSet* r = _mf.createRoleSet(&doc, _masterPlan);
 
-    filesParsed.push_back(roleSetLocation);
+    _filesParsed.push_back(roleSetLocation);
 
-    while (this->filesToParse.size() > 0) {
-        string fileToParse = this->filesToParse.front();
-        this->filesToParse.pop_front();
-        this->currentDirectory = essentials::FileSystem::getParent(fileToParse);
-        this->currentFile = fileToParse;
+    // This vector will grow while parsing and will be cleared at end of loop
+    for (size_t count = 0; count < _filesToParse.size(); ++count) {
+        const std::string fileToParse = _filesToParse[count];
+        _currentDirectory = essentials::FileSystem::getParent(fileToParse);
+        _currentFile = fileToParse;
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
@@ -122,40 +120,41 @@ const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
         } else {
             AlicaEngine::abort("PP: Cannot Parse file " + fileToParse);
         }
-        filesParsed.push_back(fileToParse);
+        _filesParsed.push_back(fileToParse);
     }
+    _filesToParse.clear();
 
-    this->mf->attachRoleReferences();
-    this->mf->attachCharacteristicReferences();
+    _mf.attachRoleReferences();
+    _mf.attachCharacteristicReferences();
     return r;
 }
-void PlanParser::parseRoleDefFile(const std::string& currentFile)
-{
-    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
 
-    tinyxml2::XMLDocument doc;
+void PlanParser::parseFile(const std::string& currentFile, tinyxml2::XMLDocument& doc)
+{
+    ALICA_DEBUG_MSG("PP: parsing file: " << currentFile);
     doc.LoadFile(currentFile.c_str());
     if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
         AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
     }
-    this->mf->createRoleDefinitionSet(&doc);
+}
+
+void PlanParser::parseRoleDefFile(const std::string& currentFile)
+{
+    tinyxml2::XMLDocument doc;
+    parseFile(currentFile, doc);
+    _mf.createRoleDefinitionSet(&doc);
 }
 void PlanParser::parseCapabilityDefFile(const std::string& currentFile)
 {
-    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
-
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createCapabilityDefinitionSet(&doc);
+    parseFile(currentFile, doc);
+    _mf.createCapabilityDefinitionSet(&doc);
 }
 
 std::string PlanParser::findDefaultRoleSet(std::string dir)
 {
     if (!essentials::FileSystem::isPathRooted(dir)) {
-        dir = essentials::FileSystem::combinePaths(this->baseRolePath, dir);
+        dir = essentials::FileSystem::combinePaths(_baseRolePath, dir);
     }
     if (!essentials::FileSystem::isDirectory(dir)) {
         AlicaEngine::abort("PP: RoleSet directory does not exist: " + dir);
@@ -194,34 +193,31 @@ std::string PlanParser::findDefaultRoleSet(std::string dir)
 const Plan* PlanParser::parsePlanTree(const std::string& masterplan)
 {
     std::string masterPlanPath;
-    bool found = essentials::FileSystem::findFile(this->basePlanPath, masterplan + ".pml", masterPlanPath);
-#ifdef PP_DEBUG
-    std::cout << "PP: masterPlanPath: " << masterPlanPath << std::endl;
-#endif
+    bool found = essentials::FileSystem::findFile(_basePlanPath, masterplan + ".pml", masterPlanPath);
+    ALICA_DEBUG_MSG("PP: masterPlanPath: " << masterPlanPath);
+
     if (!found) {
         AlicaEngine::abort("PP: Cannot find MasterPlan '" + masterplan + "'");
     }
-    this->currentFile = masterPlanPath;
-    this->currentDirectory = essentials::FileSystem::getParent(masterPlanPath);
-#ifdef PP_DEBUG
-    std::cout << "PP: CurFile: " << this->currentFile << " CurDir: " << this->currentDirectory << std::endl;
-#endif
+    _currentFile = masterPlanPath;
+    _currentDirectory = essentials::FileSystem::getParent(masterPlanPath);
+    ALICA_DEBUG_MSG("PP: CurFile: " << _currentFile << " CurDir: " << _currentDirectory);
 
-    this->masterPlan = parsePlanFile(masterPlanPath);
-    this->filesParsed.push_back(masterPlanPath);
+    _masterPlan = parsePlanFile(masterPlanPath);
+    _filesParsed.push_back(masterPlanPath);
     parseFileLoop();
 
-    this->mf->computeReachabilities();
-    return this->masterPlan;
+    _mf.computeReachabilities();
+    return _masterPlan;
 }
 
 void PlanParser::parseFileLoop()
 {
-    while (this->filesToParse.size() > 0) {
-        string fileToParse = this->filesToParse.front();
-        this->filesToParse.pop_front();
-        this->currentDirectory = essentials::FileSystem::getParent(fileToParse);
-        this->currentFile = fileToParse;
+    // This vector will grow while parsing and will be cleared at end of loop
+    for (size_t count = 0; count < _filesToParse.size(); ++count) {
+        const std::string fileToParse = _filesToParse[count];
+        _currentDirectory = essentials::FileSystem::getParent(fileToParse);
+        _currentFile = fileToParse;
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
@@ -239,9 +235,10 @@ void PlanParser::parseFileLoop()
         } else {
             AlicaEngine::abort("PP: Cannot Parse file", fileToParse);
         }
-        filesParsed.push_back(fileToParse);
+        _filesParsed.push_back(fileToParse);
     }
-    this->mf->attachPlanReferences();
+    _filesToParse.clear();
+    _mf.attachPlanReferences();
 }
 
 /**
@@ -251,72 +248,38 @@ void PlanParser::parseFileLoop()
  */
 void PlanParser::parsePlanningProblem(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    std::cout << "PP: parsing Planning Problem file: " << currentFile << std::endl;
-#endif
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createPlanningProblem(&doc);
+    parseFile(currentFile, doc);
+    _mf.createPlanningProblem(&doc);
 }
 
 void PlanParser::parsePlanTypeFile(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    std::cout << "PP: parsing PlanType file: " << currentFile << std::endl;
-#endif
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createPlanType(&doc);
+    parseFile(currentFile, doc);
+    _mf.createPlanType(&doc);
 }
 void PlanParser::parseBehaviourFile(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    std::cout << "PP: parsing Behaviour file: " << currentFile << std::endl;
-#endif
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createBehaviour(&doc);
+    parseFile(currentFile, doc);
+    _mf.createBehaviour(&doc);
 }
 
 void PlanParser::parseTaskFile(const std::string& currentFile)
 {
-#ifdef PP_DEBUG
-    std::cout << "PP: parsing Task file: " << currentFile << std::endl;
-#endif
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-#ifdef PP_DEBUG
-    std::cout << "TASKREPO " << currentFile << std::endl;
-#endif
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createTasks(&doc);
+    parseFile(currentFile, doc);
+    _mf.createTasks(&doc);
 }
 
 Plan* PlanParser::parsePlanFile(const std::string& planFile)
 {
-#ifdef PP_DEBUG
-    std::cout << "PP: parsing Plan file: " << planFile << std::endl;
-#endif
-
     tinyxml2::XMLDocument doc;
-    doc.LoadFile(planFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
+    parseFile(planFile, doc);
     Plan* p = nullptr;
     try {
-        p = this->mf->createPlan(&doc);
+        p = _mf.createPlan(&doc);
     } catch (std::exception& e) {
         AlicaEngine::abort("PP: cannot create plan for " + planFile + "\nException: " + e.what());
     }
@@ -324,27 +287,26 @@ Plan* PlanParser::parsePlanFile(const std::string& planFile)
 }
 
 /**
- * Provides access to all parsed elements, indexed by their id.
- * @return A shared_ptr<map<long, alica::AlicaElement>
+ * Returns true if element id is unique.
  */
-std::map<int64_t, alica::AlicaElement*>* PlanParser::getParsedElements()
+bool PlanParser::isUniqueElement(int64_t elementId)
 {
-    return mf->getElements();
+    return _mf.isUniqueElement(elementId);
 }
 
 void PlanParser::ignoreMasterPlanId(bool val)
 {
-    this->mf->setIgnoreMasterPlanId(val);
+    _mf.setIgnoreMasterPlanId(val);
 }
 
 void PlanParser::setCurrentFile(const std::string& currentFile)
 {
-    if (currentFile.compare(0, basePlanPath.size(), basePlanPath)) {
-        this->currentFile = currentFile.substr(basePlanPath.size());
-    } else if (currentFile.compare(0, baseRolePath.size(), baseRolePath)) {
-        this->currentFile = currentFile.substr(baseRolePath.size());
+    if (currentFile.compare(0, _basePlanPath.size(), _basePlanPath)) {
+        _currentFile = currentFile.substr(_basePlanPath.size());
+    } else if (currentFile.compare(0, _baseRolePath.size(), _baseRolePath)) {
+        _currentFile = currentFile.substr(_baseRolePath.size());
     } else {
-        this->currentFile = currentFile;
+        _currentFile = currentFile;
     }
 }
 
@@ -411,10 +373,10 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
     char* temp2 = nullptr;
     string locator = idString.substr(0, hashPos);
     if (!locator.empty()) {
-        if (!essentials::FileSystem::endsWith(this->currentDirectory, "/")) {
-            this->currentDirectory = this->currentDirectory + "/";
+        if (!essentials::FileSystem::endsWith(_currentDirectory, "/")) {
+            _currentDirectory = _currentDirectory + "/";
         }
-        string path = this->currentDirectory + locator;
+        string path = _currentDirectory + locator;
         // not working no clue why
         // char s[2048];
         // char s2[2048];
@@ -427,9 +389,9 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
         // This is not very efficient but necessary to keep the paths as they are
         // Here we have to check whether the file has already been parsed / is in the list for toparse files
         // problem is the normalization /home/etc/plans != /home/etc/Misc/../plans
-        // list<string>::iterator findIterParsed = find(filesParsed.begin(), filesParsed.end(), pathNew);
+        // list<string>::iterator findIterParsed = find(_filesParsed.begin(), _filesParsed.end(), pathNew);
         bool found = false;
-        for (auto& it : filesParsed) {
+        for (const auto& it : _filesParsed) {
             temp2 = realpath(it.c_str(), nullptr);
             std::string pathNew2;
             if (temp2) {
@@ -443,9 +405,8 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
             }
         }
 
-        // list<string>::iterator findIterToParse = find(filesToParse.begin(), filesToParse.end(), pathNew);
         if (!found) {
-            for (auto& it : filesToParse) {
+            for (const auto& it : _filesToParse) {
                 temp2 = realpath(it.c_str(), nullptr);
                 if (temp2 != nullptr) {
                     std::string pathNew2 = temp2;
@@ -459,10 +420,8 @@ int64_t PlanParser::fetchId(const string& idString, int64_t id)
         }
 
         if (!found) {
-#ifdef PP_DEBUG
-            std::cout << "PP: Adding " + path + " to parse queue " << std::endl;
-#endif
-            filesToParse.push_back(path);
+            ALICA_DEBUG_MSG("PP: Adding " << path << " to parse queue");
+            _filesToParse.push_back(path);
         }
     }
     std::string tokenId = idString.substr(hashPos + 1, idString.length() - hashPos);

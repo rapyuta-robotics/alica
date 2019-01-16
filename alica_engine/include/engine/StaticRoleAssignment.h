@@ -23,9 +23,8 @@ public:
     void calculateRoles();
 
 private:
-    bool updateRoles;
-
-    AlicaEngine* ae;
+    bool _updateRoles;
+    AlicaEngine* _ae;
 };
 
 } /* namespace alica */

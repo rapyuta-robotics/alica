@@ -54,7 +54,7 @@ private:
     TeamManager* _tm;
 
     std::mutex _msgQueueMutex;
-    mutable std::mutex successMarkMutex;
+    mutable std::mutex _successMarkMutex;
 
     std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
     std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
