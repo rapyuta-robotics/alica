@@ -25,21 +25,16 @@ class AlicaEngine;
 class ExpressionHandler
 {
 public:
-    ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
+    ExpressionHandler(AlicaEngine* ae);
     virtual ~ExpressionHandler();
-    void attachAll();
+    void attachAll(IConditionCreator& cc, IUtilityCreator& uc, IConstraintCreator& crc);
     //		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
     bool dummyTrue(RunningPlan* rp);
     bool dummyFalse(RunningPlan* rp);
 
 private:
-    IConditionCreator* _conditionCreator;
-    IUtilityCreator* _utilityCreator;
-    IConstraintCreator* _constraintCreator;
     AlicaEngine* _ae;
-    //		void attachPlanConditions(Plan* p, T exprType, T consType);
-    //		void attachTransConditions(Transition* t, T exprType, T consType);
-    void attachConstraint(Condition* c);
+    void attachConstraint(Condition* c, IConstraintCreator& crc);
 };
 
 } /* namespace alica */
