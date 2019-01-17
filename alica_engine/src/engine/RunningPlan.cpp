@@ -499,7 +499,24 @@ bool RunningPlan::isAnyChildTaskSuccessful() const
             return true;
         }
     }
+    return false;
+}
 
+bool RunningPlan::amISuccessful() const
+{
+    if (isBehaviour()) { // behaviors only have a simple success flag
+        return getStatus() == PlanStatus::Success;
+    }
+    return getAssignment().isAgentSuccessful(_ae->getTeamManager()->getLocalAgentID(), _activeTriple.entryPoint);
+}
+
+bool RunningPlan::amISuccessfulInAnyChild() const
+{
+    for (const RunningPlan* child : _children) {
+        if (child->amISuccessful()) {
+            return true;
+        }
+    }
     return false;
 }
 

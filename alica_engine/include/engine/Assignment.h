@@ -87,6 +87,7 @@ public:
     bool isValid() const;
     bool isSuccessful() const;
     bool isAnyTaskSuccessful() const;
+    bool isAgentSuccessful(AgentIDConstPtr id, const EntryPoint* ep) const;
 
     bool hasAgent(AgentIDConstPtr id) const;
     int size() const
