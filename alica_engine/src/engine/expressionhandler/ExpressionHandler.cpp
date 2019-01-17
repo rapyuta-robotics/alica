@@ -29,10 +29,7 @@ namespace alica
 /**
  * Constructor, loads the assembly containing expressions and constraints.
  */
-ExpressionHandler::ExpressionHandler(AlicaEngine* ae)
-        : _ae(ae)
-{
-}
+ExpressionHandler::ExpressionHandler() {}
 
 ExpressionHandler::~ExpressionHandler()
 {
@@ -42,10 +39,9 @@ ExpressionHandler::~ExpressionHandler()
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */
-void ExpressionHandler::attachAll(IConditionCreator& cc, IUtilityCreator& uc, IConstraintCreator& crc)
+void ExpressionHandler::attachAll(PlanRepository& pr, IConditionCreator& cc, IUtilityCreator& uc, IConstraintCreator& crc)
 {
-    PlanRepository* pr = _ae->getPlanRepository();
-    for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
+    for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
 
         auto ufGen = uc.createUtility(p->getId());
@@ -76,15 +72,6 @@ void ExpressionHandler::attachAll(IConditionCreator& cc, IUtilityCreator& uc, IC
             }
         }
     }
-}
-bool ExpressionHandler::dummyTrue(RunningPlan* rp)
-{
-    return true;
-}
-
-bool ExpressionHandler::dummyFalse(RunningPlan* rp)
-{
-    return false;
 }
 
 void ExpressionHandler::attachConstraint(Condition* c, IConstraintCreator& crc)

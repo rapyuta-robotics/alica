@@ -103,7 +103,7 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     }
 
     if (!_expressionHandler) {
-        _expressionHandler = new ExpressionHandler(this);
+        _expressionHandler = new ExpressionHandler();
     }
 
     _stepCalled = false;
@@ -115,7 +115,7 @@ bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCre
     _auth->init();
     _planBase = new PlanBase(this, _masterPlan);
 
-    _expressionHandler->attachAll(*cc, *uc, *crc);
+    _expressionHandler->attachAll(*_planRepository, *cc, *uc, *crc);
     UtilityFunction::initDataStructures(this);
     _syncModul->init();
     if (!_variableSyncModule) {
