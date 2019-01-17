@@ -29,11 +29,8 @@ namespace alica
 /**
  * Constructor, loads the assembly containing expressions and constraints.
  */
-ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
+ExpressionHandler::ExpressionHandler(AlicaEngine* ae)
         : _ae(ae)
-        , _conditionCreator(cc)
-        , _utilityCreator(uc)
-        , _constraintCreator(crc)
 {
 }
 
@@ -45,34 +42,34 @@ ExpressionHandler::~ExpressionHandler()
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */
-void ExpressionHandler::attachAll()
+void ExpressionHandler::attachAll(IConditionCreator& cc, IUtilityCreator& uc, IConstraintCreator& crc)
 {
     PlanRepository* pr = _ae->getPlanRepository();
     for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
         Plan* p = it.second;
 
-        auto ufGen = _utilityCreator->createUtility(p->getId());
+        auto ufGen = uc.createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->_preCondition->setBasicCondition(_conditionCreator->createConditions(p->getPreCondition()->getId()));
-                attachConstraint(p->_preCondition);
+                p->_preCondition->setBasicCondition(cc.createConditions(p->getPreCondition()->getId()));
+                attachConstraint(p->_preCondition, crc);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
             }
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->_runtimeCondition->setBasicCondition(_conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
-            attachConstraint(p->_runtimeCondition);
+            p->_runtimeCondition->setBasicCondition(cc.createConditions(p->getRuntimeCondition()->getId()));
+            attachConstraint(p->_runtimeCondition, crc);
         }
 
         for (const Transition* t : p->_transitions) {
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
-                    t->_preCondition->setBasicCondition(_conditionCreator->createConditions(t->getPreCondition()->getId()));
-                    attachConstraint(t->_preCondition);
+                    t->_preCondition->setBasicCondition(cc.createConditions(t->getPreCondition()->getId()));
+                    attachConstraint(t->_preCondition, crc);
                 } else {
                     t->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
                 }
@@ -90,21 +87,12 @@ bool ExpressionHandler::dummyFalse(RunningPlan* rp)
     return false;
 }
 
-//	void ExpressionHandler::attachPlanConditions(Plan* p, T exprType, T consType)
-//	{
-//
-//	}
-//	void ExpressionHandler::attachTransConditions(Transition* t, T exprType, T consType)
-//	{
-//
-//	}
-
-void ExpressionHandler::attachConstraint(Condition* c)
+void ExpressionHandler::attachConstraint(Condition* c, IConstraintCreator& crc)
 {
     if (c->getVariables().size() == 0 && c->getQuantifiers().size() == 0) {
         c->setBasicConstraint(make_shared<DummyConstraint>());
     } else {
-        c->setBasicConstraint(_constraintCreator->createConstraint(c->getId()));
+        c->setBasicConstraint(crc.createConstraint(c->getId()));
     }
 }
 
