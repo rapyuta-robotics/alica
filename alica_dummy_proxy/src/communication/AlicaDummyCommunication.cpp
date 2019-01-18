@@ -72,7 +72,7 @@ public:
     {
         {
             std::lock_guard<std::mutex> lock(_qmutex);
-            _q.push(std::unique_ptr<T>(new T(data)));
+            _q.push(std::make_unique<T>(data));
         }
         _qcondition.notify_one();
     }
