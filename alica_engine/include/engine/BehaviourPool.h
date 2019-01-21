@@ -23,7 +23,7 @@ class BehaviourPool
 public:
     BehaviourPool(AlicaEngine* ae);
     ~BehaviourPool();
-    bool init(IBehaviourCreator* bc);
+    bool init(IBehaviourCreator& bc);
     void startBehaviour(RunningPlan& rp);
     void stopBehaviour(RunningPlan& rp);
     void stopAll();
@@ -40,7 +40,6 @@ private:
     // TODO: switch to unique ptr
     std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* _ae;
-    IBehaviourCreator* _behaviourCreator;
 };
 
 } /* namespace alica */
