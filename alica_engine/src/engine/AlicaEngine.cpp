@@ -97,20 +97,25 @@ AlicaEngine::~AlicaEngine()
  */
 bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
 {
+    if (!bc || !cc || !uc || !crc) {
+        ALICA_ERROR_MSG("Empty creators!");
+        return false;
+    }
+
     if (!_expressionHandler) {
-        _expressionHandler = new ExpressionHandler(this, cc, uc, crc);
+        _expressionHandler = new ExpressionHandler();
     }
 
     _stepCalled = false;
     bool everythingWorked = true;
-    everythingWorked &= _behaviourPool->init(bc);
+    everythingWorked &= _behaviourPool->init(*bc);
     _auth = new AuthorityManager(this);
     _log = new Logger(this);
     _roleAssignment->init();
     _auth->init();
     _planBase = new PlanBase(this, _masterPlan);
 
-    _expressionHandler->attachAll();
+    _expressionHandler->attachAll(*_planRepository, *cc, *uc, *crc);
     UtilityFunction::initDataStructures(this);
     _syncModul->init();
     if (!_variableSyncModule) {

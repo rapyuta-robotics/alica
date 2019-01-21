@@ -10,14 +10,11 @@
 
 namespace alica
 {
-class RunningPlan;
-class Plan;
 class Condition;
-class Transition;
 class IConditionCreator;
 class IConstraintCreator;
 class IUtilityCreator;
-class AlicaEngine;
+class PlanRepository;
 
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
@@ -25,21 +22,12 @@ class AlicaEngine;
 class ExpressionHandler
 {
 public:
-    ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
+    ExpressionHandler();
     virtual ~ExpressionHandler();
-    void attachAll();
-    //		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
-    bool dummyTrue(RunningPlan* rp);
-    bool dummyFalse(RunningPlan* rp);
+    void attachAll(PlanRepository& pr, IConditionCreator& cc, IUtilityCreator& uc, IConstraintCreator& crc);
 
 private:
-    IConditionCreator* _conditionCreator;
-    IUtilityCreator* _utilityCreator;
-    IConstraintCreator* _constraintCreator;
-    AlicaEngine* _ae;
-    //		void attachPlanConditions(Plan* p, T exprType, T consType);
-    //		void attachTransConditions(Transition* t, T exprType, T consType);
-    void attachConstraint(Condition* c);
+    void attachConstraint(Condition* c, IConstraintCreator& crc);
 };
 
 } /* namespace alica */
