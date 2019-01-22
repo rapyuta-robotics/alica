@@ -6,10 +6,8 @@
 #include "ConstraintTestPlanDummySolver.h"
 #include "UtilityFunctionCreator.h"
 
-#include <SystemConfig.h>
 #include <communication/AlicaDummyCommunication.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
+#include <engine/AlicaContext.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -24,11 +22,7 @@
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
+    alica::AlicaContext* ac;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -44,33 +38,23 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
 
-        // bring up the SystemConfig with the corresponding path
-        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-        sc.setRootPath(path);
-        sc.setConfigPath(path + "/etc");
-        sc.setHostname("nase");
+        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        EXPECT_TRUE(ac->isValid());
+        ac->setRobotName("nase");
+        ac->setRootPath(path);
+        ac->setConfigPath(path + "/etc");
 
-        // setup the engine
-        ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
-        EXPECT_TRUE(ae->init(bc, cc, uc, crc));
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        EXPECT_TRUE(ac->init(creators));
     }
 
     void TearDown() override
     {
-        ae->shutdown();
-        essentials::SystemConfig::getInstance().shutdown();
-        delete ae->getCommunicator();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
+        ac->terminate();
+        delete ac;
     }
 };
 
@@ -80,14 +64,9 @@ protected:
     void SetUp() override
     {
         AlicaTestFixture::SetUp();
-        ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
+        ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
     }
-    void TearDown() override
-    {
-        alica::ISolverBase* s1 = ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        AlicaTestFixture::TearDown();
-        delete s1;
-    }
+    void TearDown() override { AlicaTestFixture::TearDown(); }
 };
 
 extern std::jmp_buf restore_point;
