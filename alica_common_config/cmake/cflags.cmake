@@ -3,7 +3,7 @@ set(ERROR "-Werror-implicit-function-declaration -Werror=return-type")
 set(C_WARNING "-Wbad-function-cast -Wstrict-prototypes")
 set(CPP_WARNING "")
 set(C_STD "-std=c11")
-set(CPP_STD "-std=c++11")
+set(CPP_STD "-std=c++14")
 set(OPTIMIZATION "-O2 -finline-functions -fomit-frame-pointer -funroll-loops -ffast-math -ftree-vectorize")
 
 if(${SANITATION})
