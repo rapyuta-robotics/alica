@@ -19,7 +19,7 @@ protected:
     /*PROTECTED REGION ID(pro1522377401286) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
-/*PROTECTED REGION ID(prv1522377401286) ENABLED START*/ // Add additional private methods here
+    /*PROTECTED REGION ID(prv1522377401286) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
 

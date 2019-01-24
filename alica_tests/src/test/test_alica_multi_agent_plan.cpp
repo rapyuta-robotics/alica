@@ -15,11 +15,11 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include <Plans/Behaviour/Attack.h>
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
-#include <supplementary/AgentIDManager.h>
+#include <essentials/AgentIDManager.h>
 #include <test_alica.h>
 
 class AlicaMultiAgent : public AlicaTestFixtureBase
@@ -35,7 +35,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         std::cout << "rootPath " << path << std::endl;
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         // setup the engine
@@ -66,15 +66,15 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
+    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+    ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     ASSERT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
+    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MultiAgentTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
-    ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
+    ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
     ASSERT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();

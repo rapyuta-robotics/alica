@@ -36,7 +36,6 @@ using namespace std;
 #include "engine/model/TerminalState.h"
 #include "engine/model/Transition.h"
 #include "engine/parser/PlanWriter.h"
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaEngine.h>
 
 class AlicaEngineTest : public AlicaTestFixture
@@ -149,8 +148,8 @@ protected:
     static void checkSyncTransition(const alica::SyncTransition* transition, long id, string name, string comment, int talkTimeout, int syncTimeout)
     {
         checkAlicaElement(transition, id, name, comment);
-        EXPECT_EQ(AlicaTime::milliseconds(talkTimeout), transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
-        EXPECT_EQ(AlicaTime::milliseconds(syncTimeout), transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
+        EXPECT_EQ(alica::AlicaTime::milliseconds(talkTimeout), transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
+        EXPECT_EQ(alica::AlicaTime::milliseconds(syncTimeout), transition->getSyncTimeOut()) << "Wrong syncTimeout!" << endl;
     }
 
     static void checkQuantifier(const alica::Quantifier* quantifier, long id, string name, string comment, long scope, initializer_list<string> sorts)
@@ -175,7 +174,7 @@ TEST_F(AlicaEngineTest, planParser)
     const auto& plans = ae->getPlanRepository()->getPlans();
 
     cout << "Printing plans from Repository: " << endl;
-    for (const Plan* plan : plans) {
+    for (const alica::Plan* plan : plans) {
         cout << "--------- Next Plan: -------------" << endl;
         cout << "ID: " << plan->getId() << endl;
         cout << "Plan: " << plan->toString() << endl;
@@ -254,7 +253,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit AttackPlan.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 checkEntryPoint(ep, 1402488646221, "MISSING_NAME", "", false, 0, 2147483647, 1402488646220, 1225112227903, "DefaultTask");
             }
@@ -315,7 +314,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488903550:
@@ -381,7 +380,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488881800:
@@ -454,7 +453,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488437263:
@@ -532,7 +531,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(2, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit MidFieldPlayPlan.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488787819:
@@ -561,7 +560,7 @@ TEST_F(AlicaEngineTest, planParser)
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
-            for (const EntryPoint* ep : plan->getEntryPoints()) {
+            for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 checkEntryPoint(ep, 1402489329142, "MISSING_NAME", "", false, 0, 2147483647, 1402489329141, 1225112227903, "DefaultTask");
             }
@@ -582,12 +581,12 @@ TEST_F(AlicaEngineTest, planWriter)
     ASSERT_NO_SIGNAL
 
     const auto& plans = ae->getPlanRepository()->getPlans();
-    PlanWriter pw = PlanWriter(ae, ae->getPlanRepository());
-    for (const Plan* plan : plans) {
+    alica::PlanWriter pw = alica::PlanWriter(ae, ae->getPlanRepository());
+    for (const alica::Plan* plan : plans) {
         cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
         pw.saveSinglePlan(plan);
-        string temp = supplementary::FileSystem::combinePaths(sc->getConfigPath(), "plans/tmp");
-        temp = supplementary::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
+        string temp = essentials::FileSystem::combinePaths(sc->getConfigPath(), "plans/tmp");
+        temp = essentials::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
         string test = exec((string("diff ") + plan->getFileName() + string(" ") + temp).c_str());
         EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
         std::remove(temp.c_str()); // delete the file after comparing it

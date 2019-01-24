@@ -13,7 +13,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
@@ -37,7 +36,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
     ae->start();
 
-    AlicaTime sleepTime = AlicaTime::seconds(1);
+    alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     do {
         ae->getAlicaClock()->sleep(sleepTime);
     } while (ae->getPlanBase()->getRootNode() == nullptr);

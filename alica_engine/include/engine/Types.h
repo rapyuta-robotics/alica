@@ -5,11 +5,6 @@
 #include <utility>
 #include <vector>
 
-namespace supplementary
-{
-class AgentID;
-}
-
 namespace alica
 {
 class AbstractPlan;

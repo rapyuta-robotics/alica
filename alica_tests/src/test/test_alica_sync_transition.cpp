@@ -13,7 +13,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
@@ -23,8 +23,6 @@ class AlicaSyncTransition : public AlicaTestFixtureBase
 { /* namespace alicaTests */
 protected:
     alica::AlicaEngine* ae2;
-    alicaRosProxy::AlicaRosCommunication* ros;
-    alicaRosProxy::AlicaRosCommunication* ros2;
 
     virtual void SetUp()
     {
@@ -34,7 +32,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
@@ -55,10 +53,10 @@ protected:
         delete bc;
         delete uc;
         delete crc;
+        delete ae->getCommunicator();
+        delete ae2->getCommunicator();
         delete ae;
         delete ae2;
-        delete ros;
-        delete ros2;
     }
 };
 
@@ -70,17 +68,15 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ASSERT_NO_SIGNAL
 
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
-    ros = new alicaRosProxy::AlicaRosCommunication(ae);
+    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(ros);
+    ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
-    ros2 = new alicaRosProxy::AlicaRosCommunication(ae2);
+    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae2->setAlicaClock(new alica::AlicaClock());
-    ae2->setCommunicator(ros2);
+    ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     ae->start();

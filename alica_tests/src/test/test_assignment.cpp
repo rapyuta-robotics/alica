@@ -6,7 +6,7 @@
 #include <engine/parser/PlanParser.h>
 #include <gtest/gtest.h>
 #include <ros/ros.h>
-#include <supplementary/AgentIDFactory.h>
+#include <essentials/AgentIDFactory.h>
 #include <vector>
 
 using alica::Assignment;
@@ -15,8 +15,8 @@ using alica::Plan;
 using alica::PlanParser;
 using alica::PlanRepository;
 using alica::State;
-using supplementary::AgentID;
-using supplementary::AgentIDFactory;
+using essentials::AgentID;
+using essentials::AgentIDFactory;
 
 TEST(Assignment, RobotsInserted)
 {
@@ -26,7 +26,7 @@ TEST(Assignment, RobotsInserted)
     nh.param<std::string>("/rootPath", path, ".");
 
     // bring up the SystemConfig with the corresponding path
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc =essentials::SystemConfig::getInstance();
     sc->setRootPath(path);
     sc->setConfigPath(path + "/etc");
     sc->setHostname("nase");

@@ -5,11 +5,6 @@
 #include <iostream>
 #include <tuple>
 
-namespace supplementary
-{
-class AgentID;
-}
-
 namespace alica
 {
 typedef std::tuple<AgentIDConstPtr, int64_t, bool, bool> stdSyncData;

@@ -6,7 +6,7 @@
 #include "TestWorldModel.h"
 
 #include <SystemConfig.h>
-#include <supplementary/ITrigger.h>
+#include <essentials/ITrigger.h>
 /*PROTECTED REGION END*/
 namespace alica
 {
@@ -25,7 +25,7 @@ protected:
     /*PROTECTED REGION ID(pro1429017274116) ENABLED START*/ // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
-/*PROTECTED REGION ID(prv1429017274116) ENABLED START*/ // Add additional private methods here
+    /*PROTECTED REGION ID(prv1429017274116) ENABLED START*/ // Add additional private methods here
         /*PROTECTED REGION END*/};
         } /* namespace alica */
 

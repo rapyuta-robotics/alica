@@ -2,8 +2,6 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "CounterClass.h"
-#include "Plans/Behaviour/Attack.h"
-#include "Plans/Behaviour/MidFieldStandard.h"
 #include "UtilityFunctionCreator.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
@@ -17,7 +15,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>

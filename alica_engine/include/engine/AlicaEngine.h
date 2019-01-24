@@ -7,14 +7,9 @@
 #include <SystemConfig.h>
 #include <list>
 #include <string>
-#include <supplementary/AgentIDManager.h>
+#include <essentials/AgentIDManager.h>
 
 #include <unordered_map>
-
-namespace supplementary
-{
-class AgentIDFactory;
-}
 
 namespace alica
 {
@@ -49,7 +44,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
+    AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:
@@ -130,7 +125,7 @@ private:
     PlanRepository* planRepository;
     BlackBoard _blackboard;
 
-    supplementary::AgentIDManager* agentIDManager;
+    essentials::AgentIDManager* agentIDManager;
     Logger* log;
     PlanParser* planParser;
 
@@ -163,7 +158,7 @@ private:
 
     const Plan* masterPlan;
     std::unordered_map<size_t, ISolverBase*> _solvers;
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
 };
 
 /**

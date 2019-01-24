@@ -1,13 +1,15 @@
 #pragma once
 
-#include <supplementary/ITrigger.h>
 #include <SystemConfig.h>
+#include <essentials/ITrigger.h>
 
 #include <vector>
 
-namespace alicaTests {
+namespace alicaTests
+{
 
-class TestWorldModel {
+class TestWorldModel
+{
 public:
     virtual ~TestWorldModel();
     static TestWorldModel* getOne();
@@ -36,8 +38,8 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
-    supplementary::ITrigger* trigger1;
-    supplementary::ITrigger* trigger2;
+    essentials::ITrigger* trigger1;
+    essentials::ITrigger* trigger2;
 
 private:
     TestWorldModel();
@@ -56,4 +58,4 @@ private:
     bool runtimeCondition1418042967134;
 };
 
-}  // namespace alicaTests
+} // namespace alicaTests

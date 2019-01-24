@@ -14,22 +14,22 @@ namespace reasoner
 
 class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, BBIdent>
 {
-  public:
+public:
     ConstraintTestPlanDummySolver(AlicaEngine* ae);
     virtual ~ConstraintTestPlanDummySolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
     bool getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results);
 
-    virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) override;
-    virtual std::unique_ptr<SolverContext> createSolverContext() override;
+    SolverVariable* createVariable(int64_t id, SolverContext* ctx) override;
+    std::unique_ptr<SolverContext> createSolverContext() override;
 
     static int getExistsSolutionCallCounter();
     static int getGetSolutionCallCounter();
 
-  private:
-    static int existsSolutionCallCounter;
-    static int getSolutionCallCounter;
+private:
+    static int s_existsSolutionCallCounter;
+    static int s_getSolutionCallCounter;
 };
 } /* namespace reasoner */
 

@@ -1,4 +1,4 @@
 - git:
-    local-name: alica-supplementary
-    uri: https://github.com/rapyuta-robotics/alica-supplementary.git
+    local-name: alica-essentials
+    uri: https://github.com/rapyuta-robotics/alica-essentials.git
     version: rr-devel

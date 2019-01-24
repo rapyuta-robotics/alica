@@ -8,7 +8,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
@@ -28,18 +27,18 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
 {
     ASSERT_NO_SIGNAL
 
-    USummand* uSummandPreConditionPlan = ae->getPlanRepository()->getPlans().find(1418042796751)->getUtilityFunction()->getUtilSummands()[0].get();
-    TestConstantValueSummand* dbrPre = dynamic_cast<TestConstantValueSummand*>(uSummandPreConditionPlan);
+    alica::USummand* uSummandPreConditionPlan = ae->getPlanRepository()->getPlans().find(1418042796751)->getUtilityFunction()->getUtilSummands()[0].get();
+    alica::TestConstantValueSummand* dbrPre = dynamic_cast<alica::TestConstantValueSummand*>(uSummandPreConditionPlan);
     ASSERT_NE(dbrPre, nullptr);
     dbrPre->robotId = ae->getTeamManager()->getLocalAgentID();
 
-    USummand* uSummandOtherPlan = ae->getPlanRepository()->getPlans().find(1418042819203)->getUtilityFunction()->getUtilSummands()[0].get();
-    TestConstantValueSummand* dbrOther = dynamic_cast<TestConstantValueSummand*>(uSummandOtherPlan);
+    alica::USummand* uSummandOtherPlan = ae->getPlanRepository()->getPlans().find(1418042819203)->getUtilityFunction()->getUtilSummands()[0].get();
+    alica::TestConstantValueSummand* dbrOther = dynamic_cast<alica::TestConstantValueSummand*>(uSummandOtherPlan);
     ASSERT_NE(dbrOther, nullptr);
     dbrOther->robotId = ae->getTeamManager()->getLocalAgentID();
 
-    USummand* uSummandRunPlan = ae->getPlanRepository()->getPlans().find(1418042806575)->getUtilityFunction()->getUtilSummands()[0].get();
-    TestConstantValueSummand* dbrRun = dynamic_cast<TestConstantValueSummand*>(uSummandRunPlan);
+    alica::USummand* uSummandRunPlan = ae->getPlanRepository()->getPlans().find(1418042806575)->getUtilityFunction()->getUtilSummands()[0].get();
+    alica::TestConstantValueSummand* dbrRun = dynamic_cast<alica::TestConstantValueSummand*>(uSummandRunPlan);
     ASSERT_NE(dbrRun, nullptr);
     dbrRun->robotId = ae->getTeamManager()->getLocalAgentID();
 

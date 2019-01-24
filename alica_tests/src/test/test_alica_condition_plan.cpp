@@ -8,12 +8,11 @@
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
+//#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include <Plans/Behaviour/Attack.h>
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
@@ -65,14 +64,14 @@ TEST_F(AlicaConditionPlan, solverTest)
     ae->start();
     step(ae);
 
-    BasicBehaviour* basicBehaviour = ae->getPlanBase()->getRootNode()->getChildren()[0]->getBasicBehaviour();
+    alica::BasicBehaviour* basicBehaviour = ae->getPlanBase()->getRootNode()->getChildren()[0]->getBasicBehaviour();
     alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
     ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
-    const ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
+    const alica::ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
     std::string resultingString(reinterpret_cast<const char*>(ba.begin()), ba.size());
     EXPECT_EQ("1414068576620", resultingString); // id of variable at highest level
 }

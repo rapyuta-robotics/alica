@@ -98,7 +98,7 @@
 	To be able to access your .conf files you need an instance of the SystemConfig, example:
 	
 	```
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+	essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
 	double angle = (*sc)["NameOfYourConfigFile"]->get<double>("TopLevelSection.Sub.angle", NULL);
 	```
 
