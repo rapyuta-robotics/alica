@@ -26,15 +26,15 @@ void AlicaWidget::handleAlicaEngineInfo(alica_msgs::AlicaEngineInfoConstPtr aei)
     stringstream ss;
     ss << aei->current_state << " (";
     if (aei->robot_ids_with_me.size() > 0) {
-        for (int i = 0; i < aei->robot_ids_with_me.size() - 1; i++) {
+        for (int i = 0; i < static_cast<int>(aei->robot_ids_with_me.size()) - 1; i++) {
             int tmpId = 0;
-            for (int j = 0; j < aei->robot_ids_with_me[i].id.size(); j++) {
+            for (int j = 0; j < static_cast<int>(aei->robot_ids_with_me[i].id.size()); j++) {
                 tmpId += (aei->robot_ids_with_me[i].id.at(j) << (j * 8));
             }
             ss << tmpId << ", ";
         }
         int tmpId = 0;
-        for (int i = 0; i < aei->robot_ids_with_me[aei->robot_ids_with_me.size() - 1].id.size(); i++) {
+        for (int i = 0; i < static_cast<int>(aei->robot_ids_with_me[aei->robot_ids_with_me.size() - 1].id.size()); i++) {
             tmpId += (aei->robot_ids_with_me[aei->robot_ids_with_me.size() - 1].id.at(i) << (i * 8));
         }
         ss << tmpId;

@@ -57,7 +57,7 @@ RobotsControl::RobotsControl()
             continue;
         }
 
-        for (int i = 0; i < processList.size(); i++) {
+        for (std::size_t i = 0; i != processList.size(); ++i) {
             this->bundlesMap[bundleName].push_back(pair<int, int>(processList[i], std::stoi(processParamsList[i])));
         }
         std::cout << "PMControl: Bundle '" << bundleName << "' has " << this->bundlesMap[bundleName].size() << " processes." << std::endl;
@@ -110,7 +110,7 @@ void RobotsControl::showContextMenu(const QPoint& pos)
         } else {
             icon = QIcon::fromTheme("user-available", QIcon("user-available"));
         }
-        auto tmpAction = myMenu.addAction(icon, std::string(robot.second->name + " (" + ss.str() + ")").c_str());
+        myMenu.addAction(icon, std::string(robot.second->name + " (" + ss.str() + ")").c_str());
     }
 
     QAction* selectedItem = myMenu.exec(globalPos);

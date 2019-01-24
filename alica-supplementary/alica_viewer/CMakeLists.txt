@@ -4,7 +4,7 @@ project(alica_viewer)
 ##################
 ## Dependencies ##
 ##################
-add_compile_options(-std=c++11)
+
 add_compile_options(${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS})
 
 set(PKG_DEPS

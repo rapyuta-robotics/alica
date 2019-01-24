@@ -4,11 +4,11 @@ project(alica_ros_turtlesim)
 ##################
 ## Dependencies ##
 ##################
-add_compile_options(-std=c++11)
 
 set(PKG_DEPS
         roscpp
         alica_engine
+        alica_common_config
         agent_id
         alica_ros_proxy
         constraintsolver
