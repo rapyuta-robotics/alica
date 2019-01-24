@@ -4,7 +4,7 @@ set(C_WARNING "-Wbad-function-cast -Wstrict-prototypes")
 set(CPP_WARNING "")
 set(C_STD "-std=c11")
 set(CPP_STD "-std=c++11")
-set(OPTIMIZATION "-O2 -finline-functions -fomit-frame-pointer -funroll-loops -ffast-math")
+set(OPTIMIZATION "-O2 -finline-functions -fomit-frame-pointer -funroll-loops -ffast-math -ftree-vectorize")
 
 if(${SANITATION})
     set(OPTIMIZATION "-O0") # For memory sanitation we turn off optimization.

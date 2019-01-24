@@ -1,6 +1,5 @@
 #include "CounterClass.h"
 #include "SimpleSwitches.h"
-#include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
 

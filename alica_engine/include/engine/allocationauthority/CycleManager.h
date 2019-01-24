@@ -4,16 +4,12 @@
 #include "engine/AlicaClock.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "supplementary/AgentID.h"
+#include "essentials/AgentID.h"
 
 #include <mutex>
 #include <thread>
 #include <vector>
 
-namespace supplementary
-{
-class SystemConfig;
-}
 namespace alica
 {
 class RunningPlan;

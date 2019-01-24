@@ -10,7 +10,7 @@
 #include <engine/BehaviourPool.h>
 #include <engine/PlanBase.h>
 #include <engine/model/BehaviourConfiguration.h>
-#include <supplementary/EventTrigger.h>
+#include <essentials/EventTrigger.h>
 
 #include <condition_variable>
 #include <mutex>
@@ -29,7 +29,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 
     ae->start();
 
-    AlicaTime duration = AlicaTime::milliseconds(100);
+    alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     ae->getAlicaClock()->sleep(duration);
 
     for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
@@ -69,17 +69,17 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(AlicaTime::milliseconds(33));
+    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 

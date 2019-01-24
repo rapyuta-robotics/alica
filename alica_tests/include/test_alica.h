@@ -6,15 +6,16 @@
 #include "ConstraintTestPlanDummySolver.h"
 #include "UtilityFunctionCreator.h"
 
-#include <CGSolver.h>
 #include <SystemConfig.h>
-#include <communication/AlicaRosCommunication.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 
 #include <csetjmp>
 #include <csignal>
 #include <string>
+
+#include <ros/ros.h>
 
 #include <gtest/gtest.h>
 
@@ -23,7 +24,7 @@
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
     alica::AlicaEngine* ae;
     alica::BehaviourCreator* bc;
     alica::ConditionCreator* cc;
@@ -45,20 +46,20 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
 
         // bring up the SystemConfig with the corresponding path
-        sc = supplementary::SystemConfig::getInstance();
+        sc = essentials::SystemConfig::getInstance();
         sc->setRootPath(path);
         sc->setConfigPath(path + "/etc");
         sc->setHostname("nase");
 
         // setup the engine
         ae = new alica::AlicaEngine(
-                new supplementary::AgentIDManager(new supplementary::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
+                new essentials::AgentIDManager(new essentials::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
         crc = new alica::ConstraintCreator();
         ae->setAlicaClock(new alica::AlicaClock());
-        ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
+        ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
 
         EXPECT_TRUE(ae->init(bc, cc, uc, crc));
     }
@@ -82,15 +83,12 @@ protected:
     {
         AlicaTestFixture::SetUp();
         ae->addSolver(new alica::reasoner::ConstraintTestPlanDummySolver(ae));
-        ae->addSolver(new alica::reasoner::CGSolver(ae));
     }
     void TearDown() override
     {
         alica::ISolverBase* s1 = ae->getSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        alica::ISolverBase* s2 = ae->getSolver<alica::reasoner::CGSolver>();
         AlicaTestFixture::TearDown();
         delete s1;
-        delete s2;
     }
 };
 

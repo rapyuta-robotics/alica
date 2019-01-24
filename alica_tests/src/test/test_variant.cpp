@@ -4,8 +4,8 @@
 
 using alica::Variant;
 
-TEST(Variant, works) {
-
+TEST(Variant, works)
+{
     int64_t val = 5;
     Variant v1;
     Variant v2(val);
@@ -31,7 +31,7 @@ TEST(Variant, works) {
     EXPECT_FALSE(v1.isPtr());
 
     v2.setFloat(2.3f);
-    EXPECT_EQ(2.3f,v2.getFloat());
+    EXPECT_EQ(2.3f, v2.getFloat());
 
     v1.setBool(false);
     EXPECT_TRUE(v1.isSet());
@@ -46,11 +46,11 @@ TEST(Variant, works) {
     uint8_t arr[Variant::kVariantSize];
 
     int ret = v2.serializeTo(arr);
-    EXPECT_EQ(Variant::kVariantSize,ret);
+    EXPECT_EQ(Variant::kVariantSize, ret);
     ret = v1.loadFrom(arr);
-    EXPECT_EQ(Variant::kVariantSize,ret);
+    EXPECT_EQ(Variant::kVariantSize, ret);
     EXPECT_TRUE(v1.isFloat());
-    EXPECT_EQ(2.3f,v2.getFloat());
+    EXPECT_EQ(2.3f, v2.getFloat());
 
     Variant v3;
     v3.serializeTo(arr);

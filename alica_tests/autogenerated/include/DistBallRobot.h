@@ -6,12 +6,6 @@
 #include <string>
 #include <vector>
 
-namespace supplementary
-{
-class AgentID;
-class AgentIDManager;
-} // namespace supplementary
-
 namespace alica
 {
 
@@ -29,7 +23,7 @@ protected:
     double sb;
     double angleBallOpp;
     double velAngle;
-    supplementary::AgentIDManager* manager;
+    essentials::AgentIDManager* manager;
 };
 
 } /* namespace alica */
