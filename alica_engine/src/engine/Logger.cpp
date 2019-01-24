@@ -1,6 +1,8 @@
 #include "engine/Logger.h"
+
 #include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
+#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/PlanRepository.h"
@@ -26,8 +28,6 @@ using std::to_string;
 Logger::Logger(AlicaEngine* ae)
         : _ae(ae)
         , _itCount(0)
-        , _to(nullptr)
-        , _tm(nullptr)
         , _inIteration(false)
         , _receivedEvent(false)
         , _fileWriter()
@@ -48,8 +48,6 @@ Logger::Logger(AlicaEngine* ae)
 
         sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << robotName << ".txt";
         _fileWriter.open(sb.str().c_str());
-        _to = _ae->getTeamObserver();
-        _tm = _ae->getTeamManager();
     }
 }
 
@@ -77,7 +75,7 @@ void Logger::processString(const std::string& event)
 void Logger::itertionStarts()
 {
     _inIteration = true;
-    _startTime = _ae->getAlicaClock()->now();
+    _startTime = _ae->getAlicaClock().now();
 }
 
 /**
@@ -91,7 +89,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
         return;
     }
     _inIteration = false;
-    _endTime = _ae->getAlicaClock()->now();
+    _endTime = _ae->getAlicaClock().now();
     _itCount++;
     _time += (_endTime - _startTime);
 
@@ -112,10 +110,11 @@ void Logger::iterationEnds(const RunningPlan* rp)
         _sBuild << reason;
     }
     _sBuild << endl;
-    ActiveAgentIdView agents = _tm->getActiveAgentIds();
+    TeamManager& tm = _ae->getTeamManager();
+    ActiveAgentIdView agents = tm.getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";
-    _sBuild << _tm->getTeamSize();
+    _sBuild << tm.getTeamSize();
 
     _sBuild << " TeamMember:";
     for (AgentIDConstPtr id : agents) {
@@ -130,7 +129,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
         evaluationAssignmentsToString(_sBuild, *rp);
     }
 
-    const auto& teamPlanTrees = _to->getTeamPlanTrees();
+    const auto& teamPlanTrees = _ae->getTeamObserver().getTeamPlanTrees();
     if (!teamPlanTrees.empty()) {
         _sBuild << "OtherTrees:" << endl;
         for (const auto& kvp : teamPlanTrees) {
@@ -177,7 +176,7 @@ std::shared_ptr<std::list<std::string>> Logger::createHumanReadablePlanTree(cons
 {
     std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(std::list<std::string>());
 
-    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository()->getStates();
+    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository().getStates();
 
     const EntryPoint* e;
     for (int64_t id : l) {
@@ -254,7 +253,7 @@ std::stringstream& Logger::createTreeLog(std::stringstream& ss, const RunningPla
 
 void Logger::logToConsole(const std::string& logString)
 {
-    std::cout << "Agent " << _ae->getTeamManager()->getLocalAgentID() << ":\t" << logString << std::endl;
+    std::cout << "Agent " << _ae->getTeamManager().getLocalAgentID() << ":\t" << logString << std::endl;
 }
 
 } /* namespace alica */

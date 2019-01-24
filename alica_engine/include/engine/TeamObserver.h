@@ -51,7 +51,7 @@ private:
 
     AlicaEngine* _ae;
     Agent* _me;
-    TeamManager* _tm;
+    TeamManager& _tm;
 
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;

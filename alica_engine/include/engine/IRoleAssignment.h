@@ -25,7 +25,6 @@ public:
 
     const Role* getOwnRole() const { return _ownRole; }
     const Role* getRole(AgentIDConstPtr robotId);
-    void setCommunication(const IAlicaCommunication* communication);
 
 protected:
     /**
@@ -33,6 +32,5 @@ protected:
      */
     const Role* _ownRole;
     std::map<AgentIDConstPtr, const Role*> _robotRoleMapping;
-    const IAlicaCommunication* _communication;
 };
 } // namespace alica

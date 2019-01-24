@@ -8,7 +8,7 @@ namespace alica
 
 RobotProperties::RobotProperties() {}
 
-RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& name)
+RobotProperties::RobotProperties(AlicaEngine* engine, const std::string& name)
 {
     readFromConfig(engine, name);
 }
@@ -16,7 +16,7 @@ RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& n
 /**
  * Reads the default role as well as the capabilities and characteristics from the Globals.conf.
  */
-void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::string& name)
+void RobotProperties::readFromConfig(AlicaEngine* engine, const std::string& name)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
 
@@ -27,7 +27,7 @@ void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::strin
         }
         std::string key = s;
         std::string kvalue = sc["Globals"]->get<std::string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
-        for (const Capability* cap : engine->getPlanRepository()->getCapabilities()) {
+        for (const Capability* cap : engine->getPlanRepository().getCapabilities()) {
             if (cap->getName().compare(key) == 0) {
                 for (const CapValue* val : cap->getCapValues()) {
                     // transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);

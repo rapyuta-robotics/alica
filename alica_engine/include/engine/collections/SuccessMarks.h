@@ -18,7 +18,7 @@ public:
     ~SuccessMarks();
 
     void limitToPlans(const AbstractPlanGrp& active);
-    void update(const AlicaEngine* ae, const IdGrp& succeededEps);
+    void update(AlicaEngine* ae, const IdGrp& succeededEps);
     const std::map<const AbstractPlan*, EntryPointGrp>& getSuccessMarks() const { return _successMarks; }
 
     void clear();

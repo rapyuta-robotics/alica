@@ -591,7 +591,7 @@ void PlanWriter::createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc)
     xp->SetAttribute("xmi:version", "2.0");
     xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
-    xp->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+    xp->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
     xp->SetAttribute("name", r->getName().c_str());
     xp->SetAttribute("usableWithPlanID", to_string(r->getUsableWithPlanId()).c_str());
     if (r->isDefault()) {
@@ -603,12 +603,12 @@ void PlanWriter::createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc)
     for (const RoleTaskMapping* rtm : r->getRoleTaskMappings()) {
         tinyxml2::XMLElement* xc = doc->NewElement("mappings");
         xp->InsertEndChild(xc);
-        xc->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+        xc->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
         xc->SetAttribute("name", rtm->getName().c_str());
         for (auto mapping : rtm->getTaskPriorities()) {
             tinyxml2::XMLElement* xd = doc->NewElement("taskPriorities");
             xc->InsertEndChild(xd);
-            xd->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+            xd->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
             xd->SetAttribute("name", "");
             xd->SetAttribute("key", to_string(mapping.first).c_str());
             xd->SetAttribute("value", to_string(mapping.second).c_str());
@@ -626,7 +626,7 @@ void PlanWriter::createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDoc
     xp->SetAttribute("xmi:version", "2.0");
     xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
-    xp->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+    xp->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
     xp->SetAttribute("name", tr->getName().c_str());
     xp->SetAttribute("defaultTask", to_string(tr->getDefaultTask()).c_str());
 

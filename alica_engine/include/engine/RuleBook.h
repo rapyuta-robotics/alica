@@ -42,12 +42,11 @@ public:
     PlanSelector* getPlanSelector() const { return _ps.get(); }
 
 private:
-    TeamObserver* _to;
-    TeamManager* _tm;
-    SyncModule* _sm;
+    const TeamManager& _tm;
+    SyncModule& _sm;
     std::unique_ptr<PlanSelector> _ps;
     PlanBase* _pb;
-    Logger* _log;
+    Logger& _log;
     int _maxConsecutiveChanges;
     bool _changeOccurred;
 

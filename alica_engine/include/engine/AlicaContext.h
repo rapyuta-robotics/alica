@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <unordered_map>
 
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
@@ -21,19 +22,22 @@ namespace alica
 
 class AlicaEngine;
 class IAlicaCommunication;
+class AlicaTestFixture;
 
 /**
  * Alica options that can be set at runtime.
  * They are either not part of conf files or app might want to override them at runtime.
  */
-// TODO: shift them to separate header?
-#define ALICA_OPT_THREADPOOL_SIZE (0)
-#define ALICA_OPT_ENGINE_FREQUENCY (1)
-#define ALICA_OPT_MIN_BROADCAST_FREQUENCY (2)
-#define ALICA_OPT_MAX_BROADCAST_FREQUENCY (3)
-#define ALICA_OPT_TEAM_TIMEOUT (4)
-#define ALICA_OPT_ASSIGNMENT_PROTECTION_TIME (5)
-// More to come
+enum class AlicaOption : int
+{
+    ALICA_THREADPOOL_SIZE,
+    ALICA_ENGINE_FREQUENCY,
+    ALICA_MIN_BROADCAST_FREQUENCY,
+    ALICA_MAX_BROADCAST_FREQUENCY,
+    ALICA_TEAM_TIMEOUT,
+    ALICA_ASSIGNMENT_PROTECTION_TIME
+    // More to come
+};
 
 /**
  * Alica creators that framework uses to instantiate various behaviours, utilities, conditions or constraints.
@@ -195,14 +199,17 @@ public:
     // Nice to have's
     void getVersion(int& major, int& minor, int& patch) const;
     // TODO: Extend optVal to be of any type
-    int set(int option, int optval);
-    int get(int option);
+    template <class T>
+    int set(AlicaOption option, T optval);
+    template <class T>
+    T get(AlicaOption option) const;
 
 private:
+    friend AlicaTestFixture;
+
     uint32_t _validTag;
     std::unique_ptr<AlicaEngine> _engine;
     std::unique_ptr<IAlicaCommunication> _communicator;
-    std::unordered_map<int, int> _options;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
 };
 
@@ -210,14 +217,14 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
-    _communicator = std::make_unique<CommunicatorType>(*_engine, std::forward<Args>(args));
+    _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
 }
 
 template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
-    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(*_engine, std::forward<Args>(args)));
+    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
 }
 
 template <class SolverType>
