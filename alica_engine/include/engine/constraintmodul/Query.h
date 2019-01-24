@@ -96,7 +96,7 @@ public:
 private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,14 +114,14 @@ private:
 template <class SolverType>
 bool Query::existsSolution(ThreadSafePlanInterface pi)
 {
-    SolverType* solver = pi.getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi.getAlicaEngine()->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
-    return solver->existsSolution(_relevantVariables, cds);
+    return solver.existsSolution(_relevantVariables, cds);
 }
 
 template <class SolverType, typename ResultType>
@@ -132,12 +132,13 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
     // Collect the complete problem specification
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
-    SolverType* solver = pi.getAlicaEngine()->getSolver<SolverType>();
-    if (solver == nullptr) {
+
+    if (!pi.getAlicaEngine()->existSolver<SolverType>()) {
         ALICA_ERROR_MSG("Query::getSolution: The engine does not have a suitable solver for the given type available.");
         return false;
     }
 
+    SolverType& solver = pi.getAlicaEngine()->getSolver<SolverType>();
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
@@ -147,13 +148,13 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
     // let the solver solve the problem
-    bool ret = solver->getSolution(_context.get(), cds, solverResult);
+    bool ret = solver.getSolution(_context.get(), cds, solverResult);
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule* rs = pi.getAlicaEngine()->getResultStore();
+        VariableSyncModule& rs = pi.getAlicaEngine()->getResultStore();
         for (const ResultType& value : solverResult) {
-            rs->postResult(_relevantVariables[i]->getId(), Variant(value));
+            rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;
         }
 

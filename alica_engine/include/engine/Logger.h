@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
 #include <SystemConfig.h>
@@ -81,8 +80,6 @@ private:
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
     AlicaEngine* _ae;
-    TeamObserver* _to;
-    TeamManager* _tm;
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;

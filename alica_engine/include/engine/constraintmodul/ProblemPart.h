@@ -29,7 +29,7 @@ public:
     const AgentVariables& getVarsOfAgent(AgentIDConstPtr id) const;
 
     // TODO: get rid of the shared ptr
-    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase* solver, const UniqueVarStore& uvs, SolverContext* ctx);
+    std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase& solver, const UniqueVarStore& uvs, SolverContext* ctx);
 
     ProblemPart(const ProblemPart&) = delete;
     ProblemPart& operator=(const ProblemPart&) = delete;

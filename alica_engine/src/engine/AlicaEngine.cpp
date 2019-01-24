@@ -1,32 +1,21 @@
 
 #include "engine/AlicaEngine.h"
-#include "engine/BehaviourPool.h"
-#include "engine/IConditionCreator.h"
+#include <SystemConfig.h>
+
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
 #include "engine/StaticRoleAssignment.h"
-#include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
-#include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
-#include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
-#include "engine/parser/PlanParser.h"
 #include "engine/planselector/PartialAssignment.h"
-#include "engine/teammanager/TeamManager.h"
-#include <engine/syncmodule/SyncModule.h>
-
 #include <alica_common_config/debug_output.h>
 #include <essentials/AgentIDManager.h>
 
 namespace alica
 {
 /**
- * Abort execution with a message, called if initialization fails.
+ * Abort execution with a _planParsermessage, called if initialization fails.
  * @param msg A string
  */
 void AlicaEngine::abort(const std::string& msg)
@@ -38,52 +27,45 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
-        : _stepCalled(false)
-        , _planBase(nullptr)
-        , _communicator(nullptr)
-        , _alicaClock(nullptr)
-        , _terminating(false)
-        , _expressionHandler(nullptr)
-        , _log(nullptr)
-        , _auth(nullptr)
-        , _variableSyncModule(nullptr)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+        : _ctx(ctx)
+        , _stepCalled(false)
+        , _log(this)
         , _stepEngine(stepEngine)
-        , _agentIDManager(idManager)
+        , _agentIDManager(new essentials::AgentIDFactory())
+        , _planParser(&_planRepository)
+        , _teamManager(this, true)
+        , _syncModul(this)
+        , _behaviourPool(this)
+        , _teamObserver(this)
+        , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
+        , _auth(this)
+        , _planBase(this)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
     _useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
     PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
-    _planRepository = new PlanRepository();
-    _planParser = new PlanParser(_planRepository);
-    _masterPlan = _planParser->parsePlanTree(masterPlanName);
-    _roleSet = _planParser->parseRoleSet(roleSetName);
-    _teamManager = new TeamManager(this, true);
-    _teamManager->init();
-    _behaviourPool = new BehaviourPool(this);
-    _teamObserver = new TeamObserver(this);
+    _masterPlan = _planParser.parsePlanTree(masterPlanName);
+    _roleSet = _planParser.parseRoleSet(roleSetName);
+    if (!_planRepository.verifyPlanBase()) {
+        AlicaEngine::abort("Error in parsed plans.");
+    }
+
     if (_useStaticRoles) {
-        _roleAssignment = new StaticRoleAssignment(this);
+        _roleAssignment = std::make_unique<StaticRoleAssignment>(this);
     } else {
         AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
-    // the communicator is expected to be set before init() is called
-    _roleAssignment->setCommunication(_communicator);
-    _syncModul = new SyncModule(this);
 
-    if (!_planRepository->verifyPlanBase()) {
-        abort("Error in parsed plans.");
-    }
     ALICA_DEBUG_MSG("AE: Constructor finished!");
 }
 
 AlicaEngine::~AlicaEngine()
 {
-    if (!_terminating) {
-        shutdown();
-    }
+    _roleSet = nullptr;
+    _masterPlan = nullptr;
 }
 
 /**
@@ -95,119 +77,49 @@ AlicaEngine::~AlicaEngine()
  * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(IBehaviourCreator* bc, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
+bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
-    if (!bc || !cc || !uc || !crc) {
-        ALICA_ERROR_MSG("Empty creators!");
-        return false;
-    }
-
-    if (!_expressionHandler) {
-        _expressionHandler = new ExpressionHandler();
-    }
-
+    _teamManager.init();
     _stepCalled = false;
     bool everythingWorked = true;
-    everythingWorked &= _behaviourPool->init(*bc);
-    _auth = new AuthorityManager(this);
-    _log = new Logger(this);
+    everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
-    _auth->init();
-    _planBase = new PlanBase(this, _masterPlan);
+    _auth.init();
 
-    _expressionHandler->attachAll(*_planRepository, *cc, *uc, *crc);
+    _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
-    _syncModul->init();
-    if (!_variableSyncModule) {
-        _variableSyncModule = new VariableSyncModule(this);
-    }
-    if (_communicator) {
-        _communicator->startCommunication();
-    }
-    if (_variableSyncModule) {
-        _variableSyncModule->init();
-    }
-    RunningPlan::init();
+    _syncModul.init();
+    _variableSyncModule->init();
+    _planBase.start(_masterPlan);
+    std::cout << "AE: Engine started" << std::endl;
     return everythingWorked;
 }
 
 /**
  * Closes the engine for good.
  */
-void AlicaEngine::shutdown()
+void AlicaEngine::terminate()
 {
-    if (_communicator != nullptr) {
-        _communicator->stopCommunication();
-    }
-    _terminating = true;
     _maySendMessages = false;
 
-    if (_behaviourPool != nullptr) {
-        _behaviourPool->stopAll();
-        _behaviourPool->terminateAll();
-        delete _behaviourPool;
-        _behaviourPool = nullptr;
-    }
+    _behaviourPool.stopAll();
+    _behaviourPool.terminateAll();
 
-    if (_planBase != nullptr) {
-        _planBase->stop();
-        delete _planBase;
-        _planBase = nullptr;
-    }
+    _planBase.stop();
+    _auth.close();
+    _syncModul.close();
+    _teamObserver.close();
+    _log.close();
+}
 
-    if (_auth != nullptr) {
-        _auth->close();
-        delete _auth;
-        _auth = nullptr;
-    }
+const IAlicaCommunication& AlicaEngine::getCommunicator() const
+{
+    return _ctx.getCommunicator();
+}
 
-    if (_syncModul != nullptr) {
-        _syncModul->close();
-        delete _syncModul;
-        _syncModul = nullptr;
-    }
-
-    if (_teamObserver != nullptr) {
-        _teamObserver->close();
-        delete _teamObserver;
-        _teamObserver = nullptr;
-    }
-
-    if (_log != nullptr) {
-        _log->close();
-        delete _log;
-        _log = nullptr;
-    }
-
-    if (_planRepository != nullptr) {
-        delete _planRepository;
-        _planRepository = nullptr;
-    }
-
-    if (_planParser != nullptr) {
-        delete _planParser;
-        _planParser = nullptr;
-    }
-
-    _roleSet = nullptr;
-    _masterPlan = nullptr;
-
-    if (_expressionHandler != nullptr) {
-        delete _expressionHandler;
-        _expressionHandler = nullptr;
-    }
-
-    if (_variableSyncModule != nullptr) {
-        delete _variableSyncModule;
-        _variableSyncModule = nullptr;
-    }
-    if (_roleAssignment != nullptr) {
-        delete _roleAssignment;
-        _roleAssignment = nullptr;
-    }
-
-    delete _alicaClock;
-    _alicaClock = nullptr;
+std::string AlicaEngine::getRobotName() const
+{
+    return _ctx.getRobotName();
 }
 
 /**
@@ -216,15 +128,6 @@ void AlicaEngine::shutdown()
 void AlicaEngine::iterationComplete()
 {
     // TODO: implement the trigger function for iteration complete
-}
-
-/**
- * Starts the engine.
- */
-void AlicaEngine::start()
-{
-    _planBase->start();
-    std::cout << "AE: Engine started" << std::endl;
 }
 
 void AlicaEngine::setStepCalled(bool stepCalled)
@@ -242,68 +145,9 @@ bool AlicaEngine::getStepEngine() const
     return _stepEngine;
 }
 
-void AlicaEngine::setAlicaClock(AlicaClock* clock)
-{
-    _alicaClock = clock;
-}
-
-void AlicaEngine::setTeamObserver(TeamObserver* teamObserver)
-{
-    _teamObserver = teamObserver;
-}
-
-void AlicaEngine::setSyncModul(SyncModule* syncModul)
-{
-    _syncModul = syncModul;
-}
-
-void AlicaEngine::setAuth(AuthorityManager* auth)
-{
-    _auth = auth;
-}
-
-void AlicaEngine::setRoleAssignment(IRoleAssignment* roleAssignment)
-{
-    _roleAssignment = roleAssignment;
-}
-
 void AlicaEngine::setStepEngine(bool stepEngine)
 {
     _stepEngine = stepEngine;
-}
-
-/**
- * Gets the robot name, either by access the environment variable "ROBOT", or if that isn't set, the hostname.
- * @return The robot name under which the engine operates, a string
- */
-std::string AlicaEngine::getRobotName() const
-{
-    return essentials::SystemConfig::getInstance().getHostname();
-}
-
-void AlicaEngine::setLog(Logger* log)
-{
-    _log = log;
-}
-
-bool AlicaEngine::isTerminating() const
-{
-    return _terminating;
-}
-
-void AlicaEngine::setMaySendMessages(bool maySendMessages)
-{
-    _maySendMessages = maySendMessages;
-}
-
-void AlicaEngine::setCommunicator(IAlicaCommunication* communicator)
-{
-    _communicator = communicator;
-}
-
-void AlicaEngine::setResultStore(VariableSyncModule* resultStore)
-{
-    _variableSyncModule = resultStore;
 }
 
 /**
@@ -315,7 +159,7 @@ void AlicaEngine::setResultStore(VariableSyncModule* resultStore)
 void AlicaEngine::stepNotify()
 {
     setStepCalled(true);
-    getPlanBase()->getStepModeCV()->notify_all();
+    _planBase.getStepModeCV()->notify_all();
 }
 
 /**
@@ -325,9 +169,9 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding AgentID object.
  */
-AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector) const
+AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
 {
-    return AgentIDConstPtr(_agentIDManager->getIDFromBytes(idByteVector));
+    return AgentIDConstPtr(_agentIDManager.getIDFromBytes(idByteVector));
 }
 
 } // namespace alica

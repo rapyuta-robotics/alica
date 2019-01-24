@@ -36,12 +36,10 @@
 namespace alica
 {
 
-AlicaTime RunningPlan::s_assignmentProtectionTime = AlicaTime::zero();
-
-void RunningPlan::init()
+namespace
 {
-    s_assignmentProtectionTime =
-            AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+std::once_flag once;
+AlicaTime assignmentProtectionTime = AlicaTime::zero();
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
@@ -53,6 +51,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
 {
+    std::call_once(once, []() {
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        assignmentProtectionTime = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+    });
+
+    _assignmentProtectionTime = assignmentProtectionTime;
 }
 
 RunningPlan::~RunningPlan()
@@ -105,7 +109,7 @@ bool RunningPlan::isDeleteable() const
     if (_status.active == PlanActivity::InActive) {
         return true; // shortcut for plans from planselector
     }
-    return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool()->isBehaviourRunningInContext(*this));
+    return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool().isBehaviourRunningInContext(*this));
 }
 
 void RunningPlan::preTick()
@@ -253,7 +257,7 @@ void RunningPlan::printRecursive() const
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
     if (_activeTriple.plan != plan) {
-        _status.planStartTime = _ae->getAlicaClock()->now();
+        _status.planStartTime = _ae->getAlicaClock().now();
         revokeAllConstraints();
         _activeTriple.plan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
@@ -278,14 +282,14 @@ void RunningPlan::useState(const State* s)
     if (_activeTriple.state != s) {
         ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
-        _status.stateStartTime = _ae->getAlicaClock()->now();
+        _status.stateStartTime = _ae->getAlicaClock().now();
         if (s != nullptr) {
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
                 AgentIDConstPtr mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->getTeamManager()->setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
+                _ae->getTeamManager().setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
             }
         }
     }
@@ -439,9 +443,9 @@ void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
     if (isBehaviour()) {
-        _ae->getBehaviourPool()->stopBehaviour(*this);
+        _ae->getBehaviourPool().stopBehaviour(*this);
     } else {
-        _ae->getTeamObserver()->notifyRobotLeftPlan(_activeTriple.plan);
+        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.plan);
     }
     revokeAllConstraints();
     deactivateChildren();
@@ -507,7 +511,7 @@ bool RunningPlan::amISuccessful() const
     if (isBehaviour()) { // behaviors only have a simple success flag
         return getStatus() == PlanStatus::Success;
     }
-    return getAssignment().isAgentSuccessful(_ae->getTeamManager()->getLocalAgentID(), _activeTriple.entryPoint);
+    return getAssignment().isAgentSuccessful(_ae->getTeamManager().getLocalAgentID(), _activeTriple.entryPoint);
 }
 
 bool RunningPlan::amISuccessfulInAnyChild() const
@@ -528,7 +532,7 @@ void RunningPlan::activate()
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
-        _ae->getBehaviourPool()->startBehaviour(*this);
+        _ae->getBehaviourPool().startBehaviour(*this);
     }
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
@@ -577,8 +581,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (isBehaviour()) {
         return false;
     }
-    const bool keepTask = _status.planStartTime + s_assignmentProtectionTime > now;
-    const bool keepState = _status.stateStartTime + s_assignmentProtectionTime > now;
+    const bool keepTask = _status.planStartTime + _assignmentProtectionTime > now;
+    const bool keepState = _status.stateStartTime + _assignmentProtectionTime > now;
     const bool auth = _cycleManagement.haveAuthority();
 
     // if keepTask, the task Assignment should not be changed!
@@ -687,7 +691,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     aldif.setReason(AllocationDifference::Reason::message);
 
     // Update Success Collection:
-    _ae->getTeamObserver()->updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
+    _ae->getTeamObserver().updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
@@ -752,6 +756,11 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
         }
         message.push_back(-2);
     }
+}
+
+AgentIDConstPtr RunningPlan::getOwnID() const
+{
+    return _ae->getTeamManager().getLocalAgentID();
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

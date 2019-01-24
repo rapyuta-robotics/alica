@@ -85,7 +85,7 @@ const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
  */
 AgentIDConstPtr BasicBehaviour::getOwnId() const
 {
-    return _engine->getTeamManager()->getLocalAgentID();
+    return _engine->getTeamManager().getLocalAgentID();
 }
 
 /**
@@ -116,7 +116,7 @@ void BasicBehaviour::setSuccess()
 {
     if (!_success) {
         _success = true;
-        _engine->getPlanBase()->addFastPathEvent(_context);
+        _engine->getPlanBase().addFastPathEvent(_context);
     }
 }
 
@@ -129,7 +129,7 @@ void BasicBehaviour::setFailure()
 {
     if (!_failure) {
         _failure = true;
-        _engine->getPlanBase()->addFastPathEvent(_context);
+        _engine->getPlanBase().addFastPathEvent(_context);
     }
 }
 
@@ -239,7 +239,7 @@ void BasicBehaviour::runInternalTriggered()
 
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
-    _engine->getCommunicator()->sendLogMessage(level, message);
+    _engine->getCommunicator().sendLogMessage(level, message);
 }
 
 } /* namespace alica */

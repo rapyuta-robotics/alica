@@ -45,11 +45,9 @@ private:
     AlicaEngine* _ae;
     AgentIDConstPtr _myId;
     unsigned long _ticks;
-    PlanRepository* _pr;
     std::map<const SyncTransition*, Synchronisation*> _synchSet;
     std::list<const SyncTransition*> _synchedTransitions;
     std::mutex _lomutex;
-    const IAlicaCommunication* _communicator;
 };
 
 } // namespace alica

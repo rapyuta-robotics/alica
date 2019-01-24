@@ -50,7 +50,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
     _allocationHistory.resize(historySize);
 
     _rp = p;
-    _myID = ae->getTeamManager()->getLocalAgentID();
+    _myID = ae->getTeamManager().getLocalAgentID();
 }
 
 CycleManager::~CycleManager() {}
@@ -79,16 +79,16 @@ void CycleManager::update()
             _overrideShoutTime = AlicaTime::zero();
 
             ALICA_DEBUG_MSG("CM: Assuming Authority for " << plan->getAuthorityTimeInterval().inSeconds() << "sec!");
-            _overrideTimestamp = _ae->getAlicaClock()->now();
+            _overrideTimestamp = _ae->getAlicaClock().now();
         } else {
             plan->setAuthorityTimeInterval(std::max(_minimalOverrideTimeInterval, plan->getAuthorityTimeInterval() * _intervalDecFactor));
         }
     } else {
-        if (_state == CycleState::overriding && _overrideTimestamp + plan->getAuthorityTimeInterval() < _ae->getAlicaClock()->now()) {
+        if (_state == CycleState::overriding && _overrideTimestamp + plan->getAuthorityTimeInterval() < _ae->getAlicaClock().now()) {
             ALICA_DEBUG_MSG("CM: Resume Observing!");
             _state = CycleState::observing;
             _fixedAllocation = AllocationAuthorityInfo();
-        } else if (_state == CycleState::overridden && _overrideShoutTime + plan->getAuthorityTimeInterval() < _ae->getAlicaClock()->now()) {
+        } else if (_state == CycleState::overridden && _overrideShoutTime + plan->getAuthorityTimeInterval() < _ae->getAlicaClock().now()) {
             ALICA_DEBUG_MSG("CM: Resume Observing!");
             _state = CycleState::observing;
             _fixedAllocation = AllocationAuthorityInfo();
@@ -181,20 +181,20 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
             _state = CycleState::overriding;
             _rp->getActivePlan()->setAuthorityTimeInterval(
                     std::min(_maximalOverrideTimeInterval, (_rp->getActivePlan()->getAuthorityTimeInterval() * _intervalIncFactor)));
-            _overrideTimestamp = _ae->getAlicaClock()->now();
+            _overrideTimestamp = _ae->getAlicaClock().now();
             _overrideShoutTime = AlicaTime::zero();
         }
     } else {
         ALICA_DEBUG_MSG("CM: Assignment overridden in " << _rp->getActivePlan()->getName());
         _state = CycleState::overridden;
-        _overrideShoutTime = _ae->getAlicaClock()->now();
+        _overrideShoutTime = _ae->getAlicaClock().now();
         _fixedAllocation = aai;
     }
 }
 
 bool CycleManager::needsSending() const
 {
-    return _state == CycleState::overriding && (_overrideShoutTime + _overrideShoutInterval < _ae->getAlicaClock()->now());
+    return _state == CycleState::overriding && (_overrideShoutTime + _overrideShoutInterval < _ae->getAlicaClock().now());
 }
 
 /**
@@ -202,7 +202,7 @@ bool CycleManager::needsSending() const
  */
 void CycleManager::sent()
 {
-    _overrideShoutTime = _ae->getAlicaClock()->now();
+    _overrideShoutTime = _ae->getAlicaClock().now();
 }
 
 /**
@@ -233,7 +233,7 @@ bool CycleManager::applyAssignment()
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
             for (AgentIDConstPtr robot : epr.robots) {
-                const EntryPoint* e = _ae->getPlanRepository()->getEntryPoints()[epr.entrypoint];
+                const EntryPoint* e = _ae->getPlanRepository().getEntryPoints()[epr.entrypoint];
                 bool changed = _rp->editAssignment().updateAgent(robot, e);
                 if (changed) {
                     if (robot == _myID) {

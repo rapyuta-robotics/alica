@@ -11,7 +11,7 @@
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
+Agent::Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
         : _id(id)
         , _name()
         , _engine(engine)
@@ -24,7 +24,7 @@ Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
 {
 }
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
+Agent::Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
         : _id(id)
         , _name(name)
         , _engine(engine)
@@ -72,14 +72,14 @@ bool Agent::update()
     if (_local) {
         return false;
     }
-    if (_active && _timeLastMsgReceived + _timeout < _engine->getAlicaClock()->now()) {
+    if (_active && _timeLastMsgReceived + _timeout < _engine->getAlicaClock().now()) {
         // timeout triggered
         _engineData.clearSuccessMarks();
         _active = false;
         return true;
     }
 
-    if (!_active && _timeLastMsgReceived + _timeout > _engine->getAlicaClock()->now()) {
+    if (!_active && _timeLastMsgReceived + _timeout > _engine->getAlicaClock().now()) {
         // reactivate because of new messages
         _active = true;
         return true;
