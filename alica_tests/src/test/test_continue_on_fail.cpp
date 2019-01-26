@@ -4,6 +4,11 @@
 
 #include <engine/PlanBase.h>
 
+namespace alica
+{
+namespace
+{
+
 class FailureHandling : public AlicaTestFixture
 {
 protected:
@@ -17,24 +22,24 @@ TEST_F(FailureHandling, continueOnFailure)
     ASSERT_NO_SIGNAL
     SimpleSwitches::reset();
 
-    ae->start();
-
     step(ae);
 
-    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530004915641);
+    ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1530004915641);
 
     SimpleSwitches::set(0, true);
     step(ae);
 
-    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530069246104);
+    ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1530069246104);
 
     SimpleSwitches::set(1, true);
     step(ae);
 
-    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1530004975275);
+    ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1530004975275);
 
     SimpleSwitches::set(2, true);
     step(ae); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
-    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
-    ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1532424097662);
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1532424097662);
+}
+}
 }

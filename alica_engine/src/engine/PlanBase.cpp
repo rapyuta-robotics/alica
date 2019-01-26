@@ -74,7 +74,6 @@ PlanBase::PlanBase(AlicaEngine* ae)
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
         _statusMessage = new AlicaEngineInfo();
-        _statusMessage->senderID = _ae->getTeamManager().getLocalAgentID();
     }
 
     ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
@@ -93,7 +92,10 @@ void PlanBase::start(const Plan* masterPlan)
 {
     if (!_running) {
         _running = true;
-        _statusMessage->masterPlan = masterPlan->getName();
+        if (_statusMessage) {
+            _statusMessage->senderID = _ae->getTeamManager().getLocalAgentID();
+            _statusMessage->masterPlan = masterPlan->getName();
+        }
         _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
     }
 }

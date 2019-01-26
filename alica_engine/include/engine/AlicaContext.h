@@ -22,7 +22,7 @@ namespace alica
 
 class AlicaEngine;
 class IAlicaCommunication;
-class AlicaTestFixture;
+class AlicaTestEngineGetter;
 
 /**
  * Alica options that can be set at runtime.
@@ -51,7 +51,7 @@ struct AlicaCreators
             , constraintCreator(std::move(crc))
             , behaviourCreator(std::move(bc))
     {
-        assert(cc && uc && crc && bc);
+        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator);
     }
 
     std::unique_ptr<IConditionCreator> conditionCreator;
@@ -111,14 +111,14 @@ public:
      *
      * @return The agent name under which the engine operates, a string
      */
-    std::string getRobotName() const;
+    static std::string getRobotName();
 
     /**
      * Set host (or agent) name for this process.
      *
      * @param name Host name
      */
-    void setRobotName(const std::string& name);
+    static void setRobotName(const std::string& name);
 
     // TODO: better descriptive name for paths
     /**
@@ -126,14 +126,14 @@ public:
      *
      * @param path Root path
      */
-    void setRootPath(const std::string& path);
+    static void setRootPath(const std::string& path);
 
     /**
      * Set config path for this process.
      *
      * @param path Config path
      */
-    void setConfigPath(const std::string& path);
+    static void setConfigPath(const std::string& path);
 
     /**
      * Set communicator to be used by this alica framework instance.
@@ -205,7 +205,7 @@ public:
     T get(AlicaOption option) const;
 
 private:
-    friend AlicaTestFixture;
+    friend class AlicaTestEngineGetter;
 
     uint32_t _validTag;
     std::unique_ptr<AlicaEngine> _engine;

@@ -22,42 +22,30 @@
 #include "engine/teammanager/TeamManager.h"
 #include <communication/AlicaDummyCommunication.h>
 
-class AlicaEngineAuthorityManager : public AlicaTestFixtureBase
+namespace alica
+{
+namespace
+{
+
+class AlicaEngineAuthorityManager : public AlicaTestMultiAgentFixture
 {
 protected:
-    alica::AlicaEngine* ae2;
-
-    virtual void SetUp()
+    const int agentCount = 2;
+    virtual const char* getRoleSetName() const override { return "RolesetTA"; }
+    virtual const char* getMasterPlanName() const override { return "AuthorityTestMaster"; }
+    virtual int getAgentCount() const override { return agentCount; }
+    virtual const char* getHostName(int agentNumber) const override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        // bring up the SystemConfig with the corresponding path
-        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-        sc.setRootPath(path);
-        sc.setConfigPath(path + "/etc");
-        sc.setHostname("nase");
-
-        // setup the engine parts
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
+        if (agentNumber) {
+            return "hairy";
+        } else {
+            return "nase";
+        }
     }
 
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        ae2->shutdown();
-        essentials::SystemConfig::getInstance().shutdown();
-        delete ae->getCommunicator();
-        delete ae2->getCommunicator();
-        delete cc;
-        delete bc;
-        delete uc;
-        delete crc;
-    }
+    virtual void SetUp() override { AlicaTestMultiAgentFixture::SetUp(); }
+
+    virtual void TearDown() override { AlicaTestMultiAgentFixture::TearDown(); }
 };
 
 TEST(AllocationDifference, MessageCancelsUtil)
@@ -107,33 +95,17 @@ TEST(AllocationDifference, MessageCancelsUtil)
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setHostname("nase");
-    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
-    ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
-    EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
-
-    sc.setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
-    ae2->setAlicaClock(new alica::AlicaClock());
-    ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
-    EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
-
-    auto uSummandAe = ae->getPlanRepository()->getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
+    auto uSummandAe = aes[0]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr = dynamic_cast<alica::DummyTestSummand*>(uSummandAe);
-    dbr->robotId = ae->getTeamManager()->getLocalAgentID();
+    dbr->robotId = aes[0]->getTeamManager().getLocalAgentID();
 
-    auto uSummandAe2 = ae2->getPlanRepository()->getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
+    auto uSummandAe2 = aes[1]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
-    dbr2->robotId = ae2->getTeamManager()->getLocalAgentID();
+    dbr2->robotId = aes[1]->getTeamManager().getLocalAgentID();
 
-    alica::AgentIDConstPtr id1 = ae->getTeamManager()->getLocalAgentID();
-    alica::AgentIDConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
+    alica::AgentIDConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
+    alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
-
-    ae->start();
-    ae2->start();
 
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
@@ -142,17 +114,19 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
-        step(ae);
-        step(ae2);
+        step(aes[0]);
+        step(aes[1]);
 
         if (i == 1) {
-            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
+            EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
+            EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
         }
 
         if (i == 20) {
-            EXPECT_EQ(ae->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(ae2->getPlanBase()->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403429950);
+            EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
+            EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403429950);
         }
     }
+}
+}
 }

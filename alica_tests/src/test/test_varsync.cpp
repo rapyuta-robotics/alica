@@ -20,6 +20,11 @@ using alica::Variable;
 using alica::VariableSyncModule;
 using alica::Variant;
 
+namespace alica
+{
+namespace
+{
+
 class VariableSyncModuleTest : public AlicaTestFixture
 {
 protected:
@@ -31,12 +36,12 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 {
     ASSERT_NO_SIGNAL
 
-    VariableSyncModule* vsm = ae->getResultStore();
+    VariableSyncModule& vsm = ae->getResultStore();
 
     Variant v1(1.23);
     Variant v2(-10.0);
-    vsm->postResult(1, v1);
-    vsm->postResult(2, v2);
+    vsm.postResult(1, v1);
+    vsm.postResult(2, v2);
 
     std::vector<alica::Interval<double>> limits(2);
 
@@ -51,7 +56,7 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
     vs[0] = &sv1;
     vs[1] = &sv2;
 
-    int num = vsm->getSeeds(vs, limits, seeds);
+    int num = vsm.getSeeds(vs, limits, seeds);
     EXPECT_EQ(num, 1);
     EXPECT_EQ(seeds.size(), 2);
     EXPECT_TRUE(seeds[0].isDouble());
@@ -59,4 +64,6 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 
     EXPECT_EQ(1.23, seeds[0].getDouble());
     EXPECT_EQ(-10.0, seeds[1].getDouble());
+}
+}
 }

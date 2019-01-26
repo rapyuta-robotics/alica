@@ -38,6 +38,11 @@ using namespace std;
 #include "engine/parser/PlanWriter.h"
 #include <engine/AlicaEngine.h>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaEngineTest : public AlicaTestFixture
 {
 protected:
@@ -171,7 +176,7 @@ TEST_F(AlicaEngineTest, planParser)
 {
     ASSERT_NO_SIGNAL
 
-    const auto& plans = ae->getPlanRepository()->getPlans();
+    const auto& plans = ae->getPlanRepository().getPlans();
 
     cout << "Printing plans from Repository: " << endl;
     for (const alica::Plan* plan : plans) {
@@ -580,8 +585,8 @@ TEST_F(AlicaEngineTest, planWriter)
 {
     ASSERT_NO_SIGNAL
 
-    const auto& plans = ae->getPlanRepository()->getPlans();
-    alica::PlanWriter pw = alica::PlanWriter(ae, ae->getPlanRepository());
+    const auto& plans = ae->getPlanRepository().getPlans();
+    alica::PlanWriter pw = alica::PlanWriter(ae);
     for (const alica::Plan* plan : plans) {
         cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
         pw.saveSinglePlan(plan);
@@ -593,4 +598,6 @@ TEST_F(AlicaEngineTest, planWriter)
         std::remove(temp.c_str()); // delete the file after comparing it
     }
     cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
+}
+}
 }
