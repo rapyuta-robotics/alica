@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+#include "engine/AgentIDConstPtr.h"
+#include "essentials/AgentIDManager.h"
+
 namespace alica
 {
 

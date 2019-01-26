@@ -1,4 +1,6 @@
 #include "engine/UtilityFunction.h"
+
+#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/IRoleAssignment.h"
@@ -13,7 +15,6 @@
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
-#include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
 

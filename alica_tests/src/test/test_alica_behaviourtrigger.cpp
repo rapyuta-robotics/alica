@@ -15,6 +15,11 @@
 #include <condition_variable>
 #include <mutex>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaBehaviourTrigger : public AlicaTestFixture
 {
 protected:
@@ -27,12 +32,10 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
 
-    ae->start();
-
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
-    ae->getAlicaClock()->sleep(duration);
+    ae->getAlicaClock().sleep(duration);
 
-    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
             continue;
@@ -48,7 +51,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
         }
     }
 
-    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
             continue;
@@ -69,23 +72,23 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run();
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger2->run();
 
-    ae->getAlicaClock()->sleep(duration * 2);
+    ae->getAlicaClock().sleep(duration * 2);
 
-    for (auto iter : ae->getBehaviourPool()->getAvailableBehaviours()) {
+    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
             continue;
@@ -103,4 +106,6 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
         }
     }
     std::cout << "Finished" << std::endl;
+}
+}
 }

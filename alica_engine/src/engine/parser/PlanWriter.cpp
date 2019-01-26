@@ -46,10 +46,9 @@ using std::string;
 using std::stringstream;
 using std::to_string;
 
-PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep)
+PlanWriter::PlanWriter(AlicaEngine* ae)
         : _objectCounter(0)
         , _ae(ae)
-        , _rep(rep)
 {
     string path = essentials::SystemConfig::getInstance().getConfigPath();
     _tempPlanDir = essentials::FileSystem::combinePaths(path, "plans/tmp/");
@@ -87,7 +86,7 @@ void PlanWriter::setPlansToSave(const AlicaElementGrp& plansToSave)
 void PlanWriter::saveAllPlans()
 {
     _plansToSave.clear();
-    for (const Plan* p : _rep->getPlans()) {
+    for (const Plan* p : _ae->getPlanRepository().getPlans()) {
         _plansToSave.push_back(p);
     }
     saveFileLoop();
@@ -514,9 +513,10 @@ tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(const EntryPoint* e, t
     xe->SetAttribute("minCardinality", e->getMinCardinality());
     xe->SetAttribute("maxCardinality", e->getMaxCardinality());
     tinyxml2::XMLElement* xc = doc->NewElement("task");
-    xc->InsertEndChild(doc->NewText((
-            getRelativeFileName(_rep->getTaskRepositorys()[e->getTask()->getTaskRepository()->getId()]->getFileName()) + "#" + to_string(e->getTask()->getId()))
-                                            .c_str()));
+    xc->InsertEndChild(
+            doc->NewText((getRelativeFileName(_ae->getPlanRepository().getTaskRepositorys()[e->getTask()->getTaskRepository()->getId()]->getFileName()) + "#" +
+                          to_string(e->getTask()->getId()))
+                                 .c_str()));
     xe->InsertEndChild(xc);
     xc = doc->NewElement("state");
     xc->InsertEndChild(doc->NewText((string("#") + to_string(e->getState()->getId())).c_str()));

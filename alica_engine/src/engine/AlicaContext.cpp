@@ -43,7 +43,7 @@ int AlicaContext::terminate()
     return 0;
 }
 
-std::string AlicaContext::getRobotName() const
+std::string AlicaContext::getRobotName()
 {
     return essentials::SystemConfig::getInstance().getHostname();
 }

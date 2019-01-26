@@ -40,13 +40,12 @@ void TeamManager::readTeamFromConfig()
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     std::string localAgentName = _engine->getRobotName();
     std::shared_ptr<std::vector<std::string>> agentNames = sc["Globals"]->getSections("Globals.Team", NULL);
-
     bool foundSelf = false;
     for (const std::string& agentName : *agentNames) {
         int id = sc["Globals"]->tryGet<int>(-1, "Globals", "Team", agentName.c_str(), "ID", NULL);
 
         Agent* agent = new Agent(_engine, _teamTimeOut, _engine->getId(id), agentName);
-        if (!foundSelf && agentName.compare(localAgentName) == 0) {
+        if (!foundSelf && agentName == localAgentName) {
             foundSelf = true;
             _localAgent = agent;
             _localAgent->setLocal(true);

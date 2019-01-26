@@ -39,7 +39,7 @@ class AlicaEngine;
 class PlanWriter
 {
 public:
-    PlanWriter(AlicaEngine* ae, PlanRepository* rep);
+    PlanWriter(AlicaEngine* ae);
     ~PlanWriter();
 
     const std::string& getTempPlanDir() const;
@@ -61,7 +61,6 @@ public:
     tinyxml2::XMLDocument* createTaskRepositoryXMLDocument(const TaskRepository* tr);
 
 private:
-    PlanRepository* _rep;
     std::string _currentFile;
     int _objectCounter;
 
