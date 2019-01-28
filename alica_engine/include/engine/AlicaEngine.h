@@ -21,7 +21,6 @@
 namespace alica
 {
 struct AlicaCreators;
-class AlicaContext;
 class Plan;
 class RoleSet;
 class VariableSyncModule;
