@@ -29,7 +29,11 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
         _communicator->startCommunication();
     }
 
-    return _engine->init(creatorCtx);
+    if (_engine->init(creatorCtx)) {
+        _engine->start();
+        return 0;
+    }
+    return -1;
 }
 
 int AlicaContext::terminate()

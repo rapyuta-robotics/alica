@@ -26,48 +26,23 @@
 #include <ros/ros.h>
 #include <vector>
 
-using alica::AlicaTime;
-
+namespace alica
+{
+namespace
+{
+// TODO: What to do with this clock?
+/*
 class StillClock : public alica::AlicaClock
 {
-    alica::AlicaTime now() const override { return AlicaTime::milliseconds(555); }
-};
-/*
-class TaskAssignmentTest : public AlicaTestFixtureBase
+    alica::AlicaTime now() const override { return alica::AlicaTime::milliseconds(555); }
+};*/
+
+class TaskAssignmentTest : public AlicaTestFixture
 {
 protected:
-    virtual void SetUp()
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-        sc.setRootPath(path);
-        sc.setConfigPath(path + "/etc");
-        cout << sc.getConfigPath() << endl;
-
-        sc.setHostname("nase");
-        ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
-        bc = new alica::BehaviourCreator();
-        cc = new alica::ConditionCreator();
-        uc = new alica::UtilityFunctionCreator();
-        crc = new alica::ConstraintCreator();
-        ae->setAlicaClock(new StillClock());
-        ae->init(bc, cc, uc, crc);
-    }
-
-    virtual void TearDown()
-    {
-        ae->shutdown();
-        essentials::SystemConfig::getInstance().shutdown();
-        delete bc;
-        delete cc;
-        delete uc;
-        delete crc;
-    }
+    const char* getRoleSetName() const override { return "RolesetTA"; }
+    const char* getMasterPlanName() const override { return "MasterPlanTaskAssignment"; }
+    bool stepEngine() const override { return false; }
 };
 
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
@@ -81,8 +56,9 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
         robots.push_back(agentID);
         ae->getTeamManager().setTimeLastMsgReceived(agentID, ae->getAlicaClock().now());
     }
-    ae->getTeamObserver()->tick(nullptr);
-    ae->getRoleAssignment()->tick();
+    ae->getTeamObserver().tick(nullptr);
+
+    ae->getRoleAssignment().tick();
     // fake inform the team observer about roles of none existing robots
 
     const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository().getPlans();
@@ -96,4 +72,5 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1);
 }
-*/
+}
+}

@@ -16,22 +16,18 @@ TeamManager::TeamManager(AlicaEngine* engine, bool useConfigForTeam = true)
         , _useConfigForTeam(useConfigForTeam)
         , _engine(engine)
 {
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
+
+    if (_useConfigForTeam) {
+        readTeamFromConfig();
+    }
 }
 
 TeamManager::~TeamManager()
 {
     for (auto& agentEntry : _agents) {
         delete agentEntry.second;
-    }
-}
-
-void TeamManager::init()
-{
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
-
-    if (_useConfigForTeam) {
-        readTeamFromConfig();
     }
 }
 

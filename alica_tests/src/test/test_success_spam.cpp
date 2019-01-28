@@ -39,6 +39,7 @@ protected:
 TEST_F(AlicaSpamSuccess, runBehaviour)
 {
     ASSERT_NO_SIGNAL
+    ae->start();
     for (int i = 0; i < 30 * 6; ++i) {
         step(ae);
     }

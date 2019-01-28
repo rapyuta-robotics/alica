@@ -66,6 +66,7 @@ TEST_F(AlicaConditionPlan, solverTest)
     }
     ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
+    ae->start();
     step(ae);
 
     alica::BasicBehaviour* basicBehaviour = ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour();

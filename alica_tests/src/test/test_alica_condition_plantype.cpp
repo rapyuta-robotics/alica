@@ -46,7 +46,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     alica::TestConstantValueSummand* dbrRun = dynamic_cast<alica::TestConstantValueSummand*>(uSummandRunPlan);
     ASSERT_NE(dbrRun, nullptr);
     dbrRun->robotId = ae->getTeamManager().getLocalAgentID();
-
+    ae->start();
     for (int i = 0; i < 21; i++) {
         step(ae);
 

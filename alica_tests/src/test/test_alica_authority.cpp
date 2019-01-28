@@ -42,10 +42,6 @@ protected:
             return "nase";
         }
     }
-
-    virtual void SetUp() override { AlicaTestMultiAgentFixture::SetUp(); }
-
-    virtual void TearDown() override { AlicaTestMultiAgentFixture::TearDown(); }
 };
 
 TEST(AllocationDifference, MessageCancelsUtil)
@@ -107,6 +103,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
+    aes[0]->start();
+    aes[1]->start();
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
 

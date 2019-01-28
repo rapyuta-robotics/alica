@@ -39,10 +39,6 @@ protected:
             return "hairy";
         }
     }
-
-    virtual void SetUp() override { AlicaTestMultiAgentFixture::SetUp(); }
-
-    virtual void TearDown() override { AlicaTestMultiAgentFixture::TearDown(); }
 };
 
 /**
@@ -51,7 +47,8 @@ protected:
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
-
+    aes[0]->start();
+    aes[1]->start();
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << *(aes[0]->getTeamManager().getLocalAgentID()) << std::endl;
         step(aes[0]);

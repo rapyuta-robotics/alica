@@ -42,10 +42,6 @@ protected:
             return "nase";
         }
     }
-
-    virtual void SetUp() override { AlicaTestMultiAgentFixture::SetUp(); }
-
-    virtual void TearDown() override { AlicaTestMultiAgentFixture::TearDown(); }
 };
 /**
  * Tests whether it is possible to use multiple agents.
@@ -53,7 +49,8 @@ protected:
 TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
     ASSERT_NO_SIGNAL
-
+    aes[0]->start();
+    aes[1]->start();
     step(aes[0]);
     step(aes[1]);
 
