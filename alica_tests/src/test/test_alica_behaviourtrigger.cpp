@@ -31,7 +31,7 @@ protected:
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
-
+    ae->start();
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     ae->getAlicaClock().sleep(duration);
 

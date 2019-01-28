@@ -41,22 +41,20 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _planBase(this)
+        , _masterPlan(_planParser.parsePlanTree(masterPlanName))
+        , _roleSet(_planParser.parseRoleSet(roleSetName))
+        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
     _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
     _useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
-
-    _masterPlan = _planParser.parsePlanTree(masterPlanName);
-    _roleSet = _planParser.parseRoleSet(roleSetName);
-    if (!_planRepository.verifyPlanBase()) {
-        AlicaEngine::abort("Error in parsed plans.");
+    if (!_useStaticRoles) {
+        AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
 
-    if (_useStaticRoles) {
-        _roleAssignment = std::make_unique<StaticRoleAssignment>(this);
-    } else {
-        AlicaEngine::abort("Unknown RoleAssignment Type!");
+    if (!_planRepository.verifyPlanBase()) {
+        AlicaEngine::abort("Error in parsed plans.");
     }
 
     ALICA_DEBUG_MSG("AE: Constructor finished!");
@@ -79,7 +77,6 @@ AlicaEngine::~AlicaEngine()
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
-    _teamManager.init();
     _stepCalled = false;
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
@@ -89,17 +86,23 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
     _syncModul.init();
+    const_cast<IAlicaCommunication&>(getCommunicator()).startCommunication();
     _variableSyncModule->init();
-    _planBase.start(_masterPlan);
     std::cout << "AE: Engine started" << std::endl;
     return everythingWorked;
 }
 
+void AlicaEngine::start()
+{
+    // TODO: Removing this api need major refactoring of unit tests.
+    _planBase.start(_masterPlan);
+}
 /**
  * Closes the engine for good.
  */
 void AlicaEngine::terminate()
 {
+    const_cast<IAlicaCommunication&>(getCommunicator()).stopCommunication();
     _maySendMessages = false;
 
     _behaviourPool.stopAll();

@@ -39,6 +39,7 @@ public:
 
     // State modifiers:
     bool init(AlicaCreators& creatorCtx);
+    void start();
     void terminate();
     void stepNotify();
 
@@ -89,26 +90,25 @@ private:
     void setStepEngine(bool stepEngine);
 
     AlicaContext& _ctx;
-
-    const RoleSet* _roleSet;
-    const Plan* _masterPlan;
-
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
-    // TODO: fix this, VariableSyncModule has circular dependency with engine header
-    std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    // VariableSyncModule _variableSyncModule;
-    PlanBase _planBase;
-    AuthorityManager _auth;
-    ExpressionHandler _expressionHandler;
-    TeamObserver _teamObserver;
-    BehaviourPool _behaviourPool;
-    SyncModule _syncModul;
-    TeamManager _teamManager;
     essentials::AgentIDManager _agentIDManager;
     PlanRepository _planRepository;
     PlanParser _planParser;
-    Logger _log;
+    const Plan* _masterPlan;
+    const RoleSet* _roleSet;
+    TeamManager _teamManager;
+    BehaviourPool _behaviourPool;
+    TeamObserver _teamObserver;
+    SyncModule _syncModul;
     AlicaClock _alicaClock;
+    ExpressionHandler _expressionHandler;
+    AuthorityManager _auth;
+    Logger _log;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
+    PlanBase _planBase;
+    // TODO: fix this, VariableSyncModule has circular dependency with engine header
+    // VariableSyncModule _variableSyncModule;
+    std::unique_ptr<VariableSyncModule> _variableSyncModule;
+
     BlackBoard _blackboard;
     /**
      * Switch the engine between normal operation and silent mode, in which no messages other than debugging information

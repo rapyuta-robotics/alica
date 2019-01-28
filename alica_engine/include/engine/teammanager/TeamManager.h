@@ -31,8 +31,6 @@ public:
     TeamManager(AlicaEngine* engine, bool useConfigForTeam);
     virtual ~TeamManager();
 
-    void init();
-
     const AgentMap& getAllAgents() const { return _agents; }
 
     AgentIDConstPtr getLocalAgentID() const;

@@ -38,7 +38,7 @@ protected:
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
     ASSERT_NO_SIGNAL
-
+    ae->start();
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     do {
         ae->getAlicaClock().sleep(sleepTime);

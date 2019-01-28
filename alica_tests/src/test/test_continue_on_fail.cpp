@@ -21,7 +21,7 @@ TEST_F(FailureHandling, continueOnFailure)
 {
     ASSERT_NO_SIGNAL
     SimpleSwitches::reset();
-
+    ae->start();
     step(ae);
 
     ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1530004915641);

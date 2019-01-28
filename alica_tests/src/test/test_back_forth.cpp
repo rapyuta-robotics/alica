@@ -32,6 +32,7 @@ TEST_F(BackForthTest, testing)
     SimpleSwitches::reset();
 
     ASSERT_EQ(CounterClass::called, 0);
+    ae->start();
     step(ae);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(200));

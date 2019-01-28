@@ -55,10 +55,12 @@ protected:
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
 
+        ae = AlicaTestEngineGetter::getEngine(ac);
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-        EXPECT_TRUE(ac->init(creators));
-        ae = AlicaTestEngineGetter::getEngine(ac);
+        // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
+        // ac->init(creators);
+        EXPECT_TRUE(ae->init(creators));
     }
 
     void TearDown() override
@@ -110,9 +112,12 @@ protected:
             alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            EXPECT_TRUE(ac->init(creators));
+            // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
+            // ac->init(creators);
+            alica::AlicaEngine* ae = AlicaTestEngineGetter::getEngine(ac);
+            EXPECT_TRUE(ae->init(creators));
             acs.push_back(ac);
-            aes.push_back(AlicaTestEngineGetter::getEngine(ac));
+            aes.push_back(ae);
         }
     }
 
