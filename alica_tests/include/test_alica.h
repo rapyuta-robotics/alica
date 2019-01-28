@@ -96,7 +96,7 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual void SetUp() override
+    void SetUp() override
     {
         // determine the path to the test config
         ros::NodeHandle nh;
