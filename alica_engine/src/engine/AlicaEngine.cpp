@@ -88,7 +88,6 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _syncModul.init();
     const_cast<IAlicaCommunication&>(getCommunicator()).startCommunication();
     _variableSyncModule->init();
-    std::cout << "AE: Engine started" << std::endl;
     return everythingWorked;
 }
 
@@ -96,6 +95,7 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan);
+    ALICA_DEBUG_MSG("AE: Engine started!");
 }
 /**
  * Closes the engine for good.

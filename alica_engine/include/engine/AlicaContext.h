@@ -196,9 +196,15 @@ public:
      */
     bool isValid();
 
-    // Nice to have's
+    /**
+     * Get version of Alica engine.
+     *
+     * @param[out] major Version major
+     * @param[out] minor Version minor
+     * @param[out] patch Version patch
+     */
     void getVersion(int& major, int& minor, int& patch) const;
-    // TODO: Extend optVal to be of any type
+    // TODO: Implement
     template <class T>
     int set(AlicaOption option, T optval);
     template <class T>

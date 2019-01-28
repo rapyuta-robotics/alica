@@ -71,4 +71,11 @@ bool AlicaContext::isValid()
 {
     return _validTag == ALICA_CTX_GOOD;
 }
+
+void AlicaContext::getVersion(int& major, int& minor, int& patch) const
+{
+    major = ALICA_VERSION_MAJOR;
+    minor = ALICA_VERSION_MINOR;
+    patch = ALICA_VERSION_PATCH;
+}
 }
