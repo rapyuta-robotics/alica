@@ -86,7 +86,6 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
     _syncModul.init();
-    const_cast<IAlicaCommunication&>(getCommunicator()).startCommunication();
     _variableSyncModule->init();
     return everythingWorked;
 }
@@ -102,7 +101,6 @@ void AlicaEngine::start()
  */
 void AlicaEngine::terminate()
 {
-    const_cast<IAlicaCommunication&>(getCommunicator()).stopCommunication();
     _maySendMessages = false;
 
     _behaviourPool.stopAll();

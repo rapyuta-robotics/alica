@@ -47,6 +47,11 @@ int AlicaContext::terminate()
     return 0;
 }
 
+bool AlicaContext::isValid()
+{
+    return _validTag == ALICA_CTX_GOOD;
+}
+
 std::string AlicaContext::getRobotName()
 {
     return essentials::SystemConfig::getInstance().getHostname();
@@ -67,12 +72,7 @@ void AlicaContext::setConfigPath(const std::string& path)
     essentials::SystemConfig::getInstance().setConfigPath(path);
 }
 
-bool AlicaContext::isValid()
-{
-    return _validTag == ALICA_CTX_GOOD;
-}
-
-void AlicaContext::getVersion(int& major, int& minor, int& patch) const
+void AlicaContext::getVersion(int& major, int& minor, int& patch)
 {
     major = ALICA_VERSION_MAJOR;
     minor = ALICA_VERSION_MINOR;

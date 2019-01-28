@@ -60,6 +60,7 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
         // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
         // ac->init(creators);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
     }
 
@@ -115,6 +116,7 @@ protected:
             // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
             // ac->init(creators);
             alica::AlicaEngine* ae = AlicaTestEngineGetter::getEngine(ac);
+            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
             acs.push_back(ac);
             aes.push_back(ae);

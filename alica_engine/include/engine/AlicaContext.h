@@ -70,6 +70,44 @@ class AlicaContext
 {
 public:
     /**
+     * Get host (or agent) name for this process.
+     *
+     * @return The agent name under which the engine operates, a string
+     */
+    static std::string getRobotName();
+
+    /**
+     * Set host (or agent) name for this process.
+     *
+     * @param name Host name
+     */
+    static void setRobotName(const std::string& name);
+
+    // TODO: better descriptive name for paths
+    /**
+     * Set root path for this process.
+     *
+     * @param path Root path
+     */
+    static void setRootPath(const std::string& path);
+
+    /**
+     * Set config path for this process.
+     *
+     * @param path Config path
+     */
+    static void setConfigPath(const std::string& path);
+
+    /**
+     * Get version of Alica engine.
+     *
+     * @param[out] major Version major
+     * @param[out] minor Version minor
+     * @param[out] patch Version patch
+     */
+    static void getVersion(int& major, int& minor, int& patch);
+
+    /**
      * Creates AlicaContext object.
      *
      * @param roleSetName Name for roleset
@@ -105,35 +143,6 @@ public:
      * @return Return code '0' stands for success, any other for corresponding error
      */
     int terminate();
-
-    /**
-     * Get host (or agent) name for this process.
-     *
-     * @return The agent name under which the engine operates, a string
-     */
-    static std::string getRobotName();
-
-    /**
-     * Set host (or agent) name for this process.
-     *
-     * @param name Host name
-     */
-    static void setRobotName(const std::string& name);
-
-    // TODO: better descriptive name for paths
-    /**
-     * Set root path for this process.
-     *
-     * @param path Root path
-     */
-    static void setRootPath(const std::string& path);
-
-    /**
-     * Set config path for this process.
-     *
-     * @param path Config path
-     */
-    static void setConfigPath(const std::string& path);
 
     /**
      * Set communicator to be used by this alica framework instance.
@@ -196,14 +205,6 @@ public:
      */
     bool isValid();
 
-    /**
-     * Get version of Alica engine.
-     *
-     * @param[out] major Version major
-     * @param[out] minor Version minor
-     * @param[out] patch Version patch
-     */
-    void getVersion(int& major, int& minor, int& patch) const;
     // TODO: Implement
     template <class T>
     int set(AlicaOption option, T optval);
