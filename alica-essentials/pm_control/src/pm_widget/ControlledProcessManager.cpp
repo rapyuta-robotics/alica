@@ -12,13 +12,13 @@ using std::string;
 
 namespace pm_widget
 {
-ControlledProcessManager::ControlledProcessManager(string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* parentLayout)
-    : name(processManagerName)
-    , id(processManagerId)
-    , pmRegistry(supplementary::RobotExecutableRegistry::get())
-    , parentLayout(parentLayout)
+ControlledProcessManager::ControlledProcessManager(string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* parentLayout)
+        : name(processManagerName)
+        , id(processManagerId)
+        , pmRegistry(essentials::RobotExecutableRegistry::get())
+        , parentLayout(parentLayout)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->msgTimeOut = duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 }
 
@@ -32,9 +32,9 @@ ControlledProcessManager::~ControlledProcessManager()
 void ControlledProcessManager::handleProcessStats(std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr> timePstsPair)
 {
     this->timeLastMsgReceived = timePstsPair.first;
-    for (auto& processStat : timePstsPair.second->processStats) {
+    for (auto& processStat : timePstsPair.second->process_stats) {
         // get the corresponding controlled robot
-        auto agentID = this->pmRegistry->getRobotId(processStat.robotId.id);
+        auto agentID = this->pmRegistry->getRobotId(processStat.robot_id.id);
         ControlledRobot* controlledRobot = this->getControlledRobot(agentID);
         if (controlledRobot != nullptr) {
             // call the controlled robot to update its corresponding process statistics.
@@ -43,7 +43,7 @@ void ControlledProcessManager::handleProcessStats(std::pair<std::chrono::system_
     }
 }
 
-ControlledRobot* ControlledProcessManager::getControlledRobot(const supplementary::AgentID* robotId)
+ControlledRobot* ControlledProcessManager::getControlledRobot(const essentials::AgentID* robotId)
 {
     auto controlledRobotEntry = this->controlledRobotsMap.find(robotId);
     if (controlledRobotEntry != this->controlledRobotsMap.end()) { // robot is already known

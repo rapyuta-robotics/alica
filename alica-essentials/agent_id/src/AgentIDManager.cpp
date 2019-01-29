@@ -1,13 +1,13 @@
-#include "supplementary/AgentIDManager.h"
-#include "supplementary/AgentIDFactory.h"
-namespace supplementary
+#include "essentials/AgentIDManager.h"
+#include "essentials/AgentIDFactory.h"
+namespace essentials
 {
 
 /**
  * Attention: The idFactory will be deleted by the AgentIDManager's destructor.
  */
 AgentIDManager::AgentIDManager(AgentIDFactory* idFactory)
-    : idFactory(idFactory)
+        : idFactory(idFactory)
 {
 }
 
@@ -49,4 +49,4 @@ const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByte
     }
     return *(entry.first);
 }
-} // namespace supplementary
+} // namespace essentials

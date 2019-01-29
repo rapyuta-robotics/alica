@@ -5,18 +5,18 @@
 #ifndef SUPPLEMENTARY_WRAPPEDMESSAGE_H
 #define SUPPLEMENTARY_WRAPPEDMESSAGE_H
 
-#include <iostream>
 #include <functional>
+#include <iostream>
 
 #include <boost/regex.hpp>
 #include <cstdint>
 
 using namespace std;
 
-class WrappedMessage {
+class WrappedMessage
+{
 public:
-    WrappedMessage(const string& topic, const string& wrappedMessage, const string& message, const string& options,
-            const string& sendReceive);
+    WrappedMessage(const string& topic, const string& wrappedMessage, const string& message, const string& options, const string& sendReceive);
     ~WrappedMessage();
 
     string topic, message, wrappedMessage, options, sendReceive;
@@ -42,4 +42,4 @@ public:
     string getWrappedPublisherName();
 };
 
-#endif  // SUPPLEMENTARY_WRAPPEDMESSAGE_H
+#endif // SUPPLEMENTARY_WRAPPEDMESSAGE_H

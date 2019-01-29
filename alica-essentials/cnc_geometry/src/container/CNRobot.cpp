@@ -7,9 +7,11 @@
 
 #include "container/CNRobot.h"
 
-namespace geometry {
+namespace geometry
+{
 
-CNRobot::CNRobot() {
+CNRobot::CNRobot()
+{
     this->radius = 0;
     this->velocityX = 0;
     this->velocityY = 0;
@@ -20,10 +22,11 @@ CNRobot::CNRobot() {
 
 CNRobot::~CNRobot() {}
 
-string CNRobot::toString() {
+string CNRobot::toString()
+{
     stringstream ss;
-    ss << "CNRobot: x: " << this->x << " y: " << this->y << " angle: " << this->theta << " velX: " << this->velocityX
-       << " velY: " << this->velocityY << " id: " << this->id << endl;
+    ss << "CNRobot: x: " << this->x << " y: " << this->y << " angle: " << this->theta << " velX: " << this->velocityX << " velY: " << this->velocityY
+       << " id: " << this->id << endl;
     return ss.str();
 }
-}  // namespace geometry
+} // namespace geometry

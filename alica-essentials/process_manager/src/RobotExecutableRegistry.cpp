@@ -4,9 +4,9 @@
 #include "process_manager/RobotMetaData.h"
 
 #include <ConsoleCommandHelper.h>
-#include <SystemConfig.h>
-#include <supplementary/AgentIDFactory.h>
-#include <supplementary/AgentIDManager.h>
+
+#include <essentials/AgentIDFactory.h>
+#include <essentials/AgentIDManager.h>
 
 #include <iostream>
 #include <string.h>
@@ -22,7 +22,7 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-namespace supplementary
+namespace essentials
 {
 
 RobotExecutableRegistry* RobotExecutableRegistry::get()
@@ -32,8 +32,8 @@ RobotExecutableRegistry* RobotExecutableRegistry::get()
 }
 
 RobotExecutableRegistry::RobotExecutableRegistry()
-    : sc(SystemConfig::getInstance())
-    , agentIDManager(new supplementary::AgentIDManager(new supplementary::AgentIDFactory()))
+        : sc(essentials::SystemConfig::getInstance())
+        , agentIDManager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
 {
 }
 
@@ -58,7 +58,7 @@ const map<string, vector<pair<int, int>>>* const RobotExecutableRegistry::getBun
         for (auto bundleName : (*bundlesSections)) {
             vector<int> processList = (*this->sc)["ProcessManaging"]->getList<int>("Processes.Bundles", bundleName.c_str(), "processList", NULL);
             vector<string> processParamsList =
-                (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
+                    (*this->sc)["ProcessManaging"]->getList<string>("Processes.Bundles", bundleName.c_str(), "processParamsList", NULL);
             if (processList.size() != processParamsList.size()) {
                 cerr << "RobotExecutableReg: Number of processes does not match the number of parameter sets for the "
                         "bundle '"
@@ -75,7 +75,7 @@ const map<string, vector<pair<int, int>>>* const RobotExecutableRegistry::getBun
     return &bundlesMap;
 }
 
-bool RobotExecutableRegistry::getRobotName(const AgentID* agentID, string& robotName)
+bool RobotExecutableRegistry::getRobotName(const essentials::AgentID* agentID, string& robotName)
 {
     for (auto& agentEntry : this->robotMap) {
         if (*(agentEntry.second->agentID) == *agentID) {
@@ -87,7 +87,7 @@ bool RobotExecutableRegistry::getRobotName(const AgentID* agentID, string& robot
     return false;
 }
 
-bool RobotExecutableRegistry::robotExists(const AgentID* agentID)
+bool RobotExecutableRegistry::robotExists(const essentials::AgentID* agentID)
 {
     return this->robotMap.find(agentID) != this->robotMap.end();
 }
@@ -102,7 +102,7 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-const AgentID* RobotExecutableRegistry::getRobotId(string robotName)
+const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::string& robotName) const
 {
     for (auto& agentEntry : this->robotMap) {
         if (agentEntry.second->name == robotName) {
@@ -112,7 +112,7 @@ const AgentID* RobotExecutableRegistry::getRobotId(string robotName)
     return nullptr;
 }
 
-const AgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, string& robotName)
+const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName)
 {
     auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
@@ -125,7 +125,7 @@ const AgentID* RobotExecutableRegistry::getRobotId(vector<uint8_t>& idVector, st
     }
 }
 
-const AgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
+const essentials::AgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
 {
     auto agentID = this->agentIDManager->getIDFromBytes(idVector);
     auto agentEntry = this->robotMap.find(agentID);
@@ -138,7 +138,7 @@ const AgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVect
     }
 }
 
-void RobotExecutableRegistry::addRobot(string robotName, const AgentID* agentID)
+void RobotExecutableRegistry::addRobot(string robotName, const essentials::AgentID* agentID)
 {
     auto robotEntry = this->robotMap.find(agentID);
     if (robotEntry == this->robotMap.end()) {
@@ -152,7 +152,7 @@ void RobotExecutableRegistry::addRobot(string robotName, const AgentID* agentID)
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-std::string RobotExecutableRegistry::addRobot(const AgentID* agentID)
+std::string RobotExecutableRegistry::addRobot(const essentials::AgentID* agentID)
 {
     stringstream ss;
     ss << *agentID;
@@ -166,15 +166,15 @@ std::string RobotExecutableRegistry::addRobot(const AgentID* agentID)
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-const AgentID* RobotExecutableRegistry::addRobot(string agentName)
+const essentials::AgentID* RobotExecutableRegistry::addRobot(string agentName)
 {
-    const AgentID* agentID;
+    const essentials::AgentID* agentID;
 
     try {
         int tmpID = (*sc)["Globals"]->get<int>("Globals.Team", agentName.c_str(), "ID", NULL);
         std::vector<uint8_t> agentIDVector;
         for (int i = 0; i < sizeof(int); i++) {
-            agentIDVector.push_back(*(((uint8_t*)&tmpID) + i));
+            agentIDVector.push_back(*(((uint8_t*) &tmpID) + i));
         }
         agentID = this->agentIDManager->getIDFromBytes(agentIDVector);
     } catch (const std::runtime_error* e) {
@@ -190,7 +190,7 @@ const AgentID* RobotExecutableRegistry::addRobot(string agentName)
     return agentID;
 }
 
-const std::map<const AgentID*, RobotMetaData*, supplementary::AgentIDComparator>& RobotExecutableRegistry::getRobots() const
+const std::map<const essentials::AgentID*, RobotMetaData*, essentials::AgentIDComparator>& RobotExecutableRegistry::getRobots() const
 {
     return this->robotMap;
 }
@@ -267,7 +267,7 @@ int RobotExecutableRegistry::addExecutable(string execSectionName)
         return -1;
     }
 
-    SystemConfig* sc = SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     int execId;
     string processMode;
     string execName;
@@ -289,7 +289,7 @@ int RobotExecutableRegistry::addExecutable(string execSectionName)
     // create absolute executable name, if possible
     if (rosPackage.compare("NOT-FOUND") != 0 && prefixCmd.compare("roslaunch") != 0) {
         string cmd = "catkin_find --first-only --libexec " + rosPackage;
-        absExecName = supplementary::ConsoleCommandHelper::exec(cmd.c_str());
+        absExecName = essentials::ConsoleCommandHelper::exec(cmd.c_str());
 
         if (absExecName.length() > 1) {
             absExecName = absExecName.substr(0, absExecName.length() - 1);
@@ -303,8 +303,8 @@ int RobotExecutableRegistry::addExecutable(string execSectionName)
         for (string paramSetKeyString : (*paramSets)) {
             try {
                 int paramSetKey = stoi(paramSetKeyString);
-                auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>("Processes.ProcessDescriptions", execSectionName.c_str(), "paramSets",
-                                                                                paramSetKeyString.c_str(), NULL);
+                auto paramSetValues = (*sc)["ProcessManaging"]->getList<string>(
+                        "Processes.ProcessDescriptions", execSectionName.c_str(), "paramSets", paramSetKeyString.c_str(), NULL);
 
                 // first param is always the executable name
                 vector<char*> currentParams;
@@ -392,4 +392,4 @@ void RobotExecutableRegistry::setInterpreters(vector<string> interpreter)
     this->interpreter = interpreter;
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

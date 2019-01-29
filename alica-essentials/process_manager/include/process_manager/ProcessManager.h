@@ -1,30 +1,34 @@
 #pragma once
 
-#define PM_DEBUG  // for toggling debug output
+#define PM_DEBUG // for toggling debug output
 
 #include "process_manager/ProcessCommand.h"
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <supplementary/AgentID.h>
-#include <ros/ros.h>
-#include <chrono>
+#include <SystemConfig.h>
+#include <essentials/AgentID.h>
+#include <essentials/AgentIDFactory.h>
 
-namespace std {
+#include <chrono>
+#include <ros/ros.h>
+
+namespace std
+{
 class thread;
 }
 
-namespace supplementary {
+namespace essentials
+{
 
-class AgentIDFactory;
-class SystemConfig;
 class ManagedRobot;
 class ManagedExecutable;
 class RobotMetaData;
 class ExecutableMetaData;
 class RobotExecutableRegistry;
 
-class ProcessManager {
+class ProcessManager
+{
 public:
     ProcessManager(int argc, char** argv);
     virtual ~ProcessManager();
@@ -43,11 +47,11 @@ public:
     static bool running; /* < has to be static, to be changeable within ProcessManager::pmSignintHandler() */
 
 private:
-    SystemConfig* sc;
+    essentials::SystemConfig* sc;
     std::string ownHostname;
-    const AgentID* ownId;
+    const essentials::AgentID* ownId;
     bool simMode;
-    std::map<const AgentID*, ManagedRobot*, AgentIDComparator> robotMap;
+    std::map<const essentials::AgentID*, ManagedRobot*, essentials::AgentIDComparator> robotMap;
     RobotExecutableRegistry* pmRegistry;
     std::vector<std::string> interpreters;
     unsigned long long lastTotalCPUTime;
@@ -74,4 +78,4 @@ private:
     void report();
 };
 
-}  // namespace supplementary
+} // namespace  essentials

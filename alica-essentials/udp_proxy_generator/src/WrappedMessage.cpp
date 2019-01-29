@@ -58,19 +58,19 @@ WrappedMessage::WrappedMessage(const string& topic, const string& wrappedMessage
 
 WrappedMessage::~WrappedMessage() {}
 
-string WrappedMessage::getRosCallBackName()
+std::string WrappedMessage::getRosCallBackName()
 {
-    return string("onRos") + get(getRosClassName()) + to_string(Id);
+    return std::string("onRos") + get(getRosClassName()) + to_string(Id);
 }
 
-string WrappedMessage::getRosWrappedCallBackName()
+std::string WrappedMessage::getRosWrappedCallBackName()
 {
-    return string("onRos") + get(getWrappedRosClassName()) + to_string(Id);
+    return std::string("onRos") + get(getWrappedRosClassName()) + to_string(Id);
 }
 
-string WrappedMessage::getWrappedRosClassName()
+std::string WrappedMessage::getWrappedRosClassName()
 {
-    string ret = this->wrappedMessage;
+    std::string ret = this->wrappedMessage;
     while (ret.find("/") != string::npos) {
         ret.replace(ret.find("/"), 1, "::");
     }
@@ -78,33 +78,33 @@ string WrappedMessage::getWrappedRosClassName()
     return ret;
 }
 
-string WrappedMessage::getRosClassName()
+std::string WrappedMessage::getRosClassName()
 {
-    string ret = this->message;
-    while (ret.find("/") != string::npos) {
+    std::string ret = this->message;
+    while (ret.find("/") != std::string::npos) {
         ret.replace(ret.find("/"), 1, "::");
     }
 
     return ret;
 }
 
-string WrappedMessage::getPublisherName()
+std::string WrappedMessage::getPublisherName()
 {
-    string topicChanged = this->topic;
+    std::string topicChanged = this->topic;
     replace(topicChanged.begin(), topicChanged.end(), '/', '_');
-    return string("pub") + get(getRosClassName()) + topicChanged;
+    return std::string("pub") + get(getRosClassName()) + topicChanged;
 }
 
-string WrappedMessage::getWrappedPublisherName()
+std::string WrappedMessage::getWrappedPublisherName()
 {
-    string topicChanged = this->topic;
+    std::string topicChanged = this->topic;
     replace(topicChanged.begin(), topicChanged.end(), '/', '_');
-    return string("pub") + get(getWrappedRosClassName()) + topicChanged;
+    return std::string("pub") + get(getWrappedRosClassName()) + topicChanged;
 }
 
-string WrappedMessage::getRosMessageHandler()
+std::string WrappedMessage::getRosMessageHandler()
 {
-    string ret = string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
+    std::string ret = std::string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
     ret += "\t" + getWrappedRosClassName() + " message;\n";
     ret += "\tmessage.receiverId = robotID;\n";
     ret += "\tmessage.msg = *event.getMessage();\n";
@@ -113,9 +113,9 @@ string WrappedMessage::getRosMessageHandler()
     return ret;
 }
 
-string WrappedMessage::getRosWrappedMessageHandler()
+std::string WrappedMessage::getRosWrappedMessageHandler()
 {
-    string ret = string("void ") + getRosWrappedCallBackName() + "(const ros::MessageEvent<" + getWrappedRosClassName() + ">& event) {\n";
+    std::string ret = string("void ") + getRosWrappedCallBackName() + "(const ros::MessageEvent<" + getWrappedRosClassName() + ">& event) {\n";
     ret += "\tconst " + getWrappedRosClassName() + "::ConstPtr& message = event.getMessage();\n";
     ret += "\tif(message->receiverId == robotID && event.getPublisherName().compare(ros::this_node::getName()) != 0)\n";
     ret += "\t{";

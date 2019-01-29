@@ -1,8 +1,10 @@
-#include "supplementary/Timer.h"
+#include "essentials/Timer.h"
 
-namespace supplementary {
+namespace essentials
+{
 
-Timer::Timer(long msInterval, long msDelayedStart) {
+Timer::Timer(long msInterval, long msDelayedStart)
+{
     this->started = true;
     this->running = false;
     this->triggered = false;
@@ -11,7 +13,8 @@ Timer::Timer(long msInterval, long msDelayedStart) {
     this->runThread = new std::thread(&Timer::run, this, false);
 }
 
-Timer::~Timer() {
+Timer::~Timer()
+{
     this->running = true;
     this->started = false;
     cv.notify_one();
@@ -19,17 +22,19 @@ Timer::~Timer() {
     delete this->runThread;
 }
 
-void Timer::run(bool notifyAll) {
+void Timer::run(bool notifyAll)
+{
     if (msDelayedStart.count() > 0) {
         std::this_thread::sleep_for(msDelayedStart);
     }
 
-    std::unique_lock<std::mutex> lck(cv_mtx);
-
     while (this->started) {
-        this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        {
+            std::unique_lock<std::mutex> lck(cv_mtx);
+            this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        }
 
-        if (!this->started)  // for destroying the timer
+        if (!this->started) // for destroying the timer
             return;
 
         std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -42,7 +47,8 @@ void Timer::run(bool notifyAll) {
     }
 }
 
-bool Timer::start() {
+bool Timer::start()
+{
     if (this->started && !this->running) {
         this->running = true;
         this->cv.notify_one();
@@ -50,35 +56,42 @@ bool Timer::start() {
     return this->started && this->running;
 }
 
-bool Timer::stop() {
+bool Timer::stop()
+{
     if (this->started && this->running) {
         this->running = false;
     }
     return this->started && this->running;
 }
 
-bool Timer::isRunning() {
+bool Timer::isRunning()
+{
     return this->running;
 }
 
-bool Timer::isStarted() {
+bool Timer::isStarted()
+{
     return this->started;
 }
 
-void Timer::setDelayedStart(long msDelayedStart) {
+void Timer::setDelayedStart(long msDelayedStart)
+{
     this->msDelayedStart = std::chrono::milliseconds(msDelayedStart);
 }
 
-const long Timer::getDelayedStart() const {
+const long Timer::getDelayedStart() const
+{
     return msDelayedStart.count();
 }
 
-void Timer::setInterval(long msInterval) {
+void Timer::setInterval(long msInterval)
+{
     this->msInterval = std::chrono::milliseconds(msInterval);
 }
 
-const long Timer::getInterval() const {
+const long Timer::getInterval() const
+{
     return msInterval.count();
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

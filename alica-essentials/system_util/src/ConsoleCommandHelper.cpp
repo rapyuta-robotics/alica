@@ -10,17 +10,21 @@
 
 using namespace std;
 
-namespace supplementary {
+namespace essentials
+{
 
-ConsoleCommandHelper::ConsoleCommandHelper() {
+ConsoleCommandHelper::ConsoleCommandHelper()
+{
     // TODO Auto-generated constructor stub
 }
 
-ConsoleCommandHelper::~ConsoleCommandHelper() {
+ConsoleCommandHelper::~ConsoleCommandHelper()
+{
     // TODO Auto-generated destructor stub
 }
 
-std::string ConsoleCommandHelper::exec(const char* cmd) {
+std::string ConsoleCommandHelper::exec(const char* cmd)
+{
     FILE* pipe = popen(cmd, "r");
     if (!pipe)
         return "ERROR";
@@ -34,4 +38,4 @@ std::string ConsoleCommandHelper::exec(const char* cmd) {
     return result;
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

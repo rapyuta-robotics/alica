@@ -10,15 +10,17 @@
 
 #include <string>
 
-namespace supplementary {
+namespace essentials
+{
 
-class ConsoleCommandHelper {
+class ConsoleCommandHelper
+{
 public:
     ConsoleCommandHelper();
     virtual ~ConsoleCommandHelper();
     static std::string exec(const char* cmd);
 };
 
-} /* namespace supplementary */
+} /* namespace essentials */
 
 #endif /* SUPPLEMENTARY_SYSTEM_UTIL_SRC_CONSOLECOMMANDHELPER_H_ */

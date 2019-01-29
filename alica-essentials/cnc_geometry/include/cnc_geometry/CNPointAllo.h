@@ -2,13 +2,15 @@
 
 #include "CNPointTemplate.h"
 
-namespace geometry {
+namespace geometry
+{
 
 class CNPointEgo;
 class CNPositionAllo;
 class CNVecAllo;
 
-class CNPointAllo : public CNPointTemplate<CNPointAllo> {
+class CNPointAllo : public CNPointTemplate<CNPointAllo>
+{
 public:
     CNPointAllo()
             : CNPointAllo(0, 0, 0){};

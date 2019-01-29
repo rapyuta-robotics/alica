@@ -1,13 +1,15 @@
 #pragma once
 
-#include "CNVecAllo.h"
 #include "CNPositionAllo.h"
+#include "CNVecAllo.h"
 
-namespace geometry {
+namespace geometry
+{
 
 class CNRobotEgo;
 
-class CNRobotAllo {
+class CNRobotAllo
+{
 public:
     CNRobotAllo();
     virtual ~CNRobotAllo();

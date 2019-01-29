@@ -3,7 +3,8 @@
 // Alternative hasing function
 // http://stackoverflow.com/questions/98153/whats-the-best-hashing-algorithm-to-use-on-a-stl-string-when-using-hash-map
 // These guys says it works well... colpa sua
-uint32_t hash32(const char* s, unsigned int seed = 0) {
+uint32_t hash32(const char* s, unsigned int seed = 0)
+{
     unsigned int hash = seed;
     while (*s) {
         hash = hash * 101 + *s++;
@@ -11,7 +12,8 @@ uint32_t hash32(const char* s, unsigned int seed = 0) {
     return hash;
 }
 
-RelayedMessage::RelayedMessage(string topic, string message, string options, string sendReceive) {
+RelayedMessage::RelayedMessage(string topic, string message, string options, string sendReceive)
+{
     this->Ros2UdpQueueLength = 5;
     this->Udp2RosQueueLength = 5;
     this->Topic = topic;
@@ -55,15 +57,18 @@ RelayedMessage::RelayedMessage(string topic, string message, string options, str
 
 RelayedMessage::~RelayedMessage() {}
 
-string RelayedMessage::getRosCallBackName() {
+string RelayedMessage::getRosCallBackName()
+{
     return string("onRos") + BaseName + to_string(Id);
 }
 
-string RelayedMessage::getRosJavaCallBackName() {
+string RelayedMessage::getRosJavaCallBackName()
+{
     return string("OnRos") + BaseName + to_string(Id) + "Listener";
 }
 
-string RelayedMessage::getRosClassName() {
+string RelayedMessage::getRosClassName()
+{
     string ret = FullName;
     while (ret.find("/") != string::npos) {
         ret.replace(ret.find("/"), 1, "::");
@@ -72,13 +77,14 @@ string RelayedMessage::getRosClassName() {
     return ret;
 }
 
-string RelayedMessage::getPublisherName() {
+string RelayedMessage::getPublisherName()
+{
     return string("pub") + to_string(Id);
 }
 
-string RelayedMessage::getRosMessageHandler() {
-    string ret =
-            string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
+string RelayedMessage::getRosMessageHandler()
+{
+    string ret = string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
     ret += "\tif(0 == event.getPublisherName().compare(ownRosName)) return;\n";
     ret += "uint8_t* buffer = NULL;\n";
     ret += "\tconst " + getRosClassName() + "::ConstPtr& message = event.getMessage();\n";
@@ -105,16 +111,15 @@ string RelayedMessage::getRosMessageHandler() {
     return ret;
 }
 
-string RelayedMessage::getRosJavaMessageHandler() {
+string RelayedMessage::getRosJavaMessageHandler()
+{
     string ret = string("\tprivate class ") + getRosJavaCallBackName() + " implements MessageListener {\n";
     ret += "\t@Override\npublic void onNewMessage(Object o) {\n";
     ret += "\t\t" + BaseName + " converted = (" + BaseName + ") o;\n";
-    ret += "\t\tMessageSerializer<" + BaseName +
-           "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName + "\");\n";
+    ret += "\t\tMessageSerializer<" + BaseName + "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName + "\");\n";
     ret += "\t\tChannelBuffer buffer = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN,64000);\n";
     ret += "\t\tserializer.serialize(converted,buffer);\n";
-    ret += "\t\tByteBuffer idBuf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt((int) " +
-           to_string(Id) + "l);\n";
+    ret += "\t\tByteBuffer idBuf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt((int) " + to_string(Id) + "l);\n";
     ret += "\t\tChannelBuffer finalBuf = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN, idBuf.array(), "
            "buffer.array());\n";
     ret += "\t\ttry {\n";
