@@ -5,6 +5,8 @@
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 #include <supplementary/AgentID.h>
+#include <essentials/Timer.h>
+#include <essentials/ITrigger.h>
 
 #include <atomic>
 #include <chrono>
@@ -13,12 +15,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-namespace supplementary
-{
-class Timer;
-class ITrigger;
-} // namespace supplementary
 
 namespace alica
 {
@@ -38,7 +34,7 @@ class BasicBehaviour
 {
 public:
     BasicBehaviour(const std::string& name);
-    virtual ~BasicBehaviour();
+    virtual ~BasicBehaviour() {};
     virtual void run(void* msg) = 0;
 
     bool isRunningInContext(const RunningPlan* rp) const;
@@ -52,6 +48,7 @@ public:
 
     bool stop();
     bool start();
+    void terminate();
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = std::chrono::milliseconds(msDelayedStart); }
 
@@ -65,11 +62,16 @@ public:
     bool isFailure() const;
     void setFailure();
 
-    void setTrigger(supplementary::ITrigger* trigger);
+    bool getParameter(const std::string& key, std::string& valueOut) const;
+    void setTrigger(essentials::ITrigger* trigger);
 
     void sendLogMessage(int level, const std::string& message) const;
 
-    virtual void init(){};
+    /**
+     * Called after construction.
+     * Override in case custom initialization has to happen after the behavior has been integrated into the engine.
+     */
+    virtual void init() {}
 
 protected:
     AgentIDConstPtr getOwnId() const;
@@ -77,11 +79,14 @@ protected:
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-     * Override for behaviour specific initialisation.
+     * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
      */
-
-    virtual void initialiseParameters(){};
-    std::string getParameter(std::string paramName);
+    virtual void initialiseParameters() {}
+    /**
+     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
+     */
+    virtual void onTermination() {}
 
 private:
     void runInternalTimed();
@@ -118,7 +123,7 @@ private:
 
     std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
 
-    supplementary::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
+    essentials::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
     std::condition_variable _runCV;
     mutable std::mutex _runLoopMutex;

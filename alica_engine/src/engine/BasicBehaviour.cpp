@@ -15,7 +15,7 @@
 
 #include <alica_common_config/debug_output.h>
 
-#include <supplementary/ITrigger.h>
+#include <essentials/ITrigger.h>
 
 #include <assert.h>
 #include <iostream>
@@ -45,7 +45,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
 {
 }
 
-BasicBehaviour::~BasicBehaviour()
+void BasicBehaviour::terminate()
 {
     _started = false;
     _runCV.notify_all();
@@ -110,9 +110,9 @@ bool BasicBehaviour::start()
 void BasicBehaviour::setSuccess()
 {
     if (!_success) {
+        _success = true;
         _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    _success = true;
 }
 
 bool BasicBehaviour::isSuccess() const
@@ -123,9 +123,9 @@ bool BasicBehaviour::isSuccess() const
 void BasicBehaviour::setFailure()
 {
     if (!_failure) {
+        _failure = true;
         _engine->getPlanBase()->addFastPathEvent(_context);
     }
-    _failure = true;
 }
 
 bool BasicBehaviour::isFailure() const
@@ -133,7 +133,7 @@ bool BasicBehaviour::isFailure() const
     return _failure && !_callInit;
 }
 
-void BasicBehaviour::setTrigger(supplementary::ITrigger* trigger)
+void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 {
     _behaviourTrigger = trigger;
     _behaviourTrigger->registerCV(&_runCV);
@@ -157,6 +157,9 @@ void BasicBehaviour::runInternalTimed()
         {
             std::unique_lock<std::mutex> lck(_runLoopMutex);
             if (!_running) {
+                if (_contextInRun) {
+                    onTermination();
+                }
                 _contextInRun = nullptr;
                 _runCV.wait(lck, [this] { return _running || !_started; }); // wait for signal to run
             }
@@ -192,6 +195,9 @@ void BasicBehaviour::runInternalTriggered()
 {
     while (_started) {
         {
+            if (_contextInRun) {
+                onTermination();
+            }
             std::unique_lock<std::mutex> lck(_runLoopMutex);
             _contextInRun = nullptr;
             _runCV.wait(lck, [this] { return !_started || (_behaviourTrigger->isNotifyCalled(&_runCV) && _running); });
@@ -219,12 +225,14 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
     _engine->getCommunicator()->sendLogMessage(level, message);
 }
 
-std::string BasicBehaviour::getParameter(std::string paramName)
+bool BasicBehaviour::getParameter(std::string& key, std::string& valueOut) const
 {
     supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
     string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(
             this->getName().c_str(), this->getPlanContext().getRunningPlan()->getActiveState()->getId(), NULL);
-    return (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), paramName.c_str(), NULL);
+    valueOut = (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), key.c_str(), NULL);
+    // if we don't get here, system config has thrown an exception
+    return true;
 }
 
 } /* namespace alica */

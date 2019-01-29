@@ -1,17 +1,12 @@
-/*
- * AlicaDummyCommunication.h
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
-#ifndef ALICADUMMYCOMMUNICATION_H_
-#define ALICADUMMYCOMMUNICATION_H_
+#pragma once
 
 #include <engine/IAlicaCommunication.h>
 
-namespace alica_dummy_proxy
+namespace alicaDummyProxy
 {
+
+class CommModuleContainer;
+struct Queues;
 
 class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
@@ -31,8 +26,12 @@ public:
 
     virtual void startCommunication();
     virtual void stopCommunication();
+    alica::AlicaEngine* getEngine() const { return ae; }
+
+private:
+    bool _isRunning;
+    static CommModuleContainer s_modContainer;
+    static Queues s_qctx;
 };
 
-} // namespace alica_dummy_proxy
-
-#endif /* ALICA_ALICA_DUMMY_PROXY_INCLUDE_COMMUNICATION_ALICADUMMYCOMMUNICATION_H_ */
+} // namespace alicaDummyProxy

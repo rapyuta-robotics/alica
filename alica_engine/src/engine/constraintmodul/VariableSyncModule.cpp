@@ -15,13 +15,14 @@
 namespace alica
 {
 VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-        : _ae(ae)
-        , _running(false)
-        , _timer(nullptr)
-        , _distThreshold(0)
-        , _communicator(nullptr)
-        , _ttl4Communication(AlicaTime::zero())
-        , _ttl4Usage(AlicaTime::zero())
+    : _ae(ae)
+    , _running(false)
+    , _timer(nullptr)
+    , _distThreshold(0)
+    , _communicator(nullptr)
+    , _ttl4Communication(AlicaTime::zero())
+    , _ttl4Usage(AlicaTime::zero())
+    , _ownResults(nullptr)
 {
 }
 
@@ -37,14 +38,19 @@ void VariableSyncModule::init()
         return;
     }
     _running = true;
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     bool communicationEnabled = (*sc)["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
     _ttl4Communication = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
     _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
     AgentIDConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
-    _ownResults = ResultEntry(ownId);
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _store.emplace_back(new ResultEntry(ownId));
+        _ownResults = _store.back().get();
+    }
+
     _publishData.senderID = ownId;
 
     if (communicationEnabled) {
@@ -52,7 +58,7 @@ void VariableSyncModule::init()
         double communicationFrequency = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = new supplementary::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
+            _timer = new essentials::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
         }
         _timer->start();
     }
@@ -68,32 +74,39 @@ void VariableSyncModule::close()
 
 void VariableSyncModule::clear()
 {
-    for (ResultEntry& r : _store) {
-        r.clear();
+    for (std::unique_ptr<ResultEntry>& r : _store) {
+        r->clear();
     }
 }
 
 void VariableSyncModule::onSolverResult(const SolverResult& msg)
 {
-    if (*(msg.senderID) == *_ownResults.getId()) {
+    if (*(msg.senderID) == *(_ownResults->getId())) {
         return;
     }
     if (_ae->getTeamManager()->isAgentIgnored(msg.senderID)) {
         return;
     }
-    ResultEntry* re = nullptr;
 
-    for (ResultEntry& r : _store) {
-        if (*(r.getId()) == *(msg.senderID)) {
-            re = &r;
+    ResultEntry* re = nullptr;
+    for (std::unique_ptr<ResultEntry>& r : _store) {
+        if (*(r->getId()) == *(msg.senderID)) {
+            re = r.get();
             break;
         }
     }
+
     if (re == nullptr) {
+        std::unique_ptr<ResultEntry> new_entry(new ResultEntry(msg.senderID));
         std::lock_guard<std::mutex> lock(_mutex);
-        _store.emplace_back(msg.senderID);
-        re = &_store.back();
+        auto agent_sorted_loc = std::upper_bound(_store.begin(), _store.end(), new_entry, 
+            [](const std::unique_ptr<ResultEntry>& a, const std::unique_ptr<ResultEntry>& b) {
+                return (a->getId() < b->getId());
+            });
+        agent_sorted_loc = _store.insert(agent_sorted_loc, std::move(new_entry));
+        re = (*agent_sorted_loc).get();
     }
+
     AlicaTime now = _ae->getAlicaClock()->now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
@@ -113,7 +126,7 @@ void VariableSyncModule::publishContent()
 
     _publishData.vars.clear();
     AlicaTime now = _ae->getAlicaClock()->now();
-    _ownResults.getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
+    _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
     if (_publishData.vars.empty()) {
         return;
     }
@@ -122,7 +135,7 @@ void VariableSyncModule::publishContent()
 
 void VariableSyncModule::postResult(int64_t vid, Variant result)
 {
-    _ownResults.addValue(vid, result, _ae->getAlicaClock()->now());
+    _ownResults->addValue(vid, result, _ae->getAlicaClock()->now());
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)

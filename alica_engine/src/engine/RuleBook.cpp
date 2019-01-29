@@ -37,7 +37,7 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _log(ae->getLog())
         , _changeOccurred(true)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     _maxConsecutiveChanges = (*sc)["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
     assert(_to && _tm && _ps && _pb && _sm && _log);
 }

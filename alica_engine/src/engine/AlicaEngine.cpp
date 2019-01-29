@@ -21,7 +21,7 @@
 #include <engine/syncmodule/SyncModule.h>
 
 #include <alica_common_config/debug_output.h>
-#include <supplementary/AgentIDManager.h>
+#include <essentials/AgentIDManager.h>
 
 namespace alica
 {
@@ -39,12 +39,12 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(
-        supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked)
+        essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked)
         : stepCalled(false)
         , planBase(nullptr)
         , communicator(nullptr)
         , alicaClock(nullptr)
-        , sc(supplementary::SystemConfig::getInstance())
+        , sc(essentials::SystemConfig::getInstance())
         , terminating(false)
         , expressionHandler(nullptr)
         , log(nullptr)
@@ -146,6 +146,7 @@ void AlicaEngine::shutdown()
 
     if (this->behaviourPool != nullptr) {
         this->behaviourPool->stopAll();
+        this->behaviourPool->terminateAll();
         delete this->behaviourPool;
         this->behaviourPool = nullptr;
     }
