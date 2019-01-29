@@ -87,7 +87,7 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
-
+    // WARNING: Initialization order dependencies, do not change the declaration order of members.
     AlicaContext& _ctx;
     essentials::AgentIDManager _agentIDManager;
     PlanRepository _planRepository;

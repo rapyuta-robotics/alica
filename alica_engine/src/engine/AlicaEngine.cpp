@@ -15,7 +15,7 @@
 namespace alica
 {
 /**
- * Abort execution with a _planParsermessage, called if initialization fails.
+ * Abort execution with a message, called if initialization fails.
  * @param msg A string
  */
 void AlicaEngine::abort(const std::string& msg)
