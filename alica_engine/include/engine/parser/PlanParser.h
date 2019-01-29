@@ -48,7 +48,7 @@ public:
     int64_t fetchId(const std::string& idString);
 
 private:
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
     std::shared_ptr<ModelFactory> mf;
     PlanRepository* rep;
     Plan* masterPlan;

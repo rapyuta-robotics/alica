@@ -6,8 +6,8 @@
 
 #include "engine/AlicaEngine.h"
 
-#include <supplementary/AgentID.h>
-#include <supplementary/NotifyTimer.h>
+#include <essentials/AgentID.h>
+#include <essentials/NotifyTimer.h>
 
 #include <vector>
 
@@ -60,8 +60,9 @@ private:
         int _totalSupCount;
     };
 
-    ResultEntry _ownResults;
-    std::vector<ResultEntry> _store;
+    // This memory resides in _store, don't delete
+    ResultEntry* _ownResults;
+    std::vector<std::unique_ptr<ResultEntry>> _store;
     SolverResult _publishData;
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
@@ -69,7 +70,7 @@ private:
     const IAlicaCommunication* _communicator;
     bool _running;
     double _distThreshold;
-    supplementary::NotifyTimer<VariableSyncModule>* _timer;
+    essentials::NotifyTimer<VariableSyncModule>* _timer;
     mutable std::mutex _mutex;
 };
 
@@ -83,13 +84,10 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     std::vector<VotedSeed> seeds;
 
     AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
-    if (_ownResults.getValues(query, earliest, vec)) {
-        seeds.emplace_back(std::move(vec));
-    }
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
-        for (const ResultEntry& re : _store) {
-            bool any = re.getValues(query, earliest, vec);
+        for (const std::unique_ptr<ResultEntry>& re : _store) {
+            bool any = re->getValues(query, earliest, vec);
             if (!any) {
                 continue;
             }

@@ -35,7 +35,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     maxAllocationCycles = (*sc)["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount", NULL);
     enabled = (*sc)["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled", NULL);
     minimalOverrideTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));

@@ -18,7 +18,7 @@ RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& n
  */
 void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::string& name)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
 
     std::shared_ptr<std::vector<std::string>> caps = (*sc)["Globals"]->getNames("Globals", "Team", name.c_str(), NULL);
     for (const std::string& s : *caps) {

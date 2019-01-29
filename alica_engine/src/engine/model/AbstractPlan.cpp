@@ -20,7 +20,7 @@ AbstractPlan::AbstractPlan()
         , _runtimeCondition(nullptr)
 
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
@@ -30,7 +30,7 @@ AbstractPlan::AbstractPlan(int64_t id)
         , _preCondition(nullptr)
         , _runtimeCondition(nullptr)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
