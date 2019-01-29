@@ -7,17 +7,13 @@
 #include "alica_msgs/SyncReady.h"
 #include "alica_msgs/SyncTalk.h"
 #include "engine/IAlicaCommunication.h"
-#include "supplementary/AgentID.h"
+#include "essentials/AgentID.h"
+#include <SystemConfig.h>
 
 #include <ros/ros.h>
 #include <string>
 
 using namespace alica;
-
-namespace supplementary
-{
-class SystemConfig;
-}
 
 namespace alicaRosProxy
 {
@@ -80,7 +76,7 @@ protected:
 
     bool isRunning;
 
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
 };
 
 } /* namespace alicaRosProxy */

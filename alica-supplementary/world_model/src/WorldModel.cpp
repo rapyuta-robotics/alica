@@ -3,7 +3,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/teammanager/TeamManager.h>
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
 
 namespace supplementary
 {
@@ -12,7 +12,7 @@ WorldModel::WorldModel()
     , alicaEngine(nullptr)
     , ownID(nullptr)
 {
-    this->sc = supplementary::SystemConfig::getInstance();
+    this->sc = essentials::SystemConfig::getInstance();
     this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }
 
@@ -58,7 +58,7 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
 /**
  * The AlicaEngine must be set, before this method is called!
  */
-const supplementary::AgentID* WorldModel::getOwnId()
+const essentials::AgentID* WorldModel::getOwnId()
 {
     if (!this->ownID) {
         this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID().get();
@@ -66,7 +66,7 @@ const supplementary::AgentID* WorldModel::getOwnId()
     return this->ownID;
 }
 
-supplementary::SystemConfig* WorldModel::getSystemConfig()
+essentials::SystemConfig* WorldModel::getSystemConfig()
 {
     return this->sc;
 }

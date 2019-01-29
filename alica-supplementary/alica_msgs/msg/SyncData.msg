@@ -1,4 +1,4 @@
-agent_id/AgentID robotID
-int64 transitionID
-bool conditionHolds
+agent_id/AgentID robot_id
+int64 transition_id
+bool condition_holds
 bool ack

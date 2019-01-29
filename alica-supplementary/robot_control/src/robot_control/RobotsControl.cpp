@@ -4,7 +4,7 @@
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <robot_control/RobotsControl.h>
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
 
 #include <QMenu>
 
@@ -27,10 +27,10 @@ RobotsControl::RobotsControl()
 {
     setObjectName("RobotsControl");
     rosNode = new ros::NodeHandle();
-    this->sc = supplementary::SystemConfig::getInstance();
+    this->sc = essentials::SystemConfig::getInstance();
 
     RobotsControl::msgTimeOut = std::chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
-    this->pmRegistry = supplementary::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
      * with data from Globals.conf and Processes.conf file. */
@@ -121,7 +121,7 @@ void RobotsControl::showContextMenu(const QPoint& pos)
 
         std::cout << "RC: '" << name << "'" << std::endl;
 
-        const supplementary::AgentID* robotId = this->pmRegistry->getRobotId(name);
+        const essentials::AgentID* robotId = this->pmRegistry->getRobotId(name);
         if (robotId != nullptr) {
             this->controlledRobotsMap[robotId]->toggle();
         } else {
@@ -177,11 +177,11 @@ void RobotsControl::processMessages()
             auto timePstsPair = processStatMsgQueue.front();
             processStatMsgQueue.pop();
 
-            for (auto processStat : (timePstsPair.second->processStats)) {
-                auto agentID = this->pmRegistry->getRobotId(processStat.robotId.id);
+            for (auto processStat : (timePstsPair.second->process_stats)) {
+                auto agentID = this->pmRegistry->getRobotId(processStat.robot_id.id);
                 this->checkAndInit(agentID);
 
-                auto senderAgentID = this->pmRegistry->getRobotId(timePstsPair.second->senderId.id);
+                auto senderAgentID = this->pmRegistry->getRobotId(timePstsPair.second->sender_id.id);
 
                 this->controlledRobotsMap[agentID]->handleProcessStat(timePstsPair.first, processStat, senderAgentID);
             }
@@ -194,7 +194,7 @@ void RobotsControl::processMessages()
             // unqueue the ROS alica info message
             auto timeAlicaInfoPair = alicaInfoMsgQueue.front();
             alicaInfoMsgQueue.pop();
-            auto agentID = this->pmRegistry->getRobotId(timeAlicaInfoPair.second->senderID.id);
+            auto agentID = this->pmRegistry->getRobotId(timeAlicaInfoPair.second->sender_id.id);
             this->checkAndInit(agentID);
             this->controlledRobotsMap[agentID]->handleAlicaInfo(timeAlicaInfoPair);
         }
@@ -205,7 +205,7 @@ void RobotsControl::processMessages()
  * If the given robot ID is already known, nothing is done.
  * Otherwise a new entry in the controlled robot map is created.
  */
-void RobotsControl::checkAndInit(const supplementary::AgentID* robotId)
+void RobotsControl::checkAndInit(const essentials::AgentID* robotId)
 {
     auto pmEntry = this->controlledRobotsMap.find(robotId);
     if (pmEntry == this->controlledRobotsMap.end()) { // robot is not known, so create a corresponding instance
