@@ -11,7 +11,7 @@ class CNVecAllo;
 
 class CNVecEgo : public CNVecTemplate<CNVecEgo>
 {
-  public:
+public:
     CNVecEgo()
         : CNVecEgo(0, 0, 0){};
     CNVecEgo(double x, double y, double z = 0);

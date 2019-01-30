@@ -10,7 +10,7 @@
 
 #include "../include/WrappedMessage.h"
 #include "boost/filesystem.hpp"
-using namespace boost::filesystem;
+using boost::filesystem::exists;
 
 using namespace std;
 

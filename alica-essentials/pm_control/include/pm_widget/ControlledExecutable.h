@@ -1,12 +1,4 @@
-/*
- * ControlledExecutable.h
- *
- *  Created on: Mar 2, 2015
- *      Author: Stephan Opfer
- */
-
-#ifndef SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_
-#define SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_
+#pragma once 
 
 #include <process_manager/ProcessStat.h>
 #include <qt5/QtWidgets/QWidget>
@@ -22,11 +14,11 @@ class ProcessWidget;
 class RobotProcessesWidget;
 } // namespace Ui
 
-namespace supplementary
+namespace essentials
 {
 class ExecutableMetaData;
 class RobotExecutableRegistry;
-} // namespace supplementary
+} // namespace  essentials
 
 using namespace std;
 
@@ -38,8 +30,8 @@ class ControlledExecutable : public QObject
 {
     Q_OBJECT
 
-  public:
-    ControlledExecutable(supplementary::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
+public:
+    ControlledExecutable(essentials::ExecutableMetaData* metaExec, ControlledRobot* parentRobot);
     virtual ~ControlledExecutable();
 
     void handleStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps);
@@ -57,7 +49,7 @@ class ControlledExecutable : public QObject
     long int memory;
     bool publishing;
 
-    supplementary::ExecutableMetaData* metaExec;
+    essentials::ExecutableMetaData* metaExec;
     QWidget* processWidget;
     Ui::ProcessWidget* _processWidget;
 
@@ -73,9 +65,8 @@ class ControlledExecutable : public QObject
     static const string greenBackground;
     static const string grayBackground;
     ControlledRobot* parentRobot;
-    supplementary::RobotExecutableRegistry* pmRegistry;
+    essentials::RobotExecutableRegistry* pmRegistry;
 };
 
 } /* namespace pm_widget */
 
-#endif /* SUPPLEMENTARY_PM_CONTROL_SRC_PM_WIDGET_CONTROLLEDEXECUTABLE_H_ */

@@ -1,6 +1,6 @@
-#include "supplementary/EventTrigger.h"
+#include "essentials/EventTrigger.h"
 
-namespace supplementary
+namespace essentials
 {
 EventTrigger::EventTrigger() {}
 
@@ -11,4 +11,4 @@ void EventTrigger::run(bool notifyAll)
     std::lock_guard<std::mutex> lock(cv_mtx);
     this->notifyAll(notifyAll);
 }
-} // namespace supplementary
+} // namespace essentials

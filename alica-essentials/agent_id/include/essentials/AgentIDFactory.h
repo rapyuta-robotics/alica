@@ -2,16 +2,16 @@
 
 #include "AgentID.h"
 
-namespace supplementary
+namespace essentials
 {
 
 class AgentIDFactory
 {
-  public:
+public:
     AgentIDFactory();
     virtual ~AgentIDFactory();
     virtual const AgentID* create(const std::vector<uint8_t>& bytes) const;
     virtual const AgentID* generateID(int size = 16) const;
 };
 
-} /* namespace supplementary */
+} /* namespace essentials */

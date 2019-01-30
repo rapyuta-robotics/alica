@@ -11,7 +11,7 @@ class CNVecEgo;
 
 class CNPointEgo : public CNPointTemplate<CNPointEgo>
 {
-  public:
+public:
     CNPointEgo()
         : CNPointEgo(0, 0, 0){};
     CNPointEgo(double x, double y, double z = 0);

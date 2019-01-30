@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 
 template <class NotificationClass>
@@ -17,7 +17,7 @@ using t_notificationcallback = void (NotificationClass::*)();
 template <class NotificationClass>
 class NotifyTimer : public virtual ITrigger
 {
-  public:
+public:
     NotifyTimer(long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj);
     ~NotifyTimer();
     bool start();
@@ -119,9 +119,9 @@ const long NotifyTimer<NotificationClass>::getInterval() const
     return msInterval.count();
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */
 
 template <class NotificationClass>
-inline void supplementary::NotifyTimer<NotificationClass>::registerCV(std::condition_variable* condVar)
+inline void essentials::NotifyTimer<NotificationClass>::registerCV(std::condition_variable* condVar)
 {
 }

@@ -1,13 +1,11 @@
 #include "process_manager/RobotMetaData.h"
 
-#include <supplementary/AgentID.h>
-
-namespace supplementary
+namespace essentials
 {
 
-RobotMetaData::RobotMetaData(std::string name, const AgentID* agentID)
-    : name(name)
-    , agentID(agentID)
+RobotMetaData::RobotMetaData(std::string name, const essentials::AgentID* agentID)
+        : name(name)
+        , agentID(agentID)
 {
 }
 
@@ -16,4 +14,4 @@ RobotMetaData::~RobotMetaData()
     delete agentID;
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

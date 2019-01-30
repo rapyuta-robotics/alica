@@ -5,7 +5,7 @@ This is particularly useful to apply ros-multi-master solutions.
 
 ## Requirements ##
 
-You need the [system_config](https://github.com/carpe-noctem-cassel/supplementary/tree/master/system_config) package, that is also included in this repository/stack! It is necessary to read the multicast address and port from the UdpProxy.conf file.
+You need the [system_config](https://github.com/carpe-noctem-cassel/essentials/tree/master/system_config) package, that is also included in this repository/stack! It is necessary to read the multicast address and port from the UdpProxy.conf file.
 
 ## Usage ##
 

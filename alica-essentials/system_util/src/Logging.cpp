@@ -9,7 +9,7 @@
 #include "FileSystem.h"
 #include <SystemConfig.h>
 
-namespace supplementary
+namespace essentials
 {
 namespace logging
 {
@@ -20,13 +20,13 @@ namespace logging
  */
 std::string getLogFilename(const std::string& file)
 {
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     char mbstr[100];
     // strcpy(mbstr, "CheckManagedExecutable_CPP"); // what was this for???
     std::strftime(mbstr, 100, "%Y-%0m-%0d_%0H-%0M-%0S", localtime(&time));
     std::string logFileName = std::string(mbstr) + "_" + file + ".txt";
-    return supplementary::FileSystem::combinePaths(sc->getLogPath(), logFileName);
+    return essentials::FileSystem::combinePaths(sc->getLogPath(), logFileName);
 }
 
 /**
@@ -40,4 +40,4 @@ std::string getErrLogFilename(const std::string& file)
     return getLogFilename(errFile);
 }
 } // namespace logging
-} /* namespace supplementary */
+} /* namespace essentials */

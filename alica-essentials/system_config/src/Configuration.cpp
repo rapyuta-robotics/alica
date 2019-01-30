@@ -1,23 +1,23 @@
 #include "Configuration.h"
 
-namespace supplementary
+namespace essentials
 {
 Configuration::Configuration()
-    : filename()
-    , configRoot(new ConfigNode("root"))
+        : filename()
+        , configRoot(new ConfigNode("root"))
 {
 }
 
 Configuration::Configuration(std::string filename)
-    : filename(filename)
-    , configRoot(new ConfigNode("root"))
+        : filename(filename)
+        , configRoot(new ConfigNode("root"))
 {
     load(filename);
 }
 
 Configuration::Configuration(std::string filename, const std::string content)
-    : filename(filename)
-    , configRoot(new ConfigNode("root"))
+        : filename(filename)
+        , configRoot(new ConfigNode("root"))
 {
     load(filename, std::shared_ptr<std::istream>(new std::istringstream(content)), false, false);
 }
@@ -483,4 +483,4 @@ std::shared_ptr<std::vector<std::string>> Configuration::getParams(char seperato
     }
     return params;
 }
-} // namespace supplementary
+} // namespace essentials

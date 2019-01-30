@@ -8,12 +8,11 @@
 #include <vector>
 
 #include "boost/filesystem.hpp"
-using namespace boost::filesystem;
 
 #include "../include/RelayedMessage.h"
 #include "RelayedMessage.h"
 
-using namespace std;
+using boost::filesystem::exists;
 
 // trim from start
 inline std::string& ltrim(std::string& s)
@@ -50,19 +49,19 @@ std::string exec(const char* cmd)
     return result;
 }
 
-string getTemplateDir()
+std::string getTemplateDir()
 {
-    string pwd = exec((string("rospack find udp_proxy_generator")).c_str());
+    std::string pwd = exec((std::string("rospack find udp_proxy_generator")).c_str());
     pwd.pop_back();
     return pwd + "/templates";
 }
 
-bool checkForCollisions(vector<RelayedMessage*>& msgList)
+bool checkForCollisions(std::vector<RelayedMessage*>& msgList)
 {
     for (int i = 0; i < msgList.size(); i++) {
         for (int j = i + 1; j < msgList.size(); j++) {
             if (msgList[i]->Id == msgList[j]->Id) {
-                cout << "Hashcollision between topic " << msgList[i]->Topic << " and topic " << msgList[j]->Topic;
+                std::cout << "Hashcollision between topic " << msgList[i]->Topic << " and topic " << msgList[j]->Topic;
                 return false;
             }
         }
@@ -70,11 +69,11 @@ bool checkForCollisions(vector<RelayedMessage*>& msgList)
     return true;
 }
 
-bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, string& lang)
+bool parseDefinitionFile(std::string msgDefFile, std::vector<RelayedMessage*>& msgList, std::string& lang)
 {
     // regex line("Topic:\\^ ");
     // regex line("Topic:\\.*(\\.+)\\.*Msg:\\.*(\\.+)\\.*Opt:\\.*\\[(.*)\\]");
-    string regstr;
+    std::string regstr;
     if (lang.compare("java") == 0) {
         regstr = "(send|receive)Topic:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
     } else {
@@ -94,7 +93,7 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, st
         }
         if (boost::regex_match(s, line)) {
             boost::smatch m;
-            string topic, message, options, sendReceive;
+            std::string topic, message, options, sendReceive;
             if (boost::regex_search(s, m, line)) {
                 if (m[1].compare("send") == 0 || m[1].compare("receive") == 0) {
                     sendReceive = m[1];
@@ -126,9 +125,9 @@ bool parseDefinitionFile(string msgDefFile, vector<RelayedMessage*>& msgList, st
     return true;
 }
 
-string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName)
+std::string processTemplate(std::stringstream& t, std::vector<RelayedMessage*>& msgList, std::string& pkgName)
 {
-    string reg_string = "<\\?(.*)\\?>";
+    std::string reg_string = "<\\?(.*)\\?>";
     boost::regex markers(reg_string.c_str());
     boost::smatch m;
     stringstream ret;
@@ -195,12 +194,12 @@ string processTemplate(stringstream& t, vector<RelayedMessage*>& msgList, string
     return ret.str();
 }
 
-string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, string& pkgName)
+std::string processTemplateJava(std::stringstream& t, std::vector<RelayedMessage*>& msgList, std::string& pkgName)
 {
-    string reg_string = "<\\?(.*)\\?>";
+    std::string reg_string = "<\\?(.*)\\?>";
     boost::regex markers(reg_string.c_str());
     boost::smatch m;
-    stringstream ret;
+    std::stringstream ret;
     while (!t.eof()) {
         string s;
         std::getline(t, s);
@@ -276,51 +275,51 @@ string processTemplateJava(stringstream& t, vector<RelayedMessage*>& msgList, st
     return ret.str();
 }
 
-vector<string> getFilesinFolder(string folder)
+std::vector<std::string> getFilesinFolder(std::string folder)
 {
     namespace fs = boost::filesystem;
     fs::path someDir(folder.c_str());
     fs::directory_iterator end_iter;
 
-    vector<string> result_set;
+    std::vector<std::string> result_set;
 
     if (exists(someDir) && is_directory(someDir)) {
         for (fs::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter) {
             if (fs::is_regular_file(dir_iter->status())) {
-                result_set.push_back(string((*dir_iter).path().c_str()));
+                result_set.push_back(std::string((*dir_iter).path().c_str()));
             }
         }
     }
     return result_set;
 }
 
-void processTemplates(string tmplDir, string outDir, vector<RelayedMessage*>& msgList, string& pkgName)
+void processTemplates(std::string tmplDir, std::string outDir, std::vector<RelayedMessage*>& msgList, std::string& pkgName)
 {
-    vector<string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
+    std::vector<std::string> tmplarr = getFilesinFolder(tmplDir); // = Directory.GetFiles(tmplDir,"*.*");
     for (string tmpl : tmplarr) {
         std::cout << "Template: " << tmpl << std::endl;
         int idx = tmpl.find_last_of('/');
-        string basename = tmpl.substr(idx + 1);
+        std::string basename = tmpl.substr(idx + 1);
         std::ifstream ifs(tmpl);
-        stringstream ss;
+        std::stringstream ss;
         if (ifs) {
             ss << ifs.rdbuf();
         }
         ifs.close();
 
-        string content = ss.str();
+        std::string content = ss.str();
         if (basename.find(".tpl") != std::string::npos && outDir.find("proxy_gen") != std::string::npos) {
-            string parsedContent = processTemplate(ss, msgList, pkgName);
+            std::string parsedContent = processTemplate(ss, msgList, pkgName);
 
-            string outputFile = outDir + "/" + basename.substr(0, basename.length() - 3) + "cpp";
+            std::string outputFile = outDir + "/" + basename.substr(0, basename.length() - 3) + "cpp";
             std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
 
         } else if (outDir.find("src/main/java/util") != std::string::npos) {
-            string parsedContent = processTemplateJava(ss, msgList, pkgName);
+            std::string parsedContent = processTemplateJava(ss, msgList, pkgName);
 
-            string outputFile = outDir + "/" + basename.substr(0, basename.length() - 4) + "java";
+            std::string outputFile = outDir + "/" + basename.substr(0, basename.length() - 4) + "java";
             std::ofstream ofs(outputFile);
             ofs << parsedContent;
             ofs.close();
@@ -332,21 +331,21 @@ int main(int argc, char* argv[])
 {
     if (argc < 2) {
         // TODO update this usage information
-        cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << endl;
+        std::cout << "Usage MakeUDPProxy.exe <packageName> <optional j>" << std::endl;
         return -1;
     }
 
-    vector<string> outputPaths;
-    string outputPath;
+    std::vector<std::string> outputPaths;
+    std::string outputPath;
     outputPath = exec((string("rospack find ") + argv[1]).c_str());
-    cout << outputPath << endl;
+    std::cout << outputPath << std::endl;
     outputPath.pop_back();
     string templateDir = getTemplateDir();
     if (!exists(templateDir)) {
-        cout << "Cannot find template directory: " << templateDir << endl;
+        std::cout << "Cannot find template directory: " << templateDir << std::endl;
     }
 
-    string pkgName = argv[1];
+    std::string pkgName = argv[1];
 
     if (!exists(outputPath)) {
         cout << "Cannot find package name!" << endl;

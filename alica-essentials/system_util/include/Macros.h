@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace supplementary
+namespace essentials
 {
 
 #ifdef __GNUC__

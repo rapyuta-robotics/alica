@@ -4,7 +4,7 @@
 
 #include <unistd.h>
 
-namespace supplementary
+namespace essentials
 {
 using std::cerr;
 using std::cout;

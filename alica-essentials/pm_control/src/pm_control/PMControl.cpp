@@ -12,24 +12,24 @@
 namespace pm_control
 {
 PMControl::PMControl()
-    : rqt_gui_cpp::Plugin()
-    , widget_(0)
-    , guiUpdateTimer(nullptr)
+        : rqt_gui_cpp::Plugin()
+        , widget_(0)
+        , guiUpdateTimer(nullptr)
 {
     setObjectName("PMControl");
     rosNode = new ros::NodeHandle();
 
-    this->sc = supplementary::SystemConfig::getInstance();
+    this->sc = essentials::SystemConfig::getInstance();
 
     this->msgTimeOut = chrono::duration<double>((*this->sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
-    this->pmRegistry = supplementary::RobotExecutableRegistry::get();
+    this->pmRegistry = essentials::RobotExecutableRegistry::get();
 
     /* Initialise the registry data structure for better performance
      * with data from Globals.conf and ProcessManaging.conf file. */
 
     // Register robots from Globals.conf
-    const supplementary::AgentID* tmpAgentID;
+    const essentials::AgentID* tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
@@ -108,7 +108,7 @@ void PMControl::handleProcessStats()
         processStatMsgQueue.pop();
 
         // get the corresponding process manager object
-        pm_widget::ControlledProcessManager* controlledPM = this->getControlledProcessManager(timePstsPair.second->senderId.id);
+        pm_widget::ControlledProcessManager* controlledPM = this->getControlledProcessManager(timePstsPair.second->sender_id.id);
         if (controlledPM != nullptr) {
             // hand the message to the process manager, in order to let him update his data structures
             controlledPM->handleProcessStats(timePstsPair);
@@ -127,7 +127,7 @@ void PMControl::handleProcessStats()
  */
 pm_widget::ControlledProcessManager* PMControl::getControlledProcessManager(const vector<uint8_t>& processManagerId)
 {
-    const supplementary::AgentID* id = this->pmRegistry->getRobotId(processManagerId);
+    const essentials::AgentID* id = this->pmRegistry->getRobotId(processManagerId);
     string pmName;
     auto pmEntry = this->processManagersMap.find(id);
     if (pmEntry != this->processManagersMap.end()) { // process manager is already known

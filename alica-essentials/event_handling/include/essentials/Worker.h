@@ -12,12 +12,12 @@ namespace std
 class thread;
 }
 
-namespace supplementary
+namespace essentials
 {
 class Timer;
 class Worker
 {
-  public:
+public:
     Worker(std::string name);
     virtual ~Worker();
     virtual void run() = 0; /** < Meant to be overwritten by derived classes. */
@@ -34,8 +34,8 @@ class Worker
     bool started; /** < Is always true except when the worker is shutting down. */
     bool running; /** < Tells us whether the worker is currently running (or active). */
 
-    std::thread* runThread;      /** < Executes the runInternal and thereby the abstract run method. */
-    supplementary::Timer* timer; /** < Triggers the condition_variable of the runThread. */
+    std::thread* runThread;   /** < Executes the runInternal and thereby the abstract run method. */
+    essentials::Timer* timer; /** < Triggers the condition_variable of the runThread. */
 
   private:
     void runInternal();
@@ -43,4 +43,4 @@ class Worker
     std::mutex runCV_mtx;
 };
 
-} // namespace supplementary
+} // namespace essentials

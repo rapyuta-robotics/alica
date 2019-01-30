@@ -1,16 +1,9 @@
-/*
- * ConsoleCommandHelper.cpp
- *
- *  Created on: Apr 15, 2015
- *      Author: Stephan Opfer
- */
-
 #include "ConsoleCommandHelper.h"
 #include <stdio.h>
 
 using namespace std;
 
-namespace supplementary
+namespace essentials
 {
 
 ConsoleCommandHelper::ConsoleCommandHelper()
@@ -38,4 +31,4 @@ std::string ConsoleCommandHelper::exec(const char* cmd)
     return result;
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

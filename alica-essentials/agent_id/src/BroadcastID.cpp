@@ -1,17 +1,17 @@
-#include "supplementary/BroadcastID.h"
+#include "essentials/BroadcastID.h"
 #include <typeinfo>
 
-namespace supplementary
+namespace essentials
 {
 
 BroadcastID::BroadcastID(const uint8_t* idBytes, int idSize)
-    : AgentID(idBytes, idSize, BC_TYPE)
+        : essentials::AgentID(idBytes, idSize, BC_TYPE)
 {
 }
 
 BroadcastID::~BroadcastID() {}
 
-bool BroadcastID::operator==(const supplementary::AgentID& other) const
+bool BroadcastID::operator==(const essentials::AgentID& other) const
 {
     try {
         dynamic_cast<const BroadcastID&>(other);
@@ -22,7 +22,7 @@ bool BroadcastID::operator==(const supplementary::AgentID& other) const
     return true;
 }
 
-bool BroadcastID::operator!=(const supplementary::AgentID& other) const
+bool BroadcastID::operator!=(const essentials::AgentID& other) const
 {
     try {
         dynamic_cast<const BroadcastID&>(other);
@@ -33,12 +33,12 @@ bool BroadcastID::operator!=(const supplementary::AgentID& other) const
     return false;
 }
 
-bool BroadcastID::operator<(const supplementary::AgentID& other) const
+bool BroadcastID::operator<(const essentials::AgentID& other) const
 {
     return true;
 }
 
-bool BroadcastID::operator>(const supplementary::AgentID& other) const
+bool BroadcastID::operator>(const essentials::AgentID& other) const
 {
     return false;
 }
@@ -53,4 +53,4 @@ std::size_t BroadcastID::hash() const
     return 0;
 }
 
-} /* namespace supplementary*/
+} /* namespace essentials*/

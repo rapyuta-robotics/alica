@@ -11,14 +11,14 @@ uint8 STOP_LOG_PUBLISHING = 3
 uint8 cmd
 
 # ReceiverId determines the ProcessManager-Instanz, which is addressed by this message. 0 means every ProcessManager
-agent_id/AgentID receiverId
+agent_id/AgentID receiver_id
 
 # RobotId determines the ROBOT-Environment Variable. 
-agent_id/AgentID[] robotIds
+agent_id/AgentID[] robot_ids
 
 # Array of process IDs from the Processes.conf file.
-int32[] processKeys
+int32[] process_keys
 
 # Array of paramSet IDs from the Processes.conf file.
-int32[] paramSets
+int32[] param_sets
 

@@ -2,9 +2,9 @@
 
 #include "pm_widget/ControlledRobot.h"
 
+#include <essentials/AgentID.h>
 #include <process_manager/ProcessStat.h>
 #include <process_manager/ProcessStats.h>
-#include <supplementary/AgentID.h>
 #include <ui_PMControl.h>
 
 #include <QDialog>
@@ -19,11 +19,10 @@
 #include <queue>
 #include <utility>
 
-namespace supplementary
+namespace essentials
 {
-class SystemConfig;
 class RobotExecutableRegistry;
-} // namespace supplementary
+} // namespace  essentials
 
 namespace pm_widget
 {
@@ -43,15 +42,15 @@ class PMControl : public rqt_gui_cpp::Plugin
     virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
     virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-    void sendProcessCommand(const supplementary::AgentID* receiverId, std::vector<const supplementary::AgentID*> robotIds, std::vector<int> execIds,
-                            std::vector<int> paramSets, int cmd);
+    void sendProcessCommand(const essentials::AgentID* receiverId, std::vector<const essentials::AgentID*> robotIds, std::vector<int> execIds,
+            std::vector<int> paramSets, int cmd);
 
     std::chrono::duration<double> msgTimeOut;
 
     Ui::PMControlWidget ui_;
     QWidget* widget_;
 
-    supplementary::RobotExecutableRegistry* pmRegistry;
+    essentials::RobotExecutableRegistry* pmRegistry;
 
   private:
     ros::NodeHandle* rosNode;
@@ -60,9 +59,9 @@ class PMControl : public rqt_gui_cpp::Plugin
     std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>> processStatMsgQueue;
     std::mutex msgQueueMutex;
 
-    supplementary::SystemConfig* sc;
+    essentials::SystemConfig* sc;
 
-    std::map<const supplementary::AgentID*, pm_widget::ControlledProcessManager*, supplementary::AgentIDComparator> processManagersMap;
+    std::map<const essentials::AgentID*, pm_widget::ControlledProcessManager*, essentials::AgentIDComparator> processManagersMap;
 
     void handleProcessStats();
 

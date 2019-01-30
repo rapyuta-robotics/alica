@@ -11,7 +11,7 @@ namespace geometry
 {
 
 CNRobotEgo::CNRobotEgo()
-    : velocity()
+        : velocity()
 {
     this->radius = 0;
     this->id = 0;

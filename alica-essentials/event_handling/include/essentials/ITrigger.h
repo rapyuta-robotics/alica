@@ -5,12 +5,12 @@
 #include <map>
 #include <mutex>
 
-namespace supplementary
+namespace essentials
 {
 
 class ITrigger
 {
-  public:
+public:
     virtual ~ITrigger() {}
     void registerCV(std::condition_variable* condVar)
     {
@@ -26,7 +26,7 @@ class ITrigger
         }
     }
 
-  protected:
+protected:
     void notifyAll(bool notifyAll)
     {
         for (auto& pair : registeredCVs) {
@@ -43,4 +43,4 @@ class ITrigger
     std::map<std::condition_variable*, bool> registeredCVs;
 };
 
-} /* namespace supplementary */
+} /* namespace essentials */

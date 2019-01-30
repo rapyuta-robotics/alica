@@ -5,27 +5,27 @@
 #include "ui_RobotProcessesWidget.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentID.h>
+#include <essentials/BroadcastID.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>
-#include <supplementary/AgentID.h>
-#include <supplementary/BroadcastID.h>
 
 #include <limits.h>
 #include <ros/ros.h>
 namespace pm_widget
 {
 // Second Constructor is for robot_control
-ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID* robotId, const supplementary::AgentID* parentPMid)
-    : RobotMetaData(robotName, robotId)
-    , robotProcessesQFrame(new QFrame())
-    , _robotProcessesWidget(new Ui::RobotProcessesWidget())
-    , parentPMid(parentPMid)
+ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* robotId, const essentials::AgentID* parentPMid)
+        : RobotMetaData(robotName, robotId)
+        , robotProcessesQFrame(new QFrame())
+        , _robotProcessesWidget(new Ui::RobotProcessesWidget())
+        , parentPMid(parentPMid)
 {
     // setup gui stuff
     this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
-    auto pmRegistry = supplementary::RobotExecutableRegistry::get();
-    if (dynamic_cast<const supplementary::BroadcastID*>(parentPMid)) {
+    auto pmRegistry = essentials::RobotExecutableRegistry::get();
+    if (dynamic_cast<const essentials::BroadcastID*>(parentPMid)) {
         // don't show in robot_control
         this->_robotProcessesWidget->robotHostLabel->hide();
         this->inRobotControl = true;
@@ -47,18 +47,18 @@ ControlledRobot::ControlledRobot(string robotName, const supplementary::AgentID*
     }
 
     // construct all known executables
-    const vector<supplementary::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
+    const vector<essentials::ExecutableMetaData*>& execMetaDatas = pmRegistry->getExecutables();
     ControlledExecutable* controlledExec;
     for (auto execMetaDataEntry : execMetaDatas) {
         controlledExec = new ControlledExecutable(execMetaDataEntry, this);
         this->controlledExecMap.emplace(execMetaDataEntry->id, controlledExec);
     }
 
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     this->msgTimeOut = chrono::duration<double>((*sc)["ProcessManaging"]->get<unsigned long>("PMControl.timeLastMsgReceivedTimeOut", NULL));
 
     ros::NodeHandle* nh = new ros::NodeHandle();
-    string cmdTopic = (*supplementary::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+    string cmdTopic = (*essentials::SystemConfig::getInstance())["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
     processCommandPub = nh->advertise<process_manager::ProcessCommand>(cmdTopic, 10);
 }
 
@@ -70,18 +70,18 @@ ControlledRobot::~ControlledRobot()
     delete robotProcessesQFrame;
 }
 
-void ControlledRobot::handleProcessStat(chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps,
-                                        const supplementary::AgentID* parentPMid)
+void ControlledRobot::handleProcessStat(
+        chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const essentials::AgentID* parentPMid)
 {
     this->parentPMid = parentPMid;
 
-    auto controlledExecEntry = this->controlledExecMap.find(ps.processKey);
+    auto controlledExecEntry = this->controlledExecMap.find(ps.process_key);
     if (controlledExecEntry != this->controlledExecMap.end()) { // executable is already known
         this->timeLastMsgReceived = timeMsgReceived;
         // update the statistics of the ControlledExecutable
         controlledExecEntry->second->handleStat(timeMsgReceived, ps);
     } else { // executable is unknown
-        cerr << "ControlledRobot: Received processStat for unknown executable with process key " << ps.processKey << endl;
+        cerr << "ControlledRobot: Received processStat for unknown executable with process key " << ps.process_key << endl;
         return;
     }
 }
@@ -119,12 +119,12 @@ void ControlledRobot::removeExec(QWidget* exec)
 void ControlledRobot::sendProcessCommand(vector<int> execIds, vector<int> paramSets, int cmd)
 {
     process_manager::ProcessCommand pc;
-    pc.receiverId.type = this->parentPMid->getType();
-    pc.receiverId.id = this->parentPMid->toByteVector();
-    pc.robotIds.push_back(process_manager::ProcessCommand::_robotIds_type::value_type());
-    pc.robotIds[0].id = this->agentID->toByteVector();
-    pc.processKeys = execIds;
-    pc.paramSets = paramSets;
+    pc.receiver_id.type = this->parentPMid->getType();
+    pc.receiver_id.id = this->parentPMid->toByteVector();
+    pc.robot_ids.push_back(process_manager::ProcessCommand::_robot_ids_type::value_type());
+    pc.robot_ids[0].id = this->agentID->toByteVector();
+    pc.process_keys = execIds;
+    pc.param_sets = paramSets;
     pc.cmd = cmd;
     this->processCommandPub.publish(pc);
 }

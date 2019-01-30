@@ -8,7 +8,7 @@ namespace geometry
 template <class T>
 class CNPositionTemplate : public geometry_msgs::Pose2D
 {
-  public:
+public:
     double length() const { return sqrt(x * x + y * y); }
 
     // Self

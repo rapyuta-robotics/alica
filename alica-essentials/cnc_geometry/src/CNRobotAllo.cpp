@@ -12,7 +12,7 @@ namespace geometry
 {
 
 CNRobotAllo::CNRobotAllo()
-    : velocity()
+        : velocity()
 {
     this->radius = 0;
     this->id = 0;

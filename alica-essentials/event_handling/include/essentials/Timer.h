@@ -1,6 +1,6 @@
 #pragma once
 
-#include "supplementary/ITrigger.h"
+#include "essentials/ITrigger.h"
 
 #include <chrono>
 #include <condition_variable>
@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 /**
  * The TimerEvent allows to register several condition variables.
@@ -16,7 +16,7 @@ namespace supplementary
  */
 class Timer : public virtual ITrigger
 {
-  public:
+public:
     Timer(long msInterval, long msDelayedStart);
     ~Timer();
     bool start();
@@ -36,4 +36,4 @@ class Timer : public virtual ITrigger
     bool running, started, triggered;
     std::condition_variable cv;
 };
-} /* namespace supplementary */
+} /* namespace essentials */

@@ -12,9 +12,9 @@ class CNPositionAllo;
 
 class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
 {
-  public:
+public:
     CNPositionEgo()
-        : CNPositionEgo(0, 0, 0)
+            : CNPositionEgo(0, 0, 0)
     {
     }
     CNPositionEgo(double x, double y, double theta);

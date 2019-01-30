@@ -9,7 +9,7 @@
 TEST(SystemConfigBasics, readValues)
 {
     // bring up the SystemConfig with the corresponding path
-    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     sc->setRootPath(".");
     sc->setConfigPath("./etc");
 

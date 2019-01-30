@@ -8,13 +8,13 @@
 #include <string>
 #include <utility>
 
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
 
-namespace supplementary
+namespace essentials
 {
 class SystemConfig;
 class RobotExecutableRegistry;
-} // namespace supplementary
+} // namespace  essentials
 
 namespace pm_control
 {
@@ -29,8 +29,8 @@ class ControlledProcessManager : public QObject
 {
     Q_OBJECT
 
-  public:
-    ControlledProcessManager(std::string processManagerName, const supplementary::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
+public:
+    ControlledProcessManager(std::string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
     virtual ~ControlledProcessManager();
 
     void updateGUI(std::chrono::system_clock::time_point now);
@@ -44,14 +44,14 @@ class ControlledProcessManager : public QObject
     std::chrono::duration<double> msgTimeOut;
     std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
     std::string name;                                          /* < Hostname under which this process manager is running */
-    const supplementary::AgentID* id;                          /* < The id of the host */
-    supplementary::RobotExecutableRegistry* pmRegistry;
+    const essentials::AgentID* id;                             /* < The id of the host */
+    essentials::RobotExecutableRegistry* pmRegistry;
 
-  private:
-    std::map<const supplementary::AgentID*, ControlledRobot*, supplementary::AgentIDComparator>
-        controlledRobotsMap; /* < The robots, which are controlled by this process manager */
+private:
+    std::map<const essentials::AgentID*, ControlledRobot*, essentials::AgentIDComparator>
+            controlledRobotsMap; /* < The robots, which are controlled by this process manager */
     QBoxLayout* parentLayout;
-    ControlledRobot* getControlledRobot(const supplementary::AgentID* robotId);
+    ControlledRobot* getControlledRobot(const essentials::AgentID* robotId);
 };
 
 } /* namespace pm_widget */

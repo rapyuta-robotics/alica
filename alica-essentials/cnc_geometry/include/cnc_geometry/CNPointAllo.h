@@ -11,7 +11,7 @@ class CNVecAllo;
 
 class CNPointAllo : public CNPointTemplate<CNPointAllo>
 {
-  public:
+public:
     CNPointAllo()
         : CNPointAllo(0, 0, 0){};
     CNPointAllo(double x, double y, double z = 0);

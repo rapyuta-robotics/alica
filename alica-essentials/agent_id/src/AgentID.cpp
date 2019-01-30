@@ -1,10 +1,10 @@
-#include "supplementary/AgentID.h"
+#include "essentials/AgentID.h"
 
-namespace supplementary
+namespace essentials
 {
 
 AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type)
-    : TYPE(type)
+        : TYPE(type)
 {
     for (int i = 0; i < idSize; i++) {
         this->id.push_back(idBytes[i]);
@@ -133,4 +133,4 @@ std::size_t AgentID::hash() const
     return h;
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

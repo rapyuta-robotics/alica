@@ -11,15 +11,15 @@
 #include <string>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 class ManagedExecutable;
 class ProcessManager;
 
 class ManagedRobot : public RobotMetaData
 {
-  public:
-    ManagedRobot(std::string robotName, const AgentID* agentID, ProcessManager* procMan);
+public:
+    ManagedRobot(std::string robotName, const essentials::AgentID* agentID, ProcessManager* procMan);
     virtual ~ManagedRobot();
     void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
     void update(unsigned long long cpuDelta);
@@ -35,4 +35,4 @@ class ManagedRobot : public RobotMetaData
     std::map<int, ManagedExecutable*> executableMap;
 };
 
-} /* namespace supplementary */
+} /* namespace  essentials */

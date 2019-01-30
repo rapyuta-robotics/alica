@@ -1,5 +1,4 @@
-#ifndef SUPPLEMENTARY_DATETIME_H
-#define SUPPLEMENTARY_DATETIME_H 1
+#pragma once 
 
 #include <cstring>
 #include <sys/time.h>
@@ -7,12 +6,12 @@
 
 #define EPOCH_ADJUST (62135596800LL)
 
-namespace supplementary
+namespace essentials
 {
 
 struct DateTime
 {
-  protected:
+protected:
     long long ticks;
 
   public:
@@ -21,12 +20,12 @@ struct DateTime
      * @param ticks Tocks (100 ns resolution
      */
     DateTime(long long t)
-        : ticks(t)
+            : ticks(t)
     {
     }
 
     DateTime(const DateTime& other)
-        : ticks(other.ticks)
+            : ticks(other.ticks)
     {
     }
 
@@ -48,6 +47,6 @@ struct DateTime
 
     inline long long getTicks() { return this->ticks; }
 };
-} // namespace supplementary
 
-#endif /* SUPPLEMENTARY_DATETIME_H */
+} // namespace essentials
+

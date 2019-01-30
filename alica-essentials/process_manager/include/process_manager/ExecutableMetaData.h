@@ -5,16 +5,16 @@
 #include <string>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 
 class ExecutableMetaData
 {
-  public:
+public:
+    ExecutableMetaData(
+            std::string name, int id, std::string mode, std::string execName, std::string rosPackage, std::string prefixCmd, std::string absExecName);
     ExecutableMetaData(std::string name, int id, std::string mode, std::string execName, std::string rosPackage, std::string prefixCmd,
-                       std::string absExecName);
-    ExecutableMetaData(std::string name, int id, std::string mode, std::string execName, std::string rosPackage, std::string prefixCmd,
-                       std::map<int, std::vector<char*>> parameterMap, std::string absExecName);
+            std::map<int, std::vector<char*>> parameterMap, std::string absExecName);
     virtual ~ExecutableMetaData();
 
     bool matchSplittedCmdLine(std::vector<std::string>& cmdline);
@@ -32,9 +32,9 @@ class ExecutableMetaData
     std::string mode;
 };
 
-} /* namespace supplementary */
+} /* namespace  essentials */
 
-inline std::ostream& operator<<(std::ostream& strm, const supplementary::ExecutableMetaData& a)
+inline std::ostream& operator<<(std::ostream& strm, const essentials::ExecutableMetaData& a)
 {
     std::ostringstream resultStream;
     resultStream << "ExecutableMetaData: " << a.name << "(" << a.id << ")\n\tAbsExecName:\t" << a.absExecName << "\n\tMode:\t\t" << a.mode << std::endl;

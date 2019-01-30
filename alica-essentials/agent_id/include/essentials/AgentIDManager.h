@@ -1,18 +1,18 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
-#include "supplementary/AgentIDFactory.h"
+#include "essentials/AgentID.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <mutex>
 #include <unordered_set>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 
 class AgentIDManager
 {
-  public:
+public:
     // static AgentIDManager *getInstance();
     AgentIDManager(AgentIDFactory* idFactory);
     virtual ~AgentIDManager();
@@ -24,8 +24,8 @@ class AgentIDManager
 
     const AgentID* generateID(int size = 16);
 
-  private:
-    std::unordered_set<const AgentID*, supplementary::AgentIDHash, supplementary::AgentIDEqualsComparator> agentIDs;
+private:
+    std::unordered_set<const AgentID*, essentials::AgentIDHash, essentials::AgentIDEqualsComparator> agentIDs;
     AgentIDFactory* idFactory;
     std::mutex mutex;
 };
@@ -49,4 +49,4 @@ const AgentID* AgentIDManager::getID(Prototype& idPrototype)
     return this->getIDFromBytes(idByteVector);
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

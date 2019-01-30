@@ -5,30 +5,30 @@ using std::map;
 using std::string;
 using std::vector;
 
-namespace supplementary
+namespace essentials
 {
 
 ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd, string absExecName)
-    : name(name)
-    , id(id)
-    , mode(mode)
-    , execName(execName)
-    , rosPackage(rosPackage)
-    , prefixCmd(prefixCmd)
-    , absExecName(absExecName)
+        : name(name)
+        , id(id)
+        , mode(mode)
+        , execName(execName)
+        , rosPackage(rosPackage)
+        , prefixCmd(prefixCmd)
+        , absExecName(absExecName)
 {
 }
 
-ExecutableMetaData::ExecutableMetaData(string name, int id, string mode, string execName, string rosPackage, string prefixCmd,
-                                       map<int, vector<char*>> parameterMap, string absExecName)
-    : name(name)
-    , id(id)
-    , mode(mode)
-    , execName(execName)
-    , rosPackage(rosPackage)
-    , prefixCmd(prefixCmd)
-    , parameterMap(parameterMap)
-    , absExecName(absExecName)
+ExecutableMetaData::ExecutableMetaData(
+        string name, int id, string mode, string execName, string rosPackage, string prefixCmd, map<int, vector<char*>> parameterMap, string absExecName)
+        : name(name)
+        , id(id)
+        , mode(mode)
+        , execName(execName)
+        , rosPackage(rosPackage)
+        , prefixCmd(prefixCmd)
+        , parameterMap(parameterMap)
+        , absExecName(absExecName)
 {
 }
 
@@ -97,4 +97,4 @@ ExecutableMetaData::~ExecutableMetaData()
     }
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

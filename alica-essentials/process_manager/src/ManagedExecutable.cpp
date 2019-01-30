@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 
 using std::cerr;
@@ -34,23 +34,23 @@ using std::vector;
 long ManagedExecutable::kernelPageSize = 0;
 
 ManagedExecutable::ManagedExecutable(ExecutableMetaData const* const metaExec, long pid, string robotName, ProcessManager* procMan)
-    : metaExec(metaExec)
-    , managedPid(pid)
-    , state('X')
-    , lastUTime(0)
-    , lastSTime(0)
-    , currentUTime(0)
-    , currentSTime(0)
-    , memory(0)
-    , starttime(0)
-    , desiredRunState(RunState::SHOULDNT_RUN)
-    , cpu(0)
-    , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-    , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
-    , procMan(procMan)
-    , need2ReadParams(true)
-    , publishing(false)
-    , shouldPublish(false)
+        : metaExec(metaExec)
+        , managedPid(pid)
+        , state('X')
+        , lastUTime(0)
+        , lastSTime(0)
+        , currentUTime(0)
+        , currentSTime(0)
+        , memory(0)
+        , starttime(0)
+        , desiredRunState(RunState::SHOULDNT_RUN)
+        , cpu(0)
+        , runningParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+        , desiredParamSet(ExecutableMetaData::UNKNOWN_PARAMS)
+        , procMan(procMan)
+        , need2ReadParams(true)
+        , publishing(false)
+        , shouldPublish(false)
 {
 #ifdef MNGD_EXEC_DEBUG
     cout << "ME: Constructor of executable " << metaExec->name << endl;
@@ -63,7 +63,7 @@ ManagedExecutable::~ManagedExecutable()
 {
     // TODO: check whether the cleanup is right -> valgrind
     for (auto param : this->runningParams) {
-        free((char*)param);
+        free((char*) param);
     }
 }
 
@@ -130,10 +130,11 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
                             publishing = false;
                         }
 
-                        if (this->desiredParamSet == this->runningParamSet || this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running
-                                                                                                                                   // with the right parameters,
-                                                                                                                                   // or is started manually
-                                                                                                                                   // -> so kill all others
+                        if (this->desiredParamSet == this->runningParamSet ||
+                                this->desiredRunState == RunState::MANUAL_STARTED) { // our process is running with the
+                                                                                     // right parameters, or is started
+                                                                                     // manually
+                                                                                     // -> so kill all others
 
                             if (this->shouldPublish && !this->publishing) { // start the log publishing threads if necessary
                                 startPublishingLogs();
@@ -201,18 +202,18 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
     }
 }
 
-void ManagedExecutable::report(process_manager::ProcessStats& psts, const AgentID* agentID)
+void ManagedExecutable::report(process_manager::ProcessStats& psts, const essentials::AgentID* agentID)
 {
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) {
         process_manager::ProcessStat ps;
-        ps.robotId.id = agentID->toByteVector();
+        ps.robot_id.id = agentID->toByteVector();
         ps.cpu = this->cpu;
         ps.mem = this->memory * ManagedExecutable::kernelPageSize / 1024.0 / 1024.0; // MB
-        ps.processKey = this->metaExec->id;
-        ps.paramSet = this->runningParamSet;
+        ps.process_key = this->metaExec->id;
+        ps.param_set = this->runningParamSet;
         ps.state = this->state;
         ps.publishing = (this->publishing ? 1 : 0);
-        psts.processStats.push_back(ps);
+        psts.process_stats.push_back(ps);
     }
 }
 
@@ -373,7 +374,7 @@ void ManagedExecutable::readProcParams(string pidString)
             i++;
             for (; i < this->runningParams.size(); i++) {
                 if (paramEntry.second[i] == nullptr &&
-                    this->runningParams[i] == nullptr) { // this case is for the ending null pointer in the command line parameters
+                        this->runningParams[i] == nullptr) { // this case is for the ending null pointer in the command line parameters
                     continue;
                 } else if (strcmp(paramEntry.second[i], this->runningParams[i]) != 0) { // we have miss matching parameters
                     break;
@@ -499,8 +500,8 @@ void ManagedExecutable::startPublishingLogs()
  */
 void ManagedExecutable::startProcess(vector<char*>& params)
 {
-    this->stdLogFileName = logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
-    this->errLogFileName = logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
+    this->stdLogFileName = essentials::logging::getLogFilename(this->robotEnvVariable + '_' + metaExec->name);
+    this->errLogFileName = essentials::logging::getErrLogFilename(this->robotEnvVariable + '_' + this->metaExec->name);
 
     const char* execStartString;
     vector<char*> startParams;
@@ -586,7 +587,7 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
 {
     std::ifstream ifs;
     int startCounter = 0;
-    while (!FileSystem::isFile(logFileName)) {
+    while (!essentials::FileSystem::isFile(logFileName)) {
         usleep(1000);
         startCounter++;
         if (startCounter > 2) {
@@ -610,7 +611,7 @@ void ManagedExecutable::publishLogFile(string logFileName, ros::console::levels:
             int charsRead = ifs.readsome(buf + idx, bufSize - idx);
             if (charsRead > 0) {
                 int charsToBeConsumed = charsRead;
-                while (char* newLine = (char*)memchr(buf + idx, '\n', charsToBeConsumed)) {
+                while (char* newLine = (char*) memchr(buf + idx, '\n', charsToBeConsumed)) {
                     idx = newLine - buf + 1;
                     charsToBeConsumed = idxLast + charsRead - idx;
                 }
@@ -653,4 +654,4 @@ void ManagedExecutable::startProcess()
     this->startProcess(entry);
 }
 
-} /* namespace supplementary */
+} /* namespace  essentials */

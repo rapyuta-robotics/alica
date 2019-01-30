@@ -284,11 +284,11 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
  * @return True if all points are outside the triangle (a,b,c).
  */
 template <class T>
-typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type outsideTriangle(const T& a, const T& b, const T& c, double tolerance,
-                                                                                                   const vector<T>& points)
+typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::type outsideTriangle(
+        const T& a, const T& b, const T& c, double tolerance, const vector<T>& points)
 {
-    auto a2b = b - a;
-    auto b2c = c - b;
+auto a2b = b - a;
+auto b2c = c - b;
     auto c2a = a - c;
 
     for (int i = 0; i < points.size(); i++) {
@@ -298,7 +298,7 @@ typename std::enable_if<std::is_base_of<CNPointTemplate<T>, T>::value, bool>::ty
         auto c2p = p - c;
 
         if ((a2p.x * a2b.y - a2p.y * a2b.x) / a2p.normalize().length() < tolerance && (b2p.x * b2c.y - b2p.y * b2c.x) / b2p.normalize().length() < tolerance &&
-            (c2p.x * c2a.y - c2p.y * c2a.x) / c2p.normalize().length() < tolerance) {
+                (c2p.x * c2a.y - c2p.y * c2a.x) / c2p.normalize().length() < tolerance) {
             return false;
         }
     }

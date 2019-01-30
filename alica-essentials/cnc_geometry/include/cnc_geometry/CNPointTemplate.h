@@ -8,7 +8,7 @@ namespace geometry
 template <class T>
 class CNPointTemplate : public geometry_msgs::Point
 {
-  public:
+public:
     T rotateZ(double radian) const { return T(x * cos(radian) - y * sin(radian), x * sin(radian) + y * cos(radian), z); }
 
     double angleZ() const { return atan2(y, x); }

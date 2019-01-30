@@ -1,18 +1,18 @@
 #pragma once
 
+#include <essentials/AgentID.h>
 #include <string>
 
-namespace supplementary
+namespace essentials
 {
-class AgentID;
 
 class RobotMetaData
 {
-  public:
-    RobotMetaData(std::string name, const AgentID* agentID);
+public:
+    RobotMetaData(std::string name, const essentials::AgentID* agentID);
     virtual ~RobotMetaData();
 
-    const AgentID* agentID;
+    const essentials::AgentID* agentID;
     std::string name;
 };
-} /* namespace supplementary */
+} /* namespace  essentials */

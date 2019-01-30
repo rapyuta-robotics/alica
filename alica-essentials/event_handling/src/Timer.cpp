@@ -1,6 +1,6 @@
-#include "supplementary/Timer.h"
+#include "essentials/Timer.h"
 
-namespace supplementary
+namespace essentials
 {
 
 Timer::Timer(long msInterval, long msDelayedStart)
@@ -28,10 +28,11 @@ void Timer::run(bool notifyAll)
         std::this_thread::sleep_for(msDelayedStart);
     }
 
-    std::unique_lock<std::mutex> lck(cv_mtx);
-
     while (this->started) {
-        this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        {
+            std::unique_lock<std::mutex> lck(cv_mtx);
+            this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+        }
 
         if (!this->started) // for destroying the timer
             return;
@@ -93,4 +94,4 @@ const long Timer::getInterval() const
     return msInterval.count();
 }
 
-} /* namespace supplementary */
+} /* namespace essentials */

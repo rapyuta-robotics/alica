@@ -2,7 +2,7 @@
 
 #include "container/CNPosition.h"
 
-namespace supplementary
+namespace essentials
 {
 class IAgentID;
 }
@@ -12,13 +12,13 @@ namespace geometry
 
 class CNRobot : public CNPosition
 {
-  public:
+public:
     CNRobot();
     virtual ~CNRobot();
     double radius;
     double velocityX;
     double velocityY;
-    const supplementary::IAgentID* id;
+    const essentials::IAgentID* id;
     shared_ptr<vector<int>> opposer;
     shared_ptr<vector<int>> supporter;
     double certainty;

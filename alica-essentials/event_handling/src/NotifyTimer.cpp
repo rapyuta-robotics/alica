@@ -1,5 +1,5 @@
-#include "supplementary/NotifyTimer.h"
+#include "essentials/NotifyTimer.h"
 
-namespace supplementary
+namespace essentials
 {
-} /* namespace supplementary */
+} /* namespace essentials */

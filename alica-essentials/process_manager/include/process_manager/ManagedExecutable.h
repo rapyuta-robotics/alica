@@ -5,7 +5,7 @@
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <supplementary/AgentID.h>
+#include <essentials/AgentID.h>
 
 #include <ros/console.h>
 
@@ -14,11 +14,10 @@
 #include <thread>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 class ProcessManager;
 class ExecutableMetaData;
-class AgentID;
 
 enum RunState
 {
@@ -29,12 +28,12 @@ enum RunState
 
 class ManagedExecutable
 {
-  public:
+public:
     ManagedExecutable(ExecutableMetaData const* const metaExec, long pid, std::string robotName, ProcessManager* procMan);
     virtual ~ManagedExecutable();
     void queue4Update(long pid);
     void update(unsigned long long cpuDelta);
-    void report(process_manager::ProcessStats& psts, const AgentID* robotId);
+    void report(process_manager::ProcessStats& psts, const essentials::AgentID* robotId);
     void changeDesiredState(bool shouldRun, int paramSetId);
     void changeDesiredLogPublishingState(bool shouldPublish);
     void startProcess(std::vector<char*>& params);
@@ -85,4 +84,4 @@ class ManagedExecutable
     void clear();
 };
 
-} /* namespace supplementary */
+} /* namespace  essentials */

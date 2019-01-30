@@ -1,19 +1,19 @@
-#include "supplementary/Worker.h"
-#include "supplementary/ITrigger.h"
-#include "supplementary/Timer.h"
+#include "essentials/Worker.h"
+#include "essentials/ITrigger.h"
+#include "essentials/Timer.h"
 
 #include <string>
 
-namespace supplementary
+namespace essentials
 {
 
 Worker::Worker(std::string name)
-    : name(name)
-    , started(true)
-    , runCV()
+        : name(name)
+        , started(true)
+        , runCV()
 {
     this->running = false;
-    this->timer = new supplementary::Timer(0, 0);
+    this->timer = new essentials::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
     this->runThread = new std::thread(&Worker::runInternal, this);
 }
@@ -70,4 +70,4 @@ void Worker::runInternal()
     }
 }
 
-} // namespace supplementary
+} // namespace essentials

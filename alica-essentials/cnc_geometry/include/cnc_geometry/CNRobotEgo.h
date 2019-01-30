@@ -11,7 +11,7 @@ class CNRobotAllo;
 
 class CNRobotEgo
 {
-  public:
+public:
     CNRobotEgo();
     virtual ~CNRobotEgo();
 

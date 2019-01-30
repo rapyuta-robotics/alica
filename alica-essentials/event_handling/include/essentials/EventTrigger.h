@@ -6,13 +6,13 @@
 #include <mutex>
 #include <vector>
 
-namespace supplementary
+namespace essentials
 {
 class EventTrigger : public virtual ITrigger
 {
-  public:
+public:
     EventTrigger();
     virtual ~EventTrigger();
     void run(bool notifyAll = true);
 };
-} // namespace supplementary
+} // namespace essentials
