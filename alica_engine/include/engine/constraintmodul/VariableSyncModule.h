@@ -113,8 +113,6 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     }
 #endif
 
-    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
-
     std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
         if (a._totalSupCount != b._totalSupCount) {
             return a._totalSupCount > b._totalSupCount;
@@ -122,11 +120,12 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
             return a._hash > b._hash;
         }
     });
-    int i = 0;
+
+    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
     o_seeds.resize(dim * maxNum);
-    for (const VotedSeed& vs : seeds) {
-        memcpy(&*(o_seeds.begin() + i), &*vs._values.begin(), sizeof(Variant) * dim);
-        i += dim;
+    for (int i = 0; i < maxNum; ++i) {
+        auto sit = seeds[i]._values.begin();
+        std::copy(sit, sit + dim, o_seeds.begin() + (i * dim));
     }
 
     return maxNum;
