@@ -1,3 +1,9 @@
+#include <BehaviourCreator.h>
+#include <ConditionCreator.h>
+#include <ConstraintCreator.h>
+#include <UtilityFunctionCreator.h>
+#include <engine/AlicaContext.h>
+
 #include <CGSolver.h>
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
@@ -13,39 +19,26 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 {
     // create world model
     ALICATurtleWorldModel::init(nh, priv_nh);
-
-    // ALICA essentials setting
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setHostname(name);
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
-
-    // ALICA engine setting
-    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), roleset, master_plan, false);
-    bc = new alica::BehaviourCreator();
-    cc = new alica::ConditionCreator();
-    uc = new alica::UtilityFunctionCreator();
-    crc = new alica::ConstraintCreator();
-    ae->setAlicaClock(new alica::AlicaClock());
-    ae->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae));
-    ae->addSolver(new alica::reasoner::CGSolver(ae));
-    ae->init(bc, cc, uc, crc);
+    // Initialize Alica
+    alica::AlicaContext::setRobotName(name);
+    alica::AlicaContext::setRootPath(path);
+    alica::AlicaContext::setConfigPath(path + "/etc");
+    ac = new alica::AlicaContext(roleset, master_plan, false);
+    ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 void Base::start()
 {
-    ae->start();
+    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+    ac->init(creators);
 }
 
 Base::~Base()
 {
-    ae->shutdown();
-    delete ae->getCommunicator();
-    delete ae;
-    delete cc;
-    delete bc;
-    delete uc;
-    delete crc;
+    ac->terminate();
+    delete ac;
     ALICATurtleWorldModel::del();
 }
 

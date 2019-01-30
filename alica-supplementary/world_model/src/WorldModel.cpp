@@ -39,7 +39,7 @@ alica::AlicaEngine* WorldModel::getEngine()
 alica::AlicaTime WorldModel::getTime()
 {
     if (this->alicaEngine != nullptr) {
-        return this->alicaEngine->getAlicaClock()->now();
+        return this->alicaEngine->getAlicaClock().now();
     } else {
         return alica::AlicaTime::zero();
     }
@@ -61,7 +61,7 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
 const essentials::AgentID* WorldModel::getOwnId()
 {
     if (!this->ownID) {
-        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID().get();
+        this->ownID = this->alicaEngine->getTeamManager().getLocalAgentID().get();
     }
     return this->ownID;
 }

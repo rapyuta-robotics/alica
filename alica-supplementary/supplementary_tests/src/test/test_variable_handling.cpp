@@ -1,13 +1,10 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
+
 #include "Plans/VariableHandling/Lvl11524452759599.h"
-#include "UtilityFunctionCreator.h"
+#include <test_supplementary.h>
+
 #include "engine/Assignment.h"
-#include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
-
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include <CGSolver.h>
@@ -19,105 +16,59 @@
 #include <iostream>
 #include <thread>
 
+namespace supplementary
+{
+namespace
+{
+
 using alica::reasoner::CGSolver;
 
-class AlicaVariableHandlingTest : public ::testing::Test
+class AlicaVariableHandlingTest : public AlicaTestMultiAgentFixture
 {
 protected:
-    alica::AlicaEngine* ae1;
-    alica::AlicaEngine* ae2;
-    alica::BehaviourCreator* bc1;
-    alica::ConditionCreator* cc1;
-    alica::UtilityFunctionCreator* uc1;
-    alica::ConstraintCreator* crc1;
-
-    alica::BehaviourCreator* bc2;
-    alica::ConditionCreator* cc2;
-    alica::UtilityFunctionCreator* uc2;
-    alica::ConstraintCreator* crc2;
+    const int agentCount = 2;
+    const char* getRoleSetName() const override { return "RolesetTA"; }
+    const char* getMasterPlanName() const override { return "VHMaster"; }
+    int getAgentCount() const override { return agentCount; }
+    const char* getHostName(int agentNumber) const override
+    {
+        if (agentNumber) {
+            return "hairy";
+        } else {
+            return "nase";
+        }
+    }
 
     virtual void SetUp()
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-
-        // bring up the SystemConfig with the corresponding path
-        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-        sc.setRootPath(path);
-        sc.setConfigPath(path + "/etc");
-        sc.setHostname("nase");
-
-        // setup the engine
-        ae1 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
-        bc1 = new alica::BehaviourCreator();
-        cc1 = new alica::ConditionCreator();
-        uc1 = new alica::UtilityFunctionCreator();
-        crc1 = new alica::ConstraintCreator();
-        ae1->setAlicaClock(new alica::AlicaClock());
-        ae1->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae1));
-        ae1->addSolver(new CGSolver(ae1));
-
-        sc.setHostname("hairy");
-
-        ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "VHMaster", true);
-        bc2 = new alica::BehaviourCreator();
-        cc2 = new alica::ConditionCreator();
-        uc2 = new alica::UtilityFunctionCreator();
-        crc2 = new alica::ConstraintCreator();
-        ae2->setAlicaClock(new alica::AlicaClock());
-        ae2->setCommunicator(new alicaRosProxy::AlicaRosCommunication(ae2));
-        ae2->addSolver(new CGSolver(ae2));
-    }
-
-    virtual void TearDown()
-    {
-        ae1->shutdown();
-        ae2->shutdown();
-
-        delete ae1->getCommunicator();
-        delete ae1->getSolver<CGSolver>();
-        delete crc1;
-        delete uc1;
-        delete cc1;
-        delete bc1;
-
-        delete ae2->getCommunicator();
-        delete ae2->getSolver<CGSolver>();
-        delete crc2;
-        delete uc2;
-        delete cc2;
-        delete bc2;
-
-        essentials::SystemConfig::getInstance().shutdown();
+        AlicaTestMultiAgentFixture::SetUp();
+        acs[0]->addSolver<alica::reasoner::CGSolver>();
+        acs[1]->addSolver<alica::reasoner::CGSolver>();
     }
 };
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
 {
-    ae1->init(bc1, cc1, uc1, crc1);
-    ae2->init(bc2, cc2, uc2, crc2);
     cout << "Starting engine..." << endl;
-    ae1->start();
-    ae2->start();
+    aes[0]->start();
+    aes[1]->start();
 
     chrono::milliseconds sleepTime(33);
     do {
         for (int i = 0; i < 3; ++i) {
-            ae1->stepNotify();
-            ae2->stepNotify();
+            aes[0]->stepNotify();
+            aes[1]->stepNotify();
             do {
                 this_thread::sleep_for(sleepTime);
-            } while (!ae1->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting());
+            } while (!aes[0]->getPlanBase().isWaiting() || !aes[1]->getPlanBase().isWaiting());
         }
-    } while (ae1->getTeamManager()->getTeamSize() != 2 || ae2->getTeamManager()->getTeamSize() != 2);
+    } while (aes[0]->getTeamManager().getTeamSize() != 2 || aes[1]->getTeamManager().getTeamSize() != 2);
 
-    const RunningPlan* rp1 = ae1->getPlanBase()->getDeepestNode();
-    const RunningPlan* rp2 = ae1->getPlanBase()->getDeepestNode();
+    const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
+    const RunningPlan* rp2 = aes[0]->getPlanBase().getDeepestNode();
 
-    alica::AgentIDConstPtr id1 = ae1->getTeamManager()->getLocalAgentID();
-    alica::AgentIDConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
+    alica::AgentIDConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
+    alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
     EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
@@ -133,7 +84,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     alica::Query q1;
 
-    q1.addDomainVariable(id1, "X", ae1);
+    q1.addDomainVariable(id1, "X", aes[0]);
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_FALSE(ok);
     EXPECT_TRUE(result1.empty());
@@ -158,7 +109,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_GT(result1[1], 0);
     EXPECT_LT(result1[0] + result1[1], 10.0);
     EXPECT_GT(result1[0] + result1[1], -10.0);
-    q1.addDomainVariable(id1, "X", ae1);
+    q1.addDomainVariable(id1, "X", aes[0]);
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(3, result1.size());
@@ -166,14 +117,14 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     // Cause  agent to move through transition:
     vhStartCondition = true;
-    ae1->stepNotify();
-    ae2->stepNotify();
+    aes[0]->stepNotify();
+    aes[1]->stepNotify();
     do {
         this_thread::sleep_for(sleepTime);
-    } while (!ae1->getPlanBase()->isWaiting() || !ae2->getPlanBase()->isWaiting());
+    } while (!aes[0]->getPlanBase().isWaiting() || !aes[1]->getPlanBase().isWaiting());
 
-    rp1 = ae1->getPlanBase()->getDeepestNode();
-    rp2 = ae2->getPlanBase()->getDeepestNode();
+    rp1 = aes[0]->getPlanBase().getDeepestNode();
+    rp2 = aes[1]->getPlanBase().getDeepestNode();
 
     EXPECT_EQ(1524452836023, rp1->getActiveState()->getId()); // lvl3
     EXPECT_EQ(1524453248579, rp2->getActiveState()->getId()); // Dummy in lvl2
@@ -192,8 +143,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_EQ(4, q1.getPartCount());
 
     Query q2;
-    q2.addDomainVariable(id2, "X", ae2);
-    q2.addDomainVariable(id2, "Y", ae2);
+    q2.addDomainVariable(id2, "X", aes[1]);
+    q2.addDomainVariable(id2, "Y", aes[1]);
 
     ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
     EXPECT_TRUE(ok);
@@ -204,11 +155,13 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.clearStaticVariables();
     q1.clearDomainVariables();
 
-    q1.addDomainVariable(id1, "X", ae1);
-    q1.addDomainVariable(id1, "Y", ae1);
+    q1.addDomainVariable(id1, "X", aes[0]);
+    q1.addDomainVariable(id1, "Y", aes[0]);
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
+}
+}
 }
