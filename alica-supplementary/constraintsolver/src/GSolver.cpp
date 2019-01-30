@@ -344,8 +344,8 @@ void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const st
     const int dim = o_result.dim();
     initialStepSize(dim, limits);
 
-    double* curGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
-    double* formerGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
+    double* curGradient = static_cast<double*>(alloca(sizeof(double) * (dim + 1)));
+    double* formerGradient = static_cast<double*>(alloca(sizeof(double) * (dim + 1)));
 
     double* pointBuffer = static_cast<double*>(alloca(sizeof(double) * dim));
 
@@ -355,7 +355,7 @@ void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const st
         initialPoint(tape, o_result, limits, curGradient);
     }
 
-    memcpy(formerGradient, curGradient, sizeof(double) * dim + 1);
+    memcpy(formerGradient, curGradient, sizeof(double) * (dim + 1));
     memcpy(pointBuffer, o_result.getPoint(), sizeof(double) * dim);
     double curUtil = o_result.getUtil();
     int itcounter = 0;
