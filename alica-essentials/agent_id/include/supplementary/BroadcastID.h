@@ -1,13 +1,13 @@
 #pragma once
 
-#include "supplementary/AgentID.h"
+#include "essentials/AgentID.h"
 
 #include <iostream>
 
-namespace supplementary
+namespace essentials
 {
 
-class BroadcastID : public supplementary::AgentID
+class BroadcastID : public essentials::AgentID
 {
   public:
     BroadcastID(const uint8_t* idBytes, int idSize);
@@ -15,9 +15,9 @@ class BroadcastID : public supplementary::AgentID
 
     std::string toString() const;
     std::size_t hash() const;
-    bool operator==(const supplementary::AgentID& obj) const;
-    bool operator!=(const supplementary::AgentID& obj) const;
-    bool operator<(const supplementary::AgentID& other) const;
-    bool operator>(const supplementary::AgentID& other) const;
+    bool operator==(const essentials::AgentID& obj) const;
+    bool operator!=(const essentials::AgentID& obj) const;
+    bool operator<(const essentials::AgentID& other) const;
+    bool operator>(const essentials::AgentID& other) const;
 };
 } /* namespace supplementary */

@@ -22,6 +22,7 @@
 namespace essentials
 {
 class RobotExecutableRegistry;
+class SystemConfig;
 } // namespace  essentials
 
 namespace pm_widget
