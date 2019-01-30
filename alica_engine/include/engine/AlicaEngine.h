@@ -5,9 +5,9 @@
 #include "engine/constraintmodul/ISolver.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentIDManager.h>
 #include <list>
 #include <string>
-#include <essentials/AgentIDManager.h>
 
 #include <unordered_map>
 
@@ -44,8 +44,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(
-            supplementary::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked = false);
+    AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked = false);
     ~AlicaEngine();
 
     // State modifiers:
