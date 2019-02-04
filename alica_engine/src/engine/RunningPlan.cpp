@@ -38,8 +38,13 @@ namespace alica
 
 namespace
 {
-std::once_flag once;
-AlicaTime assignmentProtectionTime = AlicaTime::zero();
+AlicaTime s_assignmentProtectionTime = AlicaTime::zero();
+}
+
+void RunningPlan::init()
+{
+    s_assignmentProtectionTime =
+            AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae)
@@ -51,12 +56,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
 {
-    std::call_once(once, []() {
-        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-        assignmentProtectionTime = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
-    });
-
-    _assignmentProtectionTime = assignmentProtectionTime;
 }
 
 RunningPlan::~RunningPlan()
@@ -581,8 +580,8 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (isBehaviour()) {
         return false;
     }
-    const bool keepTask = _status.planStartTime + _assignmentProtectionTime > now;
-    const bool keepState = _status.stateStartTime + _assignmentProtectionTime > now;
+    const bool keepTask = _status.planStartTime + s_assignmentProtectionTime > now;
+    const bool keepState = _status.stateStartTime + s_assignmentProtectionTime > now;
     const bool auth = _cycleManagement.haveAuthority();
 
     // if keepTask, the task Assignment should not be changed!

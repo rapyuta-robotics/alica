@@ -100,6 +100,8 @@ public:
     RunningPlan(AlicaEngine* ae, const PlanType* pt);
     RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
 
+    static void init();
+
     virtual ~RunningPlan();
 
     bool isBehaviour() const { return _behaviour; };
@@ -232,8 +234,6 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
-
-    AlicaTime _assignmentProtectionTime;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
