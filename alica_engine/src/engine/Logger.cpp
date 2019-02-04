@@ -25,7 +25,7 @@ namespace alica
 {
 using std::to_string;
 
-Logger::Logger(AlicaEngine* ae)
+Logger::Logger(const AlicaEngine* ae)
         : _ae(ae)
         , _itCount(0)
         , _inIteration(false)
@@ -110,7 +110,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
         _sBuild << reason;
     }
     _sBuild << endl;
-    TeamManager& tm = _ae->getTeamManager();
+    const TeamManager& tm = _ae->getTeamManager();
     ActiveAgentIdView agents = tm.getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";

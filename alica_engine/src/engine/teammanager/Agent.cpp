@@ -11,7 +11,7 @@
 namespace alica
 {
 
-Agent::Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
         : _id(id)
         , _name()
         , _engine(engine)
@@ -24,7 +24,7 @@ Agent::Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
 {
 }
 
-Agent::Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
         : _id(id)
         , _name(name)
         , _engine(engine)

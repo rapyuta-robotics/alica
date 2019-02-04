@@ -46,7 +46,7 @@ void AuthorityManager::close() {}
 void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
 {
     AlicaTime now = _engine->getAlicaClock().now();
-    TeamManager& tm = _engine->getTeamManager();
+    TeamManager& tm = _engine->editTeamManager();
     if (tm.isAgentIgnored(aai.senderID)) {
         return;
     }

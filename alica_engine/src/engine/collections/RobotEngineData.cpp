@@ -18,7 +18,7 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(AlicaEngine* engine, AgentIDConstPtr agentId)
+RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId)
         : _engine(engine)
         , _agentId(agentId)
         , _successMarks()

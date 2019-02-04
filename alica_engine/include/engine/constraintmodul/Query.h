@@ -75,7 +75,7 @@ public:
     Query();
 
     void addStaticVariable(const alica::Variable* v);
-    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, AlicaEngine* ae);
+    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
@@ -152,7 +152,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule& rs = pi.getAlicaEngine()->getResultStore();
+        VariableSyncModule& rs = pi.getAlicaEngine()->editResultStore();
         for (const ResultType& value : solverResult) {
             rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;

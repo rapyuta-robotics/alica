@@ -24,7 +24,7 @@ public:
     virtual void update() = 0;
 
     const Role* getOwnRole() const { return _ownRole; }
-    const Role* getRole(AgentIDConstPtr robotId);
+    const Role* getRole(AgentIDConstPtr robotId) const;
 
 protected:
     /**

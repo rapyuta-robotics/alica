@@ -57,7 +57,7 @@ public:
     bool getIgnoreMasterPlanId();
     void setIgnoreMasterPlanId(bool value);
     Plan* createPlan(tinyxml2::XMLDocument* node);
-    bool isUniqueElement(int64_t elementId);
+    bool isUniqueElement(int64_t elementId) const;
     void setElements(const std::map<int64_t, AlicaElement*>& elements);
     std::string getNameOfNode(tinyxml2::XMLElement* node);
     void createTasks(tinyxml2::XMLDocument* node);

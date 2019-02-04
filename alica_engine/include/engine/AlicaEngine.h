@@ -46,20 +46,42 @@ public:
     bool getStepEngine() const;
     bool maySendMessages() const { return _maySendMessages; }
 
-    // TODO: fix this, make these functions return references (and const ref)
     // Module Access:
-    AuthorityManager& getAuth() { return _auth; }
-    BehaviourPool& getBehaviourPool() { return _behaviourPool; }
-    Logger& getLog() { return _log; }
-    PlanBase& getPlanBase() { return _planBase; }
-    PlanParser& getPlanParser() { return _planParser; }
-    PlanRepository& getPlanRepository() { return _planRepository; }
-    VariableSyncModule& getResultStore() { return *_variableSyncModule; }
-    IRoleAssignment& getRoleAssignment() { return *_roleAssignment; }
-    SyncModule& getSyncModul() { return _syncModul; }
-    TeamManager& getTeamManager() { return _teamManager; }
-    TeamObserver& getTeamObserver() { return _teamObserver; }
-    AlicaClock& getAlicaClock() { return _alicaClock; }
+    const AuthorityManager& getAuth() const { return _auth; }
+    AuthorityManager& editAuth() { return _auth; }
+
+    const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
+    BehaviourPool& editBehaviourPool() { return _behaviourPool; }
+
+    const Logger& getLog() const { return _log; }
+    Logger& editLog() { return _log; }
+
+    const PlanBase& getPlanBase() const { return _planBase; }
+    PlanBase& editPlanBase() { return _planBase; }
+
+    const PlanParser& getPlanParser() const { return _planParser; }
+    PlanParser& editPlanParser() { return _planParser; }
+
+    const PlanRepository& getPlanRepository() const { return _planRepository; }
+    PlanRepository& editPlanRepository() { return _planRepository; }
+
+    const VariableSyncModule& getResultStore() const { return *_variableSyncModule; }
+    VariableSyncModule& editResultStore() { return *_variableSyncModule; }
+
+    const IRoleAssignment& getRoleAssignment() const { return *_roleAssignment; }
+    IRoleAssignment& editRoleAssignment() { return *_roleAssignment; }
+
+    const SyncModule& getSyncModul() const { return _syncModul; }
+    SyncModule& editSyncModul() { return _syncModul; }
+
+    const TeamManager& getTeamManager() const { return _teamManager; }
+    TeamManager& editTeamManager() { return _teamManager; }
+
+    const TeamObserver& getTeamObserver() const { return _teamObserver; }
+    TeamObserver& editTeamObserver() { return _teamObserver; }
+
+    const AlicaClock& getAlicaClock() const { return _alicaClock; }
+    // AlicaClock& editAlicaClock() { return _alicaClock; }
 
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }

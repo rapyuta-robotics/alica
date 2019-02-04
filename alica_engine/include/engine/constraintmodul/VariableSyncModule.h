@@ -20,7 +20,7 @@ class IAlicaCommunication;
 class VariableSyncModule
 {
 public:
-    VariableSyncModule(AlicaEngine* ae);
+    VariableSyncModule(const AlicaEngine* ae);
     ~VariableSyncModule();
 
     void init();
@@ -66,7 +66,7 @@ private:
     SolverResult _publishData;
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
-    AlicaEngine* _ae;
+    const AlicaEngine* _ae;
     bool _running;
     double _distThreshold;
     essentials::NotifyTimer<VariableSyncModule>* _timer;

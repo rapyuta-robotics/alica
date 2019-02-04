@@ -18,7 +18,7 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-Synchronisation::Synchronisation(AlicaEngine* ae)
+Synchronisation::Synchronisation(const AlicaEngine* ae)
         : _myID(nullptr)
         , _ae(ae)
         , _syncModul(nullptr)
@@ -31,7 +31,7 @@ Synchronisation::Synchronisation(AlicaEngine* ae)
 {
 }
 
-Synchronisation::Synchronisation(AlicaEngine* ae, AgentIDConstPtr myID, const SyncTransition* st, SyncModule* sm)
+Synchronisation::Synchronisation(const AlicaEngine* ae, AgentIDConstPtr myID, const SyncTransition* st, SyncModule* sm)
         : _ae(ae)
         , _myID(myID)
         , _syncTransition(st)

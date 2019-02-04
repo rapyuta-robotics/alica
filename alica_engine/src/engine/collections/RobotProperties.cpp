@@ -8,7 +8,7 @@ namespace alica
 
 RobotProperties::RobotProperties() {}
 
-RobotProperties::RobotProperties(AlicaEngine* engine, const std::string& name)
+RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& name)
 {
     readFromConfig(engine, name);
 }
@@ -16,7 +16,7 @@ RobotProperties::RobotProperties(AlicaEngine* engine, const std::string& name)
 /**
  * Reads the default role as well as the capabilities and characteristics from the Globals.conf.
  */
-void RobotProperties::readFromConfig(AlicaEngine* engine, const std::string& name)
+void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::string& name)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
 

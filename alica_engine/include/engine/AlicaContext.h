@@ -123,6 +123,9 @@ public:
      */
     ~AlicaContext();
 
+    AlicaContext(const AlicaContext& other) = delete;
+    AlicaContext& operator=(const AlicaContext& other) = delete;
+
     /**
      * Initialize alica framework and related modules.
      *

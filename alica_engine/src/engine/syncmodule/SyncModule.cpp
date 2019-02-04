@@ -24,7 +24,7 @@ using std::pair;
 using std::shared_ptr;
 using std::vector;
 
-SyncModule::SyncModule(AlicaEngine* ae)
+SyncModule::SyncModule(const AlicaEngine* ae)
         : _myId(nullptr)
         , _ae(ae)
         , _running(false)

@@ -54,15 +54,15 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     for (int number = 8; number <= 11; number++) {
         alica::AgentIDConstPtr agentID = ae->getId<int>(number);
         robots.push_back(agentID);
-        ae->getTeamManager().setTimeLastMsgReceived(agentID, ae->getAlicaClock().now());
+        ae->editTeamManager().setTimeLastMsgReceived(agentID, ae->getAlicaClock().now());
     }
-    ae->getTeamObserver().tick(nullptr);
+    ae->editTeamObserver().tick(nullptr);
 
-    ae->getRoleAssignment().tick();
+    ae->editRoleAssignment().tick();
     // fake inform the team observer about roles of none existing robots
 
     const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository().getPlans();
-    alica::RunningPlan* rp = ae->getPlanBase().makeRunningPlan(planMap.find(1407152758497));
+    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497));
     alica::AbstractPlanGrp inputPlans;
     inputPlans.push_back(planMap.find(1407152758497));
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();

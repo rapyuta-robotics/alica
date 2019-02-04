@@ -31,9 +31,9 @@ using std::endl;
 RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         : _tm(ae->getTeamManager())
         , _ps(new PlanSelector(ae, pb))
-        , _log(ae->getLog())
+        , _log(ae->editLog())
         , _pb(pb)
-        , _sm(ae->getSyncModul())
+        , _sm(ae->editSyncModul())
         , _changeOccurred(true)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();

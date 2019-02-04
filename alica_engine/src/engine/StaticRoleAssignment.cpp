@@ -15,7 +15,7 @@
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
+StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae)
         : IRoleAssignment()
         , _ae(ae)
         , _updateRoles(false)
