@@ -18,6 +18,11 @@
 #include <thread>
 #include <vector>
 
+namespace supplementary
+{
+namespace
+{
+
 class AlicaProblemCompositionTest : public AlicaTestFixtureWithSolvers
 {
 protected:
@@ -37,7 +42,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
         step(ae);
     }
 
-    const alica::RunningPlan* deep = ae->getPlanBase()->getDeepestNode();
+    const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
     ASSERT_EQ(deep->getChildren().size(), 1);
@@ -52,4 +57,6 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
         // cout << "Test: '" << rep->getName() << "'" << endl;
     }
+}
+}
 }

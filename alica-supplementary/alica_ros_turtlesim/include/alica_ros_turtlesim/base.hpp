@@ -1,17 +1,11 @@
 #ifndef IO_TURTLE_BASE_BASE_HPP
 #define IO_TURTLE_BASE_BASE_HPP
 
-#include <BehaviourCreator.h>
-#include <ConditionCreator.h>
-#include <ConstraintCreator.h>
-#include <UtilityFunctionCreator.h>
-#include <engine/AlicaEngine.h>
-
 #include "world_model.hpp"
 
 namespace turtlesim
 {
-
+class AlicaContext;
 class Base
 {
 public:
@@ -21,11 +15,7 @@ public:
     void start();
 
 private:
-    alica::AlicaEngine* ae;
-    alica::BehaviourCreator* bc;
-    alica::ConditionCreator* cc;
-    alica::UtilityFunctionCreator* uc;
-    alica::ConstraintCreator* crc;
+    alica::AlicaContext* ac;
 };
 
 } // namespace turtlesim

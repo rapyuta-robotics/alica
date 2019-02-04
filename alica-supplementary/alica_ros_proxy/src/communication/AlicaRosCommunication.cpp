@@ -163,7 +163,7 @@ void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    auto robotID = this->ae->getTeamManager()->getLocalAgentID();
+    auto robotID = this->ae->getTeamManager().getLocalAgentID();
     rss.sender_id.id = robotID->toByteVector();
 
     if (this->isRunning) {
