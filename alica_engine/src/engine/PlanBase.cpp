@@ -26,19 +26,11 @@ namespace alica
  * Constructs the PlanBase given a top-level plan to execute
  * @param masterplan A Plan
  */
-PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
+PlanBase::PlanBase(AlicaEngine* ae)
         : _ae(ae)
-        , _masterPlan(masterPlan)
-        , _teamObserver(ae->getTeamObserver())
-        , _ra(ae->getRoleAssignment())
-        , _syncModel(ae->getSyncModul())
-        , _authModul(ae->getAuth())
-        , _statusPublisher(nullptr)
-        , _alicaClock(ae->getAlicaClock())
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
         , _mainThread(nullptr)
-        , _log(ae->getLog())
         , _statusMessage(nullptr)
         , _stepModeCV()
         , _ruleBook(ae, this)
@@ -80,8 +72,6 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
         _statusMessage = new AlicaEngineInfo();
-        _statusMessage->senderID = ae->getTeamManager()->getLocalAgentID();
-        _statusMessage->masterPlan = masterPlan->getName();
     }
 
     ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
@@ -96,22 +86,33 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start()
+void PlanBase::start(const Plan* masterPlan)
 {
     if (!_running) {
         _running = true;
-        _mainThread = new std::thread(&PlanBase::run, this);
+        if (_statusMessage) {
+            _statusMessage->senderID = _ae->getTeamManager().getLocalAgentID();
+            _statusMessage->masterPlan = masterPlan->getName();
+        }
+        _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
     }
 }
 /**
  * The Engine's main loop
  */
-void PlanBase::run()
+void PlanBase::run(const Plan* masterPlan)
 {
     ALICA_DEBUG_MSG("PB: Run-Method of PlanBase started. ");
+    const AlicaClock& alicaClock = _ae->getAlicaClock();
+    IRoleAssignment& ra = _ae->editRoleAssignment();
+    Logger& log = _ae->editLog();
+    TeamObserver& to = _ae->editTeamObserver();
+    SyncModule& sm = _ae->editSyncModul();
+    AuthorityManager& auth = _ae->editAuth();
+
     while (_running) {
-        AlicaTime beginTime = _alicaClock->now();
-        _log->itertionStarts();
+        AlicaTime beginTime = alicaClock.now();
+        log.itertionStarts();
 
         if (_ae->getStepEngine()) {
 #ifdef ALICA_DEBUG_ENABLED
@@ -134,18 +135,18 @@ void PlanBase::run()
                     return;
                 }
             }
-            beginTime = _alicaClock->now();
+            beginTime = alicaClock.now();
         }
 
         // Send tick to other modules
-        //_ae->getCommunicator()->tick(); // not implemented as ros works asynchronous
-        _teamObserver->tick(_rootNode);
-        _ra->tick();
-        _syncModel->tick();
-        _authModul->tick(_rootNode);
+        //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
+        to.tick(_rootNode);
+        ra.tick();
+        sm.tick();
+        auth.tick(_rootNode);
 
         if (_rootNode == nullptr) {
-            _rootNode = _ruleBook.initialisationRule(_masterPlan);
+            _rootNode = _ruleBook.initialisationRule(masterPlan);
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
@@ -189,7 +190,7 @@ void PlanBase::run()
             _fpEvents = std::queue<RunningPlan*>();
         }
 
-        AlicaTime now = _alicaClock->now();
+        AlicaTime now = alicaClock.now();
 
         if (now < _lastSendTime) {
             ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
@@ -201,12 +202,12 @@ void PlanBase::run()
             _deepestNode = _rootNode;
             _treeDepth = 0;
             _rootNode->toMessage(msg, _deepestNode, _treeDepth, 0);
-            _teamObserver->doBroadCast(msg);
+            _ae->getTeamObserver().doBroadCast(msg);
             _lastSendTime = now;
             _ruleBook.resetChangeOccurred();
         }
 
-        if (_sendStatusMessages && _lastSentStatusTime + _sendStatusInterval < _alicaClock->now()) {
+        if (_sendStatusMessages && _lastSentStatusTime + _sendStatusInterval < alicaClock.now()) {
             if (_deepestNode != nullptr) {
                 _statusMessage->robotIDsWithMe.clear();
                 _statusMessage->currentPlan = _deepestNode->getActivePlan()->getName();
@@ -222,22 +223,22 @@ void PlanBase::run()
                 } else {
                     _statusMessage->currentState = "NONE";
                 }
-                auto tmpRole = _ra->getOwnRole();
+                auto tmpRole = ra.getOwnRole();
                 if (tmpRole) {
-                    _statusMessage->currentRole = _ra->getOwnRole()->getName();
+                    _statusMessage->currentRole = ra.getOwnRole()->getName();
                 } else {
                     _statusMessage->currentRole = "No Role";
                 }
-                _ae->getCommunicator()->sendAlicaEngineInfo(*_statusMessage);
-                _lastSentStatusTime = _alicaClock->now();
+                _ae->getCommunicator().sendAlicaEngineInfo(*_statusMessage);
+                _lastSentStatusTime = alicaClock.now();
             }
         }
 
-        _log->iterationEnds(_rootNode);
+        log.iterationEnds(_rootNode);
 
         _ae->iterationComplete();
 
-        now = _alicaClock->now();
+        now = alicaClock.now();
 
         AlicaTime availTime = _loopTime - (now - beginTime);
         bool checkFp = false;
@@ -264,18 +265,18 @@ void PlanBase::run()
                         first = false;
                     }
                 }
-                now = _alicaClock->now();
+                now = alicaClock.now();
                 availTime = _loopTime - (now - beginTime);
             }
         }
 
-        now = _alicaClock->now();
+        now = alicaClock.now();
         availTime = _loopTime - (now - beginTime);
 
         ALICA_DEBUG_MSG("PB: availTime " << availTime);
 
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
-            _alicaClock->sleep(availTime);
+            alicaClock.sleep(availTime);
         }
     }
 }
@@ -312,6 +313,22 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
         _fpEvents.push(p);
     }
     _fpEventWait.notify_all();
+}
+
+RunningPlan* PlanBase::makeRunningPlan(const Plan* plan)
+{
+    _runningPlans.emplace_back(new RunningPlan(_ae, plan));
+    return _runningPlans.back().get();
+}
+RunningPlan* PlanBase::makeRunningPlan(const BehaviourConfiguration* bc)
+{
+    _runningPlans.emplace_back(new RunningPlan(_ae, bc));
+    return _runningPlans.back().get();
+}
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt)
+{
+    _runningPlans.emplace_back(new RunningPlan(_ae, pt));
+    return _runningPlans.back().get();
 }
 
 const AlicaTime PlanBase::getloopInterval() const

@@ -31,7 +31,7 @@ class TeamObserver;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
+    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
@@ -59,8 +59,8 @@ public:
 private:
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
-    TeamManager* _tm;
-    TeamObserver* _to;
+    const TeamManager& _tm;
+    const TeamObserver& _to;
     PartialAssignmentPool& _pool;
     PlanGrp _plans;
     AgentGrp _agents;

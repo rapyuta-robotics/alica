@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/PlanChange.h"
 #include "engine/PlanStatus.h"
@@ -24,6 +23,7 @@
 
 namespace alica
 {
+class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
 class AbstractPlan;
@@ -204,7 +204,7 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
+    AgentIDConstPtr getOwnID() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:
@@ -234,8 +234,6 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
-
-    static AlicaTime s_assignmentProtectionTime;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

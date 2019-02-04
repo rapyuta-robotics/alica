@@ -33,7 +33,7 @@ private:
         MODIFIED,
         NONE
     };
-    Result TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
+    Result TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const;
 };
 
 } // namespace alica

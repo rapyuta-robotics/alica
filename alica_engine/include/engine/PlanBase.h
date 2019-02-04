@@ -31,7 +31,8 @@ class EntryPoint;
 class Assignment;
 class StateCollection;
 class AlicaEngine;
-
+class PlanType;
+class Plan;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -39,7 +40,7 @@ class AlicaEngine;
 class PlanBase
 {
 public:
-    PlanBase(AlicaEngine* ae, const Plan* masterplan);
+    PlanBase(AlicaEngine* ae);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
@@ -50,31 +51,17 @@ public:
     const AlicaTime getloopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start();
+    void start(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
-
-    const Plan* getMasterPlan() const { return _masterPlan; }
     bool isWaiting() const { return _isWaiting; }
 
     // factory functions
-    RunningPlan* makeRunningPlan(const Plan* plan)
-    {
-        _runningPlans.emplace_back(new RunningPlan(_ae, plan));
-        return _runningPlans.back().get();
-    }
-    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc)
-    {
-        _runningPlans.emplace_back(new RunningPlan(_ae, bc));
-        return _runningPlans.back().get();
-    }
-    RunningPlan* makeRunningPlan(const PlanType* pt)
-    {
-        _runningPlans.emplace_back(new RunningPlan(_ae, pt));
-        return _runningPlans.back().get();
-    }
+    RunningPlan* makeRunningPlan(const Plan* plan);
+    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc);
+    RunningPlan* makeRunningPlan(const PlanType* pt);
 
 private:
-    void run();
+    void run(const Plan* masterPlan);
 
     // Owning container of running plans (replace with uniqueptrs once possibe)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
@@ -84,21 +71,11 @@ private:
      */
 
     AlicaEngine* _ae;
-    const Plan* _masterPlan;
-
-    TeamObserver* _teamObserver;
-    IRoleAssignment* _ra;
-    SyncModule* _syncModel;
-    AuthorityManager* _authModul;
-    IAlicaCommunication* _statusPublisher;
-    AlicaClock* _alicaClock;
-
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;
 
     std::thread* _mainThread;
-    Logger* _log;
     AlicaEngineInfo* _statusMessage;
 
     AlicaTime _loopTime;

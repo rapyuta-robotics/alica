@@ -9,6 +9,11 @@
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaEngineTestBehPool : public AlicaTestFixture
 {
 protected:
@@ -23,8 +28,10 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 {
     ASSERT_NO_SIGNAL
 
-    for (const alica::Behaviour* behaviour : ae->getPlanRepository()->getBehaviours()) {
+    for (const alica::Behaviour* behaviour : ae->getPlanRepository().getBehaviours()) {
         ASSERT_NE(behaviour, nullptr);
         cout << "Behaviour: " << behaviour->getName() << endl;
     }
+}
+}
 }

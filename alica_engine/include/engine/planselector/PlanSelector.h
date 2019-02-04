@@ -34,7 +34,6 @@ private:
     bool getPlansForStateInternal(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
     PartialAssignmentPool _pap;
-    TeamObserver* _to;
     AlicaEngine* _ae;
     PlanBase* _pb;
 };

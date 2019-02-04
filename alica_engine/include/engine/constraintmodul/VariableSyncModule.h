@@ -19,8 +19,8 @@ class IAlicaCommunication;
 
 class VariableSyncModule
 {
-  public:
-    VariableSyncModule(AlicaEngine* ae);
+public:
+    VariableSyncModule(const AlicaEngine* ae);
     ~VariableSyncModule();
 
     void init();
@@ -40,10 +40,10 @@ class VariableSyncModule
     VariableSyncModule& operator=(const VariableSyncModule&) = delete;
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
-  private:
+private:
     class VotedSeed
     {
-      public:
+    public:
         VotedSeed(std::vector<Variant>&& v);
 
         bool takeVector(const std::vector<Variant>& v, const std::vector<Interval<double>>& limits, double distThreshold);
@@ -67,7 +67,6 @@ class VariableSyncModule
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
     const AlicaEngine* _ae;
-    const IAlicaCommunication* _communicator;
     bool _running;
     double _distThreshold;
     essentials::NotifyTimer<VariableSyncModule>* _timer;
@@ -83,7 +82,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
 
     std::vector<VotedSeed> seeds;
 
-    AlicaTime earliest = _ae->getAlicaClock()->now() - _ttl4Usage;
+    AlicaTime earliest = _ae->getAlicaClock().now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const std::unique_ptr<ResultEntry>& re : _store) {
@@ -114,8 +113,6 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     }
 #endif
 
-    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
-
     std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
         if (a._totalSupCount != b._totalSupCount) {
             return a._totalSupCount > b._totalSupCount;
@@ -123,11 +120,12 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
             return a._hash > b._hash;
         }
     });
-    int i = 0;
+
+    int maxNum = std::min(static_cast<int>(seeds.size()), dim);
     o_seeds.resize(dim * maxNum);
-    for (const VotedSeed& vs : seeds) {
-        memcpy(&*(o_seeds.begin() + i), &*vs._values.begin(), sizeof(Variant) * dim);
-        i += dim;
+    for (int i = 0; i < maxNum; ++i) {
+        auto sit = seeds[i]._values.begin();
+        std::copy(sit, sit + dim, o_seeds.begin() + (i * dim));
     }
 
     return maxNum;

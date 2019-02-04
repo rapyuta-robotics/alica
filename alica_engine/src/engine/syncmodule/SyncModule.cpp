@@ -24,13 +24,11 @@ using std::pair;
 using std::shared_ptr;
 using std::vector;
 
-SyncModule::SyncModule(AlicaEngine* ae)
+SyncModule::SyncModule(const AlicaEngine* ae)
         : _myId(nullptr)
         , _ae(ae)
-        , _pr(nullptr)
         , _running(false)
         , _ticks(0)
-        , _communicator(nullptr)
 {
 }
 
@@ -45,9 +43,7 @@ void SyncModule::init()
     lock_guard<mutex> lock(_lomutex);
     _ticks = 0;
     _running = true;
-    _myId = _ae->getTeamManager()->getLocalAgentID();
-    _pr = _ae->getPlanRepository();
-    _communicator = _ae->getCommunicator();
+    _myId = _ae->getTeamManager().getLocalAgentID();
 }
 void SyncModule::close()
 {
@@ -90,14 +86,14 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_ae->maySendMessages())
         return;
     st.senderID = _myId;
-    _communicator->sendSyncTalk(st);
+    _ae->getCommunicator().sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
 {
     if (!_ae->maySendMessages())
         return;
     sr.senderID = _myId;
-    _communicator->sendSyncReady(sr);
+    _ae->getCommunicator().sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 {
@@ -106,7 +102,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-    _communicator->sendSyncTalk(st);
+    _ae->getCommunicator().sendSyncTalk(st);
 }
 void SyncModule::synchronisationDone(const SyncTransition* st)
 {
@@ -121,7 +117,7 @@ void SyncModule::synchronisationDone(const SyncTransition* st)
     _synchSet.erase(st);
     _synchedTransitions.push_back(st);
 #ifdef SM_SUCCES
-    cout << "SM: SYNC TRIGGER TIME:" << _ae->getAlicaClock()->now().inMilliseconds() << endl;
+    cout << "SM: SYNC TRIGGER TIME:" << _ae->getAlicaClock().now().inMilliseconds() << endl;
 #endif
 }
 
@@ -138,7 +134,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 {
     if (!_running || st->senderID == _myId)
         return;
-    if (_ae->getTeamManager()->isAgentIgnored(st->senderID))
+    if (_ae->getTeamManager().isAgentIgnored(st->senderID))
         return;
 
 #ifdef SM_SUCCES
@@ -154,7 +150,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
         cout << "SyncModul: ACK" << sd.ack << endl;
 #endif
 
-        const Transition* trans = _pr->getTransitions().find(sd.transitionID);
+        const Transition* trans = _ae->getPlanRepository().getTransitions().find(sd.transitionID);
         const SyncTransition* syncTrans = nullptr;
 
         if (trans != nullptr) {
@@ -199,9 +195,9 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 {
     if (!_running || *(sr->senderID) == *(_myId))
         return;
-    if (_ae->getTeamManager()->isAgentIgnored(sr->senderID))
+    if (_ae->getTeamManager().isAgentIgnored(sr->senderID))
         return;
-    const SyncTransition* syncTrans = _pr->getSyncTransitions().find(sr->syncTransitionID);
+    const SyncTransition* syncTrans = _ae->getPlanRepository().getSyncTransitions().find(sr->syncTransitionID);
 
     if (syncTrans == nullptr) {
         cout << "SyncModul: Unable to find synchronisation " << sr->syncTransitionID << " send by " << sr->senderID << endl;

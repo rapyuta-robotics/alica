@@ -24,12 +24,12 @@ ForallAgents::ForallAgents(int64_t id)
 
 ForallAgents::~ForallAgents() {}
 
-ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const
+ForallAgents::Result ForallAgents::TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
 {
     std::vector<AgentVariables>::iterator it =
             std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
 
-    const RobotEngineData& robotEngineData = tm->getAgentByID(id)->getEngineData();
+    const RobotEngineData& robotEngineData = tm.getAgentByID(id)->getEngineData();
     if (it == io_agentVarsInScope.end()) {
         // add new agent
         AgentVariables newAgent(id);
@@ -75,7 +75,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
     bool addedAgent = false;
     bool changedAgent = false;
 
-    const TeamManager* tm = p.getAlicaEngine()->getTeamManager();
+    const TeamManager& tm = p.getAlicaEngine()->getTeamManager();
     switch (getScopeType()) {
     case PLANSCOPE:
         if (p.getActivePlan() == getScopedPlan()) {

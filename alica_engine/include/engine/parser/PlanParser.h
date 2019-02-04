@@ -31,7 +31,7 @@ public:
 
     const Plan* parsePlanTree(const std::string& masterplan);
     void ignoreMasterPlanId(bool val);
-    bool isUniqueElement(int64_t elementId);
+    bool isUniqueElement(int64_t elementId) const;
 
     const std::string& getCurrentFile() const { return _currentFile; }
     void setCurrentFile(const std::string& currentFile);

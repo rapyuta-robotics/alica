@@ -8,6 +8,7 @@
 #ifndef TESTCONSTANTVALUESUMMAND_H_
 #define TESTCONSTANTVALUESUMMAND_H_
 
+#include "engine/AgentIDConstPtr.h"
 #include <engine/USummand.h>
 
 namespace alica
