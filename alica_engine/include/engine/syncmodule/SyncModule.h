@@ -25,7 +25,7 @@ class IAlicaCommunication;
 class SyncModule
 {
 public:
-    SyncModule(AlicaEngine* ae);
+    SyncModule(const AlicaEngine* ae);
     ~SyncModule();
     void init();
     void close();
@@ -42,7 +42,7 @@ public:
 
 private:
     bool _running;
-    AlicaEngine* _ae;
+    const AlicaEngine* _ae;
     AgentIDConstPtr _myId;
     unsigned long _ticks;
     std::map<const SyncTransition*, Synchronisation*> _synchSet;

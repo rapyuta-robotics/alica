@@ -36,7 +36,7 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 {
     ASSERT_NO_SIGNAL
 
-    VariableSyncModule& vsm = ae->getResultStore();
+    VariableSyncModule& vsm = ae->editResultStore();
 
     Variant v1(1.23);
     Variant v2(-10.0);

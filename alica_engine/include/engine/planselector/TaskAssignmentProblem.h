@@ -59,8 +59,8 @@ public:
 private:
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
-    TeamManager& _tm;
-    TeamObserver& _to;
+    const TeamManager& _tm;
+    const TeamObserver& _to;
     PartialAssignmentPool& _pool;
     PlanGrp _plans;
     AgentGrp _agents;

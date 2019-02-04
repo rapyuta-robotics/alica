@@ -289,7 +289,7 @@ void RunningPlan::useState(const State* s)
             } else if (s->isSuccessState()) {
                 AgentIDConstPtr mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->getTeamManager().setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
+                _ae->editTeamManager().setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
             }
         }
     }
@@ -443,9 +443,9 @@ void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
     if (isBehaviour()) {
-        _ae->getBehaviourPool().stopBehaviour(*this);
+        _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
-        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.plan);
+        _ae->editTeamObserver().notifyRobotLeftPlan(_activeTriple.plan);
     }
     revokeAllConstraints();
     deactivateChildren();
@@ -532,7 +532,7 @@ void RunningPlan::activate()
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
-        _ae->getBehaviourPool().startBehaviour(*this);
+        _ae->editBehaviourPool().startBehaviour(*this);
     }
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
@@ -691,7 +691,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     aldif.setReason(AllocationDifference::Reason::message);
 
     // Update Success Collection:
-    _ae->getTeamObserver().updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
+    _ae->editTeamObserver().updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.

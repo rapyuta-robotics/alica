@@ -36,7 +36,7 @@ public:
 
     const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
-    int successesInPlan(const Plan* plan);
+    int successesInPlan(const Plan* plan) const;
     SuccessCollection createSuccessCollection(const Plan* plan) const;
     void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 

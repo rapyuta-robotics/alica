@@ -32,7 +32,7 @@ using std::pair;
 
 TeamObserver::TeamObserver(AlicaEngine* ae)
         : _ae(ae)
-        , _tm(ae->getTeamManager())
+        , _tm(ae->editTeamManager())
 {
     _me = _tm.editLocalAgent();
 }
@@ -79,8 +79,8 @@ void TeamObserver::tick(RunningPlan* root)
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
-        _ae->getRoleAssignment().update();
-        _ae->getLog().eventOccurred("TeamChanged");
+        _ae->editRoleAssignment().update();
+        _ae->editLog().eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
@@ -106,7 +106,7 @@ void TeamObserver::tick(RunningPlan* root)
         ALICA_DEBUG_MSG("TO: spts size " << updatespts.size());
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            _ae->getLog().eventOccurred("MsgUpdate");
+            _ae->editLog().eventOccurred("MsgUpdate");
         }
     }
 }
@@ -178,7 +178,7 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
  * @param plan a plan
  * @return an int counting successes in plan
  */
-int TeamObserver::successesInPlan(const Plan* plan)
+int TeamObserver::successesInPlan(const Plan* plan) const
 {
     int ret = 0;
     const EntryPointGrp* suc = nullptr;

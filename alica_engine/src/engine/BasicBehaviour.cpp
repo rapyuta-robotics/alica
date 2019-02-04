@@ -116,7 +116,7 @@ void BasicBehaviour::setSuccess()
 {
     if (!_success) {
         _success = true;
-        _engine->getPlanBase().addFastPathEvent(_context);
+        _engine->editPlanBase().addFastPathEvent(_context);
     }
 }
 
@@ -129,7 +129,7 @@ void BasicBehaviour::setFailure()
 {
     if (!_failure) {
         _failure = true;
-        _engine->getPlanBase().addFastPathEvent(_context);
+        _engine->editPlanBase().addFastPathEvent(_context);
     }
 }
 

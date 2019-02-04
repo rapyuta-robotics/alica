@@ -14,7 +14,7 @@
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
+VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
         : _ae(ae)
         , _running(false)
         , _timer(nullptr)

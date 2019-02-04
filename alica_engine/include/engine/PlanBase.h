@@ -71,9 +71,6 @@ private:
      */
 
     AlicaEngine* _ae;
-    IRoleAssignment& _ra;
-    AlicaClock& _alicaClock;
-
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;

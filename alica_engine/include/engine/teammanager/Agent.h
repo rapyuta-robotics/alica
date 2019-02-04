@@ -37,10 +37,10 @@ public:
     bool isIgnored() const { return _ignored; }
 
 private:
-    Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id);
-    Agent(AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name);
 
-    AlicaEngine* _engine;
+    const AlicaEngine* _engine;
     AgentIDConstPtr _id;
     bool _active;
     bool _ignored;

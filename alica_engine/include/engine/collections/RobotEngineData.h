@@ -18,7 +18,7 @@ class AlicaEngine;
 class RobotEngineData
 {
 public:
-    RobotEngineData(AlicaEngine* engine, AgentIDConstPtr agentId);
+    RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
     ~RobotEngineData();
     void initDomainVariables();
 
@@ -37,7 +37,7 @@ private:
      */
     int64_t makeUniqueId(const std::string& s) const;
 
-    AlicaEngine* _engine;
+    const AlicaEngine* _engine;
     AgentIDConstPtr _agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.

@@ -18,7 +18,7 @@ SuccessMarks::SuccessMarks() {}
 /**
  * Update with an IdGrp of EntryPoint ids, as received by a message
  */
-void SuccessMarks::update(AlicaEngine* ae, const IdGrp& succeededEps)
+void SuccessMarks::update(const AlicaEngine* ae, const IdGrp& succeededEps)
 {
     clear();
     const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository().getEntryPoints();
