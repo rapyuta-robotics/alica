@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
 #include <SystemConfig.h>
@@ -55,7 +54,7 @@ struct StringBuilder<First>
 class Logger
 {
 public:
-    Logger(AlicaEngine* ae);
+    Logger(const AlicaEngine* ae);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -80,9 +79,7 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    AlicaEngine* _ae;
-    TeamObserver* _to;
-    TeamManager* _tm;
+    const AlicaEngine* _ae;
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;

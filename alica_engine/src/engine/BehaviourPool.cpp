@@ -36,7 +36,7 @@ BehaviourPool::~BehaviourPool() {}
  */
 bool BehaviourPool::init(IBehaviourCreator& bc)
 {
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
+    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository().getBehaviourConfigurations();
     for (const BehaviourConfiguration* beh : behaviourConfs) {
         auto basicBeh = bc.createBehaviour(beh->getId());
         if (basicBeh != nullptr) {

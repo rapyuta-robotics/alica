@@ -21,6 +21,11 @@
 #include <test_alica.h>
 #include <thread>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaConditionPlan : public AlicaTestFixtureWithSolvers
 {
 protected:
@@ -33,11 +38,11 @@ TEST_F(AlicaConditionPlan, solverTest)
 {
     ASSERT_NO_SIGNAL
 
-    const alica::PlanRepository* rep = ae->getPlanRepository();
+    const alica::PlanRepository& rep = ae->getPlanRepository();
 
-    const alica::BehaviourConfiguration* beh = rep->getBehaviourConfigurations()[1414068618837];
+    const alica::BehaviourConfiguration* beh = rep.getBehaviourConfigurations()[1414068618837];
     ASSERT_NE(beh, nullptr);
-    const alica::State* state = rep->getStates()[1414068524246];
+    const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);
 
     ASSERT_EQ(beh->getVariables().size(), 2);
@@ -64,7 +69,7 @@ TEST_F(AlicaConditionPlan, solverTest)
     ae->start();
     step(ae);
 
-    alica::BasicBehaviour* basicBehaviour = ae->getPlanBase()->getRootNode()->getChildren()[0]->getBasicBehaviour();
+    alica::BasicBehaviour* basicBehaviour = ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour();
     alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
     ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
@@ -74,4 +79,6 @@ TEST_F(AlicaConditionPlan, solverTest)
     const alica::ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
     std::string resultingString(reinterpret_cast<const char*>(ba.begin()), ba.size());
     EXPECT_EQ("1414068576620", resultingString); // id of variable at highest level
+}
+}
 }

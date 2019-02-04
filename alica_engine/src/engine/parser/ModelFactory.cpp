@@ -1342,7 +1342,7 @@ void ModelFactory::removeRedundancy()
     }
 }
 
-bool ModelFactory::isUniqueElement(int64_t elementId)
+bool ModelFactory::isUniqueElement(int64_t elementId) const
 {
     return _elements.find(elementId) == _elements.end();
 }

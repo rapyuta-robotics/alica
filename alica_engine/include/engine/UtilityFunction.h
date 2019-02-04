@@ -56,7 +56,6 @@ private:
     double _similarityWeight;
 
     AlicaEngine* _ae;
-    IRoleAssignment* _ra;
 };
 
 std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);

@@ -21,7 +21,7 @@ SuccessMarks::SuccessMarks() {}
 void SuccessMarks::update(const AlicaEngine* ae, const IdGrp& succeededEps)
 {
     clear();
-    const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository()->getEntryPoints();
+    const PlanRepository::Accessor<EntryPoint>& eps = ae->getPlanRepository().getEntryPoints();
     for (int64_t id : succeededEps) {
         const EntryPoint* ep = eps.find(id);
         if (ep != nullptr) {

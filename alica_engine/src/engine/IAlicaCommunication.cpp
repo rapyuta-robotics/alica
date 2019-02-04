@@ -13,25 +13,25 @@ using std::shared_ptr;
 
 void alica::IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {
-    ae->getSyncModul()->onSyncTalk(st);
+    ae->editSyncModul().onSyncTalk(st);
 }
 
 void alica::IAlicaCommunication::onSyncReadyReceived(shared_ptr<SyncReady> sr)
 {
-    ae->getSyncModul()->onSyncReady(sr);
+    ae->editSyncModul().onSyncReady(sr);
 }
 
 void alica::IAlicaCommunication::onAuthorityInfoReceived(const AllocationAuthorityInfo& aai)
 {
-    ae->getAuth()->handleIncomingAuthorityMessage(aai);
+    ae->editAuth().handleIncomingAuthorityMessage(aai);
 }
 
 void alica::IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti)
 {
-    ae->getTeamObserver()->handlePlanTreeInfo(pti);
+    ae->editTeamObserver().handlePlanTreeInfo(pti);
 }
 
 void alica::IAlicaCommunication::onSolverResult(const SolverResult& sr)
 {
-    ae->getResultStore()->onSolverResult(sr);
+    ae->editResultStore().onSolverResult(sr);
 }

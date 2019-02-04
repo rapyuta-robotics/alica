@@ -21,18 +21,18 @@ public:
     AlicaDummyCommunication(alica::AlicaEngine* ae);
     virtual ~AlicaDummyCommunication();
 
-    virtual void tick();
+    void tick() override;
 
-    virtual void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const;
-    virtual void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const;
-    virtual void sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const;
-    virtual void sendRoleSwitch(const alica::RoleSwitch& rs) const;
-    virtual void sendSyncReady(const alica::SyncReady& sr) const;
-    virtual void sendSyncTalk(const alica::SyncTalk& st) const;
-    virtual void sendSolverResult(const alica::SolverResult& sr) const;
+    void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const override;
+    void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const override;
+    void sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const override;
+    void sendRoleSwitch(const alica::RoleSwitch& rs) const override;
+    void sendSyncReady(const alica::SyncReady& sr) const override;
+    void sendSyncTalk(const alica::SyncTalk& st) const override;
+    void sendSolverResult(const alica::SolverResult& sr) const override;
 
-    virtual void startCommunication();
-    virtual void stopCommunication();
+    void startCommunication() override;
+    void stopCommunication() override;
     alica::AlicaEngine* getEngine() const { return ae; }
 
 private:

@@ -18,7 +18,7 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-Synchronisation::Synchronisation(AlicaEngine* ae)
+Synchronisation::Synchronisation(const AlicaEngine* ae)
         : _myID(nullptr)
         , _ae(ae)
         , _syncModul(nullptr)
@@ -31,7 +31,7 @@ Synchronisation::Synchronisation(AlicaEngine* ae)
 {
 }
 
-Synchronisation::Synchronisation(AlicaEngine* ae, AgentIDConstPtr myID, const SyncTransition* st, SyncModule* sm)
+Synchronisation::Synchronisation(const AlicaEngine* ae, AgentIDConstPtr myID, const SyncTransition* st, SyncModule* sm)
         : _ae(ae)
         , _myID(myID)
         , _syncTransition(st)
@@ -42,7 +42,7 @@ Synchronisation::Synchronisation(AlicaEngine* ae, AgentIDConstPtr myID, const Sy
         , _myRow(nullptr)
         , _lastTalkData(nullptr)
 {
-    _syncStartTime = _ae->getAlicaClock()->now();
+    _syncStartTime = _ae->getAlicaClock().now();
     for (const Transition* t : st->getInSync()) {
         _connectedTransitions.push_back(t->getId());
     }
@@ -68,7 +68,7 @@ void Synchronisation::setTick(uint64_t now)
 void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
 {
 #ifdef SM_MISC
-    std::cout << "CHOD: ElapsedTime: " << (_ae->getAlicaClock()->now() - _syncStartTime) << std::endl;
+    std::cout << "CHOD: ElapsedTime: " << (_ae->getAlicaClock().now() - _syncStartTime) << std::endl;
 #endif
 
     if (!conditionHolds) {
@@ -148,7 +148,7 @@ bool Synchronisation::isValid(uint64_t curTick)
         return false;
     }
 
-    AlicaTime now = _ae->getAlicaClock()->now();
+    AlicaTime now = _ae->getAlicaClock().now();
 
     if (_lastTalkTime != AlicaTime::zero()) // talked already
     {
@@ -188,7 +188,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
     }
 
     ALICA_DEBUG_MSG("Integrate synctalk in synchronisation");
-    ALICA_DEBUG_MSG("ST: ElapsedTime: " << (_ae->getAlicaClock()->now() - _syncStartTime));
+    ALICA_DEBUG_MSG("ST: ElapsedTime: " << (_ae->getAlicaClock().now() - _syncStartTime));
 
     for (const SyncData& sd : talk->syncData) {
         ALICA_DEBUG_MSG("syncdata for transID: " << sd.transitionID);
@@ -235,7 +235,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
             // late acks...
             if (_readyForSync) {
                 if (allSyncReady()) {
-                    ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntTalk): elapsed time: " << (_ae->getAlicaClock()->now() - _syncStartTime));
+                    ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntTalk): elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
                     // notify syncmodul
                     _syncModul->synchronisationDone(_syncTransition);
                 }
@@ -267,7 +267,7 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready)
     if (_readyForSync) {
         if (allSyncReady()) {
             // notify _syncModul
-            ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntReady): elapsed time: " << (_ae->getAlicaClock()->now() - _syncStartTime));
+            ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntReady): elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
             _syncModul->synchronisationDone(_syncTransition);
         }
     }
@@ -305,7 +305,7 @@ void Synchronisation::sendTalk(const SyncData& sd)
 {
     SyncTalk talk;
     talk.syncData.push_back(sd);
-    _lastTalkTime = _ae->getAlicaClock()->now();
+    _lastTalkTime = _ae->getAlicaClock().now();
 
     ALICA_DEBUG_MSG("Sending Talk TID: " << sd.transitionID);
 

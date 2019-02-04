@@ -46,10 +46,9 @@ using std::string;
 using std::stringstream;
 using std::to_string;
 
-PlanWriter::PlanWriter(AlicaEngine* ae, PlanRepository* rep)
+PlanWriter::PlanWriter(AlicaEngine* ae)
         : _objectCounter(0)
         , _ae(ae)
-        , _rep(rep)
 {
     string path = essentials::SystemConfig::getInstance().getConfigPath();
     _tempPlanDir = essentials::FileSystem::combinePaths(path, "plans/tmp/");
@@ -87,7 +86,7 @@ void PlanWriter::setPlansToSave(const AlicaElementGrp& plansToSave)
 void PlanWriter::saveAllPlans()
 {
     _plansToSave.clear();
-    for (const Plan* p : _rep->getPlans()) {
+    for (const Plan* p : _ae->getPlanRepository().getPlans()) {
         _plansToSave.push_back(p);
     }
     saveFileLoop();
@@ -514,9 +513,10 @@ tinyxml2::XMLElement* PlanWriter::createEntryPointXMLNode(const EntryPoint* e, t
     xe->SetAttribute("minCardinality", e->getMinCardinality());
     xe->SetAttribute("maxCardinality", e->getMaxCardinality());
     tinyxml2::XMLElement* xc = doc->NewElement("task");
-    xc->InsertEndChild(doc->NewText((
-            getRelativeFileName(_rep->getTaskRepositorys()[e->getTask()->getTaskRepository()->getId()]->getFileName()) + "#" + to_string(e->getTask()->getId()))
-                                            .c_str()));
+    xc->InsertEndChild(
+            doc->NewText((getRelativeFileName(_ae->getPlanRepository().getTaskRepositorys()[e->getTask()->getTaskRepository()->getId()]->getFileName()) + "#" +
+                          to_string(e->getTask()->getId()))
+                                 .c_str()));
     xe->InsertEndChild(xc);
     xc = doc->NewElement("state");
     xc->InsertEndChild(doc->NewText((string("#") + to_string(e->getState()->getId())).c_str()));
@@ -591,7 +591,7 @@ void PlanWriter::createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc)
     xp->SetAttribute("xmi:version", "2.0");
     xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
-    xp->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+    xp->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
     xp->SetAttribute("name", r->getName().c_str());
     xp->SetAttribute("usableWithPlanID", to_string(r->getUsableWithPlanId()).c_str());
     if (r->isDefault()) {
@@ -603,12 +603,12 @@ void PlanWriter::createRoleSet(const RoleSet* r, tinyxml2::XMLDocument* doc)
     for (const RoleTaskMapping* rtm : r->getRoleTaskMappings()) {
         tinyxml2::XMLElement* xc = doc->NewElement("mappings");
         xp->InsertEndChild(xc);
-        xc->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+        xc->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
         xc->SetAttribute("name", rtm->getName().c_str());
         for (auto mapping : rtm->getTaskPriorities()) {
             tinyxml2::XMLElement* xd = doc->NewElement("taskPriorities");
             xc->InsertEndChild(xd);
-            xd->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+            xd->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
             xd->SetAttribute("name", "");
             xd->SetAttribute("key", to_string(mapping.first).c_str());
             xd->SetAttribute("value", to_string(mapping.second).c_str());
@@ -626,7 +626,7 @@ void PlanWriter::createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDoc
     xp->SetAttribute("xmi:version", "2.0");
     xp->SetAttribute("xmlns:xmi", "http://www.omg.org/XMI");
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
-    xp->SetAttribute("id", to_string(_ae->getAlicaClock()->now().inNanoseconds() + _objectCounter++).c_str());
+    xp->SetAttribute("id", to_string(_ae->getAlicaClock().now().inNanoseconds() + _objectCounter++).c_str());
     xp->SetAttribute("name", tr->getName().c_str());
     xp->SetAttribute("defaultTask", to_string(tr->getDefaultTask()).c_str());
 

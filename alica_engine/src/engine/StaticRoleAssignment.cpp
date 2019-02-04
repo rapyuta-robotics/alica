@@ -15,7 +15,7 @@
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
+StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae)
         : IRoleAssignment()
         , _ae(ae)
         , _updateRoles(false)
@@ -58,10 +58,10 @@ void StaticRoleAssignment::calculateRoles()
     _robotRoleMapping.clear();
 
     // get data for "calculations"
-    const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository()->getRoles();
+    const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository().getRoles();
 
     // assign a role for each robot if you have match
-    for (const Agent* agent : _ae->getTeamManager()->getActiveAgents()) {
+    for (const Agent* agent : _ae->getTeamManager().getActiveAgents()) {
         const RobotProperties& prop = agent->getProperties();
         bool roleIsAssigned = false;
 
@@ -72,14 +72,13 @@ void StaticRoleAssignment::calculateRoles()
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (agent->getId() == _ae->getTeamManager()->getLocalAgentID() && _ownRole != role) {
+                if (agent->getId() == _ae->getTeamManager().getLocalAgentID() && _ownRole != role) {
                     _ownRole = role;
                     // probably nothing is reacting on this message, but anyway we send it
-                    if (_communication != nullptr) {
-                        RoleSwitch rs;
-                        rs.roleID = role->getId();
-                        _communication->sendRoleSwitch(rs);
-                    }
+                    // TODO: fix this take context
+                    RoleSwitch rs;
+                    rs.roleID = role->getId();
+                    _ae->getCommunicator().sendRoleSwitch(rs);
                 }
                 roleIsAssigned = true;
                 break;

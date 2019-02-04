@@ -6,11 +6,10 @@ namespace alica
 {
 IRoleAssignment::IRoleAssignment()
         : _ownRole(nullptr)
-        , _communication(nullptr)
 {
 }
 
-const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId)
+const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId) const
 {
     auto iter = _robotRoleMapping.find(robotId);
     if (iter != _robotRoleMapping.end()) {
@@ -21,11 +20,6 @@ const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId)
         AlicaEngine::abort(ss.str());
         return nullptr;
     }
-}
-
-void IRoleAssignment::setCommunication(const IAlicaCommunication* communication)
-{
-    _communication = communication;
 }
 
 } /* namespace alica */

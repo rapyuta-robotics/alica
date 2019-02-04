@@ -289,7 +289,7 @@ Plan* PlanParser::parsePlanFile(const std::string& planFile)
 /**
  * Returns true if element id is unique.
  */
-bool PlanParser::isUniqueElement(int64_t elementId)
+bool PlanParser::isUniqueElement(int64_t elementId) const
 {
     return _mf.isUniqueElement(elementId);
 }

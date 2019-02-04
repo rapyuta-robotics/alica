@@ -38,7 +38,7 @@ void RobotEngineData::initDomainVariables()
     std::stringstream ss;
     ss << *_agentId << ".";
     std::string agentIdString = ss.str();
-    for (const Quantifier* quantifier : _engine->getPlanRepository()->getQuantifiers()) {
+    for (const Quantifier* quantifier : _engine->getPlanRepository().getQuantifiers()) {
         for (const Variable* tv : quantifier->getTemplateVariables()) {
             _domainVariables.emplace(tv,
                     std::unique_ptr<const DomainVariable>(new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId)));
@@ -58,14 +58,14 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
 
 const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name) const
 {
-    const Variable* tv = _engine->getPlanRepository()->getVariables()[Hash64(name.c_str(), name.size())];
+    const Variable* tv = _engine->getPlanRepository().getVariables()[Hash64(name.c_str(), name.size())];
     return getDomainVariable(tv);
 }
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
     int64_t ret = static_cast<int64_t>(essentials::AgentIDHash{}(_agentId.get()) + std::hash<std::string>()(s));
-    assert(_engine->getPlanParser()->isUniqueElement(ret));
+    assert(_engine->getPlanParser().isUniqueElement(ret));
     return ret;
 }
 

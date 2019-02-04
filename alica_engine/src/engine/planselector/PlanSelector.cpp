@@ -35,10 +35,9 @@ constexpr int POOL_SIZE = 10100;
 PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb)
         : _pap(POOL_SIZE)
         , _ae(ae)
-        , _to(ae->getTeamObserver())
         , _pb(pb)
 {
-    assert(_ae && _to && _pb);
+    assert(_ae && _pb);
 }
 
 PlanSelector::~PlanSelector() {}
@@ -98,7 +97,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
-        if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _to->successesInPlan(plan))) {
+        if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
             ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << std::endl
                                              << "= " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
         } else {
@@ -135,7 +134,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     }
 
     // some variables for the do while loop
-    const AgentIDConstPtr localAgentID = _ae->getTeamManager()->getLocalAgentID();
+    const AgentIDConstPtr localAgentID = _ae->getTeamManager().getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     std::vector<RunningPlan*> rpChildren;

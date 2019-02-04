@@ -2,7 +2,6 @@
 
 //#define AM_DEBUG
 
-#include "../AlicaEngine.h"
 #include "../IAlicaCommunication.h"
 #include "../RunningPlan.h"
 #include "../containers/AllocationAuthorityInfo.h"
@@ -14,7 +13,7 @@
 namespace alica
 {
 class IAlicaCommunication;
-
+class AlicaEngine;
 /**
  * Manages communication wrt. conflict resolution.
  */
@@ -34,7 +33,7 @@ private:
     bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 
     std::vector<AllocationAuthorityInfo> _queue;
-    const AlicaEngine* _engine;
+    AlicaEngine* _engine;
     AgentIDConstPtr _localAgentID;
     std::mutex _mutex;
 };

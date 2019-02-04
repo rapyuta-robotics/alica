@@ -27,7 +27,7 @@ void RobotProperties::readFromConfig(const AlicaEngine* engine, const std::strin
         }
         std::string key = s;
         std::string kvalue = sc["Globals"]->get<std::string>("Globals", "Team", name.c_str(), s.c_str(), NULL);
-        for (const Capability* cap : engine->getPlanRepository()->getCapabilities()) {
+        for (const Capability* cap : engine->getPlanRepository().getCapabilities()) {
             if (cap->getName().compare(key) == 0) {
                 for (const CapValue* val : cap->getCapValues()) {
                     // transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
