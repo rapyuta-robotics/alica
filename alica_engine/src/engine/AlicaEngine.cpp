@@ -87,6 +87,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     UtilityFunction::initDataStructures(this);
     _syncModul.init();
     _variableSyncModule->init();
+    RunningPlan::init();
     return everythingWorked;
 }
 
