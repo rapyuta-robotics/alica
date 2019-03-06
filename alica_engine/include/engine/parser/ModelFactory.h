@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include "tinyxml2.h"
 
