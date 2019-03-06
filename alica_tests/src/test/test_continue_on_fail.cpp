@@ -48,3 +48,4 @@ TEST_F(FailureHandling, continueOnFailure)
     ASSERT_EQ(ae->getPlanBase().getDeepestNode()->getActiveState()->getId(), 1532424097662);
 }
 }
+}
