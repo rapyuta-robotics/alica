@@ -31,6 +31,14 @@ TeamManager::~TeamManager()
     }
 }
 
+void TeamManager::setTeamTimeout(AlicaTime t)
+{
+    _teamTimeOut = t;
+    for (auto& agentEntry : _agents) {
+        agentEntry.second->setTimeout(t);
+    }
+}
+
 void TeamManager::readTeamFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();

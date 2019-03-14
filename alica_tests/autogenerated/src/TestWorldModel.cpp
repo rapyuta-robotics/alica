@@ -28,24 +28,29 @@ TestWorldModel::TestWorldModel()
         : trigger1(new essentials::EventTrigger())
         , trigger2(new essentials::EventTrigger())
 {
-    this->transitionCondition1413201227586 = false;
-    this->transitionCondition1413201389955 = false;
-    this->transitionCondition1413201052549 = false;
-    this->transitionCondition1413201367990 = false;
-    this->transitionCondition1413201370590 = false;
-    this->preCondition1418042929966 = false;
-    this->runtimeCondition1418042967134 = false;
-
-    this->transitionCondition1418825427317 = false;
-    this->transitionCondition1418825428924 = false;
-
-    this->x = 0;
+    reset();
 }
 
 TestWorldModel::~TestWorldModel()
 {
     delete trigger1;
     delete trigger2;
+}
+
+void TestWorldModel::reset()
+{
+    transitionCondition1413201227586 = false;
+    transitionCondition1413201389955 = false;
+    transitionCondition1413201052549 = false;
+    transitionCondition1413201367990 = false;
+    transitionCondition1413201370590 = false;
+    preCondition1418042929966 = false;
+    runtimeCondition1418042967134 = false;
+
+    transitionCondition1418825427317 = false;
+    transitionCondition1418825428924 = false;
+
+    x = 0;
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586()

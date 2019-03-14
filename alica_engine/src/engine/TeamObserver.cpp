@@ -1,4 +1,5 @@
 #include "engine/TeamObserver.h"
+
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
@@ -75,6 +76,7 @@ bool TeamObserver::updateTeamPlanTrees()
 void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = _ae->getAlicaClock().now();
+    ALICA_DEBUG_MSG("TO: tick " << time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
@@ -275,6 +277,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
             return;
         }
         lock_guard<mutex> lock(_msgQueueMutex);
+        ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
         _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
     }
 }
