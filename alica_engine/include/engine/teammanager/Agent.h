@@ -35,6 +35,7 @@ public:
     RobotEngineData& editEngineData() { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
+    void setTimeout(AlicaTime t);
 
 private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id);
