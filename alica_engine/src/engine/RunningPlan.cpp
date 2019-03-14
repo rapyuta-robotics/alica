@@ -673,10 +673,6 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
             for (AgentIDConstPtr rob : robs) {
-                const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
-                if (freezeAgent) {
-                    continue;
-                }
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif.editSubtractions().emplace_back(ep, rob);
