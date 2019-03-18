@@ -101,6 +101,7 @@ public:
     RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
 
     static void init();
+    static void setAssignmentProtectionTime(AlicaTime t);
 
     virtual ~RunningPlan();
 

@@ -80,8 +80,8 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const AlicaClock& getAlicaClock() const { return _alicaClock; }
-    // AlicaClock& editAlicaClock() { return _alicaClock; }
+    const AlicaClock& getAlicaClock() const { return *_alicaClock.get(); }
+    void setAlicaClock(std::unique_ptr<AlicaClock> c) { _alicaClock = std::move(c); }
 
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
@@ -120,7 +120,7 @@ private:
     BehaviourPool _behaviourPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
-    AlicaClock _alicaClock;
+    std::unique_ptr<AlicaClock> _alicaClock;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     Logger _log;

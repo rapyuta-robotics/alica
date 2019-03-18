@@ -5,6 +5,7 @@
 #include "ConstraintCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
 #include "UtilityFunctionCreator.h"
+#include <TestWorldModel.h>
 
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaContext.h>
@@ -44,6 +45,9 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -99,6 +103,8 @@ protected:
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
     void SetUp() override
     {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

@@ -47,6 +47,11 @@ void Agent::setLocal(bool local)
     _local = local;
 }
 
+void Agent::setTimeout(AlicaTime t)
+{
+    _timeout = t;
+}
+
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     _engineData.editSuccessMarks().markSuccessfull(plan, entryPoint);
