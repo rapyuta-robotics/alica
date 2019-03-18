@@ -59,6 +59,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_task_assignment.cpp
         src/test/test_variant.cpp
         src/test/test_varsync.cpp
+        src/test/test_agent_dies.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

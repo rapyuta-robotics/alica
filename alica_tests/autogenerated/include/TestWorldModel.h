@@ -41,6 +41,8 @@ public:
     essentials::ITrigger* trigger1;
     essentials::ITrigger* trigger2;
 
+    void reset();
+
 private:
     TestWorldModel();
     bool transitionCondition1413201227586;

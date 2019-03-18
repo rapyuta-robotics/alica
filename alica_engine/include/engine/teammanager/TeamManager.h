@@ -51,6 +51,8 @@ public:
     bool setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
+    void setTeamTimeout(AlicaTime t);
+
 private:
     AlicaTime _teamTimeOut;
     Agent* _localAgent;
