@@ -14,7 +14,9 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, alica::Plan* plan) {
-            plan = new alica::Plan(1);
+            plan = new alica::Plan(node["id"].as<std::int64_t>());
+//            plan->setMasterPlan(node["masterPlan"].as<bool>());
+            std::cout << "abc: " << plan->getId() << std::endl;
             return true;
         }
     };
