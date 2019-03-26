@@ -207,16 +207,6 @@ std::string PlanParser::findDefaultRoleSet(std::string dir)
     return files[0];
 }
 
-const Plan* PlanParser::getHackedPlan()
-{
-    return this->mf->getHackedPlan();
-}
-
-const RoleSet* PlanParser::getHackedRoleSet()
-{
-    return this->mf->getHackedRoleSet();
-}
-
 /**
  * Parses a plan tree
  * @param masterplan The name of the top-level plan

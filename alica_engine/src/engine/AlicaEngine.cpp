@@ -39,7 +39,7 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(
-        essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked)
+        essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : stepCalled(false)
         , planBase(nullptr)
         , communicator(nullptr)
@@ -52,7 +52,6 @@ AlicaEngine::AlicaEngine(
         , variableSyncModule(nullptr)
         , stepEngine(stepEngine)
         , agentIDManager(idManager)
-        , hacked(hacked)
 {
     _maySendMessages = !(*sc)["Alica"]->get<bool>("Alica.SilentStart", NULL);
     this->useStaticRoles = (*sc)["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
@@ -60,13 +59,10 @@ AlicaEngine::AlicaEngine(
 
     this->planRepository = new PlanRepository();
     this->planParser = new PlanParser(this->planRepository);
-    if (hacked) {
-        this->masterPlan = this->planParser->getHackedPlan();
-        this->roleSet = this->planParser->getHackedRoleSet();
-    } else {
-        this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-        this->roleSet = this->planParser->parseRoleSet(roleSetName);
-    }
+
+    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+    this->roleSet = this->planParser->parseRoleSet(roleSetName);
+
     _teamManager = new TeamManager(this, true);
     _teamManager->init();
     this->behaviourPool = new BehaviourPool(this);
