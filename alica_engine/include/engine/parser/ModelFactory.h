@@ -65,9 +65,6 @@ public:
     RoleSet* createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan);
     static const EntryPoint* generateIdleEntryPoint();
 
-    const Plan* getHackedPlan();
-    const RoleSet* getHackedRoleSet();
-
 private:
     static const std::string entryPoints;
     static const std::string states;

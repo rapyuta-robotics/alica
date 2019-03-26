@@ -44,9 +44,7 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${YAML_CPP_INCLUDE_DIR})
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
-add_library(alica_engine
-    ${alica_SOURCES};
-)
+add_library(alica_engine ${alica_SOURCES})
 
 target_link_libraries(alica_engine ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 

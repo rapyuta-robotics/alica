@@ -44,7 +44,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, bool hacked = false);
+    AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:
@@ -111,7 +111,6 @@ public:
     AgentIDConstPtr getId(Prototype& idPrototype) const;
 
 private:
-    bool hacked;
     void setStepEngine(bool stepEngine);
 
     PlanBase* planBase;

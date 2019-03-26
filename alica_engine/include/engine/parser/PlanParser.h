@@ -25,7 +25,7 @@ class RoleSet;
 class AlicaElement;
 
 /**
- * The default parser, parsing the XML encoding of an ALICA plan-tree
+ * The default parser, parsing the YAML encoding of an ALICA plan-tree
  */
 class PlanParser
 {
@@ -33,8 +33,6 @@ public:
     PlanParser(PlanRepository* rep);
     ~PlanParser();
 
-    const RoleSet* getHackedRoleSet();
-    const Plan* getHackedPlan();
     const Plan* parsePlanTree(const std::string& masterplan);
     void ignoreMasterPlanId(bool val);
     std::map<int64_t, AlicaElement*>* getParsedElements();
