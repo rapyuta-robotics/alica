@@ -112,30 +112,50 @@ namespace alica
 
     Plan* ModelFactory::createPlan(YAML::Node& node)
     {
-        Plan* plan = node.as<alica::Plan*>();
-        std::cout << plan->getId() << std::endl;
-//        Plan* plan = new Plan(this->parser->parserId(node));
-//        plan->setFileName(this->parser->getCurrentFile());
-//        setAlicaElementAttributes(plan, node);
-//
-//        if (node["masterPlan"] &&  node["masterPlan"].as<std::string>() == ("true")) {
-//            plan->setMasterPlan(true);
-//        }
+//        Plan* plan = node.as<alica::Plan*>();
+//        std::cout << plan->getId() << std::endl;
+        Plan* plan = new Plan(this->parser->parserId(node));
+        // insert into elements map
+        addElement(plan);
+        // insert into plan repository map
+        this->rep->_plans.emplace(plan->getId(), plan);
+
+        plan->setFileName(this->parser->getCurrentFile());
+        setAlicaElementAttributes(plan, node);
+
+        if (node["masterPlan"]) {
+            node["masterPlan"].as<std::string>() == ("true") ? plan->setMasterPlan(true) : plan->setMasterPlan(false);
+        }
+        if(node["utilityThreshold"]) {
+            plan->_utilityThreshold = node["utilityThreshold"].as<std::double_t>();
+        }
+
+        std::vector<EntryPoint*> constructedEntryPoints;
+        const YAML::Node& entryPoints = node[entryPoints];
+        for (YAML::const_iterator it = entryPoints.begin(); it != entryPoints.end(); ++it) {
+            const YAML::Node& epNode = *it;
+            EntryPoint* ep = createEntryPoint(epNode);
+            constructedEntryPoints.push_back(ep);
+            ep->setPlan(plan);
+        }
+        // Sort entrypoints:
+        std::sort(constructedEntryPoints.begin(), constructedEntryPoints.end(),
+                  [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
+        plan->_entryPoints.reserve(constructedEntryPoints.size());
+        // set indices and add to plan:
+        for (int i = 0; i < static_cast<int>(constructedEntryPoints.size()); ++i) {
+            constructedEntryPoints[i]->_index = i;
+            plan->_entryPoints.push_back(constructedEntryPoints[i]);
+        }
+        // TODO: calculate when all EntryPoints are parsed
 //        if(node["minCardinality"]) {
 //            plan->setMinCardinality(stoi(node["minCardinality"].as<std::string>()));
 //        }
 //        if(node["maxCardinality"]) {
-//            plan->setMaxCardinality(stod(node["maxCardinality"].as<std::string>()));
+//            plan->setMaxCardinality(stoi(node["maxCardinality"].as<std::string>()));
 //        }
-//        if(node["utilityThreshold"]) {
-//            plan->_utilityThreshold = stod(node["utilityThreshold"].as<std::string>());
-//        }
-//        // insert into elements map
-//        addElement(plan);
-//        // insert into plan repository map
-//        this->rep->_plans.emplace(plan->getId(), plan);
-//        std::cout << "master id " << node["id"];
-//        //TODO
+
+
         /*
         // tinyxml2::XMLElement* curChild = element->FirstChildElement();
 
@@ -206,16 +226,9 @@ namespace alica
             }
             curChild = curChild->NextSiblingElement();
         }
-        // Sort entrypoints:
-        std::sort(constructedEntryPoints.begin(), constructedEntryPoints.end(),
-                  [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
-        plan->_entryPoints.reserve(constructedEntryPoints.size());
-        // set indices and add to plan:
-        for (int i = 0; i < static_cast<int>(constructedEntryPoints.size()); ++i) {
-            constructedEntryPoints[i]->_index = i;
-            plan->_entryPoints.push_back(constructedEntryPoints[i]);
-        }
 */
+
+
         return plan;
     }
 
@@ -858,49 +871,46 @@ namespace alica
         return pos;
     }
 
-    EntryPoint* ModelFactory::createEntryPoint(tinyxml2::XMLElement* element)
+    EntryPoint* ModelFactory::createEntryPoint(const YAML::Node& element)
     {
         EntryPoint* ep = new EntryPoint();
-//        ep->setId(this->parser->parserId(element));
-//        setAlicaElementAttributes(ep, element);
-        string attr = element->Attribute("minCardinality");
-        if (!attr.empty()) {
-            ep->_cardinality.setMin(stoi(attr));
+        ep->setId(this->parser->parserId(element));
+        setAlicaElementAttributes(ep, element);
+        if (element["minCardinality"]) {
+            ep->_cardinality.setMin(element["minCardinality"].as<int>());
         }
-        attr = element->Attribute("maxCardinality");
-        if (!attr.empty()) {
-            ep->_cardinality.setMax(stoi(attr));
+        if (element["maxCardinality"]) {
+            ep->_cardinality.setMax(element["maxCardinality"].as<int>());
         }
-        attr = element->Attribute("successRequired");
-        if (!attr.empty()) {
-            transform(attr.begin(), attr.end(), attr.begin(), ::tolower);
-            ep->setSuccessRequired(attr.compare("true") == 0);
+        if (element["successRequired"]) {
+            ep->setSuccessRequired(element["successRequired"].as<bool>());
         }
 
         addElement(ep);
         this->rep->_entryPoints.insert(pair<int64_t, EntryPoint*>(ep->getId(), ep));
-        tinyxml2::XMLElement* curChild = element->FirstChildElement();
-        bool haveState = false;
-        int64_t curChildId;
-
-        while (curChild != nullptr) {
-            const char* val = curChild->Value();
-//            curChildId = this->parser->parserId(curChild);
-
-            if (state.compare(val) == 0) {
-                this->epStateReferences.push_back(pair<int64_t, int64_t>(ep->getId(), curChildId));
-                haveState = true;
-            } else if (task.compare(val) == 0) {
-                this->epTaskReferences.push_back(pair<int64_t, int64_t>(ep->getId(), curChildId));
-            } else {
-                AlicaEngine::abort("MF: Unhandled EntryPoint Child: ", val);
-            }
-            curChild = curChild->NextSiblingElement();
-        }
-
-        if (!haveState) {
-            AlicaEngine::abort("MF: No initial state identified for EntryPoint: ", ep->getId());
-        }
+        // TODO
+//        tinyxml2::XMLElement* curChild = element->FirstChildElement();
+//        bool haveState = false;
+//        int64_t curChildId;
+//
+//        while (curChild != nullptr) {
+//            const char* val = curChild->Value();
+////            curChildId = this->parser->parserId(curChild);
+//
+//            if (state.compare(val) == 0) {
+//                this->epStateReferences.push_back(pair<int64_t, int64_t>(ep->getId(), curChildId));
+//                haveState = true;
+//            } else if (task.compare(val) == 0) {
+//                this->epTaskReferences.push_back(pair<int64_t, int64_t>(ep->getId(), curChildId));
+//            } else {
+//                AlicaEngine::abort("MF: Unhandled EntryPoint Child: ", val);
+//            }
+//            curChild = curChild->NextSiblingElement();
+//        }
+//
+//        if (!haveState) {
+//            AlicaEngine::abort("MF: No initial state identified for EntryPoint: ", ep->getId());
+//        }
 
         return ep;
     }

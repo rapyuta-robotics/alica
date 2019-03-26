@@ -126,7 +126,7 @@ private:
     ReferenceList planningProblemPlanAlternativeReferences;
 
     void setAlicaElementAttributes(AlicaElement* ae, YAML::Node node);
-    EntryPoint* createEntryPoint(tinyxml2::XMLElement* element);
+    EntryPoint* createEntryPoint(const YAML::Node&  element);
     State* createState(tinyxml2::XMLElement* element);
     SuccessState* createSuccessState(tinyxml2::XMLElement* element);
     FailureState* createFailureState(tinyxml2::XMLElement* element);
