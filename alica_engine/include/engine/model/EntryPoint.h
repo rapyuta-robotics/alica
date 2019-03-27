@@ -52,6 +52,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend ModelManager;
     void computeReachabilitySet();
     void setTask(Task* task);
     void setPlan(Plan* plan);
@@ -70,6 +71,8 @@ private:
      * The plan to which this entrypoint belongs.
      */
     const Plan* _plan;
+    // TODO: EntryPoint should not depend on Interval class from external solver interface library
+    // Suggestion: move the Interval class, or make EntryPoint using separate minCard, maxCard
     Interval<int> _cardinality;
     /**
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.

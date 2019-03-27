@@ -1,7 +1,7 @@
-#include "engine/parser/PlanParser.h"
+#include "engine/modelmanagement/PlanParser.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/Plan.h"
-#include "engine/parser/ModelFactory.h"
+#include "engine/modelmanagement/ModelFactory.h"
 
 #include <FileSystem.h>
 #include <alica_common_config/debug_output.h>
@@ -352,7 +352,7 @@ void PlanParser::setCurrentFile(const std::string& currentFile)
  * @param node the given xml node
  * @return id: returns the id from the plan
  */
-int64_t PlanParser::parserId(YAML::Node node)
+int64_t PlanParser::parseId(YAML::Node node)
 {
     try {
         if (node["id"]) {

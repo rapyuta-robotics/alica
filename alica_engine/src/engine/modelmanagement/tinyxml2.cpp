@@ -21,7 +21,7 @@
  distribution.
  */
 
-#include "engine/parser/tinyxml2.h"
+#include "engine/modelmanagement/tinyxml2.h"
 
 #include <new> // yes, this one new style header, is in the Android SDK.
 #ifdef ANDROID_NDK

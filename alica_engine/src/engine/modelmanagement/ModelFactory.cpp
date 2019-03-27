@@ -1,5 +1,4 @@
-#include "engine/parser/ModelFactory.h"
-#include "engine/parser/yamlcpp/YAMLPlan.h"
+#include "engine/modelmanagement/ModelFactory.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/BehaviourConfiguration.h"
@@ -28,7 +27,7 @@
 #include "engine/model/TaskRepository.h"
 #include "engine/model/Transition.h"
 #include "engine/model/Variable.h"
-#include "engine/parser/PlanParser.h"
+#include "engine/modelmanagement/PlanParser.h"
 #include "engine/util/HashFunctions.h"
 
 #include "engine/AlicaEngine.h"
@@ -112,7 +111,7 @@ namespace alica
 
     Plan* ModelFactory::createPlan(YAML::Node& node)
     {
-        Plan* plan = new Plan(this->parser->parserId(node));
+        Plan* plan = new Plan(this->parser->parseId(node));
         // insert into elements map
         addElement(plan);
         // insert into plan repository map
@@ -426,7 +425,7 @@ namespace alica
     void ModelFactory::createBehaviour(YAML::Node& node)
     {
         Behaviour* beh = new Behaviour();
-        beh->setId(this->parser->parserId(node));
+        beh->setId(this->parser->parseId(node));
         beh->setFileName(this->parser->getCurrentFile());
 
         if(node["masterPlan"] && node["masterPlan"].as<std::string>() == "true") {
@@ -477,7 +476,7 @@ namespace alica
     void ModelFactory::createPlanType(YAML::Node& node)
     {
         PlanType* pt = new PlanType();
-        pt->setId(this->parser->parserId(node));
+        pt->setId(this->parser->parseId(node));
         pt->setFileName(this->parser->getCurrentFile());
         setAlicaElementAttributes(pt, node);
         addElement(pt);
@@ -514,7 +513,7 @@ namespace alica
     void ModelFactory::createTasks(YAML::Node& node)
     {
         TaskRepository* tr = new TaskRepository();
-        tr->setId(this->parser->parserId(node));
+        tr->setId(this->parser->parseId(node));
         tr->setFileName(this->parser->getCurrentFile());
         addElement(tr);
         setAlicaElementAttributes(tr, node);
@@ -530,7 +529,7 @@ namespace alica
         }
 
         for(unsigned i=0;i<node["tasks"].size();i++) {
-            int64_t cid =  this->parser->parserId(node["tasks"][i]);
+            int64_t cid =  this->parser->parseId(node["tasks"][i]);
             Task* task = new Task(cid == id);
             task->setId(cid);
             YAML::Node child =  node["tasks"][i];
@@ -588,7 +587,7 @@ namespace alica
             AlicaEngine::abort("MF: Unhandled createVariable");
         }
 
-        Variable* v = new Variable(this->parser->parserId(node), name, type);
+        Variable* v = new Variable(this->parser->parseId(node), name, type);
         setAlicaElementAttributes(v, node);
         addElement(v);
         this->rep->_variables.insert(pair<int64_t, Variable*>(v->getId(), v));
@@ -873,7 +872,7 @@ namespace alica
     EntryPoint* ModelFactory::createEntryPoint(const YAML::Node& element)
     {
         EntryPoint* ep = new EntryPoint();
-        ep->setId(this->parser->parserId(element));
+        ep->setId(this->parser->parseId(element));
         setAlicaElementAttributes(ep, element);
         if (element["minCardinality"]) {
             ep->_cardinality.setMin(element["minCardinality"].as<int>());
@@ -952,7 +951,7 @@ namespace alica
     Parametrisation* ModelFactory::createParametrisation(YAML::Node node)
     {
         Parametrisation* para = new Parametrisation();
-        para->setId(this->parser->parserId(node));
+        para->setId(this->parser->parseId(node));
         setAlicaElementAttributes(para, node);
 
         addElement(para);

@@ -7,7 +7,7 @@
 #include "engine/model/DomainVariable.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
-#include "engine/parser/PlanParser.h"
+#include "engine/modelmanagement/ModelManager.h"
 
 #include <assert.h>
 #include <typeinfo>
@@ -65,7 +65,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
     int64_t ret = static_cast<int64_t>(essentials::AgentIDHash{}(_agentId.get()) + std::hash<std::string>()(s));
-    assert(_engine->getPlanParser()->getParsedElements()->find(ret) == _engine->getPlanParser()->getParsedElements()->end());
+    assert(!_engine->getModelManager()->idExists(ret));
     return ret;
 }
 

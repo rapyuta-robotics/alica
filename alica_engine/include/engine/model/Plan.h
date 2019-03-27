@@ -13,7 +13,6 @@ class PostCondition;
 class State;
 class SyncTransition;
 class Transition;
-class ModelFactory;
 class ExpressionHandler;
 /**
  * An ALICA plan
@@ -47,6 +46,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend ModelManager;
     friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);

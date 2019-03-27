@@ -31,6 +31,7 @@ class Transition;
 class Variable;
 class PlanningProblem;
 class ModelFactory;
+class ModelManager;
 class ExpressionHandler;
 
 /**
@@ -125,6 +126,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend ModelManager;
     friend ExpressionHandler;
     MapType<Plan> _plans;
     MapType<Task> _tasks;

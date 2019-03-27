@@ -1,12 +1,4 @@
-/*
- * AbstractPlan.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ABSTRACTPLAN_H_
-#define ABSTRACTPLAN_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -24,10 +16,11 @@ class PreCondition;
 class RuntimeCondition;
 class UtilityFunction;
 class ModelFactory;
+class ModelManager;
 class ExpressionHandler;
 
 /**
- * Super class of plans, plantypes and behaviourconfigurations.
+ * Super class of plans, plantypes and behaviours.
  */
 class AbstractPlan : public AlicaElement
 {
@@ -54,6 +47,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend ModelManager;
     friend ExpressionHandler;
 
     void setMasterPlan(bool isMasterPlan);
@@ -83,5 +77,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* ABSTRACTPLAN_H_ */

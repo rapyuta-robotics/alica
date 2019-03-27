@@ -1,6 +1,6 @@
 #include <FileSystem.h>
 #include <SystemConfig.h>
-#include <engine/parser/PlanWriter.h>
+#include <engine/modelmanagement/PlanWriter.h>
 
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
@@ -31,7 +31,7 @@
 #include "engine/model/TaskRepository.h"
 #include "engine/model/Transition.h"
 #include "engine/model/Variable.h"
-#include "engine/parser/tinyxml2.h"
+#include "engine/modelmanagement/tinyxml2.h"
 
 namespace alica
 {

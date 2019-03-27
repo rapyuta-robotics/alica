@@ -15,10 +15,10 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
-#include "engine/parser/PlanParser.h"
+#include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/teammanager/TeamManager.h"
-#include <engine/syncmodule/SyncModule.h>
+#include "engine/syncmodule/SyncModule.h"
 
 #include <alica_common_config/debug_output.h>
 #include <essentials/AgentIDManager.h>
@@ -58,10 +58,13 @@ AlicaEngine::AlicaEngine(
     PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
-    this->planParser = new PlanParser(this->planRepository);
+//    this->planParser = new PlanParser(this->planRepository);
+//    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
+//    this->roleSet = this->planParser->parseRoleSet(roleSetName);
 
-    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-    this->roleSet = this->planParser->parseRoleSet(roleSetName);
+    this->modelManager = new ModelManager(this->planRepository);
+    this->masterPlan = this->modelManager->loadPlanTree(masterPlanName);
+    this->roleSet = this->modelManager->loadRoleSet(roleSetName);
 
     _teamManager = new TeamManager(this, true);
     _teamManager->init();
@@ -182,9 +185,14 @@ void AlicaEngine::shutdown()
         this->planRepository = nullptr;
     }
 
-    if (this->planParser != nullptr) {
-        delete this->planParser;
-        this->planParser = nullptr;
+//    if (this->planParser != nullptr) {
+//        delete this->planParser;
+//        this->planParser = nullptr;
+//    }
+
+    if (this->modelManager != nullptr) {
+        delete this->modelManager;
+        this->modelManager= nullptr;
     }
 
     this->roleSet = nullptr;
