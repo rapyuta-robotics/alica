@@ -222,19 +222,19 @@ int64_t ModelManager::getId(const YAML::Node& node)
 
 std::string ModelManager::getName(const YAML::Node& node)
 {
-    if (node[alica::Strings::name]) {
-        return node[alica::Strings::name].as<std::string>();
-    } else {
+    if (!node[alica::Strings::name] || YAML::NodeType::Null == node[alica::Strings::name].Type()) {
         return alica::Strings::no_name;
+    } else {
+        return node[alica::Strings::name].as<std::string>();
     }
 }
 
 std::string ModelManager::getComment(const YAML::Node& node)
 {
-    if (node[alica::Strings::comment]) {
-        return node[alica::Strings::comment].as<std::string>();
-    } else {
+    if (!node[alica::Strings::comment] || YAML::NodeType::Null == node[alica::Strings::comment].Type()) {
         return alica::Strings::no_comment;
+    } else {
+        return node[alica::Strings::comment].as<std::string>();
     }
 }
 
@@ -269,12 +269,12 @@ int64_t ModelManager::getReferencedId(const YAML::Node& node)
     return id;
 }
 
-bool ModelManager::idExists(int64_t id)
+bool ModelManager::idExists(const int64_t id)
 {
     return this->elements.find(id) != this->elements.end();
 }
 
-AlicaElement* ModelManager::getElement(const int64_t id)
+const AlicaElement* ModelManager::getElement(const int64_t id)
 {
     auto mapEntry = this->elements.find(id);
     if (mapEntry != this->elements.end()) {

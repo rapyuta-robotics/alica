@@ -1,4 +1,3 @@
-
 #include "engine/AlicaEngine.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IConditionCreator.h"
@@ -58,12 +57,10 @@ AlicaEngine::AlicaEngine(
     PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
-//    this->planParser = new PlanParser(this->planRepository);
-//    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-//    this->roleSet = this->planParser->parseRoleSet(roleSetName);
 
     this->modelManager = new ModelManager(this->planRepository);
     this->masterPlan = this->modelManager->loadPlanTree(masterPlanName);
+    ALICA_DEBUG_MSG("AE: MasterPlan:"  << this->masterPlan->toString());
     this->roleSet = this->modelManager->loadRoleSet(roleSetName);
 
     _teamManager = new TeamManager(this, true);
