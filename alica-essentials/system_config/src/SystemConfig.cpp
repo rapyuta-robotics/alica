@@ -60,6 +60,9 @@ SystemConfig::SystemConfig()
     if (!FileSystem::pathExists(configPath)) {
         cerr << "SC: Could not find config directory: \"" << configPath << "\"" << endl;
     }
+    if (!essentials::FileSystem::endsWith(configPath, essentials::FileSystem::PATH_SEPARATOR)) {
+        configPath = configPath + essentials::FileSystem::PATH_SEPARATOR;
+    }
 
     logPath = FileSystem::combinePaths(rootPath, "/log/temp");
     if (!FileSystem::pathExists(logPath)) {
