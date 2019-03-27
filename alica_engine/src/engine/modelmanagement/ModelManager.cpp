@@ -103,8 +103,8 @@ Plan* ModelManager::createPlan(const YAML::Node& node)
     if (node[alica::Strings::utilityThreshold]) {
         plan->_utilityThreshold = node[alica::Strings::utilityThreshold].as<double>();
     }
-    if (node[alica::Strings::entryPoint]) {
-        this->createEntryPoints(node[alica::Strings::entryPoint], plan);
+    if (node[alica::Strings::entryPoints]) {
+        this->createEntryPoints(node[alica::Strings::entryPoints], plan);
     }
 
     /*
@@ -190,6 +190,7 @@ void ModelManager::createEntryPoints(const YAML::Node& entryPoints, Plan* plan)
         if (epNode[alica::Strings::task]) {
             this->epTaskReferences.push_back(std::pair<int64_t, int64_t>(ep->getId(), this->getReferencedId(epNode[alica::Strings::task])));
         }
+        constructedEntryPoints.push_back(ep);
     }
 
     // SORT EntryPoints
@@ -262,11 +263,12 @@ void ModelManager::storeElement(AlicaElement* ael, const std::string& type)
 int64_t ModelManager::getReferencedId(const YAML::Node& node)
 {
     std::string idString = node.as<std::string>();
-    std::cout << "MM: ID string is '" << idString << "' " << std::endl;
-    // TODO: handle stuff like "ServiceRobotsTasks.tsk#1528875085489"
-
-    int64_t id = node.as<int64_t>();
-    return id;
+    std::size_t idxOfHashtag = idString.find_last_of("#");
+    if (idxOfHashtag == std::string::npos) {
+        return node.as<int64_t>();
+    } else {
+        return stol(idString.substr(idxOfHashtag+1, idString.size()-idxOfHashtag));
+    }
 }
 
 bool ModelManager::idExists(const int64_t id)

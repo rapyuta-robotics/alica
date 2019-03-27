@@ -44,6 +44,8 @@ public:
     const TransitionGrp& getTransitions() const { return _transitions; }
     const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
 
+    std::string toString() const;
+
 private:
     friend ModelFactory;
     friend ModelManager;
