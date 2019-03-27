@@ -41,7 +41,7 @@ public:
     void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
     const RoleSet* parseRoleSet(std::string roleSetName);
-    int64_t parserId(YAML::Node node);
+    int64_t parseId(YAML::Node node);
     int64_t fetchId(const std::string& idString);
 
 private:

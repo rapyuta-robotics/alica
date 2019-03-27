@@ -20,11 +20,23 @@ AlicaElement::AlicaElement(int64_t id, const std::string& name)
 {
 }
 
+AlicaElement::AlicaElement(int64_t id, const std::string& name, const std::string& comment)
+        : _id(id)
+        , _name(name)
+        , _comment(comment)
+{
+}
+
 AlicaElement::~AlicaElement() {}
 
 void AlicaElement::setName(const std::string& name)
 {
     _name = name;
+}
+
+void AlicaElement::setComment(const std::string& comment)
+{
+    _comment = comment;
 }
 
 void AlicaElement::setId(int64_t id)
@@ -35,7 +47,7 @@ void AlicaElement::setId(int64_t id)
 std::string AlicaElement::toString() const
 {
     std::stringstream ss;
-    ss << "ID: " << getId() << " Name: " << getName() << std::endl;
+    ss << "ID: " << getId() << " Name: " << getName() << " Comment: " << getComment() << std::endl;
     return ss.str();
 }
 
