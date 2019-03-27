@@ -3,11 +3,6 @@
 #include "AbstractPlan.h"
 #include "engine/Types.h"
 
-namespace YAML {
-    template <typename T>
-    struct convert;
-}
-
 namespace alica
 {
 
@@ -51,7 +46,6 @@ public:
     const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
 
 private:
-    friend YAML::convert<alica::Plan*>;
     friend ModelFactory;
     friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);

@@ -112,8 +112,6 @@ namespace alica
 
     Plan* ModelFactory::createPlan(YAML::Node& node)
     {
-//        Plan* plan = node.as<alica::Plan*>();
-//        std::cout << plan->getId() << std::endl;
         Plan* plan = new Plan(this->parser->parserId(node));
         // insert into elements map
         addElement(plan);
@@ -147,6 +145,7 @@ namespace alica
             constructedEntryPoints[i]->_index = i;
             plan->_entryPoints.push_back(constructedEntryPoints[i]);
         }
+
         // TODO: calculate when all EntryPoints are parsed
 //        if(node["minCardinality"]) {
 //            plan->setMinCardinality(stoi(node["minCardinality"].as<std::string>()));
