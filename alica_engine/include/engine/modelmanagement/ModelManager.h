@@ -26,7 +26,7 @@ public:
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
-    bool idExists(int64_t id);
+    bool idExists(const int64_t id);
 
 private:
     essentials::SystemConfig* sc;
@@ -60,6 +60,7 @@ private:
     ReferenceList planningProblemPlanWaitReferences;
     ReferenceList planningProblemPlanAlternativeReferences;
 
+    const AlicaElement* getElement(const int64_t id);
     const std::string getBasePath(const std::string& configKey);
     AlicaElement* parseFile(const std::string& currentFile, const std::string& type);
 
@@ -67,7 +68,7 @@ private:
     void createEntryPoints(const YAML::Node& entryPoints, Plan* plan);
 
     int64_t getReferencedId(const YAML::Node& node);
-    AlicaElement* getElement(const int64_t id);
+
     int64_t getId(const YAML::Node& node);
     std::string getName(const YAML::Node& node);
     std::string getComment(const YAML::Node& node);
