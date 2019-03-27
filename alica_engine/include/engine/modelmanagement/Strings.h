@@ -14,6 +14,7 @@ namespace alica {
         static const std::string taskrepository_extension = ".tsk";
         static const std::string task = "task";
         static const std::string state = "state";
+        static const std::string entryPoint = "entryPoint";
 
 
         static const std::string id = "id";
@@ -21,7 +22,7 @@ namespace alica {
         static const std::string no_name = "no_name";
         static const std::string comment = "comment";
         static const std::string no_comment = "no_comment";
-        static const std::string entryPoint = "entryPoint";
+        static const std::string entryPoints = "entryPoints";
         static const std::string masterPlan = "masterPlan";
         static const std::string utilityThreshold = "utilityThreshold";
         static const std::string minCardinality = "minCardinality";

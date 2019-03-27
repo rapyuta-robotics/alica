@@ -103,4 +103,14 @@ void Plan::setTransitions(const TransitionGrp& transitions)
     _transitions = transitions;
 }
 
+std::string Plan::toString() const
+{
+    std::stringstream ss;
+    ss << AbstractPlan::toString();
+    for (const EntryPoint* ep : this->_entryPoints) {
+        ss << ep->toString();
+    }
+    return ss.str();
+}
+
 } // namespace alica
