@@ -40,7 +40,7 @@ std::string PlanType::toString() const
     return ss.str();
 }
 
-void PlanType::setParametrisation(const ParametrisationGrp& parametrisation)
+void PlanType::setParametrisation(const VariableBindingGrp& parametrisation)
 {
     _parametrisation = parametrisation;
 }

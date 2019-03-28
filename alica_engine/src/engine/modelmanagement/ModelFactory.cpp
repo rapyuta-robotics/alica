@@ -9,7 +9,7 @@
 #include "engine/model/FailureState.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Parameter.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/PlanningProblem.h"
@@ -112,48 +112,6 @@ namespace alica
     Plan* ModelFactory::createPlan(YAML::Node& node)
     {
         Plan* plan = new Plan(this->parser->parseId(node));
-        // insert into elements map
-        addElement(plan);
-        // insert into plan repository map
-        this->rep->_plans.emplace(plan->getId(), plan);
-
-        plan->setFileName(this->parser->getCurrentFile());
-        setAlicaElementAttributes(plan, node);
-
-        if (node["masterPlan"]) {
-            node["masterPlan"].as<std::string>() == ("true") ? plan->setMasterPlan(true) : plan->setMasterPlan(false);
-        }
-        if(node["utilityThreshold"]) {
-            plan->_utilityThreshold = node["utilityThreshold"].as<std::double_t>();
-        }
-
-        std::vector<EntryPoint*> constructedEntryPoints;
-        const YAML::Node& entryPoints = node[entryPoints];
-        for (YAML::const_iterator it = entryPoints.begin(); it != entryPoints.end(); ++it) {
-            const YAML::Node& epNode = *it;
-            EntryPoint* ep = createEntryPoint(epNode);
-            constructedEntryPoints.push_back(ep);
-            ep->setPlan(plan);
-        }
-        // Sort entrypoints:
-        std::sort(constructedEntryPoints.begin(), constructedEntryPoints.end(),
-                  [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
-        plan->_entryPoints.reserve(constructedEntryPoints.size());
-        // set indices and add to plan:
-        for (int i = 0; i < static_cast<int>(constructedEntryPoints.size()); ++i) {
-            constructedEntryPoints[i]->_index = i;
-            plan->_entryPoints.push_back(constructedEntryPoints[i]);
-        }
-
-        // TODO: calculate when all EntryPoints are parsed
-//        if(node["minCardinality"]) {
-//            plan->setMinCardinality(stoi(node["minCardinality"].as<std::string>()));
-//        }
-//        if(node["maxCardinality"]) {
-//            plan->setMaxCardinality(stoi(node["maxCardinality"].as<std::string>()));
-//        }
-
-
         /*
         // tinyxml2::XMLElement* curChild = element->FirstChildElement();
 
@@ -428,10 +386,6 @@ namespace alica
         beh->setId(this->parser->parseId(node));
         beh->setFileName(this->parser->getCurrentFile());
 
-        if(node["masterPlan"] && node["masterPlan"].as<std::string>() == "true") {
-            beh->setMasterPlan(true);
-        }
-
         if(node["receiveRemoteCommand"] && node["receiveRemoteCommand"].as<std::string>() == "true") {
             beh->setEventDriven(true);
         }
@@ -501,7 +455,7 @@ namespace alica
             }
         } else if (node["parametrisation"]) {
             for(unsigned i=0;i< node["parametrisation"].size();i++) {
-                const Parametrisation *para = createParametrisation(node["parametrisation"][i]);
+                const VariableBinding *para = createParametrisation(node["parametrisation"][i]);
                 pt->_parametrisation.push_back(para);
             }
         } else {
@@ -948,9 +902,9 @@ namespace alica
         return s;
     }
 
-    Parametrisation* ModelFactory::createParametrisation(YAML::Node node)
+    VariableBinding* ModelFactory::createParametrisation(YAML::Node node)
     {
-        Parametrisation* para = new Parametrisation();
+        VariableBinding* para = new VariableBinding();
         para->setId(this->parser->parseId(node));
         setAlicaElementAttributes(para, node);
 
@@ -1119,7 +1073,7 @@ namespace alica
 
         // paramSubPlanReferences
         for (pair<int64_t, int64_t> pairs : this->paramSubPlanReferences) {
-            Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+            VariableBinding* p = (VariableBinding*) this->elements.find(pairs.first)->second;
             AbstractPlan* ap = (AbstractPlan*) this->elements.find(pairs.second)->second;
             p->setSubPlan(ap);
         }
@@ -1127,7 +1081,7 @@ namespace alica
 
         // paramSubVarReferences
         for (pair<int64_t, int64_t> pairs : this->paramSubVarReferences) {
-            Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+            VariableBinding* p = (VariableBinding*) this->elements.find(pairs.first)->second;
             Variable* ap = (Variable*) this->elements.find(pairs.second)->second;
             p->setSubVar(ap);
         }
@@ -1135,7 +1089,7 @@ namespace alica
 
         // paramVarReferences
         for (pair<int64_t, int64_t> pairs : this->paramVarReferences) {
-            Parametrisation* p = (Parametrisation*) this->elements.find(pairs.first)->second;
+            VariableBinding* p = (VariableBinding*) this->elements.find(pairs.first)->second;
             Variable* v = (Variable*) this->elements.find(pairs.second)->second;
             p->setVar(v);
         }

@@ -14,6 +14,7 @@ namespace alica
 class Plan;
 class State;
 class Task;
+class EntryPointFactory;
 
 /**
  * An EntryPoint is used to identify the initial state of a task within a plan.
@@ -52,7 +53,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend ModelManager;
+    friend EntryPointFactory;
     void computeReachabilitySet();
     void setTask(Task* task);
     void setPlan(Plan* plan);

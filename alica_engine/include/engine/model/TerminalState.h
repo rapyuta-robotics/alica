@@ -1,13 +1,4 @@
-/*
- * ExitPoint.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef TERMINALSTATE_H_
-#define TERMINALSTATE_H_
-
+#pragma once
 #include "State.h"
 
 namespace alica
@@ -31,5 +22,3 @@ protected:
 };
 
 } // namespace alica
-
-#endif /* TERMINALSTATE_H_ */

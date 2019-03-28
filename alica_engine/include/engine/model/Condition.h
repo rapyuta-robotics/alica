@@ -14,6 +14,7 @@ class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
 class ModelFactory;
+class PreConditionFactory;
 class ExpressionHandler;
 
 /**
@@ -46,6 +47,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend PreConditionFactory;
     friend ExpressionHandler;
 
     void setConditionString(const std::string& conditionString);

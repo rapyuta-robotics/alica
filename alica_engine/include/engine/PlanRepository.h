@@ -1,12 +1,4 @@
-/*
- * PlanRepository.h
- *
- *  Created on: May 28, 2014
- *      Author: Paul Panin
- */
-
-#ifndef PLANREPOSITORY_H_
-#define PLANREPOSITORY_H_
+#pragma once
 
 #include <iostream>
 #include <unordered_map>
@@ -28,10 +20,11 @@ class SyncTransition;
 class TaskRepository;
 class Task;
 class Transition;
+class Condition;
 class Variable;
 class PlanningProblem;
 class ModelFactory;
-class ModelManager;
+class Factory;
 class ExpressionHandler;
 
 /**
@@ -113,6 +106,7 @@ public:
     const Accessor<TaskRepository> getTaskRepositorys() const { return Accessor<TaskRepository>(_taskRepositories); }
     const Accessor<Task> getTasks() const { return Accessor<Task>(_tasks); }
     const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
+    const Accessor<Condition> getConditoins() const { return Accessor<Condition>(_conditions); }
     const Accessor<Variable> getVariables() const { return Accessor<Variable>(_variables); }
     const Accessor<PlanningProblem> getPlanningProblems() const { return Accessor<PlanningProblem>(_planningProblems); }
 
@@ -126,7 +120,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend ModelManager;
+    friend Factory;
     friend ExpressionHandler;
     MapType<Plan> _plans;
     MapType<Task> _tasks;
@@ -139,6 +133,7 @@ private:
     MapType<State> _states;
     MapType<EntryPoint> _entryPoints;
     MapType<Transition> _transitions;
+    MapType<Condition> _conditions;
     MapType<SyncTransition> _syncTransitions;
     MapType<Quantifier> _quantifiers;
     MapType<Variable> _variables;
@@ -147,4 +142,3 @@ private:
     MapType<PlanningProblem> _planningProblems;
 };
 } // namespace alica
-#endif /* PLANREPOSITORY_H_ */

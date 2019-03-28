@@ -1,10 +1,3 @@
-/*
- * Plan.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Plan.h"
 
 #include <assert.h>
@@ -20,6 +13,7 @@ Plan::Plan(int64_t id)
         , _postCondition(nullptr)
         , _minCardinality(0)
         , _maxCardinality(0)
+        , _masterPlan(false)
         , _utilityThreshold(1.0)
 {
 }
@@ -78,6 +72,11 @@ void Plan::setMinCardinality(int minCardinality)
     _minCardinality = minCardinality;
 }
 
+void Plan::setMasterPlan(bool masterPlan)
+{
+    _masterPlan = masterPlan;
+}
+
 void Plan::setPostCondition(const PostCondition* postCondition)
 {
     _postCondition = postCondition;
@@ -109,6 +108,9 @@ std::string Plan::toString() const
     ss << AbstractPlan::toString();
     for (const EntryPoint* ep : this->_entryPoints) {
         ss << ep->toString();
+    }
+    for (const State* state : this->_states) {
+        ss << state->toString();
     }
     return ss.str();
 }

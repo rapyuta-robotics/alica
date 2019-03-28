@@ -1,10 +1,3 @@
-/*
- * ExitPoint.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/TerminalState.h"
 #include "engine/model/PostCondition.h"
 

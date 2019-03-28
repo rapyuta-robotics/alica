@@ -1,12 +1,4 @@
-/*
- * Transition.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef TRANSITION_H_
-#define TRANSITION_H_
+#pragma once
 
 #include "AlicaElement.h"
 #include <engine/RunningPlan.h>
@@ -19,6 +11,7 @@ class State;
 class SyncTransition;
 class PreCondition;
 class ModelFactory;
+class TransitionFactory;
 class ExpressionHandler;
 
 /**
@@ -39,6 +32,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend TransitionFactory;
     friend ExpressionHandler;
     void setPreCondition(PreCondition* preCondition);
     void setInState(State* inState);
@@ -64,5 +58,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* TRANSITION_H_ */

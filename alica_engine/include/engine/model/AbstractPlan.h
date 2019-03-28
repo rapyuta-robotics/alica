@@ -16,8 +16,8 @@ class PreCondition;
 class RuntimeCondition;
 class UtilityFunction;
 class ModelFactory;
-class ModelManager;
 class ExpressionHandler;
+class ModelManager;
 
 /**
  * Super class of plans, plantypes and behaviours.
@@ -33,7 +33,6 @@ public:
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
 
-    bool isMasterPlan() const { return _masterPlan; }
     AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
     const VariableGrp& getVariables() const { return _variables; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
@@ -50,7 +49,6 @@ private:
     friend ModelManager;
     friend ExpressionHandler;
 
-    void setMasterPlan(bool isMasterPlan);
 
     void setFileName(const std::string& fileName);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
@@ -69,10 +67,6 @@ private:
 
     VariableGrp _variables;
 
-    /**
-     *  Whether this plan is marked as a MasterPlan.
-     */
-    bool _masterPlan;
     std::string _fileName;
 };
 

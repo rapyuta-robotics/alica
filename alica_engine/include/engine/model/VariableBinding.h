@@ -1,12 +1,4 @@
-/*
- * Parametrisation.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef PARAMETRISATION_H_
-#define PARAMETRISATION_H_
+#pragma once
 
 #include <string>
 
@@ -17,11 +9,11 @@ namespace alica
 class Variable;
 class AbstractPlan;
 
-class Parametrisation : public AlicaElement
+class VariableBinding : public AlicaElement
 {
 public:
-    Parametrisation();
-    virtual ~Parametrisation();
+    VariableBinding();
+    virtual ~VariableBinding();
 
     std::string toString() const override;
 
@@ -43,4 +35,3 @@ protected:
 
 } // namespace alica
 
-#endif /* PARAMETRISATION_H_ */

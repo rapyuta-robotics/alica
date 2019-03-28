@@ -25,7 +25,7 @@ namespace alica
 
 class PlanRepository;
 class Condition;
-class Parametrisation;
+class VariableBinding;
 class TaskRepository;
 class PostCondition;
 class PreCondition;
@@ -77,7 +77,7 @@ private:
     void createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDocument* doc);
 
     tinyxml2::XMLElement* createStateXMLNode(const State* s, tinyxml2::XMLDocument* doc);
-    tinyxml2::XMLElement* createParametrisationXMLNode(const Parametrisation* p, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createParametrisationXMLNode(const VariableBinding* p, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createResultXMLNode(const PostCondition* r, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createPreConditionXMLNode(const PreCondition* c, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createSynchronisationXMLNode(const SyncTransition* s, tinyxml2::XMLDocument* doc);

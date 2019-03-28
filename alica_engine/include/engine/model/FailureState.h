@@ -1,12 +1,4 @@
-/*
- * FailurePoint.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef FAILURESTATE_H_
-#define FAILURESTATE_H_
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -17,7 +9,7 @@ namespace alica
 {
 
 /**
- * A terminal failure state in a plan. Indicates unsuccesful termination.
+ * A terminal failure state in a plan. Indicates unsuccessful termination.
  */
 class FailureState : public TerminalState
 {
@@ -28,5 +20,3 @@ public:
 };
 
 } // namespace alica
-
-#endif /* FAILURESTATE_H_ */
