@@ -1,12 +1,4 @@
-/*
- * SuccessState.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef SUCCESSSTATE_H_
-#define SUCCESSSTATE_H_
+#pragma once
 
 #include <string>
 
@@ -26,5 +18,3 @@ public:
 };
 
 } // namespace alica
-
-#endif /* SUCCESSSTATE_H_ */

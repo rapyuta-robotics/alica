@@ -12,7 +12,7 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 

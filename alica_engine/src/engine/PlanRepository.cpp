@@ -8,7 +8,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/Quantifier.h"
@@ -42,7 +42,7 @@ bool checkVarsInParametrisations(const Plan* p)
 {
     const VariableGrp& pvars = p->getVariables();
     for (const State* s : p->getStates()) {
-        for (const Parametrisation* pr : s->getParametrisation()) {
+        for (const VariableBinding* pr : s->getParametrisation()) {
             if (std::find(pvars.begin(), pvars.end(), pr->getVar()) == pvars.end()) {
                 std::cerr << "Variable " << pr->getVar()->toString() << " used in Parametrisation of state " << s->toString() << " in Plan " << p->toString()
                           << " is not properly contained in the plan." << std::endl;

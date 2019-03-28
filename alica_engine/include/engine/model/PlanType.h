@@ -10,7 +10,7 @@
 namespace alica
 {
 class Plan;
-class Parametrisation;
+class VariableBinding;
 class ModelFactory;
 
 class PlanType : public AbstractPlan
@@ -21,17 +21,17 @@ public:
 
     std::string toString() const override;
 
-    const ParametrisationGrp& getParametrisation() const { return _parametrisation; }
+    const VariableBindingGrp& getParametrisation() const { return _parametrisation; }
     const PlanGrp& getPlans() const { return _plans; }
     const Plan* getPlanById(int64_t id) const;
 
 private:
     friend ModelFactory;
-    void setParametrisation(const ParametrisationGrp& parametrisation);
+    void setParametrisation(const VariableBindingGrp& parametrisation);
     void setPlans(const PlanGrp& plans);
 
     PlanGrp _plans;
-    ParametrisationGrp _parametrisation;
+    VariableBindingGrp _parametrisation;
 };
 
 } // namespace alica

@@ -1,10 +1,3 @@
-/*
- * Transition.cpp
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Transition.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"

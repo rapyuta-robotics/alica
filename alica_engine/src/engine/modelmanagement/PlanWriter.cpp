@@ -13,7 +13,7 @@
 #include "engine/model/FailureState.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Parameter.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/PlanningProblem.h"
@@ -352,7 +352,7 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::X
         xs->SetAttribute("entryPoint", to_string(s->getEntryPoint()->getId()).c_str());
     }
 
-    for (const Parametrisation* p : s->getParametrisation()) {
+    for (const VariableBinding* p : s->getParametrisation()) {
         xs->InsertEndChild(createParametrisationXMLNode(p, doc));
     }
 
@@ -415,7 +415,7 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::X
     return xs;
 }
 
-tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(const Parametrisation* p, tinyxml2::XMLDocument* doc)
+tinyxml2::XMLElement* PlanWriter::createParametrisationXMLNode(const VariableBinding* p, tinyxml2::XMLDocument* doc)
 {
     tinyxml2::XMLElement* xr = doc->NewElement("parametrisation");
     addPlanElementAttributes(p, xr);

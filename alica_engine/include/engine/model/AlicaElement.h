@@ -6,7 +6,7 @@
 namespace alica
 {
 class ModelFactory;
-class ModelManager;
+class Factory;
 /**
  * Base class of all model elements
  */
@@ -33,7 +33,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend ModelManager;
+    friend Factory;
     void setId(int64_t id);
     void setName(const std::string& name);
     void setComment(const std::string& comment);

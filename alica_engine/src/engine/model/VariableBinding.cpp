@@ -1,11 +1,4 @@
-/*
- * Parametrisation.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 
 #include <sstream>
 
@@ -15,35 +8,35 @@
 namespace alica
 {
 
-Parametrisation::Parametrisation()
+VariableBinding::VariableBinding()
         : _subPlan(nullptr)
         , _subVar(nullptr)
         , _var(nullptr)
 {
 }
 
-Parametrisation::~Parametrisation() {}
+VariableBinding::~VariableBinding() {}
 
-std::string Parametrisation::toString() const
+std::string VariableBinding::toString() const
 {
     std::stringstream ss;
-    ss << "[Parametrisation: Var=" << _var->getId();
+    ss << "[VariableBinding: Var=" << _var->getId();
     ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getId() << "), ";
     ss << "SubPlan=" << _subPlan->getName() << "]" << std::endl;
     return ss.str();
 }
 
-void Parametrisation::setSubPlan(const AbstractPlan* subPlan)
+void VariableBinding::setSubPlan(const AbstractPlan* subPlan)
 {
     _subPlan = subPlan;
 }
 
-void Parametrisation::setSubVar(const Variable* subVar)
+void VariableBinding::setSubVar(const Variable* subVar)
 {
     _subVar = subVar;
 }
 
-void Parametrisation::setVar(const Variable* var)
+void VariableBinding::setVar(const Variable* var)
 {
     _var = var;
 }

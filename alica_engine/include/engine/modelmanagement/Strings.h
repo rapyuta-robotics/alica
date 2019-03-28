@@ -15,14 +15,31 @@ namespace alica {
         static const std::string task = "task";
         static const std::string state = "state";
         static const std::string entryPoint = "entryPoint";
+        static const std::string transition = "transition";
+        static const std::string synchronisation = "synchronisation";
+        static const std::string precondition = "precondition";
 
 
         static const std::string id = "id";
         static const std::string name = "name";
         static const std::string no_name = "no_name";
         static const std::string comment = "comment";
+        static const std::string pluginName = "pluginName";
+        static const std::string conditionString = "conditionString";
+        static const std::string enabled = "enabled";
         static const std::string no_comment = "no_comment";
         static const std::string entryPoints = "entryPoints";
+        static const std::string states = "states";
+        static const std::string inState = "inState";
+        static const std::string outState = "outState";
+        static const std::string parentPlan = "parentPlan";
+        static const std::string transitions = "transitions";
+        static const std::string inTransitions = "inTransitions";
+        static const std::string outTransitions = "outTransitions";
+        static const std::string variables = "variables";
+        static const std::string quantifiers = "quantifiers";
+        static const std::string abstractPlans = "abstractPlans";
+        static const std::string variableBindings = "variableBindings";
         static const std::string masterPlan = "masterPlan";
         static const std::string utilityThreshold = "utilityThreshold";
         static const std::string minCardinality = "minCardinality";

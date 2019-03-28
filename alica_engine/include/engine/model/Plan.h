@@ -14,6 +14,8 @@ class State;
 class SyncTransition;
 class Transition;
 class ExpressionHandler;
+class PlanFactory;
+
 /**
  * An ALICA plan
  */
@@ -35,6 +37,7 @@ public:
 
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
+    bool isMasterPlan() const { return _masterPlan; }
 
     UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
     double getUtilityThreshold() const { return _utilityThreshold; }
@@ -48,13 +51,14 @@ public:
 
 private:
     friend ModelFactory;
-    friend ModelManager;
+    friend PlanFactory;
     friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);
     void setSuccessStates(const SuccessStateGrp& succesPoints);
     void setMaxCardinality(int maxCardinality);
     void setMinCardinality(int minCardinality);
+    void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
     void setStates(const StateGrp& states);
     void setSyncTransitions(const SyncTransitionGrp& syncTransitions);
@@ -78,6 +82,10 @@ private:
      * The utility threshold, the higher, the less likely dynamic changes are.
      */
     double _utilityThreshold;
+    /**
+     *  Whether this plan is marked as a MasterPlan.
+     */
+    bool _masterPlan;
 };
 
 } // namespace alica

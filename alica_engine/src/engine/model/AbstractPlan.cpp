@@ -15,7 +15,6 @@ namespace alica
 
 AbstractPlan::AbstractPlan()
         : AlicaElement()
-        , _masterPlan(false)
         , _preCondition(nullptr)
         , _runtimeCondition(nullptr)
 
@@ -26,7 +25,6 @@ AbstractPlan::AbstractPlan()
 
 AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
-        , _masterPlan(false)
         , _preCondition(nullptr)
         , _runtimeCondition(nullptr)
 {
@@ -40,7 +38,6 @@ std::string AbstractPlan::toString() const
 {
     std::stringstream ss;
     ss << AlicaElement::toString();
-    ss << "IsMasterPlan: " << (isMasterPlan() ? "true" : "false") << std::endl;
     ss << "Filename: " << _fileName << std::endl;
     return ss.str();
 }
@@ -74,10 +71,7 @@ bool AbstractPlan::containsVar(const std::string& name) const
     return false;
 }
 
-void AbstractPlan::setMasterPlan(bool masterPlan)
-{
-    _masterPlan = masterPlan;
-}
+
 
 void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
 {
