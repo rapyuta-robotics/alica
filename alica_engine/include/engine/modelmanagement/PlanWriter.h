@@ -80,7 +80,7 @@ private:
     tinyxml2::XMLElement* createParametrisationXMLNode(const VariableBinding* p, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createResultXMLNode(const PostCondition* r, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createPreConditionXMLNode(const PreCondition* c, tinyxml2::XMLDocument* doc);
-    tinyxml2::XMLElement* createSynchronisationXMLNode(const SyncTransition* s, tinyxml2::XMLDocument* doc);
+    tinyxml2::XMLElement* createSynchronisationXMLNode(const Synchronisation* s, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createTransitionXMLNode(const Transition* t, tinyxml2::XMLDocument* doc);
     tinyxml2::XMLElement* createEntryPointXMLNode(const EntryPoint* e, tinyxml2::XMLDocument* doc);
 

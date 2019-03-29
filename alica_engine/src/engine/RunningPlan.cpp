@@ -71,7 +71,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
 {
-    _activeTriple.plan = plan;
+    _activeTriple.abstractPlan = plan;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
@@ -161,15 +161,23 @@ void RunningPlan::setAllocationNeeded(bool need)
  */
 bool RunningPlan::evalPreCondition() const
 {
-    if (_activeTriple.plan == nullptr) {
+    if (_activeTriple.abstractPlan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         assert(false);
     }
-    if (_activeTriple.plan->getPreCondition() == nullptr) {
+
+    const PreCondition* preCondition = nullptr;
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        preCondition = behaviour->getPreCondition();
+    }
+    if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        preCondition = plan->getPreCondition();
+    }
+    if (preCondition == nullptr) {
         return true;
     }
     try {
-        return _activeTriple.plan->getPreCondition()->evaluate(*this);
+        return preCondition->evaluate(*this);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -182,20 +190,27 @@ bool RunningPlan::evalPreCondition() const
  */
 bool RunningPlan::evalRuntimeCondition() const
 {
-    if (_activeTriple.plan == nullptr) {
+    if (_activeTriple.abstractPlan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
-    if (_activeTriple.plan->getRuntimeCondition() == nullptr) {
+    const RuntimeCondition* runtimeCondition = nullptr;
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        runtimeCondition = behaviour->getRuntimeCondition();
+    }
+    if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        runtimeCondition = plan->getRuntimeCondition();
+    }
+    if (runtimeCondition== nullptr) {
         _status.runTimeConditionStatus = EvalStatus::True;
         return true;
     }
     try {
-        bool ret = _activeTriple.plan->getRuntimeCondition()->evaluate(*this);
+        bool ret = runtimeCondition->evaluate(*this);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.plan->getName() << " " << e.what());
+        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what());
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -246,16 +261,16 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cout << "END CHILDREN of " << (_activeTriple.plan == nullptr ? "NULL" : _activeTriple.plan->getName()) << std::endl;
+        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
     }
 }
 
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
-    if (_activeTriple.plan != plan) {
+    if (_activeTriple.abstractPlan != plan) {
         _status.planStartTime = _ae->getAlicaClock()->now();
         revokeAllConstraints();
-        _activeTriple.plan = plan;
+        _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
     }
 }
@@ -285,7 +300,7 @@ void RunningPlan::useState(const State* s)
             } else if (s->isSuccessState()) {
                 AgentIDConstPtr mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->getTeamManager()->setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
+                _ae->getTeamManager()->setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
         }
     }
@@ -441,7 +456,7 @@ void RunningPlan::deactivate()
     if (isBehaviour()) {
         _ae->getBehaviourPool()->stopBehaviour(*this);
     } else {
-        _ae->getTeamObserver()->notifyRobotLeftPlan(_activeTriple.plan);
+        _ae->getTeamObserver()->notifyRobotLeftPlan(_activeTriple.abstractPlan);
     }
     revokeAllConstraints();
     deactivateChildren();
@@ -551,8 +566,14 @@ void RunningPlan::revokeAllConstraints()
 
 void RunningPlan::attachPlanConstraints()
 {
-    _constraintStore.addCondition(_activeTriple.plan->getPreCondition());
-    _constraintStore.addCondition(_activeTriple.plan->getRuntimeCondition());
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        _constraintStore.addCondition(behaviour->getPreCondition());
+        _constraintStore.addCondition(behaviour->getRuntimeCondition());
+    } else if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        _constraintStore.addCondition(plan->getPreCondition());
+        _constraintStore.addCondition(plan->getRuntimeCondition());
+    }
+
 }
 
 bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
@@ -573,7 +594,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
         if (freezeAgent) {
             continue;
         }
-        if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
+        if (spt->getState()->getInPlan() != _activeTriple.abstractPlan) { // the robot is no longer participating in this plan
             if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
@@ -741,7 +762,7 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
 {
     out << "######## RP ##########" << std::endl;
     PlanStateTriple ptz = r.getActiveTriple();
-    out << "Plan: " + (ptz.plan != nullptr ? ptz.plan->getName() : "NULL") << std::endl;
+    out << "Plan: " + (ptz.abstractPlan != nullptr ? ptz.abstractPlan->getName() : "NULL") << std::endl;
     out << "PlanType: " << (r.getPlanType() != nullptr ? r.getPlanType()->getName() : "NULL") << std::endl;
     out << "ActState: " << (ptz.state != nullptr ? ptz.state->getName() : "NULL") << std::endl;
     out << "Task: " << (ptz.entryPoint != nullptr ? ptz.entryPoint->getTask()->getName() : "NULL") << std::endl;
@@ -763,10 +784,10 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     if (!r._children.empty()) {
         out << " ( ";
         for (const RunningPlan* c : r._children) {
-            if (c->_activeTriple.plan == nullptr) {
+            if (c->_activeTriple.abstractPlan == nullptr) {
                 out << "NULL PLAN, ";
             } else
-                out << c->_activeTriple.plan->getName() + ", ";
+                out << c->_activeTriple.abstractPlan->getName() + ", ";
         }
         out << ")";
     }

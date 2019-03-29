@@ -16,7 +16,7 @@ class Quantifier;
 class RoleDefinitionSet;
 class Role;
 class State;
-class SyncTransition;
+class Synchronisation;
 class TaskRepository;
 class Task;
 class Transition;
@@ -102,7 +102,7 @@ public:
     const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const { return Accessor<RoleDefinitionSet>(_roleDefinitionSets); }
     const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
     const Accessor<State> getStates() const { return Accessor<State>(_states); }
-    const Accessor<SyncTransition> getSyncTransitions() const { return Accessor<SyncTransition>(_syncTransitions); }
+    const Accessor<Synchronisation> getSynchronisations() const { return Accessor<Synchronisation>(_synchronisations); }
     const Accessor<TaskRepository> getTaskRepositorys() const { return Accessor<TaskRepository>(_taskRepositories); }
     const Accessor<Task> getTasks() const { return Accessor<Task>(_tasks); }
     const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
@@ -134,7 +134,7 @@ private:
     MapType<EntryPoint> _entryPoints;
     MapType<Transition> _transitions;
     MapType<Condition> _conditions;
-    MapType<SyncTransition> _syncTransitions;
+    MapType<Synchronisation> _synchronisations;
     MapType<Quantifier> _quantifiers;
     MapType<Variable> _variables;
     MapType<RoleDefinitionSet> _roleDefinitionSets;

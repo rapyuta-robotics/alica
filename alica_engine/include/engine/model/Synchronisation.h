@@ -1,12 +1,4 @@
-/*
- * SyncTransition.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef SYNCTRANSITION_H_
-#define SYNCTRANSITION_H_
+#pragma once
 
 #include <list>
 #include <sstream>
@@ -22,12 +14,13 @@ namespace alica
 class Plan;
 class Transition;
 class ModelFactory;
+class SynchronisationFactory;
 
-class SyncTransition : public AlicaElement
+class Synchronisation : public AlicaElement
 {
 public:
-    SyncTransition();
-    virtual ~SyncTransition();
+    Synchronisation();
+    virtual ~Synchronisation();
 
     bool isFailOnSyncTimeOut() const { return _failOnSyncTimeOut; }
 
@@ -42,6 +35,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend SynchronisationFactory;
     void setFailOnSyncTimeOut(bool failOnSyncTimeOut);
     void setSyncTimeOut(AlicaTime syncTimeOut);
     void setInSync(const TransitionGrp& inSync);
@@ -58,5 +52,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* SYNCTRANSITION_H_ */

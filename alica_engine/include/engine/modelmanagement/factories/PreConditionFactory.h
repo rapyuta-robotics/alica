@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Factory.h"
+#include "ConditionFactory.h"
 
 #include <vector>
 
 namespace alica {
     class PreCondition;
-    class PreConditionFactory : public Factory {
+    class PreConditionFactory : public ConditionFactory {
     public:
-        static PreCondition* create(const YAML::Node& preconditinNode, Plan* plan);
+        static PreCondition* create(const YAML::Node& preconditinNode, AbstractPlan* plan);
     };
 }

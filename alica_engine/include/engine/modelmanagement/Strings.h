@@ -17,7 +17,12 @@ namespace alica {
         static const std::string entryPoint = "entryPoint";
         static const std::string transition = "transition";
         static const std::string synchronisation = "synchronisation";
-        static const std::string precondition = "precondition";
+        static const std::string condition = "condition";
+        static const std::string preCondition = "preCondition";
+        static const std::string runtimeCondition = "runtimeCondition";
+        static const std::string postCondition = "postCondition";
+        static const std::string quantifier = "quantifier";
+        static const std::string variable = "variable";
 
 
         static const std::string id = "id";
@@ -39,11 +44,14 @@ namespace alica {
         static const std::string variables = "variables";
         static const std::string quantifiers = "quantifiers";
         static const std::string abstractPlans = "abstractPlans";
+        static const std::string variableType = "variableType";
+        static const std::string no_type = "no_type";
         static const std::string variableBindings = "variableBindings";
         static const std::string masterPlan = "masterPlan";
         static const std::string utilityThreshold = "utilityThreshold";
         static const std::string minCardinality = "minCardinality";
         static const std::string maxCardinality = "maxCardinality";
         static const std::string successRequired = "successRequired";
+        static const std::string synchronisations = "synchronisations";
     }
 }

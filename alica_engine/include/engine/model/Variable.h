@@ -9,6 +9,7 @@
 namespace alica
 {
 class ModelFactory;
+class VariableFactory;
 /**
  * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
  */
@@ -26,6 +27,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend VariableFactory;
     void setType(const std::string& type);
     std::string _type;
 };

@@ -23,12 +23,8 @@ ReferenceList Factory::planTypePlanReferences;
 ReferenceList Factory::rtmRoleReferences;
 ReferenceList Factory::charCapReferences;
 ReferenceList Factory::charCapValReferences;
-ReferenceList Factory::planningProblemPlanReferences;
-ReferenceList Factory::planningProblemPlanWaitReferences;
-ReferenceList Factory::planningProblemPlanAlternativeReferences;
 PlanRepository* Factory::planRepository;
 std::map<int64_t, AlicaElement*>* Factory::elements;
-
 
 int64_t Factory::getReferencedId(const YAML::Node& node)
 {
@@ -87,10 +83,17 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         planRepository->_states.emplace(ael->getId(), (State*) ael);
     } else if (alica::Strings::transition.compare(type) == 0) {
         planRepository->_transitions.emplace(ael->getId(), (Transition*) ael);
-    } else if (alica::Strings::precondition.compare(type) == 0) {
+    } else if (alica::Strings::condition.compare(type) == 0) {
         planRepository->_conditions.emplace(ael->getId(), (Condition*) ael);
+    } else if (alica::Strings::variable.compare(type) == 0) {
+        planRepository->_variables.emplace(ael->getId(), (Variable*) ael);
+    } else if (alica::Strings::quantifier.compare(type) == 0) {
+        planRepository->_quantifiers.emplace(ael->getId(), (Quantifier*) ael);
+    } else if (alica::Strings::synchronisation.compare(type) == 0) {
+        planRepository->_synchronisations.emplace(ael->getId(), (Synchronisation*) ael);
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing!");
     }
 }
+
 } // namespace alica

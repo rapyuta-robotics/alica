@@ -1,5 +1,4 @@
-#ifndef ROLESET_H_
-#define ROLESET_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -35,5 +34,3 @@ private:
 };
 
 } // namespace alica
-
-#endif /* ROLESET_H_ */

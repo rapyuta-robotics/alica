@@ -14,7 +14,7 @@ class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
 class ModelFactory;
-class PreConditionFactory;
+class ConditionFactory;
 class ExpressionHandler;
 
 /**
@@ -24,7 +24,6 @@ class Condition : public AlicaElement
 {
 public:
     Condition();
-    Condition(int64_t id);
     virtual ~Condition();
 
     /**
@@ -47,7 +46,7 @@ public:
 
 private:
     friend ModelFactory;
-    friend PreConditionFactory;
+    friend ConditionFactory;
     friend ExpressionHandler;
 
     void setConditionString(const std::string& conditionString);

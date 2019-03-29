@@ -14,7 +14,7 @@ class PreConditionFactory;
 class PreCondition : public Condition
 {
 public:
-    PreCondition(int64_t id = 0);
+    PreCondition();
     virtual ~PreCondition();
 
     std::string toString() const override;

@@ -3,9 +3,8 @@
 namespace alica
 {
 
-PreCondition::PreCondition(int64_t id)
-        : Condition(id)
-        , _enabled(true)
+PreCondition::PreCondition()
+        : _enabled(true)
 {
 }
 

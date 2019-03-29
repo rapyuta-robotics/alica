@@ -4,10 +4,7 @@
 namespace alica
 {
 
-PostCondition::PostCondition(int64_t id)
-        : Condition(id)
-{
-}
+PostCondition::PostCondition(){}
 
 PostCondition::~PostCondition() {}
 

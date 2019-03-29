@@ -33,9 +33,4 @@ void Behaviour::setDeferring(int deferring)
     _deferring = deferring;
 }
 
-void Behaviour::setFileName(const std::string& fileName)
-{
-    _fileName = fileName;
-}
-
 } // namespace alica

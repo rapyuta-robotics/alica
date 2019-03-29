@@ -12,12 +12,11 @@ namespace alica
 {
 
 class Variable;
-class PreCondition;
-class RuntimeCondition;
 class UtilityFunction;
 class ModelFactory;
 class ExpressionHandler;
 class ModelManager;
+class AbstractPlanFactory;
 
 /**
  * Super class of plans, plantypes and behaviours.
@@ -32,42 +31,34 @@ public:
 
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
+    const VariableGrp& getVariables() const { return _variables; }
+    const Variable* getVariable(const std::string& name) const;
 
     AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
-    const VariableGrp& getVariables() const { return _variables; }
-    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
-    const PreCondition* getPreCondition() const { return _preCondition; }
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
 
     std::string toString() const override;
     const std::string& getFileName() const { return _fileName; }
 
-    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
-    const Variable* getVariable(const std::string& name) const;
-
 private:
     friend ModelFactory;
     friend ModelManager;
+    friend AbstractPlanFactory;
     friend ExpressionHandler;
 
-
     void setFileName(const std::string& fileName);
-    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
-    void setPreCondition(PreCondition* preCondition);
+    /**
+     * The variables that are available in the context of this abstract plan.
+     */
+    VariableGrp _variables;
+
+    /**
+     * The file this abstract plan is parsed from/ written to.
+     */
+    std::string _fileName;
 
     // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;
-    /**
-     * This plan's runtime condition.
-     */
-    RuntimeCondition* _runtimeCondition;
-    /**
-     * This plan's precondition
-     */
-    PreCondition* _preCondition;
-
-    VariableGrp _variables;
-
-    std::string _fileName;
 };
 
 } // namespace alica
