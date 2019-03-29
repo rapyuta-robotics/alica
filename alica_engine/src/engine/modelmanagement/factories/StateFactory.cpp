@@ -23,10 +23,11 @@ State* StateFactory::create(const YAML::Node& stateNode)
             Factory::stateOutTransitionReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
         }
     }
+    // only works if plan designer generates stuff as real yaml list
     if (Factory::isValid(stateNode[alica::Strings::abstractPlans])) {
         const YAML::Node& abstractPlans = stateNode[alica::Strings::abstractPlans];
         for (YAML::const_iterator it = abstractPlans.begin(); it != abstractPlans.end(); ++it) {
-            Factory::statePlanReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
+            Factory::stateAbstractPlanReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
         }
     }
     if (Factory::isValid(stateNode[alica::Strings::variableBindings])) {

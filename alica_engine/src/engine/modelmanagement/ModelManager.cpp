@@ -25,8 +25,7 @@ ModelManager::ModelManager(PlanRepository* planRepository)
     this->basePlanPath = getBasePath("Alica.PlanDir");
     this->baseRolePath = getBasePath("Alica.RoleDir");
     this->baseTaskPath = getBasePath("Alica.TaskDir");
-    Factory::setElementsMap(elements);
-    Factory::setPlanRepository(this->planRepository);
+    Factory::setModelManager(this);
 }
 
 const std::string ModelManager::getBasePath(const std::string& configKey)
@@ -61,8 +60,12 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         AlicaEngine::abort("MM: Cannot find MasterPlan '" + masterPlanName + "'");
     }
 
-    //    this->filesParsed.push_back(masterPlanPath);
+    this->filesParsed.push_back(masterPlanPath);
     Plan* masterPlan = (Plan*) parseFile(masterPlanPath, alica::Strings::plan);
+    std::cout << "MM: filesToParse" << std::endl;
+    for (auto file : this->filesToParse) {
+        std::cout << file << std::endl;
+    }
     //    parseFileLoop();
 
     //    this->mf->computeReachabilities();
@@ -93,11 +96,6 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         return nullptr;
     }
 }
-
-
-
-
-
 
 bool ModelManager::idExists(const int64_t id)
 {
