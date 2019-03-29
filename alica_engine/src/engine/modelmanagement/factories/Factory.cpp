@@ -28,6 +28,7 @@ std::map<int64_t, AlicaElement*>* Factory::elements;
 
 int64_t Factory::getReferencedId(const YAML::Node& node)
 {
+    std::cout << node << std::endl;
     std::string idString = node.as<std::string>();
     std::size_t idxOfHashtag = idString.find_last_of("#");
     if (idxOfHashtag == std::string::npos) {

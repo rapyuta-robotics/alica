@@ -23,6 +23,7 @@ public:
     static void setPlanRepository(PlanRepository* planRepository);
     static void storeElement(AlicaElement* ael, const std::string& type);
     static void setAttributes(const YAML::Node& node, AlicaElement* ael);
+    static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
 
 protected:
     static ReferenceList stateInTransitionReferences;
@@ -54,22 +55,23 @@ private:
 template <typename T>
 T Factory::getValue(const YAML::Node& node, const std::string& key)
 {
-    if (!node[key] || YAML::NodeType::Null == node[key].Type()) {
+    if (isValid(node[key])) {
+        return node[key].as<T>();
+    } else {
+        std::cerr << "Error Node: " << node << std::endl;
         AlicaEngine::abort("Factory: Node does not provide an value for: ", key);
         // does not happen, because abort() cancels the current process
         return T();
-    } else {
-        return node[key].as<T>();
     }
 }
 
 template <typename T>
 T Factory::getValue(const YAML::Node& node, const std::string& key, T defaultValue)
 {
-    if (!node[key] || YAML::NodeType::Null == node[key].Type()) {
-        return defaultValue;
-    } else {
+    if (isValid(node[key])) {
         return node[key].as<T>();
+    } else {
+        return defaultValue;
     }
 }
 } // namespace alica
