@@ -888,7 +888,7 @@ namespace alica
             } else if (outTransitions.compare(val) == 0) {
 //                this->stateOutTransitionReferences.push_back(pair<int64_t, int64_t>(s->getId(), cid));
             } else if (plans.compare(val) == 0) {
-//                this->statePlanReferences.push_back(pair<int64_t, int64_t>(s->getId(), cid));
+//                this->stateAbstractPlanReferences.push_back(pair<int64_t, int64_t>(s->getId(), cid));
             } else if (parametrisation.compare(val) == 0) {
 //                Parametrisation* para = createParametrisation(curChild);
                 //              s->_parametrisation.push_back(para);
@@ -1046,7 +1046,7 @@ namespace alica
         }
         this->stateOutTransitionReferences.clear();
 
-        // statePlanReferences
+        // stateAbstractPlanReferences
         for (pair<int64_t, int64_t> pairs : this->statePlanReferences) {
             State* st = (State*) this->elements.find(pairs.first)->second;
             AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;

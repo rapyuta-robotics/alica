@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/AlicaEngine.h"
-#include "engine/PlanRepository.h"
+#include "engine/modelmanagement/ModelManager.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -14,21 +14,13 @@ class AlicaElement;
 class Factory
 {
 public:
-    template <typename T>
-    static T getValue(const YAML::Node& node, const std::string& key);
-    template <typename T>
-    static T getValue(const YAML::Node& node, const std::string& key, T defaultValue);
-    static int64_t getReferencedId(const YAML::Node& node);
-    static void setElementsMap(std::map<int64_t, AlicaElement*>& elements);
-    static void setPlanRepository(PlanRepository* planRepository);
-    static void storeElement(AlicaElement* ael, const std::string& type);
-    static void setAttributes(const YAML::Node& node, AlicaElement* ael);
-    static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
+    Factory() = delete;
+    static void setModelManager(ModelManager* modelManager);
 
 protected:
     static ReferenceList stateInTransitionReferences;
     static ReferenceList stateOutTransitionReferences;
-    static ReferenceList statePlanReferences;
+    static ReferenceList stateAbstractPlanReferences;
     static ReferenceList transitionSynchReferences;
     static ReferenceList transitionInStateReferences;
     static ReferenceList transitionOutStateReferences;
@@ -44,12 +36,20 @@ protected:
     static ReferenceList charCapReferences;
     static ReferenceList charCapValReferences;
 
-    static const AlicaElement* getElement(const int64_t id);
 
+    template <typename T>
+    static T getValue(const YAML::Node& node, const std::string& key);
+    template <typename T>
+    static T getValue(const YAML::Node& node, const std::string& key, T defaultValue);
+    static const AlicaElement* getElement(const int64_t id);
+    static int64_t getReferencedId(const std::string& referenceString);
+    static int64_t getReferencedId(const YAML::Node& referenceNode);
+    static std::vector<int64_t> getReferencedIds(const YAML::Node& referenceListNode);
+    static void storeElement(AlicaElement* ael, const std::string& type);
+    static void setAttributes(const YAML::Node& node, AlicaElement* ael);
+    static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
 private:
-    Factory() = delete;
-    static PlanRepository* planRepository;
-    static std::map<int64_t, AlicaElement*>* elements;
+    static ModelManager* modelManager;
 };
 
 template <typename T>

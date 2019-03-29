@@ -17,6 +17,7 @@ class PlanRepository;
 class AlicaElement;
 class Plan;
 class RoleSet;
+class Factory;
 
 /**
  * Parse the plan tree from disk and writes it back. Fills the PlanRepository and holds all existing elements.
@@ -31,11 +32,15 @@ public:
     bool idExists(const int64_t id);
 
 private:
+    friend Factory;
+
     essentials::SystemConfig* sc;
     std::string domainConfigFolder;
     std::string basePlanPath;
     std::string baseRolePath;
     std::string baseTaskPath;
+    std::list<std::string> filesToParse;
+    std::list<std::string> filesParsed;
 
     PlanRepository* planRepository;
     std::map<int64_t, AlicaElement*> elements;
