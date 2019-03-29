@@ -18,7 +18,7 @@ class State;
 class SuccessState;
 class FailureState;
 class Transition;
-class SyncTransition;
+class Synchronisation;
 class VariableBinding;
 class PreCondition;
 class PostCondition;
@@ -131,7 +131,7 @@ private:
     SuccessState* createSuccessState(tinyxml2::XMLElement* element);
     FailureState* createFailureState(tinyxml2::XMLElement* element);
     Transition* createTransition(tinyxml2::XMLElement* element, Plan* plan);
-    SyncTransition* createSyncTransition(tinyxml2::XMLElement* element);
+    Synchronisation* createSynchronisation(tinyxml2::XMLElement *element);
     Parameter* createParameter(tinyxml2::XMLElement* element);
     VariableBinding* createParametrisation(YAML::Node node);
     PreCondition* createPreCondition(tinyxml2::XMLElement* element);

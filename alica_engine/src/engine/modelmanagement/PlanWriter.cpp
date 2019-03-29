@@ -16,7 +16,6 @@
 #include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/PlanningProblem.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/Quantifier.h"
@@ -26,7 +25,7 @@
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/SuccessState.h"
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TaskRepository.h"
 #include "engine/model/Transition.h"
@@ -203,15 +202,6 @@ void PlanWriter::createPlanXMLNode(const Plan* p, tinyxml2::XMLDocument* doc)
         xc->SetAttribute("pluginName", p->getRuntimeCondition()->getPlugInName().c_str());
         addConditionChildren(p->getRuntimeCondition(), xc, doc);
     }
-    if (p->getPostCondition() != nullptr) {
-        tinyxml2::XMLElement* xc = doc->NewElement("conditions");
-        xp->InsertEndChild(xc);
-        xc->SetAttribute("xsi:type", "alica:postCondition");
-        addPlanElementAttributes(p->getPostCondition(), xc);
-        xc->SetAttribute("conditionString", p->getPostCondition()->getConditionString().c_str());
-        xc->SetAttribute("pluginName", p->getPostCondition()->getPlugInName().c_str());
-        addConditionChildren(p->getPostCondition(), xc, doc);
-    }
     for (const Variable* v : p->getVariables()) {
         tinyxml2::XMLElement* xc = doc->NewElement("vars");
         addPlanElementAttributes(v, xc);
@@ -228,7 +218,7 @@ void PlanWriter::createPlanXMLNode(const Plan* p, tinyxml2::XMLDocument* doc)
     for (const Transition* t : p->getTransitions()) {
         xp->InsertEndChild(createTransitionXMLNode(t, doc));
     }
-    for (const SyncTransition* s : p->getSyncTransitions()) {
+    for (const Synchronisation* s : p->getSynchronisations()) {
         xp->InsertEndChild(createSynchronisationXMLNode(s, doc));
     }
     for (const EntryPoint* e : p->getEntryPoints()) {
@@ -378,14 +368,6 @@ tinyxml2::XMLElement* PlanWriter::createStateXMLNode(const State* s, tinyxml2::X
             xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
             continue;
         }
-
-        if (dynamic_cast<const PlanningProblem*>(p) != nullptr) {
-            tinyxml2::XMLElement* xc = doc->NewElement("plans");
-            xs->InsertEndChild(xc);
-            xc->SetAttribute("xsi:type", "alica:PlanningProblem");
-            xc->InsertEndChild(doc->NewText((getRelativeFileName(p) + "#" + to_string(p->getId())).c_str()));
-            continue;
-        }
     }
 
     for (const Transition* t : s->getInTransitions()) {
@@ -466,7 +448,7 @@ tinyxml2::XMLElement* PlanWriter::createPreConditionXMLNode(const PreCondition* 
     return xr;
 }
 
-tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransition* s, tinyxml2::XMLDocument* doc)
+tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const Synchronisation* s, tinyxml2::XMLDocument* doc)
 {
     tinyxml2::XMLElement* xr = doc->NewElement("synchronisations");
     addPlanElementAttributes(s, xr);
@@ -475,7 +457,7 @@ tinyxml2::XMLElement* PlanWriter::createSynchronisationXMLNode(const SyncTransit
         synched.append(to_string(s->getInSync()[i]->getId()));
         synched.append(" ");
     }
-    xr->SetAttribute("synchedTransitions", essentials::Configuration::trim(synched).c_str());
+    xr->SetAttribute("synchronisations", essentials::Configuration::trim(synched).c_str());
     xr->SetAttribute("talkTimeout", to_string(s->getTalkTimeOut().inMilliseconds()).c_str());
     xr->SetAttribute("syncTimeout", to_string(s->getSyncTimeOut().inMilliseconds()).c_str());
     xr->SetAttribute("failOnSyncTimeOut", "false");
@@ -497,10 +479,10 @@ tinyxml2::XMLElement* PlanWriter::createTransitionXMLNode(const Transition* t, t
     xc = doc->NewElement("outState");
     xt->InsertEndChild(xc);
     xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getOutState()->getId())).c_str()));
-    if (t->getSyncTransition() != nullptr) {
+    if (t->getSynchronisation() != nullptr) {
         xc = doc->NewElement("synchronisation");
         xt->InsertEndChild(xc);
-        xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getSyncTransition()->getId())).c_str()));
+        xc->InsertEndChild(doc->NewText((string("#") + to_string(t->getSynchronisation()->getId())).c_str()));
     }
     return xt;
 }

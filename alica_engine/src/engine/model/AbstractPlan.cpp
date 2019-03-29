@@ -15,8 +15,6 @@ namespace alica
 
 AbstractPlan::AbstractPlan()
         : AlicaElement()
-        , _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
 
 {
     essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
@@ -25,8 +23,6 @@ AbstractPlan::AbstractPlan()
 
 AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
-        , _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
 {
     essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
     _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
@@ -71,8 +67,6 @@ bool AbstractPlan::containsVar(const std::string& name) const
     return false;
 }
 
-
-
 void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
 {
     _authorityTimeInterval = authorithyTimeInterval;
@@ -81,16 +75,6 @@ void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) co
 void AbstractPlan::setFileName(const std::string& fileName)
 {
     _fileName = fileName;
-}
-
-void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
-{
-    _runtimeCondition = runtimeCondition;
-}
-
-void AbstractPlan::setPreCondition(PreCondition* preCondition)
-{
-    _preCondition = preCondition;
 }
 
 } // namespace alica

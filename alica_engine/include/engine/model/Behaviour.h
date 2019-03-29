@@ -12,6 +12,9 @@ namespace alica
 class BehaviourConfiguration;
 class BasicBehaviour;
 class ModelFactory;
+class PreCondition;
+class RuntimeCondition;
+class PostCondition;
 
 /**
  * Represents a Behaviour within the plan tree
@@ -24,18 +27,22 @@ public:
 
     std::string toString() const;
 
-    const std::string& getFileName() const { return _fileName; }
     int getDeferring() const { return _deferring; }
     bool isEventDriven() const { return _eventDriven; }
     int getFrequency() const { return _frequency; }
+    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
+    const PostCondition* getPostCondition() const { return _postCondition; }
 
 private:
     friend ModelFactory;
 
-    void setFileName(const std::string& fileName);
     void setDeferring(int deferring);
     void setEventDriven(bool eventDriven);
     void setFrequency(int frequency);
+    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
+    void setPreCondition(PreCondition* preCondition);
+    void setPostCondition(PostCondition* postCondition);
     /**
      * Specifies whether this Behaviour is run eventDriven. If it is not event driven, a timer will call it according to
      * Frequency and Deferring.
@@ -50,7 +57,18 @@ private:
      * state. Has only effect for Behaviours not running in EventDriven mode.
      */
     int _deferring;
-    std::string _fileName;
+    /**
+     * This behaviour's runtime condition.
+     */
+    RuntimeCondition* _runtimeCondition;
+    /**
+     * This behaviour's precondition
+     */
+    PreCondition* _preCondition;
+    /**
+     * This behaviour's postcondition
+     */
+    PostCondition* _postCondition;
 };
 
 } // namespace alica

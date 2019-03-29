@@ -10,7 +10,7 @@ namespace alica
 class PostCondition : public Condition
 {
 public:
-    PostCondition(int64_t id = 0);
+    PostCondition();
     virtual ~PostCondition();
     std::string toString() const override;
 };

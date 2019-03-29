@@ -12,7 +12,6 @@
 #include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/PlanningProblem.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/Quantifier.h"
@@ -22,7 +21,7 @@
 #include "engine/model/RoleTaskMapping.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/SuccessState.h"
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TaskRepository.h"
 #include "engine/model/Transition.h"
@@ -173,9 +172,9 @@ namespace alica
                 Variable* var = createVariable(curChild);
                 plan->_variables.push_back(var);
             } else if (synchronisations.compare(val) == 0) {
-                SyncTransition* st = createSyncTransition(curChild);
+                Synchronisation* st = createSynchronisation(curChild);
                 st->setPlan(plan);
-                plan->_syncTransitions.push_back(st);
+                plan->_synchronisations.push_back(st);
 
             } else {
                 AlicaEngine::abort("MF: Unhandled Plan Child: ", val);
@@ -507,9 +506,9 @@ namespace alica
         }
     }
 
-    SyncTransition* ModelFactory::createSyncTransition(tinyxml2::XMLElement* element)
+    Synchronisation* ModelFactory::createSynchronisation(tinyxml2::XMLElement *element)
     {
-        SyncTransition* s = new SyncTransition();
+        Synchronisation* s = new Synchronisation();
 //        s->setId(this->parser->parserId(element));
 //        setAlicaElementAttributes(s, element);
         const char* talkTimeoutPtr = element->Attribute("talkTimeout");
@@ -522,7 +521,7 @@ namespace alica
         }
 
         addElement(s);
-        this->rep->_syncTransitions.insert(pair<int64_t, SyncTransition*>(s->getId(), s));
+        this->rep->_synchronisations.insert(pair<int64_t, Synchronisation*>(s->getId(), s));
         if (element->FirstChild()) {
             AlicaEngine::abort("MF: Unhandled Synchtransition Child:", element->FirstChild());
         }
@@ -1098,35 +1097,11 @@ namespace alica
         // transitionSynchReferences
         for (pair<int64_t, int64_t> pairs : this->transitionSynchReferences) {
             Transition* t = (Transition*) this->elements.find(pairs.first)->second;
-            SyncTransition* sync = (SyncTransition*) this->elements.find(pairs.second)->second;
-            t->setSyncTransition(sync);
+            Synchronisation* sync = (Synchronisation*) this->elements.find(pairs.second)->second;
+            t->setSynchronisation(sync);
             sync->_inSync.push_back(t);
         }
         this->transitionSynchReferences.clear();
-
-        // planningProblemPlanReferences
-        for (pair<int64_t, int64_t> pairs : this->planningProblemPlanReferences) {
-            PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-            AbstractPlan* p = (AbstractPlan*) this->elements.find(pairs.second)->second;
-            s->_plans.push_back(p);
-        }
-        this->planningProblemPlanReferences.clear();
-
-        // planningProblemPlanWaitReferences
-        for (pair<int64_t, int64_t> pairs : this->planningProblemPlanWaitReferences) {
-            PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-            Plan* p = (Plan*) this->elements.find(pairs.second)->second;
-            s->setWaitPlan(p);
-        }
-        this->planningProblemPlanWaitReferences.clear();
-
-        // planningProblemPlanAlternativeReferences
-        for (pair<int64_t, int64_t> pairs : this->planningProblemPlanAlternativeReferences) {
-            PlanningProblem* s = (PlanningProblem*) this->elements.find(pairs.first)->second;
-            Plan* p = (Plan*) this->elements.find(pairs.second)->second;
-            s->setAlternativePlan(p);
-        }
-        this->planningProblemPlanAlternativeReferences.clear();
 
         // quantifierScopeReferences
         for (pair<int64_t, int64_t> pairs : this->quantifierScopeReferences) {

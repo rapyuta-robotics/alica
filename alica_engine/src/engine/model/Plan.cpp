@@ -10,7 +10,6 @@ namespace alica
 {
 Plan::Plan(int64_t id)
         : AbstractPlan(id)
-        , _postCondition(nullptr)
         , _minCardinality(0)
         , _maxCardinality(0)
         , _masterPlan(false)
@@ -77,11 +76,6 @@ void Plan::setMasterPlan(bool masterPlan)
     _masterPlan = masterPlan;
 }
 
-void Plan::setPostCondition(const PostCondition* postCondition)
-{
-    _postCondition = postCondition;
-}
-
 void Plan::setStates(const StateGrp& states)
 {
     _states = states;
@@ -92,9 +86,9 @@ void Plan::setSuccessStates(const SuccessStateGrp& successStates)
     _successStates = successStates;
 }
 
-void Plan::setSyncTransitions(const SyncTransitionGrp& syncTransitions)
+void Plan::setSynchronisations(const SynchronisationGrp &synchronisations)
 {
-    _syncTransitions = syncTransitions;
+    _synchronisations = synchronisations;
 }
 
 void Plan::setTransitions(const TransitionGrp& transitions)

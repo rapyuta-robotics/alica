@@ -20,8 +20,8 @@ namespace alica
         if (transitionNode[alica::Strings::synchronisation]) {
             Factory::transitionSynchReferences.push_back(std::pair<int64_t, int64_t>(transition->getId(),  Factory::getReferencedId(transitionNode[alica::Strings::synchronisation])));
         }
-        if (transitionNode[alica::Strings::precondition]) {
-            transition->_preCondition = PreConditionFactory::create(transitionNode[alica::Strings::precondition], plan);
+        if (transitionNode[alica::Strings::preCondition]) {
+            transition->_preCondition = PreConditionFactory::create(transitionNode[alica::Strings::preCondition], plan);
         }
 
         return transition;

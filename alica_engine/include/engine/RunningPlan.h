@@ -45,18 +45,18 @@ struct PlanStateTriple
     PlanStateTriple()
             : state(nullptr)
             , entryPoint(nullptr)
-            , plan(nullptr)
+            , abstractPlan(nullptr)
     {
     }
     PlanStateTriple(const AbstractPlan* p, const EntryPoint* e, const State* s)
             : state(s)
             , entryPoint(e)
-            , plan(p)
+            , abstractPlan(p)
     {
     }
     const State* state;
     const EntryPoint* entryPoint;
-    const AbstractPlan* plan;
+    const AbstractPlan* abstractPlan;
 };
 
 /**
@@ -128,8 +128,8 @@ public:
     const PlanStatusInfo& getStatusInfo() const { return _status; }
     const State* getActiveState() const { return _activeTriple.state; }
     const EntryPoint* getActiveEntryPoint() const { return _activeTriple.entryPoint; }
-    const AbstractPlan* getActivePlan() const { return _activeTriple.plan; }
-    const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.plan); }
+    const AbstractPlan* getActivePlan() const { return _activeTriple.abstractPlan; }
+    const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.abstractPlan); }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }

@@ -4,11 +4,11 @@
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
 #include <engine/syncmodule/SyncModule.h>
 #include <engine/syncmodule/SyncRow.h>
-#include <engine/syncmodule/Synchronisation.h>
+#include <engine/syncmodule/SynchronisationProcess.h>
 
 #include <alica_common_config/debug_output.h>
 
@@ -18,12 +18,12 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-Synchronisation::Synchronisation(AlicaEngine* ae)
+    SynchronisationProcess::SynchronisationProcess(AlicaEngine* ae)
         : myID(nullptr)
 {
     this->ae = ae;
     this->syncModul = nullptr;
-    this->syncTransition = nullptr;
+    this->synchronisation = nullptr;
     this->readyForSync = false;
     this->lastTick = 0;
     this->runningPlan = nullptr;
@@ -31,13 +31,13 @@ Synchronisation::Synchronisation(AlicaEngine* ae)
     this->lastTalkData = nullptr;
 }
 
-Synchronisation::Synchronisation(AlicaEngine* ae, AgentIDConstPtr myID, const SyncTransition* st, SyncModule* sm)
+    SynchronisationProcess::SynchronisationProcess(AlicaEngine* ae, AgentIDConstPtr myID, const Synchronisation* sync, SyncModule* sm)
 {
     this->ae = ae;
-    this->syncTransition = st;
+    this->synchronisation = sync;
     this->myID = myID;
     this->syncStartTime = ae->getAlicaClock()->now();
-    for (const Transition* t : st->getInSync()) {
+    for (const Transition* t : sync->getInSync()) {
         connectedTransitions.push_back(t->getId());
     }
     this->syncModul = sm;
@@ -48,24 +48,24 @@ Synchronisation::Synchronisation(AlicaEngine* ae, AgentIDConstPtr myID, const Sy
     this->lastTalkData = nullptr;
 }
 
-Synchronisation::~Synchronisation()
+    SynchronisationProcess::~SynchronisationProcess()
 {
     for (auto row : syncMatrix) {
         delete row;
     }
 }
 
-const SyncTransition* Synchronisation::getSyncTransition() const
+const Synchronisation* SynchronisationProcess::getSynchronisation() const
 {
-    return syncTransition;
+    return synchronisation;
 }
 
-void Synchronisation::setTick(uint64_t now)
+void SynchronisationProcess::setTick(uint64_t now)
 {
     this->lastTick = now;
 }
 
-void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
+void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionHolds)
 {
 #ifdef SM_MISC
     std::cout << "CHOD: ElapsedTime: " << (ae->getAlicaClock()->now() - this->syncStartTime) << std::endl;
@@ -120,7 +120,7 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
     if (maySendTalk) {
         if (isSyncComplete()) {
 #ifdef SM_SUCCESS
-            cout << "ChangedOwnData: Synctrans " << this->syncTransition->getId() << " ready" << endl;
+            cout << "ChangedOwnData: Synchronisation " << this->synchronisation->getId() << " ready" << endl;
 #endif
             sendSyncReady();
             this->readyForSync = true;
@@ -133,7 +133,7 @@ void Synchronisation::changeOwnData(int64_t transitionID, bool conditionHolds)
 /**
  * resend lastTalk, test for failure on synchronisation timeout and stop sync on state change
  */
-bool Synchronisation::isValid(uint64_t curTick)
+bool SynchronisationProcess::isValid(uint64_t curTick)
 {
     bool stillActive = (this->lastTick + 2 >= curTick);
 
@@ -153,9 +153,9 @@ bool Synchronisation::isValid(uint64_t curTick)
 
     if (this->lastTalkTime != AlicaTime::zero()) // talked already
     {
-        ALICA_DEBUG_MSG("TestTimeOut on Sync: " << this->syncTransition->getId());
+        ALICA_DEBUG_MSG("TestTimeOut on Sync: " << this->synchronisation->getId());
 
-        if ((now > this->syncTransition->getTalkTimeOut() + this->lastTalkTime) && !this->readyForSync) {
+        if ((now > this->synchronisation->getTalkTimeOut() + this->lastTalkTime) && !this->readyForSync) {
             if (this->myRow != nullptr) {
                 sendTalk(this->myRow->getSyncData());
             }
@@ -164,8 +164,8 @@ bool Synchronisation::isValid(uint64_t curTick)
 
     ALICA_DEBUG_MSG("Synchronisation: TestTimeOut(): syncStarTime " << this->syncStartTime);
 
-    if (this->syncTransition->isFailOnSyncTimeOut()) {
-        if (now > this->syncTransition->getSyncTimeOut() + this->syncStartTime) {
+    if (this->synchronisation->isFailOnSyncTimeOut()) {
+        if (now > this->synchronisation->getSyncTimeOut() + this->syncStartTime) {
             ALICA_DEBUG_MSG("Synchronisation: TestTimeOut() sync failed");
             return false;
         }
@@ -174,7 +174,7 @@ bool Synchronisation::isValid(uint64_t curTick)
     return true;
 }
 
-bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick)
+bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick)
 {
     if (this->readyForSync) {
         // do not integrate talks if we believe the sync is already finished
@@ -222,7 +222,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
                 rowInMatrix->getReceivedBy().push_back(talk->senderID);
             }
             if (isSyncComplete()) {
-                ALICA_DEBUG_MSG("IntegrateSyncTalk: Synctrans " << this->syncTransition->getId() << " ready");
+                ALICA_DEBUG_MSG("IntegrateSyncTalk: Synctrans " << this->synchronisation->getId() << " ready");
 
                 sendSyncReady();
                 this->readyForSync = true;
@@ -239,7 +239,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
                 if (allSyncReady()) {
                     ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntTalk): elapsed time: " << (ae->getAlicaClock()->now() - syncStartTime));
                     // notify syncmodul
-                    this->syncModul->synchronisationDone(this->syncTransition);
+                    this->syncModul->synchronisationDone(this->synchronisation);
                 }
             }
         }
@@ -248,7 +248,7 @@ bool Synchronisation::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t
     return true;
 }
 
-void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready)
+void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
 {
     // every robot that has acknowleged my row needs to send me a SyncReady
     bool found = false;
@@ -270,17 +270,17 @@ void Synchronisation::integrateSyncReady(shared_ptr<SyncReady> ready)
         if (allSyncReady()) {
             // notify syncModul
             ALICA_DEBUG_MSG("SyncDONE in Synchronisation (IntReady): elapsed time: " << (ae->getAlicaClock()->now() - this->syncStartTime));
-            this->syncModul->synchronisationDone(this->syncTransition);
+            this->syncModul->synchronisationDone(this->synchronisation);
         }
     }
 }
 
-void Synchronisation::setSyncTransition(const SyncTransition* syncTransition)
+void SynchronisationProcess::setSynchronisation(const Synchronisation *synchronisation)
 {
-    this->syncTransition = syncTransition;
+    this->synchronisation = synchronisation;
 }
 
-bool Synchronisation::allSyncReady() const
+bool SynchronisationProcess::allSyncReady() const
 {
     // test if all robots who acknowledged myRow have sent a SyncReady
     for (AgentIDConstPtr robotID : this->myRow->getReceivedBy()) {
@@ -303,7 +303,7 @@ bool Synchronisation::allSyncReady() const
     return true;
 }
 
-void Synchronisation::sendTalk(const SyncData& sd)
+void SynchronisationProcess::sendTalk(const SyncData& sd)
 {
     SyncTalk talk;
     talk.syncData.push_back(sd);
@@ -314,20 +314,20 @@ void Synchronisation::sendTalk(const SyncData& sd)
     this->syncModul->sendSyncTalk(talk);
 }
 
-void Synchronisation::sendSyncReady()
+void SynchronisationProcess::sendSyncReady()
 {
     // send own row again to be sure
     sendTalk(myRow->getSyncData());
 
     SyncReady sr;
-    sr.syncTransitionID = this->syncTransition->getId();
+    sr.synchronisationID = this->synchronisation->getId();
     this->syncModul->sendSyncReady(sr);
 }
 
 /**
  * Before calling this method lock this mutex --> syncMutex (lock_guard<mutex> lock(syncMutex))
  */
-bool Synchronisation::isSyncComplete()
+bool SynchronisationProcess::isSyncComplete()
 {
     // myRow needs to be acknowledged by all participants
     // every participant needs to believe in its condition
@@ -368,12 +368,12 @@ bool Synchronisation::isSyncComplete()
     return true;
 }
 
-std::ostream& operator<<(std::ostream& s, const Synchronisation& sync)
+std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc)
 {
     s << std::endl;
     s << "Matrix:" << std::endl;
 
-    for (SyncRow* row : sync.syncMatrix) {
+    for (SyncRow* row : syncProc.syncMatrix) {
         s << "Row: " << row->getSyncData().robotID << " "
           << std::to_string(row->getSyncData().transitionID) + " " + std::to_string(row->getSyncData().conditionHolds) << " " << row->getSyncData().ack
           << " RecvBy: ";
@@ -383,7 +383,7 @@ std::ostream& operator<<(std::ostream& s, const Synchronisation& sync)
         s << std::endl;
     }
     s << "ReceivedSyncreadys: ";
-    for (const shared_ptr<SyncReady>& sr : sync.receivedSyncReadys) {
+    for (const shared_ptr<SyncReady>& sr : syncProc.receivedSyncReadys) {
         s << sr->senderID << ", " << std::endl;
         ;
     }

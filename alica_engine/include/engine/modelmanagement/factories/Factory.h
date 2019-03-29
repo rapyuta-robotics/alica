@@ -42,9 +42,6 @@ protected:
     static ReferenceList rtmRoleReferences;
     static ReferenceList charCapReferences;
     static ReferenceList charCapValReferences;
-    static ReferenceList planningProblemPlanReferences;
-    static ReferenceList planningProblemPlanWaitReferences;
-    static ReferenceList planningProblemPlanAlternativeReferences;
 
     static const AlicaElement* getElement(const int64_t id);
 

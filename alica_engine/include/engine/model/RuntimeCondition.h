@@ -11,7 +11,7 @@ class RunningPlan;
 class RuntimeCondition : public Condition
 {
 public:
-    RuntimeCondition(int64_t id);
+    RuntimeCondition();
     virtual ~RuntimeCondition();
 
     std::string toString() const override;

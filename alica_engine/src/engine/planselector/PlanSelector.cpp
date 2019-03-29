@@ -13,7 +13,6 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/PlanningProblem.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"

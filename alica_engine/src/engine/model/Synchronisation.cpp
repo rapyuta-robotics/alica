@@ -1,18 +1,11 @@
-/*
- * SyncTransition.cpp
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Transition.h"
 
 namespace alica
 {
 
-SyncTransition::SyncTransition()
+Synchronisation::Synchronisation()
         : _failOnSyncTimeOut(false)
         , _syncTimeOut(AlicaTime::milliseconds(3000))
         , _talkTimeOut(AlicaTime::milliseconds(30))
@@ -20,12 +13,12 @@ SyncTransition::SyncTransition()
 {
 }
 
-SyncTransition::~SyncTransition() {}
+Synchronisation::~Synchronisation() {}
 
-std::string SyncTransition::toString() const
+std::string Synchronisation::toString() const
 {
     std::stringstream ss;
-    ss << "#SyncTransition: " << getName() << " " << getId() << std::endl;
+    ss << "#Synchronisation: " << getName() << " " << getId() << std::endl;
     if (_plan != nullptr) {
         ss << "\t Plan: " << _plan->getId() << " " << _plan->getName() << std::endl;
     }
@@ -38,31 +31,31 @@ std::string SyncTransition::toString() const
         ss << "\t" << t->getId() << " " << t->getName() << std::endl;
     }
     ss << std::endl;
-    ss << "#EndSyncTransition" << std::endl;
+    ss << "#EndSynchronisation" << std::endl;
     return ss.str();
 }
 
-void SyncTransition::setFailOnSyncTimeOut(bool failOnSyncTimeOut)
+void Synchronisation::setFailOnSyncTimeOut(bool failOnSyncTimeOut)
 {
     _failOnSyncTimeOut = failOnSyncTimeOut;
 }
 
-void SyncTransition::setSyncTimeOut(AlicaTime syncTimeOut)
+void Synchronisation::setSyncTimeOut(AlicaTime syncTimeOut)
 {
     _syncTimeOut = syncTimeOut;
 }
 
-void SyncTransition::setTalkTimeOut(AlicaTime talkTimeOut)
+void Synchronisation::setTalkTimeOut(AlicaTime talkTimeOut)
 {
     _talkTimeOut = talkTimeOut;
 }
 
-void SyncTransition::setPlan(const Plan* plan)
+void Synchronisation::setPlan(const Plan* plan)
 {
     _plan = plan;
 }
 
-void SyncTransition::setInSync(const TransitionGrp& inSync)
+void Synchronisation::setInSync(const TransitionGrp& inSync)
 {
     _inSync = inSync;
 }

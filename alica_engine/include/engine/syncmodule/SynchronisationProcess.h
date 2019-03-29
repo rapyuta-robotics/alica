@@ -16,7 +16,7 @@ namespace alica
 {
 
 class SyncModule;
-class SyncTransition;
+class Synchronisation;
 class SyncRow;
 class RunningPlan;
 struct SyncData;
@@ -24,30 +24,30 @@ struct SyncReady;
 struct SyncTalk;
 class AlicaEngine;
 
-class Synchronisation
+class SynchronisationProcess
 {
 public:
-    Synchronisation(AlicaEngine* ae);
-    Synchronisation(AlicaEngine* ae, AgentIDConstPtr id, const SyncTransition* st, SyncModule* sm);
-    virtual ~Synchronisation();
+    SynchronisationProcess(AlicaEngine* ae);
+    SynchronisationProcess(AlicaEngine* ae, AgentIDConstPtr id, const Synchronisation* sync, SyncModule* sm);
+    virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
     bool isValid(uint64_t curTick);
     bool integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick);
     void integrateSyncReady(std::shared_ptr<SyncReady> ready);
-    const SyncTransition* getSyncTransition() const;
-    void setSyncTransition(const SyncTransition* syncTransition);
+    const Synchronisation* getSynchronisation() const;
+    void setSynchronisation(const Synchronisation *synchronisation);
 
 private:
     bool allSyncReady() const;
-    friend std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
+    friend std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& sync);
 
 protected:
     AlicaEngine* ae;
     std::mutex syncMutex;
     std::mutex rowOkMutex;
     SyncModule* syncModul;
-    const SyncTransition* syncTransition;
+    const Synchronisation* synchronisation;
     AgentIDConstPtr myID;
     SyncData* lastTalkData;
     AlicaTime lastTalkTime;
@@ -65,5 +65,5 @@ protected:
     void sendSyncReady();
     bool isSyncComplete();
 };
-std::ostream& operator<<(std::ostream& s, const Synchronisation& sync);
+std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc);
 } /* namespace alica */

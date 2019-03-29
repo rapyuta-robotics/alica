@@ -11,19 +11,19 @@ struct SyncReady
 {
     SyncReady()
             : senderID(nullptr)
-            , syncTransitionID(0)
+            , synchronisationID(0)
     {
     }
     AgentIDConstPtr senderID;
-    int64_t syncTransitionID;
+    int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)
             : senderID(std::get<0>(s))
-            , syncTransitionID(std::get<1>(s))
+            , synchronisationID(std::get<1>(s))
     {
     }
 
-    stdSyncReady toStandard() { return std::make_tuple(senderID, syncTransitionID); }
+    stdSyncReady toStandard() { return std::make_tuple(senderID, synchronisationID); }
 };
 
 } /* namespace alica */

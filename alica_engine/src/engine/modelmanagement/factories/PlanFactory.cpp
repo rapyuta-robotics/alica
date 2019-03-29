@@ -9,6 +9,11 @@
 #include "engine/modelmanagement/factories/EntryPointFactory.h"
 #include "engine/modelmanagement/factories/StateFactory.h"
 #include "engine/modelmanagement/factories/TransitionFactory.h"
+#include "engine/modelmanagement/factories/PreConditionFactory.h"
+#include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
+#include "engine/modelmanagement/factories/VariableFactory.h"
+#include "engine/modelmanagement/factories/AbstractPlanFactory.h"
+#include "engine/modelmanagement/factories/SynchronisationFactory.h"
 
 #include "engine/model/Plan.h"
 
@@ -21,6 +26,7 @@ Plan* PlanFactory::create(const YAML::Node& node)
     Plan* plan = new Plan(Factory::getValue<int64_t>(node, alica::Strings::id));
     Factory::setAttributes(node, plan);
     Factory::storeElement(plan, alica::Strings::plan);
+    AbstractPlanFactory::setVariables(node, plan);
 
     if (node[alica::Strings::masterPlan]) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();
@@ -56,38 +62,23 @@ Plan* PlanFactory::create(const YAML::Node& node)
         }
     }
     if (node[alica::Strings::transitions]) {
-        const YAML::Node& transitions = node[alica::Strings::transitions];
+        const YAML::Node &transitions = node[alica::Strings::transitions];
         for (YAML::const_iterator it = transitions.begin(); it != transitions.end(); ++it) {
-            Transition* transition = TransitionFactory::create(*it, plan);
-            plan->_transitions.push_back(transition);
+            plan->_transitions.push_back(TransitionFactory::create(*it, plan));
         }
     }
-
-    /*
-     if (transitions.compare(val) == 0) {
-        Transition* tran = createTransition(curChild, plan);
-        plan->_transitions.push_back(tran);
-    } else if (preCondition.compare(val) == 0) {
-        PreCondition* p = createPreCondition(curChild);
-        p->setAbstractPlan(plan);
-        plan->setPreCondition(p);
-    } else if (runtimeCondition.compare(val) == 0) {
-        RuntimeCondition* rc = createRuntimeCondition(curChild);
-        rc->setAbstractPlan(plan);
-        plan->setRuntimeCondition(rc);
-    } else if (postCondition.compare(val) == 0) {
-        PostCondition* p = createPostCondition(curChild);
-        plan->setPostCondition(p);
-    } else if (vars.compare(val) == 0) {
-        Variable* var = createVariable(curChild);
-        plan->_variables.push_back(var);
-    } else if (synchronisations.compare(val) == 0) {
-        SyncTransition* st = createSyncTransition(curChild);
-        st->setPlan(plan);
-        plan->_syncTransitions.push_back(st);
-
+    if (node[alica::Strings::preCondition]) {
+        plan->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], plan);
     }
-*/
+    if (node[alica::Strings::runtimeCondition]) {
+        plan->_runtimeCondition = RuntimeConditionFactory::create(node[alica::Strings::runtimeCondition], plan);
+    }
+    if (node[alica::Strings::synchronisations]) {
+        const YAML::Node &synchronisations = node[alica::Strings::synchronisations];
+        for (YAML::const_iterator it = synchronisations.begin(); it != synchronisations.end(); ++it) {
+            plan->_synchronisations.push_back(SynchronisationFactory::create(*it, plan));
+        }
+    }
 
     return plan;
 }
