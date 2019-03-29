@@ -15,19 +15,19 @@ namespace alica {
             Factory::storeElement(ep, alica::Strings::entryPoint);
 
             ep->_plan = (Plan*) Factory::getElement(Factory::getReferencedId(epNode[alica::Strings::plan]));
-            if (epNode[alica::Strings::minCardinality]) {
+            if (Factory::isValid(epNode[alica::Strings::minCardinality])) {
                 ep->_cardinality.setMin(epNode[alica::Strings::minCardinality].as<int>());
             }
-            if (epNode[alica::Strings::maxCardinality]) {
+            if (Factory::isValid(epNode[alica::Strings::maxCardinality])) {
                 ep->_cardinality.setMax(epNode[alica::Strings::maxCardinality].as<int>());
             }
-            if (epNode[alica::Strings::successRequired]) {
+            if (Factory::isValid(epNode[alica::Strings::successRequired])) {
                 ep->setSuccessRequired(epNode[alica::Strings::successRequired].as<bool>());
             }
-            if (epNode[alica::Strings::state]) {
+            if (Factory::isValid(epNode[alica::Strings::state])) {
                 Factory::epStateReferences.push_back(std::pair<int64_t, int64_t>(ep->getId(), Factory::getReferencedId(epNode[alica::Strings::state])));
             }
-            if (epNode[alica::Strings::task]) {
+            if (Factory::isValid(epNode[alica::Strings::task])) {
                 Factory::epTaskReferences.push_back(std::pair<int64_t, int64_t>(ep->getId(), Factory::getReferencedId(epNode[alica::Strings::task])));
             }
             constructedEntryPoints.push_back(ep);

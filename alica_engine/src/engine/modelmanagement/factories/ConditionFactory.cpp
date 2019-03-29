@@ -13,13 +13,13 @@ namespace alica
         condition->_abstractPlan = abstractPlan;
         condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString);
         condition->_plugInName = Factory::getValue<std::string>(conditionNode, alica::Strings::pluginName);
-        if (conditionNode[alica::Strings::variables]) {
+        if (Factory::isValid(conditionNode[alica::Strings::variables])) {
             const YAML::Node& variableNodes = conditionNode[alica::Strings::variables];
             for (YAML::const_iterator it = variableNodes.begin(); it != variableNodes.end(); ++it) {
                 Factory::conditionVarReferences.push_back(std::pair<int64_t, int64_t>(condition->getId(), Factory::getReferencedId(*it)));
             }
         }
-        if (conditionNode[alica::Strings::quantifiers]) {
+        if (Factory::isValid(conditionNode[alica::Strings::quantifiers])) {
             const YAML::Node& quantifierNodes = conditionNode[alica::Strings::variables];
             for (YAML::const_iterator it = quantifierNodes.begin(); it != quantifierNodes.end(); ++it) {
                 condition->_quantifiers.push_back(QuantifierFactory::create(*it));
