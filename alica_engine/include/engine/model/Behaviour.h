@@ -12,6 +12,7 @@ namespace alica
 class BehaviourConfiguration;
 class BasicBehaviour;
 class ModelFactory;
+class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
 class PostCondition;
@@ -36,6 +37,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend BehaviourFactory;
 
     void setDeferring(int deferring);
     void setEventDriven(bool eventDriven);

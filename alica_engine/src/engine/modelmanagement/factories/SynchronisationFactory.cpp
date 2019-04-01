@@ -6,15 +6,16 @@ namespace alica
 {
     Synchronisation* SynchronisationFactory::create(const YAML::Node& synchronisationNode, Plan* plan)
     {
-        Synchronisation* synchronisation;
-        // TODO analyse type of Quantifier
-//        = new Quantifier();
+        Synchronisation* synchronisation = new Synchronisation();
         Factory::setAttributes(synchronisationNode, synchronisation);
         Factory::storeElement(synchronisation, alica::Strings::synchronisation);
         synchronisation->_plan = plan;
 
-        // TODO
-        std::cerr << "SynchronisationFactory: Parsing Synchronisation not completely implemented, yet!" << std::endl;
+        synchronisation->_failOnSyncTimeout = Factory::getValue<bool>(synchronisationNode, alica::Strings::failOnSyncTimeout);
+        synchronisation->_syncTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::syncTimeout));
+        synchronisation->_syncTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::talkTimeout));
+
+        //Note: synchronisation->_inSync are set via resolve references with Factory::transitionSynchReferences (filled in the TransitionFactory)
 
         return synchronisation;
     }

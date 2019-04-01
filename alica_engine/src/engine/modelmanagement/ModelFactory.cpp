@@ -473,35 +473,21 @@ namespace alica
 
         this->rep->_taskRepositories.insert(pair<int64_t, TaskRepository*>(tr->getId(), tr));
 
-        int64_t id = 0;
-
-        const char* defaultTaskPtr = node["defaultTask"].as<std::string>().c_str();
-        if (defaultTaskPtr) {
-            id = stoll(defaultTaskPtr);
-            tr->setDefaultTask(id);
-        }
-
         for(unsigned i=0;i<node["tasks"].size();i++) {
             int64_t cid =  this->parser->parseId(node["tasks"][i]);
-            Task* task = new Task(cid == id);
+            Task* task = new Task();
             task->setId(cid);
             YAML::Node child =  node["tasks"][i];
             setAlicaElementAttributes(task, child);
 
-//            TODO description in Task
-//            const char* descriptionkPtr = node["tasks"][i]["description"].as<std::string>().c_str();
-//            if (descriptionkPtr) {
-//                task->setDescription(descriptionkPtr);
-//            }
-
             TaskRepository *taskRepository = new(TaskRepository);
             taskRepository->setId(node["tasks"][i]["taskRepository"].as<std::int64_t>());
             if(taskRepository) {
-                task->setTaskRepository(taskRepository);
+                task->_taskRepository = taskRepository;
             }
             addElement(task);
             this->rep->_tasks.insert(pair<int64_t, Task*>(task->getId(), task));
-            task->setTaskRepository(tr);
+            task->_taskRepository = tr;
             tr->_tasks.push_back(task);
         }
     }
@@ -1218,7 +1204,7 @@ namespace alica
         idleEP->setId(EntryPoint::IDLEID);
         idleEP->_index = -42;
         idleEP->_cardinality = Interval<int>(0, std::numeric_limits<int>::max());
-        Task* idleTask = new Task(true);
+        Task* idleTask = new Task();
         idleTask->setName("IDLE-TASK");
         idleTask->setId(Task::IDLEID);
 

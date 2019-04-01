@@ -11,7 +11,7 @@ namespace alica
         Factory::setAttributes(conditionNode, condition);
         Factory::storeElement(condition, alica::Strings::condition);
         condition->_abstractPlan = abstractPlan;
-        condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString);
+        condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString, "");
         condition->_plugInName = Factory::getValue<std::string>(conditionNode, alica::Strings::pluginName);
         if (Factory::isValid(conditionNode[alica::Strings::variables])) {
             const YAML::Node& variableNodes = conditionNode[alica::Strings::variables];
@@ -20,7 +20,7 @@ namespace alica
             }
         }
         if (Factory::isValid(conditionNode[alica::Strings::quantifiers])) {
-            const YAML::Node& quantifierNodes = conditionNode[alica::Strings::variables];
+            const YAML::Node& quantifierNodes = conditionNode[alica::Strings::quantifiers];
             for (YAML::const_iterator it = quantifierNodes.begin(); it != quantifierNodes.end(); ++it) {
                 condition->_quantifiers.push_back(QuantifierFactory::create(*it));
             }

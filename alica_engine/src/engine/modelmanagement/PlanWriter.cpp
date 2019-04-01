@@ -613,14 +613,12 @@ void PlanWriter::createTaskRepository(const TaskRepository* tr, tinyxml2::XMLDoc
     xp->SetAttribute("xmlns:alica", "http:///de.uni_kassel.vs.cn");
     xp->SetAttribute("id", to_string(ae->getAlicaClock()->now().inNanoseconds() + objectCounter++).c_str());
     xp->SetAttribute("name", tr->getName().c_str());
-    xp->SetAttribute("defaultTask", to_string(tr->getDefaultTask()).c_str());
 
     for (const Task* t : tr->getTasks()) {
         tinyxml2::XMLElement* xc = doc->NewElement("tasks");
         xp->InsertEndChild(xc);
         xc->SetAttribute("id", to_string(t->getId()).c_str());
         xc->SetAttribute("name", t->getName().c_str());
-        xc->SetAttribute("description", t->getDescription().c_str());
     }
 }
 

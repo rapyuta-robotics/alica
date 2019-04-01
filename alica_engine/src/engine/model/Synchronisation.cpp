@@ -6,9 +6,9 @@ namespace alica
 {
 
 Synchronisation::Synchronisation()
-        : _failOnSyncTimeOut(false)
-        , _syncTimeOut(AlicaTime::milliseconds(3000))
-        , _talkTimeOut(AlicaTime::milliseconds(30))
+        : _failOnSyncTimeout(false)
+        , _syncTimeout(AlicaTime::milliseconds(3000))
+        , _talkTimeout(AlicaTime::milliseconds(30))
         , _plan(nullptr)
 {
 }
@@ -23,9 +23,9 @@ std::string Synchronisation::toString() const
         ss << "\t Plan: " << _plan->getId() << " " << _plan->getName() << std::endl;
     }
     ss << std::endl;
-    ss << "\t TalkTimeOut: " << _talkTimeOut.inMilliseconds() << std::endl;
-    ss << "\t SyncTimeOut: " << _syncTimeOut.inMilliseconds() << std::endl;
-    ss << "\t FailOnSyncTimeOut: " << _failOnSyncTimeOut << std::endl;
+    ss << "\t TalkTimeOut: " << _talkTimeout.inMilliseconds() << std::endl;
+    ss << "\t SyncTimeOut: " << _syncTimeout.inMilliseconds() << std::endl;
+    ss << "\t FailOnSyncTimeOut: " << _failOnSyncTimeout << std::endl;
     ss << "\t InSync: " << _inSync.size() << std::endl;
     for (const Transition* t : _inSync) {
         ss << "\t" << t->getId() << " " << t->getName() << std::endl;
@@ -37,17 +37,17 @@ std::string Synchronisation::toString() const
 
 void Synchronisation::setFailOnSyncTimeOut(bool failOnSyncTimeOut)
 {
-    _failOnSyncTimeOut = failOnSyncTimeOut;
+    _failOnSyncTimeout = failOnSyncTimeOut;
 }
 
 void Synchronisation::setSyncTimeOut(AlicaTime syncTimeOut)
 {
-    _syncTimeOut = syncTimeOut;
+    _syncTimeout = syncTimeOut;
 }
 
 void Synchronisation::setTalkTimeOut(AlicaTime talkTimeOut)
 {
-    _talkTimeOut = talkTimeOut;
+    _talkTimeout = talkTimeOut;
 }
 
 void Synchronisation::setPlan(const Plan* plan)

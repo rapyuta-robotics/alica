@@ -2,11 +2,15 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
-#include "engine/model/EntryPoint.h"
-#include "engine/model/Plan.h"
 #include "engine/modelmanagement/Strings.h"
-#include "engine/modelmanagement/factories/Factory.h"
+#include "engine/model/Plan.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/PlanType.h"
+#include "engine/model/TaskRepository.h"
 #include "engine/modelmanagement/factories/PlanFactory.h"
+#include "engine/modelmanagement/factories/BehaviourFactory.h"
+#include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/modelmanagement/factories/PlanTypeFactory.h"
 
 #include <SystemConfig.h>
 #include <alica_common_config/debug_output.h>
@@ -62,12 +66,31 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 
     this->filesParsed.push_back(masterPlanPath);
     Plan* masterPlan = (Plan*) parseFile(masterPlanPath, alica::Strings::plan);
-    std::cout << "MM: filesToParse" << std::endl;
-    for (auto file : this->filesToParse) {
-        std::cout << file << std::endl;
-    }
-    //    parseFileLoop();
+    while (this->filesToParse.size() > 0) {
+        std::string fileToParse = this->filesToParse.front();
+        this->filesToParse.pop_front();
 
+        std::cout << "MM: fileToParse: " << fileToParse << std::endl;
+
+        if (!essentials::FileSystem::pathExists(fileToParse)) {
+            AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
+        }
+        filesParsed.push_back(fileToParse);
+        if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::plan_extension)) {
+            parseFile(fileToParse, alica::Strings::plan);
+        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::taskrepository_extension)) {
+            parseFile(fileToParse, alica::Strings::taskrepository);
+        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::behaviour_extension)) {
+            parseFile(fileToParse, alica::Strings::behaviour);
+        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::plantype_extension)) {
+            parseFile(fileToParse, alica::Strings::plantype);
+        } else {
+            AlicaEngine::abort("MM: Cannot parse file type: ", fileToParse);
+        }
+    }
+
+    // TODO
+    //    this->mf->attachPlanReferences();
     //    this->mf->computeReachabilities();
     return masterPlan;
 }
@@ -80,17 +103,29 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 
 AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std::string& type)
 {
-    YAML::Node doc;
+    YAML::Node node;
     try {
-        doc = YAML::LoadFile(currentFile);
+        node = YAML::LoadFile(currentFile);
     } catch (YAML::BadFile badFile) {
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
 
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(doc);
+        Plan* plan = PlanFactory::create(node);
         plan->setFileName(currentFile);
         return plan;
+    } else if (alica::Strings::behaviour.compare(type) == 0) {
+        Behaviour* behaviour = BehaviourFactory::create(node);
+        behaviour->setFileName(currentFile);
+        return behaviour;
+    } else if (alica::Strings::plantype.compare(type) == 0) {
+        PlanType* planType = PlanTypeFactory::create(node);
+        planType->setFileName(currentFile);
+        return planType;
+    } else if (alica::Strings::taskrepository.compare(type) == 0) {
+        TaskRepository* taskrepository = TaskRepositoryFactory::create(node);
+        taskrepository->setFileName(currentFile);
+        return taskrepository;
     } else {
         AlicaEngine::abort("MM: Parsing type not handled: ", type);
         return nullptr;

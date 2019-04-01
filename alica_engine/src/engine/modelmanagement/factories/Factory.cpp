@@ -125,6 +125,14 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->planRepository->_quantifiers.emplace(ael->getId(), (Quantifier*) ael);
     } else if (alica::Strings::synchronisation.compare(type) == 0) {
         modelManager->planRepository->_synchronisations.emplace(ael->getId(), (Synchronisation*) ael);
+    } else if (alica::Strings::behaviour.compare(type) == 0) {
+        modelManager->planRepository->_behaviours.emplace(ael->getId(), (Behaviour*) ael);
+    } else if (alica::Strings::task.compare(type) == 0) {
+        modelManager->planRepository->_tasks.emplace(ael->getId(), (Task*) ael);
+    } else if (alica::Strings::taskrepository.compare(type) == 0) {
+        modelManager->planRepository->_taskRepositories.emplace(ael->getId(), (TaskRepository*) ael);
+    } else if (alica::Strings::plantype.compare(type) == 0) {
+        modelManager->planRepository->_planTypes.emplace(ael->getId(), (PlanType*) ael);
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing!");
     }
