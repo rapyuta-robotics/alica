@@ -53,5 +53,13 @@ namespace alica {
         static const std::string maxCardinality = "maxCardinality";
         static const std::string successRequired = "successRequired";
         static const std::string synchronisations = "synchronisations";
+        static const std::string failOnSyncTimeout = "failOnSyncTimeout";
+        static const std::string syncTimeout = "syncTimeout";
+        static const std::string talkTimeout = "talkTimeout";
+        static const std::string frequency = "frequency";
+        static const std::string deferring = "deferring";
+        static const std::string tasks = "tasks";
+        static const std::string annotatedPlans = "annotatedPlans";
+        static const std::string activated = "activated";
     }
 }

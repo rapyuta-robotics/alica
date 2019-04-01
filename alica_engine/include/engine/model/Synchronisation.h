@@ -22,10 +22,10 @@ public:
     Synchronisation();
     virtual ~Synchronisation();
 
-    bool isFailOnSyncTimeOut() const { return _failOnSyncTimeOut; }
+    bool isFailOnSyncTimeOut() const { return _failOnSyncTimeout; }
 
-    AlicaTime getSyncTimeOut() const { return _syncTimeOut; }
-    AlicaTime getTalkTimeOut() const { return _talkTimeOut; }
+    AlicaTime getSyncTimeOut() const { return _syncTimeout; }
+    AlicaTime getTalkTimeOut() const { return _talkTimeout; }
 
     const Plan* getPlan() const { return _plan; }
 
@@ -45,10 +45,10 @@ private:
     TransitionGrp _inSync;
     const Plan* _plan;
 
-    AlicaTime _talkTimeOut;
-    AlicaTime _syncTimeOut;
+    AlicaTime _talkTimeout;
+    AlicaTime _syncTimeout;
 
-    bool _failOnSyncTimeOut;
+    bool _failOnSyncTimeout;
 };
 
 } // namespace alica
