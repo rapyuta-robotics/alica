@@ -34,4 +34,8 @@ namespace alica
 
         return behaviour;
     }
+
+    void BehaviourFactory::attachReferences() {
+        ConditionFactory::attachReferences();
+    }
 } // namespace alica

@@ -11,6 +11,7 @@ class PlanFactory : public Factory
 {
 public:
     static Plan* create(const YAML::Node& node);
+    static void attachReferences();
 private:
     PlanFactory() = delete;
 };

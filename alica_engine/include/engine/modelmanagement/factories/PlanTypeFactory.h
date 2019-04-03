@@ -11,6 +11,7 @@ namespace alica
     {
     public:
         static PlanType* create(const YAML::Node& planTypeNode);
+        static void attachReferences();
     private:
         PlanTypeFactory() = delete;
     };

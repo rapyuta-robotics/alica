@@ -7,5 +7,7 @@ namespace alica {
     class QuantifierFactory: public Factory {
     public:
         static Quantifier* create(const YAML::Node& quantifierNode);
+        static void attachReferences();
+        static void createVariableTemplates();
     };
 }

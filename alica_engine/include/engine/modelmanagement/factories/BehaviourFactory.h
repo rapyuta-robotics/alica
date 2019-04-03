@@ -11,6 +11,7 @@ namespace alica
     {
     public:
         static Behaviour* create(const YAML::Node& node);
+        static void attachReferences();
     private:
         BehaviourFactory() = delete;
     };

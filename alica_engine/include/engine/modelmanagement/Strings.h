@@ -23,6 +23,8 @@ namespace alica {
         static const std::string postCondition = "postCondition";
         static const std::string quantifier = "quantifier";
         static const std::string variable = "variable";
+        static const std::string variableBinding = "variableBinding";
+
 
 
         static const std::string id = "id";
@@ -47,6 +49,8 @@ namespace alica {
         static const std::string variableType = "variableType";
         static const std::string no_type = "no_type";
         static const std::string variableBindings = "variableBindings";
+        static const std::string subPlan = "subPlan";
+        static const std::string subVariable = "subVariable";
         static const std::string masterPlan = "masterPlan";
         static const std::string utilityThreshold = "utilityThreshold";
         static const std::string minCardinality = "minCardinality";
@@ -61,5 +65,10 @@ namespace alica {
         static const std::string tasks = "tasks";
         static const std::string annotatedPlans = "annotatedPlans";
         static const std::string activated = "activated";
+        static const std::string quantifierType = "quantifierType";
+        static const std::string forAllAgents = "ALL";
+        static const std::string scope = "scope";
+        static const std::string sorts = "sorts";
+        static const std::string inSync = "inSync";
     }
 }

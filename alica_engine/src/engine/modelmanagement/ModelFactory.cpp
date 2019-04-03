@@ -455,7 +455,7 @@ namespace alica
         } else if (node["parametrisation"]) {
             for(unsigned i=0;i< node["parametrisation"].size();i++) {
                 const VariableBinding *para = createParametrisation(node["parametrisation"][i]);
-                pt->_parametrisation.push_back(para);
+                pt->_variableBindings.push_back(para);
             }
         } else {
             AlicaEngine::abort("MF: Unhandled PlanType Child:", node);

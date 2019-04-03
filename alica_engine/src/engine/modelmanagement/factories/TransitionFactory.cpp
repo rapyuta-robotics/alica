@@ -26,4 +26,28 @@ namespace alica
 
         return transition;
     }
+
+    void TransitionFactory::attachReferences() {
+        // transitionOutStateReferences
+        for (std::pair<int64_t, int64_t> pairs : Factory::transitionOutStateReferences) {
+            Transition* t = (Transition*) Factory::getElement(pairs.first);
+            State* st = (State*)Factory::getElement(pairs.second);
+            t->_outState = st;
+        }
+        Factory::transitionOutStateReferences.clear();
+        // transitionInStateReferences
+        for (std::pair<int64_t, int64_t> pairs : Factory::transitionInStateReferences) {
+            Transition* t = (Transition*) Factory::getElement(pairs.first);
+            State* st = (State*)Factory::getElement(pairs.second);
+            t->_inState = st;
+        }
+        Factory::transitionInStateReferences.clear();
+        // transitionSynchReferences
+        for (std::pair<int64_t, int64_t> pairs : Factory::transitionSynchReferences) {
+            Transition* t = (Transition*) Factory::getElement(pairs.first);
+            Synchronisation* sync = (Synchronisation*) Factory::getElement(pairs.second);
+            t->setSynchronisation(sync);
+        }
+        Factory::transitionSynchReferences.clear();
+    }
 } // namespace alica

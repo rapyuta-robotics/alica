@@ -23,7 +23,6 @@ State* StateFactory::create(const YAML::Node& stateNode)
             Factory::stateOutTransitionReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
         }
     }
-    // only works if plan designer generates stuff as real yaml list
     if (Factory::isValid(stateNode[alica::Strings::abstractPlans])) {
         const YAML::Node& abstractPlans = stateNode[alica::Strings::abstractPlans];
         for (YAML::const_iterator it = abstractPlans.begin(); it != abstractPlans.end(); ++it) {
@@ -33,9 +32,37 @@ State* StateFactory::create(const YAML::Node& stateNode)
     if (Factory::isValid(stateNode[alica::Strings::variableBindings])) {
         const YAML::Node& variableBindings = stateNode[alica::Strings::variableBindings];
         for (YAML::const_iterator it = variableBindings.begin(); it != variableBindings.end(); ++it) {
-            //state->_variableBindingGrp.push_back(VariableBindingFactory::create(*it));
+            state->_variableBindingGrp.push_back(VariableBindingFactory::create(*it));
         }
     }
     return state;
+}
+
+void StateFactory::attachReferences() {
+    VariableBindingFactory::attachReferences();
+
+    // stateInTransitionReferences
+    for (std::pair<int64_t, int64_t> pairs : Factory::stateInTransitionReferences) {
+        Transition* t = (Transition*) Factory::getElement(pairs.second);
+        State* st = (State*) Factory::getElement(pairs.first);
+        st->_inTransitions.push_back(t);
+    }
+    Factory::stateInTransitionReferences.clear();
+
+    // stateOutTransitionReferences
+    for (std::pair<int64_t, int64_t> pairs : Factory::stateOutTransitionReferences) {
+        State* st = (State*) Factory::getElement(pairs.first);
+        Transition* t = (Transition*) Factory::getElement(pairs.second);
+        st->_outTransitions.push_back(t);
+    }
+    Factory::stateOutTransitionReferences.clear();
+
+    // stateAbstractPlanReferences
+    for (std::pair<int64_t, int64_t> pairs : Factory::stateAbstractPlanReferences) {
+        State* st = (State*) Factory::getElement(pairs.first);
+        AbstractPlan* p = (AbstractPlan*) Factory::getElement(pairs.second);
+        st->_plans.push_back(p);
+    }
+    Factory::stateAbstractPlanReferences.clear();
 }
 } // namespace alica
