@@ -1,10 +1,3 @@
-/*
- * PlanType.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/PlanType.h"
 #include "engine/model/Plan.h"
 #include <sstream>
@@ -40,9 +33,9 @@ std::string PlanType::toString() const
     return ss.str();
 }
 
-void PlanType::setParametrisation(const VariableBindingGrp& parametrisation)
+void PlanType::setVariableBindings(const VariableBindingGrp &variableBindings)
 {
-    _parametrisation = parametrisation;
+    _variableBindings = variableBindings;
 }
 
 void PlanType::setPlans(const PlanGrp& plans)

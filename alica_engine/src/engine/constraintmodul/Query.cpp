@@ -104,7 +104,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* sol
 
             // 2. process bindings for plantype
             if (rp->getPlanType() != nullptr) {
-                for (const VariableBinding* p : rp->getPlanType()->getParametrisation()) {
+                for (const VariableBinding* p : rp->getPlanType()->getVariableBindings()) {
                     if (p->getSubPlan() == rp->getActivePlan() && _staticVars.hasCurrently(p->getSubVar())) {
                         _staticVars.editNext().push_back(p->getVar());
                         _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());

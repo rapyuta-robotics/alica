@@ -2,15 +2,17 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
-#include "engine/modelmanagement/Strings.h"
-#include "engine/model/Plan.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/TaskRepository.h"
-#include "engine/modelmanagement/factories/PlanFactory.h"
+#include "engine/model/Quantifier.h"
+#include "engine/model/Variable.h"
+#include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BehaviourFactory.h"
-#include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/modelmanagement/factories/PlanFactory.h"
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
+#include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 
 #include <SystemConfig.h>
 #include <alica_common_config/debug_output.h>
@@ -89,9 +91,10 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         }
     }
 
-    // TODO
-    //    this->mf->attachPlanReferences();
-    //    this->mf->computeReachabilities();
+    this->attachReferences();
+    this->generateTemplateVariables();
+    this->computeReachabilities();
+
     return masterPlan;
 }
 
@@ -144,6 +147,47 @@ const AlicaElement* ModelManager::getElement(const int64_t id)
         return mapEntry->second;
     }
     return nullptr;
+}
+
+void ModelManager::attachReferences()
+{
+    // these methods call recursively other factories for the job
+    PlanFactory::attachReferences();
+    PlanTypeFactory::attachReferences();
+    BehaviourFactory::attachReferences();
+}
+
+void ModelManager::generateTemplateVariables() {
+    // generates template variables for all quantifiers
+    for (std::pair<const int64_t, Quantifier*> p : this->planRepository->_quantifiers) {
+        Quantifier* q = p.second;
+        for (const std::string& s : q->getDomainIdentifiers()) {
+            int64_t id = Hash64(s.c_str(), s.size());
+            Variable* v;
+            PlanRepository::MapType<Variable>::iterator vit = this->planRepository->_variables.find(id);
+            if (vit != this->planRepository->_variables.end()) {
+                v = vit->second;
+            } else {
+                v = new Variable(id, s, "Template");
+                this->planRepository->_variables.emplace(id, v);
+            }
+            q->_templateVars.push_back(v);
+        }
+    }
+}
+
+/**
+ * Computes the sets of reachable states for all entrypoints created.
+ * This speeds up some calculations during run-time.
+ */
+void ModelManager::computeReachabilities () {
+    for (const std::pair<const int64_t, EntryPoint*>& ep : this->planRepository->_entryPoints) {
+        ep.second->computeReachabilitySet();
+        // set backpointers:
+        for (const State* s : ep.second->_reachableStates) {
+            this->planRepository->_states[s->getId()]->_entryPoint = ep.second;
+        }
+    }
 }
 
 } // namespace alica

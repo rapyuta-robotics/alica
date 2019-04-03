@@ -26,4 +26,16 @@ namespace alica
             }
         }
     }
+
+    void ConditionFactory::attachReferences() {
+        QuantifierFactory::attachReferences();
+
+        // conditionVarReferences
+        for (std::pair<int64_t, int64_t> pairs : Factory::conditionVarReferences) {
+            Condition* c = (Condition*) Factory::getElement(pairs.first);
+            Variable* v = (Variable*) Factory::getElement(pairs.second);
+            c->_variables.push_back(v);
+        }
+        Factory::conditionVarReferences.clear();
+    }
 } // namespace alica

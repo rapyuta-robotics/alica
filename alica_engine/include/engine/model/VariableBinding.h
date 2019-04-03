@@ -8,6 +8,7 @@ namespace alica
 {
 class Variable;
 class AbstractPlan;
+class VariableBindingFactory;
 
 class VariableBinding : public AlicaElement
 {
@@ -23,6 +24,7 @@ public:
 
 protected:
     friend ModelFactory;
+    friend VariableBindingFactory;
 
     void setSubPlan(const AbstractPlan* subPlan);
     void setSubVar(const Variable* subVar);

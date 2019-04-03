@@ -9,5 +9,6 @@ namespace alica {
     class TransitionFactory : public Factory {
     public:
         static Transition* create(const YAML::Node& transitionNode, Plan* plan);
+        static void attachReferences();
     };
 }

@@ -26,6 +26,7 @@ class PlanningProblem;
 class ModelFactory;
 class Factory;
 class ExpressionHandler;
+class ModelManager;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -121,6 +122,7 @@ public:
 private:
     friend ModelFactory;
     friend Factory;
+    friend ModelManager;
     friend ExpressionHandler;
     MapType<Plan> _plans;
     MapType<Task> _tasks;

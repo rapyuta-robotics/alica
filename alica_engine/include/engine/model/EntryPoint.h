@@ -14,6 +14,7 @@ namespace alica
 class Plan;
 class State;
 class Task;
+class ModelManager;
 class EntryPointFactory;
 
 /**
@@ -54,6 +55,7 @@ public:
 private:
     friend ModelFactory;
     friend EntryPointFactory;
+    friend ModelManager;
     void computeReachabilitySet();
     void setTask(Task* task);
     void setPlan(Plan* plan);

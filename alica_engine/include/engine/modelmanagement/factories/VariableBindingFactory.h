@@ -7,5 +7,6 @@ namespace alica {
     class VariableBindingFactory : public Factory {
     public:
         static VariableBinding* create(const YAML::Node& node);
+        static void attachReferences();
     };
 }

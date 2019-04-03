@@ -1,19 +1,19 @@
 #include "engine/modelmanagement/factories/PlanFactory.h"
 
-#include "engine/modelmanagement/Strings.h"
-#include "engine/modelmanagement/factories/Factory.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
-#include "engine/model/PreCondition.h"
+#include "engine/modelmanagement/Strings.h"
+#include "engine/modelmanagement/factories/AbstractPlanFactory.h"
 #include "engine/modelmanagement/factories/EntryPointFactory.h"
-#include "engine/modelmanagement/factories/StateFactory.h"
-#include "engine/modelmanagement/factories/TransitionFactory.h"
+#include "engine/modelmanagement/factories/Factory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
-#include "engine/modelmanagement/factories/VariableFactory.h"
-#include "engine/modelmanagement/factories/AbstractPlanFactory.h"
+#include "engine/modelmanagement/factories/StateFactory.h"
 #include "engine/modelmanagement/factories/SynchronisationFactory.h"
+#include "engine/modelmanagement/factories/TransitionFactory.h"
+#include "engine/modelmanagement/factories/VariableFactory.h"
 
 #include "engine/model/Plan.h"
 
@@ -62,7 +62,7 @@ Plan* PlanFactory::create(const YAML::Node& node)
         }
     }
     if (Factory::isValid(node[alica::Strings::transitions])) {
-        const YAML::Node &transitions = node[alica::Strings::transitions];
+        const YAML::Node& transitions = node[alica::Strings::transitions];
         for (YAML::const_iterator it = transitions.begin(); it != transitions.end(); ++it) {
             plan->_transitions.push_back(TransitionFactory::create(*it, plan));
         }
@@ -74,12 +74,20 @@ Plan* PlanFactory::create(const YAML::Node& node)
         plan->_runtimeCondition = RuntimeConditionFactory::create(node[alica::Strings::runtimeCondition], plan);
     }
     if (Factory::isValid(node[alica::Strings::synchronisations])) {
-        const YAML::Node &synchronisations = node[alica::Strings::synchronisations];
+        const YAML::Node& synchronisations = node[alica::Strings::synchronisations];
         for (YAML::const_iterator it = synchronisations.begin(); it != synchronisations.end(); ++it) {
             plan->_synchronisations.push_back(SynchronisationFactory::create(*it, plan));
         }
     }
 
     return plan;
+}
+
+void PlanFactory::attachReferences()
+{
+    EntryPointFactory::attachReferences();
+    StateFactory::attachReferences();
+    TransitionFactory::attachReferences();
+    SynchronisationFactory::attachReferences();
 }
 } // namespace alica

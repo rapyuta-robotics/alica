@@ -12,6 +12,7 @@ namespace alica
 class Plan;
 class VariableBinding;
 class ModelFactory;
+class PlanTypeFactory;
 
 class PlanType : public AbstractPlan
 {
@@ -21,17 +22,18 @@ public:
 
     std::string toString() const override;
 
-    const VariableBindingGrp& getParametrisation() const { return _parametrisation; }
+    const VariableBindingGrp& getVariableBindings() const { return _variableBindings; }
     const PlanGrp& getPlans() const { return _plans; }
     const Plan* getPlanById(int64_t id) const;
 
 private:
     friend ModelFactory;
-    void setParametrisation(const VariableBindingGrp& parametrisation);
+    friend PlanTypeFactory;
+    void setVariableBindings(const VariableBindingGrp &variableBindings);
     void setPlans(const PlanGrp& plans);
 
     PlanGrp _plans;
-    VariableBindingGrp _parametrisation;
+    VariableBindingGrp _variableBindings;
 };
 
 } // namespace alica

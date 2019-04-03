@@ -1,10 +1,3 @@
-/*
- * Quantifier.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Quantifier.h"
 #include "engine/AlicaEngine.h"
 #include "engine/model/EntryPoint.h"
@@ -14,9 +7,8 @@
 namespace alica
 {
 
-Quantifier::Quantifier(int64_t id)
-        : AlicaElement(id)
-        , _scope(nullptr)
+Quantifier::Quantifier()
+        : _scope(nullptr)
         , _scopeType(PLANSCOPE)
 {
 }

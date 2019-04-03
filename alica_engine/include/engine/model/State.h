@@ -12,6 +12,7 @@ class VariableBinding;
 class EntryPoint;
 class ModelFactory;
 class StateFactory;
+class ModelManager;
 
 /**
  * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
@@ -44,6 +45,7 @@ public:
 private:
     friend ModelFactory;
     friend StateFactory;
+    friend ModelManager;
     void setInPlan(const Plan* inPlan);
 
     void setInTransitions(const TransitionGrp& inTransitions);

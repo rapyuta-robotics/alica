@@ -1,8 +1,11 @@
 #include "engine/modelmanagement/factories/Factory.h"
 
+#include "engine/PlanRepository.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/modelmanagement/Strings.h"
-#include "engine/PlanRepository.h"
+#include "engine/model/EntryPoint.h"
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -10,23 +13,22 @@ namespace alica
 ReferenceList Factory::stateInTransitionReferences;
 ReferenceList Factory::stateOutTransitionReferences;
 ReferenceList Factory::stateAbstractPlanReferences;
+ReferenceList Factory::synchTransitionReferences;
 ReferenceList Factory::transitionSynchReferences;
 ReferenceList Factory::transitionInStateReferences;
 ReferenceList Factory::transitionOutStateReferences;
-ReferenceList Factory::paramSubPlanReferences;
-ReferenceList Factory::paramSubVarReferences;
-ReferenceList Factory::paramVarReferences;
+ReferenceList Factory::bindingSubPlanReferences;
+ReferenceList Factory::bindingSubVarReferences;
+ReferenceList Factory::bindingVarReferences;
 ReferenceList Factory::conditionVarReferences;
 ReferenceList Factory::quantifierScopeReferences;
 ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
-ReferenceList Factory::rtmRoleReferences;
-ReferenceList Factory::charCapReferences;
-ReferenceList Factory::charCapValReferences;
 ModelManager* Factory::modelManager;
 
-int64_t Factory::getReferencedId(const YAML::Node &node) {
+int64_t Factory::getReferencedId(const YAML::Node& node)
+{
     const std::string idString = node.as<std::string>();
     return Factory::getReferencedId(idString);
 }
@@ -40,9 +42,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
     std::string locator = idString.substr(0, idxOfHashtag);
     if (!locator.empty()) {
         std::string fileReferenced;
-        if (essentials::FileSystem::endsWith(locator, ".pml")
-            || essentials::FileSystem::endsWith(locator, ".beh")
-            || essentials::FileSystem::endsWith(locator, ".pty")) {
+        if (essentials::FileSystem::endsWith(locator, ".pml") || essentials::FileSystem::endsWith(locator, ".beh") ||
+                essentials::FileSystem::endsWith(locator, ".pty")) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, ".tsk")) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
@@ -53,31 +54,16 @@ int64_t Factory::getReferencedId(const std::string& idString)
         }
 
         if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileReferenced) == std::end(modelManager->filesParsed) &&
-            std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileReferenced) == std::end(modelManager->filesToParse)) {
+                std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileReferenced) ==
+                        std::end(modelManager->filesToParse)) {
             modelManager->filesToParse.push_back(fileReferenced);
         }
     }
     return stoll(idString.substr(idxOfHashtag + 1, idString.size() - idxOfHashtag));
 }
 
-std::vector<int64_t> Factory::getReferencedIds(const YAML::Node& referenceListNode) {
-    std::vector<int64_t> ids;
-
-    // TODO not working, yet - maybe adapt jackson mixin, that would be simpler...
-    std::string references = referenceListNode.as<std::string>();
-    size_t startIdx = 0;
-    size_t endIdx = references.find_first_of(",", startIdx);
-    while (endIdx != std::string::npos) {
-        ids.push_back(Factory::getReferencedId(references.substr(startIdx, endIdx-startIdx)));
-        startIdx = endIdx+1;
-        endIdx = references.find_first_of(",", startIdx);
-    }
-    ids.push_back(Factory::getReferencedId(references.substr(startIdx, endIdx-startIdx)));
-
-    return ids;
-}
-
-void Factory::setModelManager(alica::ModelManager* modelManager) {
+void Factory::setModelManager(alica::ModelManager* modelManager)
+{
     Factory::modelManager = modelManager;
 }
 
@@ -133,6 +119,8 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->planRepository->_taskRepositories.emplace(ael->getId(), (TaskRepository*) ael);
     } else if (alica::Strings::plantype.compare(type) == 0) {
         modelManager->planRepository->_planTypes.emplace(ael->getId(), (PlanType*) ael);
+    } else if (alica::Strings::variableBinding.compare(type) == 0) {
+        ALICA_DEBUG_MSG("Factory: Element type " << type << " is ignored.");
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing!");
     }

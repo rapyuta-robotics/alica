@@ -22,19 +22,18 @@ protected:
     static ReferenceList stateOutTransitionReferences;
     static ReferenceList stateAbstractPlanReferences;
     static ReferenceList transitionSynchReferences;
+    static ReferenceList synchTransitionReferences;
     static ReferenceList transitionInStateReferences;
     static ReferenceList transitionOutStateReferences;
-    static ReferenceList paramSubPlanReferences;
-    static ReferenceList paramSubVarReferences;
-    static ReferenceList paramVarReferences;
+    static ReferenceList bindingSubPlanReferences;
+    static ReferenceList bindingSubVarReferences;
+    static ReferenceList bindingVarReferences;
     static ReferenceList conditionVarReferences;
     static ReferenceList quantifierScopeReferences;
     static ReferenceList epStateReferences;
     static ReferenceList epTaskReferences;
     static ReferenceList planTypePlanReferences;
-    static ReferenceList rtmRoleReferences;
-    static ReferenceList charCapReferences;
-    static ReferenceList charCapValReferences;
+    static ModelManager* modelManager;
 
 
     template <typename T>
@@ -44,12 +43,9 @@ protected:
     static const AlicaElement* getElement(const int64_t id);
     static int64_t getReferencedId(const std::string& referenceString);
     static int64_t getReferencedId(const YAML::Node& referenceNode);
-    static std::vector<int64_t> getReferencedIds(const YAML::Node& referenceListNode);
     static void storeElement(AlicaElement* ael, const std::string& type);
     static void setAttributes(const YAML::Node& node, AlicaElement* ael);
     static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
-private:
-    static ModelManager* modelManager;
 };
 
 template <typename T>
