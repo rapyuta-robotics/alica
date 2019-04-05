@@ -11,6 +11,9 @@ struct PlanTreeInfo;
 struct SolverResult;
 struct SyncTalk;
 struct SyncReady;
+struct SyncReady;
+struct AgentQuery;
+struct AgentAnnouncement;
 class AlicaEngine;
 class RoleSwitch;
 
@@ -28,6 +31,8 @@ public:
     virtual void sendSyncReady(const SyncReady& sr) const = 0;
     virtual void sendSyncTalk(const SyncTalk& st) const = 0;
     virtual void sendSolverResult(const SolverResult& sr) const = 0;
+    virtual void sendAgentQuery(const AgentQuery& pq) const = 0;
+    virtual void sendAgentAnnouncement(const AgentAnnouncement& pa) const = 0;
     virtual void sendLogMessage(int level, const std::string& message) const {};
 
     virtual void tick(){};
@@ -37,6 +42,8 @@ public:
     void onAuthorityInfoReceived(const AllocationAuthorityInfo& aai);
     void onPlanTreeInfoReceived(std::shared_ptr<PlanTreeInfo> pti);
     void onSolverResult(const SolverResult& sr);
+    void onAgentQuery(const AgentQuery& pq);
+    void onAgentAnnouncement(const AgentAnnouncement& pa);
 
     virtual void startCommunication() = 0;
     virtual void stopCommunication() = 0;

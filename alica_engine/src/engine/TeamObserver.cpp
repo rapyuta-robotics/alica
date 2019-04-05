@@ -63,13 +63,11 @@ bool TeamObserver::updateTeamPlanTrees()
     }
 
     bool changedSomeAgent = false;
-    for (const auto& agent : _tm.getAllAgents()) {
-        bool changedCurrentAgent = agent.second->update();
-        if (changedCurrentAgent && !agent.second->isActive()) {
-            _simplePlanTrees.erase(agent.second->getId());
-        }
-        changedSomeAgent |= changedCurrentAgent;
+    std::vector<AgentIDConstPtr> deactivatedAgentIds = _tm.updateAgents(changedSomeAgent);
+    for (auto& agent : deactivatedAgentIds) {
+        _simplePlanTrees.erase(agent);
     }
+
     return changedSomeAgent;
 }
 
@@ -88,8 +86,9 @@ void TeamObserver::tick(RunningPlan* root)
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
+        ActiveAgentIdView agentIds = _tm.getActiveAgentIds();
         AgentGrp activeAgents;
-        std::copy(_tm.getActiveAgentIds().begin(), _tm.getActiveAgentIds().end(), std::back_inserter(activeAgents));
+        std::copy(agentIds.begin(), agentIds.end(), std::back_inserter(activeAgents));
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;

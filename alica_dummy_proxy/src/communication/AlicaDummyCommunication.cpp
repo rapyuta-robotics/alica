@@ -13,6 +13,8 @@
 #include <thread>
 
 #include "engine/AlicaEngine.h"
+#include "engine/containers/AgentAnnouncement.h"
+#include "engine/containers/AgentQuery.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/containers/SolverResult.h"
@@ -172,6 +174,28 @@ void InProcQueue<alica::SolverResult>::process(std::unique_ptr<alica::SolverResu
     }
 }
 
+template <>
+void InProcQueue<alica::AgentAnnouncement>::process(std::unique_ptr<alica::AgentAnnouncement>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    alica::AgentIDConstPtr prev = first->senderID;
+    for (AlicaDummyCommunication* module : registeredModules) {
+        first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
+        module->onAgentAnnouncement(*first);
+    }
+}
+
+template <>
+void InProcQueue<alica::AgentQuery>::process(std::unique_ptr<alica::AgentQuery>& first)
+{
+    std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
+    alica::AgentIDConstPtr prev = first->senderID;
+    for (AlicaDummyCommunication* module : registeredModules) {
+        first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
+        module->onAgentQuery(*first);
+    }
+}
+
 typedef struct Queues
 {
     InProcQueue<alica::AllocationAuthorityInfo> aaq;
@@ -179,6 +203,8 @@ typedef struct Queues
     InProcQueue<alica::SyncTalk> stq;
     InProcQueue<alica::SyncReady> srq;
     InProcQueue<alica::SolverResult> soq;
+    InProcQueue<alica::AgentAnnouncement> anq;
+    InProcQueue<alica::AgentQuery> aqq;
 
     Queues(CommModuleContainer& mContainer)
             : aaq(mContainer)
@@ -186,6 +212,8 @@ typedef struct Queues
             , stq(mContainer)
             , srq(mContainer)
             , soq(mContainer)
+            , anq(mContainer)
+            , aqq(mContainer)
     {
     }
 } Queues;
@@ -243,6 +271,22 @@ void AlicaDummyCommunication::sendSolverResult(const alica::SolverResult& sr) co
         return;
     }
     s_qctx.soq.push(sr);
+}
+
+void AlicaDummyCommunication::sendAgentQuery(const alica::AgentQuery& aq) const
+{
+    if (!_isRunning) {
+        return;
+    }
+    s_qctx.aqq.push(aq);
+}
+
+void AlicaDummyCommunication::sendAgentAnnouncement(const alica::AgentAnnouncement& aa) const
+{
+    if (!_isRunning) {
+        return;
+    }
+    s_qctx.anq.push(aa);
 }
 
 void AlicaDummyCommunication::tick() {}
