@@ -48,8 +48,9 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
     ASSERT_EQ(deep->getChildren().size(), 1);
     ASSERT_TRUE((*deep->getChildren().begin())->isBehaviour());
 
-    auto queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());
+    alica::QueryBehaviour1* queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());
     ASSERT_NE(queryBehaviour1, nullptr);
+    queryBehaviour1->stopQueries();
     alica::VariableGrp allReps;
     queryBehaviour1->query->getUniqueVariableStore().getAllRep(allReps);
 
