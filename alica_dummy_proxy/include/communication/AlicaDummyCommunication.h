@@ -30,6 +30,8 @@ public:
     void sendSyncReady(const alica::SyncReady& sr) const override;
     void sendSyncTalk(const alica::SyncTalk& st) const override;
     void sendSolverResult(const alica::SolverResult& sr) const override;
+    void sendAgentQuery(const alica::AgentQuery& aq) const override;
+    void sendAgentAnnouncement(const alica::AgentAnnouncement& aa) const override;
 
     void startCommunication() override;
     void stopCommunication() override;

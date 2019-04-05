@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <shared_mutex>
 #include <string>
 #include <unordered_set>
 
@@ -22,16 +23,32 @@ class ActiveAgentIdView;
 class ActiveAgentIdIterator;
 class ActiveAgentView;
 class ActiveAgentIterator;
+struct AgentQuery;
+struct AgentAnnouncement;
 
-class TeamManager
+// A read optimized cache for multi writer and readers.
+class AgentsCache
 {
 public:
     using AgentMap = std::map<AgentIDConstPtr, Agent*>;
 
-    TeamManager(AlicaEngine* engine, bool useConfigForTeam);
-    virtual ~TeamManager();
+    AgentsCache();
+    ~AgentsCache();
+    const std::shared_ptr<AgentMap>& get() const;
+    void addAgent(Agent* agent);
 
-    const AgentMap& getAllAgents() const { return _agents; }
+private:
+    // TODO: split active and inactive agents in different maps.
+    // Most of the operations are only on active agents.
+    std::shared_ptr<AgentMap> _agents;
+    mutable std::mutex _agentsMutex;
+};
+
+class TeamManager
+{
+public:
+    TeamManager(AlicaEngine* engine);
+    virtual ~TeamManager();
 
     AgentIDConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
@@ -52,21 +69,33 @@ public:
     const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
+    AgentGrp updateAgents(bool changedSomeAgent);
+    void handleAgentQuery(const AgentQuery& pq) const;
+    void handleAgentAnnouncement(const AgentAnnouncement& aa);
+    void init();
+    void tick();
 
 private:
     AlicaTime _teamTimeOut;
-    Agent* _localAgent;
-    AlicaEngine* _engine;
-    AgentMap _agents;
-    bool _useConfigForTeam;
+    AlicaTime _agentAnnouncementTimeInterval;
+    AlicaTime _timeLastAnnouncement;
+    int _announcementRetries;
 
-    void readTeamFromConfig();
+    Agent* _localAgent;
+    AgentsCache _agentsCache;
+    AlicaEngine* _engine;
+    bool _useAutoDiscovery;
+
+    void readSelfFromConfig();
+    void announcePresence() const;
+    void queryPresence() const;
+    Agent* getAgent(AgentIDConstPtr agentId) const;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
 {
 public:
-    ActiveAgentBaseIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+    ActiveAgentBaseIterator(AgentsCache::AgentMap::const_iterator it, const AgentsCache::AgentMap& map)
             : _it(it)
             , _map(map)
     {
@@ -91,14 +120,14 @@ protected:
             ++_it;
         }
     }
-    TeamManager::AgentMap::const_iterator _it;
-    const TeamManager::AgentMap& _map;
+    AgentsCache::AgentMap::const_iterator _it;
+    const AgentsCache::AgentMap& _map;
 };
 
 class ActiveAgentIdIterator : public ActiveAgentBaseIterator
 {
 public:
-    ActiveAgentIdIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+    ActiveAgentIdIterator(AgentsCache::AgentMap::const_iterator it, const AgentsCache::AgentMap& map)
             : ActiveAgentBaseIterator(it, map)
     {
     }
@@ -108,7 +137,7 @@ public:
 class ActiveAgentIterator : public ActiveAgentBaseIterator
 {
 public:
-    ActiveAgentIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
+    ActiveAgentIterator(AgentsCache::AgentMap::const_iterator it, const AgentsCache::AgentMap& map)
             : ActiveAgentBaseIterator(it, map)
     {
     }
@@ -118,24 +147,24 @@ public:
 class ActiveAgentBaseView
 {
 public:
-    ActiveAgentBaseView(const TeamManager::AgentMap& map)
+    ActiveAgentBaseView(const std::shared_ptr<AgentsCache::AgentMap>& map)
             : _map(map)
     {
     }
 
 protected:
-    const TeamManager::AgentMap& _map;
+    const std::shared_ptr<AgentsCache::AgentMap> _map;
 };
 
 class ActiveAgentIdView : public ActiveAgentBaseView
 {
 public:
-    ActiveAgentIdView(const TeamManager::AgentMap& map)
+    ActiveAgentIdView(const std::shared_ptr<AgentsCache::AgentMap> map)
             : ActiveAgentBaseView(map)
     {
     }
-    ActiveAgentIdIterator begin() const { return ActiveAgentIdIterator(_map.begin(), _map); }
-    ActiveAgentIdIterator end() const { return ActiveAgentIdIterator(_map.end(), _map); }
+    ActiveAgentIdIterator begin() const { return ActiveAgentIdIterator(_map->begin(), *_map); }
+    ActiveAgentIdIterator end() const { return ActiveAgentIdIterator(_map->end(), *_map); }
     int size() const { return std::distance(begin(), end()); }
     bool empty() const { return begin() == end(); }
 };
@@ -143,12 +172,12 @@ public:
 class ActiveAgentView : public ActiveAgentBaseView
 {
 public:
-    ActiveAgentView(const TeamManager::AgentMap& map)
+    ActiveAgentView(const std::shared_ptr<AgentsCache::AgentMap> map)
             : ActiveAgentBaseView(map)
     {
     }
-    ActiveAgentIterator begin() const { return ActiveAgentIterator(_map.begin(), _map); }
-    ActiveAgentIterator end() const { return ActiveAgentIterator(_map.end(), _map); }
+    ActiveAgentIterator begin() const { return ActiveAgentIterator(_map->begin(), *_map); }
+    ActiveAgentIterator end() const { return ActiveAgentIterator(_map->end(), *_map); }
     int size() const { return std::distance(begin(), end()); }
     bool empty() const { return begin() == end(); }
 };
