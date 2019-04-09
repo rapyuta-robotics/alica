@@ -1,0 +1,71 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(alica_capnzero_proxy)
+
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+    set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
+    set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
+    add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
+endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+
+## ZMQ
+find_package(PkgConfig)
+pkg_check_modules(PC_ZeroMQ QUIET zmq)
+find_path(ZeroMQ_INCLUDE_DIR
+        NAMES zmq.hpp
+        PATHS ${PC_ZeroMQ_INCLUDE_DIRS}
+        )
+find_library(ZeroMQ_LIBRARY
+        NAMES zmq
+        PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
+        )
+
+find_package(CapnProto)
+
+find_package(catkin REQUIRED COMPONENTS
+        alica_engine
+        message_generation
+        alica_msgs
+        alica_common_config
+        capnzero
+        )
+
+## System dependencies are found with CMake's conventions
+find_package(Boost REQUIRED COMPONENTS system)
+
+catkin_package(
+        INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
+        LIBRARIES alica_capnzero_proxy
+        CATKIN_DEPENDS alica_engine capnzero alica_msgs
+        #DEPENDS system_lib
+)
+
+include_directories(
+        include
+        ${catkin_INCLUDE_DIRS}
+)
+
+add_library(alica_capnzero_proxy
+        src/communication/AlicaCapnzeroCommunication.cpp
+        include/communication/AlicaCapnzeroCommunication.h
+        )
+
+add_dependencies(alica_capnzero_proxy
+        alica_msgs_generate_messages_cpp
+        agent_id_generate_messages_cpp
+        )
+
+target_compile_definitions(alica_capnzero_proxy PUBLIC ZMQ_BUILD_DRAFT_API=1)
+target_link_libraries(alica_capnzero_proxy
+        ${catkin_LIBRARIES}
+        )
+
+add_executable(fake_engine src/FakeEngine.cpp)
+target_link_libraries(fake_engine
+        alica_capnzero_proxy
+        ${ZeroMQ_LIBRARY}
+        ${CapnProto_LIBRARY}
+        ${capnzeroe_LIBRARY}
+        )
+target_compile_definitions(fake_engine PUBLIC ZMQ_BUILD_DRAFT_API=1)
