@@ -55,14 +55,14 @@ public:
     std::string getNameOfNode(tinyxml2::XMLElement* node);
     void createTasks(YAML::Node& node);
     void createBehaviour(YAML::Node& node);
-    void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
-    void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
+//    void createCapabilityDefinitionSet(tinyxml2::XMLDocument* node);
+//    void createRoleDefinitionSet(tinyxml2::XMLDocument* node);
     void createPlanType(YAML::Node& node);
     void computeReachabilities();
     void attachPlanReferences();
     void attachRoleReferences();
     void attachCharacteristicReferences();
-    RoleSet* createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan);
+//    RoleSet* createRoleSet(tinyxml2::XMLDocument* node, Plan* masterPlan);
     static const EntryPoint* generateIdleEntryPoint();
 
 private:

@@ -6,6 +6,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/TaskRepository.h"
+#include "engine/model/RoleSet.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/Variable.h"
 #include "engine/modelmanagement/Strings.h"
@@ -13,6 +14,7 @@
 #include "engine/modelmanagement/factories/PlanFactory.h"
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/modelmanagement/factories/RoleSetFactory.h"
 
 #include <SystemConfig.h>
 #include <alica_common_config/debug_output.h>
@@ -100,8 +102,13 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 
 RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
-    AlicaEngine::abort("MM: loadRoleSet not implemented, yet!");
-    return nullptr;
+    std::string roleSetPath;
+    if (!essentials::FileSystem::findFile(this->baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
+        AlicaEngine::abort("MM: Cannot find RoleSet '" + roleSetName + "'");
+    }
+
+    RoleSet* roleSet = (RoleSet*) parseFile(roleSetName, alica::Strings::roleset);
+    return roleSet;
 }
 
 AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std::string& type)
@@ -129,6 +136,10 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         TaskRepository* taskrepository = TaskRepositoryFactory::create(node);
         taskrepository->setFileName(currentFile);
         return taskrepository;
+    } else if (alica::Strings::roleset.compare(type) == 0) {
+        RoleSet* roleSet = RoleSetFactory::create(node);
+        roleSet->setFileName(currentFile);
+        return roleSet;
     } else {
         AlicaEngine::abort("MM: Parsing type not handled: ", type);
         return nullptr;

@@ -13,7 +13,7 @@ class EntryPoint;
 class Plan;
 class PlanType;
 class Quantifier;
-class RoleDefinitionSet;
+class RoleSet;
 class Role;
 class State;
 class Synchronisation;
@@ -100,7 +100,7 @@ public:
     const Accessor<Plan> getPlans() const { return Accessor<Plan>(_plans); }
     const Accessor<PlanType> getPlanTypes() const { return Accessor<PlanType>(_planTypes); }
     const Accessor<Quantifier> getQuantifiers() const { return Accessor<Quantifier>(_quantifiers); }
-    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const { return Accessor<RoleDefinitionSet>(_roleDefinitionSets); }
+    const Accessor<RoleSet> getRoleDefinitionSets() const { return Accessor<RoleSet>(_roleSets); }
     const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
     const Accessor<State> getStates() const { return Accessor<State>(_states); }
     const Accessor<Synchronisation> getSynchronisations() const { return Accessor<Synchronisation>(_synchronisations); }
@@ -139,7 +139,7 @@ private:
     MapType<Synchronisation> _synchronisations;
     MapType<Quantifier> _quantifiers;
     MapType<Variable> _variables;
-    MapType<RoleDefinitionSet> _roleDefinitionSets;
+    MapType<RoleSet> _roleSets;
     MapType<TaskRepository> _taskRepositories;
     MapType<PlanningProblem> _planningProblems;
 };

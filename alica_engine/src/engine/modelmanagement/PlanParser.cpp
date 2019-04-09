@@ -93,84 +93,84 @@ PlanParser::~PlanParser() {}
  * @param roleSetDir The relative directory in which to search for a roleset.
  * @return The parsed roleSet
  */
-const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
-{
-    std::string roleSetLocation;
-    if (roleSetName.empty()) {
-        roleSetLocation = findDefaultRoleSet(baseRolePath);
-    } else {
-        if (!essentials::FileSystem::endsWith(roleSetName, ".rset")) {
-            roleSetName = roleSetName + ".rset";
-        }
+//const RoleSet* PlanParser::parseRoleSet(std::string roleSetName)
+//{
+//    std::string roleSetLocation;
+//    if (roleSetName.empty()) {
+//        roleSetLocation = findDefaultRoleSet(baseRolePath);
+//    } else {
+//        if (!essentials::FileSystem::endsWith(roleSetName, ".rset")) {
+//            roleSetName = roleSetName + ".rset";
+//        }
+//
+//        essentials::FileSystem::findFile(this->baseRolePath, roleSetName, roleSetLocation);
+//    }
+//
+//    if (!essentials::FileSystem::pathExists(roleSetLocation)) {
+//        AlicaEngine::abort("PP: Cannot find roleset: " + roleSetLocation);
+//    }
+//
+//    ALICA_DEBUG_MSG("PP: Parsing RoleSet " << roleSetLocation);
+//
+//    this->currentDirectory = essentials::FileSystem::getParent(roleSetLocation);
+//
+//    tinyxml2::XMLDocument doc;
+//    doc.LoadFile(roleSetLocation.c_str());
+//    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
+//        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
+//    }
+//
+//    RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
+//
+//    filesParsed.push_back(roleSetLocation);
+//
+//    while (this->filesToParse.size() > 0) {
+//        string fileToParse = this->filesToParse.front();
+//        this->filesToParse.pop_front();
+//        this->currentDirectory = essentials::FileSystem::getParent(fileToParse);
+//        this->currentFile = fileToParse;
+//
+//        if (!essentials::FileSystem::pathExists(fileToParse)) {
+//            AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
+//        }
+//        if (essentials::FileSystem::endsWith(fileToParse, ".rdefset")) {
+//            parseRoleDefFile(fileToParse);
+//        } else if (essentials::FileSystem::endsWith(fileToParse, ".cdefset")) {
+//            parseCapabilityDefFile(fileToParse);
+//        } else {
+//            AlicaEngine::abort("PP: Cannot Parse file " + fileToParse);
+//        }
+//
+//        filesParsed.push_back(fileToParse);
+//    }
+//
+//    this->mf->attachRoleReferences();
+//    this->mf->attachCharacteristicReferences();
+//    return r;
+//}
 
-        essentials::FileSystem::findFile(this->baseRolePath, roleSetName, roleSetLocation);
-    }
+//void PlanParser::parseRoleDefFile(const std::string& currentFile)
+//{
+//    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
+//
+//    tinyxml2::XMLDocument doc;
+//    doc.LoadFile(currentFile.c_str());
+//    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
+//        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
+//    }
+//    this->mf->createRoleDefinitionSet(&doc);
+//}
 
-    if (!essentials::FileSystem::pathExists(roleSetLocation)) {
-        AlicaEngine::abort("PP: Cannot find roleset: " + roleSetLocation);
-    }
-
-    ALICA_DEBUG_MSG("PP: Parsing RoleSet " << roleSetLocation);
-
-    this->currentDirectory = essentials::FileSystem::getParent(roleSetLocation);
-
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile(roleSetLocation.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-
-    RoleSet* r = this->mf->createRoleSet(&doc, this->masterPlan);
-
-    filesParsed.push_back(roleSetLocation);
-
-    while (this->filesToParse.size() > 0) {
-        string fileToParse = this->filesToParse.front();
-        this->filesToParse.pop_front();
-        this->currentDirectory = essentials::FileSystem::getParent(fileToParse);
-        this->currentFile = fileToParse;
-
-        if (!essentials::FileSystem::pathExists(fileToParse)) {
-            AlicaEngine::abort("PP: Cannot Find referenced file ", fileToParse);
-        }
-        if (essentials::FileSystem::endsWith(fileToParse, ".rdefset")) {
-            parseRoleDefFile(fileToParse);
-        } else if (essentials::FileSystem::endsWith(fileToParse, ".cdefset")) {
-            parseCapabilityDefFile(fileToParse);
-        } else {
-            AlicaEngine::abort("PP: Cannot Parse file " + fileToParse);
-        }
-
-        filesParsed.push_back(fileToParse);
-    }
-
-    this->mf->attachRoleReferences();
-    this->mf->attachCharacteristicReferences();
-    return r;
-}
-
-void PlanParser::parseRoleDefFile(const std::string& currentFile)
-{
-    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
-
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createRoleDefinitionSet(&doc);
-}
-
-void PlanParser::parseCapabilityDefFile(const std::string& currentFile)
-{
-    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile(currentFile.c_str());
-    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
-        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
-    }
-    this->mf->createCapabilityDefinitionSet(&doc);
-}
+//void PlanParser::parseCapabilityDefFile(const std::string& currentFile)
+//{
+//    ALICA_DEBUG_MSG("PP: parsing RoleDef file: " << currentFile);
+//    tinyxml2::XMLDocument doc;
+//    doc.LoadFile(currentFile.c_str());
+//    if (doc.ErrorID() != tinyxml2::XML_NO_ERROR) {
+//        AlicaEngine::abort("PP: doc.ErrorCode: ", tinyxml2::XMLErrorStr[doc.ErrorID()]);
+//    }
+//    this->mf->createCapabilityDefinitionSet(&doc);
+//}
 
 std::string PlanParser::findDefaultRoleSet(std::string dir)
 {

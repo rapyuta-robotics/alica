@@ -24,6 +24,9 @@ namespace alica {
         static const std::string quantifier = "quantifier";
         static const std::string variable = "variable";
         static const std::string variableBinding = "variableBinding";
+        static const std::string roleset = "roleset";
+        static const std::string roleset_extension = ".rst";
+        static const std::string role = "role";
 
 
 
@@ -63,6 +66,7 @@ namespace alica {
         static const std::string frequency = "frequency";
         static const std::string deferring = "deferring";
         static const std::string tasks = "tasks";
+        static const std::string roles = "roles";
         static const std::string annotatedPlans = "annotatedPlans";
         static const std::string activated = "activated";
         static const std::string quantifierType = "quantifierType";
@@ -70,5 +74,7 @@ namespace alica {
         static const std::string scope = "scope";
         static const std::string sorts = "sorts";
         static const std::string inSync = "inSync";
+        static const std::string priorityDefault = "priorityDefault";
+        static const std::string taskPriorities = "taskPriorities";
     }
 }

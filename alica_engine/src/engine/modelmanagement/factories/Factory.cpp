@@ -119,6 +119,10 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->planRepository->_taskRepositories.emplace(ael->getId(), (TaskRepository*) ael);
     } else if (alica::Strings::plantype.compare(type) == 0) {
         modelManager->planRepository->_planTypes.emplace(ael->getId(), (PlanType*) ael);
+    } else if (alica::Strings::role.compare(type) == 0) {
+        modelManager->planRepository->_roles.emplace(ael->getId(), (Role*) ael);
+    } else if (alica::Strings::roleset.compare(type) == 0) {
+        modelManager->planRepository->_roleSets.emplace(ael->getId(), (RoleSet*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         ALICA_DEBUG_MSG("Factory: Element type " << type << " is ignored.");
     } else {

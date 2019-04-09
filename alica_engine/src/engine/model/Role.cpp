@@ -1,14 +1,4 @@
-/*
- * Role.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Role.h"
-
-#include "engine/model/Characteristic.h"
-#include "engine/model/RoleTaskMapping.h"
 
 #include <exception>
 #include <iostream>
@@ -18,8 +8,6 @@ namespace alica
 {
 
 Role::Role()
-        : _roleDefinitionSet(nullptr)
-        , _roleTaskMapping(nullptr)
 {
 }
 
@@ -27,8 +15,8 @@ Role::~Role() {}
 
 double Role::getPriority(int64_t taskId) const
 {
-    std::unordered_map<int64_t, double>::const_iterator it = _roleTaskMapping->getTaskPriorities().find(taskId);
-    if (it != _roleTaskMapping->getTaskPriorities().end()) {
+    std::unordered_map<int64_t, double>::const_iterator it = _taskPriorities.find(taskId);
+    if (it != _taskPriorities.end()) {
         return it->second;
     } else { // TODO move this check to start up
         std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
@@ -40,14 +28,9 @@ std::string Role::toString() const
 {
     std::stringstream ss;
     ss << "#Role: " << getName() << " " << getId() << std::endl;
-    ss << "\t Characteristics: " << _characteristics.size() << std::endl;
-    for (std::unordered_map<std::string, const Characteristic*>::const_iterator iter = _characteristics.begin(); iter != _characteristics.end(); ++iter) {
-        ss << "t" << iter->second->getName() << " : " << iter->second->getCapValue()->getName() << std::endl;
-    }
-    ss << std::endl;
-    ss << "\tRTM TaskPriorities (" << _roleTaskMapping->getId() << "): " << _roleTaskMapping->getTaskPriorities().size() << std::endl;
-    for (std::unordered_map<int64_t, double>::const_iterator iterator = _roleTaskMapping->getTaskPriorities().begin();
-            iterator != _roleTaskMapping->getTaskPriorities().end(); ++iterator) {
+    ss << "\tRTM TaskPriorities Size: " << _taskPriorities.size() << std::endl;
+    for (std::unordered_map<int64_t, double>::const_iterator iterator = _taskPriorities.begin();
+            iterator != _taskPriorities.end(); ++iterator) {
         const int64_t l = iterator->first;
         const double val = iterator->second;
         ss << "\t" << l << " : " << val << std::endl;
@@ -59,13 +42,8 @@ std::string Role::toString() const
 
 //====================== Getter and Setter ==================
 
-void Role::setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet)
+void Role::setTaskPriorities(const std::unordered_map<int64_t, double>& taskPriorities)
 {
-    _roleDefinitionSet = roleDefinitionSet;
-}
-
-void Role::setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping)
-{
-    _roleTaskMapping = roleTaskMapping;
+    _taskPriorities = taskPriorities;
 }
 } // namespace alica
