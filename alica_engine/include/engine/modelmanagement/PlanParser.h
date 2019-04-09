@@ -40,7 +40,7 @@ public:
     const std::string& getCurrentFile() const { return currentFile; }
     void setCurrentFile(const std::string& currentFile);
     void parseFileLoop();
-    const RoleSet* parseRoleSet(std::string roleSetName);
+//    const RoleSet* parseRoleSet(std::string roleSetName);
     int64_t parseId(YAML::Node node);
     int64_t fetchId(const std::string& idString);
 
@@ -60,8 +60,8 @@ private:
     std::string domainConfigFolder;
     std::string currentFile;
     void parseTaskFile(const std::string& currentFile);
-    void parseRoleDefFile(const std::string& currentFile);
-    void parseCapabilityDefFile(const std::string& currentFile);
+//    void parseRoleDefFile(const std::string& currentFile);
+//    void parseCapabilityDefFile(const std::string& currentFile);
     void parsePlanTypeFile(const std::string& currentFile);
     void parseBehaviourFile(const std::string& currentFile);
     Plan* parsePlanFile(const std::string& planFile);
