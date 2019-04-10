@@ -14,7 +14,7 @@ public:
     RuntimeCondition();
     virtual ~RuntimeCondition();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
 } // namespace alica

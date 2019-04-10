@@ -49,7 +49,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
-    std::string toString() const;
+    std::string toString(std::string indent = "") const;
 
 private:
     friend ModelFactory;

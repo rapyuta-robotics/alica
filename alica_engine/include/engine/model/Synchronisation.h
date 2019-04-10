@@ -31,7 +31,7 @@ public:
 
     const TransitionGrp& getInSync() const { return _inSync; }
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 
 private:
     friend ModelFactory;

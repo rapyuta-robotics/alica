@@ -22,7 +22,6 @@
 #include "engine/model/Role.h"
 #include "engine/model/RoleDefinitionSet.h"
 #include "engine/model/RoleSet.h"
-#include "engine/model/RoleTaskMapping.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/SuccessState.h"
 #include "engine/model/Synchronisation.h"

@@ -1,6 +1,8 @@
 #include "engine/model/State.h"
+#include "engine/model/AbstractPlan.h"
 
 #include <sstream>
+#include <iostream>
 
 namespace alica
 {
@@ -51,33 +53,28 @@ void State::setPlans(const AbstractPlanGrp& plans)
     _plans = plans;
 }
 
-std::string State::toString() const
+std::string State::toString(std::string indent) const
 {
-    AlicaElement::toString();
     std::stringstream ss;
-    ss << "#State: " << getName() << " " << getId() << std::endl;
-    ss << "\t Parent Plan: " << ((AlicaElement*)_inPlan)->getName() << " " << ((AlicaElement*)_inPlan)->getId() << std::endl;
-    ss << "\t InTransitions: " << std::endl;
+    ss << indent << "#State: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\tParent Plan: " << ((AlicaElement*)_inPlan)->getName() << " " << ((AlicaElement*)_inPlan)->getId() << std::endl;
+    ss << indent << "\tInTransitions: " << std::endl;
     for (const Transition* trans : _inTransitions) {
-        ss << "\t" << ((AlicaElement*)trans)->toString() << std::endl;
+        ss << ((AlicaElement*)trans)->toString(indent + "\t\t");
     }
-    ss << std::endl;
-    ss << "\t OutTransitions: " << std::endl;
+    ss << indent << "\tOutTransitions: " << std::endl;
     for (const Transition* trans : _outTransitions) {
-        ss << "\t" << ((AlicaElement*)trans)->toString() << std::endl;
+        ss << ((AlicaElement*)trans)->toString(indent + "\t\t");
     }
-    ss << std::endl;
-    ss << "\t Abstract Plans: " << std::endl;
+    ss << indent << "\tAbstract Plans: " << std::endl;
     for (const AbstractPlan* plans : _plans) {
-        ss << "\t" << ((AlicaElement*)plans)->toString() << std::endl;
+        ss << plans->AlicaElement::toString(indent + "\t\t");
     }
-    ss << std::endl;
-    ss << "\t Variable Bindings: " << std::endl;
+    ss << indent << "\tVariable Bindings: " << std::endl;
     for (const VariableBinding* binding : _variableBindingGrp) {
-        ss << "\t" << ((AlicaElement*)binding)->toString() << std::endl;
+        ss << ((AlicaElement*)binding)->toString(indent + "\t\t");
     }
-    ss << std::endl;
-    ss << "#EndState" << std::endl;
+    ss << indent << "#EndState" << std::endl;
     return ss.str();
 }
 

@@ -16,7 +16,7 @@ public:
     VariableBinding();
     virtual ~VariableBinding();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 
     const AbstractPlan* getSubPlan() const { return _subPlan; }
     const Variable* getVar() const { return _var; }

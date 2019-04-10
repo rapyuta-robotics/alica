@@ -1,4 +1,6 @@
 #include "engine/model/RoleSet.h"
+#include "engine/model/Role.h"
+
 #include <sstream>
 
 namespace alica
@@ -11,14 +13,14 @@ RoleSet::RoleSet()
 
 RoleSet::~RoleSet() {}
 
-std::string RoleSet::toString() const
+std::string RoleSet::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#RoleSet: " << getName() << " " << getId() << std::endl;
-    ss << "\t UsableWithPlanID: " << _usableWithPlanID << std::endl;
-    ss << "\t Contains Mappings: " << _roles.size() << std::endl;
+    ss << indent << "#RoleSet: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\t UsableWithPlanID: " << _usableWithPlanID << std::endl;
+    ss << indent << "\t Contains Mappings: " << _roles.size() << std::endl;
     for (const Role* role : _roles) {
-        ss << "\tRole: " << role << std::endl;
+        ss << role->toString(indent + "\t");
     }
     ss << "#EndRoleSet" << std::endl;
     return ss.str();

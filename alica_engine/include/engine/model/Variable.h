@@ -20,7 +20,7 @@ public:
     Variable(int64_t id, const std::string& name, const std::string& type);
     virtual ~Variable();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
     const std::string& getType() const { return _type; }
 
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) { return os << variable.getName() << "(" << variable.getId() << ")"; }

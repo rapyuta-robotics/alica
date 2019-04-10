@@ -16,11 +16,12 @@ class RoleSet : public AlicaElement
 public:
     RoleSet();
     virtual ~RoleSet();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
     int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
     const std::string& getFileName() const { return _fileName; }
     void setFileName(const std::string& fileName);
     const std::vector<Role*> getRoles() const { return _roles; }
+    double getDefaultPriority() const { return _priorityDefault; }
 
 private:
     friend ModelFactory;
@@ -31,7 +32,7 @@ private:
     /**
      * the default priority for all tasks that are not prioritized in a role of this set
      */
-    int64_t _priorityDefault;
+    double _priorityDefault;
     /**
      * the plan ID this roleset is defined for
      */

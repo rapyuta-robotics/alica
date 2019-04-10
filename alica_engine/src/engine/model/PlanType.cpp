@@ -19,17 +19,17 @@ const Plan* PlanType::getPlanById(int64_t id) const
     return nullptr;
 }
 
-std::string PlanType::toString() const
+std::string PlanType::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#PlanType: " << getName() << " " << getId() << std::endl;
-    ss << "\t Plans: " << _plans.size() << std::endl;
+    ss << indent << "#PlanType: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\t Plans: " << _plans.size() << std::endl;
     if (_plans.size() != 0) {
         for (const Plan* p : _plans) {
-            ss << "\t" << p->getId() << " " << p->getName() << std::endl;
+            ss << indent << "\t" << p->getId() << " " << p->getName() << std::endl;
         }
     }
-    ss << "#EndPlanType" << std::endl;
+    ss << indent << "#EndPlanType" << std::endl;
     return ss.str();
 }
 

@@ -1,12 +1,6 @@
-/*
- * AbstractPlan.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
+
 #include <SystemConfig.h>
 #include <sstream>
 
@@ -30,11 +24,11 @@ AbstractPlan::AbstractPlan(int64_t id)
 
 AbstractPlan::~AbstractPlan() {}
 
-std::string AbstractPlan::toString() const
+std::string AbstractPlan::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << AlicaElement::toString();
-    ss << "Filename: " << _fileName << std::endl;
+    ss << indent << AlicaElement::toString(indent);
+    ss << indent << "\tFilename: " << _fileName << std::endl;
     return ss.str();
 }
 

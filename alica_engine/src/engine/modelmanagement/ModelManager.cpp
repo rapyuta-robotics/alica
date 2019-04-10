@@ -5,16 +5,16 @@
 #include "engine/model/Behaviour.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/TaskRepository.h"
-#include "engine/model/RoleSet.h"
 #include "engine/model/Quantifier.h"
+#include "engine/model/RoleSet.h"
+#include "engine/model/TaskRepository.h"
 #include "engine/model/Variable.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BehaviourFactory.h"
 #include "engine/modelmanagement/factories/PlanFactory.h"
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
-#include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
+#include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 
 #include <SystemConfig.h>
 #include <alica_common_config/debug_output.h>
@@ -53,7 +53,7 @@ const std::string ModelManager::getBasePath(const std::string& configKey)
         basePath = this->domainConfigFolder + basePath;
     }
 
-    ALICA_DEBUG_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
+    ALICA_INFO_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
 
     if (!essentials::FileSystem::pathExists(basePath)) {
         AlicaEngine::abort("MM: base path does not exist: " + basePlanPath);
@@ -74,7 +74,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         std::string fileToParse = this->filesToParse.front();
         this->filesToParse.pop_front();
 
-        std::cout << "MM: fileToParse: " << fileToParse << std::endl;
+        ALICA_DEBUG_MSG("MM: fileToParse: " << fileToParse);
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
@@ -97,6 +97,11 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     this->generateTemplateVariables();
     this->computeReachabilities();
 
+    for (const Behaviour* beh : this->planRepository->getBehaviours()) {
+        ALICA_INFO_MSG("MM: " << beh->toString());
+    }
+
+
     return masterPlan;
 }
 
@@ -104,11 +109,53 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
     std::string roleSetPath;
     if (!essentials::FileSystem::findFile(this->baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
-        AlicaEngine::abort("MM: Cannot find RoleSet '" + roleSetName + "'");
+        roleSetPath = findDefaultRoleSet(baseRolePath);
     }
 
-    RoleSet* roleSet = (RoleSet*) parseFile(roleSetName, alica::Strings::roleset);
+    if (!essentials::FileSystem::pathExists(roleSetPath)) {
+        AlicaEngine::abort("MM: Cannot find RoleSet '" + roleSetPath + "'");
+    }
+
+    RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
+    RoleSetFactory::attachReferences();
+    ALICA_INFO_MSG("MM: Parsed the following role set: \n" << roleSet->toString());
     return roleSet;
+}
+
+/**
+ * Searches for default role sets in the given directory.
+ * @param dir directory to search in (not recursively)
+ * @return The first default role set it finds.
+ */
+std::string ModelManager::findDefaultRoleSet(const std::string& dir)
+{
+    std::string rolesetDir = dir;
+    if (!essentials::FileSystem::isPathRooted(rolesetDir)) {
+        rolesetDir = essentials::FileSystem::combinePaths(this->baseRolePath, rolesetDir);
+    }
+    if (!essentials::FileSystem::isDirectory(rolesetDir)) {
+        AlicaEngine::abort("MM: RoleSet directory does not exist: " + rolesetDir);
+    }
+
+    std::vector<std::string> files = essentials::FileSystem::findAllFiles(rolesetDir, alica::Strings::roleset_extension);
+
+    // find default role set and return first you find
+    for (std::string file : files) {
+        YAML::Node node;
+        try {
+            node = YAML::LoadFile(file);
+            if (Factory::isValid(node[alica::Strings::defaultRoleSet]) && Factory::getValue<bool>(node, alica::Strings::defaultRoleSet)) {
+                return file;
+            }
+        } catch (YAML::BadFile badFile) {
+            AlicaEngine::abort("MM: Could not parse roleset file: ", badFile.msg);
+        }
+    }
+
+    AlicaEngine::abort("MM: Could not find any default role set in '" + rolesetDir +"'");
+
+    // need to return something, but it should never be reached (either found something, or abort)
+    return files[0];
 }
 
 AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std::string& type)
@@ -168,7 +215,8 @@ void ModelManager::attachReferences()
     BehaviourFactory::attachReferences();
 }
 
-void ModelManager::generateTemplateVariables() {
+void ModelManager::generateTemplateVariables()
+{
     // generates template variables for all quantifiers
     for (std::pair<const int64_t, Quantifier*> p : this->planRepository->_quantifiers) {
         Quantifier* q = p.second;
@@ -191,7 +239,8 @@ void ModelManager::generateTemplateVariables() {
  * Computes the sets of reachable states for all entrypoints created.
  * This speeds up some calculations during run-time.
  */
-void ModelManager::computeReachabilities () {
+void ModelManager::computeReachabilities()
+{
     for (const std::pair<const int64_t, EntryPoint*>& ep : this->planRepository->_entryPoints) {
         ep.second->computeReachabilitySet();
         // set backpointers:

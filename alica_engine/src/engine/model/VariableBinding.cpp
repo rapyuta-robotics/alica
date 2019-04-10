@@ -17,12 +17,12 @@ VariableBinding::VariableBinding()
 
 VariableBinding::~VariableBinding() {}
 
-std::string VariableBinding::toString() const
+std::string VariableBinding::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "[VariableBinding: Var=" << _var->getId();
-    ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getId() << "), ";
-    ss << "SubPlan=" << _subPlan->getName() << "]" << std::endl;
+    ss << indent << "[VariableBinding: Var=" << _var->getName() << " (" << _var->getId() << "),";
+    ss << " SubVar=" << _subVar->getName() << " (" << _subVar->getId() << "),";
+    ss << " SubPlan=" << _subPlan->getName() << "]" << std::endl;
     return ss.str();
 }
 

@@ -10,12 +10,18 @@
 namespace alica
 {
 using ReferenceList = std::list<std::pair<int64_t, int64_t>>;
+using TripleReferenceList = std::list<std::tuple<int64_t, int64_t, double>>;
 class AlicaElement;
 class Factory
 {
 public:
     Factory() = delete;
     static void setModelManager(ModelManager* modelManager);
+    template <typename T>
+    static T getValue(const YAML::Node& node, const std::string& key);
+    template <typename T>
+    static T getValue(const YAML::Node& node, const std::string& key, T defaultValue);
+    static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
 
 protected:
     static ReferenceList stateInTransitionReferences;
@@ -33,19 +39,16 @@ protected:
     static ReferenceList epStateReferences;
     static ReferenceList epTaskReferences;
     static ReferenceList planTypePlanReferences;
+    static TripleReferenceList roleTaskReferences;
     static ModelManager* modelManager;
 
 
-    template <typename T>
-    static T getValue(const YAML::Node& node, const std::string& key);
-    template <typename T>
-    static T getValue(const YAML::Node& node, const std::string& key, T defaultValue);
+
     static const AlicaElement* getElement(const int64_t id);
     static int64_t getReferencedId(const std::string& referenceString);
     static int64_t getReferencedId(const YAML::Node& referenceNode);
     static void storeElement(AlicaElement* ael, const std::string& type);
     static void setAttributes(const YAML::Node& node, AlicaElement* ael);
-    static bool isValid(const YAML::Node& node) {return node && YAML::NodeType::Null != node.Type();}
 };
 
 template <typename T>

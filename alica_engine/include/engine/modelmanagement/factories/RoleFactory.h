@@ -8,5 +8,6 @@ namespace alica {
     class RoleFactory: public Factory {
     public:
         static Role* create(const YAML::Node& roleNode, RoleSet* roleSet);
+        static void attachReferences();
     };
 }

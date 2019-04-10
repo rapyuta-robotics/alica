@@ -50,7 +50,7 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
             // set stuff from behaviour configuration in basic behaviour object
             basicBeh->setBehaviour(beh);
             basicBeh->setDelayedStart(beh->getDeferring());
-            basicBeh->setInterval(1000 / beh->getFrequency());
+            basicBeh->setInterval(1000 / (beh->getFrequency() < 1 ? 1 : beh->getFrequency()));
             basicBeh->setEngine(_ae);
             basicBeh->init();
 
@@ -67,17 +67,6 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
  */
 void BehaviourPool::stopAll()
 {
-/*    
-    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository()->getBehaviours();
-    for (const Behaviour* beh : behaviours) {
-        auto bbPtr = _availableBehaviours.at(beh);
-        if (bbPtr == nullptr) {
-            ALICA_ERROR_MSG("BP::stop(): Found Behaviour without an BasicBehaviour attached!");
-            continue;
-        }
-    }
-*/
-
     for (auto& beh_pair : _availableBehaviours) {
         beh_pair.second->stop();
     }

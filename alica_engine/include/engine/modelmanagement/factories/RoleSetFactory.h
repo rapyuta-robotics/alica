@@ -11,6 +11,7 @@ namespace alica
     {
     public:
         static RoleSet* create(const YAML::Node& node);
+        static void attachReferences();
     private:
         RoleSetFactory() = delete;
     };
