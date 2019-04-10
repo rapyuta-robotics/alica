@@ -1,11 +1,11 @@
-@0xf1cf2b46ae0692ca
+@0xf1cf2b46ae0692ca;
 
 struct AlicaEngineInfo {
-    sender_id @0 :Uint32;
-    master_plan @1 :Text;
-    current_plan @2 :Text;
-    current_state @3 :Text;
-    current_role @4 :Text;
-    current_task @5 :Text;
-    agent_ids_with_me @6 :List(Uint32);
+    senderId @0 :List(UInt8);
+    masterPlan @1 :Text;
+    currentPlan @2 :Text;
+    currentState @3 :Text;
+    currentRole @4 :Text;
+    currentTask @5 :Text;
+    agentIdsWithMe @6 :List(List(UInt8));
 }

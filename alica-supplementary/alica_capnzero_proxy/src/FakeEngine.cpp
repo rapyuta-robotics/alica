@@ -1,4 +1,5 @@
 #include <communication/AlicaCapnzeroCommunication.h>
+#include <engine/AlicaEngine.h>
 
 #include <capnp/common.h>
 #include <capnp/message.h>
@@ -8,5 +9,6 @@
 
 int main(int argc, char* argv[])
 {
-    alicaCapnzeroProxy::AlicaCapnzeroCommunication com();
+    alica::AlicaEngine *ae = NULL;
+    alicaCapnzeroProxy::AlicaCapnzeroCommunication *com = new alicaCapnzeroProxy::AlicaCapnzeroCommunication(ae);
 }

@@ -17,7 +17,6 @@ namespace alicaCapnzeroProxy
 class AlicaCapnzeroCommunication : public alica::IAlicaCommunication
 {
     AlicaCapnzeroCommunication(alica::AlicaEngine *ae);
-    AlicaCapnzeroCommunication(); // Hack for testing!!!
     virtual ~AlicaCapnzeroCommunication();
 
     virtual void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const override;
@@ -29,11 +28,11 @@ class AlicaCapnzeroCommunication : public alica::IAlicaCommunication
     virtual void sendSolverResult(const alica::SolverResult& sr) const override;
     virtual void sendLogMessage(int level, const std::string& message) const override;
 
-    virtual void handleAllocationAuthorityCapnzero(const alica_msgs::AllocationAuthorityInfo& aai);
-    virtual void handlePlanTreeInfoCapnzero(alica_msgs::PlanTreeInfoPtr pti);
-    virtual void handleSyncReadyCapnzero(alica_msgs::SyncReadyPtr sr);
-    virtual void handleSyncTalkCapnzero(alica_msgs::SyncTalkPtr st);
-    virtual void handleSolverResult(const alica_msgs::SolverResult& sr);
+    void handleAllocationAuthority(const alica_msgs::AllocationAuthorityInfo& aai);
+    void handlePlanTreeInfo(alica_msgs::PlanTreeInfoPtr pti);
+    void handleSyncReady(alica_msgs::SyncReadyPtr sr);
+    void handleSyncTalk(alica_msgs::SyncTalkPtr st);
+    void handleSolverResult(const alica_msgs::SolverResult& sr);
 
     virtual void startCommunication();
     virtual void stopCommunication();

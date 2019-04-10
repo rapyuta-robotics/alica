@@ -176,7 +176,7 @@ void AlicaRosCommunication::sendSyncReady(const SyncReady& sr) const
     alica_msgs::SyncReady srs;
 
     srs.sender_id.id = sr.senderID->toByteVector();
-    srs.sync_transition_id = sr.syncTransitionID;
+    srs.sync_transition_id = sr.synchronisationID;
 
     if (this->isRunning) {
         this->SyncReadyPublisher.publish(srs);
@@ -265,7 +265,7 @@ void AlicaRosCommunication::handleSyncReadyRos(alica_msgs::SyncReadyPtr sr)
 {
     auto srPtr = make_shared<SyncReady>();
     srPtr->senderID = this->ae->getIdFromBytes(sr->sender_id.id);
-    srPtr->syncTransitionID = sr->sync_transition_id;
+    srPtr->synchronisationID = sr->sync_transition_id;
 
     if (this->isRunning) {
         this->onSyncReadyReceived(srPtr);
