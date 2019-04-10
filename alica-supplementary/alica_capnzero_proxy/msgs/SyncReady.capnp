@@ -2,5 +2,5 @@
 
 struct SynReady {
     senderId @0 :List(UInt8);
-    syncTransitionId @1 :Int64;
+    synchronisationId @1 :Int64;
 }
