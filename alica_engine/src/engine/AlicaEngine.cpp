@@ -134,6 +134,11 @@ void AlicaEngine::iterationComplete()
     // TODO: implement the trigger function for iteration complete
 }
 
+int AlicaEngine::getVersion() const
+{
+    return _ctx.getVersion();
+}
+
 void AlicaEngine::setStepCalled(bool stepCalled)
 {
     _stepCalled = stepCalled;

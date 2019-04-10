@@ -93,6 +93,7 @@ public:
     void setStepCalled(bool stepCalled);
     bool getStepCalled() const;
     void iterationComplete();
+    int getVersion() const;
 
     // AlicaContext forward interface
     const IAlicaCommunication& getCommunicator() const;
@@ -106,6 +107,7 @@ public:
     AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID);
     template <class Prototype>
     AgentIDConstPtr getId(Prototype& idPrototype);
+    AgentIDConstPtr generateId(std::size_t size) { return AgentIDConstPtr(_agentIDManager.generateID(size)); }
 
 private:
     void setStepEngine(bool stepEngine);

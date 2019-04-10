@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/containers/AgentAnnouncement.h"
 #include <engine/AgentIDConstPtr.h>
 #include <engine/AlicaClock.h>
 #include <engine/teammanager/Agent.h>
@@ -24,7 +25,6 @@ class ActiveAgentIdIterator;
 class ActiveAgentView;
 class ActiveAgentIterator;
 struct AgentQuery;
-struct AgentAnnouncement;
 
 // A read optimized cache for multi writer and readers.
 class AgentsCache
@@ -35,7 +35,7 @@ public:
     AgentsCache();
     ~AgentsCache();
     const std::shared_ptr<AgentMap>& get() const;
-    void addAgent(Agent* agent);
+    void addAgents(std::vector<Agent*>& agents);
 
 private:
     // TODO: split active and inactive agents in different maps.
@@ -69,7 +69,7 @@ public:
     const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
-    AgentGrp updateAgents(bool changedSomeAgent);
+    AgentGrp updateAgents(bool& changedSomeAgent);
     void handleAgentQuery(const AgentQuery& pq) const;
     void handleAgentAnnouncement(const AgentAnnouncement& aa);
     void init();
@@ -80,15 +80,19 @@ private:
     AlicaTime _agentAnnouncementTimeInterval;
     AlicaTime _timeLastAnnouncement;
     int _announcementRetries;
+    AgentAnnouncement _presenceMessage;
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
+    std::mutex _msgQueueMutex;
+    std::vector<Agent*> _msgQueue;
 
     void readSelfFromConfig();
     void announcePresence() const;
     void queryPresence() const;
+    void constructAnnouncementMessage();
     Agent* getAgent(AgentIDConstPtr agentId) const;
 };
 

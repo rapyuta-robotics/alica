@@ -47,22 +47,22 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
 {
     AlicaTime now = _engine->getAlicaClock().now();
     TeamManager& tm = _engine->editTeamManager();
-    if (tm.isAgentIgnored(aai.senderID)) {
+    if (aai.senderID == _localAgentID || tm.isAgentIgnored(aai.senderID)) {
         return;
     }
-    if (*(aai.senderID) != *_localAgentID) {
-        tm.setTimeLastMsgReceived(aai.senderID, now);
-        if (*(aai.senderID) > *_localAgentID) {
-            // notify TO that evidence about other robots is available
-            for (EntryPointRobots epr : aai.entryPointRobots) {
-                for (AgentIDConstPtr rid : epr.robots) {
-                    if (*rid != *_localAgentID) {
-                        tm.setTimeLastMsgReceived(rid, now);
-                    }
+
+    tm.setTimeLastMsgReceived(aai.senderID, now);
+    if (*(aai.senderID) > *_localAgentID) {
+        // notify TO that evidence about other robots is available
+        for (EntryPointRobots epr : aai.entryPointRobots) {
+            for (AgentIDConstPtr rid : epr.robots) {
+                if (*rid != *_localAgentID) {
+                    tm.setTimeLastMsgReceived(rid, now);
                 }
             }
         }
     }
+
     ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
     {
         std::lock_guard<std::mutex> lock(_mutex);

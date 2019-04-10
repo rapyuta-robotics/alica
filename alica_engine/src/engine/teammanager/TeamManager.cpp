@@ -2,10 +2,11 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
+#include "engine/Logger.h"
 #include "engine/collections/RobotProperties.h"
-#include "engine/containers/AgentAnnouncement.h"
 #include "engine/containers/AgentQuery.h"
 #include "essentials/AgentIDFactory.h"
+#include <alica_common_config/debug_output.h>
 
 #include <SystemConfig.h>
 #include <iostream>
@@ -40,12 +41,21 @@ const std::shared_ptr<AgentsCache::AgentMap>& AgentsCache::get() const
     return s_agents;
 }
 
-void AgentsCache::addAgent(Agent* agent)
+void AgentsCache::addAgents(std::vector<Agent*>& agents)
 {
+    if (agents.empty()) {
+        return;
+    }
     // Mutate agent cache and add new agent
     std::lock_guard<std::mutex> guard(_agentsMutex);
     std::shared_ptr<AgentMap> newAgentsMap = std::make_shared<AgentMap>(*_agents);
-    newAgentsMap->emplace(std::make_pair(agent->getId(), agent));
+    for (Agent* agent : agents) {
+        auto ret = newAgentsMap->emplace(agent->getId(), agent);
+        if (!ret.second) {
+            // already existed
+            delete agent;
+        }
+    }
     _agents = std::move(newAgentsMap);
 }
 
@@ -59,10 +69,25 @@ TeamManager::TeamManager(AlicaEngine* engine)
     _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
     _useAutoDiscovery = sc["Alica"]->get<bool>("Alica.AutoDiscovery", NULL);
     if (_useAutoDiscovery) {
-        _agentAnnouncementTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
+        _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
     readSelfFromConfig();
+    constructAnnouncementMessage();
+}
+
+void TeamManager::constructAnnouncementMessage()
+{
+    _presenceMessage.senderID = _localAgent->getId();
+    _presenceMessage.senderName = _localAgent->getName();
+    _presenceMessage.senderSdk = _localAgent->getSdk();
+    _presenceMessage.planHash = _localAgent->getPlanHash();
+    _presenceMessage.role = _localAgent->getProperties().getDefaultRole();
+    for (const auto& cap : _localAgent->getProperties().getCharacteristics()) {
+        const std::string& name = cap.first;
+        const std::string& value = cap.second->getCapValue()->getName();
+        _presenceMessage.capabilities.push_back(std::make_pair(name, value));
+    }
 }
 
 TeamManager::~TeamManager() {}
@@ -82,18 +107,20 @@ void TeamManager::readSelfFromConfig()
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     std::string localAgentName = _engine->getRobotName();
     int id = sc["Local"]->tryGet<int>(-1, "Local", localAgentName.c_str(), "ID", NULL);
-    if (id == -1) {
-        //@759 TODO auto generate id
-    }
 
     AgentAnnouncement aa;
-    aa.senderID = _engine->getId(id);
+    if (id != -1) {
+        aa.senderID = _engine->getId(id);
+    } else {
+        aa.senderID = _engine->generateId(8);
+        ALICA_DEBUG_MSG("tm: Auto generated id " << aa.senderID);
+    }
+
     aa.senderName = localAgentName;
     aa.role = sc["Local"]->get<std::string>("Local", localAgentName.c_str(), "DefaultRole", NULL);
-    // @759: TODO: get plan hash and sdk here
-    // aa.planHash =
-    // aa.senderSdk =
-    // Add capabilities
+    // TODO: add plan hash
+    aa.planHash = 0;
+    aa.senderSdk = _engine->getVersion();
     std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", localAgentName.c_str(), NULL);
     for (const std::string& s : *properties) {
         if (s == "ID" || s == "DefaultRole") {
@@ -106,7 +133,9 @@ void TeamManager::readSelfFromConfig()
 
     _localAgent = new Agent(_engine, _teamTimeOut, aa);
     _localAgent->setLocal(true);
-    _agentsCache.addAgent(_localAgent);
+    std::vector<Agent*> agents;
+    agents.push_back(_localAgent);
+    _agentsCache.addAgents(agents);
 }
 
 ActiveAgentIdView TeamManager::getActiveAgentIds() const
@@ -142,9 +171,9 @@ Agent* TeamManager::getAgent(AgentIDConstPtr agentId) const
     auto agentEntry = agents.find(agentId);
     if (agentEntry != agents.end()) {
         return agentEntry->second;
-    } else {
-        return nullptr;
     }
+
+    return nullptr;
 }
 
 AgentIDConstPtr TeamManager::getLocalAgentID() const
@@ -177,9 +206,10 @@ bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
-        agent->isIgnored();
+        return agent->isIgnored();
     }
-    return false;
+    // Ignore agents that are not announced yet
+    return true;
 }
 
 void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
@@ -195,6 +225,7 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
     Agent* agent = getAgent(agentId);
     if (agent) {
         agent->setSuccess(plan, entryPoint);
+        return true;
     }
     return false;
 }
@@ -204,6 +235,7 @@ bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceeded
     Agent* agent = getAgent(agentId);
     if (agent) {
         agent->setSuccessMarks(suceededEps);
+        return true;
     }
     return false;
 }
@@ -217,13 +249,14 @@ const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, co
     return nullptr;
 }
 
-AgentGrp TeamManager::updateAgents(bool changedSomeAgent)
+AgentGrp TeamManager::updateAgents(bool& changedSomeAgent)
 {
     AgentsCache::AgentMap& agents = *_agentsCache.get();
     changedSomeAgent = false;
     AgentGrp deactivatedAgentIds;
     for (const auto& agent : agents) {
         bool changedCurrentAgent = agent.second->update();
+
         if (changedCurrentAgent && !agent.second->isActive()) {
             deactivatedAgentIds.push_back(agent.second->getId());
         }
@@ -232,18 +265,31 @@ AgentGrp TeamManager::updateAgents(bool changedSomeAgent)
     return deactivatedAgentIds;
 }
 
-void TeamManager::handleAgentQuery(const AgentQuery& pq) const
+void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 {
-    //@759 check plan hash and sdk version before responding and log query here
-    if (!_useAutoDiscovery) {
+    if (!_useAutoDiscovery || aq.senderID == _localAgent->getId()) {
         return;
     }
+
+    // TODO: Add sdk compatibility check with comparing major version numbers
+    if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
+        ALICA_DEBUG_MSG("tm: Version mismatch ignoring: " << aq.senderID);
+        return;
+    }
+
+    ALICA_DEBUG_MSG("tm: Responding to agent: " << aq.senderID);
     announcePresence();
 }
 
 void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 {
-    if (!_useAutoDiscovery) {
+    if (!_useAutoDiscovery || aa.senderID == _localAgent->getId()) {
+        return;
+    }
+
+    // TODO: Add sdk compatibility check with comparing major version numbers
+    if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
+        ALICA_DEBUG_MSG("tm: Version mismatch ignoring: " << aa.senderID);
         return;
     }
 
@@ -253,11 +299,11 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
         return;
     }
 
-    //@759 verify plan hash and sdk version before adding and log query here
     agentInfo = new Agent(_engine, _teamTimeOut, aa);
-    _agentsCache.addAgent(agentInfo);
-    _engine->editRoleAssignment().update();
-    _engine->editRoleAssignment().tick();
+    agentInfo->setTimeLastMsgReceived(_engine->getAlicaClock().now());
+    _engine->editLog().eventOccurred("New Agent(", aa.senderID, ")");
+    std::lock_guard<std::mutex> lg(_msgQueueMutex);
+    _msgQueue.push_back(agentInfo);
 }
 
 void TeamManager::init()
@@ -271,17 +317,9 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    //@759 TODO: cache this message
-    AgentAnnouncement paMessage;
-    paMessage.senderID = _localAgent->getId();
-    paMessage.senderName = _localAgent->getName();
-    paMessage.senderSdk = _localAgent->getSdk();
-    paMessage.planHash = _localAgent->getPlanHash();
-    paMessage.role = _localAgent->getProperties().getDefaultRole();
-    // @759 TODO: add capabilities
-    // paMessage.capabilities =
+    ALICA_DEBUG_MSG("tm: Announcing presence");
     for (int i = 0; i < _announcementRetries; ++i) {
-        _engine->getCommunicator().sendAgentAnnouncement(paMessage);
+        _engine->getCommunicator().sendAgentAnnouncement(_presenceMessage);
     }
 }
 
@@ -302,9 +340,14 @@ void TeamManager::tick()
         return;
     }
 
+    if (!_msgQueue.empty()) {
+        std::lock_guard<std::mutex> lg(_msgQueueMutex);
+        _agentsCache.addAgents(_msgQueue);
+        _msgQueue.clear();
+    }
     // check whether its time for new announcement
     AlicaTime now = _engine->getAlicaClock().now();
-    if (_timeLastAnnouncement + _agentAnnouncementTimeInterval > now) {
+    if (_timeLastAnnouncement + _agentAnnouncementTimeInterval <= now) {
         _timeLastAnnouncement = now;
         announcePresence();
     }

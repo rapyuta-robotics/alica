@@ -12,12 +12,12 @@
 #include "engine/TeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
-
 #include <test_alica.h>
 
 #include <gtest/gtest.h>
@@ -51,13 +51,29 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     // fake a list of existing robots
     alica::AgentGrp robots;
-    for (int number = 8; number <= 11; number++) {
-        alica::AgentIDConstPtr agentID = ae->getId<int>(number);
-        robots.push_back(agentID);
-        ae->editTeamManager().setTimeLastMsgReceived(agentID, ae->getAlicaClock().now());
-    }
-    ae->editTeamObserver().tick(nullptr);
 
+    alica::AgentAnnouncement aa;
+    aa.planHash = 0;
+    aa.senderSdk = ae->getVersion();
+    for (int agentId = 8; agentId <= 11; ++agentId) {
+        aa.senderID = ae->getId<int>(agentId);
+        if (agentId == 8) {
+            aa.role = "Attacker";
+            aa.senderName = "hairy";
+        } else if (agentId == 10) {
+            aa.role = "AttackSupporter";
+            aa.senderName = "savvy";
+        } else if (agentId == 11) {
+            aa.role = "Supporter";
+            aa.senderName = "myo";
+        }
+
+        ae->editTeamManager().handleAgentAnnouncement(aa);
+        robots.push_back(aa.senderID);
+    }
+
+    ae->editTeamManager().tick();
+    ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
     // fake inform the team observer about roles of none existing robots
 

@@ -105,6 +105,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->start();
     aes[1]->start();
+
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
 

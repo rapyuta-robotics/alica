@@ -108,6 +108,13 @@ public:
     static void getVersion(int& major, int& minor, int& patch);
 
     /**
+     * Get version of Alica engine.
+     *
+     * @return compressed representation of sdk version
+     */
+    static int getVersion();
+
+    /**
      * Creates AlicaContext object.
      *
      * @param roleSetName Name for roleset
