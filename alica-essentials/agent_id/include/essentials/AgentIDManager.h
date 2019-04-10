@@ -1,16 +1,18 @@
 #pragma once
 
-#include "essentials/AgentIDFactory.h"
 #include "essentials/AgentID.h"
+#include "essentials/AgentIDFactory.h"
 
 #include <mutex>
 #include <unordered_set>
 #include <vector>
 
-namespace essentials {
+namespace essentials
+{
 
-class AgentIDManager {
-public:
+class AgentIDManager
+{
+  public:
     // static AgentIDManager *getInstance();
     AgentIDManager(AgentIDFactory* idFactory);
     virtual ~AgentIDManager();
@@ -20,12 +22,12 @@ public:
     template <class Prototype>
     const AgentID* getID(Prototype& idPrototype);
 
-    const AgentID* generateID(int size = 16);
+    const AgentID* generateID(std::size_t size = 16);
 
-private:
-    std::unordered_set<const AgentID*, essentials::AgentIDHash, essentials::AgentIDEqualsComparator> agentIDs;
-    AgentIDFactory* idFactory;
-    std::mutex mutex;
+  private:
+    std::unordered_set<const AgentID*, essentials::AgentIDHash, essentials::AgentIDEqualsComparator> _agentIds;
+    AgentIDFactory* _idFactory;
+    std::mutex _mtx;
 };
 
 /**
@@ -36,12 +38,13 @@ private:
  * a pointer to a corresponding AgentID object.
  */
 template <class Prototype>
-const AgentID* AgentIDManager::getID(Prototype& idPrototype) {
+const AgentID* AgentIDManager::getID(Prototype& idPrototype)
+{
     // little-endian encoding
     std::vector<uint8_t> idByteVector;
-    //TODO: replace with memcpy or std copy
+    // TODO: replace with memcpy or std copy
     for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
-        idByteVector.push_back(*(((uint8_t*) &idPrototype) + i));
+        idByteVector.push_back(*(((uint8_t*)&idPrototype) + i));
     }
     return this->getIDFromBytes(idByteVector);
 }
