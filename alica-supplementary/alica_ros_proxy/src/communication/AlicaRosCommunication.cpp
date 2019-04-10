@@ -68,10 +68,10 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
     _solverResultPublisher = _rosNode->advertise<alica_msgs::SolverResult>(solverResultTopic, 10);
     _solverResultSubscriber = _rosNode->subscribe(solverResultTopic, 5, &AlicaRosCommunication::handleSolverResult, (AlicaRosCommunication*) this);
 
-    _presenceQueryPublisher = _rosNode->advertise<alica_msgs::AgentQuery>(presenceQueryTopic, 5);
+    _presenceQueryPublisher = _rosNode->advertise<alica_msgs::AgentQuery>(presenceQueryTopic, 5, true);
     _presenceQuerySubscriber = _rosNode->subscribe(presenceQueryTopic, 5, &AlicaRosCommunication::handleAgentQuery, (AlicaRosCommunication*) this);
 
-    _presenceAnnouncementPublisher = _rosNode->advertise<alica_msgs::AgentAnnouncement>(presenceAnnouncementTopic, 5);
+    _presenceAnnouncementPublisher = _rosNode->advertise<alica_msgs::AgentAnnouncement>(presenceAnnouncementTopic, 5, true);
     _presenceAnnouncementSubscriber =
             _rosNode->subscribe(presenceAnnouncementTopic, 50, &AlicaRosCommunication::handleAgentAnnouncement, (AlicaRosCommunication*) this);
 }
@@ -326,7 +326,7 @@ void AlicaRosCommunication::handleAgentQuery(const alica_msgs::AgentQuery& pq)
 {
     AgentQuery newpq;
     newpq.senderID = ae->getIdFromBytes(pq.sender_id.id);
-    newpq.senderSdk = pq.plan_hash;
+    newpq.senderSdk = pq.sender_sdk;
     newpq.planHash = pq.plan_hash;
 
     if (_isRunning) {
