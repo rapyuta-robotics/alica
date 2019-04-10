@@ -271,14 +271,13 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != _me->getId()) {
-        if (_tm.isAgentIgnored(incoming->senderID)) {
-            return;
-        }
-        lock_guard<mutex> lock(_msgQueueMutex);
-        ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
-        _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
+    if (incoming->senderID == _me->getId() || _tm.isAgentIgnored(incoming->senderID)) {
+        return;
     }
+
+    lock_guard<mutex> lock(_msgQueueMutex);
+    ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
+    _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
 }
 
 /**

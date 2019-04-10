@@ -49,6 +49,9 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ASSERT_NO_SIGNAL
     aes[0]->start();
     aes[1]->start();
+    // Allow agents to discover each other
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << *(aes[0]->getTeamManager().getLocalAgentID()) << std::endl;
         step(aes[0]);

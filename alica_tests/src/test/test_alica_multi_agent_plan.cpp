@@ -51,6 +51,7 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     ASSERT_NO_SIGNAL
     aes[0]->start();
     aes[1]->start();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     step(aes[0]);
     step(aes[1]);
 
