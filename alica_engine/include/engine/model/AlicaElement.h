@@ -24,7 +24,7 @@ public:
 
     int64_t getId() const { return _id; }
 
-    virtual std::string toString() const;
+    virtual std::string toString(std::string indent = "") const;
 
     AlicaElement(const AlicaElement&) = delete;
     AlicaElement(AlicaElement&&) = delete;

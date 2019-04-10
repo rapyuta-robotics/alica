@@ -28,6 +28,7 @@ namespace alica
     }
 
     void TransitionFactory::attachReferences() {
+        ConditionFactory::attachReferences();
         // transitionOutStateReferences
         for (std::pair<int64_t, int64_t> pairs : Factory::transitionOutStateReferences) {
             Transition* t = (Transition*) Factory::getElement(pairs.first);

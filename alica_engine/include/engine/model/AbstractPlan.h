@@ -37,7 +37,7 @@ public:
     AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
     void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
     const std::string& getFileName() const { return _fileName; }
 
 private:

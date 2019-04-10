@@ -25,6 +25,7 @@ ReferenceList Factory::quantifierScopeReferences;
 ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
+TripleReferenceList Factory::roleTaskReferences;
 ModelManager* Factory::modelManager;
 
 int64_t Factory::getReferencedId(const YAML::Node& node)
@@ -42,12 +43,12 @@ int64_t Factory::getReferencedId(const std::string& idString)
     std::string locator = idString.substr(0, idxOfHashtag);
     if (!locator.empty()) {
         std::string fileReferenced;
-        if (essentials::FileSystem::endsWith(locator, ".pml") || essentials::FileSystem::endsWith(locator, ".beh") ||
-                essentials::FileSystem::endsWith(locator, ".pty")) {
+        if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) || essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
+                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
-        } else if (essentials::FileSystem::endsWith(locator, ".tsk")) {
+        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
-        } else if (essentials::FileSystem::endsWith(locator, ".rst")) {
+        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::roleset_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseRolePath, locator);
         } else {
             std::cout << "Factory: Unknown file extension: " << locator << std::endl;
@@ -124,9 +125,10 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
     } else if (alica::Strings::roleset.compare(type) == 0) {
         modelManager->planRepository->_roleSets.emplace(ael->getId(), (RoleSet*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
-        ALICA_DEBUG_MSG("Factory: Element type " << type << " is ignored.");
+        // case for ignored types
+        ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");
     } else {
-        AlicaEngine::abort("Factory: Element type unhandled for storing!");
+        AlicaEngine::abort("Factory: Element type unhandled for storing: Type is '" + type + "'");
     }
 }
 

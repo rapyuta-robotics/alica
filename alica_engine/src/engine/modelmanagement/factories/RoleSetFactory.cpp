@@ -26,4 +26,8 @@ namespace alica
 
         return roleSet;
     }
+
+    void RoleSetFactory::attachReferences() {
+        RoleFactory::attachReferences();
+    }
 } // namespace alica

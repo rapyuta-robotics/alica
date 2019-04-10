@@ -89,5 +89,6 @@ void PlanFactory::attachReferences()
     StateFactory::attachReferences();
     TransitionFactory::attachReferences();
     SynchronisationFactory::attachReferences();
+    ConditionFactory::attachReferences();
 }
 } // namespace alica

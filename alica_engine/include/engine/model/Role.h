@@ -9,6 +9,7 @@ namespace alica
 class ModelFactory;
 class RoleFactory;
 class RoleSet;
+class Task;
 
 class Role : public AlicaElement
 {
@@ -17,16 +18,13 @@ public:
     virtual ~Role();
 
     double getPriority(int64_t taskId) const;
-    std::string toString() const override;
-
-    const std::unordered_map<int64_t, double>& getTaskPriorities() const { return _taskPriorities; }
-    void setTaskPriorities(const std::unordered_map<int64_t, double>& taskPriorities);
+    std::string toString(std::string indent = "") const override;
 
 private:
     friend ModelFactory;
     friend RoleFactory;
 
-    std::unordered_map<int64_t, double> _taskPriorities;
+    std::unordered_map<Task*, double> _taskPriorities;
     RoleSet* _roleSet;
 };
 

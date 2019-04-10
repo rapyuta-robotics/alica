@@ -15,7 +15,6 @@
 #include "engine/model/Role.h"
 #include "engine/model/RoleDefinitionSet.h"
 #include "engine/model/RoleSet.h"
-#include "engine/model/RoleTaskMapping.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/SuccessState.h"
 #include "engine/model/Synchronisation.h"
@@ -1100,44 +1099,44 @@ namespace alica
         cout << "DONE!" << endl;
 #endif
     }
-    void ModelFactory::attachRoleReferences()
-    {
-#ifdef MF_DEBUG
-        cout << "MF: Attaching Role references..." << endl;
-#endif
-        for (pair<int64_t, int64_t> pairs : this->rtmRoleReferences) {
-            Role* r = this->rep->_roles.find(pairs.second)->second;
-            RoleTaskMapping* rtm = static_cast<RoleTaskMapping*>(this->elements.find(pairs.first)->second);
-//            r->setRoleTaskMapping(rtm);
-            rtm->setRole(r);
-        }
-        this->rtmRoleReferences.clear();
-#ifdef MF_DEBUG
-        cout << "MF: Attaching Role references... done!" << endl;
-#endif
-    }
-    void ModelFactory::attachCharacteristicReferences()
-    {
-#ifdef MF_DEBUG
-        cout << "MF: Attaching Characteristics references..." << endl;
-#endif
-        for (pair<int64_t, int64_t> pairs : this->charCapReferences) {
-            Characteristic* cha = this->rep->_characteristics.find(pairs.first)->second;
-//            Capability* cap = static_cast<Capability*>(this->elements.find(pairs.second)->second);
-//            cha->setCapability(cap);
-        }
-        this->charCapReferences.clear();
-
-        for (pair<int64_t, int64_t> pairs : this->charCapValReferences) {
-            Characteristic* cha = this->rep->_characteristics.find(pairs.first)->second;
-//            CapValue* capVal = static_cast<CapValue*>(this->elements.find(pairs.second)->second);
-//            cha->setCapValue(capVal);
-        }
-        this->charCapValReferences.clear();
-#ifdef MF_DEBUG
-        cout << "MF: Attaching Characteristics references... done!" << endl;
-#endif
-    }
+//    void ModelFactory::attachRoleReferences()
+//    {
+//#ifdef MF_DEBUG
+//        cout << "MF: Attaching Role references..." << endl;
+//#endif
+//        for (pair<int64_t, int64_t> pairs : this->rtmRoleReferences) {
+//            Role* r = this->rep->_roles.find(pairs.second)->second;
+//            RoleTaskMapping* rtm = static_cast<RoleTaskMapping*>(this->elements.find(pairs.first)->second);
+////            r->setRoleTaskMapping(rtm);
+//            rtm->setRole(r);
+//        }
+//        this->rtmRoleReferences.clear();
+//#ifdef MF_DEBUG
+//        cout << "MF: Attaching Role references... done!" << endl;
+//#endif
+//    }
+//    void ModelFactory::attachCharacteristicReferences()
+//    {
+//#ifdef MF_DEBUG
+//        cout << "MF: Attaching Characteristics references..." << endl;
+//#endif
+//        for (pair<int64_t, int64_t> pairs : this->charCapReferences) {
+//            Characteristic* cha = this->rep->_characteristics.find(pairs.first)->second;
+////            Capability* cap = static_cast<Capability*>(this->elements.find(pairs.second)->second);
+////            cha->setCapability(cap);
+//        }
+//        this->charCapReferences.clear();
+//
+//        for (pair<int64_t, int64_t> pairs : this->charCapValReferences) {
+//            Characteristic* cha = this->rep->_characteristics.find(pairs.first)->second;
+////            CapValue* capVal = static_cast<CapValue*>(this->elements.find(pairs.second)->second);
+////            cha->setCapValue(capVal);
+//        }
+//        this->charCapValReferences.clear();
+//#ifdef MF_DEBUG
+//        cout << "MF: Attaching Characteristics references... done!" << endl;
+//#endif
+//    }
 
     void ModelFactory::createVariableTemplates()
     {

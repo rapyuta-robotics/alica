@@ -1,10 +1,3 @@
-/*
- * PlanRepository.cpp
- *
- *  Created on: May 28, 2014
- *      Author: Paul Panin
- */
-
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
@@ -38,7 +31,7 @@ bool checkVarsInCondition(const Condition* c, const Plan* p)
 
     return true;
 }
-bool checkVarsInParametrisations(const Plan* p)
+bool checkVarsInVariableBindings(const Plan *p)
 {
     const VariableGrp& pvars = p->getVariables();
     for (const State* s : p->getStates()) {
@@ -58,7 +51,7 @@ bool checkVarsInPlan(const Plan* p)
 {
     bool ret = checkVarsInCondition(p->getPreCondition(), p);
     ret = ret && checkVarsInCondition(p->getRuntimeCondition(), p);
-    ret = ret && checkVarsInParametrisations(p);
+    ret = ret && checkVarsInVariableBindings(p);
 
     return ret;
 }

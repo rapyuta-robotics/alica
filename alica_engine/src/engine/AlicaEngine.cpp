@@ -60,7 +60,7 @@ AlicaEngine::AlicaEngine(
 
     this->modelManager = new ModelManager(this->planRepository);
     this->masterPlan = this->modelManager->loadPlanTree(masterPlanName);
-    ALICA_DEBUG_MSG("AE: MasterPlan:\n -----------------"  << this->masterPlan->toString());
+//    ALICA_DEBUG_MSG("AE: MasterPlan:\n -----------------"  << this->masterPlan->toString());
     this->roleSet = this->modelManager->loadRoleSet(roleSetName);
 
     _teamManager = new TeamManager(this, true);

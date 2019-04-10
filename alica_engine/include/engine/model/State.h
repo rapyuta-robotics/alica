@@ -30,7 +30,7 @@ public:
     State(StateType t);
     virtual ~State();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
     const Plan* getInPlan() const { return _inPlan; }
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
     const AbstractPlanGrp& getPlans() const { return _plans; }

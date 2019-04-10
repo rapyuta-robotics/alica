@@ -48,6 +48,7 @@ private:
     const AlicaElement* getElement(const int64_t id);
     const std::string getBasePath(const std::string& configKey);
     AlicaElement* parseFile(const std::string& currentFile, const std::string& type);
+    std::string findDefaultRoleSet(const std::string& dir);
     void attachReferences();
     void generateTemplateVariables();
     void computeReachabilities();

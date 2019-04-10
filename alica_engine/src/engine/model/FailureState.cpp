@@ -1,10 +1,3 @@
-/*
- * FailurePoint.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/FailureState.h"
 #include "engine/model/Transition.h"
 
@@ -18,15 +11,15 @@ FailureState::FailureState()
 
 FailureState::~FailureState() {}
 
-std::string FailureState::toString() const
+std::string FailureState::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#FailureState: " << getName() << " " << getId() << std::endl;
-    ss << "\t Result:" << std::endl;
-    ss << "\t InTransitions: " << getInTransitions().size() << std::endl;
+    ss << indent << "#FailureState: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\t Result:" << std::endl;
+    ss << indent << "\t InTransitions: " << getInTransitions().size() << std::endl;
     if (getInTransitions().size() != 0) {
         for (const Transition* t : getInTransitions()) {
-            ss << "\t" << t->getId() << " " << t->getName() << std::endl;
+            ss << indent << "\t" << t->getId() << " " << t->getName() << std::endl;
         }
     }
     ss << "#EndFailureState" << std::endl;

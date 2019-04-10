@@ -1,5 +1,6 @@
 #include "engine/model/PreCondition.h"
 #include <sstream>
+#include <iostream>
 namespace alica
 {
 
@@ -10,12 +11,12 @@ PreCondition::PreCondition()
 
 PreCondition::~PreCondition() {}
 
-std::string PreCondition::toString() const
+std::string PreCondition::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
-    ss << "\t ConditionString: " << getConditionString() << std::endl;
-    ss << "#EndPreCondition" << std::endl;
+    ss << indent << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
+    ss << indent << "\t ConditionString: " << getConditionString() << std::endl;
+    ss << indent << "#EndPreCondition" << std::endl;
     return ss.str();
 }
 

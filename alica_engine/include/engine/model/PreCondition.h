@@ -17,7 +17,7 @@ public:
     PreCondition();
     virtual ~PreCondition();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 
     bool isEnabled() const { return _enabled; }
 

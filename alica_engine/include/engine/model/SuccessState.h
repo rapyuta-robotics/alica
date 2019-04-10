@@ -7,14 +7,14 @@
 namespace alica
 {
 /**
- *  A terminal state, encoding the succesful termination of a task.
+ *  A terminal state, encoding the successful termination of a task.
  */
 class SuccessState : public TerminalState
 {
 public:
     SuccessState();
     virtual ~SuccessState();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
 } // namespace alica

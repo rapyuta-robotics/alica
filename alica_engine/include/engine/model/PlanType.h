@@ -20,7 +20,7 @@ public:
     PlanType();
     virtual ~PlanType();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 
     const VariableBindingGrp& getVariableBindings() const { return _variableBindings; }
     const PlanGrp& getPlans() const { return _plans; }

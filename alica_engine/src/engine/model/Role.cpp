@@ -1,4 +1,7 @@
 #include "engine/model/Role.h"
+#include "engine/model/RoleSet.h"
+#include "engine/model/Task.h"
+#include "engine/AlicaEngine.h"
 
 #include <exception>
 #include <iostream>
@@ -15,35 +18,27 @@ Role::~Role() {}
 
 double Role::getPriority(int64_t taskId) const
 {
-    std::unordered_map<int64_t, double>::const_iterator it = _taskPriorities.find(taskId);
-    if (it != _taskPriorities.end()) {
-        return it->second;
-    } else { // TODO move this check to start up
-        std::cerr << "ROLE DOES NOT HAVE A PRIORITY FOR TASK: " << taskId << std::endl;
-        throw new std::exception;
+    for (auto pair : _taskPriorities) {
+        if (pair.first->getId() == taskId) {
+            return pair.second;
+        }
     }
+    return _roleSet->getDefaultPriority();
 }
 
-std::string Role::toString() const
+std::string Role::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#Role: " << getName() << " " << getId() << std::endl;
-    ss << "\tRTM TaskPriorities Size: " << _taskPriorities.size() << std::endl;
-    for (std::unordered_map<int64_t, double>::const_iterator iterator = _taskPriorities.begin();
+    ss << indent << "#Role: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\tTaskPriorities Size: " << _taskPriorities.size() << std::endl;
+    for (std::unordered_map<Task*, double>::const_iterator iterator = _taskPriorities.begin();
             iterator != _taskPriorities.end(); ++iterator) {
-        const int64_t l = iterator->first;
-        const double val = iterator->second;
-        ss << "\t" << l << " : " << val << std::endl;
+        const Task* task = iterator->first;
+        const double priority = iterator->second;
+        ss << indent << "\t" << task->getName() << " (" <<  task->getId() << ") : " << priority << std::endl;
     }
-    ss << std::endl;
-    ss << "#EndRole" << std::endl;
+    ss << indent << "#EndRole" << std::endl;
     return ss.str();
 }
 
-//====================== Getter and Setter ==================
-
-void Role::setTaskPriorities(const std::unordered_map<int64_t, double>& taskPriorities)
-{
-    _taskPriorities = taskPriorities;
-}
 } // namespace alica

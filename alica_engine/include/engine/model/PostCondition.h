@@ -12,7 +12,7 @@ class PostCondition : public Condition
 public:
     PostCondition();
     virtual ~PostCondition();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
 } // namespace alica

@@ -14,11 +14,20 @@ namespace alica
         if (Factory::isValid(roleNode[alica::Strings::taskPriorities])) {
             const YAML::Node& taskPriorities = roleNode[alica::Strings::taskPriorities];
             for (YAML::const_iterator it = taskPriorities.begin(); it != taskPriorities.end(); ++it) {
-                // TODO Key and Value
-                //Factory::getReferencedId(*it)));
+                Factory::roleTaskReferences.push_back(std::make_tuple(role->getId(), Factory::getReferencedId((*it).first), ((*it).second).as<double>()));
             }
         }
 
         return role;
+    }
+
+    void RoleFactory::attachReferences() {
+        // roleTaskReferences
+        for (std::tuple<int64_t, int64_t, double> triple: Factory::roleTaskReferences) {
+            Role* role = (Role*) Factory::getElement(std::get<0>(triple));
+            Task* task = (Task*) Factory::getElement(std::get<1>(triple));
+            role->_taskPriorities.emplace(task, std::get<2>(triple));
+        }
+        Factory::planTypePlanReferences.clear();
     }
 } // namespace alica

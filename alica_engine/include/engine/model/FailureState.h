@@ -16,7 +16,7 @@ class FailureState : public TerminalState
 public:
     FailureState();
     virtual ~FailureState();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
 } // namespace alica

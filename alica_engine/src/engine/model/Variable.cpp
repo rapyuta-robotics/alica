@@ -14,10 +14,10 @@ Variable::Variable(int64_t id, const std::string& name, const std::string& type)
 {
 }
 
-std::string Variable::toString() const
+std::string Variable::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "[Variable: Name=" << getName() << " Id=" << getId() << std::endl;
+    ss << indent << "[Variable: Name=" << getName() << " Id=" << getId() << "]" << std::endl;
     return ss.str();
 }
 

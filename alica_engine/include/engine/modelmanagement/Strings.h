@@ -76,5 +76,6 @@ namespace alica {
         static const std::string inSync = "inSync";
         static const std::string priorityDefault = "priorityDefault";
         static const std::string taskPriorities = "taskPriorities";
+        static const std::string defaultRoleSet = "defaultRoleSet";
     }
 }

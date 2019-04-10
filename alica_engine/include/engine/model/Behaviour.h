@@ -26,7 +26,7 @@ public:
     Behaviour();
     virtual ~Behaviour();
 
-    std::string toString() const;
+    std::string toString(std::string indent = "") const;
 
     int getDeferring() const { return _deferring; }
     bool isEventDriven() const { return _eventDriven; }

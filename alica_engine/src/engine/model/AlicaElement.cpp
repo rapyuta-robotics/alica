@@ -1,6 +1,8 @@
 #include "engine/model/AlicaElement.h"
 #include <sstream>
 
+#include <iostream>
+
 namespace alica
 {
 
@@ -44,10 +46,10 @@ void AlicaElement::setId(int64_t id)
     _id = id;
 }
 
-std::string AlicaElement::toString() const
+std::string AlicaElement::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "ID: " << getId() << " Name: " << getName() << " Comment: " << getComment() << std::endl;
+    ss << indent << "Name: " << getName() << " ID: " << getId() << " Comment: " << getComment() << std::endl;
     return ss.str();
 }
 
