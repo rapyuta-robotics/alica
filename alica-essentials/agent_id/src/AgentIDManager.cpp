@@ -26,7 +26,7 @@ const AgentID* AgentIDManager::generateID(std::size_t size)
     const AgentID* tmpID = _idFactory->generateID(size);
     std::lock_guard<std::mutex> guard(_mtx);
     auto entry = _agentIds.insert(tmpID);
-    assert(!entry.second);
+    assert(entry.second);
     return tmpID;
 }
 
