@@ -33,8 +33,8 @@ public:
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
-    uint32_t getSdk() { return _sdk; }
-    uint32_t getPlanHash() { return _planHash; }
+    uint32_t getSdk() const { return _sdk; }
+    uint32_t getPlanHash() const { return _planHash; }
     RobotEngineData& editEngineData() { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }

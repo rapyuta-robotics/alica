@@ -62,9 +62,9 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    bool changedSomeAgent = false;
-    std::vector<AgentIDConstPtr> deactivatedAgentIds = _tm.updateAgents(changedSomeAgent);
-    for (auto& agent : deactivatedAgentIds) {
+    std::vector<AgentIDConstPtr> deactivatedAgentIds;
+    bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
+    for (auto agent : deactivatedAgentIds) {
         _simplePlanTrees.erase(agent);
     }
 

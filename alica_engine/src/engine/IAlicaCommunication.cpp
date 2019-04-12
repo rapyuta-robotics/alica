@@ -7,8 +7,6 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <iostream>
-
 using std::shared_ptr;
 
 namespace alica

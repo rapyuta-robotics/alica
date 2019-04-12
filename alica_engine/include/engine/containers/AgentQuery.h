@@ -2,10 +2,6 @@
 
 #include "engine/AgentIDConstPtr.h"
 
-#include <string>
-#include <tuple>
-#include <vector>
-
 namespace alica
 {
 struct AgentQuery
