@@ -338,6 +338,7 @@ void AlicaRosCommunication::handleAgentAnnouncement(const alica_msgs::AgentAnnou
 {
     AgentAnnouncement newpa;
     newpa.senderID = ae->getIdFromBytes(pa.sender_id.id);
+    newpa.token = pa.token;
     newpa.senderName = pa.sender_name;
     newpa.senderSdk = pa.sender_sdk;
     newpa.planHash = pa.plan_hash;
@@ -366,6 +367,7 @@ void AlicaRosCommunication::sendAgentAnnouncement(const AgentAnnouncement& pa) c
 {
     alica_msgs::AgentAnnouncement newpa;
     newpa.sender_id.id = pa.senderID->toByteVector();
+    newpa.token = pa.token;
     newpa.sender_name = pa.senderName;
     newpa.sender_sdk = pa.senderSdk;
     newpa.plan_hash = pa.planHash;
