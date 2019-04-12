@@ -371,7 +371,6 @@ void AlicaRosCommunication::sendAgentAnnouncement(const AgentAnnouncement& pa) c
     newpa.plan_hash = pa.planHash;
     newpa.role = pa.role;
     for (const auto& cap : pa.capabilities) {
-        // alica_msgs::StringTuple()
         alica_msgs::StringTuple st;
         st.key = cap.first;
         st.value = cap.second;
