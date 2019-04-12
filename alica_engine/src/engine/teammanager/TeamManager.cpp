@@ -70,6 +70,7 @@ TeamManager::TeamManager(AlicaEngine* engine)
 void TeamManager::constructAnnouncementMessage()
 {
     _presenceMessage.senderID = _localAgent->getId();
+    _presenceMessage.token = _localAgent->getToken();
     _presenceMessage.senderName = _localAgent->getName();
     _presenceMessage.senderSdk = _localAgent->getSdk();
     _presenceMessage.planHash = _localAgent->getPlanHash();
@@ -96,7 +97,7 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 void TeamManager::readSelfFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    std::string localAgentName = _engine->getRobotName();
+    const std::string localAgentName = _engine->getRobotName();
     int id = sc["Local"]->tryGet<int>(-1, "Local", localAgentName.c_str(), "ID", NULL);
 
     AgentAnnouncement aa;
@@ -107,6 +108,8 @@ void TeamManager::readSelfFromConfig()
         ALICA_DEBUG_MSG("tm: Auto generated id " << aa.senderID);
     }
 
+    std::random_device rd;
+    aa.token = rd();
     aa.senderName = localAgentName;
     aa.role = sc["Local"]->get<std::string>("Local", localAgentName.c_str(), "DefaultRole", NULL);
     // TODO: add plan hash
@@ -276,7 +279,15 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
 void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 {
-    if (!_useAutoDiscovery || aa.senderID == _localAgent->getId()) {
+    if (aa.senderID == _localAgent->getId()) {
+        if (aa.token != _localAgent->getToken()) {
+            // Shall abort ?
+            ALICA_ERROR_MSG("Duplicate Agent(", aa.senderID, ") discovered");
+        }
+        return;
+    }
+
+    if (!_useAutoDiscovery) {
         return;
     }
 
@@ -324,7 +335,9 @@ void TeamManager::queryPresence() const
     pqMessage.senderID = _localAgent->getId();
     pqMessage.senderSdk = _localAgent->getSdk();
     pqMessage.planHash = _localAgent->getPlanHash();
-    _engine->getCommunicator().sendAgentQuery(pqMessage);
+    for (int i = 0; i < _announcementRetries; ++i) {
+        _engine->getCommunicator().sendAgentQuery(pqMessage);
+    }
 }
 
 void TeamManager::tick()
