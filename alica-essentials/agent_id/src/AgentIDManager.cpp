@@ -1,6 +1,6 @@
 #include "essentials/AgentIDManager.h"
 #include "essentials/AgentIDFactory.h"
-#include <assert.h>
+#include <cassert>
 
 namespace essentials
 {
