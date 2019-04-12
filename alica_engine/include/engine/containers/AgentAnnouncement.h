@@ -16,6 +16,7 @@ struct AgentAnnouncement
     {
     }
     AgentIDConstPtr senderID;
+    uint32_t token;
     std::string senderName;
     uint32_t senderSdk;
     uint32_t planHash;

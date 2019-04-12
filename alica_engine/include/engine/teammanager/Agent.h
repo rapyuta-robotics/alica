@@ -33,6 +33,7 @@ public:
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
+    uint32_t getToken() const { return _token; }
     uint32_t getSdk() const { return _sdk; }
     uint32_t getPlanHash() const { return _planHash; }
     RobotEngineData& editEngineData() { return _engineData; }
@@ -53,6 +54,7 @@ private:
     RobotProperties _properties;
     RobotEngineData _engineData;
     std::string _name;
+    uint32_t _token;
     uint32_t _sdk;
     uint32_t _planHash;
 

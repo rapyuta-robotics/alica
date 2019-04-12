@@ -14,6 +14,7 @@ namespace alica
 
 Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const AgentAnnouncement& aa)
         : _id(aa.senderID)
+        , _token(aa.token)
         , _name(aa.senderName)
         , _planHash(aa.planHash)
         , _sdk(aa.senderSdk)
