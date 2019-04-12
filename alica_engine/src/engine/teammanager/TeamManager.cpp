@@ -282,7 +282,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            ALICA_ERROR_MSG("Duplicate Agent(", aa.senderID, ") discovered");
+            ALICA_ERROR_MSG("Duplicate Agent(" << aa.senderID << ") discovered");
         }
         return;
     }
