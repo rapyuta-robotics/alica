@@ -1,16 +1,14 @@
 #pragma once
 
-#include "engine/containers/AgentAnnouncement.h"
 #include <engine/AgentIDConstPtr.h>
 #include <engine/AlicaClock.h>
+#include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
 
 #include <list>
 #include <map>
 #include <memory>
-#include <shared_mutex>
 #include <string>
-#include <unordered_set>
 
 namespace alica
 {
@@ -35,7 +33,7 @@ public:
     AgentsCache();
     ~AgentsCache();
     const std::shared_ptr<AgentMap>& get() const;
-    void addAgents(std::vector<Agent*>& agents);
+    bool addAgent(Agent* agent);
 
 private:
     // TODO: split active and inactive agents in different maps.
@@ -69,7 +67,7 @@ public:
     const DomainVariable* getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
-    AgentGrp updateAgents(bool& changedSomeAgent);
+    bool updateAgents(AgentGrp& deactivatedAgents);
     void handleAgentQuery(const AgentQuery& pq) const;
     void handleAgentAnnouncement(const AgentAnnouncement& aa);
     void init();
@@ -86,8 +84,6 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
-    std::mutex _msgQueueMutex;
-    std::vector<Agent*> _msgQueue;
 
     void readSelfFromConfig();
     void announcePresence() const;

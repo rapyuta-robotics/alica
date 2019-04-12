@@ -141,11 +141,11 @@ void PlanBase::run(const Plan* masterPlan)
 
         // Send tick to other modules
         //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
-        tm.tick();
         to.tick(_rootNode);
         ra.tick();
         sm.tick();
         auth.tick(_rootNode);
+        tm.tick();
 
         if (_rootNode == nullptr) {
             _rootNode = _ruleBook.initialisationRule(masterPlan);
