@@ -1,10 +1,3 @@
-/*
- * AlicaDummyCommunication.cpp
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
 #include "communication/AlicaDummyCommunication.h"
 
 #include <condition_variable>

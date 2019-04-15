@@ -1,44 +1,46 @@
-/*
- * RoleSet.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef ROLESET_H_
-#define ROLESET_H_
+#include "AlicaElement.h"
 
 #include <string>
 #include <vector>
 
-#include "AlicaElement.h"
-
-namespace alica {
+namespace alica
+{
 class RoleTaskMapping;
+class RoleSetFactory;
+class Role;
 
-class RoleSet : public AlicaElement {
+class RoleSet : public AlicaElement
+{
 public:
     RoleSet();
     virtual ~RoleSet();
-    std::string toString() const override;
-    bool isDefault() const { return _isDefault; }
-    const std::vector<RoleTaskMapping*>& getRoleTaskMappings() const { return _roleTaskMappings; }
+    std::string toString(std::string indent = "") const override;
     int64_t getUsableWithPlanId() const { return _usableWithPlanID; }
+    const std::string& getFileName() const { return _fileName; }
+    void setFileName(const std::string& fileName);
+    const std::vector<Role*> getRoles() const { return _roles; }
+    double getDefaultPriority() const { return _priorityDefault; }
 
 private:
     friend ModelFactory;
-    void setRoleTaskMappings(const std::vector<RoleTaskMapping*>& roleTaskMappings);
-    void setIsDefault(bool isDefault);
+    friend RoleSetFactory;
     void setUsableWithPlanId(int64_t usableWithPlanId);
 
-    std::vector<RoleTaskMapping*> _roleTaskMappings;
-    bool _isDefault;
+    std::vector<Role*> _roles;
+    /**
+     * the default priority for all tasks that are not prioritized in a role of this set
+     */
+    double _priorityDefault;
     /**
      * the plan ID this roleset is defined for
      */
     int64_t _usableWithPlanID;
+    /**
+     * The file this abstract plan is parsed from/ written to.
+     */
+    std::string _fileName;
 };
 
-}  // namespace alica
-
-#endif /* ROLESET_H_ */
+} // namespace alica

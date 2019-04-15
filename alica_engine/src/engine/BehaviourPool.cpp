@@ -43,14 +43,14 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
 
     _behaviourCreator = bc;
 
-    const PlanRepository::Accessor<BehaviourConfiguration>& behaviourConfs = _ae->getPlanRepository()->getBehaviourConfigurations();
-    for (const BehaviourConfiguration* beh : behaviourConfs) {
+    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository()->getBehaviours();
+    for (const Behaviour* beh : behaviours) {
         auto basicBeh = _behaviourCreator->createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
             // set stuff from behaviour configuration in basic behaviour object
-            basicBeh->setConfiguration(beh);
+            basicBeh->setBehaviour(beh);
             basicBeh->setDelayedStart(beh->getDeferring());
-            basicBeh->setInterval(1000 / beh->getFrequency());
+            basicBeh->setInterval(1000 / (beh->getFrequency() < 1 ? 1 : beh->getFrequency()));
             basicBeh->setEngine(_ae);
             basicBeh->init();
 
@@ -88,8 +88,8 @@ void BehaviourPool::terminateAll()
  */
 void BehaviourPool::startBehaviour(RunningPlan& rp)
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
-        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(bc);
+    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(beh);
         if (bb != nullptr) {
             // set both directions rp <-> bb
             rp.setBasicBehaviour(bb.get());
@@ -109,8 +109,8 @@ void BehaviourPool::startBehaviour(RunningPlan& rp)
  */
 void BehaviourPool::stopBehaviour(RunningPlan& rp)
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
-        auto bb = _availableBehaviours.at(bc);
+    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+        auto bb = _availableBehaviours.at(beh);
         if (bb != nullptr) {
             bb->stop();
         }
@@ -119,10 +119,11 @@ void BehaviourPool::stopBehaviour(RunningPlan& rp)
                                                                                                        << " Plan Id: " << rp.getActivePlan()->getId());
     }
 }
+
 bool BehaviourPool::isBehaviourRunningInContext(const RunningPlan& rp) const
 {
-    if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(rp.getActivePlan())) {
-        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(bc);
+    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+        const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(beh);
         if (bb != nullptr) {
             return bb->isRunningInContext(&rp);
         }

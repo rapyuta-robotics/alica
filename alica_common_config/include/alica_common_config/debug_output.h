@@ -12,6 +12,8 @@ enum AlicaDebugLevel
     All
 };
 
+#define ALICA_DEBUG_LEVEL_WARNING
+
 #ifdef ALICA_DEBUG_LEVEL_ALL
 #define ALICA_DEBUG_LEVEL AlicaDebugLevel::All
 #define ALICA_DEBUG_ENABLED

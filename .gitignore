@@ -85,3 +85,6 @@ alica_plan_designer/bin/linux.gtk.x86/configuration
 # coala
 *.orig
 
+# clion
+**/.idea
+**/cmake-build-debug

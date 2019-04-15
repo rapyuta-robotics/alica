@@ -13,7 +13,7 @@
 namespace alica
 {
 class Transition;
-class SyncTransition;
+class SynchronisationProcess;
 class AlicaEngine;
 class PlanRepository;
 class Synchronisation;
@@ -31,14 +31,14 @@ public:
     virtual void close();
     virtual void tick();
     virtual void setSynchronisation(const Transition* trans, bool holds);
-    virtual bool followSyncTransition(const Transition* trans);
+    virtual bool followTransition(const Transition *trans);
     virtual void onSyncTalk(std::shared_ptr<SyncTalk> st);
     virtual void onSyncReady(std::shared_ptr<SyncReady> sr);
 
     void sendSyncTalk(SyncTalk& st);
     void sendSyncReady(SyncReady& sr);
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
-    void synchronisationDone(const SyncTransition* st);
+    void synchronisationDone(const Synchronisation* st);
 
 protected:
     bool running;
@@ -46,8 +46,8 @@ protected:
     AgentIDConstPtr myId;
     unsigned long ticks;
     PlanRepository* pr;
-    std::map<const SyncTransition*, Synchronisation*> synchSet;
-    std::list<const SyncTransition*> synchedTransitions;
+    std::map<const Synchronisation*, SynchronisationProcess*> synchSet;
+    std::list<const Synchronisation*> synchronisations;
     std::mutex lomutex;
     const IAlicaCommunication* communicator;
 };

@@ -1,4 +1,3 @@
-
 #include "engine/AlicaEngine.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IConditionCreator.h"
@@ -15,10 +14,10 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
-#include "engine/parser/PlanParser.h"
+#include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/teammanager/TeamManager.h"
-#include <engine/syncmodule/SyncModule.h>
+#include "engine/syncmodule/SyncModule.h"
 
 #include <alica_common_config/debug_output.h>
 #include <essentials/AgentIDManager.h>
@@ -38,7 +37,8 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaEngine::AlicaEngine(
+        essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : stepCalled(false)
         , planBase(nullptr)
         , communicator(nullptr)
@@ -57,9 +57,12 @@ AlicaEngine::AlicaEngine(essentials::AgentIDManager* idManager, const std::strin
     PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
-    this->planParser = new PlanParser(this->planRepository);
-    this->masterPlan = this->planParser->parsePlanTree(masterPlanName);
-    this->roleSet = this->planParser->parseRoleSet(roleSetName);
+
+    this->modelManager = new ModelManager(this->planRepository);
+    this->masterPlan = this->modelManager->loadPlanTree(masterPlanName);
+//    ALICA_DEBUG_MSG("AE: MasterPlan:\n -----------------"  << this->masterPlan->toString());
+    this->roleSet = this->modelManager->loadRoleSet(roleSetName);
+
     _teamManager = new TeamManager(this, true);
     _teamManager->init();
     this->behaviourPool = new BehaviourPool(this);
@@ -179,9 +182,14 @@ void AlicaEngine::shutdown()
         this->planRepository = nullptr;
     }
 
-    if (this->planParser != nullptr) {
-        delete this->planParser;
-        this->planParser = nullptr;
+//    if (this->planParser != nullptr) {
+//        delete this->planParser;
+//        this->planParser = nullptr;
+//    }
+
+    if (this->modelManager != nullptr) {
+        delete this->modelManager;
+        this->modelManager= nullptr;
     }
 
     this->roleSet = nullptr;
@@ -324,5 +332,7 @@ AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVe
 {
     return AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
 }
+
+
 
 } // namespace alica

@@ -12,7 +12,7 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
@@ -121,7 +121,7 @@ bool Query::existsSolution(ThreadSafePlanInterface pi)
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
-    return solver->existsSolution(_relevantVariables, cds);
+    return solver->existsSolution(_context.get(), cds);
 }
 
 template <class SolverType, typename ResultType>

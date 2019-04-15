@@ -11,7 +11,6 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/model/AbstractPlan.h"
-#include "engine/model/Characteristic.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"

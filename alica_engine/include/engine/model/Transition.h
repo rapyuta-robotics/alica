@@ -1,12 +1,4 @@
-/*
- * Transition.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef TRANSITION_H_
-#define TRANSITION_H_
+#pragma once
 
 #include "AlicaElement.h"
 #include <engine/RunningPlan.h>
@@ -16,9 +8,10 @@ namespace alica
 {
 
 class State;
-class SyncTransition;
+class Synchronisation;
 class PreCondition;
 class ModelFactory;
+class TransitionFactory;
 class ExpressionHandler;
 
 /**
@@ -32,18 +25,19 @@ public:
 
     const State* getOutState() const { return _outState; }
     const State* getInState() const { return _inState; }
-    const SyncTransition* getSyncTransition() const { return _syncTransition; }
+    const Synchronisation* getSynchronisation() const { return _synchronisation; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
     bool evalCondition(const RunningPlan& r) const;
 
 private:
     friend ModelFactory;
+    friend TransitionFactory;
     friend ExpressionHandler;
     void setPreCondition(PreCondition* preCondition);
     void setInState(State* inState);
     void setOutState(State* outState);
-    void setSyncTransition(SyncTransition* syncTransition);
+    void setSynchronisation(Synchronisation *synchronisation);
 
     /**
      * The condition guarding this transition.
@@ -58,11 +52,9 @@ private:
      */
     const State* _outState;
     /**
-     * The SyncTransition this transition belongs to. Null if it does not belong to any.
+     * The Synchronisation this transition belongs to. Null if it does not belong to any.
      */
-    const SyncTransition* _syncTransition;
+    const Synchronisation* _synchronisation;
 };
 
 } // namespace alica
-
-#endif /* TRANSITION_H_ */

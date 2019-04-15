@@ -15,7 +15,7 @@ class SolverVariable;
  */
 class UniqueVarStore
 {
-  public:
+public:
     UniqueVarStore();
 
     void clear();
@@ -34,7 +34,7 @@ class UniqueVarStore
 
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store);
 
-  private:
+private:
     /**
      *  Each inner list of variables is sorted from variables of the top most plan to variables of the deepest plan.
      *  Therefore, the first element is always the variable in the top most plan, where this variable occurs.

@@ -18,7 +18,7 @@ class BasicBehaviour;
 
 class IBehaviourCreator
 {
-  public:
+public:
     virtual ~IBehaviourCreator() {}
     virtual std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourConfId) = 0;
 };
