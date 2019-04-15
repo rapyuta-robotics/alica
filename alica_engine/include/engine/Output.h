@@ -21,4 +21,4 @@ inline std::ostream& operator<<(std::ostream& out, const IdGrp& ig)
     std::copy(ig.begin(), ig.end(), std::ostream_iterator<int64_t>(out, " "));
     return out;
 }
-}
+} // namespace alica

@@ -1,26 +1,20 @@
-/*
- * PostCondition.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/PostCondition.h"
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
-PostCondition::PostCondition(int64_t id)
-        : Condition(id) {}
+PostCondition::PostCondition(){}
 
 PostCondition::~PostCondition() {}
 
-std::string PostCondition::toString() const {
+std::string PostCondition::toString(std::string indent) const
+{
     std::stringstream ss;
-    ss << "#PostCondition: " + getName() << " " << getId() << std::endl;
-    ss << "\t ConditionString: " << getConditionString() << std::endl;
-    ss << "#PostCondition" << std::endl;
+    ss << indent << "#PostCondition: " + getName() << " " << getId() << std::endl;
+    ss << indent << "\t ConditionString: " << getConditionString() << std::endl;
+    ss << indent << "#PostCondition" << std::endl;
     return ss.str();
 }
 
-}  // namespace alica
+} // namespace alica

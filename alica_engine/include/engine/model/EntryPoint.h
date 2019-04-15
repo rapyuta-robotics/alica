@@ -14,6 +14,8 @@ namespace alica
 class Plan;
 class State;
 class Task;
+class ModelManager;
+class EntryPointFactory;
 
 /**
  * An EntryPoint is used to identify the initial state of a task within a plan.
@@ -31,7 +33,7 @@ public:
      */
     constexpr static int64_t IDLEID = -1; // For Idle EntryPoint...
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
 
     const Task* getTask() const { return _task; }
@@ -52,6 +54,8 @@ public:
 
 private:
     friend ModelFactory;
+    friend EntryPointFactory;
+    friend ModelManager;
     void computeReachabilitySet();
     void setTask(Task* task);
     void setPlan(Plan* plan);
@@ -70,6 +74,8 @@ private:
      * The plan to which this entrypoint belongs.
      */
     const Plan* _plan;
+    // TODO: EntryPoint should not depend on Interval class from external solver interface library
+    // Suggestion: move the Interval class, or make EntryPoint using separate minCard, maxCard
     Interval<int> _cardinality;
     /**
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.

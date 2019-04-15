@@ -62,9 +62,9 @@ public:
         _runningPlans.emplace_back(new RunningPlan(_ae, plan));
         return _runningPlans.back().get();
     }
-    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc)
+    RunningPlan* makeRunningPlan(const Behaviour* beh)
     {
-        _runningPlans.emplace_back(new RunningPlan(_ae, bc));
+        _runningPlans.emplace_back(new RunningPlan(_ae, beh));
         return _runningPlans.back().get();
     }
     RunningPlan* makeRunningPlan(const PlanType* pt)

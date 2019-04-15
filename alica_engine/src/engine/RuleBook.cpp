@@ -421,7 +421,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     const State* nextState = nullptr;
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() != nullptr)
+        if (t->getSynchronisation() != nullptr)
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
@@ -465,10 +465,10 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& r)
     const State* nextState = nullptr;
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() == nullptr) {
+        if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_sm->followSyncTransition(t)) {
+        if (_sm->followTransition(t)) {
             if (t->evalCondition(r)) {
                 nextState = t->getOutState();
                 r.editConstraintStore().addCondition(t->getPreCondition());

@@ -5,9 +5,9 @@
 #include "engine/constraintmodul/ISolver.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentIDManager.h>
 #include <list>
 #include <string>
-#include <essentials/AgentIDManager.h>
 
 #include <unordered_map>
 
@@ -16,7 +16,8 @@ namespace alica
 class AlicaClock;
 class PlanRepository;
 class Plan;
-class PlanParser;
+//class PlanParser;
+class ModelManager;
 class BehaviourPool;
 class Logger;
 class RoleSet;
@@ -65,7 +66,8 @@ public:
     const IAlicaCommunication* getCommunicator() const { return communicator; }
     Logger* getLog() const { return log; }
     PlanBase* getPlanBase() const { return planBase; }
-    PlanParser* getPlanParser() const { return planParser; }
+//    PlanParser* getPlanParser() const { return planParser; }
+    ModelManager* getModelManager() const { return modelManager; }
     PlanRepository* getPlanRepository() const { return planRepository; }
     VariableSyncModule* getResultStore() const { return variableSyncModule; }
     IRoleAssignment* getRoleAssignment() const { return roleAssignment; }
@@ -127,7 +129,8 @@ private:
 
     essentials::AgentIDManager* agentIDManager;
     Logger* log;
-    PlanParser* planParser;
+    //PlanParser* planParser;
+    ModelManager* modelManager;
 
     IRoleAssignment* roleAssignment;
     IAlicaCommunication* communicator;

@@ -5,7 +5,7 @@ namespace alica
 
 class SolverTerm
 {
-  public:
+public:
     SolverTerm() {}
     virtual ~SolverTerm() {}
 };

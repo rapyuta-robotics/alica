@@ -10,7 +10,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
 #include "engine/model/RoleSet.h"
-#include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
 #include "engine/teammanager/TeamManager.h"
@@ -103,23 +102,13 @@ void UtilityFunction::init(AlicaEngine* ae)
     _priorityMatrix.clear();
     const RoleSet* roleSet = ae->getRoleSet();
 
-    for (const RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
-        const int64_t roleId = rtm->getRole()->getId();
+    for (const Role* role : roleSet->getRoles()) {
+        const int64_t roleId = role->getId();
         int64_t taskId;
         _roleHighestPriorityMap.insert(std::pair<int64_t, double>(roleId, 0.0));
         for (const EntryPoint* ep : _plan->getEntryPoints()) {
             taskId = ep->getTask()->getId();
-            double curPrio = 0.0;
-            auto iter = rtm->getTaskPriorities().find(taskId);
-            if (iter == rtm->getTaskPriorities().end()) {
-                ALICA_ERROR_MSG("UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role " << rtm->getRole()->getName()
-                                                                         << " with id " << roleId << "!\n We are in the UF for the plan " << _plan->getName()
-                                                                         << "!");
-                AlicaEngine::abort("Error in Utility data, cannot continue.");
-                return;
-            } else {
-                curPrio = iter->second;
-            }
+            double curPrio = role->getPriority(taskId);
             _priorityMatrix[TaskRoleStruct(taskId, roleId)] = curPrio;
             if (_roleHighestPriorityMap.at(roleId) < curPrio) {
                 _roleHighestPriorityMap.at(roleId) = curPrio;
@@ -133,7 +122,7 @@ void UtilityFunction::init(AlicaEngine* ae)
 }
 
 /**
- *  Calls Init() for every utiltiyfunction.
+ *  Calls Init() for every utility function.
  * Is called and the end of AlicaEngine.Init(..), because it
  * needs the current roleset (circular dependency otherwise).
  */

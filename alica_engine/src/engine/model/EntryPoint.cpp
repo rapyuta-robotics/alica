@@ -53,26 +53,24 @@ void EntryPoint::computeReachabilitySet()
     }
 }
 
-std::string EntryPoint::toString() const
+std::string EntryPoint::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << "#EntryPoint: " << getName() << " " << getId() << std::endl;
-    ss << "\t Cardinality: " << _cardinality << std::endl;
-    ss << "\t Task:" << std::endl;
+    ss << indent << "#EntryPoint: Name: " << getName() << " ID: " << getId() << std::endl;
+    ss << indent << "\t Cardinality: " << _cardinality << std::endl;
+    ss << indent << "\t Task: ";
     if (_task != nullptr) {
-        ss << "\t" << _task->getId() << " " << _task->getName();
+        ss << "Name: " << _task->getName() << " ID: " <<  _task->getId() << std::endl;
     } else {
-        ss << "null";
+        ss << "null" << std::endl;
     }
-    ss << std::endl;
-    ss << "\t Initial State:" << std::endl;
+    ss << indent << "\t Initial State: ";
     if (_state != nullptr) {
-        ss << "\t" << _state->getId() << " " << _state->getName();
+        ss << "Name: " << _state->getName() << " ID: " << _state->getId() << std::endl;
     } else {
-        ss << "null";
+        ss << "null" << std::endl;
     }
-    ss << std::endl;
-    ss << "#EndEntryPoint" << std::endl;
+    ss << indent << "#EndEntryPoint" << std::endl;
     return ss.str();
 }
 

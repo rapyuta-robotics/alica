@@ -3,13 +3,17 @@
 
 #include <stdint.h>
 
-namespace alica {
+namespace alica
+{
 
-class BBIdent {
+class BBIdent
+{
 public:
     BBIdent() = default;
     BBIdent(uint64_t id)
-            : _val(id) {}
+            : _val(id)
+    {
+    }
     int64_t getRaw() const { return _val; }
 
     bool operator>(const BBIdent o) const { return _val > o._val; }
@@ -23,4 +27,4 @@ private:
     uint64_t _val;
 };
 
-}  // namespace alica
+} // namespace alica

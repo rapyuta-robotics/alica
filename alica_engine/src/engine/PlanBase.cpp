@@ -155,8 +155,8 @@ void PlanBase::run()
         if (_deepestNode && _deepestNode->isRetired()) {
             _deepestNode = nullptr;
         }
-            // remove deletable plans:
-            // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+        // remove deletable plans:
+        // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
 #ifdef ALICA_DEBUG_ENABLED
         int retiredCount = 0;
         int inActiveCount = 0;

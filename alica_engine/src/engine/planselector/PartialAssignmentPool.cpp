@@ -3,7 +3,7 @@
 
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Task.h"
-#include "engine/parser/ModelFactory.h"
+#include "engine/modelmanagement/ModelFactory.h"
 
 namespace alica
 {

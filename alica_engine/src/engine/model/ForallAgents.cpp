@@ -17,8 +17,8 @@
 namespace alica
 {
 
-ForallAgents::ForallAgents(int64_t id)
-        : Quantifier(id)
+ForallAgents::ForallAgents()
+        : Quantifier()
 {
 }
 

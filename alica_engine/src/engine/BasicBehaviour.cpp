@@ -34,7 +34,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _success(false)
         , _callInit(true)
         , _started(true)
-        , _configuration(nullptr)
+        , _behaviour(nullptr)
         , _msInterval(100)
         , _msDelayedStart(0)
         , _running(false)
@@ -63,20 +63,15 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
-void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
+void BasicBehaviour::setBehaviour(const Behaviour* beh)
 {
-    assert(_configuration == nullptr);
-    _configuration = beh;
-    if (_configuration->isEventDriven()) {
+    assert(_behaviour == nullptr);
+    _behaviour = beh;
+    if (_behaviour->isEventDriven()) {
         _runThread = new std::thread(&BasicBehaviour::runInternalTriggered, this);
     } else {
         _runThread = new std::thread(&BasicBehaviour::runInternalTimed, this);
     }
-}
-
-const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
-{
-    return _configuration->getVariableByName(name);
 }
 
 /**
@@ -106,7 +101,7 @@ bool BasicBehaviour::start()
 {
     _callInit = true;
     _running = true;
-    if (!_configuration->isEventDriven()) {
+    if (!_behaviour->isEventDriven()) {
         _runCV.notify_all();
     }
     return true;
@@ -154,18 +149,6 @@ void BasicBehaviour::initInternal()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
-}
-
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
-{
-    for (const auto& pair : _configuration->getParameters()) {
-        if (pair.first == key) {
-            valueOut = pair.second;
-            return true;
-        }
-    }
-    valueOut.clear();
-    return false;
 }
 
 void BasicBehaviour::runInternalTimed()
@@ -240,6 +223,16 @@ void BasicBehaviour::runInternalTriggered()
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
     _engine->getCommunicator()->sendLogMessage(level, message);
+}
+
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
+{
+    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
+    string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(
+            this->getName().c_str(), this->getPlanContext().getRunningPlan()->getActiveState()->getId(), NULL);
+    valueOut = (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), key.c_str(), NULL);
+    // if we don't get here, system config has thrown an exception
+    return true;
 }
 
 } /* namespace alica */

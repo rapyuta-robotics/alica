@@ -15,6 +15,8 @@ namespace alica
 class RunningPlan;
 class SolverTerm;
 class ModelFactory;
+class QuantifierFactory;
+class ModelManager;
 
 /**
  * A quantifier encapsulates a set of Variables, belonging to a domain artifact, scoped under a AlicaElement
@@ -22,7 +24,7 @@ class ModelFactory;
 class Quantifier : public AlicaElement
 {
 public:
-    Quantifier(int64_t id);
+    Quantifier();
     virtual ~Quantifier();
     const std::vector<std::string>& getDomainIdentifiers() const { return _domainIdentifiers; }
     bool isScopeEntryPoint() const { return _scopeType == ENTRYPOINTSCOPE; }
@@ -55,6 +57,8 @@ protected:
 
 private:
     friend ModelFactory;
+    friend QuantifierFactory;
+    friend ModelManager;
     void setScope(const AlicaElement* ae);
     void setDomainIdentifiers(const std::vector<std::string>& domainIdentifiers);
 

@@ -1,12 +1,4 @@
-/*
- * AbstractPlan.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ABSTRACTPLAN_H_
-#define ABSTRACTPLAN_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -20,14 +12,14 @@ namespace alica
 {
 
 class Variable;
-class PreCondition;
-class RuntimeCondition;
 class UtilityFunction;
 class ModelFactory;
 class ExpressionHandler;
+class ModelManager;
+class AbstractPlanFactory;
 
 /**
- * Super class of plans, plantypes and behaviourconfigurations.
+ * Super class of plans, plantypes and behaviours.
  */
 class AbstractPlan : public AlicaElement
 {
@@ -39,50 +31,34 @@ public:
 
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
-
-    bool isMasterPlan() const { return _masterPlan; }
-    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
     const VariableGrp& getVariables() const { return _variables; }
-    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
-    const PreCondition* getPreCondition() const { return _preCondition; }
+    const Variable* getVariable(const std::string& name) const;
 
-    std::string toString() const override;
-    const std::string& getFileName() const { return _fileName; }
-
+    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
     void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
-    const Variable* getVariableByName(const std::string& name) const;
+
+    std::string toString(std::string indent = "") const override;
+    const std::string& getFileName() const { return _fileName; }
 
 private:
     friend ModelFactory;
+    friend ModelManager;
+    friend AbstractPlanFactory;
     friend ExpressionHandler;
 
-    void setMasterPlan(bool isMasterPlan);
-
     void setFileName(const std::string& fileName);
-    void setVariables(const VariableGrp& variables);
-    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
-    void setPreCondition(PreCondition* preCondition);
-
-    // TODO: move this to the authority module
-    mutable AlicaTime _authorityTimeInterval;
     /**
-     * This plan's runtime condition.
+     * The variables that are available in the context of this abstract plan.
      */
-    RuntimeCondition* _runtimeCondition;
-    /**
-     * This plan's precondition
-     */
-    PreCondition* _preCondition;
-
     VariableGrp _variables;
 
     /**
-     *  Whether this plan is marked as a MasterPlan.
+     * The file this abstract plan is parsed from/ written to.
      */
-    bool _masterPlan;
     std::string _fileName;
+
+    // TODO: move this to the authority module
+    mutable AlicaTime _authorityTimeInterval;
 };
 
 } // namespace alica
-
-#endif /* ABSTRACTPLAN_H_ */
