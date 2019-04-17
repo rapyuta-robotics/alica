@@ -11,11 +11,6 @@
 #include <SystemConfig.h>
 #include <utility>
 
-namespace
-{
-thread_local std::shared_ptr<alica::AgentsCache::AgentMap> s_agents;
-}
-
 namespace alica
 {
 
@@ -33,6 +28,7 @@ AgentsCache::~AgentsCache()
 
 const std::shared_ptr<AgentsCache::AgentMap>& AgentsCache::get() const
 {
+    static thread_local std::shared_ptr<alica::AgentsCache::AgentMap> s_agents;
     if (s_agents != _agents) {
         std::lock_guard<std::mutex> guard(_agentsMutex);
         s_agents = _agents;
