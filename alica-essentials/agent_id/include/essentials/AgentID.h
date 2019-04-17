@@ -5,6 +5,8 @@
 namespace essentials
 {
 
+class AgentIDConstPtr;
+
 class AgentID
 {
     friend struct std::hash<essentials::AgentID>;
