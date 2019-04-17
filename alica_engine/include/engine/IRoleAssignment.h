@@ -1,9 +1,9 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
-
 #include "engine/collections/RobotEngineData.h"
 #include "model/Role.h"
+
+#include <essentials/AgentIDConstPtr.h>
 
 #include <map>
 
@@ -24,7 +24,7 @@ public:
     virtual void update() = 0;
 
     const Role* getOwnRole() const { return ownRole; }
-    const Role* getRole(AgentIDConstPtr robotId);
+    const Role* getRole(essentials::AgentIDConstPtr robotId);
     void setCommunication(const IAlicaCommunication* communication);
 
 protected:
@@ -32,7 +32,7 @@ protected:
      * Current Robot's role.
      */
     const Role* ownRole;
-    std::map<AgentIDConstPtr, const Role*> robotRoleMapping;
+    std::map<essentials::AgentIDConstPtr, const Role*> robotRoleMapping;
     const IAlicaCommunication* communication;
 };
 } // namespace alica

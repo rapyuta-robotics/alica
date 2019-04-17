@@ -28,7 +28,7 @@ public:
     bool isValid() const;
     bool isGoal() const;
     const Plan* getPlan() const { return _plan; }
-    bool addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx);
+    bool addIfAlreadyAssigned(const SimplePlanTree* spt, essentials::AgentIDConstPtr agent, int idx);
     bool assignUnassignedAgent(int agentIdx, int epIdx);
     UtilityInterval getUtility() const { return _utility; }
     const TaskAssignmentProblem* getProblem() const { return _problem; }

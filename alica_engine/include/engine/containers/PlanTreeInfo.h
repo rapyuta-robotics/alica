@@ -1,13 +1,13 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 
 #include <tuple>
 #include <vector>
 
 namespace alica
 {
-typedef std::tuple<AgentIDConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+typedef std::tuple<essentials::AgentIDConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
 struct PlanTreeInfo
 {
     PlanTreeInfo()
@@ -22,7 +22,7 @@ struct PlanTreeInfo
     {
     }
 
-    AgentIDConstPtr senderID;
+    essentials::AgentIDConstPtr senderID;
     std::vector<int64_t> stateIDs;
     std::vector<int64_t> succeededEPs;
 

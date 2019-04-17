@@ -18,7 +18,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include <SystemConfig.h>
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <engine/Output.h>
 
 namespace alica
@@ -284,7 +284,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return a SimplePlanTree
  */
-std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
+std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(essentials::AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
 {
     ALICA_DEBUG_MSG("Spt from robot " << agentId);
     ALICA_DEBUG_MSG(ids);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/AgentIDConstPtr.h>
 
 #include <string>
 #include <tuple>
@@ -8,20 +8,20 @@
 
 namespace alica
 {
-typedef std::tuple<AgentIDConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<AgentIDConstPtr>> stdAlicaEngineInfo;
+typedef std::tuple<essentials::AgentIDConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<essentials::AgentIDConstPtr>> stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
     AlicaEngineInfo()
             : senderID(nullptr)
     {
     }
-    AgentIDConstPtr senderID;
+    essentials::AgentIDConstPtr senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<AgentIDConstPtr> robotIDsWithMe;
+    std::vector<essentials::AgentIDConstPtr> robotIDsWithMe;
 
     AlicaEngineInfo(stdAlicaEngineInfo&& s)
     {

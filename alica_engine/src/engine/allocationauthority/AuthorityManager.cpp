@@ -53,7 +53,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         if (*(aai.senderID) > *_localAgentID) {
             // notify TO that evidence about other robots is available
             for (EntryPointRobots epr : aai.entryPointRobots) {
-                for (AgentIDConstPtr rid : epr.robots) {
+                for (essentials::AgentIDConstPtr rid : epr.robots) {
                     if (*rid != *_localAgentID) {
                         _engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
                     }

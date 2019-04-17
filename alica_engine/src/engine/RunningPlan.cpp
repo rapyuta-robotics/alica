@@ -278,7 +278,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
 void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
-        AgentIDConstPtr mid = getOwnID();
+        essentials::AgentIDConstPtr mid = getOwnID();
         _assignment.removeAgent(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
@@ -298,7 +298,7 @@ void RunningPlan::useState(const State* s)
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
-                AgentIDConstPtr mid = getOwnID();
+                essentials::AgentIDConstPtr mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
                 _ae->getTeamManager()->setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
@@ -589,7 +589,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     bool ret = false;
     AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
-        AgentIDConstPtr id = spt->getAgentId();
+        essentials::AgentIDConstPtr id = spt->getAgentId();
         const bool freezeAgent = keepState && _assignment.getStateOfAgent(id) == getActiveState();
         if (freezeAgent) {
             continue;
@@ -633,12 +633,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
-        AgentIDConstPtr ownId = getOwnID();
+        essentials::AgentIDConstPtr ownId = getOwnID();
         for (int i = 0; i < _assignment.getEntryPointCount(); ++i) {
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (AgentIDConstPtr rob : robs) {
+            for (essentials::AgentIDConstPtr rob : robs) {
                 if (rob == ownId) {
                     continue;
                 }
@@ -673,7 +673,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (AgentIDConstPtr rob : robs) {
+            for (essentials::AgentIDConstPtr rob : robs) {
                 const bool freezeAgent = keepState && _assignment.getStateOfAgent(rob) == getActiveState();
                 if (freezeAgent) {
                     continue;

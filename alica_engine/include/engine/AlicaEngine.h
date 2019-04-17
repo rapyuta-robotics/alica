@@ -1,10 +1,10 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/blackboard/BlackBoard.h"
 #include "engine/constraintmodul/ISolver.h"
 
 #include <SystemConfig.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <essentials/AgentIDManager.h>
 #include <list>
 #include <string>
@@ -108,9 +108,9 @@ public:
 
     // AgentIDManager forwarded interface:
 
-    AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
+    essentials::AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
     template <class Prototype>
-    AgentIDConstPtr getId(Prototype& idPrototype) const;
+    essentials::AgentIDConstPtr getId(Prototype& idPrototype) const;
 
 private:
     void setStepEngine(bool stepEngine);
@@ -173,9 +173,9 @@ private:
  * IntRobotID).
  */
 template <class Prototype>
-AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
+essentials::AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
 {
-    return AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
+    return essentials::AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
 }
 
 template <typename T>

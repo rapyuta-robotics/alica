@@ -1,9 +1,10 @@
 #pragma once
 
-#include <memory>
-
-#include "engine/AgentIDConstPtr.h"
 #include "engine/model/EntryPoint.h"
+
+#include <essentials/AgentIDConstPtr.h>
+
+#include <memory>
 
 namespace alica
 {
@@ -14,17 +15,17 @@ namespace alica
 class EntryPointRobotPair final
 {
 public:
-    EntryPointRobotPair(const EntryPoint* ep, AgentIDConstPtr r);
+    EntryPointRobotPair(const EntryPoint* ep, essentials::AgentIDConstPtr r);
     const EntryPoint* getEntryPoint() const;
     void setEntryPoint(const EntryPoint* entryPoint);
-    AgentIDConstPtr getRobot() const { return _robot; }
-    void setRobot(AgentIDConstPtr robot);
+    essentials::AgentIDConstPtr getRobot() const { return _robot; }
+    void setRobot(essentials::AgentIDConstPtr robot);
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 protected:
     const EntryPoint* _entryPoint;
-    AgentIDConstPtr _robot;
+    essentials::AgentIDConstPtr _robot;
 };
 
 } /* namespace alica */
