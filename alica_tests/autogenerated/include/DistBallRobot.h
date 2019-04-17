@@ -17,7 +17,7 @@ public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
     UtilityInterval eval(IAssignment ass) const override;
-    AgentIDConstPtr robotId;
+    essentials::AgentIDConstPtr robotId;
 
 protected:
     double sb;

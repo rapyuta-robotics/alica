@@ -7,9 +7,12 @@
 
 #include <vector>
 
+namespace essentials{
+    class AgentIDConstPtr;
+}
+
 namespace alica
 {
-class AgentIDConstPtr;
 class RunningPlan;
 class Variable;
 class SolverTerm;
@@ -23,7 +26,7 @@ class ForallAgents : public Quantifier
 public:
     ForallAgents();
     virtual ~ForallAgents();
-    bool isAgentInScope(AgentIDConstPtr id, const RunningPlan& rp) const override;
+    bool isAgentInScope(essentials::AgentIDConstPtr id, const RunningPlan& rp) const override;
     bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 
 private:
@@ -33,7 +36,7 @@ private:
         MODIFIED,
         NONE
     };
-    Result TryAddId(AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
+    Result TryAddId(essentials::AgentIDConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
 };
 
 } // namespace alica

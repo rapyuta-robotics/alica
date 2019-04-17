@@ -74,7 +74,7 @@ public:
     virtual void init() {}
 
 protected:
-    AgentIDConstPtr getOwnId() const;
+    essentials::AgentIDConstPtr getOwnId() const;
     AlicaEngine* getEngine() const { return _engine; }
 
     /**

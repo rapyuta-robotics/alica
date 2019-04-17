@@ -20,7 +20,7 @@ public:
     int getCount() const { return _successData.size(); }
     const EntryPointGrp& getEntryPoints() const { return _plan->getEntryPoints(); }
 
-    void setSuccess(AgentIDConstPtr robot, const EntryPoint* ep);
+    void setSuccess(essentials::AgentIDConstPtr robot, const EntryPoint* ep);
     void clear();
     const AgentGrp* getAgents(const EntryPoint* ep) const;
     const AgentGrp* getAgentsById(int64_t id) const;

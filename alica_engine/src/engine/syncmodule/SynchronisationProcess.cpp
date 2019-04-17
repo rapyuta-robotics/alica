@@ -31,7 +31,7 @@ using std::shared_ptr;
     this->lastTalkData = nullptr;
 }
 
-    SynchronisationProcess::SynchronisationProcess(AlicaEngine* ae, AgentIDConstPtr myID, const Synchronisation* sync, SyncModule* sm)
+    SynchronisationProcess::SynchronisationProcess(AlicaEngine* ae, essentials::AgentIDConstPtr myID, const Synchronisation* sync, SyncModule* sm)
 {
     this->ae = ae;
     this->synchronisation = sync;
@@ -283,7 +283,7 @@ void SynchronisationProcess::setSynchronisation(const Synchronisation *synchroni
 bool SynchronisationProcess::allSyncReady() const
 {
     // test if all robots who acknowledged myRow have sent a SyncReady
-    for (AgentIDConstPtr robotID : this->myRow->getReceivedBy()) {
+    for (essentials::AgentIDConstPtr robotID : this->myRow->getReceivedBy()) {
         if (robotID != myID) // we do not necessarily need an ack from ourselves
         {
             bool foundRobot = false;
@@ -360,7 +360,7 @@ bool SynchronisationProcess::isSyncComplete()
         return false;
     }
     for (SyncRow* row : this->rowsOK) {
-        AgentIDConstPtr tmp = row->getSyncData().robotID;
+        essentials::AgentIDConstPtr tmp = row->getSyncData().robotID;
         if (std::find(this->myRow->getReceivedBy().begin(), this->myRow->getReceivedBy().end(), tmp) == this->myRow->getReceivedBy().end()) {
             return false;
         }
@@ -377,7 +377,7 @@ std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc
         s << "Row: " << row->getSyncData().robotID << " "
           << std::to_string(row->getSyncData().transitionID) + " " + std::to_string(row->getSyncData().conditionHolds) << " " << row->getSyncData().ack
           << " RecvBy: ";
-        for (AgentIDConstPtr robotID : row->getReceivedBy()) {
+        for (essentials::AgentIDConstPtr robotID : row->getReceivedBy()) {
             s << robotID << ", ";
         }
         s << std::endl;

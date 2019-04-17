@@ -3,7 +3,7 @@
 namespace alica
 {
 
-EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, AgentIDConstPtr r)
+EntryPointRobotPair::EntryPointRobotPair(const EntryPoint* ep, essentials::AgentIDConstPtr r)
         : _entryPoint(ep)
         , _robot(r)
 {
@@ -19,7 +19,7 @@ void EntryPointRobotPair::setEntryPoint(const EntryPoint* entryPoint)
     _entryPoint = entryPoint;
 }
 
-void EntryPointRobotPair::setRobot(AgentIDConstPtr robot)
+void EntryPointRobotPair::setRobot(essentials::AgentIDConstPtr robot)
 {
     _robot = robot;
 }

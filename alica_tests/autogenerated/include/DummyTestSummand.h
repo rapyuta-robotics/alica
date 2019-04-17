@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <engine/USummand.h>
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ public:
     DummyTestSummand(double weight);
     virtual ~DummyTestSummand();
     UtilityInterval eval(IAssignment ass) const override;
-    AgentIDConstPtr robotId;
+    essentials::AgentIDConstPtr robotId;
 
 protected:
     double sb;

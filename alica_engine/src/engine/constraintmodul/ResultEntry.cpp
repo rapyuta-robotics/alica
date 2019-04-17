@@ -19,7 +19,7 @@ ResultEntry::ResultEntry()
 {
 }
 
-ResultEntry::ResultEntry(AgentIDConstPtr robotId)
+ResultEntry::ResultEntry(essentials::AgentIDConstPtr robotId)
         : _id(robotId)
 {
 }
