@@ -3,19 +3,11 @@
 #include <engine/IAlicaCommunication.h>
 #include <capnzero/CapnZero.h>
 
-// Alica messages includes. They will be replaced with capnproto messages!
-#include "alica_msgs/AlicaEngineInfo.h"
-#include "alica_msgs/AllocationAuthorityInfo.h"
-#include "alica_msgs/PlanTreeInfo.h"
-#include "alica_msgs/RoleSwitch.h"
-#include "alica_msgs/SolverResult.h"
-#include "alica_msgs/SyncReady.h"
-#include "alica_msgs/SyncTalk.h"
-
 namespace alicaCapnzeroProxy
 {
 class AlicaCapnzeroCommunication : public alica::IAlicaCommunication
 {
+public:
     AlicaCapnzeroCommunication(alica::AlicaEngine *ae);
     virtual ~AlicaCapnzeroCommunication();
 
@@ -28,11 +20,11 @@ class AlicaCapnzeroCommunication : public alica::IAlicaCommunication
     virtual void sendSolverResult(const alica::SolverResult& sr) const override;
     virtual void sendLogMessage(int level, const std::string& message) const override;
 
-    void handleAllocationAuthority(const alica_msgs::AllocationAuthorityInfo& aai);
-    void handlePlanTreeInfo(alica_msgs::PlanTreeInfoPtr pti);
-    void handleSyncReady(alica_msgs::SyncReadyPtr sr);
-    void handleSyncTalk(alica_msgs::SyncTalkPtr st);
-    void handleSolverResult(const alica_msgs::SolverResult& sr);
+    void handleAllocationAuthority(::capnp::FlatArrayMessageReader& msg);
+    void handlePlanTreeInfo(::capnp::FlatArrayMessageReader& msg);
+    void handleSyncReady(::capnp::FlatArrayMessageReader& msg);
+    void handleSyncTalk(::capnp::FlatArrayMessageReader& msg);
+    void handleSolverResult(::capnp::FlatArrayMessageReader& msg);
 
     virtual void startCommunication();
     virtual void stopCommunication();
@@ -51,13 +43,7 @@ protected:
     std::string solverResultTopic;
 
     // Publishers for the different Messages:
-    capnzero::Publisher *AlicaEngineInfoPublisher;
-    capnzero::Publisher *RoleSwitchPublisher;
-    capnzero::Publisher *AllocationAuthorityInfoPublisher;
-    capnzero::Publisher *PlanTreeInfoPublisher;
-    capnzero::Publisher *SyncReadyPublisher;
-    capnzero::Publisher *SyncTalkPublisher;
-    capnzero::Publisher *SolverResultPublisher;
+    capnzero::Publisher *AlicaPublisher;
 
     // Subscribers for the different Messages:
     capnzero::Subscriber *AlicaEngineInfoSubscriber;

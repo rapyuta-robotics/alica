@@ -11,13 +11,24 @@
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
 
-//#include "msgs/AlicaEngineInfo.capnp.h"
+// Messages:
+#include "msgs/AllocationAuthorityInfo.capnp.h"
+#include "msgs/AlicaEngineInfo.capnp.h"
+#include "msgs/PlanTreeInfo.capnp.h"
+#include "msgs/RoleSwitch.capnp.h"
+#include "msgs/SolverResult.capnp.h"
+#include "msgs/SyncReady.capnp.h"
+#include "msgs/SyncTalk.capnp.h"
 
 #include <capnzero/CapnZero.h>
 #include <capnp/common.h>
 #include <capnp/message.h>
 #include <capnp/serialize-packed.h>
 #include <kj/array.h>
+#include <iostream>
+
+#include <essentials/AgentID.h>
+#include <essentials/AgentIDFactory.h>
 
 using namespace alica;
 
@@ -43,21 +54,16 @@ namespace alicaCapnzeroProxy {
         this->solverResultTopic = "solverRES";
 
         // Setup publishers:
-        this->AlicaEngineInfoPublisher = new capnzero::Publisher(this->ctx, this->alicaEngineInfoTopic);
-        this->RoleSwitchPublisher = new capnzero::Publisher(this->ctx, this->ownRoleTopic);
-        this->AllocationAuthorityInfoPublisher = new capnzero::Publisher(this->ctx, this->allocationAuthorityInfoTopic);
-        this->PlanTreeInfoPublisher = new capnzero::Publisher(this->ctx, this->planTreeInfoTopic);
-        this->SyncReadyPublisher = new capnzero::Publisher(this->ctx, this->syncReadyTopic);
-        this->SyncTalkPublisher = new capnzero::Publisher(this->ctx, this->syncTalkTopic);
-        this->SolverResultPublisher = new capnzero::Publisher(this->ctx, this->solverResultTopic);
+        std::cout << "The publisher:\n";
+        this->AlicaPublisher = new capnzero::Publisher(this->ctx);
+        this->AlicaPublisher->setDefaultGroup("ALICA");
 
         // Open sockets:
-        this->AlicaEngineInfoPublisher->bind(capnzero::CommType::UDP, this->url);
-        this->RoleSwitchPublisher->bind(capnzero::CommType::UDP, this->url);
-        this->AllocationAuthorityInfoPublisher->bind(capnzero::CommType::UDP, this->url);
+        this->AlicaPublisher->bind(capnzero::CommType::UDP, this->url);
 
 
         // Setup Subscribers:
+        std::cout << "The subscribers:\n";
         this->AlicaEngineInfoSubscriber = new capnzero::Subscriber(this->ctx, this->alicaEngineInfoTopic);
         this->RoleSwitchSubscriber = new capnzero::Subscriber(this->ctx, this->ownRoleTopic);
         this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,
@@ -66,17 +72,17 @@ namespace alicaCapnzeroProxy {
         this->SyncReadySubscriber = new capnzero::Subscriber(this->ctx, this->syncReadyTopic);
         this->SyncTalkSubscriber = new capnzero::Subscriber(this->ctx, this->syncTalkTopic);
         this->SolverResultSubscriber = new capnzero::Subscriber(this->ctx, this->solverResultTopic);
+
+        // connecting the subscribers:
+        this->AllocationAuthorityInfoSubscriber->connect(capnzero::CommType::UDP, this->url);
+
+        // subscribing the subscribers:
+        this->AllocationAuthorityInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handleAllocationAuthority, &(*this));
     }
 
     AlicaCapnzeroCommunication::~AlicaCapnzeroCommunication() {
         // Delete Publishers:
-        delete this->SolverResultPublisher;
-        delete this->SyncTalkPublisher;
-        delete this->SyncReadyPublisher;
-        delete this->PlanTreeInfoPublisher;
-        delete this->AllocationAuthorityInfoPublisher;
-        delete this->RoleSwitchPublisher;
-        delete this->AlicaEngineInfoPublisher;
+        delete this->AlicaPublisher;
 
         // Delete Subscribers:
         delete this->SolverResultSubscriber;
@@ -92,136 +98,179 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::sendAllocationAuthority(const AllocationAuthorityInfo &aai) const {
-//        alica_msgs::AllocationAuthorityInfo aais;
-//
-//        aais.plan_id = aai.planId;
-//        aais.parent_state = aai.parentState;
-//        aais.plan_type = aai.planType;
-//
-//        aais.sender_id.id = aai.senderID->toByteVector();
-//        aais.authority.id = aai.authority->toByteVector();
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::AllocationAuthorityInfo::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::AllocationAuthorityInfo>();
 
-//        for (auto& ep : aai.entryPointRobots) {
-//            alica_msgs::EntryPointRobots newEP;
-//            newEP.entry_point = ep.entrypoint;
-//            int i = 0;
-//            for (auto& robotId : ep.robots) {
-//                newEP.robots.push_back(alica_msgs::EntryPointRobots::_robots_type::value_type());
-//                for (int j = 0; j < robotId->getSize(); j++) {
-//                    newEP.robots[i].id.push_back(*(robotId->getRaw() + j));
-//                }
-//                i++;
-//            }
-//            aais.entrypoints.push_back(newEP);
-//        }
+        std::cout << "Sending: " << aai;
+
+        msg.setParentState(aai.parentState);
+        msg.setPlanId(aai.planId);
+        msg.setParentState(aai.parentState);
+        msg.setPlanType(aai.planType);
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(aai.senderID->getRaw(), (unsigned int) aai.senderID->getSize()));
+        UUID::Builder authority = msg.initAuthority();
+        authority.setValue(kj::arrayPtr(aai.authority->getRaw(),  (unsigned int) aai.authority->getSize()));
+        ::capnp::List<alica_capnp_msgs::EntrypointRobots>::Builder entrypoints = msg.initEntrypoints((unsigned int) aai.entryPointRobots.size());
+        for (unsigned int i = 0; i < aai.entryPointRobots.size(); ++i) {
+            auto ep = aai.entryPointRobots[i];
+            alica_capnp_msgs::EntrypointRobots::Builder tmp = entrypoints[i];
+            tmp.setEntrypoint(ep.entrypoint);
+            ::capnp::List<UUID>::Builder tmpRobots = tmp.initRobots((unsigned int) ep.robots.size());
+            for (int j = 0; j < ep.robots.size(); ++i) {
+                 UUID::Builder tmpUUID = tmpRobots[j];
+                 tmpUUID.setValue(kj::arrayPtr(ep.robots[j]->getRaw(), (unsigned int) ep.robots[j]->getSize()));
+            }
+        }
 
         if (this->isRunning) {
-//            unsigned int bytes_sent = this->AllocationAuthorityInfoPublisher->send();
+            std::cout << "Sending data: " << msg.toString().flatten().cStr() << '\n';
+            this->AlicaPublisher->send(msgBuilder, this->allocationAuthorityInfoTopic);
         }
     }
 
-    void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const AlicaEngineInfo &bi) const {
-        //    alica_msgs::AlicaEngineInfo bis;
-        //    bis.current_plan = bi.currentPlan;
-        //    bis.current_role = bi.currentRole;
-        //    bis.current_state = bi.currentState;
-        //    bis.current_task = bi.currentTask;
-        //    bis.master_plan = bi.masterPlan;
-        //
-        //    for (auto& robotID : bi.robotIDsWithMe) {
-        //        alica_msgs::AllocationAuthorityInfo::_sender_id_type rosRobotID;
-        //        rosRobotID.id = robotID->toByteVector();
-        //        bis.robot_ids_with_me.push_back(rosRobotID);
-        //    }
-        //
-        //    bis.sender_id.id = bi.senderID->toByteVector();
-        //
-        //    if (this->isRunning) {
-        //        this->AlicaEngineInfoPublisher.publish(bis);
-        //    }
+    void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInfo &bi) const {
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::AlicaEngineInfo::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::AlicaEngineInfo>();
+
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(bi.senderID->getRaw(), (unsigned int) bi.senderID->getSize()));
+
+        msg.setMasterPlan(bi.masterPlan);
+        msg.setCurrentPlan(bi.currentPlan);
+        msg.setCurrentRole(bi.currentRole);
+        msg.setCurrentState(bi.currentState);
+        msg.setCurrentTask(bi.currentTask);
+
+        ::capnp::List<UUID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
+        for (int i = 0; i < bi.robotIDsWithMe.size(); ++i) {
+            auto &robo = bi.robotIDsWithMe[i];
+            UUID::Builder tmp = agents[0];
+            tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
+        }
+
+        if (this->isRunning) {
+            this->AlicaPublisher->send(msgBuilder, this->alicaEngineInfoTopic);
+        }
     }
 
-    void AlicaCapnzeroCommunication::sendPlanTreeInfo(const PlanTreeInfo &pti) const {
-        //    alica_msgs::PlanTreeInfo ptis;
-        //    ptis.sender_id.id = pti.senderID->toByteVector();
-        //
-        //    ptis.state_ids.reserve(pti.stateIDs.size());
-        //    for (int64_t i : pti.stateIDs) {
-        //        ptis.state_ids.push_back(i);
-        //    }
-        //    ptis.succeeded_eps.reserve(pti.succeededEPs.size());
-        //    for (int64_t i : pti.succeededEPs) {
-        //        ptis.succeeded_eps.push_back(i);
-        //    }
-        //    if (this->isRunning) {
-        //        this->PlanTreeInfoPublisher.publish(ptis);
-        //    }
+    void AlicaCapnzeroCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo &pti) const {
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::PlanTreeInfo::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::PlanTreeInfo>();
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(pti.senderID->getRaw(), (unsigned int) pti.senderID->getSize()));
+        ::capnp::List<int64_t>::Builder stateIds = msg.initStateIds((unsigned int) pti.stateIDs.size());
+        for (unsigned int i = 0; i < pti.stateIDs.size(); ++i) {
+            stateIds.set(i, pti.stateIDs[i]);
+        }
+        ::capnp::List<int64_t>::Builder succededEps = msg.initSucceededEps((unsigned int) pti.succeededEPs.size());
+        for (unsigned int i = 0; i < pti.succeededEPs.size(); ++i) {
+            succededEps.set(i, pti.succeededEPs[i]);
+        }
+
+            if (this->isRunning) {
+                this->AlicaPublisher->send(msgBuilder, this->planTreeInfoTopic);
+            }
     }
 
-    void AlicaCapnzeroCommunication::sendRoleSwitch(const RoleSwitch &rs) const {
-        //    alica_msgs::RoleSwitch rss;
-        //
-        //    rss.role_id = rs.roleID;
-        //    auto robotID = this->ae->getTeamManager()->getLocalAgentID();
-        //    rss.sender_id.id = robotID->toByteVector();
-        //
-        //    if (this->isRunning) {
-        //        this->RoleSwitchPublisher.publish(rss);
-        //    }
+    void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch &rs) const {
+        // TODO: Uncomment if testing is not needed anymore
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::RoleSwitch>();
+//        std::vector<uint8_t> robotID = this->ae->getTeamManager()->getLocalAgentID();
+        UUID::Builder sender = msg.initSenderId();
+//        sender.setValue(kj::arrayPtr(robotID.data(), robotID.size() * sizeof(uint8_t)));
+        msg.setRoleId(rs.roleID);
+
+        if (this->isRunning) {
+            this->AlicaPublisher->send(msgBuilder, this->ownRoleTopic);
+        }
     }
 
-    void AlicaCapnzeroCommunication::sendSyncReady(const SyncReady &sr) const {
-        //    alica_msgs::SyncReady srs;
-        //
-        //    srs.sender_id.id = sr.senderID->toByteVector();
-        //    srs.synchronisation_id = sr.synchronisationID;
-        //
-        //    if (this->isRunning) {
-        //        this->SyncReadyPublisher.publish(srs);
-        //    }
+    void AlicaCapnzeroCommunication::sendSyncReady(const alica::SyncReady &sr) const {
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::SyncReady::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::SyncReady>();
+
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
+        msg.setSynchronisationId(sr.synchronisationID);
+
+        if (this->isRunning) {
+            this->AlicaPublisher->send(msgBuilder, this->syncReadyTopic);
+        }
     }
 
-    void AlicaCapnzeroCommunication::sendSyncTalk(const SyncTalk &st) const {
-        //    alica_msgs::SyncTalk sts;
-        //    sts.sender_id.id = st.senderID->toByteVector();
-        //
-        //    for (auto sd : st.syncData) {
-        //        alica_msgs::SyncData sds;
-        //        sds.ack = sd.ack;
-        //        sds.condition_holds = sd.conditionHolds;
-        //        sds.robot_id.id = sd.robotID->toByteVector();
-        //        sds.transition_id = sd.transitionID;
-        //        sts.sync_data.push_back(sds);
-        //    }
-        //
-        //    if (this->isRunning) {
-        //        this->SyncTalkPublisher.publish(sts);
-        //    }
+    void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk &st) const {
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::SyncTalk::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::SyncTalk>();
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(st.senderID->getRaw(), (unsigned int) st.senderID->getSize()));
+
+        ::capnp::List<alica_capnp_msgs::SyncData>::Builder syncData= msg.initSyncData((unsigned int) st.syncData.size());
+        for (int i = 0; i < st.syncData.size(); ++i) {
+            auto &ds = st.syncData[i];
+            alica_capnp_msgs::SyncData::Builder tmpData = syncData[i];
+            UUID::Builder tmpId = tmpData.initRobotId();
+            tmpId.setValue(kj::arrayPtr(ds.robotID->getRaw(), (unsigned int) ds.robotID->getSize()));
+            tmpData.setAck(ds.ack);
+            tmpData.setTransitionHolds(ds.conditionHolds);
+            tmpData.setTransitionId(ds.transitionID);
+        }
+
+        if (this->isRunning) {
+            this->AlicaPublisher->send(msgBuilder, this->syncTalkTopic);
+        }
     }
 
-    void AlicaCapnzeroCommunication::sendSolverResult(const SolverResult &sr) const {
-        //    alica_msgs::SolverResult srs;
-        //    srs.sender_id.id = sr.senderID->toByteVector();
-        //
-        //    for (const SolverVar& sv : sr.vars) {
-        //        alica_msgs::SolverVar svs;
-        //        svs.id = sv.id;
-        //        svs.value = std::vector<uint8_t>(sv.value, sv.value + sizeof(sv.value) / sizeof(sv.value[0]));
-        //        srs.vars.push_back(std::move(svs));
-        //    }
-        //
-        //    if (this->isRunning) {
-        //        this->SolverResultPublisher.publish(srs);
-        //    }
+    void AlicaCapnzeroCommunication::sendSolverResult(const alica::SolverResult &sr) const {
+        ::capnp::MallocMessageBuilder msgBuilder;
+        alica_capnp_msgs::SolverResult::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::SolverResult>();
+        UUID::Builder sender = msg.initSenderId();
+        sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
+        ::capnp::List<alica_capnp_msgs::SolverVar>::Builder vars = msg.initVars((unsigned int) sr.vars.size());
+        for (int i = 0; i < sr.vars.size(); ++i) {
+            auto &var = sr.vars[i];
+            alica_capnp_msgs::SolverVar::Builder tmpVar = vars[i];
+            tmpVar.setId(var.id);
+            tmpVar.setValue(kj::arrayPtr(var.value, sizeof(var.value)));
+        }
+
+        if (this->isRunning) {
+            this->AlicaPublisher->send(msgBuilder, this->solverResultTopic);
+        }
     }
 
-    void AlicaCapnzeroCommunication::handleAllocationAuthority(const alica_msgs::AllocationAuthorityInfo &aaimsg) {
-        //    AllocationAuthorityInfo aai;
-        //    aai.senderID = this->ae->getIdFromBytes(aaimsg.sender_id.id);
-        //    aai.planId = aaimsg.plan_id;
-        //    aai.parentState = aaimsg.parent_state;
-        //    aai.planType = aaimsg.plan_type;
-        //    aai.authority = this->ae->getIdFromBytes(aaimsg.authority.id);
+    void AlicaCapnzeroCommunication::handleAllocationAuthority(::capnp::FlatArrayMessageReader& msg) {
+        alica::AllocationAuthorityInfo aai;
+        std::cout << "handleAllocationAuthority called.\n";
+        std::cout << "Recieved data: " << msg.getRoot<alica_capnp_msgs::AllocationAuthorityInfo>().toString().flatten().cStr() << std::endl;
+        alica_capnp_msgs::AllocationAuthorityInfo::Reader reader = msg.getRoot<alica_capnp_msgs::AllocationAuthorityInfo>();
+        std::vector<uint8_t> id;
+        id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
+        aai.senderID = essentials::AgentIDFactory().create(id);
+        aai.planId = reader.getPlanId();
+        aai.planType = reader.getPlanType();
+        aai.parentState = reader.getParentState();
+        id.clear();
+        id.assign(reader.getAuthority().getValue().begin(), reader.getAuthority().getValue().end());
+        aai.authority = essentials::AgentIDFactory().create(id);
+        ::capnp::List<alica_capnp_msgs::EntrypointRobots>::Reader entrypoints = reader.getEntrypoints();
+        std::vector<alica::EntryPointRobots> epData;
+        for (int i = 0; i < entrypoints.size(); ++i) {
+            EntryPointRobots tmp;
+            alica_capnp_msgs::EntrypointRobots::Reader tmpEp = entrypoints[i];
+            tmp.entrypoint = tmpEp.getEntrypoint();
+            std::vector<essentials::AgentID> agentIds;
+            ::capnp::List<UUID>::Reader robots = tmpEp.getRobots();
+            for (int j = 0; j < robots.size(); ++j) { // Not shure if this works!!!
+                id.clear();
+                UUID::Reader tmpUUID = robots[j];
+                id.assign(tmpUUID.getValue().begin(), tmpUUID.getValue().end());
+                alica::AgentIDConstPtr tmpItem = essentials::AgentIDFactory().create(id);
+                agentIds.push_back(*tmpItem);
+            }
+        }
+
         //
         //    aai.entryPointRobots.reserve(aaimsg.entrypoints.size());
         //    for (const auto& ep : aaimsg.entrypoints) {
@@ -235,12 +284,12 @@ namespace alicaCapnzeroProxy {
         //        aai.entryPointRobots.push_back(newEP);
         //    }
         //
-        //    if (this->isRunning) {
-        //        onAuthorityInfoReceived(aai);
-        //    }
+            if (this->isRunning) {
+//                onAuthorityInfoReceived(aai);
+            }
     }
 
-    void AlicaCapnzeroCommunication::handlePlanTreeInfo(alica_msgs::PlanTreeInfoPtr pti) {
+    void AlicaCapnzeroCommunication::handlePlanTreeInfo(::capnp::FlatArrayMessageReader& msg) {
         //    auto ptiPtr = make_shared<PlanTreeInfo>();
         //    ptiPtr->senderID = this->ae->getIdFromBytes(pti->sender_id.id);
         //    for (int64_t i : pti->state_ids) {
@@ -255,7 +304,7 @@ namespace alicaCapnzeroProxy {
         //    }
     }
 
-    void AlicaCapnzeroCommunication::handleSyncReady(alica_msgs::SyncReadyPtr sr) {
+    void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader& msg) {
         //    auto srPtr = make_shared<SyncReady>();
         //    srPtr->senderID = this->ae->getIdFromBytes(sr->sender_id.id);
         //    srPtr->synchronisationID = sr->synchronisation_id;
@@ -265,7 +314,7 @@ namespace alicaCapnzeroProxy {
         //    }
     }
 
-    void AlicaCapnzeroCommunication::handleSyncTalk(alica_msgs::SyncTalkPtr st) {
+    void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader& msg) {
         //    auto stPtr = make_shared<SyncTalk>();
         //    stPtr->senderID = this->ae->getIdFromBytes(st->sender_id.id);
         //
@@ -284,7 +333,7 @@ namespace alicaCapnzeroProxy {
         //    }
     }
 
-    void AlicaCapnzeroCommunication::handleSolverResult(const alica_msgs::SolverResult &sr) {
+    void AlicaCapnzeroCommunication::handleSolverResult(::capnp::FlatArrayMessageReader& msg) {
         //    SolverResult osr;
         //    osr.senderID = this->ae->getIdFromBytes(sr.sender_id.id);
         //    osr.vars.reserve(sr.vars.size());
@@ -302,35 +351,33 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::sendLogMessage(int level, const string &message) const {
-        //    switch (level) {
-        //        case ::ros::console::levels::Debug:
-        //            ROS_DEBUG("AlicaMessage: %s", message.c_str());
-        //            break;
-        //        case ::ros::console::levels::Info:
-        //            ROS_INFO("AlicaMessage: %s", message.c_str());
-        //            break;
-        //        case ::ros::console::levels::Warn:
-        //            ROS_WARN("AlicaMessage: %s", message.c_str());
-        //            break;
-        //        case ::ros::console::levels::Error:
-        //            ROS_ERROR("AlicaMessage: %s", message.c_str());
-        //            break;
-        //        case ::ros::console::levels::Fatal:
-        //            ROS_FATAL("AlicaMessage: %s", message.c_str());
-        //            break;
-        //        default:
-        //            ROS_ERROR("AlicaMessage: %s", message.c_str());
-        //            break;
-        //    }
+        switch (level) {
+            case 1:
+                std::cout << "AlicaMessage[DBG]: " << message << '\n'; // DEBUG
+                break;
+            case 2:
+                std::cout << "AlicaMessage[INF]: \033[97m" << message << "\033[0m\n"; // INFO
+                break;
+            case 3:
+                std::cout << "AlicaMessage[WRN]: \033[34m" << message << "\033[0m\n"; // WARNING
+                break;
+            case 4:
+                std::cerr << "\033[31mAlicaMessage[ERR]: " << message << "\033[0m\n"; // ERROR
+                break;
+            case 5:
+                std::cerr << "\033[91mAlicaMessage[CRT]: " << message << "\033[0m\n"; // CRITICAL
+                break;
+            default:
+                std::cerr << "\033[31mAlicaMessage[ERR]: " << message << "\033[0m\n"; // default to ERROR
+                break;
+        }
     }
 
     void AlicaCapnzeroCommunication::startCommunication() {
-        //    this->isRunning = true;
-        //    spinner->start();
+            this->isRunning = true;
     }
 
     void AlicaCapnzeroCommunication::stopCommunication() {
-        //    this->isRunning = false;
-        //    spinner->stop();
+            this->isRunning = false;
     }
 }

@@ -9,6 +9,8 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
     add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
+find_package(Threads REQUIRED)
+
 ## ZMQ
 find_package(PkgConfig)
 pkg_check_modules(PC_ZeroMQ QUIET zmq)
@@ -21,8 +23,8 @@ find_library(ZeroMQ_LIBRARY
         PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
         )
 
-find_package(CapnProto)
-set(CapnProto_LIBRARIES ${CapnProto_LIBRARY})
+find_package(CapnProto REQUIRED)
+
 
 ## Capnproto Messages:
 message(STATUS "Capnproto message stuff")
@@ -44,12 +46,15 @@ add_library(alica_capnz_msgs ${CAPNP_SRCS})
 #    target_include_directories(alica_capnz_LIBRARYS PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 #endif (NOT catkin_FOUND)
 
+
+## Find required catkin packages:
 find_package(catkin REQUIRED COMPONENTS
         alica_engine
         message_generation
         alica_msgs
         alica_common_config
         capnzero
+        agent_id
         )
 
 ## System dependencies are found with CMake's conventions
@@ -65,6 +70,7 @@ catkin_package(
 include_directories(
         include
         ${catkin_INCLUDE_DIRS}
+        ${CAPNP_INCLUDE_DIRS}
 )
 
 add_library(alica_capnzero_proxy
@@ -76,19 +82,33 @@ add_library(alica_capnzero_proxy
 add_dependencies(alica_capnzero_proxy
         alica_msgs_generate_messages_cpp
         agent_id_generate_messages_cpp
+        alica_capnz_msgs
         )
 
 target_compile_definitions(alica_capnzero_proxy PUBLIC ZMQ_BUILD_DRAFT_API=1)
 target_link_libraries(alica_capnzero_proxy
         ${catkin_LIBRARIES}
+        ${ZeroMQ_LIBRARY}
+        ${CAPNP_LIBRARIES}
+        alica_capnz_msgs
         )
 
-add_executable(fake_engine src/FakeEngine.cpp)
-target_link_libraries(fake_engine
-#        alica_capnzero_proxy
-#        alica_engine
+add_executable(senderTest src/SenderTest.cpp)
+target_link_libraries(senderTest
+        alica_capnzero_proxy
+        ${catkin_LIBRARIES}
         ${ZeroMQ_LIBRARY}
-        ${CapnProto_LIBRARY}
-#        ${capnzero_LIBRARY}
+        ${CAPNP_LIBRARIES}
+
         )
-target_compile_definitions(fake_engine PUBLIC ZMQ_BUILD_DRAFT_API=1)
+target_compile_definitions(senderTest PUBLIC ZMQ_BUILD_DRAFT_API=1)
+
+add_executable(recieverTest src/RecieverTest.cpp)
+target_link_libraries(recieverTest
+        alica_capnzero_proxy
+        ${catkin_LIBRARIES}
+        ${ZeroMQ_LIBRARY}
+        ${CAPNP_LIBRARIES}
+        alica_capnz_msgs
+        )
+target_compile_definitions(recieverTest PUBLIC ZMQ_BUILD_DRAFT_API=1)
