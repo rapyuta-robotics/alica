@@ -1,8 +1,8 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/Types.h"
 
+#include <essentials/AgentIDConstPtr.h>
 #include <SystemConfig.h>
 
 #include <algorithm>

@@ -1,6 +1,6 @@
 #pragma once
 #include "SolverVar.h"
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/AgentIDConstPtr.h>
 
 #include <vector>
 
@@ -8,7 +8,7 @@ namespace alica
 {
 struct SolverResult
 {
-    AgentIDConstPtr senderID;
+    essentials::AgentIDConstPtr senderID;
     std::vector<SolverVar> vars;
 };
 } /* namespace alica */

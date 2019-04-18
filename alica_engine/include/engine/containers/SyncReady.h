@@ -1,12 +1,12 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<AgentIDConstPtr, int64_t> stdSyncReady;
+typedef std::tuple<essentials::AgentIDConstPtr, int64_t> stdSyncReady;
 struct SyncReady
 {
     SyncReady()
@@ -14,7 +14,7 @@ struct SyncReady
             , synchronisationID(0)
     {
     }
-    AgentIDConstPtr senderID;
+    essentials::AgentIDConstPtr senderID;
     int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)
