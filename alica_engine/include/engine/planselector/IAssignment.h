@@ -55,7 +55,7 @@ private:
 
 //-----------------------------View & Iterator classes below
 // All iterators are const, as this is a const interface.
-class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
 {
 public:
     PartialAssignmentIterator(int agentIdx, int epIdx, const PartialAssignment* pas)
@@ -65,7 +65,7 @@ public:
     {
         toNextValid();
     }
-    AgentIDConstPtr operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
+    essentials::AgentIDConstPtr operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
     PartialAssignmentIterator& operator++()
     {
         ++_agentIdx;
@@ -105,7 +105,7 @@ private:
     int _epIdx;
 };
 
-class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, AgentIDConstPtr>
+class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
 {
 public:
     PartialAssignmentSuccessIteratorBase(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
@@ -115,7 +115,7 @@ public:
             , _inSuccessRange(successRange)
     {
     }
-    AgentIDConstPtr operator*() const
+    essentials::AgentIDConstPtr operator*() const
     {
         if (_inSuccessRange) {
             return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];

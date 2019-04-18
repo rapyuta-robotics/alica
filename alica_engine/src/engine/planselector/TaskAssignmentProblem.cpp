@@ -118,7 +118,7 @@ std::string TaskAssignmentProblem::toString() const
     ss << "--------------------TA:--------------------" << std::endl;
     ss << "NumRobots: " << _agents.size() << std::endl;
     ss << "RobotIDs: ";
-    for (AgentIDConstPtr id : _agents) {
+    for (essentials::AgentIDConstPtr id : _agents) {
         ss << *id << " ";
     }
     ss << std::endl;
@@ -164,9 +164,9 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
-    AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
+    essentials::AgentIDConstPtr ownAgentId = _tm->getLocalAgentID();
     bool haveToRevalute = false;
 
     for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {

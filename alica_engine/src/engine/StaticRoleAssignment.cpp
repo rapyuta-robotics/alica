@@ -8,7 +8,7 @@
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 
 #include <alica_common_config/debug_output.h>
 

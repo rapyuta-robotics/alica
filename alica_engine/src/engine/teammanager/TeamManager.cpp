@@ -91,7 +91,7 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
+const Agent* TeamManager::getAgentByID(essentials::AgentIDConstPtr agentId) const
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -101,12 +101,12 @@ const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
     }
 }
 
-AgentIDConstPtr TeamManager::getLocalAgentID() const
+essentials::AgentIDConstPtr TeamManager::getLocalAgentID() const
 {
     return this->localAgent->getId();
 }
 
-void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(essentials::AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
 {
     auto mapIter = _agents.find(agentId);
     if (mapIter != _agents.end()) {
@@ -119,7 +119,7 @@ void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime time
     }
 }
 
-bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentActive(essentials::AgentIDConstPtr agentId) const
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -133,7 +133,7 @@ bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
  * Checks if an agent is ignored
  * @param agentId an essentials::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentIgnored(essentials::AgentIDConstPtr agentId) const
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -143,7 +143,7 @@ bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
     }
 }
 
-void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
+void TeamManager::setAgentIgnored(essentials::AgentIDConstPtr agentId, const bool ignored) const
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -151,7 +151,7 @@ void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) c
     }
 }
 
-bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(essentials::AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -161,7 +161,7 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(essentials::AgentIDConstPtr agentId, const IdGrp& suceededEps)
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {
@@ -171,7 +171,7 @@ bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceeded
     return false;
 }
 
-const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const
+const DomainVariable* TeamManager::getDomainVariable(essentials::AgentIDConstPtr agentId, const std::string& sort) const
 {
     auto agentEntry = _agents.find(agentId);
     if (agentEntry != _agents.end()) {

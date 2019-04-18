@@ -1,6 +1,6 @@
 #include "DistBallRobot.h"
 #include "TestWorldModel.h"
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
@@ -32,14 +32,14 @@ UtilityInterval DistBallRobot::eval(IAssignment ass) const
 
     long x8 = 8;
     std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
-    AgentIDConstPtr agentID8 = this->manager->getIDFromBytes(id8);
+    essentials::AgentIDConstPtr agentID8 = this->manager->getIDFromBytes(id8);
 
     long x9 = 9;
     std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
-    AgentIDConstPtr agentID9 = this->manager->getIDFromBytes(id9);
+    essentials::AgentIDConstPtr agentID9 = this->manager->getIDFromBytes(id9);
 
     double curPosition;
-    for (AgentIDConstPtr id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+    for (essentials::AgentIDConstPtr id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
         int pos = 0;
         if (*id == *agentID9) {
             pos = 1;

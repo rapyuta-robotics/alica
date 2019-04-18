@@ -35,7 +35,7 @@ private:
 
     std::vector<AllocationAuthorityInfo> _queue;
     const AlicaEngine* _engine;
-    AgentIDConstPtr _localAgentID;
+    essentials::AgentIDConstPtr _localAgentID;
     std::mutex _mutex;
 };
 } /* namespace alica */

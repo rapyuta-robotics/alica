@@ -158,7 +158,7 @@ template <>
 void InProcQueue<alica::SolverResult>::process(std::unique_ptr<alica::SolverResult>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    alica::AgentIDConstPtr prev = first->senderID;
+    essentials::AgentIDConstPtr prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
         first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
         module->onSolverResult(*first);

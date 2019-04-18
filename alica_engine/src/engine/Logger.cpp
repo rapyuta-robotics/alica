@@ -1,5 +1,5 @@
 #include "engine/Logger.h"
-#include "engine/AgentIDConstPtr.h"
+
 #include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
@@ -15,6 +15,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
+#include <essentials/AgentIDConstPtr.h>
 #include <alica_common_config/debug_output.h>
 
 using std::endl;
@@ -118,7 +119,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << tm->getTeamSize();
 
     _sBuild << " TeamMember:";
-    for (AgentIDConstPtr id : agents) {
+    for (essentials::AgentIDConstPtr id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }

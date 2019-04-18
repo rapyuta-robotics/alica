@@ -6,7 +6,7 @@
  */
 
 #include <algorithm>
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <engine/containers/SyncData.h>
 #include <engine/syncmodule/SyncRow.h>
 #include <iostream>
@@ -46,7 +46,7 @@ void SyncRow::toString()
 { // TODO: fix this method (doesnt produce a string, but write to cout)
     std::cout << "SyncRow" << std::endl;
     std::cout << "ReceivedBy: ";
-    for (AgentIDConstPtr i : _receivedBy) {
+    for (essentials::AgentIDConstPtr i : _receivedBy) {
         std::cout << i << " ";
     }
     std::cout << std::endl;
