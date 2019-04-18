@@ -35,6 +35,10 @@ TEST_F(FailureHandling, continueOnFailure)
 
     SimpleSwitches::set(2, true);
     step(ae); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
+
     ae->getAlicaClock()->sleep(alica::AlicaTime::milliseconds(33));
+    // in rare cases the fast path event may not be reacted on in this iteration and one more step is needed.
+    // This happens if the fp-event comes while the engine is still processing.
+    step(ae);
     ASSERT_EQ(ae->getPlanBase()->getDeepestNode()->getActiveState()->getId(), 1532424097662);
 }
