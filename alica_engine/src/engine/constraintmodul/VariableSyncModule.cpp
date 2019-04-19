@@ -125,12 +125,16 @@ void VariableSyncModule::publishContent()
     }
 
     _publishData.vars.clear();
-    AlicaTime now = _ae->getAlicaClock()->now();
-    _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
-    if (_publishData.vars.empty()) {
-        return;
+    if (_ae->getAlicaClock() != nullptr) {
+        AlicaTime now = _ae->getAlicaClock()->now();
+        _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
+        if (_publishData.vars.empty()) {
+            return;
+        }
+        if (_communicator != nullptr) {
+            _communicator->sendSolverResult(_publishData);
+        }
     }
-    _communicator->sendSolverResult(_publishData);
 }
 
 void VariableSyncModule::postResult(int64_t vid, Variant result)
