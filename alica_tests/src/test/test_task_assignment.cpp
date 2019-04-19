@@ -30,12 +30,6 @@ namespace alica
 {
 namespace
 {
-// TODO: What to do with this clock?
-/*
-class StillClock : public alica::AlicaClock
-{
-    alica::AlicaTime now() const override { return alica::AlicaTime::milliseconds(555); }
-};*/
 
 class TaskAssignmentTest : public AlicaTestFixture
 {
@@ -55,16 +49,21 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     alica::AgentAnnouncement aa;
     aa.planHash = 0;
     aa.senderSdk = ae->getVersion();
+    aa.token = 55;
     for (int agentId = 8; agentId <= 11; ++agentId) {
+        if (agentId == 9) {
+            continue;
+        }
+
         aa.senderID = ae->getId<int>(agentId);
         if (agentId == 8) {
-            aa.role = "Attacker";
+            aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";
         } else if (agentId == 10) {
-            aa.role = "AttackSupporter";
+            aa.roleId = 1222973297054; // AttackSupporter
             aa.senderName = "savvy";
         } else if (agentId == 11) {
-            aa.role = "Supporter";
+            aa.roleId = 1222973297056; // Supporter;
             aa.senderName = "myo";
         }
 

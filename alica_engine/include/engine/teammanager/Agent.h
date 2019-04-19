@@ -42,7 +42,7 @@ public:
     void setTimeout(AlicaTime t);
 
 private:
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const AgentAnnouncement& aa);
+    Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
     AgentIDConstPtr _id;

@@ -12,14 +12,14 @@
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const AgentAnnouncement& aa)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa)
         : _id(aa.senderID)
         , _token(aa.token)
         , _name(aa.senderName)
         , _planHash(aa.planHash)
         , _sdk(aa.senderSdk)
         , _engine(engine)
-        , _properties(engine, aa)
+        , _properties(engine, defaultRole, aa)
         , _engineData(engine, aa.senderID)
         , _timeout(timeout)
         , _active(false)

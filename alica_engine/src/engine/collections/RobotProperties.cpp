@@ -7,8 +7,8 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const AlicaEngine* engine, const AgentAnnouncement& aa)
-        : _defaultRole(aa.role.empty() ? "NOROLESPECIFIED" : aa.role)
+RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& defaultRole, const AgentAnnouncement& aa)
+        : _defaultRole(defaultRole.empty() ? "NOROLESPECIFIED" : defaultRole)
 {
     for (const AgentAnnouncement::CapabilityPair& cp : aa.capabilities) {
         for (const Capability* cap : engine->getPlanRepository().getCapabilities()) {
