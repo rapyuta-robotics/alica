@@ -57,14 +57,13 @@ AlicaEngine::AlicaEngine(
     PartialAssignment::allowIdling((*this->sc)["Alica"]->get<bool>("Alica.AllowIdling", NULL));
 
     this->planRepository = new PlanRepository();
-
     this->modelManager = new ModelManager(this->planRepository);
     this->masterPlan = this->modelManager->loadPlanTree(masterPlanName);
-//    ALICA_DEBUG_MSG("AE: MasterPlan:\n -----------------"  << this->masterPlan->toString());
     this->roleSet = this->modelManager->loadRoleSet(roleSetName);
 
-    _teamManager = new TeamManager(this, true);
-    _teamManager->init();
+    this->_teamManager = new TeamManager(this, true);
+    this->_teamManager->init();
+
     this->behaviourPool = new BehaviourPool(this);
     this->teamObserver = new TeamObserver(this);
     if (this->useStaticRoles) {
@@ -72,6 +71,7 @@ AlicaEngine::AlicaEngine(
     } else {
         AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
+
     // the communicator is expected to be set before init() is called
     this->roleAssignment->setCommunication(communicator);
     this->syncModul = new SyncModule(this);

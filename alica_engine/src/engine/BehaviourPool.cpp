@@ -22,6 +22,7 @@ BehaviourPool::BehaviourPool(AlicaEngine* ae)
         , _behaviourCreator(nullptr)
 
 {
+    std::cout << "Construct behaviour pool" << std::endl;
 }
 
 /**
@@ -53,7 +54,6 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
             basicBeh->setInterval(1000 / (beh->getFrequency() < 1 ? 1 : beh->getFrequency()));
             basicBeh->setEngine(_ae);
             basicBeh->init();
-
             _availableBehaviours.insert(make_pair(beh, basicBeh));
         } else {
             return false;
@@ -89,6 +89,9 @@ void BehaviourPool::terminateAll()
 void BehaviourPool::startBehaviour(RunningPlan& rp)
 {
     if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+        if (this == nullptr) {
+            std::cout << "BehaviourPool: " << _availableBehaviours.size() << std::endl;
+        }
         const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(beh);
         if (bb != nullptr) {
             // set both directions rp <-> bb
