@@ -3,5 +3,5 @@ uint32 token
 string sender_name
 uint32 sender_sdk
 uint32 plan_hash
-string role
+int64 roleId
 StringTuple[] capabilities

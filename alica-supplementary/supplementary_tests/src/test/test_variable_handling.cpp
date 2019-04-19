@@ -67,7 +67,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     alica::AgentIDConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
     alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
-    EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
+    EXPECT_NE(id1, id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
     EXPECT_EQ(rp1->getActivePlan()->getName(), "Lvl1");

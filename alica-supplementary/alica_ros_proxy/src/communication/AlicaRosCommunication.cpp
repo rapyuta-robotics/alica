@@ -342,7 +342,7 @@ void AlicaRosCommunication::handleAgentAnnouncement(const alica_msgs::AgentAnnou
     newpa.senderName = pa.sender_name;
     newpa.senderSdk = pa.sender_sdk;
     newpa.planHash = pa.plan_hash;
-    newpa.role = pa.role;
+    newpa.roleId = pa.roleId;
     for (const alica_msgs::StringTuple& st : pa.capabilities) {
         newpa.capabilities.push_back(std::make_pair(st.key, st.value));
     }
@@ -371,7 +371,7 @@ void AlicaRosCommunication::sendAgentAnnouncement(const AgentAnnouncement& pa) c
     newpa.sender_name = pa.senderName;
     newpa.sender_sdk = pa.senderSdk;
     newpa.plan_hash = pa.planHash;
-    newpa.role = pa.role;
+    newpa.roleId = pa.roleId;
     for (const auto& cap : pa.capabilities) {
         alica_msgs::StringTuple st;
         st.key = cap.first;
