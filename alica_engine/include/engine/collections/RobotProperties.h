@@ -23,7 +23,7 @@ struct AgentAnnouncement;
 class RobotProperties
 {
 public:
-    RobotProperties(const AlicaEngine* ae, const AgentAnnouncement& aa);
+    RobotProperties(const AlicaEngine* ae, const std::string& defaultRole, const AgentAnnouncement& aa);
     ~RobotProperties();
 
     const std::map<std::string, std::unique_ptr<const Characteristic>>& getCharacteristics() const { return _characteristics; }

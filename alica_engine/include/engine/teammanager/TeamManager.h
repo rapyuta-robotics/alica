@@ -78,7 +78,7 @@ private:
     AlicaTime _agentAnnouncementTimeInterval;
     AlicaTime _timeLastAnnouncement;
     int _announcementRetries;
-    AgentAnnouncement _presenceMessage;
+    AgentAnnouncement _localAnnouncement;
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
@@ -88,7 +88,6 @@ private:
     void readSelfFromConfig();
     void announcePresence() const;
     void queryPresence() const;
-    void constructAnnouncementMessage();
     Agent* getAgent(AgentIDConstPtr agentId) const;
 };
 
