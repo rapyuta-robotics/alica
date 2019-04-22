@@ -39,7 +39,7 @@ class TestClock : public AlicaClock
 {
 public:
     TestClock()
-            : _now()
+            : _now(AlicaClock::now())
     {
     }
     AlicaTime now() const override { return _now; }
@@ -55,16 +55,20 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 
     TestClock* c1 = new TestClock();
     TestClock* c2 = new TestClock();
-    c1->increment(AlicaTime::hours(24));
-    c2->increment(AlicaTime::hours(24));
     aes[0]->setAlicaClock(std::unique_ptr<AlicaClock>(c1));
     aes[1]->setAlicaClock(std::unique_ptr<AlicaClock>(c2));
 
     aes[0]->start();
     aes[1]->start();
+    // Let agent announce their presence
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    // Process presence announcement
+    step(aes[0]);
+    step(aes[1]);
+
     RunningPlan::setAssignmentProtectionTime(AlicaTime::seconds(1000.0));
-    aes[0]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(250));
-    aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(250));
+    aes[0]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
+    aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
     step(aes[0]);
     step(aes[1]);
     c1->increment(AlicaTime::milliseconds(50));

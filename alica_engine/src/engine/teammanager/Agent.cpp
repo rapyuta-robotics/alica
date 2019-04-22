@@ -5,31 +5,22 @@
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"
+#include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id)
-        : _id(id)
-        , _name()
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa)
+        : _id(aa.senderID)
+        , _token(aa.token)
+        , _name(aa.senderName)
+        , _planHash(aa.planHash)
+        , _sdk(aa.senderSdk)
         , _engine(engine)
-        , _properties()
-        , _engineData(engine, id)
-        , _timeout(timeout)
-        , _active(false)
-        , _ignored(false)
-        , _local(false)
-{
-}
-
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, AgentIDConstPtr id, const std::string& name)
-        : _id(id)
-        , _name(name)
-        , _engine(engine)
-        , _properties(engine, name)
-        , _engineData(engine, id)
+        , _properties(engine, defaultRole, aa)
+        , _engineData(engine, aa.senderID)
         , _timeout(timeout)
         , _active(false)
         , _ignored(false)

@@ -79,10 +79,7 @@ void VariableSyncModule::clear()
 
 void VariableSyncModule::onSolverResult(const SolverResult& msg)
 {
-    if (*(msg.senderID) == *(_ownResults->getId())) {
-        return;
-    }
-    if (_ae->getTeamManager().isAgentIgnored(msg.senderID)) {
+    if (!_running || msg.senderID == _ownResults->getId() || _ae->getTeamManager().isAgentIgnored(msg.senderID)) {
         return;
     }
 

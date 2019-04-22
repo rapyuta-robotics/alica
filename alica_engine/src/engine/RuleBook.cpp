@@ -60,8 +60,8 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
     main->setAllocationNeeded(true);
 
     const EntryPoint* defep = masterPlan->getEntryPoints()[0];
-
-    main->editAssignment().setAllToInitialState(_tm.getActiveAgentIds().begin(), _tm.getActiveAgentIds().end(), defep);
+    ActiveAgentIdView agents = _tm.getActiveAgentIds();
+    main->editAssignment().setAllToInitialState(agents.begin(), agents.end(), defep);
     main->activate();
     main->useEntryPoint(defep);
     _log.eventOccurred("Init");
@@ -391,7 +391,8 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 
         r.setAllocationNeeded(true);
         r.editAssignment().clear();
-        r.editAssignment().setAllToInitialState(_tm.getActiveAgentIds().begin(), _tm.getActiveAgentIds().end(), ep);
+        ActiveAgentIdView agents = _tm.getActiveAgentIds();
+        r.editAssignment().setAllToInitialState(agents.begin(), agents.end(), ep);
         r.useState(ep->getState());
         r.clearFailedChildren();
 

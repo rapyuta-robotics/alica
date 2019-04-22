@@ -62,14 +62,12 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    bool changedSomeAgent = false;
-    for (const auto& agent : _tm.getAllAgents()) {
-        bool changedCurrentAgent = agent.second->update();
-        if (changedCurrentAgent && !agent.second->isActive()) {
-            _simplePlanTrees.erase(agent.second->getId());
-        }
-        changedSomeAgent |= changedCurrentAgent;
+    std::vector<AgentIDConstPtr> deactivatedAgentIds;
+    bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
+    for (auto agent : deactivatedAgentIds) {
+        _simplePlanTrees.erase(agent);
     }
+
     return changedSomeAgent;
 }
 
@@ -88,8 +86,9 @@ void TeamObserver::tick(RunningPlan* root)
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
+        ActiveAgentIdView agentIds = _tm.getActiveAgentIds();
         AgentGrp activeAgents;
-        std::copy(_tm.getActiveAgentIds().begin(), _tm.getActiveAgentIds().end(), std::back_inserter(activeAgents));
+        std::copy(agentIds.begin(), agentIds.end(), std::back_inserter(activeAgents));
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
@@ -272,14 +271,13 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != _me->getId()) {
-        if (_tm.isAgentIgnored(incoming->senderID)) {
-            return;
-        }
-        lock_guard<mutex> lock(_msgQueueMutex);
-        ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
-        _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
+    if (incoming->senderID == _me->getId() || _tm.isAgentIgnored(incoming->senderID)) {
+        return;
     }
+
+    lock_guard<mutex> lock(_msgQueueMutex);
+    ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
+    _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
 }
 
 /**

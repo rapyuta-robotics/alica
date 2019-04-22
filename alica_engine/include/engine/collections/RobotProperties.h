@@ -18,12 +18,12 @@ namespace alica
 class AlicaEngine;
 class Characteristic;
 class Capability;
+struct AgentAnnouncement;
 
 class RobotProperties
 {
 public:
-    RobotProperties();
-    RobotProperties(const AlicaEngine* ae, const std::string& name);
+    RobotProperties(const AlicaEngine* ae, const std::string& defaultRole, const AgentAnnouncement& aa);
     ~RobotProperties();
 
     const std::map<std::string, std::unique_ptr<const Characteristic>>& getCharacteristics() const { return _characteristics; }
@@ -39,8 +39,6 @@ public:
     }
 
 private:
-    void readFromConfig(const AlicaEngine* engine, const std::string& name);
-
     std::map<std::string, std::unique_ptr<const Characteristic>> _characteristics;
     std::string _defaultRole;
 };
