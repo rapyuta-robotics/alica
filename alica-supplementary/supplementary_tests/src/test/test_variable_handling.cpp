@@ -52,15 +52,13 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     cout << "Starting engine..." << endl;
     aes[0]->start();
     aes[1]->start();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     chrono::milliseconds sleepTime(33);
     do {
         for (int i = 0; i < 3; ++i) {
-            aes[0]->stepNotify();
-            aes[1]->stepNotify();
-            do {
-                this_thread::sleep_for(sleepTime);
-            } while (!aes[0]->getPlanBase().isWaiting() || !aes[1]->getPlanBase().isWaiting());
+            step(aes[0]);
+            step(aes[1]);
         }
     } while (aes[0]->getTeamManager().getTeamSize() != 2 || aes[1]->getTeamManager().getTeamSize() != 2);
 
@@ -69,7 +67,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     alica::AgentIDConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
     alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
-    EXPECT_NE(*id1, *id2) << "Agents use the same ID.";
+    EXPECT_NE(id1, id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
     EXPECT_EQ(rp1->getActivePlan()->getName(), "Lvl1");

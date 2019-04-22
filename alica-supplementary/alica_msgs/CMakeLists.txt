@@ -15,6 +15,9 @@ add_message_files(
   SolverResult.msg
   SyncData.msg
   SyncTalk.msg
+  StringTuple.msg
+  AgentQuery.msg
+  AgentAnnouncement.msg
 )
 
 generate_messages(
