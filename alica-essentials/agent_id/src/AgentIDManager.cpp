@@ -1,5 +1,7 @@
 #include "essentials/AgentIDManager.h"
 #include "essentials/AgentIDFactory.h"
+#include <cassert>
+
 namespace essentials
 {
 
@@ -7,21 +9,25 @@ namespace essentials
  * Attention: The idFactory will be deleted by the AgentIDManager's destructor.
  */
 AgentIDManager::AgentIDManager(AgentIDFactory* idFactory)
-    : idFactory(idFactory)
+    : _idFactory(idFactory)
 {
 }
 
 AgentIDManager::~AgentIDManager()
 {
-    delete this->idFactory;
-    for (auto& id : this->agentIDs) {
+    delete _idFactory;
+    for (auto& id : _agentIds) {
         delete id;
     }
 }
 
-const AgentID* AgentIDManager::generateID(int size)
+const AgentID* AgentIDManager::generateID(std::size_t size)
 {
-    return this->idFactory->generateID(size);
+    const AgentID* tmpID = _idFactory->generateID(size);
+    std::lock_guard<std::mutex> guard(_mtx);
+    auto entry = _agentIds.insert(tmpID);
+    assert(entry.second);
+    return tmpID;
 }
 
 /**
@@ -37,16 +43,17 @@ const AgentID* AgentIDManager::getIDFromBytes(const std::vector<uint8_t>& idByte
         return nullptr;
     }
     // create tmpID for lookup the ID
-    const AgentID* tmpID = this->idFactory->create(idByteVector);
+    const AgentID* tmpID = _idFactory->create(idByteVector);
 
     // make the manager thread-safe
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(_mtx);
 
     // lookup the ID and insert it, if not available, yet
-    auto entry = this->agentIDs.insert(tmpID);
-    if (!entry.second) { // delete tmpID if already present in agentIDs
+    auto entry = _agentIds.insert(tmpID);
+    if (!entry.second) { // delete tmpID if already present in _agentIds
         delete tmpID;
     }
     return *(entry.first);
 }
+
 } // namespace essentials
