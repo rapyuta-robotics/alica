@@ -98,11 +98,16 @@ PlanBase::PlanBase(AlicaEngine* ae, const Plan* masterPlan)
  */
 void PlanBase::start()
 {
+    if (_ae->getAlicaClock() == nullptr) {
+       _ae->abort("PlanBase: Start impossible, without ALICA Clock set!");
+    }
+
     if (!_running) {
         _running = true;
         _mainThread = new std::thread(&PlanBase::run, this);
     }
 }
+
 /**
  * The Engine's main loop
  */
