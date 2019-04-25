@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/AgentIDConstPtr.h>
 #include <engine/PlanRepository.h>
 #include <engine/Types.h>
 #include <engine/containers/PlanTreeInfo.h>
@@ -8,7 +8,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
 #include <engine/model/Task.h>
-#include <engine/parser/PlanParser.h>
+//#include <engine/modelmanagement/PlanParser.h>
+#include <engine/modelmanagement/ModelManager.h>
 #include <essentials/AgentIDManager.h>
 #include <unordered_map>
 
@@ -18,8 +19,8 @@ namespace alica
 class PlanTree;
 class AgentInfo;
 
-using AgentInfoMap = std::unordered_map<AgentIDConstPtr, AgentInfo, AgentIDHash>;
-using PlanTreeMap = std::unordered_map<AgentIDConstPtr, std::unique_ptr<PlanTree>, AgentIDHash>;
+using AgentInfoMap = std::unordered_map<essentials::AgentIDConstPtr, AgentInfo, essentials::AgentIDConstPtrHash>;
+using PlanTreeMap = std::unordered_map<essentials::AgentIDConstPtr, std::unique_ptr<PlanTree>, essentials::AgentIDConstPtrHash>;
 using PlanTreeVectorMap = std::unordered_map<int64_t, std::vector<std::unique_ptr<PlanTree>>>;
 
 class AgentInfo
@@ -27,12 +28,12 @@ class AgentInfo
   public:
     AgentInfo() {}
 
-    AgentInfo(AgentIDConstPtr idarg, const std::string& tmp_name)
+    AgentInfo(essentials::AgentIDConstPtr idarg, const std::string& tmp_name)
         : id(idarg)
         , name(tmp_name)
     {
     }
-    AgentIDConstPtr id;
+    essentials::AgentIDConstPtr id;
     std::string name;
 };
 
@@ -45,7 +46,7 @@ class PlanTree
     void setParent(const PlanTree& parent);
     bool setState(const State* state);
     void addChildren(std::unique_ptr<PlanTree> child);
-    void addRobot(AgentIDConstPtr robotId);
+    void addRobot(essentials::AgentIDConstPtr robotId);
     void mergeRobots(const AgentGrp& robotIds);
     /** Merge the src plan tree as a branch of current tree */
     void mergePlanTree(const PlanTree& src);
@@ -85,15 +86,16 @@ class AlicaPlan
      * @param ids The list of long encoding of a robot's plantree as received in a PlanTreeInfo message.
      * @return std::unique_ptr<PlanTree>
      */
-    std::unique_ptr<PlanTree> planTreeFromMessage(AgentIDConstPtr robotId, const IdGrp& ids);
+    std::unique_ptr<PlanTree> planTreeFromMessage(essentials::AgentIDConstPtr robotId, const IdGrp& ids);
 
     const PlanTreeMap& getPlanTrees() const { return _planTrees; }
     const AgentInfoMap& getAgentInfoMap() const { return _agentInfos; }
-    const AgentInfo* getAgentInfo(AgentIDConstPtr agentID) const;
+    const AgentInfo* getAgentInfo(essentials::AgentIDConstPtr agentID) const;
 
   private:
     PlanRepository _planRepository;
-    PlanParser _planParser;
+//    PlanParser _planParser;
+    ModelManager _modelManager;
     PlanTreeMap _planTrees;
     PlanTree* _combinedPlanTree;
     AgentInfoMap _agentInfos;

@@ -103,7 +103,7 @@ void PlanTree::addChildren(std::unique_ptr<PlanTree> child)
     ++_numOfChildren;
 }
 
-void PlanTree::addRobot(AgentIDConstPtr robotId)
+void PlanTree::addRobot(essentials::AgentIDConstPtr robotId)
 {
     if (robotId) {
         _robotIds.push_back(robotId);
@@ -113,7 +113,7 @@ void PlanTree::addRobot(AgentIDConstPtr robotId)
 void PlanTree::mergeRobots(const AgentGrp& robotIds)
 {
     // Here we assume that no duplicate robotID are present
-    for (AgentIDConstPtr robotId : robotIds) {
+    for (essentials::AgentIDConstPtr robotId : robotIds) {
         addRobot(robotId);
     }
 }
@@ -151,7 +151,7 @@ void PlanTree::getRobotsSorted(AgentGrp& robotIds) const
 }
 
 AlicaPlan::AlicaPlan(int argc, char* argv[])
-    : _planParser(&_planRepository)
+    : _modelManager(&_planRepository)
     , _combinedPlanTree(nullptr)
     , _agentIDManager(new essentials::AgentIDFactory())
 {
@@ -179,7 +179,7 @@ AlicaPlan::AlicaPlan(int argc, char* argv[])
     std::cout << "Masterplan is: " << masterPlanName << std::endl;
     std::cout << "Rolset is: " << roleSetName << std::endl;
 
-    _planParser.parsePlanTree(masterPlanName);
+    _modelManager.loadPlanTree(masterPlanName);
 
     _teamTimeOut = AlicaTime::milliseconds((*essentials::SystemConfig::getInstance())["Alica"]->get<uint64_t>("Alica.TeamTimeOut", NULL));
 }
@@ -212,7 +212,7 @@ void AlicaPlan::handlePlanTreeInfo(const PlanTreeInfo& incoming)
     }
 }
 
-std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(AgentIDConstPtr robotId, const IdGrp& ids)
+std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(essentials::AgentIDConstPtr robotId, const IdGrp& ids)
 {
     if (ids.empty()) {
         std::cerr << "Empty state list for robot " << robotId << std::endl;
@@ -263,7 +263,7 @@ std::unique_ptr<PlanTree> AlicaPlan::planTreeFromMessage(AgentIDConstPtr robotId
     return root;
 }
 
-const AgentInfo* AlicaPlan::getAgentInfo(AgentIDConstPtr agentID) const
+const AgentInfo* AlicaPlan::getAgentInfo(essentials::AgentIDConstPtr agentID) const
 {
     AgentInfoMap::const_iterator agentInfoEntry = _agentInfos.find(agentID);
     if (agentInfoEntry != _agentInfos.end()) {

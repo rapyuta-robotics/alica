@@ -117,7 +117,7 @@ namespace alicaCapnzeroProxy {
             alica_capnp_msgs::EntrypointRobots::Builder tmp = entrypoints[i];
             tmp.setEntrypoint(ep.entrypoint);
             ::capnp::List<UUID>::Builder tmpRobots = tmp.initRobots((unsigned int) ep.robots.size());
-            for (int j = 0; j < ep.robots.size(); ++i) {
+            for (unsigned int j = 0; j < ep.robots.size(); ++i) {
                  UUID::Builder tmpUUID = tmpRobots[j];
                  tmpUUID.setValue(kj::arrayPtr(ep.robots[j]->getRaw(), (unsigned int) ep.robots[j]->getSize()));
             }
@@ -143,7 +143,7 @@ namespace alicaCapnzeroProxy {
         msg.setCurrentTask(bi.currentTask);
 
         ::capnp::List<UUID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
-        for (int i = 0; i < bi.robotIDsWithMe.size(); ++i) {
+        for (unsigned int i = 0; i < bi.robotIDsWithMe.size(); ++i) {
             auto &robo = bi.robotIDsWithMe[i];
             UUID::Builder tmp = agents[0];
             tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
@@ -228,7 +228,7 @@ namespace alicaCapnzeroProxy {
         UUID::Builder sender = msg.initSenderId();
         sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
         ::capnp::List<alica_capnp_msgs::SolverVar>::Builder vars = msg.initVars((unsigned int) sr.vars.size());
-        for (int i = 0; i < sr.vars.size(); ++i) {
+        for (unsigned int i = 0; i < sr.vars.size(); ++i) {
             auto &var = sr.vars[i];
             alica_capnp_msgs::SolverVar::Builder tmpVar = vars[i];
             tmpVar.setId(var.id);
@@ -256,17 +256,17 @@ namespace alicaCapnzeroProxy {
         aai.authority = essentials::AgentIDFactory().create(id);
         ::capnp::List<alica_capnp_msgs::EntrypointRobots>::Reader entrypoints = reader.getEntrypoints();
         std::vector<alica::EntryPointRobots> epData;
-        for (int i = 0; i < entrypoints.size(); ++i) {
+        for (unsigned int i = 0; i < entrypoints.size(); ++i) {
             EntryPointRobots tmp;
             alica_capnp_msgs::EntrypointRobots::Reader tmpEp = entrypoints[i];
             tmp.entrypoint = tmpEp.getEntrypoint();
             std::vector<essentials::AgentID> agentIds;
             ::capnp::List<UUID>::Reader robots = tmpEp.getRobots();
-            for (int j = 0; j < robots.size(); ++j) { // Not shure if this works!!!
+            for (unsigned int j = 0; j < robots.size(); ++j) { // Not shure if this works!!!
                 id.clear();
                 UUID::Reader tmpUUID = robots[j];
                 id.assign(tmpUUID.getValue().begin(), tmpUUID.getValue().end());
-                alica::AgentIDConstPtr tmpItem = essentials::AgentIDFactory().create(id);
+                essentials::AgentIDConstPtr tmpItem = essentials::AgentIDFactory().create(id);
                 agentIds.push_back(*tmpItem);
             }
         }

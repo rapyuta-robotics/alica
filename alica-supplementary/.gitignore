@@ -37,4 +37,4 @@
 
 # Ignore generated capnproto code
 *.capnp.h
-*.capnp.cpp
+*.capnp.c++

@@ -80,8 +80,6 @@ add_library(alica_capnzero_proxy
         )
 
 add_dependencies(alica_capnzero_proxy
-        alica_msgs_generate_messages_cpp
-        agent_id_generate_messages_cpp
         alica_capnz_msgs
         )
 
