@@ -64,8 +64,6 @@ namespace alicaCapnzeroProxy {
 
         // Setup Subscribers:
         std::cout << "The subscribers:\n";
-        this->AlicaEngineInfoSubscriber = new capnzero::Subscriber(this->ctx, this->alicaEngineInfoTopic);
-        this->RoleSwitchSubscriber = new capnzero::Subscriber(this->ctx, this->ownRoleTopic);
         this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,
                                                                            this->allocationAuthorityInfoTopic);
         this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx, this->planTreeInfoTopic);
@@ -75,9 +73,18 @@ namespace alicaCapnzeroProxy {
 
         // connecting the subscribers:
         this->AllocationAuthorityInfoSubscriber->connect(capnzero::CommType::UDP, this->url);
+        this->PlanTreeInfoSubscriber->connect(capnzero::CommType::UDP, this->url);
+        this->SyncReadySubscriber->connect(capnzero::CommType::UDP, this->url);
+        this->SyncTalkSubscriber->connect(capnzero::CommType::UDP, this->url);
+        this->SolverResultSubscriber->connect(capnzero::CommType::UDP, this->url);
+
 
         // subscribing the subscribers:
         this->AllocationAuthorityInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handleAllocationAuthority, &(*this));
+        this->PlanTreeInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handlePlanTreeInfo, &(*this));
+        this->SyncReadySubscriber->subscribe(&AlicaCapnzeroCommunication::handleSyncReady, &(*this));
+        this->SyncTalkSubscriber->subscribe(&AlicaCapnzeroCommunication::handleSyncTalk, &(*this));
+        this->SolverResultSubscriber->subscribe(&AlicaCapnzeroCommunication::handleSolverResult, &(*this));
     }
 
     AlicaCapnzeroCommunication::~AlicaCapnzeroCommunication() {
@@ -101,8 +108,6 @@ namespace alicaCapnzeroProxy {
         ::capnp::MallocMessageBuilder msgBuilder;
         alica_capnp_msgs::AllocationAuthorityInfo::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::AllocationAuthorityInfo>();
 
-        std::cout << "Sending: " << aai;
-
         msg.setParentState(aai.parentState);
         msg.setPlanId(aai.planId);
         msg.setParentState(aai.parentState);
@@ -124,7 +129,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
-            std::cout << "Sending data: " << msg.toString().flatten().cStr() << '\n';
+            std::cout << "Sending AAI: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->allocationAuthorityInfoTopic);
         }
     }
@@ -150,6 +155,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
+            std::cout << "Sending AEI: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->alicaEngineInfoTopic);
         }
     }
@@ -169,12 +175,12 @@ namespace alicaCapnzeroProxy {
         }
 
             if (this->isRunning) {
+                std::cout << "Sending PTI: " << msg.toString().flatten().cStr() << '\n';
                 this->AlicaPublisher->send(msgBuilder, this->planTreeInfoTopic);
             }
     }
 
     void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch &rs) const {
-        // TODO: Uncomment if testing is not needed anymore
         ::capnp::MallocMessageBuilder msgBuilder;
         alica_capnp_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::RoleSwitch>();
         std::vector<uint8_t> robotID = {12,64,120,200}; // Hack for testing
@@ -184,6 +190,7 @@ namespace alicaCapnzeroProxy {
         msg.setRoleId(rs.roleID);
 
         if (this->isRunning) {
+            std::cout << "Sending RS: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->ownRoleTopic);
         }
     }
@@ -197,6 +204,7 @@ namespace alicaCapnzeroProxy {
         msg.setSynchronisationId(sr.synchronisationID);
 
         if (this->isRunning) {
+            std::cout << "Sending SR: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->syncReadyTopic);
         }
     }
@@ -219,6 +227,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
+            std::cout << "Sending ST: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->syncTalkTopic);
         }
     }
@@ -237,14 +246,13 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
+            std::cout << "Sending SR: " << msg.toString().flatten().cStr() << '\n';
             this->AlicaPublisher->send(msgBuilder, this->solverResultTopic);
         }
     }
 
     void AlicaCapnzeroCommunication::handleAllocationAuthority(::capnp::FlatArrayMessageReader& msg) {
         alica::AllocationAuthorityInfo aai;
-        std::cout << "handleAllocationAuthority called.\n";
-        std::cout << "Recieved data: " << msg.getRoot<alica_capnp_msgs::AllocationAuthorityInfo>().toString().flatten().cStr() << std::endl;
         alica_capnp_msgs::AllocationAuthorityInfo::Reader reader = msg.getRoot<alica_capnp_msgs::AllocationAuthorityInfo>();
         std::vector<uint8_t> id;
         id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
@@ -273,6 +281,8 @@ namespace alicaCapnzeroProxy {
         }
 
             if (this->isRunning) {
+                std::cout << "\033[93mRecieving AAI: " << aai.senderID << ' ' << aai.authority << ' ' << aai.parentState <<
+                             ' ' << aai.planType << ' ' << aai.planId <<"\033[0m\n";
 //                onAuthorityInfoReceived(aai);
             }
     }
@@ -285,7 +295,7 @@ namespace alicaCapnzeroProxy {
         ptiPtr->senderID = essentials::AgentIDFactory().create(id);
         id.clear();
         std::vector<int64_t> stateIds;
-        :capnp::List<int64_t>::Reader states = reader.getStateIds();
+        ::capnp::List<int64_t>::Reader states = reader.getStateIds();
         for (unsigned int i = 0; i < states.size(); ++i) {
             stateIds.push_back(states[i]);
         }
@@ -297,6 +307,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
+            std::cout << "\033[93mRecieving PTI: " << ptiPtr->senderID << ' ' << ptiPtr->succeededEPs.size() << ' ' << ptiPtr->stateIDs.size() << "\033[0m\n";
 //            this->onPlanTreeInfoReceived(ptiPtr);
         }
     }
@@ -310,6 +321,7 @@ namespace alicaCapnzeroProxy {
         srPtr->synchronisationID = reader.getSynchronisationId();
 
         if (this->isRunning) {
+            std::cout << "\033[93mRecieving SR: " << srPtr->senderID << ' ' << srPtr->synchronisationID << "\033[0m\n";
 //            this->onSyncReadyReceived(srPtr);
         }
     }
@@ -323,13 +335,12 @@ namespace alicaCapnzeroProxy {
         id.clear();
         capnp::List<alica_capnp_msgs::SyncData>::Reader msgSyncData = reader.getSyncData();
         std::vector<alica::SyncData> data;
-        for (int i = 0; i < msgSyncData.size(); ++i) {
+        for (unsigned int i = 0; i < msgSyncData.size(); ++i) {
             alica::SyncData sds = alica::SyncData();
             alica_capnp_msgs::SyncData::Reader tmpSyncData = msgSyncData[i];
             sds.ack = tmpSyncData.getAck();
             sds.conditionHolds = tmpSyncData.getTransitionHolds();
             sds.transitionID = tmpSyncData.getTransitionId();
-            std::vector<uint8_t> id;
             id.assign(tmpSyncData.getRobotId().getValue().begin(), tmpSyncData.getRobotId().getValue().end());
             sds.robotID = essentials::AgentIDFactory().create(id);
             id.clear();
@@ -338,6 +349,7 @@ namespace alicaCapnzeroProxy {
         stPtr->syncData = data;
 
         if (this->isRunning) {
+            std::cout << "\033[93mRecieving ST: " << stPtr->senderID << ' ' << stPtr->syncData.size() << "\033[0m\n";
 //            this->onSyncTalkReceived(stPtr);
         }
     }
@@ -351,13 +363,13 @@ namespace alicaCapnzeroProxy {
         id.clear();
         std::vector<alica::SolverVar> solverVars;
         capnp::List<alica_capnp_msgs::SolverVar>::Reader msgSolverVars = reader.getVars();
-        for (int i = 0; i < msgSolverVars.size(); ++i) {
+        for (unsigned int i = 0; i < msgSolverVars.size(); ++i) {
             alica_capnp_msgs::SolverVar::Reader tmpVar = msgSolverVars[i];
             alica::SolverVar svs;
             svs.id = tmpVar.getId();
             std::vector<uint8_t> tmp;
             capnp::List<uint8_t>::Reader val = tmpVar.getValue();
-            for (int j = 0; j < val.size(); ++j) {
+            for (unsigned int j = 0; j < val.size(); ++j) {
                 tmp.push_back(val[i]);
             }
             std::copy(tmp.begin(), tmp.end(), svs.value);
@@ -365,6 +377,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (isRunning) {
+            std::cout << "\033[93mRecieving SR: " << osr.senderID << ' ' << osr.vars.size() << "\033[0m\n";
 //            onSolverResult(osr);
         }
     }
