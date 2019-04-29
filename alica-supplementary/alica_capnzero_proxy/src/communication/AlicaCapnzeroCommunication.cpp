@@ -295,56 +295,78 @@ namespace alicaCapnzeroProxy {
         for (unsigned int j = 0; j < succeded.size(); ++j) {
             succededEps.push_back(succeded[j]);
         }
-        
+
         if (this->isRunning) {
             this->onPlanTreeInfoReceived(ptiPtr);
         }
     }
 
     void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader& msg) {
-        //    auto srPtr = make_shared<SyncReady>();
-        //    srPtr->senderID = this->ae->getIdFromBytes(sr->sender_id.id);
-        //    srPtr->synchronisationID = sr->synchronisation_id;
-        //
-        //    if (this->isRunning) {
-        //        this->onSyncReadyReceived(srPtr);
-        //    }
+        auto srPtr = make_shared<SyncReady>();
+        alica_capnp_msgs::SyncReady::Reader reader = msg.getRoot<alica_capnp_msgs::SyncReady>();
+        std::vector<uint8_t> id;
+        id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
+        srPtr->senderID = essentials::AgentIDFactory().create(id);
+        srPtr->synchronisationID = reader.getSynchronisationId();
+
+        if (this->isRunning) {
+            this->onSyncReadyReceived(srPtr);
+        }
     }
 
     void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader& msg) {
-        //    auto stPtr = make_shared<SyncTalk>();
-        //    stPtr->senderID = this->ae->getIdFromBytes(st->sender_id.id);
-        //
-        //    stPtr->syncData.reserve(st->sync_data.size());
-        //    for (const auto& sd : st->sync_data) {
-        //        SyncData sds = SyncData();
-        //        sds.ack = sd.ack;
-        //        sds.conditionHolds = sd.condition_holds;
-        //        sds.robotID = this->ae->getIdFromBytes(sd.robot_id.id);
-        //        sds.transitionID = sd.transition_id;
-        //        stPtr->syncData.push_back(std::move(sds));
-        //    }
-        //
-        //    if (this->isRunning) {
-        //        this->onSyncTalkReceived(stPtr);
-        //    }
+        auto stPtr = make_shared<SyncTalk>();
+        alica_capnp_msgs::SyncTalk::Reader reader = msg.getRoot<alica_capnp_msgs::SyncTalk>();
+        std::vector<uint8_t> id;
+        id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
+        stPtr->senderID = essentials::AgentIDFactory().create(id);
+        id.clear();
+        capnp::List<alica_capnp_msgs::SyncData>::Reader msgSyncData = reader.getSyncData();
+        std::vector<alica::SyncData> data;
+        for (int i = 0; i < msgSyncData.size(); ++i) {
+            alica::SyncData sds = alica::SyncData();
+            alica_capnp_msgs::SyncData::Reader tmpSyncData = msgSyncData[i];
+            sds.ack = tmpSyncData.getAck();
+            sds.conditionHolds = tmpSyncData.getTransitionHolds();
+            sds.transitionID = tmpSyncData.getTransitionId();
+            std::vector<uint8_t> id;
+            id.assign(tmpSyncData.getRobotId().getValue().begin(), tmpSyncData.getRobotId().getValue().end());
+            sds.robotID = essentials::AgentIDFactory().create(id);
+            id.clear();
+            data.push_back(sds);
+        }
+        stPtr->syncData = data;
+
+        if (this->isRunning) {
+            this->onSyncTalkReceived(stPtr);
+        }
     }
 
     void AlicaCapnzeroCommunication::handleSolverResult(::capnp::FlatArrayMessageReader& msg) {
-        //    SolverResult osr;
-        //    osr.senderID = this->ae->getIdFromBytes(sr.sender_id.id);
-        //    osr.vars.reserve(sr.vars.size());
-        //
-        //    for (const auto& sv : sr.vars) {
-        //        SolverVar svs;
-        //        svs.id = sv.id;
-        //        std::copy(sv.value.begin(), sv.value.end(), svs.value);
-        //        osr.vars.push_back(std::move(svs));
-        //    }
-        //
-        //    if (isRunning) {
-        //        onSolverResult(osr);
-        //    }
+        SolverResult osr;
+        alica_capnp_msgs::SolverResult::Reader reader = msg.getRoot<alica_capnp_msgs::SolverResult>();
+        std::vector<uint8_t> id;
+        id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
+        osr.senderID = essentials::AgentIDFactory().create(id);
+        id.clear();
+        std::vector<alica::SolverVar> solverVars;
+        capnp::List<alica_capnp_msgs::SolverVar>::Reader msgSolverVars = reader.getVars();
+        for (int i = 0; i < msgSolverVars.size(); ++i) {
+            alica_capnp_msgs::SolverVar::Reader tmpVar = msgSolverVars[i];
+            alica::SolverVar svs;
+            svs.id = tmpVar.getId();
+            std::vector<uint8_t> tmp;
+            capnp::List<uint8_t>::Reader val = tmpVar.getValue();
+            for (int j = 0; j < val.size(); ++j) {
+                tmp.push_back(val[i]);
+            }
+            std::copy(tmp.begin(), tmp.end(), svs.value);
+            osr.vars.push_back(svs);
+        }
+        
+        if (isRunning) {
+            onSolverResult(osr);
+        }
     }
 
     void AlicaCapnzeroCommunication::sendLogMessage(int level, const string &message) const {
