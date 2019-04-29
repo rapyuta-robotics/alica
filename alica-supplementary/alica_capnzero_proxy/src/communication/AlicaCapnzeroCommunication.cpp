@@ -297,7 +297,7 @@ namespace alicaCapnzeroProxy {
         }
 
         if (this->isRunning) {
-            this->onPlanTreeInfoReceived(ptiPtr);
+//            this->onPlanTreeInfoReceived(ptiPtr);
         }
     }
 
@@ -310,7 +310,7 @@ namespace alicaCapnzeroProxy {
         srPtr->synchronisationID = reader.getSynchronisationId();
 
         if (this->isRunning) {
-            this->onSyncReadyReceived(srPtr);
+//            this->onSyncReadyReceived(srPtr);
         }
     }
 
@@ -338,7 +338,7 @@ namespace alicaCapnzeroProxy {
         stPtr->syncData = data;
 
         if (this->isRunning) {
-            this->onSyncTalkReceived(stPtr);
+//            this->onSyncTalkReceived(stPtr);
         }
     }
 
@@ -363,9 +363,9 @@ namespace alicaCapnzeroProxy {
             std::copy(tmp.begin(), tmp.end(), svs.value);
             osr.vars.push_back(svs);
         }
-        
+
         if (isRunning) {
-            onSolverResult(osr);
+//            onSolverResult(osr);
         }
     }
 
