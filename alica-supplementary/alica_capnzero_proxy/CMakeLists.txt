@@ -76,7 +76,13 @@ include_directories(
 add_library(alica_capnzero_proxy
         src/communication/AlicaCapnzeroCommunication.cpp
         include/communication/AlicaCapnzeroCommunication.h
-        include/msgs/AlicaEngineInfo.capnp.h
+        include/msgs/AlicaEngineInfo.capnp.c++
+        include/msgs/AllocationAuthorityInfo.capnp.c++
+        include/msgs/PlanTreeInfo.capnp.c++
+        include/msgs/RoleSwitch.capnp.c++
+        include/msgs/SolverResult.capnp.c++
+        include/msgs/SyncReady.capnp.c++
+        include/msgs/SyncTalk.capnp.c++
         )
 
 add_dependencies(alica_capnzero_proxy

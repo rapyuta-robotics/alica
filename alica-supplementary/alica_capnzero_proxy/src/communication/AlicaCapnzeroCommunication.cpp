@@ -177,9 +177,10 @@ namespace alicaCapnzeroProxy {
         // TODO: Uncomment if testing is not needed anymore
         ::capnp::MallocMessageBuilder msgBuilder;
         alica_capnp_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::RoleSwitch>();
+        std::vector<uint8_t> robotID = {12,64,120,200}; // Hack for testing
 //        std::vector<uint8_t> robotID = this->ae->getTeamManager()->getLocalAgentID();
         UUID::Builder sender = msg.initSenderId();
-//        sender.setValue(kj::arrayPtr(robotID.data(), robotID.size() * sizeof(uint8_t)));
+        sender.setValue(kj::arrayPtr(robotID.data(), robotID.size() * sizeof(uint8_t)));
         msg.setRoleId(rs.roleID);
 
         if (this->isRunning) {
@@ -207,7 +208,7 @@ namespace alicaCapnzeroProxy {
         sender.setValue(kj::arrayPtr(st.senderID->getRaw(), (unsigned int) st.senderID->getSize()));
 
         ::capnp::List<alica_capnp_msgs::SyncData>::Builder syncData= msg.initSyncData((unsigned int) st.syncData.size());
-        for (int i = 0; i < st.syncData.size(); ++i) {
+        for (unsigned int i = 0; i < st.syncData.size(); ++i) {
             auto &ds = st.syncData[i];
             alica_capnp_msgs::SyncData::Builder tmpData = syncData[i];
             UUID::Builder tmpId = tmpData.initRobotId();
@@ -271,37 +272,33 @@ namespace alicaCapnzeroProxy {
             }
         }
 
-        //
-        //    aai.entryPointRobots.reserve(aaimsg.entrypoints.size());
-        //    for (const auto& ep : aaimsg.entrypoints) {
-        //        alica::EntryPointRobots newEP;
-        //        newEP.entrypoint = ep.entry_point;
-        //        newEP.robots.reserve(ep.robots.size());
-        //        for (auto robotID : ep.robots) {
-        //            newEP.robots.push_back(this->ae->getIdFromBytes(robotID.id));
-        //        }
-        //
-        //        aai.entryPointRobots.push_back(newEP);
-        //    }
-        //
             if (this->isRunning) {
 //                onAuthorityInfoReceived(aai);
             }
     }
 
     void AlicaCapnzeroCommunication::handlePlanTreeInfo(::capnp::FlatArrayMessageReader& msg) {
-        //    auto ptiPtr = make_shared<PlanTreeInfo>();
-        //    ptiPtr->senderID = this->ae->getIdFromBytes(pti->sender_id.id);
-        //    for (int64_t i : pti->state_ids) {
-        //        ptiPtr->stateIDs.push_back(i);
-        //    }
-        //    for (int64_t i : pti->succeeded_eps) {
-        //        ptiPtr->succeededEPs.push_back(i);
-        //    }
-        //
-        //    if (this->isRunning) {
-        //        this->onPlanTreeInfoReceived(ptiPtr);
-        //    }
+        auto ptiPtr = make_shared<PlanTreeInfo>();
+        alica_capnp_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnp_msgs::PlanTreeInfo>();
+        std::vector<uint8_t> id;
+        id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
+        ptiPtr->senderID = essentials::AgentIDFactory().create(id);
+        id.clear();
+        std::vector<int64_t> stateIds;
+        :capnp::List<int64_t>::Reader states = reader.getStateIds();
+        for (unsigned int i = 0; i < states.size(); ++i) {
+            stateIds.push_back(states[i]);
+        }
+
+        std::vector<int64_t> succededEps;
+        ::capnp::List<int64_t>::Reader succeded = reader.getSucceededEps();
+        for (unsigned int j = 0; j < succeded.size(); ++j) {
+            succededEps.push_back(succeded[j]);
+        }
+        
+        if (this->isRunning) {
+            this->onPlanTreeInfoReceived(ptiPtr);
+        }
     }
 
     void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader& msg) {

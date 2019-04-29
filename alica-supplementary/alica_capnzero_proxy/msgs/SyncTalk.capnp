@@ -13,4 +13,5 @@ struct SyncData {
     transitionId @1 :Int64;
     transitionHolds @2 :Bool;
     ack @3 :Bool;
+
 }
