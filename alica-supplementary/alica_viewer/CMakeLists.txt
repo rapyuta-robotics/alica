@@ -8,16 +8,21 @@ add_compile_options(-std=c++11)
 add_compile_options(${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS})
 
 set(PKG_DEPS
-        roscpp
-        alica_msgs
         alica_engine
         alica_common_config
         agent_id
+        capnzero
+        alica_capnzero_proxy
 )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(Qt5Widgets REQUIRED)
 
-catkin_package()
+catkin_package(
+    INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
+    LIBRARIES alica_viewer alica_capnz_msgs
+    CATKIN_DEPENDS alica_engine capnzero alica_capnz_msgs
+    #DEPENDS system_lib
+)
 
 ###########
 ## Build ##
@@ -36,8 +41,8 @@ endif()
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
 set(QT_CPP_HEADERS 
+        include/alica_viewer/alica_viewer_capnzero_interface.h
         include/alica_viewer/alica_viewer_main_window.h
-        include/alica_viewer/alica_viewer_ros_interface.h
         include/alica_viewer/graphics_view_zoom.h
 )
 
@@ -54,10 +59,10 @@ set(QT_CPP_SOURCES
         src/elastic_nodes/block.cpp
         src/elastic_nodes/edge.cpp
         src/elastic_nodes/node.cpp
+        src/alica_viewer_capnzero_interface.cpp
         src/alica_viewer_main_window.cpp
         src/alica_viewer_node.cpp
         src/alica_viewer_plan_parser.cpp
-        src/alica_viewer_ros_interface.cpp
         src/graphics_view_zoom.cpp
 )
 
@@ -69,8 +74,11 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES} 
+    ${Qt5Widgets_LIBRARIES}
 )
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC ZMQ_BUILD_DRAFT_API=1)
+
 
 #############
 ## Install ##

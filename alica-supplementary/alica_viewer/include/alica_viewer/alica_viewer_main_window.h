@@ -2,8 +2,13 @@
 
 #include <QMainWindow>
 
+#include <capnzero/CapnZero.h>
+#include <capnp/common.h>
+#include <capnp/message.h>
+#include <capnp/serialize-packed.h>
+
 #include "alica_viewer/alica_plan_parser.h"
-#include "alica_viewer/alica_viewer_ros_interface.h"
+#include "alica_viewer/alica_viewer_capnzero_interface.h"
 #include "alica_viewer/graphics_view_zoom.h"
 #include "ui_alica_viewer_main_window.h"
 
@@ -17,7 +22,7 @@ class Edge;
 namespace alica
 {
 
-typedef AlicaViewerRosInterface AlicaViewerInterface;
+typedef AlicaViewerCapnzeroInterface AlicaViewerInterface;
 
 class AlicaViewerMainWindow : public QMainWindow
 {
@@ -43,7 +48,6 @@ class AlicaViewerMainWindow : public QMainWindow
     AlicaPlan _alicaPlan;
     AgentGrp _agentIdVector;
     int _offset;
-    ros::Timer _timer;
 };
 
 } // namespace alica

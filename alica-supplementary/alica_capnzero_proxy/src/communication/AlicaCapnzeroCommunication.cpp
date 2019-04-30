@@ -1,4 +1,7 @@
 #include "communication/AlicaCapnzeroCommunication.h"
+#include <engine/AlicaEngine.h>
+#include <engine/teammanager/TeamManager.h>
+#include <essentials/AgentID.h>
 
 // Alica Containers:
 #include "engine/containers/AlicaEngineInfo.h"
@@ -183,8 +186,9 @@ namespace alicaCapnzeroProxy {
     void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch &rs) const {
         ::capnp::MallocMessageBuilder msgBuilder;
         alica_capnp_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::RoleSwitch>();
-        std::vector<uint8_t> robotID = {12,64,120,200}; // Hack for testing
-//        std::vector<uint8_t> robotID = this->ae->getTeamManager()->getLocalAgentID();
+//        std::vector<uint8_t> robotID = {12,64,120,200}; // Hack for testing
+        std::vector<uint8_t> robotID;
+        robotID.assign(this->ae->getTeamManager()->getLocalAgentID()->getRaw());
         UUID::Builder sender = msg.initSenderId();
         sender.setValue(kj::arrayPtr(robotID.data(), robotID.size() * sizeof(uint8_t)));
         msg.setRoleId(rs.roleID);
@@ -283,7 +287,7 @@ namespace alicaCapnzeroProxy {
             if (this->isRunning) {
                 std::cout << "\033[93mRecieving AAI: " << aai.senderID << ' ' << aai.authority << ' ' << aai.parentState <<
                              ' ' << aai.planType << ' ' << aai.planId <<"\033[0m\n";
-//                onAuthorityInfoReceived(aai);
+                onAuthorityInfoReceived(aai);
             }
     }
 
@@ -308,7 +312,7 @@ namespace alicaCapnzeroProxy {
 
         if (this->isRunning) {
             std::cout << "\033[93mRecieving PTI: " << ptiPtr->senderID << ' ' << ptiPtr->succeededEPs.size() << ' ' << ptiPtr->stateIDs.size() << "\033[0m\n";
-//            this->onPlanTreeInfoReceived(ptiPtr);
+            this->onPlanTreeInfoReceived(ptiPtr);
         }
     }
 
@@ -322,7 +326,7 @@ namespace alicaCapnzeroProxy {
 
         if (this->isRunning) {
             std::cout << "\033[93mRecieving SR: " << srPtr->senderID << ' ' << srPtr->synchronisationID << "\033[0m\n";
-//            this->onSyncReadyReceived(srPtr);
+            this->onSyncReadyReceived(srPtr);
         }
     }
 
@@ -350,7 +354,7 @@ namespace alicaCapnzeroProxy {
 
         if (this->isRunning) {
             std::cout << "\033[93mRecieving ST: " << stPtr->senderID << ' ' << stPtr->syncData.size() << "\033[0m\n";
-//            this->onSyncTalkReceived(stPtr);
+            this->onSyncTalkReceived(stPtr);
         }
     }
 
@@ -378,7 +382,7 @@ namespace alicaCapnzeroProxy {
 
         if (isRunning) {
             std::cout << "\033[93mRecieving SR: " << osr.senderID << ' ' << osr.vars.size() << "\033[0m\n";
-//            onSolverResult(osr);
+            onSolverResult(osr);
         }
     }
 

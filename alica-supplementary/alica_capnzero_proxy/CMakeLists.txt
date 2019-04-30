@@ -88,6 +88,7 @@ target_link_libraries(alica_capnzero_proxy
         ${ZeroMQ_LIBRARY}
         ${CAPNP_LIBRARIES}
         alica_capnz_msgs
+        alica_engine
         )
 
 add_executable(senderTest src/SenderTest.cpp)
