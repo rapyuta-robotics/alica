@@ -15,30 +15,32 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig)
 pkg_check_modules(PC_ZeroMQ QUIET zmq)
 find_path(ZeroMQ_INCLUDE_DIR
-        NAMES zmq.hpp
-        PATHS ${PC_ZeroMQ_INCLUDE_DIRS}
-        )
+    NAMES zmq.hpp
+    PATHS ${PC_ZeroMQ_INCLUDE_DIRS}
+)
 find_library(ZeroMQ_LIBRARY
-        NAMES zmq
-        PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
-        )
+    NAMES zmq
+    PATHS ${PC_ZeroMQ_LIBRARY_DIRS}
+)
 
 find_package(CapnProto REQUIRED)
 
 
 ## Capnproto Messages:
 message(STATUS "Capnproto message stuff")
-set(capnp_message_folder "${CMAKE_CURRENT_SOURCE_DIR}/msgs")
-file(GLOB_RECURSE capnp_messages ${capnp_message_folder} *.capnp)
-# If the destination folder does not exist create it
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include/msgs")
-    message(STATUS "Destination folder for Capnproto compile results is not present")
-    message(STATUS "Creating the folder automatically")
-    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/msgs")
-endif()
-
 set(CAPNPC_SRC_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/msgs)
 set(CAPNPC_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/msgs")
+
+# collect all capnp source files in source directory
+file(GLOB_RECURSE capnp_messages ${CAPNPC_SRC_PREFIX} *.capnp)
+
+# If the destination folder does not exist create it
+if(NOT EXISTS "${CAPNPC_OUTPUT_DIR}")
+    message(STATUS "Destination folder for Capnproto compile results is not present")
+    message(STATUS "Creating the folder automatically")
+    file(MAKE_DIRECTORY "${CAPNPC_OUTPUT_DIR}")
+endif()
+
 message(STATUS "Compiling Capnproto messages")
 capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS ${capnp_messages})
 add_library(alica_capnz_msgs ${CAPNP_SRCS})
@@ -49,45 +51,36 @@ add_library(alica_capnz_msgs ${CAPNP_SRCS})
 
 ## Find required catkin packages:
 find_package(catkin REQUIRED COMPONENTS
-        alica_engine
-        message_generation
-        alica_msgs
-        alica_common_config
-        capnzero
-        agent_id
-        )
+    alica_engine
+    alica_common_config
+    capnzero
+    agent_id
+)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
-        INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
-        LIBRARIES alica_capnzero_proxy
-        CATKIN_DEPENDS alica_engine capnzero alica_msgs
-        #DEPENDS system_lib
+    INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
+    LIBRARIES alica_capnzero_proxy
+    CATKIN_DEPENDS alica_engine capnzero
+    #DEPENDS system_lib
 )
 
 include_directories(
-        include
-        ${catkin_INCLUDE_DIRS}
-        ${CAPNP_INCLUDE_DIRS}
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${CAPNP_INCLUDE_DIRS}
 )
 
 add_library(alica_capnzero_proxy
-        src/communication/AlicaCapnzeroCommunication.cpp
-        include/communication/AlicaCapnzeroCommunication.h
-        include/msgs/AlicaEngineInfo.capnp.c++
-        include/msgs/AllocationAuthorityInfo.capnp.c++
-        include/msgs/PlanTreeInfo.capnp.c++
-        include/msgs/RoleSwitch.capnp.c++
-        include/msgs/SolverResult.capnp.c++
-        include/msgs/SyncReady.capnp.c++
-        include/msgs/SyncTalk.capnp.c++
-        )
+    src/communication/AlicaCapnzeroCommunication.cpp
+    include/communication/AlicaCapnzeroCommunication.h
+)
 
 add_dependencies(alica_capnzero_proxy
-        alica_capnz_msgs
-        )
+    alica_capnz_msgs
+)
 
 target_compile_definitions(alica_capnzero_proxy PUBLIC ZMQ_BUILD_DRAFT_API=1)
 target_link_libraries(alica_capnzero_proxy
