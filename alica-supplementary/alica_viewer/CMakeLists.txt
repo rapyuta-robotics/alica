@@ -16,6 +16,7 @@ set(PKG_DEPS
 )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(Qt5Widgets REQUIRED)
+find_package(CapnProto REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
@@ -59,12 +60,24 @@ set(QT_CPP_SOURCES
         src/elastic_nodes/block.cpp
         src/elastic_nodes/edge.cpp
         src/elastic_nodes/node.cpp
-        src/alica_viewer_capnzero_interface.cpp
-        src/alica_viewer_main_window.cpp
-        src/alica_viewer_node.cpp
+#        src/alica_viewer_capnzero_interface.cpp
+#        src/alica_viewer_main_window.cpp
+#        src/alica_viewer_node.cpp
         src/alica_viewer_plan_parser.cpp
         src/graphics_view_zoom.cpp
 )
+
+# Trying to fix linker errors by making a separate target for alica_viewer_capnzeri_interface
+add_library(avci src/alica_viewer_capnzero_interface.cpp)
+#target_link_libraries(avci include/alica_viewer/alica_viewer_capnzero_interface.h)
+target_compile_definitions(avci PUBLIC ZMQ_BUILD_DRAFT_API=1)
+add_library(avmw src/alica_viewer_main_window.cpp)
+target_compile_definitions(avmw PUBLIC ZMQ_BUILD_DRAFT_API=1)
+add_library(avn src/alica_viewer_node.cpp)
+target_compile_definitions(avn PUBLIC ZMQ_BUILD_DRAFT_API=1)
+
+
+# End of try
 
 add_executable(${PROJECT_NAME} 
     ${QT_CPP_SOURCES}
@@ -75,6 +88,10 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
+    ${CAPNP_LIBRARIES}
+    avci
+    avmw
+    avn
 )
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ZMQ_BUILD_DRAFT_API=1)
