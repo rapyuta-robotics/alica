@@ -188,7 +188,7 @@ namespace alicaCapnzeroProxy {
         alica_capnp_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnp_msgs::RoleSwitch>();
 //        std::vector<uint8_t> robotID = {12,64,120,200}; // Hack for testing
         std::vector<uint8_t> robotID;
-        robotID.assign(this->ae->getTeamManager()->getLocalAgentID()->getRaw());
+        robotID.assign(*this->ae->getTeamManager()->getLocalAgentID()->getRaw(), this->ae->getTeamManager()->getLocalAgentID()->getSize());
         UUID::Builder sender = msg.initSenderId();
         sender.setValue(kj::arrayPtr(robotID.data(), robotID.size() * sizeof(uint8_t)));
         msg.setRoleId(rs.roleID);
