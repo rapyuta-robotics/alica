@@ -8,6 +8,8 @@ struct AgentQuery
 {
     AgentQuery()
             : senderID(nullptr)
+            , senderSdk(0)
+            , planHash(0)
     {
     }
     AgentIDConstPtr senderID;
