@@ -73,6 +73,9 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
         aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(id));
         id.clear();
     }
+    std::cout << "Recieved AEI: ID: " << aei.senderID << " MasterPlan: " << aei.masterPlan  << " currentPlan: "
+              << aei.currentPlan << " current State: " << aei.currentState << " current Role: " << aei.currentRole
+              << " current Task: " << aei.currentTask << '\n';
     Q_EMIT alicaEngineInfoUpdate(aei);
 }
 
@@ -94,6 +97,8 @@ void AlicaViewerCapnzeroInterface::alicaPlanInfoCallback(::capnp::FlatArrayMessa
     for (unsigned int i = 0; i < succeded.size(); ++i) {
         pti.succeededEPs.push_back(succeded[i]);
     }
+    std::cout << "Recieved PTI senderID: " << pti.senderID << " state ids: " << pti.stateIDs.size() << " succeded eps: "
+              << pti.succeededEPs.size() << '\n';
     Q_EMIT alicaPlanInfoUpdate(pti);
 }
 
