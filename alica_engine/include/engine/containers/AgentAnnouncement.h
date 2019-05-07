@@ -13,6 +13,10 @@ struct AgentAnnouncement
     using CapabilityPair = std::pair<std::string, std::string>;
     AgentAnnouncement()
             : senderID(nullptr)
+            , token(0)
+            , senderSdk(0)
+            , planHash(0)
+            , roleId(0)
     {
     }
     AgentIDConstPtr senderID;
