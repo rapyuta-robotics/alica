@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
 
     alica::RoleSwitch rs;
     rs.roleID = 13;
+    rs.senderID = own;
 
     alica::SyncReady sr;
     sr.senderID = own;

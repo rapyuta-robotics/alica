@@ -1,6 +1,6 @@
 @0xe1e7022ab41b6957;
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("alica_capnp_msgs");
+$Cxx.namespace("alica_capnz_msgs");
 using import "uuid.capnp".UUID;
 
 struct AllocationAuthorityInfo {

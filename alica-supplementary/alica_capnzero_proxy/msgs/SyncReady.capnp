@@ -1,6 +1,6 @@
 @0xcc2514efa5bd219a;
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("alica_capnp_msgs");
+$Cxx.namespace("alica_capnz_msgs");
 using import "uuid.capnp".UUID;
 
 struct SyncReady {

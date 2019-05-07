@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
     <name>alica_capnzero_proxy</name>
     <version>0.0.0</version>
     <description>The alica_capnzero_proxy package</description>
@@ -10,20 +10,8 @@
 
     <buildtool_depend>catkin</buildtool_depend>
 
-    <build_depend>alica_engine</build_depend>
-    <build_depend>alica_common_config</build_depend>
-    <build_depend>agent_id</build_depend>
-    <build_depend>message_generation</build_depend>
-    <build_depend>capnzero</build_depend>
-    <build_depend>alica_msgs</build_depend>
-
-    <run_depend>alica_engine</run_depend>
-    <run_depend>alica_msgs</run_depend>
-    <run_depend>agent_id</run_depend>
-    <run_depend>message_runtime</run_depend>
-    <run_depend>capnzero</run_depend>
-
-    <test_depend>gtest</test_depend>
+    <depend>alica_engine</depend>
+    <depend>capnzero</depend>
 
     <export>
     </export>
