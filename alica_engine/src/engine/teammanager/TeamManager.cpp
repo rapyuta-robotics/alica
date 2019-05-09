@@ -56,6 +56,7 @@ TeamManager::TeamManager(AlicaEngine* engine)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
+        , _announcementRetries(0)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
