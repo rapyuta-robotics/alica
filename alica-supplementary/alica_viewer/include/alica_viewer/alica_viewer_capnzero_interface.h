@@ -2,8 +2,8 @@
 
 #include <QThread>
 
-#include <msgs/AlicaEngineInfo.capnp.h>
-#include <msgs/PlanTreeInfo.capnp.h>
+#include <alica_capnz_msgs/AlicaEngineInfo.capnp.h>
+#include <alica_capnz_msgs/PlanTreeInfo.capnp.h>
 #include <engine/containers/AlicaEngineInfo.h>
 #include <engine/containers/PlanTreeInfo.h>
 #include <essentials/AgentIDManager.h>

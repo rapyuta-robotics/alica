@@ -1,6 +1,6 @@
 #include "alica_viewer/alica_viewer_capnzero_interface.h"
-#include <msgs/AlicaEngineInfo.capnp.h>
-#include <msgs/PlanTreeInfo.capnp.h>
+#include <alica_capnz_msgs/AlicaEngineInfo.capnp.h>
+#include <alica_capnz_msgs/PlanTreeInfo.capnp.h>
 
 #include <capnzero/Subscriber.h>
 #include <capnp/common.h>
@@ -56,7 +56,7 @@ void AlicaViewerCapnzeroInterface::run()
 void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMessageReader& msg)
 {
     AlicaEngineInfo aei;
-    alica_capnp_msgs::AlicaEngineInfo::Reader reader = msg.getRoot<alica_capnp_msgs::AlicaEngineInfo>();
+    alica_capnz_msgs::AlicaEngineInfo::Reader reader = msg.getRoot<alica_capnz_msgs::AlicaEngineInfo>();
     std::vector<uint8_t> id;
     id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
     aei.senderID = _agent_id_manager->getIDFromBytes(id);
@@ -82,7 +82,7 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
 void AlicaViewerCapnzeroInterface::alicaPlanInfoCallback(::capnp::FlatArrayMessageReader& msg)
 {
     PlanTreeInfo pti;
-    alica_capnp_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnp_msgs::PlanTreeInfo>();
+    alica_capnz_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnz_msgs::PlanTreeInfo>();
     std::vector<uint8_t> id;
     id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
     pti.senderID = _agent_id_manager->getIDFromBytes(id);
