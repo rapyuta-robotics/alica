@@ -34,7 +34,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _stepEngine(stepEngine)
         , _agentIDManager(new essentials::AgentIDFactory())
         , _planParser(&_planRepository)
-        , _teamManager(this, true)
+        , _teamManager(this)
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
@@ -89,6 +89,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     RunningPlan::init();
+    _teamManager.init();
     return everythingWorked;
 }
 
@@ -131,6 +132,11 @@ std::string AlicaEngine::getRobotName() const
 void AlicaEngine::iterationComplete()
 {
     // TODO: implement the trigger function for iteration complete
+}
+
+int AlicaEngine::getVersion() const
+{
+    return _ctx.getVersion();
 }
 
 void AlicaEngine::setStepCalled(bool stepCalled)

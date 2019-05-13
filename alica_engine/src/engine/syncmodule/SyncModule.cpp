@@ -132,11 +132,9 @@ bool SyncModule::followSyncTransition(const Transition* trans)
 }
 void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 {
-    if (!_running || st->senderID == _myId)
+    if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
         return;
-    if (_ae->getTeamManager().isAgentIgnored(st->senderID))
-        return;
-
+    }
 #ifdef SM_SUCCES
     cout << "SyncModul:Handle Synctalk" << endl;
 #endif
@@ -193,10 +191,10 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 }
 void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 {
-    if (!_running || *(sr->senderID) == *(_myId))
+    if (!_running || sr->senderID == _myId || _ae->getTeamManager().isAgentIgnored(sr->senderID)) {
         return;
-    if (_ae->getTeamManager().isAgentIgnored(sr->senderID))
-        return;
+    }
+
     const SyncTransition* syncTrans = _ae->getPlanRepository().getSyncTransitions().find(sr->syncTransitionID);
 
     if (syncTrans == nullptr) {

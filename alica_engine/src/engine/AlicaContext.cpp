@@ -78,4 +78,9 @@ void AlicaContext::getVersion(int& major, int& minor, int& patch)
     minor = ALICA_VERSION_MINOR;
     patch = ALICA_VERSION_PATCH;
 }
+
+int AlicaContext::getVersion()
+{
+    return ALICA_VERSION;
+}
 }
