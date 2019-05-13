@@ -109,6 +109,7 @@ void PlanBase::run(const Plan* masterPlan)
     TeamObserver& to = _ae->editTeamObserver();
     SyncModule& sm = _ae->editSyncModul();
     AuthorityManager& auth = _ae->editAuth();
+    TeamManager& tm = _ae->editTeamManager();
 
     while (_running) {
         AlicaTime beginTime = alicaClock.now();
@@ -144,6 +145,7 @@ void PlanBase::run(const Plan* masterPlan)
         ra.tick();
         sm.tick();
         auth.tick(_rootNode);
+        tm.tick();
 
         if (_rootNode == nullptr) {
             _rootNode = _ruleBook.initialisationRule(masterPlan);

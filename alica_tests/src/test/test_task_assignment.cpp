@@ -12,12 +12,12 @@
 #include "engine/TeamObserver.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
-
 #include <test_alica.h>
 
 #include <gtest/gtest.h>
@@ -30,12 +30,6 @@ namespace alica
 {
 namespace
 {
-// TODO: What to do with this clock?
-/*
-class StillClock : public alica::AlicaClock
-{
-    alica::AlicaTime now() const override { return alica::AlicaTime::milliseconds(555); }
-};*/
 
 class TaskAssignmentTest : public AlicaTestFixture
 {
@@ -51,13 +45,34 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     // fake a list of existing robots
     alica::AgentGrp robots;
-    for (int number = 8; number <= 11; number++) {
-        alica::AgentIDConstPtr agentID = ae->getId<int>(number);
-        robots.push_back(agentID);
-        ae->editTeamManager().setTimeLastMsgReceived(agentID, ae->getAlicaClock().now());
-    }
-    ae->editTeamObserver().tick(nullptr);
 
+    alica::AgentAnnouncement aa;
+    aa.planHash = 0;
+    aa.senderSdk = ae->getVersion();
+    aa.token = 55;
+    for (int agentId = 8; agentId <= 11; ++agentId) {
+        if (agentId == 9) {
+            continue;
+        }
+
+        aa.senderID = ae->getId<int>(agentId);
+        if (agentId == 8) {
+            aa.roleId = 1222973297047; // Attacker
+            aa.senderName = "hairy";
+        } else if (agentId == 10) {
+            aa.roleId = 1222973297054; // AttackSupporter
+            aa.senderName = "savvy";
+        } else if (agentId == 11) {
+            aa.roleId = 1222973297056; // Supporter;
+            aa.senderName = "myo";
+        }
+
+        ae->editTeamManager().handleAgentAnnouncement(aa);
+        robots.push_back(aa.senderID);
+    }
+
+    ae->editTeamManager().tick();
+    ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
     // fake inform the team observer about roles of none existing robots
 
