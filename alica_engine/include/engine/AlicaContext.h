@@ -16,6 +16,7 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "essentials/AgentID.h"
 
 namespace alica
 {
@@ -214,6 +215,25 @@ public:
      * @return True if object is a valid context, false otherwise
      */
     bool isValid();
+
+    /**
+     * Returns id for the last of currently active state of engine.
+     *
+     * @return 0 if invalid state or state id as per plan.
+     */
+    int64_t getCurrentState() const;
+
+    /**
+     * Returns agent id for this alica context.
+     *
+     * @return Object representing id.
+     */
+    essentials::AgentID getLocalAgentId() const;
+
+    /**
+     * Execute one step of engine synchronously
+     */
+    void stepEngine();
 
     // TODO: Implement
     template <class T>

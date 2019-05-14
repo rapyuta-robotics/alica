@@ -52,6 +52,34 @@ bool AlicaContext::isValid()
     return _validTag == ALICA_CTX_GOOD;
 }
 
+int64_t AlicaContext::getCurrentState() const
+{
+    const RunningPlan* deepestPlan = _engine->getPlanBase().getDeepestNode();
+    if (!deepestPlan) {
+        return 0;
+    }
+
+    const State* deepestState = deepestPlan->getActiveState();
+    if (!deepestState) {
+        return 0;
+    }
+
+    return deepestState->getId();
+}
+
+void AlicaContext::stepEngine()
+{
+    _engine->stepNotify();
+    do {
+        _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    } while (!_engine->getPlanBase().isWaiting());
+}
+
+essentials::AgentID AlicaContext::getLocalAgentId() const
+{
+    return *(_engine->getTeamManager().getLocalAgentID());
+}
+
 std::string AlicaContext::getRobotName()
 {
     return essentials::SystemConfig::getInstance().getHostname();
