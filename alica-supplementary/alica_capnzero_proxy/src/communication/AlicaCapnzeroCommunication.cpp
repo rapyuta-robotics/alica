@@ -32,6 +32,7 @@
 
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
+#include <SystemConfig.h>
 
 using namespace alica;
 
@@ -42,19 +43,33 @@ namespace alicaCapnzeroProxy {
     AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(AlicaEngine *ae) : IAlicaCommunication(ae) {
         this->isRunning = false;
 
+        this->sc = essentials::SystemConfig::getInstance();
+
         // Create zmq context
         this->ctx = zmq_ctx_new();
-        this->url = "224.0.0.2:5555";
+        this->url = (*sc)["AlicaCapnzProxy"]->get<std::string>("Communication.URL", NULL);
+        int tp = (*sc)["AlicaCapnzProxy"]->get<int>("Communication.transport", NULL);
+        switch(tp){
+            case 0:
+                this->transport = capnzero::CommType::UDP;
+                break;
+            case 1:
+                this->transport = capnzero::CommType::TCP;
+                break;
+            case 2:
+                this->transport = capnzero::CommType::IPC;
+                break;
+        }
+
 
         // Find topics:
-        // The values are hardcoded for initial testing. Will be replaced by proper config management later!
-        this->allocationAuthorityInfoTopic = "allocAutInfo";
-        this->ownRoleTopic = "myRole";
-        this->alicaEngineInfoTopic = "EngineInfo";
-        this->planTreeInfoTopic = "planTree";
-        this->syncReadyTopic = "syncRDY";
-        this->syncTalkTopic = "syncTLK";
-        this->solverResultTopic = "solverRES";
+        this->allocationAuthorityInfoTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.allocationAuthorityInfoTopic", NULL);
+        this->ownRoleTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.ownRoleTopic", NULL);
+        this->alicaEngineInfoTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.alicaEngineInfoTopic", NULL);
+        this->planTreeInfoTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.planTreeInfoTopic", NULL);
+        this->syncReadyTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.syncReadyTopic", NULL);
+        this->syncTalkTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.syncTalkTopic", NULL);
+        this->solverResultTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.solverResultTopic", NULL);
 
         // Setup publishers:
         std::cout << "The publisher:\n";

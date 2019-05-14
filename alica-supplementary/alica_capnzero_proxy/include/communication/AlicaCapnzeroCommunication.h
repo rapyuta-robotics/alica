@@ -2,6 +2,7 @@
 
 #include <engine/IAlicaCommunication.h>
 #include <capnzero/CapnZero.h>
+#include <SystemConfig.h>
 
 namespace alicaCapnzeroProxy
 {
@@ -32,6 +33,7 @@ public:
 protected:
     void* ctx;
     std::string url;
+    essentials::SystemConfig* sc;
 
     // Topics to use:
     std::string allocationAuthorityInfoTopic;
@@ -53,6 +55,9 @@ protected:
     capnzero::Subscriber *SyncReadySubscriber;
     capnzero::Subscriber *SyncTalkSubscriber;
     capnzero::Subscriber *SolverResultSubscriber;
+
+    // Transport:
+    capnzero::CommType transport;
 
     bool isRunning;
 };
