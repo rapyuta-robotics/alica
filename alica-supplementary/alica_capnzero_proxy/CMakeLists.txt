@@ -34,11 +34,11 @@ include_directories(
 )
 
 #### ALICA CAPNZERO PROXY
-add_library(alica_capnzero_proxy
+add_library(${PROJECT_NAME}
     src/communication/AlicaCapnzeroCommunication.cpp
     include/communication/AlicaCapnzeroCommunication.h
 )
-target_link_libraries(alica_capnzero_proxy
+target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     alica_capnz_msgs
 )
@@ -46,12 +46,12 @@ target_link_libraries(alica_capnzero_proxy
 #### ALICA CAPNZERO PROXY TESTS
 add_executable(senderTest src/SenderTest.cpp)
 target_link_libraries(senderTest
-    alica_capnzero_proxy
+    ${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
 
 add_executable(recieverTest src/RecieverTest.cpp)
 target_link_libraries(recieverTest
-    alica_capnzero_proxy
+    ${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )

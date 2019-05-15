@@ -1,20 +1,6 @@
 #include "communication/AlicaCapnzeroCommunication.h"
-#include <engine/AlicaEngine.h>
-#include <engine/teammanager/TeamManager.h>
-#include <essentials/AgentID.h>
 
-// Alica Containers:
-#include "engine/containers/AlicaEngineInfo.h"
-#include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/RoleSwitch.h"
-#include "engine/containers/SolverResult.h"
-#include "engine/containers/SolverVar.h"
-#include "engine/containers/SyncData.h"
-#include "engine/containers/SyncReady.h"
-#include "engine/containers/SyncTalk.h"
-
-// Messages:
+// Generated CapnProto Messages:
 #include "alica_capnz_msgs/AllocationAuthorityInfo.capnp.h"
 #include "alica_capnz_msgs/AlicaEngineInfo.capnp.h"
 #include "alica_capnz_msgs/PlanTreeInfo.capnp.h"
@@ -23,24 +9,35 @@
 #include "alica_capnz_msgs/SyncReady.capnp.h"
 #include "alica_capnz_msgs/SyncTalk.capnp.h"
 
-#include <capnzero/CapnZero.h>
-#include <capnp/common.h>
-#include <capnp/message.h>
-#include <capnp/serialize-packed.h>
-#include <kj/array.h>
-#include <iostream>
+#include <engine/containers/AlicaEngineInfo.h>
+#include <engine/containers/AllocationAuthorityInfo.h>
+#include <engine/containers/PlanTreeInfo.h>
+#include <engine/containers/RoleSwitch.h>
+#include <engine/containers/SolverResult.h>
+#include <engine/containers/SolverVar.h>
+#include <engine/containers/SyncData.h>
+#include <engine/containers/SyncReady.h>
+#include <engine/containers/SyncTalk.h>
+#include <engine/AlicaEngine.h>
+#include <engine/teammanager/TeamManager.h>
 
 #include <essentials/AgentID.h>
 #include <essentials/AgentIDFactory.h>
 #include <SystemConfig.h>
 
-using namespace alica;
+#include <capnzero/CapnZero.h>
+#include <capnp/common.h>
+#include <capnp/message.h>
+#include <capnp/serialize-packed.h>
+#include <kj/array.h>
+
+#include <iostream>
 
 namespace alicaCapnzeroProxy {
     using std::make_shared;
     using std::string;
 
-    AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(AlicaEngine *ae) : IAlicaCommunication(ae) {
+    AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine *ae) : IAlicaCommunication(ae) {
         this->isRunning = false;
 
         this->sc = essentials::SystemConfig::getInstance();
@@ -72,7 +69,7 @@ namespace alicaCapnzeroProxy {
         this->solverResultTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.solverResultTopic", NULL);
 
         // Setup publishers:
-        std::cout << "The publisher:\n";
+        std::cout << "AlicaCapnzeroCommunication: The publisher:\n";
         this->AlicaPublisher = new capnzero::Publisher(this->ctx);
         this->AlicaPublisher->setDefaultGroup("ALICA");
 
@@ -81,7 +78,7 @@ namespace alicaCapnzeroProxy {
 
 
         // Setup Subscribers:
-        std::cout << "The subscribers:\n";
+        std::cout << "AlicaCapnzeroCommunication: The subscribers:\n";
         this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,
                                                                            this->allocationAuthorityInfoTopic);
         this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx, this->planTreeInfoTopic);
@@ -95,7 +92,6 @@ namespace alicaCapnzeroProxy {
         this->SyncReadySubscriber->connect(capnzero::CommType::UDP, this->url);
         this->SyncTalkSubscriber->connect(capnzero::CommType::UDP, this->url);
         this->SolverResultSubscriber->connect(capnzero::CommType::UDP, this->url);
-
 
         // subscribing the subscribers:
         this->AllocationAuthorityInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handleAllocationAuthority, &(*this));
@@ -122,7 +118,7 @@ namespace alicaCapnzeroProxy {
         zmq_ctx_term(this->ctx);
     }
 
-    void AlicaCapnzeroCommunication::sendAllocationAuthority(const AllocationAuthorityInfo &aai) const {
+    void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo &aai) const {
         ::capnp::MallocMessageBuilder msgBuilder;
         alica_capnz_msgs::AllocationAuthorityInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::AllocationAuthorityInfo>();
 
@@ -282,7 +278,7 @@ namespace alicaCapnzeroProxy {
         ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Reader entrypoints = reader.getEntrypoints();
         std::vector<alica::EntryPointRobots> epData;
         for (unsigned int i = 0; i < entrypoints.size(); ++i) {
-            EntryPointRobots tmp;
+            alica::EntryPointRobots tmp;
             alica_capnz_msgs::EntrypointRobots::Reader tmpEp = entrypoints[i];
             tmp.entrypoint = tmpEp.getEntrypoint();
             std::vector<essentials::AgentID> agentIds;
@@ -303,7 +299,7 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::handlePlanTreeInfo(::capnp::FlatArrayMessageReader& msg) {
-        auto ptiPtr = make_shared<PlanTreeInfo>();
+        auto ptiPtr = make_shared<alica::PlanTreeInfo>();
         alica_capnz_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnz_msgs::PlanTreeInfo>();
         std::vector<uint8_t> id;
         id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
@@ -328,7 +324,7 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader& msg) {
-        auto srPtr = make_shared<SyncReady>();
+        auto srPtr = make_shared<alica::SyncReady>();
         alica_capnz_msgs::SyncReady::Reader reader = msg.getRoot<alica_capnz_msgs::SyncReady>();
         std::vector<uint8_t> id;
         id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
@@ -342,7 +338,7 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader& msg) {
-        auto stPtr = make_shared<SyncTalk>();
+        auto stPtr = make_shared<alica::SyncTalk>();
         alica_capnz_msgs::SyncTalk::Reader reader = msg.getRoot<alica_capnz_msgs::SyncTalk>();
         std::vector<uint8_t> id;
         id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
@@ -370,7 +366,7 @@ namespace alicaCapnzeroProxy {
     }
 
     void AlicaCapnzeroCommunication::handleSolverResult(::capnp::FlatArrayMessageReader& msg) {
-        SolverResult osr;
+        alica::SolverResult osr;
         alica_capnz_msgs::SolverResult::Reader reader = msg.getRoot<alica_capnz_msgs::SolverResult>();
         std::vector<uint8_t> id;
         id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());

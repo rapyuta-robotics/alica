@@ -1,8 +1,10 @@
 #pragma once
 
 #include <engine/IAlicaCommunication.h>
-#include <capnzero/CapnZero.h>
+
 #include <SystemConfig.h>
+
+#include <capnzero/CapnZero.h>
 
 namespace alicaCapnzeroProxy
 {

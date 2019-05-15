@@ -19,4 +19,5 @@
   <depend>alica_engine</depend>
   <depend>alica_capnz_msgs</depend>
   <depend>capnzero</depend>
+  <depend>alica_capnzero_proxy</depend>
 </package>
