@@ -254,14 +254,22 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
+#if (defined __cplusplus && __cplusplus >= 201402L)
     _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
+#else
+    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+#endif
 }
 
 template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
+#if (defined __cplusplus && __cplusplus >= 201402L)
     _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
+#else
+    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine.get(), std::forward<Args>(args)...)));
+#endif
 }
 
 template <class SolverType>
