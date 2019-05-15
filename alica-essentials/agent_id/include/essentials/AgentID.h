@@ -77,5 +77,13 @@ struct AgentIDHash
 {
     std::size_t operator()(const AgentID* const obj) const { return obj->hash(); }
 };
-
 } /* namespace essentials */
+
+namespace std
+{
+template <>
+struct hash<essentials::AgentID>
+{
+    std::size_t operator()(const essentials::AgentID id) const noexcept { return id.hash(); }
+};
+}
