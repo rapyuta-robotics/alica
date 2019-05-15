@@ -196,8 +196,10 @@ void AlicaPlan::combinePlanTree(PlanTree& planTree) const
 
 void AlicaPlan::handlePlanTreeInfo(const PlanTreeInfo& incoming)
 {
+
     std::unique_ptr<PlanTree> pt = planTreeFromMessage(incoming.senderID, incoming.stateIDs);
     if (pt) {
+        std::cout << "alica_viewer_plan_parser: Callback PTI reached! " << pt->getState()->toString() << std::endl;
         PlanTreeMap::iterator ptEntry = _planTrees.find(incoming.senderID);
         if (ptEntry != _planTrees.end()) {
             ptEntry->second = std::move(pt);

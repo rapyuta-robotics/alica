@@ -10,6 +10,12 @@
 
 #include <capnp/serialize-packed.h>
 
+namespace essentials {
+    class SystemConfig;
+    template <typename T>
+    class NotifyTimer;
+}
+
 namespace capnzero
 {
     class Subscriber;
@@ -36,6 +42,7 @@ class AlicaViewerCapnzeroInterface : public QThread
   private:
     void alicaEngineInfoCallback(::capnp::FlatArrayMessageReader& msg);
     void alicaPlanInfoCallback(::capnp::FlatArrayMessageReader& msg);
+    void timerCallback();
     capnzero::Subscriber *AlicaEngineInfoSubscriber;
     capnzero::Subscriber *AlicaPlanTreeInfoSubscriber;
     essentials::AgentIDManager* _agent_id_manager;
@@ -43,6 +50,8 @@ class AlicaViewerCapnzeroInterface : public QThread
     std::string url;
     std::string alicaEngineInfoTopic;
     std::string planTreeInfoTopic;
+    essentials::SystemConfig* sc;
+    essentials::NotifyTimer<alica::AlicaViewerCapnzeroInterface>* notifyTimer;
 };
 
 } // namespace alica

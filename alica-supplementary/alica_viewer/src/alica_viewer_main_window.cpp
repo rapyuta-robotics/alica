@@ -54,6 +54,7 @@ AlicaViewerMainWindow::AlicaViewerMainWindow(int argc, char* argv[], QWidget* pa
 
 elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* planTreeNode)
 {
+    std::cout << "alica_viewer_main_window: AddStateToScene!" << std::endl;
     if (planTreeNode == nullptr) {
         return nullptr;
     }
@@ -107,6 +108,8 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
 
 void AlicaViewerMainWindow::updateNodes()
 {
+
+    std::cout << "alica_viewer_main_window: updateNodes!" << std::endl;
     _scene->clear();
     int indexSelected = _ui.agentIdComboBox->currentIndex();
     const PlanTreeMap& ptMap = _alicaPlan.getPlanTrees();
