@@ -43,6 +43,7 @@ add_library(${PROJECT_NAME}
   src/AgentIDFactory.cpp
   src/BroadcastID.cpp
   src/AgentIDManager.cpp
+  src/ID.cpp
 )
 target_link_libraries(${PROJECT_NAME} 
   ${catkin_LIBRARIES}
