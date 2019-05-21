@@ -24,6 +24,7 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestEngineGetter;
+using AgentID = essentials::AgentID;
 
 /**
  * Alica options that can be set at runtime.
@@ -120,7 +121,7 @@ public:
      *
      * @param roleSetName Name for roleset
      * @param masterPlanName Name for the main plan
-     * @param stepEngine (?)
+     * @param stepEngine Signify engine is trigger based.
      *
      * @note This is the main alica api class
      */
@@ -219,7 +220,7 @@ public:
     /**
      * Returns id for the last of currently active state of engine.
      *
-     * @return 0 if invalid state or state id as per plan.
+     * @return "0" if engine is in invalid state or "state id" as per plan.
      */
     int64_t getCurrentState() const;
 
@@ -228,7 +229,7 @@ public:
      *
      * @return Object representing id.
      */
-    essentials::AgentID getLocalAgentId() const;
+    AgentID getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously
