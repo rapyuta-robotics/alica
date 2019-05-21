@@ -38,3 +38,4 @@
 # Ignore generated capnproto code
 *.capnp.h
 *.capnp.c++
+*ID.capnp

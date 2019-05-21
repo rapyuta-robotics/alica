@@ -2,9 +2,7 @@
 using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("alica_capnz_msgs");
 
-#using IDMsg = import "../../../essentials/id/msg/ID.capnp";
-using IDMsg = import "/essentials/ID.capnp";
-$IDMsg.import;
+using IDMsg = import "ID.capnp";
 
 struct AlicaEngineInfo {
     senderId @0 :IDMsg.ID;
