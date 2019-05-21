@@ -1,13 +1,13 @@
 #include "communication/AlicaCapnzeroCommunication.h"
 
 // Generated CapnProto Messages:
-#include "alica_capnz_msgs/AlicaEngineInfo.capnp.h"
-#include "alica_capnz_msgs/AllocationAuthorityInfo.capnp.h"
-#include "alica_capnz_msgs/PlanTreeInfo.capnp.h"
-#include "alica_capnz_msgs/RoleSwitch.capnp.h"
-#include "alica_capnz_msgs/SolverResult.capnp.h"
-#include "alica_capnz_msgs/SyncReady.capnp.h"
-#include "alica_capnz_msgs/SyncTalk.capnp.h"
+#include "alica_capnz_msg/AlicaEngineInfo.capnp.h"
+#include "alica_capnz_msg/AllocationAuthorityInfo.capnp.h"
+#include "alica_capnz_msg/PlanTreeInfo.capnp.h"
+#include "alica_capnz_msg/RoleSwitch.capnp.h"
+#include "alica_capnz_msg/SolverResult.capnp.h"
+#include "alica_capnz_msg/SyncReady.capnp.h"
+#include "alica_capnz_msg/SyncTalk.capnp.h"
 
 #include <engine/AlicaEngine.h>
 #include <engine/containers/AlicaEngineInfo.h>
