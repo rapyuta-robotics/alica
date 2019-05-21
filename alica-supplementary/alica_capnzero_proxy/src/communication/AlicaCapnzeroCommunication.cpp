@@ -155,7 +155,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::AlicaEngineInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::AlicaEngineInfo>();
 
-    UUID::Builder sender = msg.initSenderId();
+    essentials::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(bi.senderID->getRaw(), (unsigned int) bi.senderID->getSize()));
 
     msg.setMasterPlan(bi.masterPlan);
@@ -164,10 +164,10 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
     msg.setCurrentState(bi.currentState);
     msg.setCurrentTask(bi.currentTask);
 
-    ::capnp::List<UUID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
+    ::capnp::List<essentials::ID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
     for (unsigned int i = 0; i < bi.robotIDsWithMe.size(); ++i) {
         auto& robo = bi.robotIDsWithMe[i];
-        UUID::Builder tmp = agents[0];
+        essentials::ID::Builder tmp = agents[0];
         tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
     }
 

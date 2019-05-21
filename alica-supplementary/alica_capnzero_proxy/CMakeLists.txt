@@ -24,7 +24,7 @@ find_package(CapnProto REQUIRED)
 # include external capnp message schema files
 set(CAPNP_INCLUDE_DIRECTORY "${CAPNP_INCLUDE_DIRECTORY} ${id_SOURCE_PREFIX}/include")
 
-message("ALICACapnZeroProxy: CAPNP_INCLUDE_DIRECTORY is '${CAPNP_INCLUDE_DIRECTORY}'")
+#message("ALICACapnZeroProxy: CAPNP_INCLUDE_DIRECTORY is '${CAPNP_INCLUDE_DIRECTORY}'")
 #message("ALICACapnZeroProxy: catkin_INCLUDE_DIRS is '${catkin_INCLUDE_DIRS}'")
 
 set(capnzero_eval_message_folder "${CMAKE_CURRENT_SOURCE_DIR}/msg")
@@ -35,7 +35,7 @@ file(GLOB_RECURSE capnp_messages
         ${capnzero_eval_message_folder} *.capnp)
 
 #file(GLOB_RECURSE capnp_message ${id_SOURCE_PREFIX}/include/essentials *.capnp)
-message("ALICACapnZeroProxy: capnp_messages is '${capnp_messages}'")
+#message("ALICACapnZeroProxy: capnp_messages is '${capnp_messages}'")
 set(CAPNPC_SRC_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/msg" CACHE STRING "" FORCE)
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
 set(CAPNPC_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg" CACHE STRING "" FORCE)

@@ -1,6 +1,6 @@
 #include "alica_viewer/alica_viewer_capnzero_interface.h"
-#include <alica_capnz_msgs/AlicaEngineInfo.capnp.h>
-#include <alica_capnz_msgs/PlanTreeInfo.capnp.h>
+#include <alica_capnz_msg/AlicaEngineInfo.capnp.h>
+#include <alica_capnz_msg/PlanTreeInfo.capnp.h>
 
 #include <SystemConfig.h>
 #include <essentials/NotifyTimer.h>
@@ -74,9 +74,9 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
     aei.currentState = reader.getCurrentState();
     aei.currentRole = reader.getCurrentRole();
     aei.currentTask = reader.getCurrentTask();
-    ::capnp::List<UUID>::Reader riwm = reader.getAgentIdsWithMe();
+    ::capnp::List<essentials::ID>::Reader riwm = reader.getAgentIdsWithMe();
     for (unsigned int i = 0; i < riwm.size(); ++i) {
-        UUID::Reader tmp = riwm[i];
+        essentials::ID::Reader tmp = riwm[i];
         id.assign(tmp.getValue().begin(), tmp.getValue().end());
         aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(id));
         id.clear();
