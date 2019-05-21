@@ -1,6 +1,6 @@
 #pragma once
 
-#include <essentials/ID.h>
+#include <essentials/Identifier.h>
 
 #include <mutex>
 #include <unordered_set>
@@ -21,14 +21,14 @@ public:
      * This method can be used, e.g., for passing a part of a ROS
      * message and receiving a pointer to a corresponding IAgentID object.
      */
-    const essentials::ID* getIDFromBytes(const std::vector<uint8_t>& vectorID);
+    const essentials::Identifier* getIDFromBytes(const std::vector<uint8_t>& vectorID);
     template <class Prototype>
-    const ID* getID(Prototype& idPrototype);
-    const ID* generateID(int size = 16) const;
-    const ID* create(const std::vector<uint8_t>& bytes) const;
+    const Identifier* getID(Prototype& idPrototype);
+    const Identifier* generateID(int size = 16) const;
+    const Identifier* create(const std::vector<uint8_t>& bytes) const;
 
 private:
-    std::unordered_set<const ID*, essentials::IDHash, essentials::IDEqualsComparator> ids;
+    std::unordered_set<const Identifier*, essentials::IdentifierHash, essentials::IdentifierEqualsComparator> ids;
     std::mutex mutex;
 };
 
@@ -40,7 +40,7 @@ private:
  * a pointer to a corresponding AgentID object.
  */
 template <class Prototype>
-const ID* IDManager::getID(Prototype& idPrototype)
+const Identifier* IDManager::getID(Prototype& idPrototype)
 {
     // little-endian encoding
     std::vector<uint8_t> idByteVector;

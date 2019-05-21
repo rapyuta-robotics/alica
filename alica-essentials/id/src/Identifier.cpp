@@ -1,9 +1,9 @@
-#include "essentials/ID.h"
+#include "essentials/Identifier.h"
 
 namespace essentials
 {
 
-ID::ID(const uint8_t* idBytes, int idSize, uint8_t type)
+Identifier::Identifier(const uint8_t* idBytes, int idSize, uint8_t type)
         : TYPE(type)
 {
     for (int i = 0; i < idSize; i++) {
@@ -11,14 +11,14 @@ ID::ID(const uint8_t* idBytes, int idSize, uint8_t type)
     }
 }
 
-ID::~ID(){};
+Identifier::~Identifier(){};
 
-uint8_t ID::getType() const
+uint8_t Identifier::getType() const
 {
     return this->TYPE;
 }
 
-bool ID::operator==(const ID& other) const
+bool Identifier::operator==(const Identifier& other) const
 {
     if (this->id.size() != other.id.size()) {
         return false;
@@ -31,12 +31,12 @@ bool ID::operator==(const ID& other) const
     return true;
 }
 
-bool ID::operator!=(const ID& other) const
+bool Identifier::operator!=(const Identifier& other) const
 {
     return !(*this == other);
 }
 
-bool ID::operator<(const ID& other) const
+bool Identifier::operator<(const Identifier& other) const
 {
     if (this->id.size() < other.id.size()) {
         return true;
@@ -54,7 +54,7 @@ bool ID::operator<(const ID& other) const
     return false;
 }
 
-bool ID::operator>(const ID& other) const
+bool Identifier::operator>(const Identifier& other) const
 {
     if (this->id.size() > other.id.size()) {
         return true;
@@ -72,17 +72,17 @@ bool ID::operator>(const ID& other) const
     return false;
 }
 
-const uint8_t* ID::getRaw() const
+const uint8_t* Identifier::getRaw() const
 {
     return this->id.data();
 }
 
-int ID::getSize() const
+int Identifier::getSize() const
 {
     return this->id.size();
 }
 
-std::vector<uint8_t> ID::toByteVector() const
+std::vector<uint8_t> Identifier::toByteVector() const
 {
     return this->id;
 }
@@ -92,7 +92,7 @@ std::vector<uint8_t> ID::toByteVector() const
  * https://en.wikipedia.org/wiki/MurmurHash
  * https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
  */
-std::size_t ID::hash() const
+std::size_t Identifier::hash() const
 {
     const uint8_t* key = this->id.data();
     int len = this->id.size();

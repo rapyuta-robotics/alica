@@ -18,13 +18,13 @@ IDManager::~IDManager() {
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding IAgentID object.
  */
-const essentials::ID* IDManager::getIDFromBytes(const std::vector<uint8_t>& vectorID)
+const essentials::Identifier* IDManager::getIDFromBytes(const std::vector<uint8_t>& vectorID)
 {
     if (vectorID.empty()) { // empty values result in none-id
         return nullptr;
     }
     // create tmpID for lookup the ID
-    const essentials::ID* tmpID = new essentials::ID(vectorID.data(), vectorID.size());
+    const essentials::Identifier* tmpID = new essentials::Identifier(vectorID.data(), vectorID.size());
 
     // make the manager thread-safe
     std::lock_guard<std::mutex> guard(mutex);
@@ -37,12 +37,12 @@ const essentials::ID* IDManager::getIDFromBytes(const std::vector<uint8_t>& vect
     return *(entry.first);
 }
 
-const essentials::ID* IDManager::generateID(int size) const
+const essentials::Identifier* IDManager::generateID(int size) const
 {
     uuid_t uuid; // a UUID is 16 bytes long
     if (size <= 16) {
         uuid_generate(uuid);
-        return new essentials::ID(uuid, size);
+        return new essentials::Identifier(uuid, size);
     } else { // in case you need an id which is longer than 16 bytes
         std::vector<uint8_t> bytes;
         while (bytes.size() < size) {
@@ -51,13 +51,13 @@ const essentials::ID* IDManager::generateID(int size) const
                 bytes.push_back(uuid[i]);
             }
         }
-        return new essentials::ID(bytes.data(), size);
+        return new essentials::Identifier(bytes.data(), size);
     }
 }
 
-const essentials::ID* IDManager::create(const std::vector<uint8_t>& bytes) const
+const essentials::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
 {
-    return new essentials::ID(bytes.data(), bytes.size());
+    return new essentials::Identifier(bytes.data(), bytes.size());
 }
 
 } // namespace srgsim

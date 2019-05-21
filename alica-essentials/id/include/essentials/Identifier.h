@@ -5,26 +5,26 @@
 namespace essentials
 {
 
-class IDConstPtr;
+class IdentifierConstPtr;
 
-class ID
+class Identifier
 {
-    friend struct std::hash<essentials::ID>;
+    friend struct std::hash<essentials::Identifier>;
 
 public:
-    ID(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
-    virtual ~ID();
-    virtual bool operator==(const ID& obj) const;
-    virtual bool operator!=(const ID& obj) const;
-    virtual bool operator<(const ID& other) const;
-    virtual bool operator>(const ID& other) const;
+    Identifier(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
+    virtual ~Identifier();
+    virtual bool operator==(const Identifier& obj) const;
+    virtual bool operator!=(const Identifier& obj) const;
+    virtual bool operator<(const Identifier& other) const;
+    virtual bool operator>(const Identifier& other) const;
     virtual const uint8_t* getRaw() const;
     virtual int getSize() const;
     virtual std::vector<uint8_t> toByteVector() const;
     virtual std::size_t hash() const;
     virtual uint8_t getType() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const essentials::ID& obj)
+    friend std::ostream& operator<<(std::ostream& os, const essentials::Identifier& obj)
     {
         if (obj.id.size() <= sizeof(int)) {
             std::vector<uint8_t> tmpLong;
@@ -58,19 +58,19 @@ private:
     std::vector<uint8_t> id;
 };
 
-struct IDComparator
+struct IdentifierComparator
 {
-    bool operator()(const ID* a, const ID* b) const { return *a < *b; }
+    bool operator()(const Identifier* a, const Identifier* b) const { return *a < *b; }
 };
 
-struct IDEqualsComparator
+struct IdentifierEqualsComparator
 {
-    bool operator()(const ID* const a, const ID* b) const { return *a == *b; }
+    bool operator()(const Identifier* const a, const Identifier* b) const { return *a == *b; }
 };
 
-struct IDHash
+struct IdentifierHash
 {
-    std::size_t operator()(const ID* const obj) const { return obj->hash(); }
+    std::size_t operator()(const Identifier* const obj) const { return obj->hash(); }
 };
 
 } /* namespace essentials */

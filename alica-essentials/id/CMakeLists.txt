@@ -33,7 +33,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   ${CAPNP_SRCS}
-  src/ID.cpp
+        src/Identifier.cpp
   src/IDManager.cpp
 )
 
