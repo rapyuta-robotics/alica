@@ -84,6 +84,6 @@ namespace std
 template <>
 struct hash<essentials::AgentID>
 {
-    std::size_t operator()(const essentials::AgentID id) const noexcept { return id.hash(); }
+    std::size_t operator()(const essentials::AgentID& id) const noexcept { return id.hash(); }
 };
 }
