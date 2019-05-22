@@ -18,11 +18,11 @@ catkin_package(
 
 #### ID MESSAGES
 find_package(CapnProto REQUIRED)
-set(${PROJECT_NAME}_message_folder "${CMAKE_CURRENT_SOURCE_DIR}/include/essentials")
-file(GLOB_RECURSE capnp_messages ${${PROJECT_NAME}_message_folder} *.capnp)
-set(CAPNPC_SRC_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/include/essentials)
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/essentials")
-set(CAPNPC_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/essentials")
+set(${PROJECT_NAME}_msgs "${CMAKE_CURRENT_SOURCE_DIR}/include/essentials")
+file(GLOB_RECURSE capnp_messages ${${PROJECT_NAME}_msgs} *.capnp)
+set(CAPNPC_SRC_PREFIX ${${PROJECT_NAME}_msgs})
+set(CAPNPC_OUTPUT_DIR ${${PROJECT_NAME}_msgs})
+#message("id: capnp_messages is '${capnp_messages}'")
 capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS ${capnp_messages})
 
 include_directories(
@@ -30,8 +30,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${UUID_INCLUDE_DIRS}
 )
-
-message("id: CAPNP_SRCS is '${CAPNP_SRCS}'")
 
 add_library(${PROJECT_NAME}
   ${CAPNP_SRCS}
