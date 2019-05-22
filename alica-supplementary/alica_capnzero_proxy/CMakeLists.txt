@@ -22,26 +22,27 @@ catkin_package(
 find_package(CapnProto REQUIRED)
 
 # include external capnp message schema files
-set(CAPNP_INCLUDE_DIRECTORY "${CAPNP_INCLUDE_DIRECTORY} ${id_SOURCE_PREFIX}/include")
+set(CAPNPC_IMPORT_DIRS "${id_SOURCE_PREFIX}/include")
 
-#message("ALICACapnZeroProxy: CAPNP_INCLUDE_DIRECTORY is '${CAPNP_INCLUDE_DIRECTORY}'")
+message("ALICACapnZeroProxy: CAPNPC_IMPORT_DIRS is '${CAPNPC_IMPORT_DIRS}'")
+message("ALICACapnZeroProxy: CAPNP_INCLUDE_DIRECTORY is '${CAPNP_INCLUDE_DIRECTORY}'")
 #message("ALICACapnZeroProxy: catkin_INCLUDE_DIRS is '${catkin_INCLUDE_DIRS}'")
 
-set(capnzero_eval_message_folder "${CMAKE_CURRENT_SOURCE_DIR}/msg")
-file(GLOB_RECURSE id_msgs ${id_SOURCE_PREFIX}/include/essentials/*.capnp)
-file(COPY ${id_msgs} DESTINATION ${capnzero_eval_message_folder})
+set(capnzero_eval_message_folder "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
+#file(GLOB_RECURSE id_msgs ${id_SOURCE_PREFIX}/include/essentials/*.capnp)
+#file(COPY ${id_msgs} DESTINATION ${capnzero_eval_message_folder})
 
-file(GLOB_RECURSE capnp_messages
-        ${capnzero_eval_message_folder} *.capnp)
+file(GLOB_RECURSE capnp_messages ${capnzero_eval_message_folder} *.capnp)
 
 #file(GLOB_RECURSE capnp_message ${id_SOURCE_PREFIX}/include/essentials *.capnp)
 #message("ALICACapnZeroProxy: capnp_messages is '${capnp_messages}'")
-set(CAPNPC_SRC_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/msg" CACHE STRING "" FORCE)
+#set(CAPNPC_SRC_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg" CACHE STRING "" FORCE)
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
-set(CAPNPC_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg" CACHE STRING "" FORCE)
+set(CAPNPC_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
 capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS ${capnp_messages})
 
 add_library(alica_capnz_msgs ${CAPNP_SRCS})
+target_link_libraries(alica_capnz_msgs ${catkin_LIBRARIES})
 
 include_directories(
     include
@@ -53,6 +54,8 @@ add_library(${PROJECT_NAME}
     src/communication/AlicaCapnzeroCommunication.cpp
     include/communication/AlicaCapnzeroCommunication.h
 )
+
+message("ALICACapnZeroProxy: catkin_LIBRARIES is '${catkin_LIBRARIES}'")
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     alica_capnz_msgs
