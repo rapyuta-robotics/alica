@@ -31,9 +31,11 @@ include_directories(
   ${UUID_INCLUDE_DIRS}
 )
 
+message("id: CAPNP_SRCS is '${CAPNP_SRCS}'")
+
 add_library(${PROJECT_NAME}
   ${CAPNP_SRCS}
-        src/Identifier.cpp
+  src/Identifier.cpp
   src/IDManager.cpp
 )
 
