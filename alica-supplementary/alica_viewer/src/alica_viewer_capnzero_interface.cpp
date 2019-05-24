@@ -74,9 +74,9 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
     aei.currentState = reader.getCurrentState();
     aei.currentRole = reader.getCurrentRole();
     aei.currentTask = reader.getCurrentTask();
-    ::capnp::List<essentials::ID>::Reader riwm = reader.getAgentIdsWithMe();
+    ::capnp::List<capnzero::ID>::Reader riwm = reader.getAgentIdsWithMe();
     for (unsigned int i = 0; i < riwm.size(); ++i) {
-        essentials::ID::Reader tmp = riwm[i];
+        capnzero::ID::Reader tmp = riwm[i];
         id.assign(tmp.getValue().begin(), tmp.getValue().end());
         aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(id));
         id.clear();

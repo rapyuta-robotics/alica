@@ -22,8 +22,6 @@
 #include <engine/teammanager/TeamManager.h>
 
 #include <SystemConfig.h>
-#include <essentials/AgentID.h>
-#include <essentials/AgentIDFactory.h>
 
 #include <capnp/common.h>
 #include <capnp/message.h>
@@ -32,6 +30,8 @@
 #include <kj/array.h>
 
 #include <iostream>
+
+//#define CAPNZERO_PROXY_DEBUG
 
 namespace alicaCapnzeroProxy
 {
@@ -128,24 +128,26 @@ void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::Allocation
     msg.setPlanId(aai.planId);
     msg.setParentState(aai.parentState);
     msg.setPlanType(aai.planType);
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(aai.senderID->getRaw(), (unsigned int) aai.senderID->getSize()));
-    UUID::Builder authority = msg.initAuthority();
+    capnzero::ID::Builder authority = msg.initAuthority();
     authority.setValue(kj::arrayPtr(aai.authority->getRaw(), (unsigned int) aai.authority->getSize()));
     ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Builder entrypoints = msg.initEntrypoints((unsigned int) aai.entryPointRobots.size());
     for (unsigned int i = 0; i < aai.entryPointRobots.size(); ++i) {
         auto ep = aai.entryPointRobots[i];
         alica_capnz_msgs::EntrypointRobots::Builder tmp = entrypoints[i];
         tmp.setEntrypoint(ep.entrypoint);
-        ::capnp::List<UUID>::Builder tmpRobots = tmp.initRobots((unsigned int) ep.robots.size());
+        ::capnp::List<capnzero::ID>::Builder tmpRobots = tmp.initRobots((unsigned int) ep.robots.size());
         for (unsigned int j = 0; j < ep.robots.size(); ++i) {
-            UUID::Builder tmpUUID = tmpRobots[j];
+            capnzero::ID::Builder tmpUUID = tmpRobots[j];
             tmpUUID.setValue(kj::arrayPtr(ep.robots[j]->getRaw(), (unsigned int) ep.robots[j]->getSize()));
         }
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending AAI: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->allocationAuthorityInfoTopic);
     }
 }
@@ -155,7 +157,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::AlicaEngineInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::AlicaEngineInfo>();
 
-    essentials::ID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(bi.senderID->getRaw(), (unsigned int) bi.senderID->getSize()));
 
     msg.setMasterPlan(bi.masterPlan);
@@ -164,15 +166,17 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
     msg.setCurrentState(bi.currentState);
     msg.setCurrentTask(bi.currentTask);
 
-    ::capnp::List<essentials::ID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
+    ::capnp::List<capnzero::ID>::Builder agents = msg.initAgentIdsWithMe((unsigned int) bi.robotIDsWithMe.size());
     for (unsigned int i = 0; i < bi.robotIDsWithMe.size(); ++i) {
         auto& robo = bi.robotIDsWithMe[i];
-        essentials::ID::Builder tmp = agents[0];
+        capnzero::ID::Builder tmp = agents[0];
         tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending AEI: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->alicaEngineInfoTopic);
     }
 }
@@ -181,7 +185,7 @@ void AlicaCapnzeroCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti
 {
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::PlanTreeInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::PlanTreeInfo>();
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(pti.senderID->getRaw(), (unsigned int) pti.senderID->getSize()));
     ::capnp::List<int64_t>::Builder stateIds = msg.initStateIds((unsigned int) pti.stateIDs.size());
     for (unsigned int i = 0; i < pti.stateIDs.size(); ++i) {
@@ -193,7 +197,9 @@ void AlicaCapnzeroCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending PTI: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->planTreeInfoTopic);
     }
 }
@@ -202,12 +208,14 @@ void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch& rs) con
 {
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::RoleSwitch>();
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(rs.senderID->getRaw(), (unsigned int) rs.senderID->getSize()));
     msg.setRoleId(rs.roleID);
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending RS: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->ownRoleTopic);
     }
 }
@@ -217,12 +225,14 @@ void AlicaCapnzeroCommunication::sendSyncReady(const alica::SyncReady& sr) const
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::SyncReady::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SyncReady>();
 
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
     msg.setSynchronisationId(sr.synchronisationID);
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending SR: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->syncReadyTopic);
     }
 }
@@ -231,14 +241,14 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
 {
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::SyncTalk::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SyncTalk>();
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(st.senderID->getRaw(), (unsigned int) st.senderID->getSize()));
 
     ::capnp::List<alica_capnz_msgs::SyncData>::Builder syncData = msg.initSyncData((unsigned int) st.syncData.size());
     for (unsigned int i = 0; i < st.syncData.size(); ++i) {
         auto& ds = st.syncData[i];
         alica_capnz_msgs::SyncData::Builder tmpData = syncData[i];
-        UUID::Builder tmpId = tmpData.initRobotId();
+        capnzero::ID::Builder tmpId = tmpData.initRobotId();
         tmpId.setValue(kj::arrayPtr(ds.robotID->getRaw(), (unsigned int) ds.robotID->getSize()));
         tmpData.setAck(ds.ack);
         tmpData.setTransitionHolds(ds.conditionHolds);
@@ -246,7 +256,9 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending ST: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->syncTalkTopic);
     }
 }
@@ -255,7 +267,7 @@ void AlicaCapnzeroCommunication::sendSolverResult(const alica::SolverResult& sr)
 {
     ::capnp::MallocMessageBuilder msgBuilder;
     alica_capnz_msgs::SolverResult::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SolverResult>();
-    UUID::Builder sender = msg.initSenderId();
+    capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
     ::capnp::List<alica_capnz_msgs::SolverVar>::Builder vars = msg.initVars((unsigned int) sr.vars.size());
     for (unsigned int i = 0; i < sr.vars.size(); ++i) {
@@ -266,7 +278,9 @@ void AlicaCapnzeroCommunication::sendSolverResult(const alica::SolverResult& sr)
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << "Sending SR: " << msg.toString().flatten().cStr() << '\n';
+#endif
         this->AlicaPublisher->send(msgBuilder, this->solverResultTopic);
     }
 }
@@ -291,10 +305,10 @@ void AlicaCapnzeroCommunication::handleAllocationAuthority(::capnp::FlatArrayMes
         alica_capnz_msgs::EntrypointRobots::Reader tmpEp = entrypoints[i];
         tmp.entrypoint = tmpEp.getEntrypoint();
         std::vector<essentials::AgentID> agentIds;
-        ::capnp::List<UUID>::Reader robots = tmpEp.getRobots();
+        ::capnp::List<capnzero::ID>::Reader robots = tmpEp.getRobots();
         for (unsigned int j = 0; j < robots.size(); ++j) { // Not shure if this works!!!
             id.clear();
-            UUID::Reader tmpUUID = robots[j];
+            capnzero::ID::Reader tmpUUID = robots[j];
             id.assign(tmpUUID.getValue().begin(), tmpUUID.getValue().end());
             essentials::AgentIDConstPtr tmpItem = essentials::AgentIDFactory().create(id);
             agentIds.push_back(*tmpItem);
@@ -302,7 +316,9 @@ void AlicaCapnzeroCommunication::handleAllocationAuthority(::capnp::FlatArrayMes
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << reader.toString().flatten().cStr() << std::endl;
+#endif
         onAuthorityInfoReceived(aai);
     }
 }
@@ -328,7 +344,9 @@ void AlicaCapnzeroCommunication::handlePlanTreeInfo(::capnp::FlatArrayMessageRea
     }
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << reader.toString().flatten().cStr() << std::endl;
+#endif
         this->onPlanTreeInfoReceived(ptiPtr);
     }
 }
@@ -343,7 +361,9 @@ void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader
     srPtr->synchronisationID = reader.getSynchronisationId();
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << reader.toString().flatten().cStr() << std::endl;
+#endif
         this->onSyncReadyReceived(srPtr);
     }
 }
@@ -372,7 +392,9 @@ void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader&
     stPtr->syncData = data;
 
     if (this->isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << reader.toString().flatten().cStr() << std::endl;
+#endif
         this->onSyncTalkReceived(stPtr);
     }
 }
@@ -401,7 +423,9 @@ void AlicaCapnzeroCommunication::handleSolverResult(::capnp::FlatArrayMessageRea
     }
 
     if (isRunning) {
+#ifdef CAPNZERO_PROXY_DEBUG
         std::cout << reader.toString().flatten().cStr() << std::endl;
+#endif
         onSolverResult(osr);
     }
 }

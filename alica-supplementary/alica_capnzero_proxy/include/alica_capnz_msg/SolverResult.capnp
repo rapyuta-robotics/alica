@@ -1,10 +1,10 @@
 @0xfcdd9ec652f24502;
 using Cxx = import "/capnp/c++.capnp";
 $Cxx.namespace("alica_capnz_msgs");
-using import "uuid.capnp".UUID;
+using IDMsg = import "/capnzero/ID.capnp";
 
 struct SolverResult {
-    senderId @0 :UUID;
+    senderId @0 :IDMsg.ID;
     vars @1 :List(SolverVar);
 }
 
