@@ -1,37 +1,33 @@
-#include "essentials/IDManager.h"
+#include "id_manager/IDManager.h"
 
 #include <uuid/uuid.h>
 
 namespace essentials
 {
 IDManager::IDManager() {}
-IDManager::~IDManager() {
+IDManager::~IDManager()
+{
     for (auto& id : this->ids) {
         delete id;
     }
 }
 
-/**
- * If present, returns the ID corresponding to the given prototype.
- * Otherwise, it creates a new one, stores and returns it.
- *
- * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding IAgentID object.
- */
-const essentials::Identifier* IDManager::getIDFromBytes(const std::vector<uint8_t>& vectorID)
+const essentials::Identifier* IDManager::getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type)
 {
-    if (vectorID.empty()) { // empty values result in none-id
+    if (idBytes == 0) {
+        // empty values result in none-id
         return nullptr;
     }
+
     // create tmpID for lookup the ID
-    const essentials::Identifier* tmpID = new essentials::Identifier(vectorID.data(), vectorID.size());
+    const essentials::Identifier* tmpID = new essentials::Identifier(idBytes, idSize, type);
 
     // make the manager thread-safe
-    std::lock_guard<std::mutex> guard(mutex);
+    std::lock_guard<std::mutex> guard(idsMutex);
 
     // lookup the ID and insert it, if not available, yet
     auto entry = this->ids.insert(tmpID);
-    if (!entry.second) { // delete tmpID if already present in agentIDs
+    if (!entry.second) { // delete tmpID if already present in IDs
         delete tmpID;
     }
     return *(entry.first);
@@ -55,9 +51,9 @@ const essentials::Identifier* IDManager::generateID(int size) const
     }
 }
 
-const essentials::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
-{
-    return new essentials::Identifier(bytes.data(), bytes.size());
-}
+// const id_manager::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
+//{
+//    return new id_manager::Identifier(bytes.data(), bytes.size());
+//}
 
-} // namespace srgsim
+} // namespace id_manager

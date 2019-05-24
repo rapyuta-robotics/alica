@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>id</name>
+  <name>id_manager</name>
   <version>0.0.0</version>
-  <description>The id package</description>
+  <description>The id_manager package</description>
 
   <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
 

@@ -73,4 +73,4 @@ struct IdentifierHash
     std::size_t operator()(const Identifier* const obj) const { return obj->hash(); }
 };
 
-} /* namespace essentials */
+} /* namespace id_manager */
