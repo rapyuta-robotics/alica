@@ -124,6 +124,8 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->planRepository->_roles.emplace(ael->getId(), (Role*) ael);
     } else if (alica::Strings::roleset.compare(type) == 0) {
         modelManager->planRepository->_roleSets.emplace(ael->getId(), (RoleSet*) ael);
+    } else if (alica::Strings::behaviourConfiguration.compare(type) == 0) {
+        modelManager->planRepository->_behaviourConfigurations.emplace(ael->getId(), (BehaviourConfiguration*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");

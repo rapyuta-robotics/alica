@@ -6,6 +6,8 @@
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
 #include "engine/modelmanagement/factories/PostConditionFactory.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
+#include "engine/modelmanagement/factories/BehaviourConfigurationFactory.h"
+#include "engine/model/BehaviourConfiguration.h"
 
 namespace alica
 {
@@ -30,6 +32,15 @@ namespace alica
         }
         if (Factory::isValid(node[alica::Strings::postCondition])) {
             behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
+        }
+
+        if (Factory::isValid(node[alica::Strings::behaviourConfigurations])) {
+            const YAML::Node& behaviourConfigurations = node[alica::Strings::behaviourConfigurations];
+            for (YAML::const_iterator it = behaviourConfigurations.begin(); it != behaviourConfigurations.end(); ++it) {
+                BehaviourConfiguration* behaviourConf = BehaviourConfigurationFactory::create(*it);
+                behaviour->_behaviourConfigurations.push_back(behaviourConf);
+                std::cout << "BehaviourFactory: " << behaviourConf->toString() << std::endl;
+            }
         }
 
         return behaviour;
