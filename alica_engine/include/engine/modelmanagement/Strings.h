@@ -27,8 +27,7 @@ namespace alica {
         static const std::string roleset = "roleset";
         static const std::string roleset_extension = ".rst";
         static const std::string role = "role";
-
-
+        static const std::string behaviourConfiguration = "behaviourConfiguration";
 
         static const std::string id = "id";
         static const std::string name = "name";
@@ -77,5 +76,7 @@ namespace alica {
         static const std::string priorityDefault = "priorityDefault";
         static const std::string taskPriorities = "taskPriorities";
         static const std::string defaultRoleSet = "defaultRoleSet";
+        static const std::string behaviourConfigurations = "configurations";
+        static const std::string keyValuePairs = "keyValuePairs";
     }
 }

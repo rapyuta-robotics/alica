@@ -34,6 +34,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
+    const std::vector<BehaviourConfiguration*> getBehaviourConfigurations() const { return _behaviourConfigurations; }
 
 private:
     friend ModelFactory;
@@ -42,9 +43,6 @@ private:
     void setDeferring(int deferring);
     void setEventDriven(bool eventDriven);
     void setFrequency(int frequency);
-    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
-    void setPreCondition(PreCondition* preCondition);
-    void setPostCondition(PostCondition* postCondition);
     /**
      * Specifies whether this Behaviour is run eventDriven. If it is not event driven, a timer will call it according to
      * Frequency and Deferring.
@@ -71,6 +69,10 @@ private:
      * This behaviour's postcondition
      */
     PostCondition* _postCondition;
+    /**
+     * This behaviour's collection of configurations.
+     */
+    std::vector<BehaviourConfiguration*> _behaviourConfigurations;
 };
 
 } // namespace alica
