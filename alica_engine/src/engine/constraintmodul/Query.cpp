@@ -120,9 +120,10 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
 
             // 3. process bindings for state
             RunningPlan* parent = rp->getParent();
-            if (parent && parent->getActiveState() != nullptr) {
+            const State* parent_state = nullptr;
+            if (parent && (parent_state = parent->getActiveState()) != nullptr) {
                 _staticVars.editNext().clear();
-                for (const Parametrisation* p : parent->getActiveState()->getParametrisation()) {
+                for (const Parametrisation* p : parent_state->getParametrisation()) {
                     if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
                         _staticVars.editNext().push_back(p->getVar());
                         _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
