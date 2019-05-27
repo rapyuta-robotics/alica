@@ -4,13 +4,13 @@ project(alica_viewer)
 ##################
 ## Dependencies ##
 ##################
-add_compile_options(-std=c++11)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 add_compile_options(${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS})
 
 set(PKG_DEPS
         alica_engine
         alica_common_config
-        agent_id
+        id_capnzero
         capnzero
         alica_capnzero_proxy
 )

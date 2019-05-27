@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SystemConfig.h>
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 namespace alica
 {
@@ -21,7 +21,7 @@ class WorldModel
     alica::AlicaTime getTime();
     bool isMaySendMessages() const;
     void setMaySendMessages(bool maySendMessages);
-    const essentials::AgentID* getOwnId();
+    const essentials::Identifier* getOwnId();
     bool setEngine(alica::AlicaEngine* ae);
     alica::AlicaEngine* getEngine();
     essentials::SystemConfig* getSystemConfig();
@@ -30,6 +30,6 @@ class WorldModel
     essentials::SystemConfig* sc;
     alica::AlicaEngine* alicaEngine;
     bool maySendMessages;
-    const essentials::AgentID* ownID;
+    const essentials::Identifier* ownID;
 };
 } // namespace supplementary

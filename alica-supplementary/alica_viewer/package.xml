@@ -15,7 +15,7 @@
   <depend>qt_build</depend>
   <depend>libqt4-dev</depend>
 
-  <depend>agent_id</depend>
+  <depend>id_capnzero</depend>
   <depend>alica_engine</depend>
   <depend>alica_capnz_msgs</depend>
   <depend>capnzero</depend>

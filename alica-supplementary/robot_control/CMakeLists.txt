@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
     rqt_gui_cpp 
     process_manager 
     system_util
-    agent_id 
+    id_ros
     alica_client 
     pm_control 
     std_msgs 
@@ -43,7 +43,7 @@ add_message_files(
 
 generate_messages(
   DEPENDENCIES
-  agent_id
+  id_ros
   std_msgs
 )
 
@@ -85,7 +85,7 @@ set(robot_control_RCS
 catkin_package(
   INCLUDE_DIRS ${robot_control_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp agent_id alica_msgs
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp id_ros alica_msgs
 )
 
 

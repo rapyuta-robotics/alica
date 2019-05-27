@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>robot_control</name>
   <version>0.0.1</version>
   <description>robot_control provides a GUI plugin sending process_manager Commands.</description>
@@ -11,24 +11,16 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>message_generation</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>rqt_gui</build_depend>
-  <build_depend>rqt_gui_cpp</build_depend>
-  <build_depend>process_manager</build_depend>
-  <build_depend>agent_id</build_depend>
-  <build_depend>alica_client</build_depend>
-  <build_depend>pm_control</build_depend>
-  <build_depend>alica_msgs</build_depend>
+  <depend>std_msgs</depend>
+  <depend>rqt_gui</depend>
+  <depend>rqt_gui_cpp</depend>
+  <depend>process_manager</depend>
+  <depend>id_ros</depend>
+  <depend>alica_client</depend>
+  <depend>pm_control</depend>
+  <depend>alica_msgs</depend>
 
-  <run_depend>message_runtime</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>rqt_gui</run_depend>
-  <run_depend>rqt_gui_cpp</run_depend>
-  <run_depend>process_manager</run_depend>
-  <run_depend>agent_id</run_depend>
-  <run_depend>alica_client</run_depend>
-  <run_depend>pm_control</run_depend>
-  <run_depend>alica_msgs</run_depend>
+  <exec_depend>message_runtime</exec_depend>
 
   <export>
     <rqt_gui plugin="${prefix}/plugin.xml"/>

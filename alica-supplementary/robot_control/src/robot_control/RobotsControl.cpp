@@ -4,7 +4,6 @@
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 #include <robot_control/RobotsControl.h>
-#include <essentials/AgentID.h>
 
 #include <QMenu>
 
@@ -121,7 +120,7 @@ void RobotsControl::showContextMenu(const QPoint& pos)
 
         std::cout << "RC: '" << name << "'" << std::endl;
 
-        const essentials::AgentID* robotId = this->pmRegistry->getRobotId(name);
+        const essentials::Identifier* robotId = this->pmRegistry->getRobotId(name);
         if (robotId != nullptr) {
             this->controlledRobotsMap[robotId]->toggle();
         } else {
@@ -205,7 +204,7 @@ void RobotsControl::processMessages()
  * If the given robot ID is already known, nothing is done.
  * Otherwise a new entry in the controlled robot map is created.
  */
-void RobotsControl::checkAndInit(const essentials::AgentID* robotId)
+void RobotsControl::checkAndInit(const essentials::Identifier* robotId)
 {
     auto pmEntry = this->controlledRobotsMap.find(robotId);
     if (pmEntry == this->controlledRobotsMap.end()) { // robot is not known, so create a corresponding instance

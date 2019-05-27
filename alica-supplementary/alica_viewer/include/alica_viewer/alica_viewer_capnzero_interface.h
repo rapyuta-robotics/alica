@@ -6,7 +6,7 @@
 #include <alica_capnz_msg/PlanTreeInfo.capnp.h>
 #include <engine/containers/AlicaEngineInfo.h>
 #include <engine/containers/PlanTreeInfo.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/IDManager.h>
 
 #include <capnp/serialize-packed.h>
 
@@ -45,7 +45,7 @@ class AlicaViewerCapnzeroInterface : public QThread
     void timerCallback();
     capnzero::Subscriber *AlicaEngineInfoSubscriber;
     capnzero::Subscriber *AlicaPlanTreeInfoSubscriber;
-    essentials::AgentIDManager* _agent_id_manager;
+    essentials::IDManager* _id_manager;
     void *ctx;
     std::string url;
     std::string alicaEngineInfoTopic;

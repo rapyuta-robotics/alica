@@ -14,7 +14,7 @@ namespace alica
 {
 
 AlicaViewerCapnzeroInterface::AlicaViewerCapnzeroInterface(int argc, char* argv[])
-        : _agent_id_manager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
+        : _id_manager(new essentials::IDManager())
 {
     // Create zmq context
     this->ctx = zmq_ctx_new();
@@ -65,10 +65,9 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
 {
     AlicaEngineInfo aei;
     alica_capnz_msgs::AlicaEngineInfo::Reader reader = msg.getRoot<alica_capnz_msgs::AlicaEngineInfo>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    aei.senderID = _agent_id_manager->getIDFromBytes(id);
-    id.clear();
+
+    aei.senderID = _id_manager->getIDFromBytes(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().size(),
+                                                     static_cast<uint8_t>(reader.getSenderId().getType()));
     aei.masterPlan = reader.getMasterPlan();
     aei.currentPlan = reader.getCurrentPlan();
     aei.currentState = reader.getCurrentState();
@@ -77,9 +76,7 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
     ::capnp::List<capnzero::ID>::Reader riwm = reader.getAgentIdsWithMe();
     for (unsigned int i = 0; i < riwm.size(); ++i) {
         capnzero::ID::Reader tmp = riwm[i];
-        id.assign(tmp.getValue().begin(), tmp.getValue().end());
-        aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(id));
-        id.clear();
+        aei.robotIDsWithMe.push_back(_id_manager->getIDFromBytes(tmp.getValue().begin(), tmp.getValue().size(), static_cast<uint8_t>(tmp.getType())));
     }
     std::cout << "Recieved AEI: ID: " << aei.senderID << " MasterPlan: " << aei.masterPlan << " currentPlan: " << aei.currentPlan
               << " current State: " << aei.currentState << " current Role: " << aei.currentRole << " current Task: " << aei.currentTask << '\n';
@@ -90,10 +87,8 @@ void AlicaViewerCapnzeroInterface::alicaPlanInfoCallback(::capnp::FlatArrayMessa
 {
     PlanTreeInfo pti;
     alica_capnz_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnz_msgs::PlanTreeInfo>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    pti.senderID = _agent_id_manager->getIDFromBytes(id);
-    id.clear();
+    pti.senderID = _id_manager->getIDFromBytes(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().size(),
+                                                     static_cast<uint8_t>(reader.getSenderId().getType()));
 
     ::capnp::List<int64_t>::Reader stateIds = reader.getStateIds();
     for (unsigned int i = 0; i < stateIds.size(); ++i) {

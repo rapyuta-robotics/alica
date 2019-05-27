@@ -6,8 +6,7 @@
 #include <ros/macros.h>
 #include <ros/ros.h>
 
-#include <essentials/AgentID.h>
-#include <essentials/AgentIDFactory.h>
+#include <essentials/Identifier.h>
 #include <SystemConfig.h>
 #include <process_manager/RobotExecutableRegistry.h>
 
@@ -57,7 +56,7 @@ class RobotsControl : public rqt_gui_cpp::Plugin
 
     essentials::SystemConfig* sc;
 
-    std::map<const essentials::AgentID*, Robot*, essentials::AgentIDComparator> controlledRobotsMap;
+    std::map<const essentials::Identifier*, Robot*, essentials::IdentifierComparator> controlledRobotsMap;
     std::queue<std::pair<std::chrono::system_clock::time_point, process_manager::ProcessStatsConstPtr>>
             processStatMsgQueue;
     std::mutex processStatsMsgQueueMutex;
@@ -67,7 +66,7 @@ class RobotsControl : public rqt_gui_cpp::Plugin
     void receiveProcessStats(process_manager::ProcessStatsConstPtr processStats);
     void receiveAlicaInfo(alica_msgs::AlicaEngineInfoConstPtr alicaInfo);
     void processMessages();
-    void checkAndInit(const essentials::AgentID* robotId);
+    void checkAndInit(const essentials::Identifier* robotId);
 
     QTimer* guiUpdateTimer;
 
