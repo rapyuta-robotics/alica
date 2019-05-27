@@ -17,13 +17,13 @@ public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
     UtilityInterval eval(IAssignment ass) const override;
-    essentials::AgentIDConstPtr robotId;
+    essentials::IdentifierConstPtr robotId;
 
 protected:
     double sb;
     double angleBallOpp;
     double velAngle;
-    essentials::AgentIDManager* manager;
+    essentials::IDManager* manager;
 };
 
 } /* namespace alica */

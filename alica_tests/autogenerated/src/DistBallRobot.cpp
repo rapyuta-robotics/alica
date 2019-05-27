@@ -1,10 +1,10 @@
 #include "DistBallRobot.h"
 #include "TestWorldModel.h"
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
-#include <essentials/AgentIDManager.h>
+#include <essentials/IDManager.h>
 
 namespace alica
 {
@@ -15,7 +15,7 @@ DistBallRobot::DistBallRobot(double weight)
         , velAngle(0)
         , robotId(nullptr)
         , sb(0)
-        , manager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
+        , manager(new essentials::IDManager())
 {
 }
 
@@ -32,14 +32,14 @@ UtilityInterval DistBallRobot::eval(IAssignment ass) const
 
     long x8 = 8;
     std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
-    essentials::AgentIDConstPtr agentID8 = this->manager->getIDFromBytes(id8);
+    essentials::IdentifierConstPtr agentID8 = this->manager->getIDFromBytes(id8.begin().base(), id8.size(), essentials::Identifier::INT_TYPE);
 
     long x9 = 9;
     std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
-    essentials::AgentIDConstPtr agentID9 = this->manager->getIDFromBytes(id9);
+    essentials::IdentifierConstPtr agentID9 = this->manager->getIDFromBytes(id9.begin().base(), id9.size(), essentials::Identifier::INT_TYPE);
 
     double curPosition;
-    for (essentials::AgentIDConstPtr id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+    for (essentials::IdentifierConstPtr id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
         int pos = 0;
         if (*id == *agentID9) {
             pos = 1;
