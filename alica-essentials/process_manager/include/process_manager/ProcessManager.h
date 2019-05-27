@@ -7,8 +7,7 @@
 #include "process_manager/ProcessStats.h"
 
 #include <SystemConfig.h>
-#include <essentials/AgentID.h>
-#include <essentials/AgentIDFactory.h>
+#include <essentials/Identifier.h>
 
 #include <chrono>
 #include <ros/ros.h>
@@ -49,9 +48,9 @@ public:
 private:
     essentials::SystemConfig* sc;
     std::string ownHostname;
-    const essentials::AgentID* ownId;
+    const essentials::Identifier* ownId;
     bool simMode;
-    std::map<const essentials::AgentID*, ManagedRobot*, essentials::AgentIDComparator> robotMap;
+    std::map<const essentials::Identifier*, ManagedRobot*, essentials::IdentifierComparator> robotMap;
     RobotExecutableRegistry* pmRegistry;
     std::vector<std::string> interpreters;
     unsigned long long lastTotalCPUTime;

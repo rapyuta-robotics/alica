@@ -3,7 +3,7 @@
 namespace essentials
 {
 
-RobotMetaData::RobotMetaData(std::string name, const essentials::AgentID* agentID)
+RobotMetaData::RobotMetaData(std::string name, const essentials::Identifier* agentID)
         : name(name)
         , agentID(agentID)
 {

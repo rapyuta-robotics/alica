@@ -2,7 +2,7 @@
 
 #include "pm_widget/ControlledRobot.h"
 
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 #include <process_manager/ProcessStat.h>
 #include <process_manager/ProcessStats.h>
 #include <ui_PMControl.h>
@@ -43,7 +43,7 @@ class PMControl : public rqt_gui_cpp::Plugin
     virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
     virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
 
-    void sendProcessCommand(const essentials::AgentID* receiverId, std::vector<const essentials::AgentID*> robotIds, std::vector<int> execIds,
+    void sendProcessCommand(const essentials::Identifier* receiverId, std::vector<const essentials::Identifier*> robotIds, std::vector<int> execIds,
             std::vector<int> paramSets, int cmd);
 
     std::chrono::duration<double> msgTimeOut;
@@ -62,7 +62,7 @@ class PMControl : public rqt_gui_cpp::Plugin
 
     essentials::SystemConfig* sc;
 
-    std::map<const essentials::AgentID*, pm_widget::ControlledProcessManager*, essentials::AgentIDComparator> processManagersMap;
+    std::map<const essentials::Identifier*, pm_widget::ControlledProcessManager*, essentials::IdentifierComparator> processManagersMap;
 
     void handleProcessStats();
 

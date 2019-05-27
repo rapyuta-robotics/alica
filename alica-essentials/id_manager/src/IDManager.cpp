@@ -1,4 +1,4 @@
-#include "id_manager/IDManager.h"
+#include "essentials/IDManager.h"
 
 #include <uuid/uuid.h>
 
@@ -51,9 +51,9 @@ const essentials::Identifier* IDManager::generateID(int size) const
     }
 }
 
-// const id_manager::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
+// const essentials::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
 //{
-//    return new id_manager::Identifier(bytes.data(), bytes.size());
+//    return new essentials::Identifier(bytes.data(), bytes.size());
 //}
 
-} // namespace id_manager
+} // namespace essentials

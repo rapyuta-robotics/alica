@@ -5,9 +5,6 @@
 
 #include <ConsoleCommandHelper.h>
 
-#include <essentials/AgentIDFactory.h>
-#include <essentials/AgentIDManager.h>
-
 #include <iostream>
 #include <string.h>
 
@@ -33,7 +30,7 @@ RobotExecutableRegistry* RobotExecutableRegistry::get()
 
 RobotExecutableRegistry::RobotExecutableRegistry()
         : sc(essentials::SystemConfig::getInstance())
-        , agentIDManager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
+        , agentIDManager(new essentials::IDManager())
 {
 }
 
@@ -75,7 +72,7 @@ const map<string, vector<pair<int, int>>>* const RobotExecutableRegistry::getBun
     return &bundlesMap;
 }
 
-bool RobotExecutableRegistry::getRobotName(const essentials::AgentID* agentID, string& robotName)
+bool RobotExecutableRegistry::getRobotName(const essentials::Identifier* agentID, string& robotName)
 {
     for (auto& agentEntry : this->robotMap) {
         if (*(agentEntry.second->agentID) == *agentID) {
@@ -87,7 +84,7 @@ bool RobotExecutableRegistry::getRobotName(const essentials::AgentID* agentID, s
     return false;
 }
 
-bool RobotExecutableRegistry::robotExists(const essentials::AgentID* agentID)
+bool RobotExecutableRegistry::robotExists(const essentials::Identifier* agentID)
 {
     return this->robotMap.find(agentID) != this->robotMap.end();
 }
@@ -102,7 +99,7 @@ bool RobotExecutableRegistry::robotExists(string robotName)
     return false;
 }
 
-const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::string& robotName) const
+const essentials::Identifier* RobotExecutableRegistry::getRobotId(const std::string& robotName) const
 {
     for (auto& agentEntry : this->robotMap) {
         if (agentEntry.second->name == robotName) {
@@ -112,9 +109,9 @@ const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::string
     return nullptr;
 }
 
-const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName)
+const essentials::Identifier* RobotExecutableRegistry::getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName)
 {
-    auto agentID = this->agentIDManager->getIDFromBytes(idVector);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size(), Identifier::INT_TYPE);
     auto agentEntry = this->robotMap.find(agentID);
     if (agentEntry != this->robotMap.end()) { // entry already exists -> delete created id and return existing data
         robotName = agentEntry->second->name;
@@ -125,9 +122,9 @@ const essentials::AgentID* RobotExecutableRegistry::getRobotId(const std::vector
     }
 }
 
-const essentials::AgentID* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
+const essentials::Identifier* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
 {
-    auto agentID = this->agentIDManager->getIDFromBytes(idVector);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size(), Identifier::INT_TYPE);
     auto agentEntry = this->robotMap.find(agentID);
 
     if (agentEntry != this->robotMap.end()) {
@@ -138,7 +135,7 @@ const essentials::AgentID* RobotExecutableRegistry::getRobotId(const vector<uint
     }
 }
 
-void RobotExecutableRegistry::addRobot(string robotName, const essentials::AgentID* agentID)
+void RobotExecutableRegistry::addRobot(string robotName, const essentials::Identifier* agentID)
 {
     auto robotEntry = this->robotMap.find(agentID);
     if (robotEntry == this->robotMap.end()) {
@@ -152,7 +149,7 @@ void RobotExecutableRegistry::addRobot(string robotName, const essentials::Agent
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-std::string RobotExecutableRegistry::addRobot(const essentials::AgentID* agentID)
+std::string RobotExecutableRegistry::addRobot(const essentials::Identifier* agentID)
 {
     stringstream ss;
     ss << *agentID;
@@ -166,9 +163,9 @@ std::string RobotExecutableRegistry::addRobot(const essentials::AgentID* agentID
  * This method allows testing with systems, which are not in the Globals.conf,
  * i.d., are no official robots.
  */
-const essentials::AgentID* RobotExecutableRegistry::addRobot(string agentName)
+const essentials::Identifier* RobotExecutableRegistry::addRobot(string agentName)
 {
-    const essentials::AgentID* agentID;
+    const essentials::Identifier* agentID;
 
     try {
         int tmpID = (*sc)["Globals"]->get<int>("Globals.Team", agentName.c_str(), "ID", NULL);
@@ -176,7 +173,7 @@ const essentials::AgentID* RobotExecutableRegistry::addRobot(string agentName)
         for (int i = 0; i < sizeof(int); i++) {
             agentIDVector.push_back(*(((uint8_t*) &tmpID) + i));
         }
-        agentID = this->agentIDManager->getIDFromBytes(agentIDVector);
+        agentID = this->agentIDManager->getIDFromBytes(agentIDVector.data(), agentIDVector.size(), Identifier::INT_TYPE);
     } catch (const std::runtime_error* e) {
         agentID = nullptr;
         do {
@@ -190,7 +187,7 @@ const essentials::AgentID* RobotExecutableRegistry::addRobot(string agentName)
     return agentID;
 }
 
-const std::map<const essentials::AgentID*, RobotMetaData*, essentials::AgentIDComparator>& RobotExecutableRegistry::getRobots() const
+const std::map<const essentials::Identifier*, RobotMetaData*, essentials::IdentifierComparator>& RobotExecutableRegistry::getRobots() const
 {
     return this->robotMap;
 }

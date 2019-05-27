@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 namespace essentials
 {
@@ -30,7 +30,7 @@ class ControlledProcessManager : public QObject
     Q_OBJECT
 
 public:
-    ControlledProcessManager(std::string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* pmHorizontalLayout);
+    ControlledProcessManager(std::string processManagerName, const essentials::Identifier* processManagerId, QBoxLayout* pmHorizontalLayout);
     virtual ~ControlledProcessManager();
 
     void updateGUI(std::chrono::system_clock::time_point now);
@@ -44,14 +44,14 @@ public:
     std::chrono::duration<double> msgTimeOut;
     std::chrono::system_clock::time_point timeLastMsgReceived; /* < Time point, when the last message have been received */
     std::string name;                                          /* < Hostname under which this process manager is running */
-    const essentials::AgentID* id;                             /* < The id of the host */
+    const essentials::Identifier* id;                             /* < The id of the host */
     essentials::RobotExecutableRegistry* pmRegistry;
 
 private:
-    std::map<const essentials::AgentID*, ControlledRobot*, essentials::AgentIDComparator>
+    std::map<const essentials::Identifier*, ControlledRobot*, essentials::IdentifierComparator>
             controlledRobotsMap; /* < The robots, which are controlled by this process manager */
     QBoxLayout* parentLayout;
-    ControlledRobot* getControlledRobot(const essentials::AgentID* robotId);
+    ControlledRobot* getControlledRobot(const essentials::Identifier* robotId);
 };
 
 } /* namespace pm_widget */

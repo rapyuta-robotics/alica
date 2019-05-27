@@ -29,7 +29,7 @@ PMControl::PMControl()
      * with data from Globals.conf and ProcessManaging.conf file. */
 
     // Register robots from Globals.conf
-    const essentials::AgentID* tmpAgentID;
+    const essentials::Identifier* tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
@@ -127,7 +127,7 @@ void PMControl::handleProcessStats()
  */
 pm_widget::ControlledProcessManager* PMControl::getControlledProcessManager(const vector<uint8_t>& processManagerId)
 {
-    const essentials::AgentID* id = this->pmRegistry->getRobotId(processManagerId);
+    const essentials::Identifier* id = this->pmRegistry->getRobotId(processManagerId);
     string pmName;
     auto pmEntry = this->processManagersMap.find(id);
     if (pmEntry != this->processManagersMap.end()) { // process manager is already known

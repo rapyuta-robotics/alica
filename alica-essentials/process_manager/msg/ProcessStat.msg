@@ -1,5 +1,5 @@
 # RobotId determines the ROBOT-Environment Variables, under which the reported process is running.
-agent_id/AgentID robot_id
+id_ros/ID robot_id
 
 # Process ID from the Processes.conf file.
 int32 process_key

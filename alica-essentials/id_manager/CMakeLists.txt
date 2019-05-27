@@ -22,8 +22,18 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/Identifier.cpp
   src/IDManager.cpp
+  src/WildcardID.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
   ${UUID_LIBRARIES}
 )
+
+target_include_directories(${PROJECT_NAME} PUBLIC include ${catkin_INCLUDE_DIRS})
+
+if(CATKIN_ENABLE_TESTING)
+  catkin_add_gtest(${PROJECT_NAME}-tests
+          src/test/IDTests.cpp
+          )
+  target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} ${GTEST_LIBRARIES})
+endif()

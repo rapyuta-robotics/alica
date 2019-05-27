@@ -5,7 +5,7 @@
 #include "process_manager/ProcessStat.h"
 #include "process_manager/ProcessStats.h"
 
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 #include <ros/console.h>
 
@@ -33,7 +33,7 @@ public:
     virtual ~ManagedExecutable();
     void queue4Update(long pid);
     void update(unsigned long long cpuDelta);
-    void report(process_manager::ProcessStats& psts, const essentials::AgentID* robotId);
+    void report(process_manager::ProcessStats& psts, const essentials::Identifier* robotId);
     void changeDesiredState(bool shouldRun, int paramSetId);
     void changeDesiredLogPublishingState(bool shouldPublish);
     void startProcess(std::vector<char*>& params);

@@ -202,7 +202,7 @@ void ManagedExecutable::update(unsigned long long cpuDelta)
     }
 }
 
-void ManagedExecutable::report(process_manager::ProcessStats& psts, const essentials::AgentID* agentID)
+void ManagedExecutable::report(process_manager::ProcessStats& psts, const essentials::Identifier* agentID)
 {
     if (this->managedPid != ExecutableMetaData::NOTHING_MANAGED) {
         process_manager::ProcessStat ps;

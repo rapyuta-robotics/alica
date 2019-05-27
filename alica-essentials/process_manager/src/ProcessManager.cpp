@@ -5,7 +5,7 @@
 #include "process_manager/RobotExecutableRegistry.h"
 
 #include <Logging.h>
-#include <essentials/BroadcastID.h>
+#include <essentials/WildcardID.h>
 
 #include <cstdlib>
 #include <dirent.h>
@@ -58,7 +58,7 @@ ProcessManager::ProcessManager(int argc, char** argv)
      * data from Globals.conf and Processes.conf file. */
 
     // Register robots from Globals.conf
-    const essentials::AgentID* tmpAgentID;
+    const essentials::Identifier* tmpAgentID;
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
@@ -127,14 +127,14 @@ ProcessManager::~ProcessManager()
 void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 {
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
-    const essentials::AgentID* receiverId = nullptr;
-    essentials::BroadcastID bcid(nullptr, 0);
-    if (pc->receiver_id.type == essentials::AgentID::BC_TYPE) {
+    const essentials::Identifier* receiverId = nullptr;
+    essentials::WildcardID bcid(nullptr, 0);
+    if (pc->receiver_id.type == essentials::Identifier::WILDCARD_TYPE) {
         receiverId = &bcid;
     } else {
         receiverId = this->pmRegistry->getRobotId(pc->receiver_id.id);
     }
-    if (receiverId != this->ownId && !(simMode && dynamic_cast<const essentials::BroadcastID*>(receiverId))) {
+    if (receiverId != this->ownId && !(simMode && dynamic_cast<const essentials::WildcardID*>(receiverId))) {
         return;
     }
 
@@ -159,7 +159,7 @@ void ProcessManager::changeLogPublishing(process_manager::ProcessCommandPtr pc, 
     for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
         std::string robotName;
-        if (const essentials::AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
+        if (const essentials::Identifier* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
             ManagedRobot* mngdRobot;
@@ -195,7 +195,7 @@ void ProcessManager::changeDesiredProcessStates(process_manager::ProcessCommandP
     for (const auto& agentIDros : pc->robot_ids) {
         // Check whether the robot with the given id is known
         std::string robotName;
-        if (const essentials::AgentID* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
+        if (const essentials::Identifier* agentID = this->pmRegistry->getRobotId(agentIDros.id, robotName)) {
             // Find the ManagedRobot object
             auto mapIter = this->robotMap.find(agentID);
             ManagedRobot* mngdRobot;
@@ -373,7 +373,7 @@ void ProcessManager::searchProcFS()
         if (this->pmRegistry->getExecutableId(splittedCmdLine, execId)) {
             // get the robots name from the ROBOT environment variable
             string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
-            const essentials::AgentID* agentID = this->pmRegistry->getRobotId(robotName);
+            const essentials::Identifier* agentID = this->pmRegistry->getRobotId(robotName);
             if (!agentID) {
                 cout << "PM: Warning! Unknown robot '" << robotName << "' is running executable with ID '" << execId << "'" << endl;
                 agentID = this->pmRegistry->addRobot(robotName);
@@ -517,7 +517,7 @@ bool ProcessManager::selfCheck()
                 string robotName = this->getRobotEnvironmentVariable(string(dirEntry->d_name));
 
                 // get the Robot Id of the robot running the roscore
-                const essentials::AgentID* agentID = this->pmRegistry->getRobotId(robotName);
+                const essentials::Identifier* agentID = this->pmRegistry->getRobotId(robotName);
                 if (!agentID) {
                     agentID = this->pmRegistry->addRobot(robotName);
                 }
@@ -570,7 +570,7 @@ bool ProcessManager::selfCheck()
             // remember started roscore in process managing data structures
             int roscoreExecId;
             if (this->pmRegistry->getExecutableIdByExecName(roscoreExecName, roscoreExecId)) {
-                const essentials::AgentID* agentID = this->pmRegistry->getRobotId(this->ownHostname);
+                const essentials::Identifier* agentID = this->pmRegistry->getRobotId(this->ownHostname);
                 if (agentID != nullptr) {
                     // create managed robot if necessary and change desired state of roscore accordingly
                     auto mngdRobot = this->robotMap.find(agentID);

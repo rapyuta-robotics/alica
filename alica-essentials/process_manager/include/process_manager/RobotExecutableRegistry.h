@@ -1,9 +1,8 @@
 #pragma once
 
 #include <SystemConfig.h>
-#include <essentials/AgentID.h>
-#include <essentials/AgentIDFactory.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/Identifier.h>
+#include <essentials/IDManager.h>
 
 #include <map>
 #include <stdint.h>
@@ -24,15 +23,15 @@ class RobotExecutableRegistry
 {
 public:
     static RobotExecutableRegistry* get();
-    const std::map<const essentials::AgentID*, RobotMetaData*, essentials::AgentIDComparator>& getRobots() const;
-    void addRobot(std::string agentName, const essentials::AgentID* agentID);
-    const essentials::AgentID* addRobot(std::string agentName);
-    std::string addRobot(const essentials::AgentID* agentID);
-    const essentials::AgentID* getRobotId(const std::string& agentName) const;
-    const essentials::AgentID* getRobotId(const std::vector<uint8_t>& idVector);
-    const essentials::AgentID* getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName);
-    bool getRobotName(const essentials::AgentID* agentID, std::string& robotName);
-    bool robotExists(const essentials::AgentID* agentID);
+    const std::map<const essentials::Identifier*, RobotMetaData*, essentials::IdentifierComparator>& getRobots() const;
+    void addRobot(std::string agentName, const essentials::Identifier* agentID);
+    const essentials::Identifier* addRobot(std::string agentName);
+    std::string addRobot(const essentials::Identifier* agentID);
+    const essentials::Identifier* getRobotId(const std::string& agentName) const;
+    const essentials::Identifier* getRobotId(const std::vector<uint8_t>& idVector);
+    const essentials::Identifier* getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName);
+    bool getRobotName(const essentials::Identifier* agentID, std::string& robotName);
+    bool robotExists(const essentials::Identifier* agentID);
     bool robotExists(std::string agentName);
     void setInterpreters(std::vector<std::string> interpreter);
     bool isKnownInterpreter(std::string const& cmdLinePart);
@@ -52,12 +51,12 @@ public:
     RobotExecutableRegistry();
     virtual ~RobotExecutableRegistry();
 
-    std::map<const essentials::AgentID*, RobotMetaData*, essentials::AgentIDComparator> robotMap;
+    std::map<const essentials::Identifier*, RobotMetaData*, essentials::IdentifierComparator> robotMap;
     std::vector<ExecutableMetaData*> executableList;
     std::vector<std::string> interpreter;
     std::map<std::string, std::vector<std::pair<int, int>>> bundlesMap;
     essentials::SystemConfig* sc;
-    essentials::AgentIDManager* agentIDManager;
+    essentials::IDManager* agentIDManager;
 };
 
 } /* namespace  essentials */

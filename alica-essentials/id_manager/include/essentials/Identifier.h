@@ -5,26 +5,26 @@
 namespace essentials
 {
 
-class AgentIDConstPtr;
+class IdentifierConstPtr;
 
-class AgentID
+class Identifier
 {
-    friend struct std::hash<essentials::AgentID>;
+    friend struct std::hash<essentials::Identifier>;
 
 public:
-    AgentID(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
-    virtual ~AgentID();
-    virtual bool operator==(const AgentID& obj) const;
-    virtual bool operator!=(const AgentID& obj) const;
-    virtual bool operator<(const AgentID& other) const;
-    virtual bool operator>(const AgentID& other) const;
+    Identifier(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
+    virtual ~Identifier();
+    virtual bool operator==(const Identifier& obj) const;
+    virtual bool operator!=(const Identifier& obj) const;
+    virtual bool operator<(const Identifier& other) const;
+    virtual bool operator>(const Identifier& other) const;
     virtual const uint8_t* getRaw() const;
     virtual int getSize() const;
     virtual std::vector<uint8_t> toByteVector() const;
     virtual std::size_t hash() const;
     virtual uint8_t getType() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const essentials::AgentID& obj)
+    friend std::ostream& operator<<(std::ostream& os, const essentials::Identifier& obj)
     {
         if (obj.id.size() <= sizeof(int)) {
             std::vector<uint8_t> tmpLong;
@@ -51,26 +51,26 @@ public:
     const uint8_t TYPE;
 
     static const uint8_t INT_TYPE = 0;
-    static const uint8_t BC_TYPE = 1;
+    static const uint8_t WILDCARD_TYPE = 1;
     static const uint8_t UUID_TYPE = 2;
 
 private:
     std::vector<uint8_t> id;
 };
 
-struct AgentIDComparator
+struct IdentifierComparator
 {
-    bool operator()(const AgentID* a, const AgentID* b) const { return *a < *b; }
+    bool operator()(const Identifier* a, const Identifier* b) const { return *a < *b; }
 };
 
-struct AgentIDEqualsComparator
+struct IdentifierEqualsComparator
 {
-    bool operator()(const AgentID* const a, const AgentID* b) const { return *a == *b; }
+    bool operator()(const Identifier* const a, const Identifier* b) const { return *a == *b; }
 };
 
-struct AgentIDHash
+struct IdentifierHash
 {
-    std::size_t operator()(const AgentID* const obj) const { return obj->hash(); }
+    std::size_t operator()(const Identifier* const obj) const { return obj->hash(); }
 };
 
 } /* namespace essentials */

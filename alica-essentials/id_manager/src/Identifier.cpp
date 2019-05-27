@@ -1,4 +1,4 @@
-#include "id_manager/Identifier.h"
+#include "essentials/Identifier.h"
 
 namespace essentials
 {
@@ -133,4 +133,4 @@ std::size_t Identifier::hash() const
     return h;
 }
 
-} /* namespace id_manager */
+} /* namespace essentials */

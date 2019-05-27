@@ -5,8 +5,8 @@
 #include "ui_RobotProcessesWidget.h"
 
 #include <SystemConfig.h>
-#include <essentials/AgentID.h>
-#include <essentials/BroadcastID.h>
+#include <essentials/Identifier.h>
+#include <essentials/WildcardID.h>
 #include <process_manager/ExecutableMetaData.h>
 #include <process_manager/ProcessCommand.h>
 #include <process_manager/RobotExecutableRegistry.h>
@@ -16,7 +16,7 @@
 namespace pm_widget
 {
 // Second Constructor is for robot_control
-ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* robotId, const essentials::AgentID* parentPMid)
+ControlledRobot::ControlledRobot(string robotName, const essentials::Identifier* robotId, const essentials::Identifier* parentPMid)
         : RobotMetaData(robotName, robotId)
         , robotProcessesQFrame(new QFrame())
         , _robotProcessesWidget(new Ui::RobotProcessesWidget())
@@ -25,7 +25,7 @@ ControlledRobot::ControlledRobot(string robotName, const essentials::AgentID* ro
     // setup gui stuff
     this->_robotProcessesWidget->setupUi(this->robotProcessesQFrame);
     auto pmRegistry = essentials::RobotExecutableRegistry::get();
-    if (dynamic_cast<const essentials::BroadcastID*>(parentPMid)) {
+    if (dynamic_cast<const essentials::WildcardID*>(parentPMid)) {
         // don't show in robot_control
         this->_robotProcessesWidget->robotHostLabel->hide();
         this->inRobotControl = true;
@@ -71,7 +71,7 @@ ControlledRobot::~ControlledRobot()
 }
 
 void ControlledRobot::handleProcessStat(
-        chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const essentials::AgentID* parentPMid)
+        chrono::system_clock::time_point timeMsgReceived, process_manager::ProcessStat ps, const essentials::Identifier* parentPMid)
 {
     this->parentPMid = parentPMid;
 

@@ -12,7 +12,7 @@ using std::chrono::duration;
 
 namespace pm_widget
 {
-ControlledProcessManager::ControlledProcessManager(string processManagerName, const essentials::AgentID* processManagerId, QBoxLayout* parentLayout)
+ControlledProcessManager::ControlledProcessManager(string processManagerName, const essentials::Identifier* processManagerId, QBoxLayout* parentLayout)
         : name(processManagerName)
         , id(processManagerId)
         , pmRegistry(essentials::RobotExecutableRegistry::get())
@@ -43,7 +43,7 @@ void ControlledProcessManager::handleProcessStats(std::pair<std::chrono::system_
     }
 }
 
-ControlledRobot* ControlledProcessManager::getControlledRobot(const essentials::AgentID* robotId)
+ControlledRobot* ControlledProcessManager::getControlledRobot(const essentials::Identifier* robotId)
 {
     auto controlledRobotEntry = this->controlledRobotsMap.find(robotId);
     if (controlledRobotEntry != this->controlledRobotsMap.end()) { // robot is already known

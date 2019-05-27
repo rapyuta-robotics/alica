@@ -19,7 +19,7 @@ class ProcessManager;
 class ManagedRobot : public RobotMetaData
 {
 public:
-    ManagedRobot(std::string robotName, const essentials::AgentID* agentID, ProcessManager* procMan);
+    ManagedRobot(std::string robotName, const essentials::Identifier* agentID, ProcessManager* procMan);
     virtual ~ManagedRobot();
     void queue4update(int execid, long pid, RobotExecutableRegistry* registry);
     void update(unsigned long long cpuDelta);
