@@ -2,7 +2,7 @@
 #pragma once
 #include "Types.h"
 #include <alica_common_config/debug_output.h>
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iterator>
 #include <ostream>
@@ -12,7 +12,7 @@ namespace alica
 
 inline std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
 {
-    std::copy(ag.begin(), ag.end(), std::ostream_iterator<essentials::AgentIDConstPtr>(out, " "));
+    std::copy(ag.begin(), ag.end(), std::ostream_iterator<essentials::IdentifierConstPtr>(out, " "));
     return out;
 }
 

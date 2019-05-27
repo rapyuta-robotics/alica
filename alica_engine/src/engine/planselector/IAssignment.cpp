@@ -32,7 +32,7 @@ void UniquePartialAssignmentSuccessIterator::toNextValid()
         const AgentGrp* successes = _pas->getSuccessData()->getAgentsByIndex(_epIdx);
         if (successes) {
             while (_agentIdx < static_cast<int>(successes->size())) {
-                essentials::AgentIDConstPtr id = (*successes)[_agentIdx];
+                essentials::IdentifierConstPtr id = (*successes)[_agentIdx];
                 PartialAssignmentIterator assignEnd{0, _pas->getTotalAgentCount(), _pas};
                 auto it1 = std::find(PartialAssignmentIterator(0, _epIdx, _pas), assignEnd, id);
                 if (it1 == assignEnd) {

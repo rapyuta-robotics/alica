@@ -4,7 +4,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/teammanager/Agent.h>
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <list>
 #include <map>
@@ -28,7 +28,7 @@ class ActiveAgentIterator;
 class TeamManager
 {
 public:
-    using AgentMap = std::map<essentials::AgentIDConstPtr, Agent*>;
+    using AgentMap = std::map<essentials::IdentifierConstPtr, Agent*>;
 
     TeamManager(AlicaEngine* engine, bool useConfigForTeam);
     virtual ~TeamManager();
@@ -37,7 +37,7 @@ public:
 
     const AgentMap& getAllAgents() const { return _agents; }
 
-    essentials::AgentIDConstPtr getLocalAgentID() const;
+    essentials::IdentifierConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return localAgent; }
     Agent* editLocalAgent() { return localAgent; }
 
@@ -45,15 +45,15 @@ public:
     ActiveAgentView getActiveAgents() const;
 
     int getTeamSize() const;
-    const Agent* getAgentByID(essentials::AgentIDConstPtr agentId) const;
+    const Agent* getAgentByID(essentials::IdentifierConstPtr agentId) const;
 
-    void setTimeLastMsgReceived(essentials::AgentIDConstPtr agendId, AlicaTime timeLastMsgReceived);
-    bool isAgentIgnored(essentials::AgentIDConstPtr agentId) const;
-    bool isAgentActive(essentials::AgentIDConstPtr agentId) const;
-    void setAgentIgnored(essentials::AgentIDConstPtr, bool) const;
-    bool setSuccess(essentials::AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(essentials::AgentIDConstPtr agentId, const IdGrp& suceededEps);
-    const DomainVariable* getDomainVariable(essentials::AgentIDConstPtr agentId, const std::string& sort) const;
+    void setTimeLastMsgReceived(essentials::IdentifierConstPtr agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(essentials::IdentifierConstPtr agentId) const;
+    bool isAgentActive(essentials::IdentifierConstPtr agentId) const;
+    void setAgentIgnored(essentials::IdentifierConstPtr, bool) const;
+    bool setSuccess(essentials::IdentifierConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
+    bool setSuccessMarks(essentials::IdentifierConstPtr agentId, const IdGrp& suceededEps);
+    const DomainVariable* getDomainVariable(essentials::IdentifierConstPtr agentId, const std::string& sort) const;
 
 private:
     AlicaTime teamTimeOut;
@@ -65,7 +65,7 @@ private:
     void readTeamFromConfig(essentials::SystemConfig* sc);
 };
 
-class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     ActiveAgentBaseIterator(TeamManager::AgentMap::const_iterator it, const TeamManager::AgentMap& map)
@@ -104,7 +104,7 @@ public:
             : ActiveAgentBaseIterator(it, map)
     {
     }
-    essentials::AgentIDConstPtr operator*() const { return _it->first; }
+    essentials::IdentifierConstPtr operator*() const { return _it->first; }
 };
 
 class ActiveAgentIterator : public ActiveAgentBaseIterator

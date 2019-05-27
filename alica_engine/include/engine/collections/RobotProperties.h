@@ -2,7 +2,7 @@
 
 #include "engine/Types.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <SystemConfig.h>
 
 #include <algorithm>

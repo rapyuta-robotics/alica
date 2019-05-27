@@ -145,7 +145,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
     }
     // SUM UP HEURISTIC PART OF PRIORITY UTILITY
 
-    for (essentials::AgentIDConstPtr agentID : ass.getUnassignedAgents()) {
+    for (essentials::IdentifierConstPtr agentID : ass.getUnassignedAgents()) {
         const auto highestPriority = _roleHighestPriorityMap.find(_ra->getRole(agentID)->getId());
         assert(highestPriority != _roleHighestPriorityMap.end());
         priResult.setMax(priResult.getMax() + highestPriority->second);
@@ -156,7 +156,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         const EntryPoint* ep = ass.getEntryPoint(i);
         const int64_t taskId = ep->getTask()->getId();
 
-        for (essentials::AgentIDConstPtr agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
+        for (essentials::IdentifierConstPtr agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
             double curPrio = 0;
             const int64_t roleId = _ra->getRole(agent)->getId();
             const auto mit = _priorityMatrix.find(TaskRoleStruct{taskId, roleId});
@@ -206,7 +206,7 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment newAss, const Assignm
         numOldAssignedRobots += oldRobots.size();
 
         if (!newRobots.empty()) {
-            for (essentials::AgentIDConstPtr oldRobot : oldRobots) {
+            for (essentials::IdentifierConstPtr oldRobot : oldRobots) {
                 if (std::find(newRobots.begin(), newRobots.end(), oldRobot) != newRobots.end()) {
                     simUI.setMin(simUI.getMin() + 1);
                 } else if (ep->getMaxCardinality() > newRobots.size() && std::find(newAss.getUnassignedAgents().begin(), newAss.getUnassignedAgents().end(),

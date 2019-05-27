@@ -7,12 +7,12 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, essentials::AgentIDConstPtr id)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, essentials::IdentifierConstPtr id)
         : _id(id)
         , _name()
         , _engine(engine)
@@ -25,7 +25,7 @@ Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, essentials::AgentIDCo
 {
 }
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, essentials::AgentIDConstPtr id, const std::string& name)
+Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, essentials::IdentifierConstPtr id, const std::string& name)
         : _id(id)
         , _name(name)
         , _engine(engine)

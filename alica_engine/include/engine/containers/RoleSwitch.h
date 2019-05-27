@@ -2,7 +2,7 @@
 
 namespace alica
 {
-typedef std::tuple<essentials::AgentIDConstPtr, int64_t> stdRoleSwitch;
+typedef std::tuple<essentials::IdentifierConstPtr, int64_t> stdRoleSwitch;
 struct RoleSwitch
 {
     RoleSwitch()
@@ -16,7 +16,7 @@ struct RoleSwitch
     {
     }
 
-    essentials::AgentIDConstPtr senderID;
+    essentials::IdentifierConstPtr senderID;
     int64_t roleID;
 
     stdRoleSwitch toStandard() const { return std::make_tuple(senderID, roleID); }

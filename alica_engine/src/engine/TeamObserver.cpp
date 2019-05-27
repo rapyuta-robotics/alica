@@ -18,7 +18,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include <SystemConfig.h>
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <engine/Output.h>
 
 namespace alica
@@ -270,6 +270,7 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
     if (incoming->senderID != _me->getId()) {
+        std::cout << "TeamObserver: IncomingID: '" << incoming->senderID << "' OwnID: '" << _me->getId() << "'" << std::endl;
         if (_tm->isAgentIgnored(incoming->senderID)) {
             return;
         }
@@ -280,11 +281,11 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 
 /**
  * Constructs a SimplePlanTree from a received message
- * @param robotId The id of the other robot.
+ * @param agentId The id of the other agent.
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return a SimplePlanTree
  */
-std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(essentials::AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
+std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(essentials::IdentifierConstPtr agentId, const IdGrp& ids, AlicaTime time) const
 {
     ALICA_DEBUG_MSG("Spt from robot " << agentId);
     ALICA_DEBUG_MSG(ids);

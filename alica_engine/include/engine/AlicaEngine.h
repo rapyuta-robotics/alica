@@ -4,8 +4,8 @@
 #include "engine/constraintmodul/ISolver.h"
 
 #include <SystemConfig.h>
-#include <essentials/AgentIDConstPtr.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/IdentifierConstPtr.h>
+#include <essentials/IDManager.h>
 #include <list>
 #include <string>
 
@@ -45,7 +45,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
+    AlicaEngine(essentials::IDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
     // State modifiers:
@@ -106,11 +106,10 @@ public:
     bool getStepCalled() const;
     void iterationComplete();
 
-    // AgentIDManager forwarded interface:
-
-    essentials::AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
+    // IDManager forwarded interface:
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
     template <class Prototype>
-    essentials::AgentIDConstPtr getId(Prototype& idPrototype) const;
+    essentials::IdentifierConstPtr getId(Prototype& idPrototype) const;
 
 private:
     void setStepEngine(bool stepEngine);
@@ -127,7 +126,7 @@ private:
     PlanRepository* planRepository;
     BlackBoard _blackboard;
 
-    essentials::AgentIDManager* agentIDManager;
+    essentials::IDManager* agentIDManager;
     Logger* log;
     //PlanParser* planParser;
     ModelManager* modelManager;
@@ -173,9 +172,9 @@ private:
  * IntRobotID).
  */
 template <class Prototype>
-essentials::AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype) const
+essentials::IdentifierConstPtr AlicaEngine::getId(Prototype& idPrototype) const
 {
-    return essentials::AgentIDConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
+    return essentials::IdentifierConstPtr(this->agentIDManager->getID<Prototype>(idPrototype));
 }
 
 template <typename T>

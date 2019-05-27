@@ -15,7 +15,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <alica_common_config/debug_output.h>
 
 using std::endl;
@@ -119,7 +119,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << tm->getTeamSize();
 
     _sBuild << " TeamMember:";
-    for (essentials::AgentIDConstPtr id : agents) {
+    for (essentials::IdentifierConstPtr id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }

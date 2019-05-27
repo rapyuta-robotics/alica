@@ -7,7 +7,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <memory>
 #include <mutex>
@@ -29,7 +29,7 @@ class SynchronisationProcess
 {
 public:
     SynchronisationProcess(AlicaEngine* ae);
-    SynchronisationProcess(AlicaEngine* ae, essentials::AgentIDConstPtr id, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(AlicaEngine* ae, essentials::IdentifierConstPtr id, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -49,7 +49,7 @@ protected:
     std::mutex rowOkMutex;
     SyncModule* syncModul;
     const Synchronisation* synchronisation;
-    essentials::AgentIDConstPtr myID;
+    essentials::IdentifierConstPtr myID;
     SyncData* lastTalkData;
     AlicaTime lastTalkTime;
     AlicaTime syncStartTime;
