@@ -8,12 +8,12 @@ set(CMAKE_BUILD_TYPE Debug)
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
-find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util alica_common_config alica_solver_interface)
+find_package(catkin REQUIRED COMPONENTS id_manager system_config fsystem event_handling system_util alica_common_config alica_solver_interface)
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS agent_id system_config fsystem event_handling system_util alica_solver_interface alica_common_config
+    CATKIN_DEPENDS id_manager system_config fsystem event_handling system_util alica_solver_interface alica_common_config
   )
 endif(catkin_FOUND)
 

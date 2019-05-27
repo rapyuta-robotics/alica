@@ -1,6 +1,6 @@
 #pragma once
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iostream>
 #include <list>
@@ -43,7 +43,7 @@ public:
 protected:
     bool running;
     AlicaEngine* ae;
-    essentials::AgentIDConstPtr myId;
+    essentials::IdentifierConstPtr myId;
     unsigned long ticks;
     PlanRepository* pr;
     std::map<const Synchronisation*, SynchronisationProcess*> synchSet;

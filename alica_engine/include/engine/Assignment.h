@@ -6,7 +6,7 @@
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <assert.h>
 #include <numeric>
 #include <sstream>
@@ -35,9 +35,9 @@ class AgentStatePairs
 {
 public:
     AgentStatePairs() {}
-    bool hasAgent(const essentials::AgentIDConstPtr id) const;
-    const State* getStateOfAgent(const essentials::AgentIDConstPtr id) const;
-    void setStateOfAgent(const essentials::AgentIDConstPtr id, const State* s);
+    bool hasAgent(const essentials::IdentifierConstPtr id) const;
+    const State* getStateOfAgent(const essentials::IdentifierConstPtr id) const;
+    void setStateOfAgent(const essentials::IdentifierConstPtr id, const State* s);
 
     const std::vector<AgentStatePair>& getRaw() const { return _data; }
     std::vector<AgentStatePair>& editRaw() { return _data; }
@@ -46,10 +46,10 @@ public:
     bool empty() const { return _data.size() == 0; }
 
     void clear() { _data.clear(); }
-    void emplace_back(essentials::AgentIDConstPtr id, const State* s) { _data.emplace_back(id, s); }
+    void emplace_back(essentials::IdentifierConstPtr id, const State* s) { _data.emplace_back(id, s); }
 
     void removeAt(int idx) { _data.erase(_data.begin() + idx); }
-    void remove(essentials::AgentIDConstPtr agent)
+    void remove(essentials::IdentifierConstPtr agent)
     {
         _data.erase(std::find_if(_data.begin(), _data.end(), [agent](AgentStatePair asp) { return asp.first == agent; }));
     }
@@ -89,15 +89,15 @@ public:
     bool isSuccessful() const;
     bool isAnyTaskSuccessful() const;
 
-    bool hasAgent(essentials::AgentIDConstPtr id) const;
+    bool hasAgent(essentials::IdentifierConstPtr id) const;
     int size() const
     {
         return std::accumulate(_assignmentData.begin(), _assignmentData.end(), 0, [](int val, const AgentStatePairs& asps) { return val + asps.size(); });
     }
     int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
     const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
-    const EntryPoint* getEntryPointOfAgent(essentials::AgentIDConstPtr id) const;
-    const State* getStateOfAgent(essentials::AgentIDConstPtr id) const;
+    const EntryPoint* getEntryPointOfAgent(essentials::IdentifierConstPtr id) const;
+    const State* getStateOfAgent(essentials::IdentifierConstPtr id) const;
 
     void getAllAgents(AgentGrp& o_agents) const;
     const AgentStatePairs& getAgentStates(int idx) const { return _assignmentData[idx]; }
@@ -123,18 +123,18 @@ public:
 
     void getAgentsInState(const State* s, AgentGrp& o_agents) const;
 
-    bool updateAgent(essentials::AgentIDConstPtr agent, const EntryPoint* e);
-    bool updateAgent(essentials::AgentIDConstPtr agent, const EntryPoint* e, const State* s);
-    void addAgent(essentials::AgentIDConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
+    bool updateAgent(essentials::IdentifierConstPtr agent, const EntryPoint* e);
+    bool updateAgent(essentials::IdentifierConstPtr agent, const EntryPoint* e, const State* s);
+    void addAgent(essentials::IdentifierConstPtr agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     template <typename ForwardIterator>
     void setAllToInitialState(ForwardIterator begin, ForwardIterator end, const EntryPoint* e);
 
-    void setState(essentials::AgentIDConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
+    void setState(essentials::IdentifierConstPtr agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
     bool removeAllIn(const AgentGrp& limit, const State* watchState);
     bool removeAllNotIn(const AgentGrp& limit, const State* watchState);
-    void removeAgentFrom(essentials::AgentIDConstPtr agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
-    void removeAgent(essentials::AgentIDConstPtr agent);
+    void removeAgentFrom(essentials::IdentifierConstPtr agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
+    void removeAgent(essentials::IdentifierConstPtr agent);
     void removeAllFrom(const AgentGrp& agents, const EntryPoint* ep) { _assignmentData[ep->getIndex()].removeAllIn(agents); }
     void clear();
     void moveAllFromTo(const EntryPoint* scope, const State* from, const State* to);
@@ -159,7 +159,7 @@ void Assignment::setAllToInitialState(ForwardIterator begin, ForwardIterator end
         if (isTargetEp) {
             const State* s = ep->getState();
             for (ForwardIterator agent_it = begin; agent_it != end; ++agent_it) {
-                essentials::AgentIDConstPtr id = *agent_it;
+                essentials::IdentifierConstPtr id = *agent_it;
                 auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](AgentStatePair asp) { return asp.first == id; });
                 if (it == _assignmentData[i].end()) {
                     _assignmentData[i].emplace_back(id, s);
@@ -180,7 +180,7 @@ void AgentStatePairs::removeAllIn(ForwardIterator begin, ForwardIterator end)
             _data.end());
 }
 
-class AssignmentIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class AssignmentIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     AssignmentIterator(int idx, const AgentStatePairs* aps)
@@ -188,7 +188,7 @@ public:
             , _idx(idx)
     {
     }
-    essentials::AgentIDConstPtr operator*() const { return _agents->getRaw()[_idx].first; }
+    essentials::IdentifierConstPtr operator*() const { return _agents->getRaw()[_idx].first; }
     AssignmentIterator& operator++()
     {
         ++_idx;
@@ -229,7 +229,7 @@ private:
     const int _epIdx;
 };
 
-class AllAgentsIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class AllAgentsIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     AllAgentsIterator(int epIdx, int agentIdx, const Assignment* a)
@@ -240,7 +240,7 @@ public:
         toNextValid();
     }
 
-    essentials::AgentIDConstPtr operator*() const { return _assignment->getAgentStates(_epIdx).getRaw()[_agentIdx].first; }
+    essentials::IdentifierConstPtr operator*() const { return _assignment->getAgentStates(_epIdx).getRaw()[_agentIdx].first; }
     AllAgentsIterator& operator++()
     {
         ++_agentIdx;
@@ -297,7 +297,7 @@ private:
     const Assignment* _assignment;
 };
 
-class AgentsInStateIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class AgentsInStateIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     AgentsInStateIterator(int idx, const State* s, const AgentStatePairs* aps)
@@ -307,7 +307,7 @@ public:
     {
         toNextValid();
     }
-    essentials::AgentIDConstPtr operator*() const { return _agents->getRaw()[_idx].first; }
+    essentials::IdentifierConstPtr operator*() const { return _agents->getRaw()[_idx].first; }
     AgentsInStateIterator& operator++()
     {
         ++_idx;
@@ -366,7 +366,7 @@ private:
     const State* _state;
 };
 
-class AssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class AssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     AssignmentSuccessIterator(int idx, bool inSuccess, const AgentStatePairs* aps, const AgentGrp* successes)
@@ -380,7 +380,7 @@ public:
             _idx = 0;
         }
     }
-    essentials::AgentIDConstPtr operator*() const
+    essentials::IdentifierConstPtr operator*() const
     {
         if (_inSuccess) {
             return (*_successData)[_idx];

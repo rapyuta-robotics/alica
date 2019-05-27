@@ -1,13 +1,13 @@
 #pragma once
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iostream>
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<essentials::AgentIDConstPtr, int64_t, bool, bool> stdSyncData;
+typedef std::tuple<essentials::IdentifierConstPtr, int64_t, bool, bool> stdSyncData;
 
 struct SyncData
 {
@@ -38,7 +38,7 @@ struct SyncData
         std::cout << " Acknowledge: " << this->ack << std::endl;
     }
 
-    essentials::AgentIDConstPtr robotID;
+    essentials::IdentifierConstPtr robotID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;

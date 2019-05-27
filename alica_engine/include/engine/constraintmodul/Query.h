@@ -75,7 +75,7 @@ public:
     Query();
 
     void addStaticVariable(const alica::Variable* v);
-    void addDomainVariable(essentials::AgentIDConstPtr robot, const std::string& ident, AlicaEngine* ae);
+    void addDomainVariable(essentials::IdentifierConstPtr robot, const std::string& ident, AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 

@@ -134,7 +134,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     }
 
     // some variables for the do while loop
-    const essentials::AgentIDConstPtr localAgentID = _ae->getTeamManager()->getLocalAgentID();
+    const essentials::IdentifierConstPtr localAgentID = _ae->getTeamManager()->getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     std::vector<RunningPlan*> rpChildren;

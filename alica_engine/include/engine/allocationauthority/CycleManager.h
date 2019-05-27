@@ -5,8 +5,6 @@
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 
-#include <essentials/AgentID.h>
-
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -53,7 +51,7 @@ private:
     int maxAllocationCycles;
     bool enabled;
 
-    essentials::AgentIDConstPtr myID;
+    essentials::IdentifierConstPtr myID;
 
     AlicaTime overrideTimestamp;
     double intervalIncFactor;

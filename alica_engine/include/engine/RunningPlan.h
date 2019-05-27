@@ -9,7 +9,6 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
-#include "essentials/AgentID.h"
 
 #include <SystemConfig.h>
 
@@ -202,7 +201,7 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    essentials::AgentIDConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
+    essentials::IdentifierConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:

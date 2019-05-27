@@ -2,7 +2,7 @@
 
 #include "engine/model/EntryPoint.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <memory>
 
@@ -15,17 +15,17 @@ namespace alica
 class EntryPointRobotPair final
 {
 public:
-    EntryPointRobotPair(const EntryPoint* ep, essentials::AgentIDConstPtr r);
+    EntryPointRobotPair(const EntryPoint* ep, essentials::IdentifierConstPtr r);
     const EntryPoint* getEntryPoint() const;
     void setEntryPoint(const EntryPoint* entryPoint);
-    essentials::AgentIDConstPtr getRobot() const { return _robot; }
-    void setRobot(essentials::AgentIDConstPtr robot);
+    essentials::IdentifierConstPtr getRobot() const { return _robot; }
+    void setRobot(essentials::IdentifierConstPtr robot);
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 protected:
     const EntryPoint* _entryPoint;
-    essentials::AgentIDConstPtr _robot;
+    essentials::IdentifierConstPtr _robot;
 };
 
 } /* namespace alica */

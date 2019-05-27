@@ -1,6 +1,6 @@
 #pragma once
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <string>
 #include <unordered_map>
@@ -32,7 +32,7 @@ class Transition;
 class Variable;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
-using AgentGrp = std::vector<essentials::AgentIDConstPtr>;
+using AgentGrp = std::vector<essentials::IdentifierConstPtr>;
 using AlicaElementGrp = std::vector<const AlicaElement*>;
 using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
 using CapabilityGrp = std::vector<const Capability*>;
@@ -56,6 +56,6 @@ using VariableGrp = std::vector<const Variable*>;
 
 using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
 
-using AgentStatePair = std::pair<essentials::AgentIDConstPtr, const State*>;
+using AgentStatePair = std::pair<essentials::IdentifierConstPtr, const State*>;
 
 } // namespace alica

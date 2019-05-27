@@ -2,7 +2,7 @@
 
 #include <engine/Types.h>
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <engine/AlicaClock.h>
 
@@ -35,7 +35,7 @@ public:
     void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
-    const std::map<essentials::AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
+    const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
     int successesInPlan(const Plan* plan);
     SuccessCollection createSuccessCollection(const Plan* plan) const;
@@ -48,7 +48,7 @@ public:
 private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
-    std::unique_ptr<SimplePlanTree> sptFromMessage(essentials::AgentIDConstPtr agent, const IdGrp& ids, AlicaTime time) const;
+    std::unique_ptr<SimplePlanTree> sptFromMessage(essentials::IdentifierConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 
     AlicaEngine* _ae;
     Agent* _me;
@@ -57,7 +57,7 @@ private:
     std::mutex _msgQueueMutex;
     mutable std::mutex successMarkMutex;
 
-    std::map<essentials::AgentIDConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
+    std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
     std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
 };
 

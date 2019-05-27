@@ -6,8 +6,6 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
 
-#include <essentials/AgentID.h>
-
 #include <iterator>
 
 namespace alica
@@ -55,7 +53,7 @@ private:
 
 //-----------------------------View & Iterator classes below
 // All iterators are const, as this is a const interface.
-class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     PartialAssignmentIterator(int agentIdx, int epIdx, const PartialAssignment* pas)
@@ -65,7 +63,7 @@ public:
     {
         toNextValid();
     }
-    essentials::AgentIDConstPtr operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
+    essentials::IdentifierConstPtr operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
     PartialAssignmentIterator& operator++()
     {
         ++_agentIdx;
@@ -105,7 +103,7 @@ private:
     int _epIdx;
 };
 
-class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, essentials::AgentIDConstPtr>
+class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
 {
 public:
     PartialAssignmentSuccessIteratorBase(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
@@ -115,7 +113,7 @@ public:
             , _inSuccessRange(successRange)
     {
     }
-    essentials::AgentIDConstPtr operator*() const
+    essentials::IdentifierConstPtr operator*() const
     {
         if (_inSuccessRange) {
             return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];

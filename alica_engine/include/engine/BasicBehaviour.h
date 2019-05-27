@@ -4,7 +4,6 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
-#include <essentials/AgentID.h>
 #include <essentials/Timer.h>
 #include <essentials/ITrigger.h>
 
@@ -74,7 +73,7 @@ public:
     virtual void init() {}
 
 protected:
-    essentials::AgentIDConstPtr getOwnId() const;
+    essentials::IdentifierConstPtr getOwnId() const;
     AlicaEngine* getEngine() const { return _engine; }
 
     /**

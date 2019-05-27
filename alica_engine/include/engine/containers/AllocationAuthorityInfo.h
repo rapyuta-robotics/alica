@@ -2,7 +2,7 @@
 
 #include "EntryPointRobots.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iterator>
 #include <ostream>
@@ -12,7 +12,7 @@
 namespace alica
 {
 
-typedef std::tuple<essentials::AgentIDConstPtr, int64_t, int64_t, int64_t, essentials::AgentIDConstPtr, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+typedef std::tuple<essentials::IdentifierConstPtr, int64_t, int64_t, int64_t, essentials::IdentifierConstPtr, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()
@@ -24,11 +24,11 @@ struct AllocationAuthorityInfo
     {
     }
 
-    essentials::AgentIDConstPtr senderID;
+    essentials::IdentifierConstPtr senderID;
     int64_t planId;
     int64_t parentState;
     int64_t planType;
-    essentials::AgentIDConstPtr authority;
+    essentials::IdentifierConstPtr authority;
     std::vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)

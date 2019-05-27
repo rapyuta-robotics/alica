@@ -89,9 +89,6 @@ void BehaviourPool::terminateAll()
 void BehaviourPool::startBehaviour(RunningPlan& rp)
 {
     if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
-        if (this == nullptr) {
-            std::cout << "BehaviourPool: " << _availableBehaviours.size() << std::endl;
-        }
         const std::shared_ptr<BasicBehaviour>& bb = _availableBehaviours.at(beh);
         if (bb != nullptr) {
             // set both directions rp <-> bb

@@ -2,7 +2,7 @@
 
 #include "engine/containers/SyncData.h"
 
-#include <essentials/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <tuple>
 #include <vector>
@@ -10,7 +10,7 @@
 namespace alica
 {
 
-typedef std::tuple<essentials::AgentIDConstPtr, std::vector<stdSyncData>> stdSyncTalk;
+typedef std::tuple<essentials::IdentifierConstPtr, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk
 {
     SyncTalk()
@@ -19,7 +19,7 @@ struct SyncTalk
     }
     ~SyncTalk() {}
 
-    essentials::AgentIDConstPtr senderID;
+    essentials::IdentifierConstPtr senderID;
     std::vector<SyncData> syncData;
 
     SyncTalk(const stdSyncTalk& s)

@@ -10,7 +10,7 @@
 namespace alica
 {
 
-BehaviourConfiguration* BehaviourConfigurationFactory::create(const YAML::Node& node)
+BehaviourConfiguration* BehaviourConfigurationFactory::create(const YAML::Node& node, Behaviour* behaviour)
 {
     BehaviourConfiguration* behaviourConf = new BehaviourConfiguration();
     Factory::setAttributes(node, behaviourConf);
@@ -22,6 +22,8 @@ BehaviourConfiguration* BehaviourConfigurationFactory::create(const YAML::Node& 
             behaviourConf->_parameters.insert(std::pair<std::string, std::string>(it->first.as<std::string>(), it->second.as<std::string>()));
         }
     }
+
+    behaviourConf->_behaviour = behaviour;
 
     return behaviourConf;
 }

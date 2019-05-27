@@ -37,7 +37,7 @@ namespace alica
         if (Factory::isValid(node[alica::Strings::behaviourConfigurations])) {
             const YAML::Node& behaviourConfigurations = node[alica::Strings::behaviourConfigurations];
             for (YAML::const_iterator it = behaviourConfigurations.begin(); it != behaviourConfigurations.end(); ++it) {
-                BehaviourConfiguration* behaviourConf = BehaviourConfigurationFactory::create(*it);
+                BehaviourConfiguration* behaviourConf = BehaviourConfigurationFactory::create(*it, behaviour);
                 behaviour->_behaviourConfigurations.push_back(behaviourConf);
                 std::cout << "BehaviourFactory: " << behaviourConf->toString() << std::endl;
             }

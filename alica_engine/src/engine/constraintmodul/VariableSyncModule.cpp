@@ -44,7 +44,7 @@ void VariableSyncModule::init()
     _ttl4Usage = AlicaTime::milliseconds((*sc)["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     _distThreshold = (*sc)["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
-    essentials::AgentIDConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
+    essentials::IdentifierConstPtr ownId = _ae->getTeamManager()->getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));

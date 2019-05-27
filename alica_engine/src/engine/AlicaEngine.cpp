@@ -20,7 +20,7 @@
 #include "engine/syncmodule/SyncModule.h"
 
 #include <alica_common_config/debug_output.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/IDManager.h>
 
 namespace alica
 {
@@ -38,7 +38,7 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(
-        essentials::AgentIDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+        essentials::IDManager* idManager, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : stepCalled(false)
         , planBase(nullptr)
         , communicator(nullptr)
@@ -326,11 +326,11 @@ void AlicaEngine::stepNotify()
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding AgentID object.
+ * message and receiving a pointer to a corresponding Identifier object.
  */
-essentials::AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector) const
+essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type) const
 {
-    return essentials::AgentIDConstPtr(this->agentIDManager->getIDFromBytes(idByteVector));
+    return essentials::IdentifierConstPtr(this->agentIDManager->getIDFromBytes(idBytes, idSize, type));
 }
 
 

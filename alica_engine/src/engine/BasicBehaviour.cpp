@@ -78,7 +78,7 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-essentials::AgentIDConstPtr BasicBehaviour::getOwnId() const
+essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager()->getLocalAgentID();
 }
