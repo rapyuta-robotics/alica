@@ -9,13 +9,13 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
   capnzero
-  id
+  id_capnzero
 )
 
 catkin_package(
         INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
         LIBRARIES alica_capnzero_proxy alica_capnz_msgs
-        CATKIN_DEPENDS alica_engine capnzero
+        CATKIN_DEPENDS alica_engine capnzero id_capnzero
 )
 
 include_directories(
@@ -25,7 +25,7 @@ include_directories(
 
 #### ALICA CAPNZERO MESSAGES
 find_package(CapnProto REQUIRED)
-set(CAPNPC_IMPORT_DIRS "${id_SOURCE_PREFIX}/include")# include external capnp message schema files
+set(CAPNPC_IMPORT_DIRS "${id_capnzero_SOURCE_PREFIX}/include")# include external capnp message schema files
 set(${PROJECT_NAME}_msgs "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
 file(GLOB_RECURSE capnp_messages ${${PROJECT_NAME}_msgs} *.capnp)
 set(CAPNPC_SRC_PREFIX ${${PROJECT_NAME}_msgs})

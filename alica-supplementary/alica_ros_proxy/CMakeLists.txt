@@ -37,7 +37,7 @@ add_library(alica_ros_proxy
 	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
 )
 
-add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp agent_id_generate_messages_cpp)
+add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp id_ros_generate_messages_cpp)
 
 target_link_libraries(alica_ros_proxy
   ${catkin_LIBRARIES}

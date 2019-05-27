@@ -10,7 +10,7 @@ struct AllocationAuthorityInfo {
     parentState @2 :Int64;
     planType @3 :Int64;
     authority @4 :IDMsg.ID;
-    entrypoints @5 :List(EntrypointRobots);
+    entrypointRobots @5 :List(EntrypointRobots);
 
 }
 

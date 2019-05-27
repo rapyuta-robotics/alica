@@ -12,7 +12,7 @@
 
     <depend>alica_engine</depend>
     <depend>capnzero</depend>
-    <depend>id</depend>
+    <depend>id_capnzero</depend>
 
     <export>
     </export>

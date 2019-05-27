@@ -130,9 +130,10 @@ void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::Allocation
     msg.setPlanType(aai.planType);
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(aai.senderID->getRaw(), (unsigned int) aai.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(aai.senderID->getType()));
     capnzero::ID::Builder authority = msg.initAuthority();
     authority.setValue(kj::arrayPtr(aai.authority->getRaw(), (unsigned int) aai.authority->getSize()));
-    ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Builder entrypoints = msg.initEntrypoints((unsigned int) aai.entryPointRobots.size());
+    ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Builder entrypoints = msg.initEntrypointRobots((unsigned int) aai.entryPointRobots.size());
     for (unsigned int i = 0; i < aai.entryPointRobots.size(); ++i) {
         auto ep = aai.entryPointRobots[i];
         alica_capnz_msgs::EntrypointRobots::Builder tmp = entrypoints[i];
@@ -141,6 +142,7 @@ void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::Allocation
         for (unsigned int j = 0; j < ep.robots.size(); ++i) {
             capnzero::ID::Builder tmpUUID = tmpRobots[j];
             tmpUUID.setValue(kj::arrayPtr(ep.robots[j]->getRaw(), (unsigned int) ep.robots[j]->getSize()));
+            tmpUUID.setType(static_cast<capnzero::IDType>(ep.robots[j]->getType()));
         }
     }
 
@@ -159,6 +161,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
 
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(bi.senderID->getRaw(), (unsigned int) bi.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(bi.senderID->getType()));
 
     msg.setMasterPlan(bi.masterPlan);
     msg.setCurrentPlan(bi.currentPlan);
@@ -171,6 +174,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
         auto& robo = bi.robotIDsWithMe[i];
         capnzero::ID::Builder tmp = agents[0];
         tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
+        tmp.setType(static_cast<capnzero::IDType>(robo->getType()));
     }
 
     if (this->isRunning) {
@@ -187,6 +191,7 @@ void AlicaCapnzeroCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti
     alica_capnz_msgs::PlanTreeInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::PlanTreeInfo>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(pti.senderID->getRaw(), (unsigned int) pti.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(pti.senderID->getType()));
     ::capnp::List<int64_t>::Builder stateIds = msg.initStateIds((unsigned int) pti.stateIDs.size());
     for (unsigned int i = 0; i < pti.stateIDs.size(); ++i) {
         stateIds.set(i, pti.stateIDs[i]);
@@ -210,6 +215,7 @@ void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch& rs) con
     alica_capnz_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::RoleSwitch>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(rs.senderID->getRaw(), (unsigned int) rs.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(rs.senderID->getType()));
     msg.setRoleId(rs.roleID);
 
     if (this->isRunning) {
@@ -227,6 +233,7 @@ void AlicaCapnzeroCommunication::sendSyncReady(const alica::SyncReady& sr) const
 
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(sr.senderID->getType()));
     msg.setSynchronisationId(sr.synchronisationID);
 
     if (this->isRunning) {
@@ -243,6 +250,7 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
     alica_capnz_msgs::SyncTalk::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SyncTalk>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(st.senderID->getRaw(), (unsigned int) st.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(st.senderID->getType()));
 
     ::capnp::List<alica_capnz_msgs::SyncData>::Builder syncData = msg.initSyncData((unsigned int) st.syncData.size());
     for (unsigned int i = 0; i < st.syncData.size(); ++i) {
@@ -250,6 +258,7 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
         alica_capnz_msgs::SyncData::Builder tmpData = syncData[i];
         capnzero::ID::Builder tmpId = tmpData.initRobotId();
         tmpId.setValue(kj::arrayPtr(ds.robotID->getRaw(), (unsigned int) ds.robotID->getSize()));
+        tmpId.setType(static_cast<capnzero::IDType>(ds.robotID->getType()));
         tmpData.setAck(ds.ack);
         tmpData.setTransitionHolds(ds.conditionHolds);
         tmpData.setTransitionId(ds.transitionID);
@@ -269,6 +278,7 @@ void AlicaCapnzeroCommunication::sendSolverResult(const alica::SolverResult& sr)
     alica_capnz_msgs::SolverResult::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SolverResult>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
+    sender.setType(static_cast<capnzero::IDType>(sr.senderID->getType()));
     ::capnp::List<alica_capnz_msgs::SolverVar>::Builder vars = msg.initVars((unsigned int) sr.vars.size());
     for (unsigned int i = 0; i < sr.vars.size(); ++i) {
         auto& var = sr.vars[i];
@@ -289,29 +299,24 @@ void AlicaCapnzeroCommunication::handleAllocationAuthority(::capnp::FlatArrayMes
 {
     alica::AllocationAuthorityInfo aai;
     alica_capnz_msgs::AllocationAuthorityInfo::Reader reader = msg.getRoot<alica_capnz_msgs::AllocationAuthorityInfo>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    aai.senderID = essentials::AgentIDFactory().create(id);
+    aai.senderID = this->ae->getIDFromBytes(reader.getSenderId().getValue().asBytes().begin(), reader.getSenderId().getValue().size(),
+                                            static_cast<uint8_t>(reader.getSenderId().getType()));
     aai.planId = reader.getPlanId();
     aai.planType = reader.getPlanType();
     aai.parentState = reader.getParentState();
-    id.clear();
-    id.assign(reader.getAuthority().getValue().begin(), reader.getAuthority().getValue().end());
-    aai.authority = essentials::AgentIDFactory().create(id);
-    ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Reader entrypoints = reader.getEntrypoints();
-    std::vector<alica::EntryPointRobots> epData;
-    for (unsigned int i = 0; i < entrypoints.size(); ++i) {
-        alica::EntryPointRobots tmp;
-        alica_capnz_msgs::EntrypointRobots::Reader tmpEp = entrypoints[i];
-        tmp.entrypoint = tmpEp.getEntrypoint();
-        std::vector<essentials::AgentID> agentIds;
-        ::capnp::List<capnzero::ID>::Reader robots = tmpEp.getRobots();
-        for (unsigned int j = 0; j < robots.size(); ++j) { // Not shure if this works!!!
-            id.clear();
-            capnzero::ID::Reader tmpUUID = robots[j];
-            id.assign(tmpUUID.getValue().begin(), tmpUUID.getValue().end());
-            essentials::AgentIDConstPtr tmpItem = essentials::AgentIDFactory().create(id);
-            agentIds.push_back(*tmpItem);
+    aai.authority = this->ae->getIDFromBytes(reader.getAuthority().getValue().asBytes().begin(), reader.getAuthority().getValue().size(), static_cast<uint8_t>(reader.getAuthority().getType()));
+    ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Reader entryPointRobots = reader.getEntrypointRobots();
+    for (unsigned int i = 0; i < entryPointRobots.size(); ++i) {
+        aai.entryPointRobots.emplace_back();
+
+        alica_capnz_msgs::EntrypointRobots::Reader tmpEntrypointRobot = entryPointRobots[i];
+        aai.entryPointRobots[i].entrypoint = tmpEntrypointRobot.getEntrypoint();
+
+        ::capnp::List<capnzero::ID>::Reader robots = tmpEntrypointRobot.getRobots();
+        for (unsigned int j = 0; j < robots.size(); ++j) {
+            // CapnProto uses uint16_t for enums, but we use uint8_t hopefully it works for us - otherwise we need a matching/translation via switch case
+            aai.entryPointRobots[i].robots.push_back(
+                    this->ae->getIDFromBytes(robots[j].getValue().asBytes().begin(), robots[j].getValue().size(), (uint8_t) robots[j].getType()));
         }
     }
 
@@ -327,10 +332,10 @@ void AlicaCapnzeroCommunication::handlePlanTreeInfo(::capnp::FlatArrayMessageRea
 {
     auto ptiPtr = make_shared<alica::PlanTreeInfo>();
     alica_capnz_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnz_msgs::PlanTreeInfo>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    ptiPtr->senderID = essentials::AgentIDFactory().create(id);
-    id.clear();
+
+    ptiPtr->senderID = ae->getIDFromBytes(
+            reader.getSenderId().getValue().asBytes().begin(), reader.getSenderId().getValue().size(), (uint8_t) reader.getSenderId().getType());
+
     std::vector<int64_t> stateIds;
     ::capnp::List<int64_t>::Reader states = reader.getStateIds();
     for (unsigned int i = 0; i < states.size(); ++i) {
@@ -355,9 +360,8 @@ void AlicaCapnzeroCommunication::handleSyncReady(::capnp::FlatArrayMessageReader
 {
     auto srPtr = make_shared<alica::SyncReady>();
     alica_capnz_msgs::SyncReady::Reader reader = msg.getRoot<alica_capnz_msgs::SyncReady>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    srPtr->senderID = essentials::AgentIDFactory().create(id);
+    srPtr->senderID = ae->getIDFromBytes(
+            reader.getSenderId().getValue().asBytes().begin(), reader.getSenderId().getValue().size(), (uint8_t) reader.getSenderId().getType());
     srPtr->synchronisationID = reader.getSynchronisationId();
 
     if (this->isRunning) {
@@ -372,10 +376,8 @@ void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader&
 {
     auto stPtr = make_shared<alica::SyncTalk>();
     alica_capnz_msgs::SyncTalk::Reader reader = msg.getRoot<alica_capnz_msgs::SyncTalk>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    stPtr->senderID = essentials::AgentIDFactory().create(id);
-    id.clear();
+    stPtr->senderID = ae->getIDFromBytes(
+            reader.getSenderId().getValue().asBytes().begin(), reader.getSenderId().getValue().size(), (uint8_t) reader.getSenderId().getType());
     capnp::List<alica_capnz_msgs::SyncData>::Reader msgSyncData = reader.getSyncData();
     std::vector<alica::SyncData> data;
     for (unsigned int i = 0; i < msgSyncData.size(); ++i) {
@@ -384,9 +386,8 @@ void AlicaCapnzeroCommunication::handleSyncTalk(::capnp::FlatArrayMessageReader&
         sds.ack = tmpSyncData.getAck();
         sds.conditionHolds = tmpSyncData.getTransitionHolds();
         sds.transitionID = tmpSyncData.getTransitionId();
-        id.assign(tmpSyncData.getRobotId().getValue().begin(), tmpSyncData.getRobotId().getValue().end());
-        sds.robotID = essentials::AgentIDFactory().create(id);
-        id.clear();
+        sds.robotID = ae->getIDFromBytes(tmpSyncData.getRobotId().getValue().asBytes().begin(), tmpSyncData.getRobotId().getValue().size(),
+                (uint8_t) tmpSyncData.getRobotId().getType());
         data.push_back(sds);
     }
     stPtr->syncData = data;
@@ -403,10 +404,8 @@ void AlicaCapnzeroCommunication::handleSolverResult(::capnp::FlatArrayMessageRea
 {
     alica::SolverResult osr;
     alica_capnz_msgs::SolverResult::Reader reader = msg.getRoot<alica_capnz_msgs::SolverResult>();
-    std::vector<uint8_t> id;
-    id.assign(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().end());
-    osr.senderID = essentials::AgentIDFactory().create(id);
-    id.clear();
+    osr.senderID = ae->getIDFromBytes(reader.getSenderId().getValue().asBytes().begin(), reader.getSenderId().getValue().size(),
+                                   (uint8_t) reader.getSenderId().getType());
     std::vector<alica::SolverVar> solverVars;
     capnp::List<alica_capnz_msgs::SolverVar>::Reader msgSolverVars = reader.getVars();
     for (unsigned int i = 0; i < msgSolverVars.size(); ++i) {

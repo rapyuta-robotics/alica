@@ -1,9 +1,8 @@
 #include <communication/AlicaCapnzeroCommunication.h>
 #include <engine/AlicaEngine.h>
-#include <essentials/AgentIDFactory.h>
 #include <engine/containers/AllocationAuthorityInfo.h>
 #include <engine/containers/EntryPointRobots.h>
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 #include <capnp/common.h>
 #include <capnp/message.h>
@@ -23,7 +22,7 @@ int main(int argc, char* argv[])
     alicaCapnzeroProxy::AlicaCapnzeroCommunication *com = new alicaCapnzeroProxy::AlicaCapnzeroCommunication(ae);
     com->startCommunication();
     com->sendLogMessage(1, "Test");
-    essentials::AgentIDConstPtr own = essentials::AgentIDFactory().generateID(16);
+    essentials::IdentifierConstPtr own = essentials::IDManager().generateID(16);
     alica::AllocationAuthorityInfo authorityInfo;
     authorityInfo.senderID = own;
     authorityInfo.authority = own;

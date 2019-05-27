@@ -6,8 +6,9 @@
 #include "alica_msgs/SolverResult.h"
 #include "alica_msgs/SyncReady.h"
 #include "alica_msgs/SyncTalk.h"
-#include "engine/IAlicaCommunication.h"
-#include "essentials/AgentID.h"
+
+#include <engine/IAlicaCommunication.h>
+#include <essentials/Identifier.h>
 #include <SystemConfig.h>
 
 #include <ros/ros.h>
