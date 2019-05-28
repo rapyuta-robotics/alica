@@ -107,7 +107,7 @@ TEST(BroadCastID, NotEqualWithNormalID)
     }
     essentials::Identifier* normalID = new essentials::Identifier(bytes1.data(), bytes1.size());
     std::vector<uint8_t> bytesBroadcast;
-    essentials::Identifier* broadcastID = new essentials::BroadcastID(bytesBroadcast.data(), bytesBroadcast.size());
+    essentials::Identifier* broadcastID = new essentials::WildcardID(bytesBroadcast.data(), bytesBroadcast.size());
 
     ASSERT_FALSE(*broadcastID == *normalID);
 
@@ -119,9 +119,9 @@ TEST(BroadCastID, EqualWithBroadcastID)
 {
     std::vector<uint8_t> bytesBroadcast1;
     bytesBroadcast1.push_back(1);
-    essentials::Identifier* broadcastID1 = new essentials::BroadcastID(bytesBroadcast1.data(), bytesBroadcast1.size());
+    essentials::Identifier* broadcastID1 = new essentials::WildcardID(bytesBroadcast1.data(), bytesBroadcast1.size());
     std::vector<uint8_t> bytesBroadcast2;
-    essentials::Identifier* broadcastID2 = new essentials::BroadcastID(bytesBroadcast2.data(), bytesBroadcast2.size());
+    essentials::Identifier* broadcastID2 = new essentials::WildcardID(bytesBroadcast2.data(), bytesBroadcast2.size());
 
     ASSERT_TRUE(*broadcastID1 == *broadcastID2);
 
@@ -131,7 +131,7 @@ TEST(BroadCastID, EqualWithBroadcastID)
 
 TEST(IdentifierFactory, GenerateIDsOfVariousLength)
 {
-    essentials::IdentifierFactory factory;
+    essentials::IDManager factory;
 
     auto id1 = factory.generateID(1);
     ASSERT_EQ(id1->getSize(), 1);
@@ -148,18 +148,17 @@ TEST(IdentifierFactory, GenerateIDsOfVariousLength)
 
 TEST(IdentifierFactory, DuplicateIDs)
 {
-    essentials::IdentifierFactory factory;
-    auto id18 = factory.generateID(18);
-    auto id18Copy = factory.create(id18->toByteVector());
+    essentials::IDManager idManager;
+    auto id18 = idManager.generateID(18);
+    auto id18Copy = idManager.getIDFromBytes(id18->toByteVector().data(), id18->toByteVector().size());
     ASSERT_TRUE(*id18 == *id18Copy);
 }
 
 TEST(IdentifierManager, CreateIDsFromIntegralTypes)
 {
-    essentials::IdentifierFactory* factory = new essentials::IdentifierFactory();
-    essentials::IdentifierManager idManager(factory);
+    essentials::IDManager* idManager = new essentials::IDManager();
     int idInt = 5;
-    auto intId5 = idManager.getID<int>(idInt);
+    auto intId5 = idManager->getID<int>(idInt);
 
     std::vector<uint8_t> idBytes;
     idBytes.push_back(5);
@@ -173,30 +172,28 @@ TEST(IdentifierManager, CreateIDsFromIntegralTypes)
 
 TEST(IdentifierManager, GuarenteeSingleEntities)
 {
-    essentials::IdentifierFactory* factory = new essentials::IdentifierFactory();
-    essentials::IdentifierManager idManager(factory);
+    essentials::IDManager* idManager = new essentials::IDManager();
     int idInt = 5;
-    auto intId1 = idManager.getID<int>(idInt);
-    auto intId2 = idManager.getID<int>(idInt);
+    auto intId1 = idManager->getID<int>(idInt);
+    auto intId2 = idManager->getID<int>(idInt);
 
     ASSERT_EQ(intId1, intId2);
 }
 
 TEST(IdentifierManager, GenerateIDsOfVariousLength)
 {
-    essentials::IdentifierFactory* factory = new essentials::IdentifierFactory();
-    essentials::IdentifierManager idManager(factory);
+    essentials::IDManager* idManager = new essentials::IDManager();
 
-    auto id1 = idManager.generateID(1);
+    auto id1 = idManager->generateID(1);
     ASSERT_EQ(id1->getSize(), 1);
 
-    auto id4 = idManager.generateID(4);
+    auto id4 = idManager->generateID(4);
     ASSERT_EQ(id4->getSize(), 4);
 
-    auto id15 = idManager.generateID(15);
+    auto id15 = idManager->generateID(15);
     ASSERT_EQ(id15->getSize(), 15);
 
-    auto id18 = idManager.generateID(18);
+    auto id18 = idManager->generateID(18);
     ASSERT_EQ(id18->getSize(), 18);
 }
 
