@@ -5,12 +5,13 @@
 namespace alica
 {
 
-constexpr int ALICA_VERSION_MAJOR = 1;
-constexpr int ALICA_VERSION_MINOR = 0;
+constexpr int ALICA_VERSION_MAJOR = 0;
+constexpr int ALICA_VERSION_MINOR = 9;
 constexpr int ALICA_VERSION_PATCH = 0;
 constexpr int ALICA_VERSION = (ALICA_VERSION_MAJOR * 10000) + (ALICA_VERSION_MINOR * 100) + ALICA_VERSION_PATCH;
 constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
+constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
 AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : _validTag(ALICA_CTX_GOOD)
@@ -71,7 +72,7 @@ void AlicaContext::stepEngine()
 {
     _engine->stepNotify();
     do {
-        _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+        _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
     } while (!_engine->getPlanBase().isWaiting());
 }
 
