@@ -2,7 +2,7 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/AgentIDConstPtr.h"
+#include "essentials/IdentifierConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
@@ -50,7 +50,7 @@ protected:
         cout << sc->getConfigPath() << endl;
 
         sc->setHostname("nase");
-        ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "MasterPlanTaskAssignment", false);
+        ae = new alica::AlicaEngine(new essentials::IDManager(), "RolesetTA", "MasterPlanTaskAssignment", false);
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();
@@ -77,7 +77,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake a list of existing robots
     alica::AgentGrp robots;
     for (int number = 8; number <= 11; number++) {
-        alica::AgentIDConstPtr agentID = ae->getId<int>(number);
+        essentials::IdentifierConstPtr agentID = ae->getId<int>(number);
         robots.push_back(agentID);
         ae->getTeamManager()->setTimeLastMsgReceived(agentID, ae->getAlicaClock()->now());
     }

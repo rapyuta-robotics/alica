@@ -31,11 +31,11 @@ using namespace std;
 #include "engine/model/Quantifier.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include "engine/model/SyncTransition.h"
+#include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
 #include "engine/model/Transition.h"
-#include "engine/parser/PlanWriter.h"
+#include "engine/modelmanagement/PlanWriter.h"
 #include <engine/AlicaEngine.h>
 
 class AlicaEngineTest : public AlicaTestFixture
@@ -145,7 +145,7 @@ protected:
         EXPECT_EQ(outState, transition->getOutState()->getId()) << "Unknown id for OutState!" << endl;
     }
 
-    static void checkSyncTransition(const alica::SyncTransition* transition, long id, string name, string comment, int talkTimeout, int syncTimeout)
+    static void checkSyncTransition(const alica::Synchronisation* transition, long id, string name, string comment, int talkTimeout, int syncTimeout)
     {
         checkAlicaElement(transition, id, name, comment);
         EXPECT_EQ(alica::AlicaTime::milliseconds(talkTimeout), transition->getTalkTimeOut()) << "Wrong talkTimeout!" << endl;
@@ -513,12 +513,12 @@ TEST_F(AlicaEngineTest, planParser)
                 case 1402489276995:
                     checkTransition(
                             t, 1402489276995, "MISSING_NAME", "", 1402489278408, 1402488787818, 1402489273401, "MISSING_NAME", "", "", "DefaultPlugin", true);
-                    EXPECT_EQ(1402500865502, t->getSyncTransition()->getId()) << "Wrong synctransition ID!" << endl;
+                    EXPECT_EQ(1402500865502, t->getSynchronisation()->getId()) << "Wrong synctransition ID!" << endl;
                     break;
                 case 1402500843072:
                     checkTransition(
                             t, 1402500843072, "MISSING_NAME", "", 1402500844446, 1402500830885, 1402500833246, "MISSING_NAME", "", "", "DefaultPlugin", true);
-                    checkSyncTransition(t->getSyncTransition(), 1402500865502, "SynChro", "", 30, 10000);
+                    checkSyncTransition(t->getSynchronisation(), 1402500865502, "SynChro", "", 30, 10000);
 
                     break;
                 default:
