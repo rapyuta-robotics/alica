@@ -53,7 +53,7 @@ protected:
 
         // setup the engine
         ae = new alica::AlicaEngine(
-                new essentials::AgentIDManager(new essentials::AgentIDFactory()), getRoleSetName(), getMasterPlanName(), stepEngine());
+                new essentials::IDManager(), getRoleSetName(), getMasterPlanName(), stepEngine());
         bc = new alica::BehaviourCreator();
         cc = new alica::ConditionCreator();
         uc = new alica::UtilityFunctionCreator();

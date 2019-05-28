@@ -69,16 +69,16 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::AllocationDifference result;
     util.setReason(alica::AllocationDifference::Reason::utility);
     msg.setReason(alica::AllocationDifference::Reason::message);
-    alica::Task t1(1, false);
-    alica::Task t2(2, false);
-    alica::EntryPoint e1(1, nullptr, &t1, nullptr);
-    alica::EntryPoint e2(2, nullptr, &t2, nullptr);
+    alica::Task* t1 = new alica::Task();
+    alica::Task* t2 = new alica::Task();
+    alica::EntryPoint e1(1, nullptr, t1, nullptr);
+    alica::EntryPoint e2(2, nullptr, t2, nullptr);
 
     const char* aname = "aa";
     const char* bname = "bb";
 
-    essentials::AgentID a1(reinterpret_cast<const uint8_t*>(aname), 2);
-    essentials::AgentID a2(reinterpret_cast<const uint8_t*>(bname), 2);
+    essentials::Identifier a1(reinterpret_cast<const uint8_t*>(aname), 2);
+    essentials::Identifier a2(reinterpret_cast<const uint8_t*>(bname), 2);
 
     alica::EntryPointRobotPair aTot1(&e1, &a1);
     alica::EntryPointRobotPair bTot1(&e1, &a2);
@@ -102,6 +102,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     EXPECT_FALSE(result.isEmpty());
     result.applyDifference(msg);
     EXPECT_TRUE(result.isEmpty());
+    delete t1;
+    delete t2;
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority)
@@ -109,13 +111,13 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     // ASSERT_NO_SIGNAL
 
     sc->setHostname("nase");
-    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
+    ae = new alica::AlicaEngine(new essentials::IDManager(), "RolesetTA", "AuthorityTestMaster", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("hairy");
-    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "AuthorityTestMaster", true);
+    ae2 = new alica::AlicaEngine(new essentials::IDManager(), "RolesetTA", "AuthorityTestMaster", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
@@ -128,8 +130,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
     dbr2->robotId = ae2->getTeamManager()->getLocalAgentID();
 
-    alica::AgentIDConstPtr id1 = ae->getTeamManager()->getLocalAgentID();
-    alica::AgentIDConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
+    essentials::IdentifierConstPtr id1 = ae->getTeamManager()->getLocalAgentID();
+    essentials::IdentifierConstPtr id2 = ae2->getTeamManager()->getLocalAgentID();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
     ae->start();

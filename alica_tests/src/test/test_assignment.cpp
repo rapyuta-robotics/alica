@@ -3,10 +3,10 @@
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
-#include <engine/parser/PlanParser.h>
+#include <engine/modelmanagement/PlanParser.h>
+#include <essentials/IDManager.h>
 #include <gtest/gtest.h>
 #include <ros/ros.h>
-#include <essentials/AgentIDFactory.h>
 #include <vector>
 
 using alica::Assignment;
@@ -15,8 +15,7 @@ using alica::Plan;
 using alica::PlanParser;
 using alica::PlanRepository;
 using alica::State;
-using essentials::AgentID;
-using essentials::AgentIDFactory;
+using essentials::Identifier;
 
 TEST(Assignment, RobotsInserted)
 {
@@ -31,13 +30,13 @@ TEST(Assignment, RobotsInserted)
     sc->setConfigPath(path + "/etc");
     sc->setHostname("nase");
 
-    AgentIDFactory idfac;
+    essentials::IDManager idManager;
     std::vector<uint8_t> b1 = {0x2, 0, 0, 0};
     std::vector<uint8_t> b2 = {0x1, 0, 0, 0};
     std::vector<uint8_t> b3 = {0x3, 0, 0, 0};
-    const AgentID* robot1 = idfac.create(b1);
-    const AgentID* robot2 = idfac.create(b2);
-    const AgentID* robot3 = idfac.create(b3);
+    const Identifier* robot1 = idManager.getIDFromBytes(b1.data(), b1.size());
+    const Identifier* robot2 = idManager.getIDFromBytes(b2.data(), b2.size());
+    const Identifier* robot3 = idManager.getIDFromBytes(b3.data(), b3.size());
 
     ASSERT_EQ(robot2->getRaw()[0], 0x1);
     ASSERT_EQ(robot1->getRaw()[0], 0x2);
@@ -89,7 +88,7 @@ TEST(Assignment, RobotsInserted)
 
     int i = 0;
 
-    for (alica::AgentIDConstPtr id : as1.getAgentsInState(s1)) {
+    for (essentials::IdentifierConstPtr id : as1.getAgentsInState(s1)) {
         EXPECT_TRUE(bool(id));
         ++i;
     }

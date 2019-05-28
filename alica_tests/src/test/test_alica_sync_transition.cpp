@@ -1,18 +1,18 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "DummyTestSummand.h"
-#include "TestConstantValueSummand.h"
-#include "TestWorldModel.h"
-#include "UtilityFunctionCreator.h"
-#include "engine/IAlicaCommunication.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
-#include "engine/TeamObserver.h"
-#include "engine/UtilityFunction.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
+#include <BehaviourCreator.h>
+#include <ConditionCreator.h>
+#include <ConstraintCreator.h>
+#include <DummyTestSummand.h>
+#include <TestConstantValueSummand.h>
+#include <TestWorldModel.h>
+#include <UtilityFunctionCreator.h>
+#include <engine/IAlicaCommunication.h>
+#include <engine/PlanBase.h>
+#include <engine/PlanRepository.h>
+#include <engine/TeamObserver.h>
+#include <engine/UtilityFunction.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
+#include <engine/teammanager/TeamManager.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -68,13 +68,13 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     ASSERT_NO_SIGNAL
 
     sc->setHostname("hairy");
-    ae = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
+    ae = new alica::AlicaEngine(new essentials::IDManager(), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae->setAlicaClock(new alica::AlicaClock());
     ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
     EXPECT_TRUE(ae->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
 
     sc->setHostname("nase");
-    ae2 = new alica::AlicaEngine(new essentials::AgentIDManager(new essentials::AgentIDFactory()), "RolesetTA", "RealMasterPlanForSyncTest", true);
+    ae2 = new alica::AlicaEngine(new essentials::IDManager(), "RolesetTA", "RealMasterPlanForSyncTest", true);
     ae2->setAlicaClock(new alica::AlicaClock());
     ae2->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae2));
     EXPECT_TRUE(ae2->init(bc, cc, uc, crc)) << "Unable to initialise the Alica Engine!";
