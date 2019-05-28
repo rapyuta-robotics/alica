@@ -26,20 +26,12 @@ uint8_t AgentID::getType() const
 
 bool AgentID::operator==(const AgentID& other) const
 {
-    if (_id.size() != other._id.size()) {
-        return false;
-    }
-    for (int i = 0; i < static_cast<int>(_id.size()); i++) {
-        if (_id[i] != other._id[i]) {
-            return false;
-        }
-    }
-    return true;
+    return (_id == other._id);
 }
 
 bool AgentID::operator!=(const AgentID& other) const
 {
-    return !(*this == other);
+    return (_id != other._id);
 }
 
 bool AgentID::operator<(const AgentID& other) const
@@ -62,20 +54,7 @@ bool AgentID::operator<(const AgentID& other) const
 
 bool AgentID::operator>(const AgentID& other) const
 {
-    if (_id.size() > other._id.size()) {
-        return true;
-    } else if (_id.size() < other._id.size()) {
-        return false;
-    }
-    for (int i = 0; i < _id.size(); i++) {
-        if (_id[i] > other._id[i]) {
-            return true;
-        } else if (_id[i] < other._id[i]) {
-            return false;
-        }
-        // else continue, because both bytes where equal and the next byte needs to be considered
-    }
-    return false;
+    return other < *this;
 }
 
 void AgentID::operator=(const std::vector<uint8_t>& other_id)
