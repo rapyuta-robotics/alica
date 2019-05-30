@@ -76,7 +76,7 @@ std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
         }
     }
     if (!haveAny) {
-        out << "No EntryPoint successful!";
+        out << "No EntryPoint successful.";
     }
     return out;
 }
