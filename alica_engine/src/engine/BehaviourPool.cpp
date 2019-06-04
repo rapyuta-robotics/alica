@@ -7,7 +7,6 @@
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 
 #include <alica_common_config/debug_output.h>
 

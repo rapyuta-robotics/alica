@@ -30,6 +30,7 @@ public:
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
     bool idExists(const int64_t id);
+    const EntryPoint* generateIdleEntryPoint();
 
 private:
     friend Factory;

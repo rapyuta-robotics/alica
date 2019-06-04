@@ -101,7 +101,6 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         ALICA_INFO_MSG("MM: " << beh->toString());
     }
 
-
     return masterPlan;
 }
 
@@ -152,7 +151,7 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
         }
     }
 
-    AlicaEngine::abort("MM: Could not find any default role set in '" + rolesetDir +"'");
+    AlicaEngine::abort("MM: Could not find any default role set in '" + rolesetDir + "'");
 
     // need to return something, but it should never be reached (either found something, or abort)
     return files[0];

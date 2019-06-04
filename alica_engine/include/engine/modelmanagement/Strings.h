@@ -77,6 +77,6 @@ namespace alica {
         static const std::string taskPriorities = "taskPriorities";
         static const std::string defaultRoleSet = "defaultRoleSet";
         static const std::string behaviourConfigurations = "configurations";
-        static const std::string keyValuePairs = "keyValuePairs";
+        static const std::string parameters = "parameters";
     }
 }

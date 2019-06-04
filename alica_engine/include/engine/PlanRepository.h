@@ -92,7 +92,6 @@ public:
         const MapType<T>& _ref;
     };
 
-    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const { return Accessor<BehaviourConfiguration>(_behaviourConfigurations); }
     const Accessor<Behaviour> getBehaviours() const { return Accessor<Behaviour>(_behaviours); }
     const Accessor<Capability> getCapabilities() const { return Accessor<Capability>(_capabilities); }
     const Accessor<Characteristic> getCharacteristics() const { return Accessor<Characteristic>(_characteristics); }
@@ -127,7 +126,6 @@ private:
     MapType<Plan> _plans;
     MapType<Task> _tasks;
     MapType<Behaviour> _behaviours;
-    MapType<BehaviourConfiguration> _behaviourConfigurations;
     MapType<PlanType> _planTypes;
     MapType<Role> _roles;
     MapType<Characteristic> _characteristics;

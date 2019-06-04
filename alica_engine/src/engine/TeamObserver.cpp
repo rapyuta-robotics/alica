@@ -270,7 +270,7 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
     if (incoming->senderID != _me->getId()) {
-        std::cout << "TeamObserver: IncomingID: '" << incoming->senderID << "' OwnID: '" << _me->getId() << "'" << std::endl;
+        ALICA_DEBUG_MSG("TeamObserver: IncomingID: '" << incoming->senderID << "' OwnID: '" << _me->getId() << "'");
         if (_tm->isAgentIgnored(incoming->senderID)) {
             return;
         }

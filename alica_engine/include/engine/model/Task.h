@@ -22,6 +22,7 @@ public:
     const TaskRepository* getTaskRepository() const { return _taskRepository; }
 
     static constexpr int64_t IDLEID = -1; // For Task Id of an Idle EntryPoint...
+    static const std::string IDLENAME;
 private:
     friend ModelFactory;
     friend TaskFactory;

@@ -8,7 +8,6 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/FailureState.h"
 #include "engine/model/ForallAgents.h"
