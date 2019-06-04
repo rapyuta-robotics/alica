@@ -7,7 +7,6 @@
 #include "engine/modelmanagement/factories/PostConditionFactory.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
 #include "engine/modelmanagement/factories/BehaviourConfigurationFactory.h"
-#include "engine/model/BehaviourConfiguration.h"
 
 namespace alica
 {
@@ -34,12 +33,10 @@ namespace alica
             behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
         }
 
-        if (Factory::isValid(node[alica::Strings::behaviourConfigurations])) {
-            const YAML::Node& behaviourConfigurations = node[alica::Strings::behaviourConfigurations];
-            for (YAML::const_iterator it = behaviourConfigurations.begin(); it != behaviourConfigurations.end(); ++it) {
-                BehaviourConfiguration* behaviourConf = BehaviourConfigurationFactory::create(*it, behaviour);
-                behaviour->_behaviourConfigurations.push_back(behaviourConf);
-                std::cout << "BehaviourFactory: " << behaviourConf->toString() << std::endl;
+        if (Factory::isValid(node[alica::Strings::parameters])) {
+            const YAML::Node &keyValuePairs = node[alica::Strings::parameters];
+            for (YAML::const_iterator it = keyValuePairs.begin(); it != keyValuePairs.end(); ++it) {
+                behaviour->_parameters.insert(std::pair<std::string, std::string>(it->first.as<std::string>(), it->second.as<std::string>()));
             }
         }
 

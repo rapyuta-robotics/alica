@@ -34,7 +34,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
-    const std::vector<BehaviourConfiguration*> getBehaviourConfigurations() const { return _behaviourConfigurations; }
+    const BehaviourParameterMap& getParameters() const { return _parameters; }
 
 private:
     friend ModelFactory;
@@ -70,9 +70,10 @@ private:
      */
     PostCondition* _postCondition;
     /**
-     * This behaviour's collection of configurations.
+     * The set of static parameters of this Behaviour configuration. Usually parsed by
+     * BasicBehaviour.InitializeParameters.
      */
-    std::vector<BehaviourConfiguration*> _behaviourConfigurations;
+    BehaviourParameterMap _parameters;
 };
 
 } // namespace alica

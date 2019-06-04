@@ -7,7 +7,6 @@
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
@@ -29,6 +28,7 @@ namespace alica
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
+        , _behaviourConfiguration(nullptr)
         , _engine(nullptr)
         , _failure(false)
         , _success(false)
@@ -61,6 +61,11 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     RunningPlan* curInRun;
     curInRun = _contextInRun;
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
+}
+
+void BasicBehaviour::setBehaviourConfiguration(const BehaviourConfiguration* behConf) {
+    assert(_behaviourConfiguration == nullptr);
+    _behaviourConfiguration = behConf;
 }
 
 void BasicBehaviour::setBehaviour(const Behaviour* beh)
@@ -227,12 +232,13 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    string configSectionName = (*sc)["BehaviourConfigurations"]->get<std::string>(
-            this->getName().c_str(), this->getPlanContext().getRunningPlan()->getActiveState()->getId(), NULL);
-    valueOut = (*sc)["BehaviourConfigurations"]->get<std::string>(this->getName().c_str(), configSectionName.c_str(), key.c_str(), NULL);
-    // if we don't get here, system config has thrown an exception
-    return true;
+    const auto& entry = this->_behaviour->getParameters().find(key);
+    if (entry != this->_behaviour->getParameters().end()) {
+        valueOut = entry->second;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 } /* namespace alica */

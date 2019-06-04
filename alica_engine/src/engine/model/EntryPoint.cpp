@@ -13,6 +13,8 @@
 namespace alica
 {
 
+const std::string EntryPoint::IDLENAME = "IDLE-EP";
+
 EntryPoint::EntryPoint()
         : _task(nullptr)
         , _state(nullptr)

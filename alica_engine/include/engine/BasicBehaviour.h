@@ -40,6 +40,7 @@ public:
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
 
+    void setBehaviourConfiguration(const BehaviourConfiguration* behConf);
     void setBehaviour(const Behaviour* beh);
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
@@ -98,6 +99,7 @@ private:
     std::string _name;
 
     const Behaviour* _behaviour;
+    const BehaviourConfiguration* _behaviourConfiguration;
     AlicaEngine* _engine;
     RunningPlan* _context;
 

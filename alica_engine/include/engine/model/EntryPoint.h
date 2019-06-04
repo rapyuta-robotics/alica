@@ -32,6 +32,7 @@ public:
      * A value encoding the do-nothing task used in loosely coupled task allocation.
      */
     constexpr static int64_t IDLEID = -1; // For Idle EntryPoint...
+    const static std::string IDLENAME;
 
     std::string toString(std::string indent = "") const override;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
@@ -53,7 +54,6 @@ public:
     int getIndex() const { return _index; }
 
 private:
-    friend ModelFactory;
     friend EntryPointFactory;
     friend ModelManager;
     void computeReachabilitySet();

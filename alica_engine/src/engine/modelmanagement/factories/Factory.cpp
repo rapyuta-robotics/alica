@@ -2,8 +2,8 @@
 
 #include "engine/PlanRepository.h"
 #include "engine/model/AlicaElement.h"
-#include "engine/modelmanagement/Strings.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/modelmanagement/Strings.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -43,7 +43,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
     std::string locator = idString.substr(0, idxOfHashtag);
     if (!locator.empty()) {
         std::string fileReferenced;
-        if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) || essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
+        if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) ||
+                essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
                 essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
@@ -124,14 +125,17 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->planRepository->_roles.emplace(ael->getId(), (Role*) ael);
     } else if (alica::Strings::roleset.compare(type) == 0) {
         modelManager->planRepository->_roleSets.emplace(ael->getId(), (RoleSet*) ael);
-    } else if (alica::Strings::behaviourConfiguration.compare(type) == 0) {
-        modelManager->planRepository->_behaviourConfigurations.emplace(ael->getId(), (BehaviourConfiguration*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing: Type is '" + type + "'");
     }
+}
+
+void Factory::setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id) {
+    element->setName(name);
+    element->setId(id);
 }
 
 } // namespace alica

@@ -9,7 +9,6 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
