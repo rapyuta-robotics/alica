@@ -32,7 +32,6 @@ public:
     std::condition_variable runCV;
 
     bool started; /** < Is always true except when the worker is shutting down. */
-    bool running; /** < Tells us whether the worker is currently running (or active). */
 
     std::thread* runThread;   /** < Executes the runInternal and thereby the abstract run method. */
     essentials::Timer* timer; /** < Triggers the condition_variable of the runThread. */

@@ -12,7 +12,6 @@ Worker::Worker(std::string name)
         , started(true)
         , runCV()
 {
-    this->running = false;
     this->timer = new essentials::Timer(0, 0);
     this->timer->registerCV(&this->runCV);
     this->runThread = new std::thread(&Worker::runInternal, this);
