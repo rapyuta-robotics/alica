@@ -112,9 +112,6 @@ AlicaCapnzeroCommunication::~AlicaCapnzeroCommunication()
     delete this->SyncReadySubscriber;
     delete this->PlanTreeInfoSubscriber;
     delete this->AllocationAuthorityInfoSubscriber;
-    //TODO implement these subscribers
-    delete this->RoleSwitchSubscriber;
-    delete this->AlicaEngineInfoSubscriber;
 
     // Delete zmq context:
     zmq_ctx_shutdown(this->ctx);
