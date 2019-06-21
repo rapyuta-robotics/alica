@@ -129,7 +129,7 @@ void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::Allocation
     msg.setPlanType(aai.planType);
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(aai.senderID->getRaw(), (unsigned int) aai.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(aai.senderID->getType()));
+    sender.setType(aai.senderID->getType());
     capnzero::ID::Builder authority = msg.initAuthority();
     authority.setValue(kj::arrayPtr(aai.authority->getRaw(), (unsigned int) aai.authority->getSize()));
     ::capnp::List<alica_capnz_msgs::EntrypointRobots>::Builder entrypoints = msg.initEntrypointRobots((unsigned int) aai.entryPointRobots.size());
@@ -141,7 +141,7 @@ void AlicaCapnzeroCommunication::sendAllocationAuthority(const alica::Allocation
         for (unsigned int j = 0; j < ep.robots.size(); ++i) {
             capnzero::ID::Builder tmpUUID = tmpRobots[j];
             tmpUUID.setValue(kj::arrayPtr(ep.robots[j]->getRaw(), (unsigned int) ep.robots[j]->getSize()));
-            tmpUUID.setType(static_cast<capnzero::IDType>(ep.robots[j]->getType()));
+            tmpUUID.setType(ep.robots[j]->getType());
         }
     }
 
@@ -160,7 +160,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
 
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(bi.senderID->getRaw(), (unsigned int) bi.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(bi.senderID->getType()));
+    sender.setType(bi.senderID->getType());
 
     msg.setMasterPlan(bi.masterPlan);
     msg.setCurrentPlan(bi.currentPlan);
@@ -173,7 +173,7 @@ void AlicaCapnzeroCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInf
         auto& robo = bi.robotIDsWithMe[i];
         capnzero::ID::Builder tmp = agents[0];
         tmp.setValue(kj::arrayPtr(robo->getRaw(), (unsigned int) robo->getSize()));
-        tmp.setType(static_cast<capnzero::IDType>(robo->getType()));
+        tmp.setType(robo->getType());
     }
 
     if (this->isRunning) {
@@ -190,7 +190,7 @@ void AlicaCapnzeroCommunication::sendPlanTreeInfo(const alica::PlanTreeInfo& pti
     alica_capnz_msgs::PlanTreeInfo::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::PlanTreeInfo>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(pti.senderID->getRaw(), (unsigned int) pti.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(pti.senderID->getType()));
+    sender.setType(pti.senderID->getType());
     ::capnp::List<int64_t>::Builder stateIds = msg.initStateIds((unsigned int) pti.stateIDs.size());
     for (unsigned int i = 0; i < pti.stateIDs.size(); ++i) {
         stateIds.set(i, pti.stateIDs[i]);
@@ -214,7 +214,7 @@ void AlicaCapnzeroCommunication::sendRoleSwitch(const alica::RoleSwitch& rs) con
     alica_capnz_msgs::RoleSwitch::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::RoleSwitch>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(rs.senderID->getRaw(), (unsigned int) rs.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(rs.senderID->getType()));
+    sender.setType(rs.senderID->getType());
     msg.setRoleId(rs.roleID);
 
     if (this->isRunning) {
@@ -232,7 +232,7 @@ void AlicaCapnzeroCommunication::sendSyncReady(const alica::SyncReady& sr) const
 
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(sr.senderID->getType()));
+    sender.setType(sr.senderID->getType());
     msg.setSynchronisationId(sr.synchronisationID);
 
     if (this->isRunning) {
@@ -249,7 +249,7 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
     alica_capnz_msgs::SyncTalk::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SyncTalk>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(st.senderID->getRaw(), (unsigned int) st.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(st.senderID->getType()));
+    sender.setType(st.senderID->getType());
 
     ::capnp::List<alica_capnz_msgs::SyncData>::Builder syncData = msg.initSyncData((unsigned int) st.syncData.size());
     for (unsigned int i = 0; i < st.syncData.size(); ++i) {
@@ -257,7 +257,7 @@ void AlicaCapnzeroCommunication::sendSyncTalk(const alica::SyncTalk& st) const
         alica_capnz_msgs::SyncData::Builder tmpData = syncData[i];
         capnzero::ID::Builder tmpId = tmpData.initRobotId();
         tmpId.setValue(kj::arrayPtr(ds.robotID->getRaw(), (unsigned int) ds.robotID->getSize()));
-        tmpId.setType(static_cast<capnzero::IDType>(ds.robotID->getType()));
+        tmpId.setType(ds.robotID->getType());
         tmpData.setAck(ds.ack);
         tmpData.setTransitionHolds(ds.conditionHolds);
         tmpData.setTransitionId(ds.transitionID);
@@ -277,7 +277,7 @@ void AlicaCapnzeroCommunication::sendSolverResult(const alica::SolverResult& sr)
     alica_capnz_msgs::SolverResult::Builder msg = msgBuilder.initRoot<alica_capnz_msgs::SolverResult>();
     capnzero::ID::Builder sender = msg.initSenderId();
     sender.setValue(kj::arrayPtr(sr.senderID->getRaw(), (unsigned int) sr.senderID->getSize()));
-    sender.setType(static_cast<capnzero::IDType>(sr.senderID->getType()));
+    sender.setType(sr.senderID->getType());
     ::capnp::List<alica_capnz_msgs::SolverVar>::Builder vars = msg.initVars((unsigned int) sr.vars.size());
     for (unsigned int i = 0; i < sr.vars.size(); ++i) {
         auto& var = sr.vars[i];
