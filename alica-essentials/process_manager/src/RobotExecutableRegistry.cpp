@@ -111,7 +111,7 @@ const essentials::Identifier* RobotExecutableRegistry::getRobotId(const std::str
 
 const essentials::Identifier* RobotExecutableRegistry::getRobotId(const std::vector<uint8_t>& idVector, std::string& robotName)
 {
-    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size(), Identifier::INT_TYPE);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size());
     auto agentEntry = this->robotMap.find(agentID);
     if (agentEntry != this->robotMap.end()) { // entry already exists -> delete created id and return existing data
         robotName = agentEntry->second->name;
@@ -124,7 +124,7 @@ const essentials::Identifier* RobotExecutableRegistry::getRobotId(const std::vec
 
 const essentials::Identifier* RobotExecutableRegistry::getRobotId(const vector<uint8_t>& idVector)
 {
-    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size(), Identifier::INT_TYPE);
+    auto agentID = this->agentIDManager->getIDFromBytes(idVector.data(), idVector.size());
     auto agentEntry = this->robotMap.find(agentID);
 
     if (agentEntry != this->robotMap.end()) {
@@ -173,7 +173,7 @@ const essentials::Identifier* RobotExecutableRegistry::addRobot(string agentName
         for (int i = 0; i < sizeof(int); i++) {
             agentIDVector.push_back(*(((uint8_t*) &tmpID) + i));
         }
-        agentID = this->agentIDManager->getIDFromBytes(agentIDVector.data(), agentIDVector.size(), Identifier::INT_TYPE);
+        agentID = this->agentIDManager->getIDFromBytes(agentIDVector.data(), agentIDVector.size());
     } catch (const std::runtime_error* e) {
         agentID = nullptr;
         do {

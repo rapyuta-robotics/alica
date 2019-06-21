@@ -19,7 +19,7 @@ public:
     virtual bool operator<(const Identifier& other) const;
     virtual bool operator>(const Identifier& other) const;
     virtual const uint8_t* getRaw() const;
-    virtual int getSize() const;
+    virtual size_t getSize() const;
     virtual std::vector<uint8_t> toByteVector() const;
     virtual std::size_t hash() const;
     virtual uint8_t getType() const;
@@ -50,7 +50,6 @@ public:
 
     const uint8_t TYPE;
 
-    static const uint8_t INT_TYPE = 0;
     static const uint8_t WILDCARD_TYPE = 1;
     static const uint8_t UUID_TYPE = 2;
 

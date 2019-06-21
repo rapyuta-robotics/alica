@@ -33,12 +33,12 @@ const essentials::Identifier* IDManager::getIDFromBytes(const uint8_t *idBytes, 
     return *(entry.first);
 }
 
-const essentials::Identifier* IDManager::generateID(int size) const
+const essentials::Identifier* IDManager::generateID(int size)
 {
     uuid_t uuid; // a UUID is 16 bytes long
     if (size <= 16) {
         uuid_generate(uuid);
-        return new essentials::Identifier(uuid, size);
+        return this->getIDFromBytes(uuid, size);
     } else { // in case you need an id which is longer than 16 bytes
         std::vector<uint8_t> bytes;
         while (bytes.size() < size) {
@@ -47,13 +47,8 @@ const essentials::Identifier* IDManager::generateID(int size) const
                 bytes.push_back(uuid[i]);
             }
         }
-        return new essentials::Identifier(bytes.data(), size);
+        return this->getIDFromBytes(bytes.data(), size);
     }
 }
-
-// const essentials::Identifier* IDManager::create(const std::vector<uint8_t>& bytes) const
-//{
-//    return new essentials::Identifier(bytes.data(), bytes.size());
-//}
 
 } // namespace essentials

@@ -77,7 +77,7 @@ const uint8_t* Identifier::getRaw() const
     return this->id.data();
 }
 
-int Identifier::getSize() const
+size_t Identifier::getSize() const
 {
     return this->id.size();
 }
