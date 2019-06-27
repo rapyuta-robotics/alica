@@ -50,8 +50,8 @@ public:
 
     const uint8_t TYPE;
 
-    static const uint8_t WILDCARD_TYPE = 1;
-    static const uint8_t UUID_TYPE = 2;
+    static const uint8_t WILDCARD_TYPE = 0;
+    static const uint8_t UUID_TYPE = 1;
 
 private:
     std::vector<uint8_t> id;
