@@ -236,15 +236,14 @@ class Configuration
         }
 
         ConfigNode* currentNode = this->configRoot.get();
-        const auto* children = currentNode->getChildren();
         size_t ind = 0;
         while (ind < params.size()) {
             auto children = currentNode->findChildren(params[ind]);
             if (children.empty()) {
                 if (ind == params.size() - 1) {
-                    currentNode->create(params[ind], stringify(value));
+                    currentNode = currentNode->create(params[ind], stringify(value));
                 } else {
-                    currentNode->create(params[ind]);
+                    currentNode = currentNode->create(params[ind]);
                 }
             } else {
                 // We chose the first,  should be the only one !
