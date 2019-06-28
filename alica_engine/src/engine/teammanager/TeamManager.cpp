@@ -86,12 +86,10 @@ void TeamManager::readSelfFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
-<<<<<<< HEAD
-    int id = sc["Local"]->tryGet<int>(-1, "Local", "ID", NULL);
-=======
-    unsigned long long id = sc["Local"]->tryGet<unsigned long long>(-1, "Local", "ID", NULL);
->>>>>>> d49bd7e... impletemtation of the PersistID option
-    if (id != -1) {
+    
+    constexpr auto notAValidID = (unsigned long long)(-1);
+    unsigned long long id = sc["Local"]->tryGet<unsigned long long>(notAValidID, "Local", "ID", NULL);
+    if (id != notAValidID) {
         _localAnnouncement.senderID = _engine->getId(id);
     } else {
         _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
