@@ -45,7 +45,6 @@ public:
     int getAgentCount() const { return _agents.size(); }
     const AgentGrp& getAgents() const { return _agents; }
 
-    std::string toString() const;
     const SuccessCollection* getSuccessData(const Plan* p) const
     {
         for (int i = 0; i < static_cast<int>(_plans.size()); ++i) {
@@ -57,6 +56,8 @@ public:
     }
 
 private:
+    friend std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
+
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
     const TeamManager& _tm;
@@ -74,5 +75,7 @@ private:
     int _expansionCount;
 #endif
 };
+std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
+
 
 } /* namespace alica */

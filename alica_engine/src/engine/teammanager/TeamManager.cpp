@@ -9,6 +9,7 @@
 #include <alica_common_config/debug_output.h>
 
 #include <SystemConfig.h>
+#include <random>
 #include <utility>
 
 namespace alica
