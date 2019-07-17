@@ -8,6 +8,7 @@
 #include "essentials/AgentIDFactory.h"
 #include <alica_common_config/debug_output.h>
 
+#include <random>
 #include <SystemConfig.h>
 #include <utility>
 
