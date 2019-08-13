@@ -14,6 +14,7 @@
 
 #include <essentials/AgentID.h>
 //#define ALICA_DEBUG_LEVEL_ALL
+
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -111,29 +112,6 @@ Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss
     return newAss;
 }
 
-std::string TaskAssignmentProblem::toString() const
-{
-    std::stringstream ss;
-    ss << std::endl;
-    ss << "--------------------TA:--------------------" << std::endl;
-    ss << "NumRobots: " << _agents.size() << std::endl;
-    ss << "RobotIDs: ";
-    for (AgentIDConstPtr id : _agents) {
-        ss << *id << " ";
-    }
-    ss << std::endl;
-    ss << "Initial Fringe (Count " << _fringe.size() << "):" << std::endl;
-    ss << "{";
-    for (PartialAssignment* pa : _fringe) // Initial PartialAssignments
-    {
-        ss << *pa << std::endl;
-    }
-    ss << "}" << std::endl;
-    ss << "-------------------------------------------" << std::endl;
-    ;
-    return ss.str();
-}
-
 PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
     PartialAssignment* goal = nullptr;
@@ -181,6 +159,29 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, cons
         }
     }
     return haveToRevalute;
+}
+
+
+std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
+{
+    out << std::endl;
+    out << "--------------------TA:--------------------" << std::endl;
+    out << "Agent count: " << tap._agents.size() << std::endl;
+    out << "AgentIDs: ";
+    for (AgentIDConstPtr id : tap._agents) {
+        out << *id << " ";
+    }
+    out << std::endl;
+    out << "Initial Fringe (Count " << tap._fringe.size() << "):" << std::endl;
+    out << "{";
+    for (const PartialAssignment* pa : tap._fringe) // Initial PartialAssignments
+    {
+        out << *pa << std::endl;
+    }
+    out << "}" << std::endl;
+    out << "-------------------------------------------" << std::endl;
+    ;
+    return out;
 }
 
 } /* namespace alica */
