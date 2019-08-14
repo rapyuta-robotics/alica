@@ -8,6 +8,7 @@
 #include "essentials/AgentIDFactory.h"
 #include <alica_common_config/debug_output.h>
 
+#include <random>
 #include <SystemConfig.h>
 #include <random>
 #include <utility>
@@ -85,7 +86,7 @@ void TeamManager::readSelfFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
-    int id = sc["Local"]->tryGet<int>(-1, "Local", localAgentName.c_str(), "ID", NULL);
+    int id = sc["Local"]->tryGet<int>(-1, "Local", "ID", NULL);
     if (id != -1) {
         _localAnnouncement.senderID = _engine->getId(id);
     } else {
@@ -99,7 +100,7 @@ void TeamManager::readSelfFromConfig()
     _localAnnouncement.senderSdk = _engine->getVersion();
     // TODO: add plan hash
     _localAnnouncement.planHash = 0;
-    const std::string myRole = sc["Local"]->get<std::string>("Local", localAgentName.c_str(), "DefaultRole", NULL);
+    const std::string myRole = sc["Local"]->get<std::string>("Local", "DefaultRole", NULL);
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
         if (role->getName() == myRole) {
@@ -107,13 +108,13 @@ void TeamManager::readSelfFromConfig()
         }
     }
 
-    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", localAgentName.c_str(), NULL);
+    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", NULL);
     for (const std::string& s : *properties) {
         if (s == "ID" || s == "DefaultRole") {
             continue;
         }
 
-        std::string svalue = sc["Local"]->get<std::string>("Local", localAgentName.c_str(), s.c_str(), NULL);
+        std::string svalue = sc["Local"]->get<std::string>("Local", s.c_str(), NULL);
         _localAnnouncement.capabilities.emplace_back(s, svalue);
     }
 
