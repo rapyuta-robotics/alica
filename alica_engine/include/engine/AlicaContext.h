@@ -16,6 +16,7 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "essentials/AgentID.h"
 
 namespace alica
 {
@@ -23,6 +24,7 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestEngineGetter;
+using AgentID = essentials::AgentID;
 
 /**
  * Alica options that can be set at runtime.
@@ -119,7 +121,7 @@ public:
      *
      * @param roleSetName Name for roleset
      * @param masterPlanName Name for the main plan
-     * @param stepEngine (?)
+     * @param stepEngine Signify engine is trigger based.
      *
      * @note This is the main alica api class
      */
@@ -215,6 +217,25 @@ public:
      */
     bool isValid();
 
+    /**
+     * Returns id for the last of currently active state of engine.
+     *
+     * @return "0" if engine is in invalid state or "state id" as per plan.
+     */
+    int64_t getCurrentState() const;
+
+    /**
+     * Returns agent id for this alica context.
+     *
+     * @return Object representing id.
+     */
+    AgentID getLocalAgentId() const;
+
+    /**
+     * Execute one step of engine synchronously
+     */
+    void stepEngine();
+
     // TODO: Implement
     template <class T>
     int set(AlicaOption option, T optval);
@@ -234,14 +255,22 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
+#if (defined __cplusplus && __cplusplus >= 201402L)
     _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
+#else
+    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+#endif
 }
 
 template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
+#if (defined __cplusplus && __cplusplus >= 201402L)
     _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
+#else
+    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine.get(), std::forward<Args>(args)...)));
+#endif
 }
 
 template <class SolverType>
