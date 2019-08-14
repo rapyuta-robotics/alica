@@ -1,46 +1,50 @@
 #include "essentials/AgentID.h"
 
-namespace essentials {
+namespace essentials
+{
+
+AgentID::AgentID(const std::vector<uint8_t>& bytes)
+    : _type(UUID_TYPE)
+    , _id(bytes)
+{
+}
 
 AgentID::AgentID(const uint8_t* idBytes, int idSize, uint8_t type)
-        : TYPE(type) {
+    : _type(type)
+{
     for (int i = 0; i < idSize; i++) {
-        this->id.push_back(idBytes[i]);
+        _id.push_back(idBytes[i]);
     }
 }
 
 AgentID::~AgentID(){};
 
-uint8_t AgentID::getType() const {
-    return this->TYPE;
+uint8_t AgentID::getType() const
+{
+    return _type;
 }
 
-bool AgentID::operator==(const AgentID& other) const {
-    if (this->id.size() != other.id.size()) {
-        return false;
-    }
-    for (int i = 0; i < static_cast<int>(this->id.size()); i++) {
-        if (this->id[i] != other.id[i]) {
-            return false;
-        }
-    }
-    return true;
+bool AgentID::operator==(const AgentID& other) const
+{
+    return (_id == other._id);
 }
 
-bool AgentID::operator!=(const AgentID& other) const {
-    return !(*this == other);
+bool AgentID::operator!=(const AgentID& other) const
+{
+    return (_id != other._id);
 }
 
-bool AgentID::operator<(const AgentID& other) const {
-    if (this->id.size() < other.id.size()) {
+bool AgentID::operator<(const AgentID& other) const
+{
+    if (_id.size() < other._id.size()) {
         return true;
-    } else if (this->id.size() > other.id.size()) {
+    } else if (_id.size() > other._id.size()) {
         return false;
     }
-    for (int i = 0; i < this->id.size(); i++) {
-        if (this->id[i] < other.id[i]) {
+    for (int i = 0; i < _id.size(); i++) {
+        if (_id[i] < other._id[i]) {
             return true;
-        } else if (this->id[i] > other.id[i]) {
+        } else if (_id[i] > other._id[i]) {
             return false;
         }
         // else continue, because both bytes where equal and the next byte needs to be considered
@@ -48,33 +52,30 @@ bool AgentID::operator<(const AgentID& other) const {
     return false;
 }
 
-bool AgentID::operator>(const AgentID& other) const {
-    if (this->id.size() > other.id.size()) {
-        return true;
-    } else if (this->id.size() < other.id.size()) {
-        return false;
-    }
-    for (int i = 0; i < this->id.size(); i++) {
-        if (this->id[i] > other.id[i]) {
-            return true;
-        } else if (this->id[i] < other.id[i]) {
-            return false;
-        }
-        // else continue, because both bytes where equal and the next byte needs to be considered
-    }
-    return false;
+bool AgentID::operator>(const AgentID& other) const
+{
+    return other < *this;
 }
 
-const uint8_t* AgentID::getRaw() const {
-    return this->id.data();
+void AgentID::operator=(const std::vector<uint8_t>& other_id)
+{
+    _id = other_id;
+    _type = UUID_TYPE;
 }
 
-int AgentID::getSize() const {
-    return this->id.size();
+const uint8_t* AgentID::getRaw() const
+{
+    return _id.data();
 }
 
-std::vector<uint8_t> AgentID::toByteVector() const {
-    return this->id;
+int AgentID::getSize() const
+{
+    return _id.size();
+}
+
+std::vector<uint8_t> AgentID::toByteVector() const
+{
+    return _id;
 }
 
 /**
@@ -82,13 +83,14 @@ std::vector<uint8_t> AgentID::toByteVector() const {
  * https://en.wikipedia.org/wiki/MurmurHash
  * https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
  */
-std::size_t AgentID::hash() const {
-    const uint8_t* key = this->id.data();
-    int len = this->id.size();
+std::size_t AgentID::hash() const
+{
+    const uint8_t* key = _id.data();
+    int len = _id.size();
     uint32_t h = 13;
     if (len > 3) {
-        const uint32_t* key_x4 = (const uint32_t*) key;
-        size_t i = this->id.size() >> 2;
+        const uint32_t* key_x4 = (const uint32_t*)key;
+        size_t i = _id.size() >> 2;
         do {
             uint32_t k = *key_x4++;
             k *= 0xcc9e2d51;
@@ -98,7 +100,7 @@ std::size_t AgentID::hash() const {
             h = (h << 13) | (h >> 19);
             h = (h * 5) + 0xe6546b64;
         } while (--i);
-        key = (const uint8_t*) key_x4;
+        key = (const uint8_t*)key_x4;
     }
     if (len & 3) {
         size_t i = len & 3;
