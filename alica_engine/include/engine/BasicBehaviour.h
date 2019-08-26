@@ -50,11 +50,11 @@ public:
     bool start();
     void terminate();
 
-    void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = std::chrono::milliseconds(msDelayedStart); }
+    void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
 
-    void setInterval(int32_t msInterval) { _msInterval = std::chrono::milliseconds(msInterval); }
+    void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(_contextInRun); }
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isBehaviourStarted() && !isStopCalled() ? _context : nullptr); }
     void setRunningPlan(RunningPlan* rp) { _context = rp; }
 
     bool isSuccess() const;
@@ -89,9 +89,28 @@ protected:
     virtual void onTermination() {}
 
 private:
-    void runInternalTimed();
-    void runInternalTriggered();
-    void initInternal();
+    enum BehaviourResult { UNKNOWN, SUCCESS, FAILURE };
+    enum BehaviourState { UNINITIALIZED, STARTED, RUNNING };
+    enum SignalState { START, STOP, TERMINATE };
+
+    SignalState getSignalState() const { return _signalState; }
+    void setSignalState(SignalState signalState) { _signalState = signalState; }
+    bool isTerminated() const { return _signalState == SignalState::TERMINATE; }
+    BehaviourState getBehaviourState() const { return _behaviourState.load(); }
+    void setBehaviourState(BehaviourState state) { _behaviourState.store(state); }
+    BehaviourResult getBehaviourResult() const { return _behaviourResult.load(); }
+    void setBehaviourResult(BehaviourResult result) { _behaviourResult.store(result); }
+    bool isStopCalled() const { return _stopCalled.load(); }
+    void setStopCalled(bool val) { _stopCalled.store(val); }
+    bool isBehaviourStarted() const { return _behaviourState.load() != BehaviourState::UNINITIALIZED; }
+
+    void runThread(bool timed);
+
+    // wait, init, run & stop the behaviour
+    bool doWait();
+    void doInit(bool timed);
+    void doRun(bool timed);
+    void doStop();
 
     /**
      * The name of this behaviour.
@@ -102,24 +121,11 @@ private:
     AlicaEngine* _engine;
     RunningPlan* _context;
 
-    /**
-     * is always true except when the behaviour is shutting down
-     */
-    bool _started;
-    bool _callInit;
-    /**
-     * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
-     */
-    bool _success;
-    /**
-     * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
-     */
-    bool _failure;
-    /**
-     * Tells us whether the behaviour is currently running (or active)
-     */
-    bool _running;
-    std::atomic<RunningPlan*> _contextInRun;
+    SignalState _signalState; // current state of the signal from main thread (start, stop or terminate)
+    std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
+
+    std::atomic<BehaviourResult> _behaviourResult;
+    std::atomic<BehaviourState> _behaviourState;
 
     std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
 
@@ -127,7 +133,7 @@ private:
                                                   is event triggered, alternative to timer */
     std::condition_variable _runCV;
     mutable std::mutex _runLoopMutex;
-    std::chrono::milliseconds _msInterval;
-    std::chrono::milliseconds _msDelayedStart;
+    AlicaTime _msInterval;
+    AlicaTime _msDelayedStart;
 };
 } /* namespace alica */
