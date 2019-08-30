@@ -5,6 +5,7 @@
 
 namespace alica
 {
+class AlicaEngine;
 
 class AlicaTime
 {
@@ -128,10 +129,15 @@ private:
 class AlicaClock
 {
 public:
-    AlicaClock() {}
-    virtual ~AlicaClock() {}
+    AlicaClock(AlicaEngine* ae)
+    :ae(ae) {};
+    AlicaClock () {};
+    virtual ~AlicaClock() {};
     virtual AlicaTime now() const;
-    void sleep(const AlicaTime&) const;
+    virtual void sleep(const AlicaTime&) const;
+
+protected:
+    AlicaEngine* ae;
 };
 
 } // namespace alica

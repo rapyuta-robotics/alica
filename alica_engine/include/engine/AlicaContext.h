@@ -157,6 +157,26 @@ public:
     int terminate();
 
     /**
+     * Set Alica Clock choose between RosClock or systemClock (std::chrono)
+     * 
+     * @note ClockType must be a derived class of AlicaClock
+     * @note This must be called before initializing context
+     */
+    template <class ClockType, class... Args>
+    void setClock(Args&&... args);
+
+    /**
+     * Get communicator being used by this alica instance.
+     *
+     * @return A reference to alica clock object being used by context
+     */
+    const AlicaClock& getAlicaClock() const
+    {
+        assert(_clock.get());
+        return *_clock;
+    }
+
+    /**
      * Set communicator to be used by this alica framework instance.
      * Example usage: setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
      *
@@ -249,7 +269,19 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unique_ptr<IAlicaCommunication> _communicator;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+    std::unique_ptr<AlicaClock> _clock;
 };
+
+template <class ClockType, class... Args>
+void AlicaContext::setClock(Args&&... args)
+{
+    static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _clock = std::make_unique<ClockType>(_engine.get(), std::forward<Args>(args)...);
+#else
+    _clock = std::unique_ptr<ClockType>(new ClockType(_engine.get(), std::forward<Args>(args)...));
+#endif
+}
 
 template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
