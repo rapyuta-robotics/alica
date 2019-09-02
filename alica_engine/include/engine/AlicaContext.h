@@ -166,7 +166,7 @@ public:
     void setClock(Args&&... args);
 
     /**
-     * Get communicator being used by this alica instance.
+     * Get clock being used by this alica instance.
      *
      * @return A reference to alica clock object being used by context
      */
