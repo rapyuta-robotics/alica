@@ -26,14 +26,15 @@ AlicaViewerCapnzeroInterface::AlicaViewerCapnzeroInterface(int argc, char* argv[
     this->alicaEngineInfoTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.alicaEngineInfoTopic", NULL);
     this->planTreeInfoTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.planTreeInfoTopic", NULL);
 
-    this->AlicaPlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx, this->planTreeInfoTopic);
-    this->AlicaEngineInfoSubscriber = new capnzero::Subscriber(this->ctx, this->alicaEngineInfoTopic);
+    this->AlicaPlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx, this->planTreeInfoTopic, &AlicaViewerCapnzeroInterface::alicaPlanInfoCallback, &(*this));
+    this->AlicaEngineInfoSubscriber = new capnzero::Subscriber(this->ctx, this->alicaEngineInfoTopic, &AlicaViewerCapnzeroInterface::alicaEngineInfoCallback, &(*this));
 
-    this->AlicaPlanTreeInfoSubscriber->connect(capnzero::CommType::UDP, this->url);
-    this->AlicaEngineInfoSubscriber->connect(capnzero::CommType::UDP, this->url);
+    this->AlicaPlanTreeInfoSubscriber->addAddress(capnzero::CommType::UDP, this->url);
+    this->AlicaEngineInfoSubscriber->addAddress(capnzero::CommType::UDP, this->url);
 
-    this->AlicaPlanTreeInfoSubscriber->subscribe(&AlicaViewerCapnzeroInterface::alicaPlanInfoCallback, &(*this));
-    this->AlicaEngineInfoSubscriber->subscribe(&AlicaViewerCapnzeroInterface::alicaEngineInfoCallback, &(*this));
+    this->AlicaPlanTreeInfoSubscriber->connect();
+    this->AlicaEngineInfoSubscriber->connect();
+
 
     // Register custom structs in qt so that they can be used in slot and signal queues
     // This structure should have been previously declared as Q_DECLARE_METATYPE
