@@ -53,7 +53,7 @@ bool AlicaContext::isValid()
     return _validTag == ALICA_CTX_GOOD;
 }
 
-bool isStateActiveHelper(const RunningPlan* rp, int64_t id)
+bool AlicaContext::isStateActiveHelper(const RunningPlan* rp, int64_t id)
 {
     if (!rp) {
         return false;
@@ -73,6 +73,7 @@ bool isStateActiveHelper(const RunningPlan* rp, int64_t id)
 
 bool AlicaContext::isStateActive(int64_t id) const
 {
+    // This method should be used only when engine is trigger based
     assert(_engine->getStepEngine());
     return isStateActiveHelper(_engine->getPlanBase().getRootNode(), id);
 }
