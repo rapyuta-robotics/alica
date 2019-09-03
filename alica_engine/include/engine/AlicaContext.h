@@ -218,11 +218,12 @@ public:
     bool isValid();
 
     /**
-     * Returns id for the last of currently active state of engine.
+     * Checks if the state identified by id is currently active.
+     * This method should be used only when engine is trigger based.
      *
-     * @return "0" if engine is in invalid state or "state id" as per plan.
+     * @return True if the state identified by id is currently active, false otherwise
      */
-    int64_t getCurrentState() const;
+    bool isStateActive(int64_t id) const;
 
     /**
      * Returns agent id for this alica context.
@@ -244,6 +245,8 @@ public:
 
 private:
     friend class AlicaTestEngineGetter;
+
+    static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 
     uint32_t _validTag;
     std::unique_ptr<AlicaEngine> _engine;

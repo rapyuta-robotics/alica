@@ -53,19 +53,29 @@ bool AlicaContext::isValid()
     return _validTag == ALICA_CTX_GOOD;
 }
 
-int64_t AlicaContext::getCurrentState() const
+bool AlicaContext::isStateActiveHelper(const RunningPlan* rp, int64_t id)
 {
-    const RunningPlan* deepestPlan = _engine->getPlanBase().getDeepestNode();
-    if (!deepestPlan) {
-        return 0;
+    if (!rp) {
+        return false;
     }
-
-    const State* deepestState = deepestPlan->getActiveState();
-    if (!deepestState) {
-        return 0;
+    const State* activeState = rp->getActiveState();
+    if (activeState && activeState->getId() == id) {
+        return true;
     }
+    const std::vector<RunningPlan*>& children = rp->getChildren();
+    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
+        if (isStateActiveHelper(children[i], id)) {
+            return true;
+        }
+    }
+    return false;
+}
 
-    return deepestState->getId();
+bool AlicaContext::isStateActive(int64_t id) const
+{
+    // This method should be used only when engine is trigger based
+    assert(_engine->getStepEngine());
+    return isStateActiveHelper(_engine->getPlanBase().getRootNode(), id);
 }
 
 void AlicaContext::stepEngine()
