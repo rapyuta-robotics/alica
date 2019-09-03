@@ -246,6 +246,8 @@ public:
 private:
     friend class AlicaTestEngineGetter;
 
+    static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
+
     uint32_t _validTag;
     std::unique_ptr<AlicaEngine> _engine;
     std::unique_ptr<IAlicaCommunication> _communicator;
