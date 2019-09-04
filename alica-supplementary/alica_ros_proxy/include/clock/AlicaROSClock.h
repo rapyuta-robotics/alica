@@ -14,7 +14,7 @@ public:
     AlicaROSClock() {};
     virtual ~AlicaROSClock() {};
     alica::AlicaTime now() const override;
-    void sleep(const alica::AlicaTime&) const override;
+    void sleep(const alica::AlicaTime&) const;
 };
 
 } /* namespace alicaRosProxy */
