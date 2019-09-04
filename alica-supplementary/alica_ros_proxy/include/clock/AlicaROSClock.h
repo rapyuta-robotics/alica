@@ -1,9 +1,6 @@
 #pragma once
 
 #include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include "ros/ros.h"
-
 
 namespace alicaRosProxy
 {
@@ -14,7 +11,7 @@ public:
     AlicaROSClock() {};
     virtual ~AlicaROSClock() {};
     alica::AlicaTime now() const override;
-    void sleep(const alica::AlicaTime&) const;
+    void sleep(const alica::AlicaTime&) const override;
 };
 
 } /* namespace alicaRosProxy */
