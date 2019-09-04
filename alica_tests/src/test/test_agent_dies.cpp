@@ -55,8 +55,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 
     TestClock* c1 = new TestClock();
     TestClock* c2 = new TestClock();
-    aes[0]->setAlicaClock(std::unique_ptr<AlicaClock>(c1));
-    aes[1]->setAlicaClock(std::unique_ptr<AlicaClock>(c2));
+    acs[0]->setClock<std::unique_ptr<AlicaClock>(c1);
+    acs[1]->setClock<std::unique_ptr<AlicaClock>(c2);
 
     aes[0]->start();
     aes[1]->start();
