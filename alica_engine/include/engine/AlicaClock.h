@@ -135,9 +135,6 @@ public:
     virtual ~AlicaClock() {};
     virtual AlicaTime now() const;
     virtual void sleep(const AlicaTime&) const;
-
-protected:
-    AlicaEngine* ae;
 };
 
 } // namespace alica
