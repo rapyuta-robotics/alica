@@ -49,14 +49,17 @@ private:
     AlicaTime _now;
 };
 
+inline TestClock& getTestClock(AlicaContext* ac)
+{
+    return static_cast<TestClock&>(const_cast<AlicaClock&>(ac->getAlicaClock()));
+}
+
 TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 
-    TestClock* c1 = new TestClock();
-    TestClock* c2 = new TestClock();
-    aes[0]->setAlicaClock(std::unique_ptr<AlicaClock>(c1));
-    aes[1]->setAlicaClock(std::unique_ptr<AlicaClock>(c2));
+    acs[0]->setClock<TestClock>();
+    acs[1]->setClock<TestClock>();
 
     aes[0]->start();
     aes[1]->start();
@@ -71,16 +74,16 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
     step(aes[0]);
     step(aes[1]);
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
     alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
 
     step(aes[0]);
     step(aes[1]);
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
     ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
@@ -99,14 +102,14 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 
     step(aes[0]);
     step(aes[1]);
-    c1->increment(AlicaTime::milliseconds(2000));
-    c2->increment(AlicaTime::milliseconds(2000));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(2000));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(2000));
 
     step(aes[0]);
     step(aes[1]);
 
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     step(aes[0]);
     step(aes[1]);
@@ -120,20 +123,20 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     const_cast<IAlicaCommunication&>(aes[0]->getCommunicator()).startCommunication();
     const_cast<IAlicaCommunication&>(aes[1]->getCommunicator()).startCommunication();
 
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     step(aes[0]);
     step(aes[1]);
 
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     step(aes[0]);
     step(aes[1]);
 
-    c1->increment(AlicaTime::milliseconds(50));
-    c2->increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     step(aes[0]);
     step(aes[1]);

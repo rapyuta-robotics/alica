@@ -44,7 +44,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _masterPlan(_planParser.parsePlanTree(masterPlanName))
         , _roleSet(_planParser.parseRoleSet(roleSetName))
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
-        , _alicaClock(std::make_unique<AlicaClock>())
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
@@ -119,6 +118,11 @@ void AlicaEngine::terminate()
 const IAlicaCommunication& AlicaEngine::getCommunicator() const
 {
     return _ctx.getCommunicator();
+}
+
+const AlicaClock& AlicaEngine::getAlicaClock() const
+{
+    return _ctx.getAlicaClock();
 }
 
 std::string AlicaEngine::getRobotName() const
