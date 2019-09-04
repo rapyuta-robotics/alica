@@ -80,9 +80,6 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const AlicaClock& getAlicaClock() const { return *_alicaClock.get(); }
-    void setAlicaClock(std::unique_ptr<AlicaClock> c) { _alicaClock = std::move(c); }
-
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
@@ -97,6 +94,7 @@ public:
 
     // AlicaContext forward interface
     const IAlicaCommunication& getCommunicator() const;
+    const AlicaClock& getAlicaClock() const;
     std::string getRobotName() const;
     template <class SolverType>
     SolverType& getSolver() const;
