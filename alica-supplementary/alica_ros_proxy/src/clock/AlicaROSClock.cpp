@@ -3,9 +3,6 @@
 namespace alicaRosProxy
 {
 
-AlicaROSClock::AlicaROSClock(alica::AlicaEngine* ae)
-: AlicaClock(ae) {}
-
 alica::AlicaTime AlicaROSClock::now() const
 {
     return alica::AlicaTime::nanoseconds(ros::Time::now().toNSec());
