@@ -1,4 +1,5 @@
 #include <clock/AlicaROSClock.h>
+#include "ros/time.h"
 
 namespace alicaRosProxy
 {
