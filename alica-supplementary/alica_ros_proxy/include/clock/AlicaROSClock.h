@@ -8,13 +8,13 @@
 namespace alicaRosProxy
 {
 
-class AlicaROSClock : public virtual alica::AlicaClock
+class AlicaROSClock : public alica::AlicaClock
 {
 public:
     AlicaROSClock(alica::AlicaEngine* ae);
     virtual ~AlicaROSClock() {};
-    virtual alica::AlicaTime now() const override;
-    virtual void sleep(const alica::AlicaTime&) const override;
+    alica::AlicaTime now() const override;
+    void sleep(const alica::AlicaTime&) const override;
 };
 
 } /* namespace alicaRosProxy */
