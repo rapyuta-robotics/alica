@@ -277,9 +277,9 @@ void AlicaContext::setClock(Args&&... args)
 {
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _clock = std::make_unique<ClockType>(_engine.get(), std::forward<Args>(args)...);
+    _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);
 #else
-    _clock = std::unique_ptr<ClockType>(new ClockType(_engine.get(), std::forward<Args>(args)...));
+    _clock = std::unique_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
 #endif
 }
 
