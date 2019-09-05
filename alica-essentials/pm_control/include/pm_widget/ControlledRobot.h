@@ -4,8 +4,8 @@
 #include <QHBoxLayout>
 #include <QObject>
 #include <chrono>
-#include <process_manager/ProcessStat.h>
-#include <process_manager/ProcessStats.h>
+//#include <process_manager/ProcessStatMsg.capnp.h>
+//#include <process_manager/ProcessStatsMsg.capnp.h>
 #include <process_manager/RobotMetaData.h>
 #include <ros/ros.h>
 
