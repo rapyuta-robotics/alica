@@ -59,7 +59,7 @@ protected:
     capnzero::Subscriber *SolverResultSubscriber;
 
     // Transport:
-    capnzero::CommType transport;
+    capnzero::Protocol protocol;
 
     bool isRunning;
 };

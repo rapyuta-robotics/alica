@@ -51,13 +51,13 @@ AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine* ae)
     int tp = (*sc)["AlicaCapnzProxy"]->get<int>("Communication.transport", NULL);
     switch (tp) {
     case 0:
-        this->transport = capnzero::CommType::UDP;
+        this->protocol = capnzero::Protocol::UDP;
         break;
     case 1:
-        this->transport = capnzero::CommType::TCP;
+        this->protocol = capnzero::Protocol::TCP;
         break;
     case 2:
-        this->transport = capnzero::CommType::IPC;
+        this->protocol = capnzero::Protocol::IPC;
         break;
     }
 
@@ -72,31 +72,38 @@ AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine* ae)
 
     // Setup publishers:
     std::cout << "AlicaCapnzeroCommunication: The publisher:\n";
-    this->AlicaPublisher = new capnzero::Publisher(this->ctx);
-    this->AlicaPublisher->setDefaultGroup("ALICA");
+    this->AlicaPublisher = new capnzero::Publisher(this->ctx, capnzero::Protocol::UDP);
+    this->AlicaPublisher->setDefaultTopic("ALICA");
 
     // Open sockets:
-    this->AlicaPublisher->bind(capnzero::CommType::UDP, this->url);
+    this->AlicaPublisher->addAddress(this->url);
 
     // Setup Subscribers:
     std::cout << "AlicaCapnzeroCommunication: The subscribers:\n";
-    this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx, this->allocationAuthorityInfoTopic, &AlicaCapnzeroCommunication::handleAllocationAuthority, &(*this));
-    this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx, this->planTreeInfoTopic, &AlicaCapnzeroCommunication::handlePlanTreeInfo, &(*this));
-    this->SyncReadySubscriber = new capnzero::Subscriber(this->ctx, this->syncReadyTopic,&AlicaCapnzeroCommunication::handleSyncReady, &(*this));
-    this->SyncTalkSubscriber = new capnzero::Subscriber(this->ctx, this->syncTalkTopic, &AlicaCapnzeroCommunication::handleSyncTalk, &(*this));
-    this->SolverResultSubscriber = new capnzero::Subscriber(this->ctx, this->solverResultTopic, &AlicaCapnzeroCommunication::handleSolverResult, &(*this));
+    this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
+    this->AlicaEngineInfoSubscriber->setTopic(this->allocationAuthorityInfoTopic);
+    this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
+    this->PlanTreeInfoSubscriber->setTopic(this->planTreeInfoTopic);
+    this->SyncReadySubscriber = new capnzero::Subscriber(this->ctx, capnzero::Protocol::UDP);
+    this->SyncReadySubscriber->setTopic(this->syncReadyTopic);
+    this->SyncTalkSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
+    this->SyncTalkSubscriber->setTopic(this->syncTalkTopic);
+    this->SolverResultSubscriber = new capnzero::Subscriber(this->ctx, capnzero::Protocol::UDP);
+    this->SolverResultSubscriber->setTopic(this->solverResultTopic);
 
     // connecting the subscribers:
-    this->AllocationAuthorityInfoSubscriber->addAddress(capnzero::CommType::UDP, this->url);
-    this->AllocationAuthorityInfoSubscriber->connect();
-    this->PlanTreeInfoSubscriber->addAddress(capnzero::CommType::UDP, this->url);
-    this->PlanTreeInfoSubscriber->connect();
-    this->SyncReadySubscriber->addAddress(capnzero::CommType::UDP, this->url);
-    this->SyncReadySubscriber->connect();
-    this->SyncTalkSubscriber->addAddress(capnzero::CommType::UDP, this->url);
-    this->SyncTalkSubscriber->connect();
-    this->SolverResultSubscriber->addAddress(capnzero::CommType::UDP, this->url);
-    this->SolverResultSubscriber->connect();
+    this->AllocationAuthorityInfoSubscriber->addAddress(this->url);
+    this->PlanTreeInfoSubscriber->addAddress(this->url);
+    this->SyncReadySubscriber->addAddress(this->url);
+    this->SyncTalkSubscriber->addAddress(this->url);
+    this->SolverResultSubscriber->addAddress(this->url);
+
+    // subscribing the subscribers:
+    this->AllocationAuthorityInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handleAllocationAuthority, &(*this));
+    this->PlanTreeInfoSubscriber->subscribe(&AlicaCapnzeroCommunication::handlePlanTreeInfo, &(*this));
+    this->SyncReadySubscriber->subscribe(&AlicaCapnzeroCommunication::handleSyncReady, &(*this));
+    this->SyncTalkSubscriber->subscribe(&AlicaCapnzeroCommunication::handleSyncTalk, &(*this));
+    this->SolverResultSubscriber->subscribe(&AlicaCapnzeroCommunication::handleSolverResult, &(*this));
 }
 
 AlicaCapnzeroCommunication::~AlicaCapnzeroCommunication()
