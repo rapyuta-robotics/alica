@@ -63,7 +63,8 @@ void AgentID::operator=(const std::vector<uint8_t>& other_id)
     _type = UUID_TYPE;
 }
 
- AgentID::operator unsigned long long() const {
+AgentID::operator uint64_t() const
+{
     // Determine the endianness
     constexpr short n = 1;
     bool isLittleEndian = *((char*)(&n)) == 1;
@@ -77,7 +78,7 @@ void AgentID::operator=(const std::vector<uint8_t>& other_id)
         std::copy(_id.begin(), _id.end(), (uint8_t*)(&out) + offset);
     }
     return out;
- }
+}
 
 const uint8_t* AgentID::getRaw() const
 {
