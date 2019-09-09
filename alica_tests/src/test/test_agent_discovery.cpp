@@ -60,7 +60,7 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     ASSERT_EQ(2, aes[0]->getTeamManager().getActiveAgentIds().size());
     ASSERT_EQ(2, aes[1]->getTeamManager().getActiveAgentIds().size());
 
-    int id = 8;
+    uint64_t id = 8;
     const alica::Agent* hairydiscovered = aes[0]->getTeamManager().getAgentByID(aes[0]->getId(id));
     const alica::Agent* hairyoriginal = aes[1]->getTeamManager().getLocalAgent();
     verifyAgents(hairydiscovered, hairyoriginal);
