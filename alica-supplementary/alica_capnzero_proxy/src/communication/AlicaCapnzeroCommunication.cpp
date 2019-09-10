@@ -79,7 +79,7 @@ AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine* ae)
 
     // Setup Subscribers:
     this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
-    this->AlicaEngineInfoSubscriber->setTopic(this->allocationAuthorityInfoTopic);
+    this->AllocationAuthorityInfoSubscriber->setTopic(this->allocationAuthorityInfoTopic);
     this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
     this->PlanTreeInfoSubscriber->setTopic(this->planTreeInfoTopic);
     this->SyncReadySubscriber = new capnzero::Subscriber(this->ctx, capnzero::Protocol::UDP);
