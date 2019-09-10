@@ -71,7 +71,6 @@ AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine* ae)
     this->solverResultTopic = (*sc)["AlicaCapnzProxy"]->get<std::string>("Topics.solverResultTopic", NULL);
 
     // Setup publishers:
-    std::cout << "AlicaCapnzeroCommunication: The publisher:\n";
     this->AlicaPublisher = new capnzero::Publisher(this->ctx, capnzero::Protocol::UDP);
     this->AlicaPublisher->setDefaultTopic("ALICA");
 
@@ -79,7 +78,6 @@ AlicaCapnzeroCommunication::AlicaCapnzeroCommunication(alica::AlicaEngine* ae)
     this->AlicaPublisher->addAddress(this->url);
 
     // Setup Subscribers:
-    std::cout << "AlicaCapnzeroCommunication: The subscribers:\n";
     this->AllocationAuthorityInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
     this->AlicaEngineInfoSubscriber->setTopic(this->allocationAuthorityInfoTopic);
     this->PlanTreeInfoSubscriber = new capnzero::Subscriber(this->ctx,capnzero::Protocol::UDP);
