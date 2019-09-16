@@ -333,6 +333,8 @@ essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t *idByte
     return essentials::IdentifierConstPtr(this->agentIDManager->getIDFromBytes(idBytes, idSize, type));
 }
 
+essentials::IDManager* AlicaEngine::getIdManager() { return this->agentIDManager; }
+
 
 
 } // namespace alica

@@ -110,6 +110,7 @@ public:
     essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
     template <class Prototype>
     essentials::IdentifierConstPtr getId(Prototype& idPrototype) const;
+    essentials::IDManager* getIdManager();
 
 private:
     void setStepEngine(bool stepEngine);
