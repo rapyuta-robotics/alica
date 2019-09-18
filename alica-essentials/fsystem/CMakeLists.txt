@@ -25,7 +25,9 @@ find_package(catkin QUIET)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 if (catkin_FOUND)
   catkin_package(
-    INCLUDE_DIRS include
+    # exporting include/essentials is required to avoid breaking existing code
+    # TODO: fix existing code to include headers using essentials/<header> & then remove this
+    INCLUDE_DIRS include include/essentials
     LIBRARIES fsystem
   #  CATKIN_DEPENDS other_catkin_pkg
   #  DEPENDS system_lib
@@ -38,7 +40,11 @@ endif (catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
- include_directories(include)
+ include_directories(
+   include
+   # TODO: see comment in catkin_package() above to remove this
+   include/essentials
+)
 
 ## Declare a cpp library
  add_library(fsystem
@@ -55,6 +61,14 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
+
+# install headers to global include/ [required to avoid breaking existing code]
+# TODO: fix existing code to include headers using essentials/<header> & then remove this
+install(DIRECTORY include/essentials/
   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE

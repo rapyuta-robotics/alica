@@ -22,7 +22,9 @@ endif(catkin_FOUND)
 
 if (catkin_FOUND)
   catkin_package(
-   INCLUDE_DIRS include
+   # exporting include/essentials is required to avoid breaking existing code
+   # TODO: fix existing code to include headers using essentials/<header> & then remove this
+   INCLUDE_DIRS include include/essentials
    LIBRARIES system_util fsystem
    CATKIN_DEPENDS system_config fsystem
   # DEPENDS system filesystem
@@ -31,6 +33,8 @@ endif(catkin_FOUND)
 
 include_directories(
   include
+  # TODO: see comment in catkin_package() above to remove this
+  include/essentials
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -50,6 +54,14 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
+
+# install headers to global include/ [required to avoid breaking existing code]
+# TODO: fix existing code to include headers using essentials/<header> & then remove this
+install(DIRECTORY include/essentials/
   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
