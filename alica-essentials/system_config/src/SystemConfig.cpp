@@ -97,11 +97,22 @@ Configuration* SystemConfig::operator[](const std::string& s)
         }
     }
 
-    vector<string> files;
+    std::string file_name = getConfigFileName(s);
+    if (file_name.empty()) {
+        return nullptr;
+    } else {
+        std::lock_guard<mutex> lock(configsMapMutex);
+        std::shared_ptr<Configuration> result = std::make_shared<Configuration>(file_name);
+        configs[s] = result;
 
+        return result.get();
+    }
+}
+
+std::string SystemConfig::getConfigFileName(const std::string& s) {
     string file = s + ".conf";
-
     // Check the host-specific config
+    vector<string> files;
     string tempConfigPath = configPath;
     tempConfigPath = FileSystem::combinePaths(tempConfigPath, hostname);
     tempConfigPath = FileSystem::combinePaths(tempConfigPath, file);
@@ -114,12 +125,7 @@ Configuration* SystemConfig::operator[](const std::string& s)
 
     for (size_t i = 0; i < files.size(); i++) {
         if (FileSystem::pathExists(files[i])) {
-            std::lock_guard<mutex> lock(configsMapMutex);
-
-            std::shared_ptr<Configuration> result = std::make_shared<Configuration>(files[i]);
-            configs[s] = result;
-
-            return result.get();
+            return files[i];
         }
     }
 
@@ -128,7 +134,7 @@ Configuration* SystemConfig::operator[](const std::string& s)
     for (size_t i = 0; i < files.size(); i++) {
         cerr << "- " << files[i] << endl;
     }
-    return nullptr;
+    return "";
 }
 
 /**
