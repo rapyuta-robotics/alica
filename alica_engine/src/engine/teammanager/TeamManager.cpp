@@ -8,10 +8,10 @@
 #include "essentials/AgentIDFactory.h"
 #include <alica_common_config/debug_output.h>
 
-#include <random>
 #include <SystemConfig.h>
 #include <random>
 #include <utility>
+#include <limits>
 
 namespace alica
 {
@@ -86,12 +86,24 @@ void TeamManager::readSelfFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
-    int id = sc["Local"]->tryGet<int>(-1, "Local", "ID", NULL);
-    if (id != -1) {
+
+    constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
+    uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+    if (id != notAValidID) {
         _localAnnouncement.senderID = _engine->getId(id);
     } else {
         _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
         ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
+        bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+        if (persistId) {
+            try{
+                auto* configLocal = sc["Local"];
+                configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
+                configLocal->store();
+            } catch(...) {
+                ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+            }
+        }
     }
 
     std::random_device rd;
