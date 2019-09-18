@@ -21,13 +21,17 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
- INCLUDE_DIRS include
+ # exporting include/constraintsolver is required to avoid breaking existing code
+ # TODO: fix existing code to include headers using constraintsolver/<header> & then remove this
+ INCLUDE_DIRS include include/constraintsolver
  LIBRARIES constraintsolver
  CATKIN_DEPENDS fsystem autodiff roslib alica_solver_interface alica_common_config
 )
 
 include_directories(
   include
+  # TODO: see comment in catkin_package() above to remove this
+  include/constraintsolver
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -69,6 +73,14 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
+
+# install headers under constraintsolver/ to global include/ [required to avoid breaking existing code]
+# TODO: fix existing code to include headers using constraintsolver/<header> & then remove this
+install(DIRECTORY include/constraintsolver/
   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
