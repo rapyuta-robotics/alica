@@ -46,6 +46,11 @@ class Configuration
         throw std::runtime_error(errMsg);
     }
 
+    template <typename Source>
+    std::string stringify(const Source& source) {
+        return std::to_string(source);
+    }
+
   public:
     Configuration();
     Configuration(std::string filename);
@@ -199,10 +204,11 @@ class Configuration
 
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes[i]->getType() == ConfigNode::Leaf) {
-                nodes[i]->setValue(value);
+                nodes[i]->setValue(stringify(value));
             }
         }
     }
+
 
     /**
      * This method creates the configuration parameter if it not already exists
@@ -212,58 +218,38 @@ class Configuration
     {
         va_list ap;
         va_start(ap, path);
-        std::shared_ptr<std::vector<std::string>> params = getParams('.', path, ap);
+        std::shared_ptr<std::vector<std::string>> params_ptr = getParams('.', path, ap);
         va_end(ap);
 
-        std::vector<ConfigNode*> nodes;
-
-        collect(this->configRoot.get(), params.get(), 0, &nodes);
-        if (nodes.size() == 0) {
-            if (params.get()[0].size() > 0) {
-                std::vector<std::string> newParams;
-                for (int i = 0; i < params.get()[0].size(); i++) {
-                    nodes.clear();
-                    if (newParams.size() == 0) {
-                        collect(this->configRoot.get(), params.get(), 0, &nodes);
-                        if (nodes.size() > 0) {
-                            newParams.push_back(params.get()[0].at(i));
-                        } else {
-                            break;
-                        }
-                    } else {
-                        newParams.push_back(params.get()[0].at(i));
-                        collect(this->configRoot.get(), &newParams, 0, &nodes);
-                        std::cout << "Size nodes: " << nodes.size() << "iteration:" << i << std::endl;
-                        if (nodes.size() > 0) {
-                            newParams.push_back(params.get()[0].at(i));
-                        } else {
-                            newParams.pop_back();
-                            collect(this->configRoot.get(), &newParams, 0, &nodes);
-
-                            std::cout << " FINAL Size nodes: " << nodes.size() << "iteration:" << i << std::endl;
-                            break;
-                        }
-                    }
-                }
-
-                std::vector<std::string> newSubList(params.get()[0].begin() + newParams.size(), params.get()[0].end());
-                ConfigNode* currentNode = NULL;
-                for (const std::string& newNode : newSubList) {
-                    if (currentNode == NULL) {
-                        currentNode = nodes[0]->create(newNode);
-                    } else if (newNode.compare(newSubList.back()) != 0) {
-                        currentNode = currentNode->create(newNode);
-                    } else {
-                        currentNode = currentNode->create(newNode, value);
-                    }
-                }
-            }
+        if (params_ptr->size() < 2) {
+            std::string errMsg = "SC-Conf: path cannot be created, not enough params";
+            std::cerr << errMsg << std::endl;
+            throw std::runtime_error(errMsg);
         }
 
-        for (int i = 0; i < nodes.size(); i++) {
-            if (nodes[i]->getType() == ConfigNode::Leaf) {
-                nodes[i]->setValue(value);
+        std::vector<ConfigNode*> nodes;
+        std::vector<std::string>& params = *params_ptr;
+        collect(this->configRoot.get(), &params, 0, &nodes);
+
+        if (!nodes.empty()) {
+            return;
+        }
+
+        ConfigNode* currentNode = this->configRoot.get();
+        size_t ind = 0;
+        while (ind < params.size()) {
+            auto children = currentNode->findChildren(params[ind]);
+            if (children.empty()) {
+                if (ind == params.size() - 1) {
+                    currentNode = currentNode->create(params[ind], stringify(value));
+                } else {
+                    currentNode = currentNode->create(params[ind]);
+                }
+            } else {
+                // We chose the first,  should be the only one !
+                currentNode = children[0].get();
             }
+            ++ind;
         }
     }
 };
@@ -375,5 +361,21 @@ inline std::vector<std::string> Configuration::convertList<std::string>(std::str
         itemVector.push_back(trim(listItem, " "));
     }
     return itemVector;
+}
+
+// Compatible with the previous specialization 'Configuration::convert<bool>'
+template <>
+inline std::string Configuration::stringify<bool>(const bool& source) {
+    return source ? "true" : "false";
+}
+
+template <>
+inline std::string Configuration::stringify<std::string>(const std::string& source) {
+    return source;
+}
+
+template <>
+inline std::string Configuration::stringify<const char*>(char const* const& source) {
+    return source;
 }
 }

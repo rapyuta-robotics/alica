@@ -41,6 +41,7 @@ class SystemConfig
     void resetHostname();
 
     Configuration* operator[](const std::string& s);
+    std::string getConfigFileName(const std::string& s);
     std::string getRootPath();
     std::string getConfigPath();
     std::string getLogPath();
