@@ -58,10 +58,10 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
 /**
  * The AlicaEngine must be set, before this method is called!
  */
-const essentials::Identifier* WorldModel::getOwnId()
+const essentials::IdentifierConstPtr WorldModel::getOwnId()
 {
     if (!this->ownID) {
-        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID().get();
+        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID();
     }
     return this->ownID;
 }
