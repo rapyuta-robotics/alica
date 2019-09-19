@@ -23,6 +23,7 @@ public:
     virtual void run() = 0; /** < Meant to be overwritten by derived classes. */
     bool stop();
     bool start();
+    bool isRunning() const;
     void setIntervalMS(std::chrono::milliseconds delay);
     void setDelayedStartMS(std::chrono::milliseconds delayedStartMS);
 

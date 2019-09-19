@@ -37,6 +37,10 @@ bool Worker::start()
     return this->timer->start();
 }
 
+bool Worker::isRunning() const {
+    return this->timer->isRunning();
+}
+
 void Worker::setIntervalMS(std::chrono::milliseconds intervalMS)
 {
     this->timer->setInterval(intervalMS.count());
