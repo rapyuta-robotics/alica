@@ -6,11 +6,11 @@
 
 namespace essentials
 {
-
+class IDManager;
 class WildcardID : public essentials::Identifier
 {
 public:
-    WildcardID(const uint8_t* idBytes, int idSize);
+    friend IDManager;
     virtual ~WildcardID();
 
     std::string toString() const;
@@ -19,5 +19,7 @@ public:
     bool operator!=(const essentials::Identifier& obj) const;
     bool operator<(const essentials::Identifier& other) const;
     bool operator>(const essentials::Identifier& other) const;
+private:
+    WildcardID(const uint8_t* idBytes, int idSize);
 };
 } /* namespace essentials */

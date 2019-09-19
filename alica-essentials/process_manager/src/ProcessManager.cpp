@@ -128,13 +128,10 @@ void ProcessManager::handleProcessCommand(process_manager::ProcessCommandPtr pc)
 {
     // check whether this message is for me, 0 is a wild card for all ProcessManagers
     const essentials::Identifier* receiverId = nullptr;
-    essentials::WildcardID bcid(nullptr, 0);
-    if (pc->receiver_id.type == essentials::Identifier::WILDCARD_TYPE) {
-        receiverId = &bcid;
-    } else {
+    if (pc->receiver_id.type != essentials::Identifier::WILDCARD_TYPE) {
         receiverId = this->pmRegistry->getRobotId(pc->receiver_id.id);
     }
-    if (receiverId != this->ownId && !(simMode && dynamic_cast<const essentials::WildcardID*>(receiverId))) {
+    if (receiverId != this->ownId && !(simMode && pc->receiver_id.type == essentials::Identifier::WILDCARD_TYPE)) {
         return;
     }
 

@@ -4,7 +4,10 @@
 
 namespace essentials
 {
-IDManager::IDManager() {}
+IDManager::IDManager() {
+    this->wildcardId = new WildcardID(nullptr, 0);
+    this->ids.insert(this->wildcardId);
+}
 IDManager::~IDManager()
 {
     for (auto& id : this->ids) {
@@ -14,6 +17,10 @@ IDManager::~IDManager()
 
 const essentials::Identifier* IDManager::getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type)
 {
+    if (type == essentials::Identifier::WILDCARD_TYPE) {
+        return this->wildcardId;
+    }
+
     if (idBytes == 0) {
         // empty values result in none-id
         return nullptr;
@@ -49,6 +56,10 @@ const essentials::Identifier* IDManager::generateID(int size)
         }
         return this->getIDFromBytes(bytes.data(), size);
     }
+}
+
+const essentials::Identifier* IDManager::getWildcardID() {
+    return this->wildcardId;
 }
 
 } // namespace essentials
