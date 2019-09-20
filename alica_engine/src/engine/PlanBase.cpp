@@ -223,7 +223,6 @@ void PlanBase::run()
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
                     _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
-
                 } else {
                     _statusMessage->currentState = "NONE";
                 }
