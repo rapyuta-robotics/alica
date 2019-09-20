@@ -1,6 +1,5 @@
 #include "engine/model/Transition.h"
 #include "engine/RunningPlan.h"
-#include "engine/model/Plan.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
 
@@ -19,7 +18,10 @@ Transition::~Transition() {}
 
 bool Transition::evalCondition(const RunningPlan& r) const
 {
-    return _preCondition->evaluate(r);
+    if (!_preCondition) {
+        std::cerr << "Transition " << this->getId() << " has no precondition attached!" << std::endl;
+    }
+    return _preCondition && _preCondition->evaluate(r);
 }
 
 void Transition::setPreCondition(PreCondition* preCondition)
