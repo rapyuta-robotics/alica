@@ -1,6 +1,8 @@
 #include "alica_viewer/alica_viewer_capnzero_interface.h"
-#include <alica_capnz_msg/AlicaEngineInfo.capnp.h>
-#include <alica_capnz_msg/PlanTreeInfo.capnp.h>
+
+#include <alica_capnzero_proxy/ContainerUtils.h>
+#include <alica_msg/AlicaEngineInfo.capnp.h>
+#include <alica_msg/PlanTreeInfo.capnp.h>
 
 #include <SystemConfig.h>
 #include <essentials/NotifyTimer.h>
@@ -63,21 +65,7 @@ void AlicaViewerCapnzeroInterface::run()
 
 void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMessageReader& msg)
 {
-    AlicaEngineInfo aei;
-    alica_capnz_msgs::AlicaEngineInfo::Reader reader = msg.getRoot<alica_capnz_msgs::AlicaEngineInfo>();
-
-    aei.senderID = _id_manager->getIDFromBytes(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().size(),
-                                                     static_cast<uint8_t>(reader.getSenderId().getType()));
-    aei.masterPlan = reader.getMasterPlan();
-    aei.currentPlan = reader.getCurrentPlan();
-    aei.currentState = reader.getCurrentState();
-    aei.currentRole = reader.getCurrentRole();
-    aei.currentTask = reader.getCurrentTask();
-    ::capnp::List<capnzero::ID>::Reader riwm = reader.getAgentIdsWithMe();
-    for (unsigned int i = 0; i < riwm.size(); ++i) {
-        capnzero::ID::Reader tmp = riwm[i];
-        aei.robotIDsWithMe.push_back(_id_manager->getIDFromBytes(tmp.getValue().begin(), tmp.getValue().size(), static_cast<uint8_t>(tmp.getType())));
-    }
+    AlicaEngineInfo aei = alica_capnzero_proxy::ContainerUtils::toAlicaEngineInfo(msg, _id_manager);
     std::cout << "Recieved AEI: ID: " << aei.senderID << " MasterPlan: " << aei.masterPlan << " currentPlan: " << aei.currentPlan
               << " current State: " << aei.currentState << " current Role: " << aei.currentRole << " current Task: " << aei.currentTask << '\n';
     Q_EMIT alicaEngineInfoUpdate(aei);
@@ -85,20 +73,7 @@ void AlicaViewerCapnzeroInterface::alicaEngineInfoCallback(::capnp::FlatArrayMes
 
 void AlicaViewerCapnzeroInterface::alicaPlanInfoCallback(::capnp::FlatArrayMessageReader& msg)
 {
-    PlanTreeInfo pti;
-    alica_capnz_msgs::PlanTreeInfo::Reader reader = msg.getRoot<alica_capnz_msgs::PlanTreeInfo>();
-    pti.senderID = _id_manager->getIDFromBytes(reader.getSenderId().getValue().begin(), reader.getSenderId().getValue().size(),
-                                                     static_cast<uint8_t>(reader.getSenderId().getType()));
-
-    ::capnp::List<int64_t>::Reader stateIds = reader.getStateIds();
-    for (unsigned int i = 0; i < stateIds.size(); ++i) {
-        pti.stateIDs.push_back(stateIds[i]);
-    }
-
-    ::capnp::List<int64_t>::Reader succeded = reader.getSucceededEps();
-    for (unsigned int i = 0; i < succeded.size(); ++i) {
-        pti.succeededEPs.push_back(succeded[i]);
-    }
+    PlanTreeInfo pti = alica_capnzero_proxy::ContainerUtils::toPlanTreeInfo(msg, _id_manager);
     std::cout << "Recieved PTI senderID: " << pti.senderID << " state ids: " << pti.stateIDs.size() << " succeded eps: " << pti.succeededEPs.size() << '\n';
     Q_EMIT alicaPlanInfoUpdate(pti);
 }

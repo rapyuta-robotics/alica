@@ -1,4 +1,4 @@
-#include <communication/AlicaCapnzeroCommunication.h>
+#include <alica_capnzero_proxy/Communication.h>
 #include <engine/AlicaEngine.h>
 #include <engine/containers/AllocationAuthorityInfo.h>
 #include <engine/containers/EntryPointRobots.h>
@@ -12,7 +12,7 @@
 
 int main(int argc, char* argv[]) {
     alica::AlicaEngine *ae = NULL;
-    alicaCapnzeroProxy::AlicaCapnzeroCommunication *com = new alicaCapnzeroProxy::AlicaCapnzeroCommunication(ae);
+    alica_capnzero_proxy::Communication *com = new alica_capnzero_proxy::Communication(ae);
     com->startCommunication();
     com->sendLogMessage(1, "\033[93mReciever test\n");
     while (true)

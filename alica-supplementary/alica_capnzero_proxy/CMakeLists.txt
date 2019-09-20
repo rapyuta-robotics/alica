@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
         INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
-        LIBRARIES alica_capnzero_proxy alica_capnz_msgs
+        LIBRARIES alica_capnzero_proxy alica_msgs
         CATKIN_DEPENDS alica_engine capnzero id_capnzero
 )
 
@@ -26,26 +26,26 @@ include_directories(
 #### ALICA CAPNZERO MESSAGES
 find_package(CapnProto REQUIRED)
 set(CAPNPC_IMPORT_DIRS "${id_capnzero_SOURCE_PREFIX}/include")# include external capnp message schema files
-set(${PROJECT_NAME}_msgs "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_capnz_msg")
+set(${PROJECT_NAME}_msgs "${CMAKE_CURRENT_SOURCE_DIR}/include/alica_msg")
 file(GLOB_RECURSE capnp_messages ${${PROJECT_NAME}_msgs} *.capnp)
 set(CAPNPC_SRC_PREFIX ${${PROJECT_NAME}_msgs})
 set(CAPNPC_OUTPUT_DIR ${${PROJECT_NAME}_msgs})
 capnp_generate_cpp(CAPNP_SRCS CAPNP_HDRS ${capnp_messages})
 
-add_library(alica_capnz_msgs ${CAPNP_SRCS})
-target_link_libraries(alica_capnz_msgs
+add_library(alica_msgs ${CAPNP_SRCS})
+target_link_libraries(alica_msgs
   ${catkin_LIBRARIES}
 )
 
 #### ALICA CAPNZERO PROXY
 add_library(${PROJECT_NAME}
-    src/communication/AlicaCapnzeroCommunication.cpp
-    include/communication/AlicaCapnzeroCommunication.h
+    src/Communication.cpp
+    src/ContainerUtils.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
-    alica_capnz_msgs
+    alica_msgs
 )
 
 #### ALICA CAPNZERO PROXY TESTS

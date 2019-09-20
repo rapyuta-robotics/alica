@@ -1,6 +1,6 @@
 @0xf1cf2b46ae0692ca;
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("alica_capnz_msgs");
+$Cxx.namespace("alica_msgs");
 
 using IDMsg = import "/capnzero/ID.capnp";
 

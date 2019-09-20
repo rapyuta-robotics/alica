@@ -6,13 +6,13 @@
 
 #include <capnzero/CapnZero.h>
 
-namespace alicaCapnzeroProxy
+namespace alica_capnzero_proxy
 {
-class AlicaCapnzeroCommunication : public alica::IAlicaCommunication
+class Communication : public alica::IAlicaCommunication
 {
 public:
-    AlicaCapnzeroCommunication(alica::AlicaEngine *ae);
-    virtual ~AlicaCapnzeroCommunication();
+    Communication(alica::AlicaEngine *ae);
+    virtual ~Communication();
 
     virtual void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const override;
     virtual void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const override;
@@ -47,20 +47,20 @@ protected:
     std::string solverResultTopic;
 
     // Publishers for the different Messages:
-    capnzero::Publisher *AlicaPublisher;
+    capnzero::Publisher *alicaPub;
 
     // Subscribers for the different Messages:
-    capnzero::Subscriber *AlicaEngineInfoSubscriber;
-    capnzero::Subscriber *RoleSwitchSubscriber;
-    capnzero::Subscriber *AllocationAuthorityInfoSubscriber;
-    capnzero::Subscriber *PlanTreeInfoSubscriber;
-    capnzero::Subscriber *SyncReadySubscriber;
-    capnzero::Subscriber *SyncTalkSubscriber;
-    capnzero::Subscriber *SolverResultSubscriber;
+    capnzero::Subscriber *alicaEngineInfoSub;
+    capnzero::Subscriber *roleSwitchSub;
+    capnzero::Subscriber *allocationAuthorityInfoSub;
+    capnzero::Subscriber *planTreeInfoSub;
+    capnzero::Subscriber *syncReadySub;
+    capnzero::Subscriber *syncTalkSub;
+    capnzero::Subscriber *solverResultSub;
 
     // Transport:
     capnzero::Protocol protocol;
 
     bool isRunning;
 };
-}
+} // namespace alica_capnzero_proxy

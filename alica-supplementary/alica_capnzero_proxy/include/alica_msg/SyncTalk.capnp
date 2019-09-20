@@ -1,6 +1,6 @@
 @0x88f4b2eb0205ebe8;
 using Cxx = import "/capnp/c++.capnp";
-$Cxx.namespace("alica_capnz_msgs");
+$Cxx.namespace("alica_msgs");
 using IDMsg = import "/capnzero/ID.capnp";
 
 struct SyncTalk {
