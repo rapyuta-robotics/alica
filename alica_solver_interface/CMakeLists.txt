@@ -40,7 +40,7 @@ add_library(alica_solver_interface
 target_link_libraries(alica_solver_interface ${catkin_LIBRARIES})
 
 if (NOT catkin_FOUND)
- target_include_directories(alica_solver_interface PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
+ target_include_directories(alica_solver_interface PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
 
 
@@ -63,3 +63,14 @@ else(CATKIN_ENABLE_TESTING)
     )
     target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
 endif(CATKIN_ENABLE_TESTING)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
