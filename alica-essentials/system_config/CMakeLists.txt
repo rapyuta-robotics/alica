@@ -22,7 +22,9 @@ endif(catkin_FOUND)
 
 if (catkin_FOUND)
   catkin_package(
-   INCLUDE_DIRS include
+   # exporting include/essentials is required to avoid breaking existing code
+   # TODO: fix existing code to include headers using essentials/<header> & then remove this
+   INCLUDE_DIRS include include/essentials
    LIBRARIES system_config
    CATKIN_DEPENDS fsystem roslib
   )
@@ -32,6 +34,8 @@ endif(catkin_FOUND)
 ## Your package locations should be listed before other locations
 include_directories(
   include
+  # TODO: see comment in catkin_package() above to remove this
+  include/essentials
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -58,3 +62,22 @@ if (catkin_FOUND)
     endif()
   endif(CATKIN_ENABLE_TESTING)
 endif(catkin_FOUND)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
+
+# install headers to global include/ [required to avoid breaking existing code]
+# TODO: fix existing code to include headers using essentials/<header> & then remove this
+install(DIRECTORY include/essentials/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(agent_id)
- 
+
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
@@ -29,7 +29,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES agent_id
   CATKIN_DEPENDS roscpp message_runtime
-  DEPENDS UUID 
+  DEPENDS UUID
 )
 
 include_directories(
@@ -44,7 +44,7 @@ add_library(${PROJECT_NAME}
   src/BroadcastID.cpp
   src/AgentIDManager.cpp
 )
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   ${UUID_LIBRARIES}
 )
@@ -57,3 +57,12 @@ if(CATKIN_ENABLE_TESTING)
   )
   target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} ${GTEST_LIBRARIES})
 endif()
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+)
