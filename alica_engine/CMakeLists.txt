@@ -46,5 +46,16 @@ add_library(alica_engine
 target_link_libraries(alica_engine ${catkin_LIBRARIES})
 
 if (NOT catkin_FOUND)
- target_include_directories(alica_engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include") 
+ target_include_directories(alica_engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
