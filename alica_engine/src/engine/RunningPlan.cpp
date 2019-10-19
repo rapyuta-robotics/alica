@@ -774,7 +774,15 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "FailHandlingNeeded: " << psi.failHandlingNeeded << "\t";
     out << "FailCount: " << psi.failCount << std::endl;
     out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
-    out << "Status: " << getPlanStatusName(psi.status) << std::endl;
+    if (!r.isBehaviour()) {
+        out << "Status: " << getPlanStatusName(psi.status) << std::endl;
+    } else if (r.getBasicBehaviour()->isSuccess()) {
+        out << "Status: " << getPlanStatusName(PlanStatus::Success) << std::endl;
+    } else if (r.getBasicBehaviour()->isFailure()) {
+        out << "Status: " << getPlanStatusName(PlanStatus::Failed) << std::endl;
+    } else {
+        out << "Status: " << getPlanStatusName(PlanStatus::Running) << std::endl;
+    }
     out << std::endl;
     if (!r.isBehaviour()) {
         out << "Assignment:" << r._assignment;

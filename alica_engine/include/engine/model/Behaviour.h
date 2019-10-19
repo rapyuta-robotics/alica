@@ -9,7 +9,6 @@
 namespace alica
 {
 
-class BehaviourConfiguration;
 class BasicBehaviour;
 class ModelFactory;
 class BehaviourFactory;
