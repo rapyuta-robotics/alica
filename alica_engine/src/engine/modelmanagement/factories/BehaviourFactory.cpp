@@ -6,7 +6,6 @@
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
 #include "engine/modelmanagement/factories/PostConditionFactory.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
-#include "engine/modelmanagement/factories/BehaviourConfigurationFactory.h"
 
 namespace alica
 {

@@ -28,7 +28,6 @@ namespace alica
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
-        , _behaviourConfiguration(nullptr)
         , _engine(nullptr)
         , _failure(false)
         , _success(false)
@@ -61,11 +60,6 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     RunningPlan* curInRun;
     curInRun = _contextInRun;
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
-}
-
-void BasicBehaviour::setBehaviourConfiguration(const BehaviourConfiguration* behConf) {
-    assert(_behaviourConfiguration == nullptr);
-    _behaviourConfiguration = behConf;
 }
 
 void BasicBehaviour::setBehaviour(const Behaviour* beh)
