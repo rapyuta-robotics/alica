@@ -6,6 +6,7 @@
 #include <mutex>
 #include <unordered_set>
 #include <vector>
+#include <bitset>
 
 namespace essentials
 {
@@ -50,6 +51,7 @@ const Identifier* IDManager::getID(Prototype& idPrototype, uint8_t type)
     for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
         idByteVector.push_back(*(((uint8_t*) &idPrototype) + i));
     }
+
     return this->getIDFromBytes(idByteVector.data(), idByteVector.size(), type);
 }
 

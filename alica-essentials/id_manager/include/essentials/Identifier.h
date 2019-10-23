@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <bitset>
 
 namespace essentials
 {
@@ -26,24 +27,24 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const essentials::Identifier& obj)
     {
-        if (obj.id.size() <= sizeof(int)) {
+        if (obj.id.size() <= sizeof(int32_t)) {
             std::vector<uint8_t> tmpLong;
-            for (int i = 0; i < static_cast<int>(obj.id.size()); i++) {
+            for (uint32_t i = 0; i < obj.id.size(); i++) {
                 tmpLong.push_back(obj.id[i]);
             }
-            for (int i = 0; i < static_cast<int>(sizeof(int) - obj.id.size()); i++) {
+            for (int i = 0; i < static_cast<int>(sizeof(uint32_t) - obj.id.size()); i++) {
                 tmpLong.push_back(0);
             }
-            os << (int) (*tmpLong.data());
+            os << *reinterpret_cast<int32_t*>(&tmpLong[0]);
         } else {
             std::vector<uint8_t> tmpShort;
             tmpShort.push_back(obj.id[0]);
             tmpShort.push_back(obj.id[1]);
-            os << (short) (*tmpShort.data()) << "[...]";
+            os << *reinterpret_cast<int16_t*>(&tmpShort[0]) << "[...]";
             tmpShort.clear();
             tmpShort.push_back(obj.id[obj.id.size() - 2]);
             tmpShort.push_back(obj.id[obj.id.size() - 1]);
-            os << (short) (*tmpShort.data());
+            os << *reinterpret_cast<int16_t*>(&tmpShort[tmpShort.size()-2]);
         }
         return os;
     }
