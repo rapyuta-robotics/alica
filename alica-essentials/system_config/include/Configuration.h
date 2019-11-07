@@ -199,7 +199,7 @@ public:
 
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes[i]->getType() == ConfigNode::Leaf) {
-                nodes[i]->setValue(value);
+                nodes[i]->setValue(std::to_string(value));
             }
         }
     }
@@ -254,7 +254,7 @@ public:
                     } else if (newNode.compare(newSubList.back()) != 0) {
                         currentNode = currentNode->create(newNode);
                     } else {
-                        currentNode = currentNode->create(newNode, value);
+                        currentNode = currentNode->create(newNode, std::to_string(value));
                     }
                 }
             }
@@ -262,7 +262,7 @@ public:
 
         for (int i = 0; i < nodes.size(); i++) {
             if (nodes[i]->getType() == ConfigNode::Leaf) {
-                nodes[i]->setValue(value);
+                nodes[i]->setValue(std::to_string(value));
             }
         }
     }
