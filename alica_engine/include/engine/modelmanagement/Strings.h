@@ -76,5 +76,9 @@ namespace alica {
         static const std::string taskPriorities = "taskPriorities";
         static const std::string defaultRoleSet = "defaultRoleSet";
         static const std::string parameters = "parameters";
+        static const std::string stateType = "type";
+        static const std::string terminalStateType = "TerminalState";
+        static const std::string normalStateType = "State";
+        static const std::string isSuccessState = "success";
     }
 }

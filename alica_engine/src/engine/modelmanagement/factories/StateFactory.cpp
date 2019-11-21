@@ -8,9 +8,11 @@ namespace alica
 State* StateFactory::create(const YAML::Node& stateNode)
 {
     State* state = new State();
+    state->_type = State::StateType::NORMAL;
     Factory::setAttributes(stateNode, state);
     Factory::storeElement(state, alica::Strings::state);
     state->_inPlan = (Plan*) Factory::getElement(Factory::getReferencedId(stateNode[alica::Strings::parentPlan]));
+
     if (Factory::isValid(stateNode[alica::Strings::inTransitions])) {
         const YAML::Node& inTransitions = stateNode[alica::Strings::inTransitions];
         for (YAML::const_iterator it = inTransitions.begin(); it != inTransitions.end(); ++it) {

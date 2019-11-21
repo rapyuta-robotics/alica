@@ -5,6 +5,7 @@ namespace alica
 {
 class PostCondition;
 class ModelFactory;
+class TerminalStateFactory;
 /**
  * A terminal state within a plan. Indicates termination of the corresponding task
  */
@@ -17,6 +18,7 @@ public:
 
 protected:
     friend ModelFactory;
+    friend TerminalStateFactory;
     void setPostCondition(PostCondition* posCondition);
     PostCondition* _postCondition;
 };
