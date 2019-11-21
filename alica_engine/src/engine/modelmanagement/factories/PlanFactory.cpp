@@ -3,6 +3,7 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
+#include "engine/model/TerminalState.h"
 #include "engine/model/Transition.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
@@ -11,9 +12,9 @@
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
 #include "engine/modelmanagement/factories/StateFactory.h"
+#include "engine/modelmanagement/factories/TerminalStateFactory.h"
 #include "engine/modelmanagement/factories/SynchronisationFactory.h"
 #include "engine/modelmanagement/factories/TransitionFactory.h"
-#include "engine/modelmanagement/factories/VariableFactory.h"
 
 #include "engine/model/Plan.h"
 
@@ -51,7 +52,15 @@ Plan* PlanFactory::create(const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::states])) {
         const YAML::Node& states = node[alica::Strings::states];
         for (YAML::const_iterator it = states.begin(); it != states.end(); ++it) {
-            State* state = StateFactory::create(*it);
+            State* state = nullptr;
+            std::string stateType = Factory::getValue<std::string>(*it, alica::Strings::stateType);
+            if (stateType.compare(alica::Strings::terminalStateType) == 0) {
+                state = TerminalStateFactory::create(*it, plan);
+            } else if (stateType.compare(alica::Strings::normalStateType) == 0) {
+                state = StateFactory::create(*it);
+            } else {
+                std::cerr << "[PlanFactory] Unknown state type encountered: '" << stateType << std::endl;
+            }
             plan->_states.push_back(state);
             if (state->isFailureState()) {
                 plan->_failureStates.push_back((FailureState*) state);

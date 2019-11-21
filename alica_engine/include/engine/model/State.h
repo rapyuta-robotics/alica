@@ -12,6 +12,7 @@ class VariableBinding;
 class EntryPoint;
 class ModelFactory;
 class StateFactory;
+class TerminalStateFactory;
 class ModelManager;
 
 /**
@@ -45,6 +46,7 @@ public:
 private:
     friend ModelFactory;
     friend StateFactory;
+    friend TerminalStateFactory;
     friend ModelManager;
     void setInPlan(const Plan* inPlan);
 
