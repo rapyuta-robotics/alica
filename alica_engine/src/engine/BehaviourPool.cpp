@@ -21,7 +21,6 @@ BehaviourPool::BehaviourPool(AlicaEngine* ae)
         , _behaviourCreator(nullptr)
 
 {
-    std::cout << "Construct behaviour pool" << std::endl;
 }
 
 /**
@@ -50,7 +49,6 @@ bool BehaviourPool::init(IBehaviourCreator* bc)
             // set stuff from behaviour configuration in basic behaviour object
             basicBeh->setBehaviour(beh);
             basicBeh->setDelayedStart(beh->getDeferring());
-            std::cout << "BehaviourPool::init: " << beh->getName() << " freq: " << beh->getFrequency() << std::endl;
             basicBeh->setInterval(1000 / (beh->getFrequency() < 1 ? 1 : beh->getFrequency()));
             basicBeh->setEngine(_ae);
             basicBeh->init();
