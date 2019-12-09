@@ -2,6 +2,8 @@
 
 #include "essentials/Identifier.h"
 
+#include <sstream>
+
 namespace essentials
 {
 
@@ -35,12 +37,20 @@ public:
 #endif
     bool operator!=(const IdentifierConstPtr id) const { return !IdentifierConstPtr::operator==(id); }
     bool operator<(const IdentifierConstPtr id) const { return *_ptr < *id._ptr; }
+    std::string toString();
     const Identifier* get() const { return _ptr; }
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const IdentifierConstPtr a);
     const Identifier* _ptr;
 };
+
+inline std::string IdentifierConstPtr::toString()
+{
+    std::stringstream ss;
+    ss << this;
+    return ss.str();
+}
 
 inline std::ostream& operator<<(std::ostream& out, const IdentifierConstPtr a)
 {
