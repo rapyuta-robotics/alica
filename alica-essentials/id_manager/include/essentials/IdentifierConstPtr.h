@@ -48,7 +48,7 @@ private:
 inline std::string IdentifierConstPtr::toString()
 {
     std::stringstream ss;
-    ss << this;
+    ss << *this;
     return ss.str();
 }
 
