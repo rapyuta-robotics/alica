@@ -45,7 +45,7 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine);
+    TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
     AgentIDConstPtr getLocalAgentID() const;
@@ -82,6 +82,7 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
+    AgentIDConstPtr _agentId;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
 
