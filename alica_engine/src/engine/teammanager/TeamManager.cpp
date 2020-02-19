@@ -53,12 +53,13 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine)
+TeamManager::TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID)
         : _localAgent(nullptr)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
+        , _agentId(agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
@@ -87,23 +88,27 @@ void TeamManager::readSelfFromConfig()
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
 
-    constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-    uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
-    if (id != notAValidID) {
-        _localAnnouncement.senderID = _engine->getId(id);
-    } else {
-        _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
-        ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
-        bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
-        if (persistId) {
-            try{
-                auto* configLocal = sc["Local"];
-                configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-                configLocal->store();
-            } catch(...) {
-                ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+    if (_agentId == nullptr) {
+        constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
+        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+        if (id != notAValidID) {
+            _localAnnouncement.senderID = _engine->getId(id);
+        } else {
+            _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
+            ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
+            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+            if (persistId) {
+                try{
+                    auto* configLocal = sc["Local"];
+                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
+                    configLocal->store();
+                } catch(...) {
+                    ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+                }
             }
         }
+    } else {
+        _localAnnouncement.senderID = _engine->getId(_agentId);
     }
 
     std::random_device rd;
