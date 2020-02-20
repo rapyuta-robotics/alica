@@ -61,6 +61,10 @@ TeamManager::TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID)
         , _announcementRetries(0)
         , _agentId(agentID)
 {
+    ROS_INFO("[TEAM MANAGER] AgentID received");
+    ROS_INFO_STREAM(*agentID);
+    ROS_INFO_STREAM("[TM] _agentId");
+    ROS_INFO_STREAM(*_agentId);
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
     _useAutoDiscovery = sc["Alica"]->get<bool>("Alica.AutoDiscovery", NULL);
@@ -85,10 +89,14 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 
 void TeamManager::readSelfFromConfig()
 {
+    ROS_INFO("[TM] Inside readSelfFromConfig _agentId");
+    ROS_INFO_STREAM(*_agentId);
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
 
     if (_agentId == nullptr) {
+        ROS_INFO("[TM] _agentId is a nullptr");
+        ROS_INFO_STREAM(*_agentId);
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
         uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
         if (id != notAValidID) {
@@ -108,7 +116,12 @@ void TeamManager::readSelfFromConfig()
             }
         }
     } else {
-        _localAnnouncement.senderID = _engine->getId(_agentId);
+        ROS_INFO("[TM] Using received _agentId");
+        ROS_INFO_STREAM(*_agentId);
+        uint64_t id = *_agentId;
+        _localAnnouncement.senderID = _engine->getId(id);
+        ROS_INFO("[TM] _localAnnouncement.senderID");
+        ROS_INFO_STREAM(*_localAnnouncement.senderID);
     }
 
     std::random_device rd;
