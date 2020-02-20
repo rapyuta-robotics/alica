@@ -45,8 +45,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _roleSet(_planParser.parseRoleSet(roleSetName))
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    ROS_INFO("[AC] AgentID received");
-    ROS_INFO_STREAM(*agentID);
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
     _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
