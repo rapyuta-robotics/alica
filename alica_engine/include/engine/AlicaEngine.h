@@ -1,5 +1,5 @@
 #pragma once
-#include <ros/ros.h>
+
 #include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaContext.h"
 #include "engine/BehaviourPool.h"

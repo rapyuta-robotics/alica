@@ -1,4 +1,3 @@
-#include <ros/ros.h>
 #include <stdio.h>
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
@@ -19,9 +18,6 @@ AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& ma
         , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
         , _clock(std::make_unique<AlicaClock>())
 {
-    ROS_INFO_STREAM("INSIDE AC CONSTRUCTOR");
-    ROS_INFO("[AC] AgentID received");
-    ROS_INFO_STREAM(*agentID);  
 }
 
 AlicaContext::~AlicaContext()
