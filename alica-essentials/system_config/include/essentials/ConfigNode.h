@@ -99,6 +99,16 @@ public:
 
     std::vector<ConfigNodePtr>* getChildren() { return &this->children; }
 
+    std::vector<ConfigNodePtr> findChildren(const std::string& name) {
+        std::vector<ConfigNodePtr> out;
+        for (auto& child : children) {
+            if (child->getName() == name) {
+                out.push_back(child);
+            }
+        }
+        return out;
+    }
+
     ConfigNode* getParent() const { return this->parent; }
 
     void setParent(ConfigNode* parent)
