@@ -62,14 +62,14 @@ ProcessManager::ProcessManager(int argc, char** argv)
     auto robotNames = (*this->sc)["Globals"]->getSections("Globals.Team", NULL);
     for (auto robotName : (*robotNames)) {
         tmpAgentID = this->pmRegistry->addRobot(robotName);
-        if (robotName == this->ownHostname) {
+        if (robotName == ownHostname) {
             this->ownId = tmpAgentID;
         }
     }
 
     // Register local hostname, if it does not exist in Globals.conf
     if (this->ownId == nullptr) {
-        this->ownId = this->pmRegistry->addRobot(this->ownHostname);
+        this->ownId = this->pmRegistry->addRobot(ownHostname);
     }
 
     // autostart for robots
@@ -85,12 +85,12 @@ ProcessManager::ProcessManager(int argc, char** argv)
 
     if (autostart) {
         // Create ManagedRobot-Object for local system/robot
-        this->robotMap.emplace(ownId, new ManagedRobot(this->ownHostname, ownId, this));
+        this->robotMap.emplace(ownId, new ManagedRobot(ownHostname, ownId, this));
     }
 
     // Register executables from Processes.conf
     int tmpExecID = -1;
-    auto processDescriptions = (*this->sc)["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
+    auto processDescriptions = sc["ProcessManaging"]->getSections("Processes.ProcessDescriptions", NULL);
     for (auto processSectionName : (*processDescriptions)) {
         tmpExecID = this->pmRegistry->addExecutable(processSectionName);
         // This autostart functionality is for easier testing. The local robot starts the processes automatically
@@ -99,7 +99,7 @@ ProcessManager::ProcessManager(int argc, char** argv)
         }
     }
 
-    this->interpreters = (*this->sc)["ProcessManaging"]->getList<string>("Processes.Interpreter", NULL);
+    this->interpreters = sc["ProcessManaging"]->getList<string>("Processes.Interpreter", NULL);
     cout << "PM: Number of Interpreters: " << this->interpreters.size() << endl;
     this->pmRegistry->setInterpreters(interpreters);
 
@@ -226,9 +226,9 @@ void ProcessManager::initCommunication(int argc, char** argv)
     ros::init(argc, argv, "ProcessManager");
     rosNode = new ros::NodeHandle();
     spinner = new ros::AsyncSpinner(4);
-
-    this->processCmdTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
-    this->processStatsTopic = (*sc)["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    this->processCmdTopic = sc["ProcessManaging"]->get<string>("Topics.processCmdTopic", NULL);
+    this->processStatsTopic = sc["ProcessManaging"]->get<string>("Topics.processStatsTopic", NULL);
 
     processCommandSub = rosNode->subscribe(this->processCmdTopic, 10, &ProcessManager::handleProcessCommand, (ProcessManager*) this);
     processStatePub = rosNode->advertise<process_manager::ProcessStats>(this->processStatsTopic, 10);
@@ -432,7 +432,7 @@ string ProcessManager::getRobotEnvironmentVariable(string processId)
     }
 
     ifs.close();
-    return this->ownHostname;
+    return essentials::SystemConfig::getInstance().getHostname();
 }
 
 /**
@@ -574,11 +574,11 @@ bool ProcessManager::selfCheck()
                     if (mngdRobot != this->robotMap.end()) {
                         mngdRobot->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
                     } else {
-                        auto emplaceResult = this->robotMap.emplace(agentID, new ManagedRobot(this->ownHostname, agentID, this));
+                        auto emplaceResult = this->robotMap.emplace(agentID, new ManagedRobot(ownHostName, agentID, this));
                         emplaceResult.first->second->changeDesiredState(roscoreExecId, true, this->pmRegistry);
                     }
                 } else {
-                    cerr << "PM: The robot " << this->ownHostname << " is unknown!" << endl;
+                    cerr << "PM: The robot " << ownHostName << " is unknown!" << endl;
                 }
             } else {
                 cerr << "PM: The ID of the roscore executable is unknown!" << endl;

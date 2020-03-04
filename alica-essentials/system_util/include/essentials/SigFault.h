@@ -38,9 +38,9 @@ using std::runtime_error;
 
 class SegFaultException : public runtime_error
 {
-public:
+  public:
     SegFaultException(std::string s)
-            : runtime_error(s.c_str())
+        : runtime_error(s.c_str())
     {
     }
     /*const char* what() const throw()
@@ -76,7 +76,7 @@ static inline std::string get_stacktrace(int startindex = 1)
 
     // allocate string which will be filled with the demangled function name
     size_t funcnamesize = 256;
-    char* funcname = (char*) malloc(funcnamesize);
+    char* funcname = (char*)malloc(funcnamesize);
 
     // iterate over the returned symbol lines. skip the first, it is the
     // address of this function.
@@ -135,8 +135,8 @@ static inline std::string get_stacktrace(int startindex = 1)
                     startaddr = startaddr.substr(0, startaddr.find("-"));
                     void* startadd = nullptr;
 
-                    sscanf(startaddr.c_str(), "%p", (void**) &startadd);
-                    sprintf(syscom, "addr2line -e %s %p", symbollist[i], (void*) ((char*) addrlist[i] - (char*) startadd));
+                    sscanf(startaddr.c_str(), "%p", (void**)&startadd);
+                    sprintf(syscom, "addr2line -e %s %p", symbollist[i], (void*)((char*)addrlist[i] - (char*)startadd));
                     std::string tmp = exec(syscom);
                     ss << "#" << (i - startindex + 1) << " " << addrlist[i] << " " << funcname << " in " << tmp;
                 } else {
@@ -208,10 +208,10 @@ void handle_fpe()
 
 #define HANDLE_DIVIDE_OVERFLOW                                                                                                                                 \
     do {                                                                                                                                                       \
-        ucontext_t* _uc = (ucontext_t*) _p;                                                                                                                    \
-        volatile struct sigcontext* _sc = (struct sigcontext*) &_uc->uc_mcontext;                                                                              \
+        ucontext_t* _uc = (ucontext_t*)_p;                                                                                                           \
+        volatile struct sigcontext* _sc = (struct sigcontext*)&_uc->uc_mcontext;                                                                               \
                                                                                                                                                                \
-        register unsigned char* _rip = (unsigned char*) _sc->rip;                                                                                              \
+        register unsigned char* _rip = (unsigned char*)_sc->rip;                                                                                               \
                                                                                                                                                                \
         /* According to the JVM spec, "if the dividend is the negative                                                                                         \
          * integer of largest possible magnitude for the type and the                                                                                          \
@@ -271,7 +271,7 @@ void handle_fpe()
                     break;                                                                                                                                     \
                 }                                                                                                                                              \
                 _rip += 2;                                                                                                                                     \
-                _sc->rip = (unsigned long) _rip;                                                                                                               \
+                _sc->rip = (unsigned long)_rip;                                                                                                                \
                 return;                                                                                                                                        \
             }                                                                                                                                                  \
         }                                                                                                                                                      \

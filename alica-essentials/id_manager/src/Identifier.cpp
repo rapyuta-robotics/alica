@@ -3,11 +3,17 @@
 namespace essentials
 {
 
+Identifier::Identifier(const std::vector<uint8_t>& bytes)
+    : _type(UUID_TYPE)
+    , _id(bytes)
+{
+}
+
 Identifier::Identifier(const uint8_t* idBytes, int idSize, uint8_t type)
-        : TYPE(type)
+    : _type(type)
 {
     for (int i = 0; i < idSize; i++) {
-        this->id.push_back(idBytes[i]);
+        _id.push_back(idBytes[i]);
     }
 }
 
@@ -15,38 +21,30 @@ Identifier::~Identifier(){};
 
 uint8_t Identifier::getType() const
 {
-    return this->TYPE;
+    return _type;
 }
 
-bool Identifier::operator==(const Identifier& other) const
+bool Identifier::operator==(const AgentID& other) const
 {
-    if (this->id.size() != other.id.size()) {
-        return false;
-    }
-    for (int i = 0; i < static_cast<int>(this->id.size()); i++) {
-        if (this->id[i] != other.id[i]) {
-            return false;
-        }
-    }
-    return true;
+    return (_id == other._id);
 }
 
-bool Identifier::operator!=(const Identifier& other) const
+bool Identifier::operator!=(const AgentID& other) const
 {
-    return !(*this == other);
+    return (_id != other._id);
 }
 
-bool Identifier::operator<(const Identifier& other) const
+bool Identifier::operator<(const AgentID& other) const
 {
-    if (this->id.size() < other.id.size()) {
+    if (_id.size() < other._id.size()) {
         return true;
-    } else if (this->id.size() > other.id.size()) {
+    } else if (_id.size() > other._id.size()) {
         return false;
     }
-    for (int i = 0; i < this->id.size(); i++) {
-        if (this->id[i] < other.id[i]) {
+    for (int i = 0; i < _id.size(); i++) {
+        if (_id[i] < other._id[i]) {
             return true;
-        } else if (this->id[i] > other.id[i]) {
+        } else if (_id[i] > other._id[i]) {
             return false;
         }
         // else continue, because both bytes where equal and the next byte needs to be considered
@@ -54,37 +52,47 @@ bool Identifier::operator<(const Identifier& other) const
     return false;
 }
 
-bool Identifier::operator>(const Identifier& other) const
+bool Identifier::operator>(const AgentID& other) const
 {
-    if (this->id.size() > other.id.size()) {
-        return true;
-    } else if (this->id.size() < other.id.size()) {
-        return false;
+    return other < *this;
+}
+
+void Identifier::operator=(const std::vector<uint8_t>& other_id)
+{
+    _id = other_id;
+    _type = UUID_TYPE;
+}
+
+Identifier::operator uint64_t() const
+{
+    // Determine the endianness
+    constexpr short n = 1;
+    bool isLittleEndian = *((char*)(&n)) == 1;
+
+    // moving data
+    long long out = 0;
+    if (isLittleEndian) {
+        std::copy(_id.begin(), _id.end(), (uint8_t*)(&out));
+    } else {
+        int offset = static_cast<int>(sizeof(long long) - _id.size());
+        std::copy(_id.begin(), _id.end(), (uint8_t*)(&out) + offset);
     }
-    for (int i = 0; i < this->id.size(); i++) {
-        if (this->id[i] > other.id[i]) {
-            return true;
-        } else if (this->id[i] < other.id[i]) {
-            return false;
-        }
-        // else continue, because both bytes where equal and the next byte needs to be considered
-    }
-    return false;
+    return out;
 }
 
 const uint8_t* Identifier::getRaw() const
 {
-    return this->id.data();
+    return _id.data();
 }
 
-size_t Identifier::getSize() const
+int Identifier::getSize() const
 {
-    return this->id.size();
+    return _id.size();
 }
 
 std::vector<uint8_t> Identifier::toByteVector() const
 {
-    return this->id;
+    return _id;
 }
 
 /**
@@ -94,12 +102,12 @@ std::vector<uint8_t> Identifier::toByteVector() const
  */
 std::size_t Identifier::hash() const
 {
-    const uint8_t* key = this->id.data();
-    int len = this->id.size();
+    const uint8_t* key = _id.data();
+    int len = _id.size();
     uint32_t h = 13;
     if (len > 3) {
         const uint32_t* key_x4 = (const uint32_t*)key;
-        size_t i = this->id.size() >> 2;
+        size_t i = _id.size() >> 2;
         do {
             uint32_t k = *key_x4++;
             k *= 0xcc9e2d51;
