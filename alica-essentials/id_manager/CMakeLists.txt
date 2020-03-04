@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(id_manager)
 
 add_compile_options(-std=c++11)
@@ -12,6 +12,7 @@ find_package(UUID)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES id_manager
+  DEPENDS UUID
 )
 
 include_directories(
@@ -29,7 +30,7 @@ target_link_libraries(${PROJECT_NAME}
   ${UUID_LIBRARIES}
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC include ${catkin_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(${PROJECT_NAME}-tests
@@ -37,3 +38,12 @@ if(CATKIN_ENABLE_TESTING)
           )
   target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} ${GTEST_LIBRARIES})
 endif()
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+)

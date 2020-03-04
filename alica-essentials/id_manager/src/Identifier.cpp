@@ -3,38 +3,38 @@
 namespace essentials
 {
 
-Identifier::Identifier(const std::vector<uint8_t>& bytes)
-    : _type(UUID_TYPE)
-    , _id(bytes)
+Identifier::Identifier(const std::vector<uint8_t>& idBytes)
+        : _type(UUID_TYPE)
+        , _id(idBytes)
 {
 }
 
 Identifier::Identifier(const uint8_t* idBytes, int idSize, uint8_t type)
-    : _type(type)
+        : _type(type)
 {
     for (int i = 0; i < idSize; i++) {
         _id.push_back(idBytes[i]);
     }
 }
 
-Identifier::~Identifier(){};
+Identifier::~Identifier() = default;
 
 uint8_t Identifier::getType() const
 {
     return _type;
 }
 
-bool Identifier::operator==(const AgentID& other) const
+bool Identifier::operator==(const Identifier& other) const
 {
     return (_id == other._id);
 }
 
-bool Identifier::operator!=(const AgentID& other) const
+bool Identifier::operator!=(const Identifier& other) const
 {
     return (_id != other._id);
 }
 
-bool Identifier::operator<(const AgentID& other) const
+bool Identifier::operator<(const Identifier& other) const
 {
     if (_id.size() < other._id.size()) {
         return true;
@@ -52,30 +52,30 @@ bool Identifier::operator<(const AgentID& other) const
     return false;
 }
 
-bool Identifier::operator>(const AgentID& other) const
+bool Identifier::operator>(const Identifier& other) const
 {
     return other < *this;
 }
 
-void Identifier::operator=(const std::vector<uint8_t>& other_id)
+Identifier& Identifier::operator=(const std::vector<uint8_t>& idBytes)
 {
-    _id = other_id;
-    _type = UUID_TYPE;
+    _id = idBytes;
+    return *this;
 }
 
 Identifier::operator uint64_t() const
 {
     // Determine the endianness
     constexpr short n = 1;
-    bool isLittleEndian = *((char*)(&n)) == 1;
+    bool isLittleEndian = *((char*) (&n)) == 1;
 
     // moving data
     long long out = 0;
     if (isLittleEndian) {
-        std::copy(_id.begin(), _id.end(), (uint8_t*)(&out));
+        std::copy(_id.begin(), _id.end(), (uint8_t*) (&out));
     } else {
         int offset = static_cast<int>(sizeof(long long) - _id.size());
-        std::copy(_id.begin(), _id.end(), (uint8_t*)(&out) + offset);
+        std::copy(_id.begin(), _id.end(), (uint8_t*) (&out) + offset);
     }
     return out;
 }
@@ -85,7 +85,7 @@ const uint8_t* Identifier::getRaw() const
     return _id.data();
 }
 
-int Identifier::getSize() const
+size_t Identifier::getSize() const
 {
     return _id.size();
 }
@@ -106,7 +106,7 @@ std::size_t Identifier::hash() const
     int len = _id.size();
     uint32_t h = 13;
     if (len > 3) {
-        const uint32_t* key_x4 = (const uint32_t*)key;
+        const uint32_t* key_x4 = (const uint32_t*) key;
         size_t i = _id.size() >> 2;
         do {
             uint32_t k = *key_x4++;
@@ -117,7 +117,7 @@ std::size_t Identifier::hash() const
             h = (h << 13) | (h >> 19);
             h = (h * 5) + 0xe6546b64;
         } while (--i);
-        key = (const uint8_t*)key_x4;
+        key = (const uint8_t*) key_x4;
     }
     if (len & 3) {
         size_t i = len & 3;

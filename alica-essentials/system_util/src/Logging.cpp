@@ -1,13 +1,7 @@
-/*
- * Logging.cpp
- *
- *  Created on: Feb 16, 2015
- *      Author: Stephan Opfer
- */
-
 #include "Logging.h"
-#include "FileSystem.h"
-#include <SystemConfig.h>
+
+#include <essentials/FileSystem.h>
+#include <essentials/SystemConfig.h>
 
 namespace essentials
 {

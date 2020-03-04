@@ -1,6 +1,6 @@
-#include "SystemConfig.h"
+#include "essentials/SystemConfig.h"
 
-#include "Configuration.h"
+#include "essentials/Configuration.h"
 
 #include <unistd.h>
 
