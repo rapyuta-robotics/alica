@@ -33,9 +33,7 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 if(CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(${PROJECT_NAME}-tests
-          src/test/IDTests.cpp
-          )
+  catkin_add_gtest(${PROJECT_NAME}-tests src/test/IDTests.cpp)
   target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} ${GTEST_LIBRARIES})
 endif()
 

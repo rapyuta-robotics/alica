@@ -1,4 +1,5 @@
 #include <essentials/Identifier.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <essentials/IDManager.h>
 #include <essentials/WildcardID.h>
 
@@ -106,27 +107,21 @@ TEST(BroadCastID, NotEqualWithNormalID)
         bytes1.push_back(i);
     }
     essentials::Identifier* normalID = new essentials::Identifier(bytes1.data(), bytes1.size());
-    std::vector<uint8_t> bytesBroadcast;
-    essentials::Identifier* broadcastID = new essentials::WildcardID(bytesBroadcast.data(), bytesBroadcast.size());
+    essentials::IDManager idManager;
+    essentials::IdentifierConstPtr broadcastID = idManager.getWildcardID();
 
     ASSERT_FALSE(*broadcastID == *normalID);
 
     delete normalID;
-    delete broadcastID;
 }
 
 TEST(BroadCastID, EqualWithBroadcastID)
 {
-    std::vector<uint8_t> bytesBroadcast1;
-    bytesBroadcast1.push_back(1);
-    essentials::Identifier* broadcastID1 = new essentials::WildcardID(bytesBroadcast1.data(), bytesBroadcast1.size());
-    std::vector<uint8_t> bytesBroadcast2;
-    essentials::Identifier* broadcastID2 = new essentials::WildcardID(bytesBroadcast2.data(), bytesBroadcast2.size());
-
+    essentials::IDManager idManager1;
+    essentials::IdentifierConstPtr broadcastID1 = idManager1.getWildcardID();
+    essentials::IDManager idManager2;
+    essentials::IdentifierConstPtr broadcastID2 = idManager2.getWildcardID();
     ASSERT_TRUE(*broadcastID1 == *broadcastID2);
-
-    delete broadcastID1;
-    delete broadcastID2;
 }
 
 TEST(IdentifierFactory, GenerateIDsOfVariousLength)
