@@ -25,22 +25,22 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository* planRepository)
+ModelManager::ModelManager(PlanRepository& planRepository)
+        : _planRepository(planRepository)
+        , sc(essentials::SystemConfig::getInstance())
 {
-    this->planRepository = planRepository;
-    this->sc = essentials::SystemConfig::getInstance();
-    this->domainConfigFolder = this->sc->getConfigPath();
+    this->domainConfigFolder = this->sc.getConfigPath();
     this->basePlanPath = getBasePath("Alica.PlanDir");
     this->baseRolePath = getBasePath("Alica.RoleDir");
     this->baseTaskPath = getBasePath("Alica.TaskDir");
     Factory::setModelManager(this);
 }
 
-const std::string ModelManager::getBasePath(const std::string& configKey)
+std::string ModelManager::getBasePath(const std::string& configKey)
 {
-    std::string basePath = "";
+    std::string basePath;
     try {
-        basePath = (*this->sc)["Alica"]->get<std::string>(configKey.c_str(), NULL);
+        basePath = this->sc["Alica"]->get<std::string>(configKey.c_str(), NULL);
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
     }
@@ -97,7 +97,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     this->generateTemplateVariables();
     this->computeReachabilities();
 
-    for (const Behaviour* beh : this->planRepository->getBehaviours()) {
+    for (const Behaviour* beh : _planRepository.getBehaviours()) {
         ALICA_INFO_MSG("MM: " << beh->toString());
     }
 
@@ -162,7 +162,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
     YAML::Node node;
     try {
         node = YAML::LoadFile(currentFile);
-    } catch (YAML::BadFile badFile) {
+    } catch (YAML::BadFile& badFile) {
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
 
@@ -192,7 +192,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
     }
 }
 
-bool ModelManager::idExists(const int64_t id)
+bool ModelManager::idExists(const int64_t id) const
 {
     return this->elements.find(id) != this->elements.end();
 }
@@ -217,17 +217,17 @@ void ModelManager::attachReferences()
 void ModelManager::generateTemplateVariables()
 {
     // generates template variables for all quantifiers
-    for (std::pair<const int64_t, Quantifier*> p : this->planRepository->_quantifiers) {
+    for (std::pair<const int64_t, Quantifier*> p : _planRepository._quantifiers) {
         Quantifier* q = p.second;
         for (const std::string& s : q->getDomainIdentifiers()) {
             int64_t id = Hash64(s.c_str(), s.size());
             Variable* v;
-            PlanRepository::MapType<Variable>::iterator vit = this->planRepository->_variables.find(id);
-            if (vit != this->planRepository->_variables.end()) {
+            PlanRepository::MapType<Variable>::iterator vit = _planRepository._variables.find(id);
+            if (vit != _planRepository._variables.end()) {
                 v = vit->second;
             } else {
                 v = new Variable(id, s, "Template");
-                this->planRepository->_variables.emplace(id, v);
+                _planRepository._variables.emplace(id, v);
             }
             q->_templateVars.push_back(v);
         }
@@ -240,11 +240,11 @@ void ModelManager::generateTemplateVariables()
  */
 void ModelManager::computeReachabilities()
 {
-    for (const std::pair<const int64_t, EntryPoint*>& ep : this->planRepository->_entryPoints) {
+    for (const std::pair<const int64_t, EntryPoint*>& ep : _planRepository._entryPoints) {
         ep.second->computeReachabilitySet();
         // set backpointers:
         for (const State* s : ep.second->_reachableStates) {
-            this->planRepository->_states[s->getId()]->_entryPoint = ep.second;
+            _planRepository._states[s->getId()]->_entryPoint = ep.second;
         }
     }
 }

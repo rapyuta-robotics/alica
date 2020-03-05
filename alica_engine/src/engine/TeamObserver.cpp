@@ -1,14 +1,11 @@
 #include "engine/TeamObserver.h"
+
 #include "engine/AlicaEngine.h"
-#include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
-#include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/collections/SuccessCollection.h"
-#include "engine/collections/SuccessMarks.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
@@ -16,7 +13,6 @@
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
-#include <SystemConfig.h>
 
 #include <essentials/IdentifierConstPtr.h>
 #include <engine/Output.h>
@@ -31,9 +27,9 @@ using std::pair;
 
 TeamObserver::TeamObserver(AlicaEngine* ae)
         : _ae(ae)
-        , _tm(ae->getTeamManager())
+        , _tm(ae->editTeamManager())
 {
-    _me = _tm->editLocalAgent();
+    _me = _tm.editLocalAgent();
 }
 
 TeamObserver::~TeamObserver() {}
@@ -46,8 +42,8 @@ bool TeamObserver::updateTeamPlanTrees()
         for (const auto& msg : _msgQueue) {
             std::unique_ptr<SimplePlanTree> spt = sptFromMessage(msg.first->senderID, msg.first->stateIDs, msg.second);
             if (spt != nullptr) {
-                _tm->setTimeLastMsgReceived(msg.first->senderID, msg.second);
-                _tm->setSuccessMarks(msg.first->senderID, msg.first->succeededEPs);
+                _tm.setTimeLastMsgReceived(msg.first->senderID, msg.second);
+                _tm.setSuccessMarks(msg.first->senderID, msg.first->succeededEPs);
 
                 auto sptEntry = _simplePlanTrees.find(spt->getAgentId());
                 if (sptEntry != _simplePlanTrees.end()) {
@@ -60,38 +56,38 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    bool changedSomeAgent = false;
-    for (const auto& agent : _tm->getAllAgents()) {
-        bool changedCurrentAgent = agent.second->update();
-        if (changedCurrentAgent && !agent.second->isActive()) {
-            _simplePlanTrees.erase(agent.second->getId());
-        }
-        changedSomeAgent |= changedCurrentAgent;
+    std::vector<essentials::IdentifierConstPtr> deactivatedAgentIds;
+    bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
+    for (auto agent : deactivatedAgentIds) {
+        _simplePlanTrees.erase(agent);
     }
+
     return changedSomeAgent;
 }
 
 void TeamObserver::tick(RunningPlan* root)
 {
-    AlicaTime time = _ae->getAlicaClock()->now();
+    AlicaTime time = _ae->getAlicaClock().now();
+    ALICA_DEBUG_MSG("TO: tick " << time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
-        _ae->getRoleAssignment()->update();
-        _ae->getLog()->eventOccurred("TeamChanged");
+        _ae->editRoleAssignment().update();
+        _ae->editLog().eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
     if (root != nullptr) {
         // TODO get rid of this once teamManager gets a datastructure overhaul
+        ActiveAgentIdView agentIds = _tm.getActiveAgentIds();
         AgentGrp activeAgents;
-        std::copy(_tm->getActiveAgentIds().begin(), _tm->getActiveAgentIds().end(), std::back_inserter(activeAgents));
+        std::copy(agentIds.begin(), agentIds.end(), std::back_inserter(activeAgents));
 
         std::vector<const SimplePlanTree*> updatespts;
         AgentGrp noUpdates;
         for (auto& ele : _simplePlanTrees) {
-            assert(_tm->isAgentActive(ele.second->getAgentId()));
+            assert(_tm.isAgentActive(ele.second->getAgentId()));
 
             if (ele.second->isNewSimplePlanTree()) {
                 updatespts.push_back(ele.second.get());
@@ -105,7 +101,7 @@ void TeamObserver::tick(RunningPlan* root)
         ALICA_DEBUG_MSG("TO: spts size " << updatespts.size());
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            _ae->getLog()->eventOccurred("MsgUpdate");
+            _ae->editLog().eventOccurred("MsgUpdate");
         }
     }
 }
@@ -129,7 +125,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     pti.senderID = _me->getId();
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
-    _ae->getCommunicator()->sendPlanTreeInfo(pti);
+    _ae->getCommunicator().sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
 
@@ -177,13 +173,13 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
  * @param plan a plan
  * @return an int counting successes in plan
  */
-int TeamObserver::successesInPlan(const Plan* plan)
+int TeamObserver::successesInPlan(const Plan* plan) const
 {
     int ret = 0;
     const EntryPointGrp* suc = nullptr;
-    for (const Agent* agent : _tm->getActiveAgents()) {
+    for (const Agent* agent : _tm.getActiveAgents()) {
         {
-            lock_guard<mutex> lock(this->successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
         }
         if (suc != nullptr) {
@@ -201,13 +197,13 @@ SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
 {
     SuccessCollection ret(plan);
 
-    for (const Agent* agent : _tm->getActiveAgents()) {
+    for (const Agent* agent : _tm.getActiveAgents()) {
         const EntryPointGrp* suc = nullptr;
         if (_me == agent) {
             continue;
         }
         {
-            lock_guard<mutex> lock(this->successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(plan);
         }
         if (suc != nullptr) {
@@ -230,12 +226,12 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
     sc.clear();
     const EntryPointGrp* suc = nullptr;
 
-    for (const Agent* agent : _tm->getActiveAgents()) {
+    for (const Agent* agent : _tm.getActiveAgents()) {
         if (agent == _me) {
             continue;
         }
         {
-            lock_guard<mutex> lock(this->successMarkMutex);
+            lock_guard<mutex> lock(_successMarkMutex);
             suc = agent->getSucceededEntryPoints(p);
         }
         if (suc != nullptr) {
@@ -257,7 +253,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
  * believed to be left in the plan.
  * @param plan The AbstractPlan left by the robot
  */
-void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
+void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan) const
 {
     for (const auto& ele : _simplePlanTrees) {
         if (ele.second->containsPlan(plan)) {
@@ -269,14 +265,13 @@ void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 {
-    if (incoming->senderID != _me->getId()) {
-        ALICA_DEBUG_MSG("TeamObserver: IncomingID: '" << incoming->senderID << "' OwnID: '" << _me->getId() << "'");
-        if (_tm->isAgentIgnored(incoming->senderID)) {
-            return;
-        }
-        lock_guard<mutex> lock(_msgQueueMutex);
-        _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock()->now());
+    if (incoming->senderID == _me->getId() || _tm.isAgentIgnored(incoming->senderID)) {
+        return;
     }
+
+    lock_guard<mutex> lock(_msgQueueMutex);
+    ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
+    _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
 }
 
 /**
@@ -301,7 +296,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(essentials::Identif
     root->setStateIds(ids);
 
     int64_t root_id = ids[0];
-    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository()->getStates();
+    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository().getStates();
     const State* s = states.find(root_id);
     if (s) {
         root->setState(s);

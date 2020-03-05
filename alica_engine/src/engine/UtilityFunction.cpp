@@ -1,4 +1,6 @@
 #include "engine/UtilityFunction.h"
+
+#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/IRoleAssignment.h"
@@ -12,7 +14,6 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
-#include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -23,7 +24,6 @@ using std::pair;
 
 UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan)
         : _plan(plan)
-        , _ra(nullptr)
         , _ae(nullptr)
         , _priorityWeight(priorityWeight)
         , _similarityWeight(similarityWeight)
@@ -118,7 +118,6 @@ void UtilityFunction::init(AlicaEngine* ae)
         _priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(Task::IDLEID, roleId), 0.0));
     }
     _ae = ae;
-    _ra = _ae->getRoleAssignment();
 }
 
 /**
@@ -128,7 +127,7 @@ void UtilityFunction::init(AlicaEngine* ae)
  */
 void UtilityFunction::initDataStructures(AlicaEngine* ae)
 {
-    for (const Plan* p : ae->getPlanRepository()->getPlans()) {
+    for (const Plan* p : ae->getPlanRepository().getPlans()) {
         p->getUtilityFunction()->init(ae);
     }
 }
@@ -144,9 +143,8 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         return priResult;
     }
     // SUM UP HEURISTIC PART OF PRIORITY UTILITY
-
     for (essentials::IdentifierConstPtr agentID : ass.getUnassignedAgents()) {
-        const auto highestPriority = _roleHighestPriorityMap.find(_ra->getRole(agentID)->getId());
+        const auto highestPriority = _roleHighestPriorityMap.find(_ae->getRoleAssignment().getRole(agentID)->getId());
         assert(highestPriority != _roleHighestPriorityMap.end());
         priResult.setMax(priResult.getMax() + highestPriority->second);
     }
@@ -158,7 +156,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
 
         for (essentials::IdentifierConstPtr agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
             double curPrio = 0;
-            const int64_t roleId = _ra->getRole(agent)->getId();
+            const int64_t roleId = _ae->getRoleAssignment().getRole(agent)->getId();
             const auto mit = _priorityMatrix.find(TaskRoleStruct{taskId, roleId});
             if (mit != _priorityMatrix.end()) {
                 curPrio = mit->second;
@@ -173,7 +171,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         }
     }
     // for better comparability of different utility functions
-    int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager()->getTeamSize());
+    int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
     ALICA_DEBUG_MSG("##" << std::endl << "UF: prioUI = " << priResult);
     ALICA_DEBUG_MSG("UF: denum = " << denum);

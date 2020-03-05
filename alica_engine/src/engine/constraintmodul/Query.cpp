@@ -32,9 +32,9 @@ void Query::addStaticVariable(const Variable* v)
     _queriedStaticVariables.push_back(v);
 }
 
-void Query::addDomainVariable(essentials::IdentifierConstPtr robot, const std::string& ident, AlicaEngine* ae)
+void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::string& ident, AlicaEngine* ae)
 {
-    _queriedDomainVariables.push_back(ae->getTeamManager()->getDomainVariable(robot, ident));
+    _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
 }
 
 void Query::clearDomainVariables()
@@ -76,11 +76,11 @@ void Query::fillBufferFromQuery()
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
+bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
-    time = pi.getAlicaEngine()->getAlicaClock()->now();
+    time = pi.getAlicaEngine()->getAlicaClock().now();
 #endif
 
     clearTemporaries();
@@ -120,9 +120,10 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* sol
 
             // 3. process bindings for state
             RunningPlan* parent = rp->getParent();
-            if (parent && parent->getActiveState() != nullptr) {
+            const State* parent_state = nullptr;
+            if (parent && (parent_state = parent->getActiveState()) != nullptr) {
                 _staticVars.editNext().clear();
-                for (const VariableBinding* p : parent->getActiveState()->getParametrisation()) {
+                for (const VariableBinding* p : parent_state->getParametrisation()) {
                     if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
                         _staticVars.editNext().push_back(p->getVar());
                         _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
@@ -148,7 +149,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* sol
 
     ALICA_DEBUG_MSG("Query: Size of problemParts is " << _problemParts.size());
     if (_context.get() == nullptr) {
-        _context = solver->createSolverContext();
+        _context = solver.createSolverContext();
     } else {
         _context->clear();
     }
@@ -173,7 +174,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase* sol
     ALICA_DEBUG_MSG("Query: Number of relevant static variables: " << domOffset);
     ALICA_DEBUG_MSG("Query: Number of relevant domain variables: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Total number of relevant variables: " << _relevantVariables.size());
-    ALICA_DEBUG_MSG("Query: PrepTime: " << (pi.getAlicaEngine()->getAlicaClock()->now() - time).inMicroseconds() << "us");
+    ALICA_DEBUG_MSG("Query: PrepTime: " << (pi.getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds() << "us");
 
     return true;
 }

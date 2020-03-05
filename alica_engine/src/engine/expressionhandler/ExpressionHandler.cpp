@@ -6,6 +6,7 @@
  */
 
 #include "engine/expressionhandler/ExpressionHandler.h"
+#include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/IConditionCreator.h"
@@ -29,13 +30,7 @@ namespace alica
 /**
  * Constructor, loads the assembly containing expressions and constraints.
  */
-ExpressionHandler::ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc)
-{
-    this->ae = ae;
-    this->conditionCreator = cc;
-    this->utilityCreator = uc;
-    this->constraintCreator = crc;
-}
+ExpressionHandler::ExpressionHandler() {}
 
 ExpressionHandler::~ExpressionHandler()
 {
@@ -45,34 +40,33 @@ ExpressionHandler::~ExpressionHandler()
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */
-void ExpressionHandler::attachAll()
+void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 {
-    PlanRepository* pr = ae->getPlanRepository();
-    for (const std::pair<const int64_t, Plan*>& it : pr->_plans) {
+    for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
 
-        auto ufGen = utilityCreator->createUtility(p->getId());
+        auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->_preCondition->setBasicCondition(this->conditionCreator->createConditions(p->getPreCondition()->getId()));
-                attachConstraint(p->_preCondition);
+                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getPreCondition()->getId()));
+                attachConstraint(p->_preCondition, *creatorCtx.constraintCreator);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
             }
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->_runtimeCondition->setBasicCondition(this->conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
-            attachConstraint(p->_runtimeCondition);
+            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
+            attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
         }
 
         for (const Transition* t : p->_transitions) {
             if (t->getPreCondition() != nullptr) {
                 if (t->getPreCondition()->isEnabled()) {
-                    t->_preCondition->setBasicCondition(this->conditionCreator->createConditions(t->getPreCondition()->getId()));
-                    attachConstraint(t->_preCondition);
+                    t->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(t->getPreCondition()->getId()));
+                    attachConstraint(t->_preCondition, *creatorCtx.constraintCreator);
                 } else {
                     t->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
                 }
@@ -80,31 +74,13 @@ void ExpressionHandler::attachAll()
         }
     }
 }
-bool ExpressionHandler::dummyTrue(RunningPlan* rp)
-{
-    return true;
-}
 
-bool ExpressionHandler::dummyFalse(RunningPlan* rp)
-{
-    return false;
-}
-
-//	void ExpressionHandler::attachPlanConditions(Plan* p, T exprType, T consType)
-//	{
-//
-//	}
-//	void ExpressionHandler::attachTransConditions(Transition* t, T exprType, T consType)
-//	{
-//
-//	}
-
-void ExpressionHandler::attachConstraint(Condition* c)
+void ExpressionHandler::attachConstraint(Condition* c, IConstraintCreator& crc)
 {
     if (c->getVariables().size() == 0 && c->getQuantifiers().size() == 0) {
         c->setBasicConstraint(make_shared<DummyConstraint>());
     } else {
-        c->setBasicConstraint(this->constraintCreator->createConstraint(c->getId()));
+        c->setBasicConstraint(crc.createConstraint(c->getId()));
     }
 }
 

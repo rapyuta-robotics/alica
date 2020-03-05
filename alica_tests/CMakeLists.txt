@@ -1,13 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_tests)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS 
     roscpp
@@ -61,6 +55,8 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_task_assignment.cpp
         src/test/test_variant.cpp
         src/test/test_varsync.cpp
+        src/test/test_agent_dies.cpp
+        src/test/test_agent_discovery.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

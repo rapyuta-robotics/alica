@@ -13,7 +13,6 @@
 #include <string>
 #include <vector>
 
-#include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/UtilityInterval.h"

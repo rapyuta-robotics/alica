@@ -32,10 +32,10 @@ struct SyncData
     void toString() const
     {
         std::cout << "SyncData--> ";
-        std::cout << " RobotId: " << this->robotID;
-        std::cout << " TransitionID: " << this->transitionID;
-        std::cout << " ConditionHolds: " << this->conditionHolds;
-        std::cout << " Acknowledge: " << this->ack << std::endl;
+        std::cout << " RobotId: " << robotID;
+        std::cout << " TransitionID: " << transitionID;
+        std::cout << " ConditionHolds: " << conditionHolds;
+        std::cout << " Acknowledge: " << ack << std::endl;
     }
 
     essentials::IdentifierConstPtr robotID;
