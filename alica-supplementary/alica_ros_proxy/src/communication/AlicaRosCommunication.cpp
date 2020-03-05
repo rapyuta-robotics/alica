@@ -114,7 +114,7 @@ void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInf
         int i = 0;
         for (auto& agentId : ep.robots) {
             newEP.robots.push_back(alica_msgs::EntryPointRobots::_robots_type::value_type());
-            for (int j = 0; j < agentId->getSize(); j++) {
+            for (size_t j = 0; j < agentId->getSize(); j++) {
                 newEP.robots[i].id.push_back(*(agentId->getRaw() + j));
             }
             i++;
