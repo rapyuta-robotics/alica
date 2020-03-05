@@ -1,22 +1,13 @@
-#include <FileSystem.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
-#include <SystemConfig.h>
-#include <chrono>
-#include <communication/AlicaRosCommunication.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
-#include <engine/RunningPlan.h>
-#include <engine/constraintmodul/Query.h>
 #include <engine/model/Variable.h>
+#include <test_supplementary.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
-#include <iostream>
-#include <memory>
+
 #include <string>
-#include <test_supplementary.h>
-#include <thread>
 #include <vector>
+#include <chrono>
 
 namespace supplementary
 {

@@ -35,8 +35,8 @@ void SolverTestBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/ // Add additional options here
     _query.clearStaticVariables();
-    _query.addStaticVariable(getVariableByName("X"));
-    _query.addStaticVariable(getVariableByName("Y"));
+    _query.addStaticVariable(getVariable("X"));
+    _query.addStaticVariable(getVariable("Y"));
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/ // Add additional methods here

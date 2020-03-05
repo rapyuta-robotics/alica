@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(world_model)
 
-## Compile as C++14, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
 
-find_package(catkin REQUIRED system_config alica_engine nonstd agent_id)
+find_package(catkin REQUIRED system_config alica_engine nonstd id_ros)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES world_model
-  CATKIN_DEPENDS system_config alica_engine nonstd agent_id
+  CATKIN_DEPENDS system_config alica_engine nonstd id_ros
 )
 
 include_directories(

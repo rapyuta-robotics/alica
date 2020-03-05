@@ -20,7 +20,7 @@
   <depend>alica_common_config</depend>
   <depend>alica_engine</depend>
 
-  <depend>agent_id</depend>
+  <depend>id_ros</depend>
   <depend>alica_ros_proxy</depend>
   <depend>constraintsolver</depend>
 </package>

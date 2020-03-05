@@ -4,8 +4,8 @@
 //#define ALWAYS_CHECK_THRESHOLD
 #define AGGREGATE_CONSTANTS
 
-#include "Configuration.h"
-#include "SystemConfig.h"
+#include "essentials/Configuration.h"
+#include "essentials/SystemConfig.h"
 
 #include <engine/AlicaClock.h>
 

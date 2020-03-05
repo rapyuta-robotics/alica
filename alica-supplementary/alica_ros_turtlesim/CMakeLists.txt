@@ -9,7 +9,7 @@ set(PKG_DEPS
         roscpp
         alica_engine
         alica_common_config
-        agent_id
+        id_ros
         alica_ros_proxy
         constraintsolver
         turtlesim

@@ -3,7 +3,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/teammanager/TeamManager.h>
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 namespace supplementary
 {
@@ -58,10 +58,10 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
 /**
  * The AlicaEngine must be set, before this method is called!
  */
-const essentials::AgentID* WorldModel::getOwnId()
+const essentials::IdentifierConstPtr WorldModel::getOwnId()
 {
     if (!this->ownID) {
-        this->ownID = this->alicaEngine->getTeamManager().getLocalAgentID().get();
+        this->ownID = this->alicaEngine->getTeamManager().getLocalAgentID();
     }
     return this->ownID;
 }
