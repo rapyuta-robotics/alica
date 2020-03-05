@@ -1,27 +1,13 @@
 using namespace std;
 
-#include "SystemConfig.h"
-#include <cstdio>
-#include <gtest/gtest.h>
-#include <iostream>
-#include <list>
-#include <map>
-#include <memory>
-#include <ros/ros.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <test_alica.h>
-#include <typeinfo>
+#include "test_alica.h"
 
 #include "engine/AlicaClock.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/BehaviourPool.h"
 #include "engine/DefaultUtilityFunction.h"
-#include "engine/PlanRepository.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/Condition.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Plan.h"
@@ -34,7 +20,12 @@ using namespace std;
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
 #include "engine/model/Transition.h"
-#include <engine/AlicaEngine.h>
+
+#include <gtest/gtest.h>
+
+#include <iostream>
+#include <list>
+#include <cstdio>
 
 namespace alica
 {
@@ -521,7 +512,7 @@ TEST_F(AlicaEngineTest, planParser)
                 case 1402500843072:
                     checkTransition(
                             t, 1402500843072, "MISSING_NAME", "", 1402500844446, 1402500830885, 1402500833246, "MISSING_NAME", "", "", "DefaultPlugin", true);
-                        checkSynchronisation(t->getSynchronisation(), 1402500865502, "SynChro", "", 30, 10000);
+                    checkSynchronisation(t->getSynchronisation(), 1402500865502, "SynChro", "", 30, 10000);
 
                     break;
                 default:
@@ -583,19 +574,19 @@ TEST_F(AlicaEngineTest, planWriter)
 {
     ASSERT_NO_SIGNAL
     cout << "AlicaEngineTest, planWriter: Develop plan writer for JSON first." << endl;
-//    const auto& plans = ae->getPlanRepository().getPlans();
-//    alica::PlanWriter pw = alica::PlanWriter(ae);
-//    for (const alica::Plan* plan : plans) {
-//        cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
-//        pw.saveSinglePlan(plan);
-//        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-//        string temp = essentials::FileSystem::combinePaths(sc.getConfigPath(), "plans/tmp");
-//        temp = essentials::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
-//        string test = exec((string("diff ") + plan->getFileName() + string(" ") + temp).c_str());
-//        EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
-//        std::remove(temp.c_str()); // delete the file after comparing it
-//    }
-//    cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
+    //    const auto& plans = ae->getPlanRepository().getPlans();
+    //    alica::PlanWriter pw = alica::PlanWriter(ae);
+    //    for (const alica::Plan* plan : plans) {
+    //        cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
+    //        pw.saveSinglePlan(plan);
+    //        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    //        string temp = essentials::FileSystem::combinePaths(sc.getConfigPath(), "plans/tmp");
+    //        temp = essentials::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
+    //        string test = exec((string("diff ") + plan->getFileName() + string(" ") + temp).c_str());
+    //        EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
+    //        std::remove(temp.c_str()); // delete the file after comparing it
+    //    }
+    //    cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
 }
-}
-}
+} // namespace
+} // namespace alica

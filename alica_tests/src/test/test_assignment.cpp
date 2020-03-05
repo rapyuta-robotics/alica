@@ -1,10 +1,12 @@
-#include <SystemConfig.h>
 #include <engine/Assignment.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
+
 #include <essentials/IDManager.h>
+#include <essentials/SystemConfig.h>
+
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <vector>
