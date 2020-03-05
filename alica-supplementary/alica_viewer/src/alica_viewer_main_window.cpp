@@ -4,11 +4,6 @@
 #include "elastic_nodes/edge.h"
 #include "elastic_nodes/node.h"
 
-#include <capnzero/CapnZero.h>
-#include <capnp/common.h>
-#include <capnp/message.h>
-#include <capnp/serialize-packed.h>
-
 namespace alica
 {
 

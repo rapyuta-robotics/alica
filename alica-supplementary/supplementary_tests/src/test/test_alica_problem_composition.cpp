@@ -1,22 +1,18 @@
-#include <FileSystem.h>
 #include <Plans/ProblemModule/QueryBehaviour1.h>
-#include <SystemConfig.h>
-#include <chrono>
-#include <communication/AlicaRosCommunication.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
-#include <engine/RunningPlan.h>
-#include <engine/constraintmodul/Query.h>
 #include <engine/model/Variable.h>
+#include <test_supplementary.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
-#include <iostream>
-#include <memory>
+
 #include <string>
-#include <test_supplementary.h>
-#include <thread>
 #include <vector>
+#include <chrono>
+
+namespace supplementary
+{
+namespace
+{
 
 class AlicaProblemCompositionTest : public AlicaTestFixtureWithSolvers
 {
@@ -37,14 +33,15 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
         step(ae);
     }
 
-    const alica::RunningPlan* deep = ae->getPlanBase()->getDeepestNode();
+    const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
     ASSERT_EQ(deep->getChildren().size(), 1);
     ASSERT_TRUE((*deep->getChildren().begin())->isBehaviour());
 
-    auto queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());
+    alica::QueryBehaviour1* queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());
     ASSERT_NE(queryBehaviour1, nullptr);
+    queryBehaviour1->stopQueries();
     alica::VariableGrp allReps;
     queryBehaviour1->query->getUniqueVariableStore().getAllRep(allReps);
 
@@ -52,4 +49,6 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
         EXPECT_TRUE(rep->getName() == "PBMX" || rep->getName() == "PBMY");
         // cout << "Test: '" << rep->getName() << "'" << endl;
     }
+}
+}
 }

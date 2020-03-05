@@ -12,12 +12,10 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>roscpp</depend>
-  <depend>qt_build</depend>
   <depend>libqt4-dev</depend>
 
-  <depend>id_capnzero</depend>
+  <depend>id_ros</depend>
   <depend>alica_engine</depend>
-  <depend>alica_capnz_msgs</depend>
-  <depend>capnzero</depend>
-  <depend>alica_capnzero_proxy</depend>
+  <depend>alica_msgs</depend>
+  <depend>alica_ros_proxy</depend>
 </package>

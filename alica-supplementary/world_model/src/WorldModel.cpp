@@ -8,12 +8,12 @@
 namespace supplementary
 {
 WorldModel::WorldModel()
-    : maySendMessages(true)
-    , alicaEngine(nullptr)
-    , ownID(nullptr)
+        : maySendMessages(true)
+        , alicaEngine(nullptr)
+        , ownID(nullptr)
 {
-    this->sc = essentials::SystemConfig::getInstance();
-    this->maySendMessages = (*this->sc)["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    this->maySendMessages = sc["WorldModel"]->get<bool>("WorldModel", "MaySendMessages", NULL);
 }
 
 WorldModel::~WorldModel() {}
@@ -39,7 +39,7 @@ alica::AlicaEngine* WorldModel::getEngine()
 alica::AlicaTime WorldModel::getTime()
 {
     if (this->alicaEngine != nullptr) {
-        return this->alicaEngine->getAlicaClock()->now();
+        return this->alicaEngine->getAlicaClock().now();
     } else {
         return alica::AlicaTime::zero();
     }
@@ -61,13 +61,9 @@ void WorldModel::setMaySendMessages(bool maySendMessages)
 const essentials::IdentifierConstPtr WorldModel::getOwnId()
 {
     if (!this->ownID) {
-        this->ownID = this->alicaEngine->getTeamManager()->getLocalAgentID();
+        this->ownID = this->alicaEngine->getTeamManager().getLocalAgentID();
     }
     return this->ownID;
 }
 
-essentials::SystemConfig* WorldModel::getSystemConfig()
-{
-    return this->sc;
-}
 } // namespace supplementary

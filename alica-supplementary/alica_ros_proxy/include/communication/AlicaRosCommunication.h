@@ -1,4 +1,6 @@
 #pragma once
+#include "alica_msgs/AgentAnnouncement.h"
+#include "alica_msgs/AgentQuery.h"
 #include "alica_msgs/AlicaEngineInfo.h"
 #include "alica_msgs/AllocationAuthorityInfo.h"
 #include "alica_msgs/PlanTreeInfo.h"
@@ -25,59 +27,59 @@ public:
     AlicaRosCommunication(AlicaEngine* ae);
     virtual ~AlicaRosCommunication();
 
-    virtual void tick();
+    void tick();
 
-    virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const override;
-    virtual void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const override;
-    virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const override;
-    virtual void sendRoleSwitch(const RoleSwitch& rs) const override;
-    virtual void sendSyncReady(const SyncReady& sr) const override;
-    virtual void sendSyncTalk(const SyncTalk& st) const override;
-    virtual void sendSolverResult(const SolverResult& sr) const override;
-    virtual void sendLogMessage(int level, const std::string& message) const override;
+    void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const override;
+    void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const override;
+    void sendPlanTreeInfo(const PlanTreeInfo& pti) const override;
+    void sendRoleSwitch(const RoleSwitch& rs) const override;
+    void sendSyncReady(const SyncReady& sr) const override;
+    void sendSyncTalk(const SyncTalk& st) const override;
+    void sendSolverResult(const SolverResult& sr) const override;
+    void sendAgentQuery(const AgentQuery& pq) const override;
+    void sendAgentAnnouncement(const AgentAnnouncement& pa) const override;
+    void sendLogMessage(int level, const std::string& message) const override;
 
-    virtual void handleAllocationAuthorityRos(const alica_msgs::AllocationAuthorityInfo& aai);
-    virtual void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
-    virtual void handleSyncReadyRos(alica_msgs::SyncReadyPtr sr);
-    virtual void handleSyncTalkRos(alica_msgs::SyncTalkPtr st);
-    virtual void handleSolverResult(const alica_msgs::SolverResult& sr);
+    void handleAllocationAuthorityRos(const alica_msgs::AllocationAuthorityInfo& aai);
+    void handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti);
+    void handleSyncReadyRos(alica_msgs::SyncReadyPtr sr);
+    void handleSyncTalkRos(alica_msgs::SyncTalkPtr st);
+    void handleSolverResult(const alica_msgs::SolverResult& sr);
+    void handleAgentQuery(const alica_msgs::AgentQuery& pq);
+    void handleAgentAnnouncement(const alica_msgs::AgentAnnouncement& pa);
 
-    virtual void startCommunication();
-    virtual void stopCommunication();
+    void startCommunication() override;
+    void stopCommunication() override;
 
-protected:
-    ros::NodeHandle* rosNode;
-    ros::AsyncSpinner* spinner;
+private:
+    ros::NodeHandle* _rosNode;
+    ros::AsyncSpinner* _spinner;
 
-    ros::Publisher AlicaEngineInfoPublisher;
-    ros::Publisher RoleSwitchPublisher;
+    ros::Publisher _alicaEngineInfoPublisher;
+    ros::Publisher _roleSwitchPublisher;
 
-    ros::Publisher AllocationAuthorityInfoPublisher;
-    ros::Subscriber AllocationAuthorityInfoSubscriber;
+    ros::Publisher _allocationAuthorityInfoPublisher;
+    ros::Subscriber _allocationAuthorityInfoSubscriber;
 
-    ros::Publisher PlanTreeInfoPublisher;
-    ros::Subscriber PlanTreeInfoSubscriber;
+    ros::Publisher _planTreeInfoPublisher;
+    ros::Subscriber _planTreeInfoSubscriber;
 
-    ros::Publisher SyncReadyPublisher;
-    ros::Subscriber SyncReadySubscriber;
+    ros::Publisher _syncReadyPublisher;
+    ros::Subscriber _syncReadySubscriber;
 
-    ros::Publisher SyncTalkPublisher;
-    ros::Subscriber SyncTalkSubscriber;
+    ros::Publisher _syncTalkPublisher;
+    ros::Subscriber _syncTalkSubscriber;
 
-    ros::Publisher SolverResultPublisher;
-    ros::Subscriber SolverResultSubscriber;
+    ros::Publisher _solverResultPublisher;
+    ros::Subscriber _solverResultSubscriber;
 
-    std::string allocationAuthorityInfoTopic;
-    std::string ownRoleTopic;
-    std::string alicaEngineInfoTopic;
-    std::string planTreeInfoTopic;
-    std::string syncReadyTopic;
-    std::string syncTalkTopic;
-    std::string solverResultTopic;
+    ros::Publisher _presenceQueryPublisher;
+    ros::Subscriber _presenceQuerySubscriber;
 
-    bool isRunning;
+    ros::Publisher _presenceAnnouncementPublisher;
+    ros::Subscriber _presenceAnnouncementSubscriber;
 
-    essentials::SystemConfig* sc;
+    bool _isRunning;
 };
 
 } /* namespace alicaRosProxy */
