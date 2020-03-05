@@ -5,15 +5,14 @@
 namespace alica
 {
 IRoleAssignment::IRoleAssignment()
-        : ownRole(nullptr)
-        , communication(nullptr)
+        : _ownRole(nullptr)
 {
 }
 
-const Role* IRoleAssignment::getRole(essentials::IdentifierConstPtr robotId)
+const Role* IRoleAssignment::getRole(essentials::IdentifierConstPtr robotId) const
 {
-    auto iter = this->robotRoleMapping.find(robotId);
-    if (iter != this->robotRoleMapping.end()) {
+    auto iter = _robotRoleMapping.find(robotId);
+    if (iter != _robotRoleMapping.end()) {
         return iter->second;
     } else {
         std::stringstream ss;
@@ -21,11 +20,6 @@ const Role* IRoleAssignment::getRole(essentials::IdentifierConstPtr robotId)
         AlicaEngine::abort(ss.str());
         return nullptr;
     }
-}
-
-void IRoleAssignment::setCommunication(const IAlicaCommunication* communication)
-{
-    this->communication = communication;
 }
 
 } /* namespace alica */

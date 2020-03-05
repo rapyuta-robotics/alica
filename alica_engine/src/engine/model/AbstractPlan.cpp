@@ -11,15 +11,15 @@ AbstractPlan::AbstractPlan()
         : AlicaElement()
 
 {
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
 AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
 {
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds((*sc)["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
 }
 
 AbstractPlan::~AbstractPlan() {}

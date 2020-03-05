@@ -2,8 +2,8 @@
 
 #include "engine/Types.h"
 
+#include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
-#include <SystemConfig.h>
 
 #include <algorithm>
 #include <map>
@@ -15,14 +15,12 @@ namespace alica
 {
 
 class AlicaEngine;
-class Characteristic;
-class Capability;
+struct AgentAnnouncement;
 
 class RobotProperties
 {
 public:
-    RobotProperties();
-    RobotProperties(const AlicaEngine* ae, const std::string& name);
+    RobotProperties(const AlicaEngine* ae, const std::string& defaultRole, const AgentAnnouncement& aa);
     ~RobotProperties();
 
     const std::string& getDefaultRole() const { return _defaultRole; }
@@ -34,8 +32,6 @@ public:
     }
 
 private:
-    void readFromConfig(const AlicaEngine* engine, const std::string& name);
-
     std::string _defaultRole;
 };
 

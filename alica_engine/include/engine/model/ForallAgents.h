@@ -36,7 +36,7 @@ private:
         MODIFIED,
         NONE
     };
-    Result TryAddId(essentials::IdentifierConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager* tm) const;
+    Result TryAddId(essentials::IdentifierConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const;
 };
 
 } // namespace alica

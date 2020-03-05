@@ -1,23 +1,13 @@
-/*
- * ExpressionHandler.h
- *
- *  Created on: Aug 26, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef EXPRESSIONHANDLER_H_
-#define EXPRESSIONHANDLER_H_
+#pragma once
 
 namespace alica
 {
 class RunningPlan;
 class Plan;
 class Condition;
-class Transition;
-class IConditionCreator;
+class PlanRepository;
+class AlicaCreators;
 class IConstraintCreator;
-class IUtilityCreator;
-class AlicaEngine;
 
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
@@ -25,23 +15,12 @@ class AlicaEngine;
 class ExpressionHandler
 {
 public:
-    ExpressionHandler(AlicaEngine* ae, IConditionCreator* cc, IUtilityCreator* uc, IConstraintCreator* crc);
+    ExpressionHandler();
     virtual ~ExpressionHandler();
-    void attachAll();
-    //		void dummyConstraint(ConstraintDescriptor cd, RunningPlan* rp);
-    bool dummyTrue(RunningPlan* rp);
-    bool dummyFalse(RunningPlan* rp);
+    void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
 
 private:
-    IConditionCreator* conditionCreator;
-    IUtilityCreator* utilityCreator;
-    IConstraintCreator* constraintCreator;
-    AlicaEngine* ae;
-    //		void attachPlanConditions(Plan* p, T exprType, T consType);
-    //		void attachTransConditions(Transition* t, T exprType, T consType);
-    void attachConstraint(Condition* c);
+    void attachConstraint(Condition* c, IConstraintCreator& crc);
 };
 
-} /* namespace alica */
-
-#endif /* EXPRESSIONHANDLER_H_ */
+} // namespace alica

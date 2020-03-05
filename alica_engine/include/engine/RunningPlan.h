@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/PlanChange.h"
 #include "engine/PlanStatus.h"
@@ -10,7 +9,7 @@
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 #include <algorithm>
 #include <iostream>
@@ -23,6 +22,7 @@
 
 namespace alica
 {
+class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
 class AbstractPlan;
@@ -101,6 +101,8 @@ public:
     RunningPlan(AlicaEngine* ae, const PlanType* pt);
     RunningPlan(AlicaEngine* ae, const Behaviour* b);
     static void init();
+    static void setAssignmentProtectionTime(AlicaTime t);
+
     virtual ~RunningPlan();
 
     bool isBehaviour() const { return _behaviour; };
@@ -193,6 +195,8 @@ public:
     bool isAnyChildStatus(PlanStatus ps) const;
     bool areAllChildrenStatus(PlanStatus ps) const;
     bool isAnyChildTaskSuccessful() const;
+    bool amISuccessful() const;
+    bool amISuccessfulInAnyChild() const;
 
     void setActiveEntryPoint(EntryPoint* activeEntryPoint);
     void limitToRobots(const AgentGrp& robots);
@@ -201,7 +205,7 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    essentials::IdentifierConstPtr getOwnID() const { return _ae->getTeamManager()->getLocalAgentID(); }
+    essentials::IdentifierConstPtr getOwnID() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:
@@ -231,8 +235,6 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
-
-    static AlicaTime assignmentProtectionTime;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

@@ -25,31 +25,29 @@ class IAlicaCommunication;
 class SyncModule
 {
 public:
-    SyncModule(AlicaEngine* ae);
-    virtual ~SyncModule();
-    virtual void init();
-    virtual void close();
-    virtual void tick();
-    virtual void setSynchronisation(const Transition* trans, bool holds);
-    virtual bool followTransition(const Transition *trans);
-    virtual void onSyncTalk(std::shared_ptr<SyncTalk> st);
-    virtual void onSyncReady(std::shared_ptr<SyncReady> sr);
+    SyncModule(const AlicaEngine* ae);
+    ~SyncModule();
+    void init();
+    void close();
+    void tick();
+    void setSynchronisation(const Transition* trans, bool holds);
+    bool followSyncedTransition(const Transition* trans);
+    void onSyncTalk(std::shared_ptr<SyncTalk> st);
+    void onSyncReady(std::shared_ptr<SyncReady> sr);
 
     void sendSyncTalk(SyncTalk& st);
     void sendSyncReady(SyncReady& sr);
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const Synchronisation* st);
 
-protected:
-    bool running;
-    AlicaEngine* ae;
-    essentials::IdentifierConstPtr myId;
-    unsigned long ticks;
-    PlanRepository* pr;
-    std::map<const Synchronisation*, SynchronisationProcess*> synchSet;
-    std::list<const Synchronisation*> synchronisations;
-    std::mutex lomutex;
-    const IAlicaCommunication* communicator;
+private:
+    bool _running;
+    const AlicaEngine* _ae;
+    essentials::IdentifierConstPtr _myId;
+    unsigned long _ticks;
+    std::map<const Synchronisation*, SynchronisationProcess*> _synchSet;
+    std::list<const Synchronisation*> _synchronisations;
+    std::mutex _lomutex;
 };
 
 } // namespace alica

@@ -12,6 +12,11 @@
 #include <ros/ros.h>
 #include <test_alica.h>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaEngineTestInit : public AlicaTestFixture
 {
 protected:
@@ -27,4 +32,6 @@ TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
     ASSERT_NO_SIGNAL
     EXPECT_NE(ae, nullptr);
+}
+}
 }
