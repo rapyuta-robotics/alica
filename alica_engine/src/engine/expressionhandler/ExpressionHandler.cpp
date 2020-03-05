@@ -22,7 +22,7 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/Transition.h"
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 namespace alica
 {

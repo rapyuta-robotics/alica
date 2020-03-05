@@ -1,6 +1,5 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
-#include "SystemConfig.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/TeamObserver.h"
@@ -9,6 +8,8 @@
 #include "engine/teammanager/TeamManager.h"
 #include <algorithm>
 #include <cmath>
+
+#include <essentials/SystemConfig.h>
 
 #include <assert.h>
 
