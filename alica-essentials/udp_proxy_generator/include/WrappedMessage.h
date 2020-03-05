@@ -1,18 +1,25 @@
-#pragma once 
+//
+// Created by marci on 17.04.16.
+//
 
-#include <functional>
+#ifndef SUPPLEMENTARY_WRAPPEDMESSAGE_H
+#define SUPPLEMENTARY_WRAPPEDMESSAGE_H
+
 #include <iostream>
+#include <functional>
 
 #include <boost/regex.hpp>
 #include <cstdint>
 
-class WrappedMessage
-{
+using namespace std;
+
+class WrappedMessage {
 public:
-    WrappedMessage(const std::string& topic, const std::string& wrappedMessage, const std::string& message, const std::string& options, const std::string& sendReceive);
+    WrappedMessage(const string& topic, const string& wrappedMessage, const string& message, const string& options,
+            const string& sendReceive);
     ~WrappedMessage();
 
-    std::string topic, message, wrappedMessage, options, sendReceive;
+    string topic, message, wrappedMessage, options, sendReceive;
 
     int Ros2UdpQueueLength;
     int Udp2RosQueueLength;
@@ -20,18 +27,19 @@ public:
     std::hash<std::string> hash;
     uint32_t Id;
 
-    std::string getRosCallBackName();
-    std::string getWrappedRosClassName();
-    std::string getPublisherName();
-    std::string getRosMessageHandler();
-    std::string getRosWrappedMessageHandler();
+    string getRosCallBackName();
+    string getWrappedRosClassName();
+    string getPublisherName();
+    string getRosMessageHandler();
+    string getRosWrappedMessageHandler();
 
     bool UseRosTcp;
 
-    std::string getRosClassName();
+    string getRosClassName();
 
-    std::string getRosWrappedCallBackName();
+    string getRosWrappedCallBackName();
 
-    std::string getWrappedPublisherName();
+    string getWrappedPublisherName();
 };
 
+#endif  // SUPPLEMENTARY_WRAPPEDMESSAGE_H

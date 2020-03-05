@@ -1,22 +1,18 @@
 #pragma once
 
-#include "CNPositionAllo.h"
 #include "CNPositionTemplate.h"
-#include "CNVecEgo.h"
 #include "cnc_geometry/CNPointEgo.h"
+#include "CNPositionAllo.h"
+#include "CNVecEgo.h"
 
-namespace geometry
-{
+namespace geometry {
 
 class CNPositionAllo;
 
-class CNPositionEgo : public CNPositionTemplate<CNPositionEgo>
-{
+class CNPositionEgo : public CNPositionTemplate<CNPositionEgo> {
 public:
     CNPositionEgo()
-            : CNPositionEgo(0, 0, 0)
-    {
-    }
+            : CNPositionEgo(0, 0, 0) {}
     CNPositionEgo(double x, double y, double theta);
     CNPositionEgo(const CNPositionEgo& obj);
     virtual ~CNPositionEgo();
