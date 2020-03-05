@@ -20,6 +20,11 @@
 #include <test_supplementary.h>
 #include <thread>
 
+namespace supplementary
+{
+namespace
+{
+
 class AlicaGSolverPlan : public AlicaTestFixtureWithSolvers
 {
 protected:
@@ -43,4 +48,6 @@ TEST_F(AlicaGSolverPlan, solverTest)
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
     EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
+}
+}
 }

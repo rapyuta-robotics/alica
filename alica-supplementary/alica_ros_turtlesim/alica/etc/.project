@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>alica_ros_turtlesim</name>
+	<comment></comment>
+	<projects>
+		<project>ExpressionValidators</project>
+		<project>Misc</project>
+		<project>Plans</project>
+		<project>Roles</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

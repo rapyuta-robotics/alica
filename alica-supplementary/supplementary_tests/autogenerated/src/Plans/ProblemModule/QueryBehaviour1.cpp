@@ -26,9 +26,20 @@ void QueryBehaviour1::run(void* msg)
     /*PROTECTED REGION ID(run1479556104511) ENABLED START*/ // Add additional options here
     callCounter++;
     // cout << "QueryBehaviour1 was called " << callCounter << " times!" << endl;
-    query->getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
+
+    std::lock_guard<std::mutex> guard(queryMutex);
+    if (!stopQuerying) {
+        query->getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
+    }
     /*PROTECTED REGION END*/
 }
+
+void QueryBehaviour1::stopQueries()
+{
+    std::lock_guard<std::mutex> guard(queryMutex);
+    stopQuerying = true;
+}
+
 void QueryBehaviour1::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1479556104511) ENABLED START*/ // Add additional options here
@@ -36,6 +47,7 @@ void QueryBehaviour1::initialiseParameters()
     query->clearStaticVariables();
     query->addStaticVariable(getVariable("QBX"));
     query->addStaticVariable(getVariable("QBY"));
+    stopQuerying = false;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1479556104511) ENABLED START*/ // Add additional methods here

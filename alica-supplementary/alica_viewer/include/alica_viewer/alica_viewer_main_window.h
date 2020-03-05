@@ -3,8 +3,8 @@
 #include <QMainWindow>
 
 #include "alica_viewer/alica_plan_parser.h"
-#include "alica_viewer/alica_viewer_capnzero_interface.h"
 #include "alica_viewer/graphics_view_zoom.h"
+#include "alica_viewer_ros_interface.h"
 #include <ui_alica_viewer_main_window.h>
 
 namespace elastic_nodes
@@ -16,7 +16,7 @@ class Edge;
 namespace alica
 {
 
-typedef AlicaViewerCapnzeroInterface AlicaViewerInterface;
+typedef AlicaViewerRosInterface AlicaViewerInterface;
 
 class AlicaViewerMainWindow : public QMainWindow
 {

@@ -1,0 +1,45 @@
+#include <BehaviourCreator.h>
+#include <ConditionCreator.h>
+#include <ConstraintCreator.h>
+#include <UtilityFunctionCreator.h>
+#include <engine/AlicaContext.h>
+
+#include <CGSolver.h>
+#include <clock/AlicaROSClock.h>
+#include <communication/AlicaRosCommunication.h>
+#include <ros/ros.h>
+
+#include <alica_ros_turtlesim/base.hpp>
+
+namespace turtlesim
+{
+
+Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const std::string& roleset, const std::string& master_plan,
+        const std::string& path)
+{
+    // create world model
+    ALICATurtleWorldModel::init(nh, priv_nh);
+    // Initialize Alica
+    alica::AlicaContext::setRobotName(name);
+    alica::AlicaContext::setRootPath(path);
+    alica::AlicaContext::setConfigPath(path + "/etc");
+    ac = new alica::AlicaContext(roleset, master_plan, false);
+    ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+    ac->addSolver<alica::reasoner::CGSolver>();
+}
+
+void Base::start()
+{
+    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+    ac->init(creators);
+}
+
+Base::~Base()
+{
+    ac->terminate();
+    delete ac;
+    ALICATurtleWorldModel::del();
+}
+
+} // namespace turtlesim

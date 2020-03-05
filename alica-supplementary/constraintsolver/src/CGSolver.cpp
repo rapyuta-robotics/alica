@@ -23,10 +23,10 @@ using autodiff::TermHolder;
 using autodiff::TermPtr;
 
 CGSolver::CGSolver(AlicaEngine* ae)
-    : ISolver(ae)
-    , _lastUtil(0.0)
-    , _lastFEvals(0.0)
-    , _lastRuns(0.0)
+        : ISolver(ae)
+        , _lastUtil(0.0)
+        , _lastFEvals(0.0)
+        , _lastRuns(0.0)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
@@ -60,12 +60,12 @@ bool CGSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::sha
     }
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore()->getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
     std::transform(serial_seeds.begin(), serial_seeds.end(), std::back_inserter(seeds),
-                   [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
+            [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
 
     return _sgs.solveSimple(constraint, *holder, ranges, seeds);
 }
@@ -121,12 +121,12 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     TermPtr all = holder->constraintUtility(constraint, utility);
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore()->getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
     std::transform(serial_seeds.begin(), serial_seeds.end(), std::back_inserter(seeds),
-                   [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
+            [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
 
 #ifdef CGSolver_DEBUG
     for (int i = 0; i < seeds.size(); i += dim) {

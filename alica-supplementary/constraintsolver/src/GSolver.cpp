@@ -36,20 +36,20 @@ int GSolver::_fcounter = 0;
 #endif
 
 GSolver::GSolver()
-    : _seedWithUtilOptimum(true)
-    , _rPropConvergenceStepSize(1E-2)
-    , _utilitySignificanceThreshold(1E-22)
-    , _initialStepSize(0.005)
-    , _utilityThreshold(1.0)
-    , _runs(0)
-    , _fevals(0)
+        : _seedWithUtilOptimum(true)
+        , _rPropConvergenceStepSize(1E-2)
+        , _utilitySignificanceThreshold(1E-22)
+        , _initialStepSize(0.005)
+        , _utilityThreshold(1.0)
+        , _runs(0)
+        , _fevals(0)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
 
-    essentials::SystemConfig* sc = essentials::SystemConfig::getInstance();
-    _maxfevals = (*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    _maxSolveTime = AlicaTime::milliseconds((*sc)["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
+    _maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
 }
 
 GSolver::~GSolver() {}
@@ -86,13 +86,13 @@ void GSolver::closeLog()
 #endif
 
 bool GSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, double& out_util,
-                    std::vector<double>& o_solution)
+        std::vector<double>& o_solution)
 {
     return solve(equation, holder, limits, std::vector<double>(), std::numeric_limits<double>::max(), out_util, o_solution);
 }
 
 bool GSolver::solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, const std::vector<double>& seeds,
-                    double sufficientUtility, double& out_util, std::vector<double>& o_solution)
+        double sufficientUtility, double& out_util, std::vector<double>& o_solution)
 {
     _fevals = 0;
     _runs = 0;
@@ -226,8 +226,8 @@ bool GSolver::solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& hold
     return solveSimple(equation, holder, limits, std::vector<double>());
 }
 
-bool GSolver::solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits,
-                          const std::vector<double>& seeds)
+bool GSolver::solveSimple(
+        autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, const std::vector<double>& seeds)
 {
     _results.clear();
 
@@ -299,12 +299,12 @@ inline GSolver::ResultView GSolver::getResultView(int num, int dim)
     return ResultView(&_results[idx], dim);
 }
 
-void GSolver::initialPointFromSeed(const autodiff::Tape& tape, const double* seed, ResultView o_res, const std::vector<Interval<double>>& limits,
-                                   double* o_value) const
+void GSolver::initialPointFromSeed(
+        const autodiff::Tape& tape, const double* seed, ResultView o_res, const std::vector<Interval<double>>& limits, double* o_value) const
 {
     for (int i = 0; i < o_res.dim(); ++i) {
         if (std::isnan(seed[i])) {
-            o_res.editPoint()[i] = ((double)rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
+            o_res.editPoint()[i] = ((double) rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
         } else {
             o_res.editPoint()[i] = limits[i].clamp(seed[i]);
         }
@@ -319,7 +319,7 @@ void GSolver::initialPoint(const autodiff::Tape& tape, ResultView o_res, const s
     bool found;
     do {
         for (int i = 0; i < dim; ++i) {
-            o_res.editPoint()[i] = ((double)rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
+            o_res.editPoint()[i] = ((double) rand() / RAND_MAX) * limits[i].size() + limits[i].getMin();
         }
         ++_fevals;
         tape.evaluate(o_res.getPoint(), o_value);
@@ -344,8 +344,8 @@ void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const st
     const int dim = o_result.dim();
     initialStepSize(dim, limits);
 
-    double* curGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
-    double* formerGradient = static_cast<double*>(alloca(sizeof(double) * dim + 1));
+    double* curGradient = static_cast<double*>(alloca(sizeof(double) * (dim + 1)));
+    double* formerGradient = static_cast<double*>(alloca(sizeof(double) * (dim + 1)));
 
     double* pointBuffer = static_cast<double*>(alloca(sizeof(double) * dim));
 
@@ -355,7 +355,7 @@ void GSolver::rPropLoop(const autodiff::Tape& tape, const double* seed, const st
         initialPoint(tape, o_result, limits, curGradient);
     }
 
-    memcpy(formerGradient, curGradient, sizeof(double) * dim + 1);
+    memcpy(formerGradient, curGradient, sizeof(double) * (dim + 1));
     memcpy(pointBuffer, o_result.getPoint(), sizeof(double) * dim);
     double curUtil = o_result.getUtil();
     int itcounter = 0;
@@ -487,8 +487,8 @@ bool GSolver::evalResults(int numResults, int dim, const std::vector<Interval<do
     return true;
 }
 
-int GSolver::movePoint(int dim, double minStep, double* pointBuffer, const double* curGradient, const double* oldGradient,
-                       const std::vector<Interval<double>>& limits)
+int GSolver::movePoint(
+        int dim, double minStep, double* pointBuffer, const double* curGradient, const double* oldGradient, const std::vector<Interval<double>>& limits)
 {
     int converged = 0;
     for (int i = 0; i < dim; ++i) {
