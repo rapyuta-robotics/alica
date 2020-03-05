@@ -19,9 +19,6 @@
 #include <essentials/SystemConfig.h>
 #include <alica_common_config/debug_output.h>
 
-#include <engine/modelmanagement/ModelManager.h>
-#include <sstream>
-
 namespace alica
 {
 
@@ -56,7 +53,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     ALICA_INFO_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
 
     if (!essentials::FileSystem::pathExists(basePath)) {
-        AlicaEngine::abort("MM: base path does not exist: " + basePlanPath);
+        AlicaEngine::abort("MM: base path does not exist: " + basePath);
     }
     return basePath;
 }
