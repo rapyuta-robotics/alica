@@ -13,6 +13,7 @@
 #include <engine/teammanager/TeamManager.h>
 
 //#define ALICA_DEBUG_LEVEL_ALL
+
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -34,7 +35,7 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
         : _agents(paraAgents)
         , _plans(planList)
 #ifdef EXPANSIONEVAL
@@ -52,7 +53,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const Pl
 
     for (const Plan* curPlan : _plans) {
         // prep successinfo for this plan
-        _successData.push_back(_to->createSuccessCollection(curPlan));
+        _successData.push_back(_to.createSuccessCollection(curPlan));
         // allow caching of eval data
         curPlan->getUtilityFunction()->cacheEvalData();
         // seed the fringe with a partial assignment
@@ -68,7 +69,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const AlicaEngine* engine, const Pl
 void TaskAssignmentProblem::preassignOtherAgents()
 {
     // TODO: fix this call
-    const auto& simplePlanTreeMap = _to->getTeamPlanTrees();
+    const auto& simplePlanTreeMap = _to.getTeamPlanTrees();
     // this call should only be made before the search starts
     assert(_fringe.size() == _plans.size());
     // ASSIGN PREASSIGNED OTHER ROBOTS
@@ -110,29 +111,6 @@ Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss
     return newAss;
 }
 
-std::string TaskAssignmentProblem::toString() const
-{
-    std::stringstream ss;
-    ss << std::endl;
-    ss << "--------------------TA:--------------------" << std::endl;
-    ss << "NumRobots: " << _agents.size() << std::endl;
-    ss << "RobotIDs: ";
-    for (essentials::IdentifierConstPtr id : _agents) {
-        ss << *id << " ";
-    }
-    ss << std::endl;
-    ss << "Initial Fringe (Count " << _fringe.size() << "):" << std::endl;
-    ss << "{";
-    for (PartialAssignment* pa : _fringe) // Initial PartialAssignments
-    {
-        ss << *pa << std::endl;
-    }
-    ss << "}" << std::endl;
-    ss << "-------------------------------------------" << std::endl;
-    ;
-    return ss.str();
-}
-
 PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
     PartialAssignment* goal = nullptr;
@@ -165,7 +143,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  */
 bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
-    essentials::IdentifierConstPtr ownAgentId = _tm->getLocalAgentID();
+    essentials::IdentifierConstPtr ownAgentId = _tm.getLocalAgentID();
     bool haveToRevalute = false;
 
     for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {
@@ -180,6 +158,29 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, cons
         }
     }
     return haveToRevalute;
+}
+
+
+std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
+{
+    out << std::endl;
+    out << "--------------------TA:--------------------" << std::endl;
+    out << "Agent count: " << tap._agents.size() << std::endl;
+    out << "AgentIDs: ";
+    for (essentials::IdentifierConstPtr id : tap._agents) {
+        out << *id << " ";
+    }
+    out << std::endl;
+    out << "Initial Fringe (Count " << tap._fringe.size() << "):" << std::endl;
+    out << "{";
+    for (const PartialAssignment* pa : tap._fringe) // Initial PartialAssignments
+    {
+        out << *pa << std::endl;
+    }
+    out << "}" << std::endl;
+    out << "-------------------------------------------" << std::endl;
+    ;
+    return out;
 }
 
 } /* namespace alica */

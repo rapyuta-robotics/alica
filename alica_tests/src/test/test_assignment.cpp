@@ -3,16 +3,18 @@
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
-#include <engine/modelmanagement/PlanParser.h>
+#include <engine/modelmanagement/ModelManager.h>
 #include <essentials/IDManager.h>
+
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <vector>
 
+
 using alica::Assignment;
 using alica::EntryPoint;
 using alica::Plan;
-using alica::PlanParser;
+using alica::ModelManager;
 using alica::PlanRepository;
 using alica::State;
 using essentials::Identifier;
@@ -25,10 +27,10 @@ TEST(Assignment, RobotsInserted)
     nh.param<std::string>("/rootPath", path, ".");
 
     // bring up the SystemConfig with the corresponding path
-    essentials::SystemConfig* sc =essentials::SystemConfig::getInstance();
-    sc->setRootPath(path);
-    sc->setConfigPath(path + "/etc");
-    sc->setHostname("nase");
+    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    sc.setRootPath(path);
+    sc.setConfigPath(path + "/etc");
+    sc.setHostname("nase");
 
     essentials::IDManager idManager;
     std::vector<uint8_t> b1 = {0x2, 0, 0, 0};
@@ -45,9 +47,9 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 < *robot3);
 
     PlanRepository repo;
-    PlanParser parser(&repo);
+    ModelManager modelManager(repo);
 
-    const Plan* stp = parser.parsePlanTree("SimpleTestPlan");
+    const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 
     Assignment as1(stp);
     const EntryPoint* ep = stp->getEntryPoints()[0];

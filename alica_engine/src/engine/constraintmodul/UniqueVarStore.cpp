@@ -100,7 +100,7 @@ SolverVariable* UniqueVarStore::getSolverVariable(const Variable* v) const
     return nullptr;
 }
 
-SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx) const
+SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISolverBase& solver, SolverContext* ctx) const
 {
     auto it = _agentSolverVars.find(dv);
     if (it != _agentSolverVars.end()) {
@@ -110,14 +110,14 @@ SolverVariable* UniqueVarStore::getSolverVariable(const DomainVariable* dv, ISol
     return nullptr;
 }
 
-void UniqueVarStore::setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars)
+void UniqueVarStore::setupSolverVars(ISolverBase& solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars)
 {
     _solverVars.resize(_store.size());
     for (int i = 0; i < static_cast<int>(_store.size()); ++i) {
-        _solverVars[i] = solver->createVariable(_store[i][0]->getId(), ctx);
+        _solverVars[i] = solver.createVariable(_store[i][0]->getId(), ctx);
     }
     for (const DomainVariable* dv : domainVars) {
-        _agentSolverVars[dv] = solver->createVariable(dv->getId(), ctx);
+        _agentSolverVars[dv] = solver.createVariable(dv->getId(), ctx);
     }
 }
 /**

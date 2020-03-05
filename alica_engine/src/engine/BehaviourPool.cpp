@@ -18,7 +18,6 @@ namespace alica
  */
 BehaviourPool::BehaviourPool(AlicaEngine* ae)
         : _ae(ae)
-        , _behaviourCreator(nullptr)
 
 {
 }
@@ -34,17 +33,11 @@ BehaviourPool::~BehaviourPool() {}
  * @param bc A BehaviourCreator.
  * @return True, if all necessary BasicBehaviours could be constructed. False, if the Initialisation was cancelled.
  */
-bool BehaviourPool::init(IBehaviourCreator* bc)
+bool BehaviourPool::init(IBehaviourCreator& bc)
 {
-    if (_behaviourCreator != nullptr) {
-        delete _behaviourCreator;
-    }
-
-    _behaviourCreator = bc;
-
-    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository()->getBehaviours();
+    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository().getBehaviours();
     for (const Behaviour* beh : behaviours) {
-        auto basicBeh = _behaviourCreator->createBehaviour(beh->getId());
+        auto basicBeh = bc.createBehaviour(beh->getId());
         if (basicBeh != nullptr) {
             // set stuff from behaviour configuration in basic behaviour object
             basicBeh->setBehaviour(beh);

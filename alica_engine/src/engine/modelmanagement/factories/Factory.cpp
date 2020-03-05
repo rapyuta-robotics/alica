@@ -98,33 +98,33 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
 
     // insert into plan repository
     if (alica::Strings::plan.compare(type) == 0) {
-        modelManager->planRepository->_plans.emplace(ael->getId(), (Plan*) ael);
+        modelManager->_planRepository._plans.emplace(ael->getId(), (Plan*) ael);
     } else if (alica::Strings::entryPoint.compare(type) == 0) {
-        modelManager->planRepository->_entryPoints.emplace(ael->getId(), (EntryPoint*) ael);
+        modelManager->_planRepository._entryPoints.emplace(ael->getId(), (EntryPoint*) ael);
     } else if (alica::Strings::state.compare(type) == 0) {
-        modelManager->planRepository->_states.emplace(ael->getId(), (State*) ael);
+        modelManager->_planRepository._states.emplace(ael->getId(), (State*) ael);
     } else if (alica::Strings::transition.compare(type) == 0) {
-        modelManager->planRepository->_transitions.emplace(ael->getId(), (Transition*) ael);
+        modelManager->_planRepository._transitions.emplace(ael->getId(), (Transition*) ael);
     } else if (alica::Strings::condition.compare(type) == 0) {
-        modelManager->planRepository->_conditions.emplace(ael->getId(), (Condition*) ael);
+        modelManager->_planRepository._conditions.emplace(ael->getId(), (Condition*) ael);
     } else if (alica::Strings::variable.compare(type) == 0) {
-        modelManager->planRepository->_variables.emplace(ael->getId(), (Variable*) ael);
+        modelManager->_planRepository._variables.emplace(ael->getId(), (Variable*) ael);
     } else if (alica::Strings::quantifier.compare(type) == 0) {
-        modelManager->planRepository->_quantifiers.emplace(ael->getId(), (Quantifier*) ael);
+        modelManager->_planRepository._quantifiers.emplace(ael->getId(), (Quantifier*) ael);
     } else if (alica::Strings::synchronisation.compare(type) == 0) {
-        modelManager->planRepository->_synchronisations.emplace(ael->getId(), (Synchronisation*) ael);
+        modelManager->_planRepository._synchronisations.emplace(ael->getId(), (Synchronisation*) ael);
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        modelManager->planRepository->_behaviours.emplace(ael->getId(), (Behaviour*) ael);
+        modelManager->_planRepository._behaviours.emplace(ael->getId(), (Behaviour*) ael);
     } else if (alica::Strings::task.compare(type) == 0) {
-        modelManager->planRepository->_tasks.emplace(ael->getId(), (Task*) ael);
+        modelManager->_planRepository._tasks.emplace(ael->getId(), (Task*) ael);
     } else if (alica::Strings::taskrepository.compare(type) == 0) {
-        modelManager->planRepository->_taskRepositories.emplace(ael->getId(), (TaskRepository*) ael);
+        modelManager->_planRepository._taskRepositories.emplace(ael->getId(), (TaskRepository*) ael);
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        modelManager->planRepository->_planTypes.emplace(ael->getId(), (PlanType*) ael);
+        modelManager->_planRepository._planTypes.emplace(ael->getId(), (PlanType*) ael);
     } else if (alica::Strings::role.compare(type) == 0) {
-        modelManager->planRepository->_roles.emplace(ael->getId(), (Role*) ael);
+        modelManager->_planRepository._roles.emplace(ael->getId(), (Role*) ael);
     } else if (alica::Strings::roleset.compare(type) == 0) {
-        modelManager->planRepository->_roleSets.emplace(ael->getId(), (RoleSet*) ael);
+        modelManager->_planRepository._roleSets.emplace(ael->getId(), (RoleSet*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");

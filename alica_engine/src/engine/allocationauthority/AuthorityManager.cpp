@@ -1,5 +1,6 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 
+#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/AbstractPlan.h"
@@ -30,7 +31,7 @@ AuthorityManager::~AuthorityManager() {}
  */
 void AuthorityManager::init()
 {
-    _localAgentID = _engine->getTeamManager()->getLocalAgentID();
+    _localAgentID = _engine->getTeamManager().getLocalAgentID();
 }
 
 /**
@@ -44,23 +45,24 @@ void AuthorityManager::close() {}
  */
 void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
 {
-    AlicaTime now = _engine->getAlicaClock()->now();
-    if (_engine->getTeamManager()->isAgentIgnored(aai.senderID)) {
+    AlicaTime now = _engine->getAlicaClock().now();
+    TeamManager& tm = _engine->editTeamManager();
+    if (aai.senderID == _localAgentID || tm.isAgentIgnored(aai.senderID)) {
         return;
     }
-    if (*(aai.senderID) != *_localAgentID) {
-        _engine->getTeamManager()->setTimeLastMsgReceived(aai.senderID, now);
-        if (*(aai.senderID) > *_localAgentID) {
-            // notify TO that evidence about other robots is available
-            for (EntryPointRobots epr : aai.entryPointRobots) {
-                for (essentials::IdentifierConstPtr rid : epr.robots) {
-                    if (*rid != *_localAgentID) {
-                        _engine->getTeamManager()->setTimeLastMsgReceived(rid, now);
-                    }
+
+    tm.setTimeLastMsgReceived(aai.senderID, now);
+    if (_localAgentID < aai.senderID) {
+        // notify TO that evidence about other robots is available
+        for (EntryPointRobots epr : aai.entryPointRobots) {
+            for (essentials::IdentifierConstPtr rid : epr.robots) {
+                if (rid != _localAgentID) {
+                    tm.setTimeLastMsgReceived(rid, now);
                 }
             }
         }
     }
+
     ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
     {
         std::lock_guard<std::mutex> lock(_mutex);
@@ -133,7 +135,7 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
     ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
-    _engine->getCommunicator()->sendAllocationAuthority(aai);
+    _engine->getCommunicator().sendAllocationAuthority(aai);
 }
 
 /**

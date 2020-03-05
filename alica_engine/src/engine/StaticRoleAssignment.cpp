@@ -15,10 +15,10 @@
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
+StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae)
         : IRoleAssignment()
-        , ae(ae)
-        , updateRoles(false)
+        , _ae(ae)
+        , _updateRoles(false)
 {
 }
 
@@ -27,7 +27,7 @@ StaticRoleAssignment::StaticRoleAssignment(AlicaEngine* ae)
  */
 void StaticRoleAssignment::init()
 {
-    this->calculateRoles();
+    calculateRoles();
 }
 
 /**
@@ -35,9 +35,9 @@ void StaticRoleAssignment::init()
  */
 void StaticRoleAssignment::tick()
 {
-    if (this->updateRoles) {
-        this->updateRoles = false;
-        this->calculateRoles();
+    if (_updateRoles) {
+        _updateRoles = false;
+        calculateRoles();
     }
 }
 
@@ -46,7 +46,7 @@ void StaticRoleAssignment::tick()
  */
 void StaticRoleAssignment::update()
 {
-    this->updateRoles = true;
+    _updateRoles = true;
 }
 
 /**
@@ -55,13 +55,13 @@ void StaticRoleAssignment::update()
 void StaticRoleAssignment::calculateRoles()
 {
     // clear current map
-    this->robotRoleMapping.clear();
+    _robotRoleMapping.clear();
 
     // get data for "calculations"
-    const PlanRepository::Accessor<Role>& roles = ae->getPlanRepository()->getRoles();
+    const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository().getRoles();
 
     // assign a role for each robot if you have match
-    for (const Agent* agent : ae->getTeamManager()->getActiveAgents()) {
+    for (const Agent* agent : _ae->getTeamManager().getActiveAgents()) {
         const RobotProperties& prop = agent->getProperties();
         bool roleIsAssigned = false;
 
@@ -69,17 +69,16 @@ void StaticRoleAssignment::calculateRoles()
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
                 ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
-                this->robotRoleMapping.emplace(agent->getId(), role);
+                _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (agent->getId() == this->ae->getTeamManager()->getLocalAgentID() && this->ownRole != role) {
-                    this->ownRole = role;
+                if (agent->getId() == _ae->getTeamManager().getLocalAgentID() && _ownRole != role) {
+                    _ownRole = role;
                     // probably nothing is reacting on this message, but anyway we send it
-                    if (this->communication != nullptr) {
-                        RoleSwitch rs;
-                        rs.roleID = role->getId();
-                        this->communication->sendRoleSwitch(rs);
-                    }
+                    // TODO: fix this take context
+                    RoleSwitch rs;
+                    rs.roleID = role->getId();
+                    _ae->getCommunicator().sendRoleSwitch(rs);
                 }
                 roleIsAssigned = true;
                 break;
