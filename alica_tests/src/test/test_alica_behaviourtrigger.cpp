@@ -9,7 +9,6 @@
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
 #include <engine/PlanBase.h>
-#include <engine/model/BehaviourConfiguration.h>
 #include <essentials/EventTrigger.h>
 
 #include <condition_variable>

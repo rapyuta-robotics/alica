@@ -184,8 +184,19 @@ void AlicaEngine::stepNotify()
  */
 essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type) const
 {
-    return essentials::IdentifierConstPtr(_ctx.getIDFromBytes(idBytes, idSize, type));
+    return _ctx.getIDFromBytes(idBytes, idSize, type);
 }
-// TODO: Do we need this: essentials::IdentifierConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
+
+/**
+ * Generates random ID of given size.
+ * @param size
+ * @return The ID Object
+ */
+essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
+{
+    return _ctx.generateID(size);
+}
+
+
 
 } // namespace alica

@@ -1,13 +1,27 @@
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <engine/IAlicaCommunication.h>
 #include <engine/allocationauthority/AllocationDifference.h>
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
+#include <engine/modelmanagement/factories/TaskFactory.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
 #include "DummyTestSummand.h"
 #include "TestWorldModel.h"
+#include "UtilityFunctionCreator.h"
+#include "engine/PlanBase.h"
+#include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
+#include "engine/model/Plan.h"
 #include "engine/model/State.h"
+#include "engine/teammanager/TeamManager.h"
+#include <communication/AlicaDummyCommunication.h>
 
 namespace alica
 {
@@ -40,21 +54,21 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::AllocationDifference result;
     util.setReason(alica::AllocationDifference::Reason::utility);
     msg.setReason(alica::AllocationDifference::Reason::message);
-    alica::Task* t1 = new alica::Task();
-    alica::Task* t2 = new alica::Task();
-    alica::EntryPoint e1(1, nullptr, t1, nullptr);
-    alica::EntryPoint e2(2, nullptr, t2, nullptr);
+    alica::Task t1;
+    alica::Task t2;
+    alica::EntryPoint e1(1, nullptr, &t1, nullptr);
+    alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 
-    const char* aname = "aa";
-    const char* bname = "bb";
+    essentials::IDManager idManager;
+    int idA1 = 1;
+    int idA2 = 2;
+    essentials::IdentifierConstPtr a1 = idManager.getID<int>(idA1);
+    essentials::IdentifierConstPtr a2 = idManager.getID<int>(idA2);
 
-    essentials::Identifier a1(reinterpret_cast<const uint8_t*>(aname), 2);
-    essentials::Identifier a2(reinterpret_cast<const uint8_t*>(bname), 2);
-
-    alica::EntryPointRobotPair aTot1(&e1, &a1);
-    alica::EntryPointRobotPair bTot1(&e1, &a2);
-    alica::EntryPointRobotPair aTot2(&e2, &a1);
-    alica::EntryPointRobotPair bTot2(&e2, &a2);
+    alica::EntryPointRobotPair aTot1(&e1, a1);
+    alica::EntryPointRobotPair bTot1(&e1, a2);
+    alica::EntryPointRobotPair aTot2(&e2, a1);
+    alica::EntryPointRobotPair bTot2(&e2, a2);
 
     ASSERT_EQ(a1, a1);
     ASSERT_NE(a1, a2);
@@ -73,14 +87,11 @@ TEST(AllocationDifference, MessageCancelsUtil)
     EXPECT_FALSE(result.isEmpty());
     result.applyDifference(msg);
     EXPECT_TRUE(result.isEmpty());
-    delete t1;
-    delete t2;
 }
 
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-
     auto uSummandAe = aes[0]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr = dynamic_cast<alica::DummyTestSummand*>(uSummandAe);
     dbr->robotId = aes[0]->getTeamManager().getLocalAgentID();

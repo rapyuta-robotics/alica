@@ -1,10 +1,24 @@
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
 #include "TestWorldModel.h"
+#include "UtilityFunctionCreator.h"
+#include "engine/Assignment.h"
+#include "engine/BasicBehaviour.h"
+#include "engine/BehaviourPool.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/PlanBase.h"
+#include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
+#include "engine/model/Behaviour.h"
+#include "engine/model/Plan.h"
 #include "engine/model/State.h"
-
 #include <Plans/Behaviour/Attack.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <essentials/IDManager.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
@@ -129,5 +143,5 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         }
     }
 }
-} // namespace
-} // namespace alica
+}
+}

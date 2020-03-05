@@ -8,7 +8,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
+//#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
@@ -40,31 +40,31 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     const alica::PlanRepository& rep = ae->getPlanRepository();
 
-    const alica::BehaviourConfiguration* beh = rep.getBehaviourConfigurations()[1414068618837];
+    const alica::Behaviour* beh = rep.getBehaviours()[1414068618837];
     ASSERT_NE(beh, nullptr);
     const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);
 
-//    ASSERT_EQ(beh->getVariables().size(), 2);
-//    ASSERT_EQ(state->getParametrisation().size(), 2);
-//    const alica::Variable* beh_y = nullptr;
-//    for (const alica::Variable* v : beh->getVariables()) {
-//        if (v->getName() == "Y") {
-//            beh_y = v;
-//            break;
-//        }
-//    }
-//    ASSERT_NE(beh_y, nullptr);
+    ASSERT_EQ(beh->getVariables().size(), 2);
+    ASSERT_EQ(state->getParametrisation().size(), 2);
+    const alica::Variable* beh_y = nullptr;
+    for (const alica::Variable* v : beh->getVariables()) {
+        if (v->getName() == "Y") {
+            beh_y = v;
+            break;
+        }
+    }
+    ASSERT_NE(beh_y, nullptr);
 
-//    ASSERT_EQ(beh_y->getId(), 1416488161203);
-//    bool found = false;
-//    for (const alica::Parametrisation* p : state->getParametrisation()) {
-//        ASSERT_EQ(p->getSubPlan(), beh);
-//        if (p->getSubVar() == beh_y) {
-//            found = true;
-//        }
-//    }
-//    ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
+    ASSERT_EQ(beh_y->getId(), 1416488161203);
+    bool found = false;
+    for (const alica::VariableBinding* p : state->getParametrisation()) {
+        ASSERT_EQ(p->getSubPlan(), beh);
+        if (p->getSubVar() == beh_y) {
+            found = true;
+        }
+    }
+    ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
     ae->start();
     step(ae);

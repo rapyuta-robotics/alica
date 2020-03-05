@@ -4,8 +4,10 @@
   <version>0.0.1</version>
   <description>The alica_tests package</description>
 
-  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
-  <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+
+  <author email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</author>
+  <author>Andreas Witsch</author>
 
   <license>MIT</license>
 
@@ -17,6 +19,7 @@
   <depend>alica_simple_solver</depend>
   <depend>id_ros</depend>
   <depend>alica_solver_interface</depend>
+
   <buildtool_depend>catkin</buildtool_depend>
   
   <test_depend>rostest</test_depend>

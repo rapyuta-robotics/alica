@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152758498"/>
+    <value xPos="288" yPos="87" width="134" height="110" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152758497"/>
+    <value xPos="1" yPos="-122" width="958" height="689"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152758499"/>
+    <value xPos="-122" yPos="269" width="121" height="19"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152894887"/>
+    <value xPos="301" yPos="295"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152900425"/>
+    <value xPos="255" yPos="332"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152902493"/>
+    <value xPos="343" yPos="307"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152951886"/>
+    <value xPos="411" yPos="280" width="176" height="127" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152962295"/>
+    <value xPos="250" yPos="527" width="116" height="110" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterPlanTaskAssignment.pml#1407152969078"/>
+    <value xPos="413" yPos="473" width="120" height="127" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="AttackPlan.pml#1402488634525"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Defend.pml#1402488893641"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MidFieldPlayPlan.pml#1402488770050"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Tackle.pml#1402489318663"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="GoalPlan.pml#1402488870347"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="Attack.pty#1407153314946"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="PlanOne.pml#1407153611768"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>

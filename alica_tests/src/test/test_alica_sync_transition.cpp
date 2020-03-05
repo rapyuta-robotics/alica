@@ -1,9 +1,21 @@
-#include <TestConstantValueSummand.h>
-#include <TestWorldModel.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/UtilityFunction.h>
-#include <engine/model/State.h>
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "DummyTestSummand.h"
+#include "TestConstantValueSummand.h"
+#include "TestWorldModel.h"
+#include "UtilityFunctionCreator.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/PlanBase.h"
+#include "engine/PlanRepository.h"
+#include "engine/TeamObserver.h"
+#include "engine/UtilityFunction.h"
+#include "engine/model/Plan.h"
+#include "engine/model/State.h"
+#include "engine/teammanager/TeamManager.h"
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
@@ -35,7 +47,6 @@ protected:
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
-
     aes[0]->start();
     aes[1]->start();
     // Allow agents to discover each other

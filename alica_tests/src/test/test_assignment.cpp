@@ -5,19 +5,16 @@
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
 #include <essentials/IDManager.h>
-
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <vector>
 
-
 using alica::Assignment;
 using alica::EntryPoint;
-using alica::Plan;
 using alica::ModelManager;
+using alica::Plan;
 using alica::PlanRepository;
 using alica::State;
-using essentials::Identifier;
 
 TEST(Assignment, RobotsInserted)
 {
@@ -33,12 +30,12 @@ TEST(Assignment, RobotsInserted)
     sc.setHostname("nase");
 
     essentials::IDManager idManager;
-    std::vector<uint8_t> b1 = {0x2, 0, 0, 0};
-    std::vector<uint8_t> b2 = {0x1, 0, 0, 0};
-    std::vector<uint8_t> b3 = {0x3, 0, 0, 0};
-    const Identifier* robot1 = idManager.getIDFromBytes(b1.data(), b1.size());
-    const Identifier* robot2 = idManager.getIDFromBytes(b2.data(), b2.size());
-    const Identifier* robot3 = idManager.getIDFromBytes(b3.data(), b3.size());
+    int b1 = 2;
+    int b2 = 1;
+    int b3 = 3;
+    essentials::IdentifierConstPtr robot1 = idManager.getID<int>(b1);
+    essentials::IdentifierConstPtr robot2 = idManager.getID<int>(b2);
+    essentials::IdentifierConstPtr robot3 = idManager.getID<int>(b3);
 
     ASSERT_EQ(robot2->getRaw()[0], 0x1);
     ASSERT_EQ(robot1->getRaw()[0], 0x2);

@@ -1,14 +1,29 @@
+#include "BehaviourCreator.h"
+#include "ConditionCreator.h"
+#include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
+#include "engine/AlicaClock.h"
+#include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
+#include "engine/TeamObserver.h"
+#include "engine/collections/RobotEngineData.h"
+#include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Plan.h"
 #include "engine/planselector/PlanSelector.h"
+#include "engine/teammanager/Agent.h"
+#include "engine/teammanager/TeamManager.h"
 #include <test_alica.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <gtest/gtest.h>
 #include <list>
+#include <memory>
+#include <ros/ros.h>
 #include <vector>
 
 namespace alica
@@ -30,6 +45,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     // fake a list of existing robots
     alica::AgentGrp robots;
+
     alica::AgentAnnouncement aa;
     aa.planHash = 0;
     aa.senderSdk = ae->getVersion();

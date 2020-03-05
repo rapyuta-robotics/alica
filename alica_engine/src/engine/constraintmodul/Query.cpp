@@ -32,7 +32,7 @@ void Query::addStaticVariable(const Variable* v)
     _queriedStaticVariables.push_back(v);
 }
 
-void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::string& ident, AlicaEngine* ae)
+void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::string& ident, const AlicaEngine* ae)
 {
     _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
 }
