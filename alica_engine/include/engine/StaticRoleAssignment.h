@@ -9,7 +9,7 @@ class AlicaEngine;
 class StaticRoleAssignment : public IRoleAssignment
 {
 public:
-    StaticRoleAssignment(AlicaEngine* ae);
+    StaticRoleAssignment(const AlicaEngine* ae);
     ~StaticRoleAssignment() = default;
 
     void init() override;
@@ -23,9 +23,8 @@ public:
     void calculateRoles();
 
 private:
-    bool updateRoles;
-
-    AlicaEngine* ae;
+    bool _updateRoles;
+    const AlicaEngine* _ae;
 };
 
 } /* namespace alica */

@@ -24,13 +24,13 @@ public:
     void addChecked(const Variable* v);
     const Variable* getRep(const Variable* v);
     SolverVariable* getSolverVariable(const Variable* v) const;
-    SolverVariable* getSolverVariable(const DomainVariable* dv, ISolverBase* solver, SolverContext* ctx) const;
+    SolverVariable* getSolverVariable(const DomainVariable* dv, ISolverBase& solver, SolverContext* ctx) const;
 
     void addVarTo(const Variable* representing, const Variable* toAdd);
     void getAllRep(VariableGrp& o_vars) const;
     int getIndexOf(const Variable* v) const;
 
-    void setupSolverVars(ISolverBase* solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars);
+    void setupSolverVars(ISolverBase& solver, SolverContext* ctx, const std::vector<const DomainVariable*>& domainVars);
 
     friend std::ostream& operator<<(std::ostream& os, const UniqueVarStore& store);
 

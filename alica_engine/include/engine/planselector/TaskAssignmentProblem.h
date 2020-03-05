@@ -29,7 +29,7 @@ class TeamObserver;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(const AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
+    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
@@ -43,7 +43,6 @@ public:
     int getAgentCount() const { return _agents.size(); }
     const AgentGrp& getAgents() const { return _agents; }
 
-    std::string toString() const;
     const SuccessCollection* getSuccessData(const Plan* p) const
     {
         for (int i = 0; i < static_cast<int>(_plans.size()); ++i) {
@@ -55,10 +54,12 @@ public:
     }
 
 private:
+    friend std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
+
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
-    TeamManager* _tm;
-    TeamObserver* _to;
+    const TeamManager& _tm;
+    const TeamObserver& _to;
     PartialAssignmentPool& _pool;
     PlanGrp _plans;
     AgentGrp _agents;
@@ -72,5 +73,7 @@ private:
     int _expansionCount;
 #endif
 };
+std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
+
 
 } /* namespace alica */

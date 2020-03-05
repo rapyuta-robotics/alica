@@ -33,11 +33,12 @@ void UniquePartialAssignmentSuccessIterator::toNextValid()
         if (successes) {
             while (_agentIdx < static_cast<int>(successes->size())) {
                 essentials::IdentifierConstPtr id = (*successes)[_agentIdx];
-                PartialAssignmentIterator assignEnd{0, _pas->getTotalAgentCount(), _pas};
+                PartialAssignmentIterator assignEnd{_pas->getTotalAgentCount(), _epIdx, _pas};
                 auto it1 = std::find(PartialAssignmentIterator(0, _epIdx, _pas), assignEnd, id);
                 if (it1 == assignEnd) {
                     break;
                 }
+
                 auto it2 = std::find(successes->begin(), successes->begin() + _agentIdx, id);
                 if (it2 == successes->begin() + _agentIdx) {
                     break;

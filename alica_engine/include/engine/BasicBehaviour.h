@@ -4,8 +4,9 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
-#include <essentials/Timer.h>
+
 #include <essentials/ITrigger.h>
+#include <essentials/Timer.h>
 
 #include <atomic>
 #include <chrono>
@@ -33,7 +34,7 @@ class BasicBehaviour
 {
 public:
     BasicBehaviour(const std::string& name);
-    virtual ~BasicBehaviour() {};
+    virtual ~BasicBehaviour(){};
     virtual void run(void* msg) = 0;
 
     bool isRunningInContext(const RunningPlan* rp) const;
@@ -74,7 +75,7 @@ public:
 
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
-    AlicaEngine* getEngine() const { return _engine; }
+    const AlicaEngine* getEngine() const { return _engine; }
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.

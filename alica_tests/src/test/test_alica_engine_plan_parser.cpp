@@ -38,6 +38,11 @@ using namespace std;
 #include "engine/modelmanagement/PlanWriter.h"
 #include <engine/AlicaEngine.h>
 
+namespace alica
+{
+namespace
+{
+
 class AlicaEngineTest : public AlicaTestFixture
 {
 protected:
@@ -171,7 +176,7 @@ TEST_F(AlicaEngineTest, planParser)
 {
     ASSERT_NO_SIGNAL
 
-    const auto& plans = ae->getPlanRepository()->getPlans();
+    const auto& plans = ae->getPlanRepository().getPlans();
 
     cout << "Printing plans from Repository: " << endl;
     for (const alica::Plan* plan : plans) {
@@ -580,16 +585,19 @@ TEST_F(AlicaEngineTest, planWriter)
 {
     ASSERT_NO_SIGNAL
 
-    const auto& plans = ae->getPlanRepository()->getPlans();
-    alica::PlanWriter pw = alica::PlanWriter(ae, ae->getPlanRepository());
+    const auto& plans = ae->getPlanRepository().getPlans();
+    alica::PlanWriter pw = alica::PlanWriter(ae);
     for (const alica::Plan* plan : plans) {
         cout << "AlicaEngineTest, planWriter: Writing Plan " << plan->getName() << endl;
         pw.saveSinglePlan(plan);
-        string temp = essentials::FileSystem::combinePaths(sc->getConfigPath(), "plans/tmp");
+        essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+        string temp = essentials::FileSystem::combinePaths(sc.getConfigPath(), "plans/tmp");
         temp = essentials::FileSystem::combinePaths(temp, plan->getName() + string(".pml"));
         string test = exec((string("diff ") + plan->getFileName() + string(" ") + temp).c_str());
         EXPECT_EQ(0, test.size()) << "files are different! " << test << endl;
         std::remove(temp.c_str()); // delete the file after comparing it
     }
     cout << "AlicaEngineTest, planWriter: writing plans done." << endl;
+}
+}
 }

@@ -33,14 +33,14 @@ struct AllocationAuthorityInfo
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)
     {
-        this->senderID = std::get<0>(s);
-        this->planId = std::get<1>(s);
-        this->parentState = std::get<2>(s);
-        this->planType = std::get<3>(s);
-        this->authority = std::get<4>(s);
+        senderID = std::get<0>(s);
+        planId = std::get<1>(s);
+        parentState = std::get<2>(s);
+        planType = std::get<3>(s);
+        authority = std::get<4>(s);
         const std::vector<stdEntryPointRobot>& tmp = std::get<5>(s);
         for (const stdEntryPointRobot& e : tmp) {
-            this->entryPointRobots.push_back(EntryPointRobots(e));
+            entryPointRobots.push_back(EntryPointRobots(e));
         }
     }
 

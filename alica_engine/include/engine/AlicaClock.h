@@ -133,7 +133,7 @@ public:
     AlicaClock() {}
     virtual ~AlicaClock() {}
     virtual AlicaTime now() const;
-    void sleep(const AlicaTime&);
+    virtual void sleep(const AlicaTime&) const;
 };
 
 } // namespace alica

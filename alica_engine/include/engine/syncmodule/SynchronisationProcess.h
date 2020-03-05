@@ -28,8 +28,8 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(AlicaEngine* ae);
-    SynchronisationProcess(AlicaEngine* ae, essentials::IdentifierConstPtr id, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(const AlicaEngine* ae);
+    SynchronisationProcess(const AlicaEngine* ae, essentials::IdentifierConstPtr myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -41,30 +41,29 @@ public:
 
 private:
     bool allSyncReady() const;
-    friend std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& sync);
-
-protected:
-    AlicaEngine* ae;
-    std::mutex syncMutex;
-    std::mutex rowOkMutex;
-    SyncModule* syncModul;
-    const Synchronisation* synchronisation;
-    essentials::IdentifierConstPtr myID;
-    SyncData* lastTalkData;
-    AlicaTime lastTalkTime;
-    AlicaTime syncStartTime;
-    bool readyForSync;
-    uint64_t lastTick;
-    std::vector<std::shared_ptr<SyncReady>> receivedSyncReadys;
-    std::vector<int64_t> connectedTransitions;
-    RunningPlan* runningPlan;
-    std::vector<SyncRow*> rowsOK;
-    std::vector<SyncRow*> syncMatrix;
-    SyncRow* myRow;
-
     void sendTalk(const SyncData& sd);
     void sendSyncReady();
     bool isSyncComplete();
+
+    friend std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& sync);
+
+    const AlicaEngine* _ae;
+    std::mutex _syncMutex;
+    std::mutex _rowOkMutex;
+    SyncModule* _syncModul;
+    const Synchronisation* _synchronisation;
+    essentials::IdentifierConstPtr _myID;
+    SyncData* _lastTalkData;
+    AlicaTime _lastTalkTime;
+    AlicaTime _syncStartTime;
+    bool _readyForSync;
+    uint64_t _lastTick;
+    std::vector<std::shared_ptr<SyncReady>> _receivedSyncReadys;
+    std::vector<int64_t> _connectedTransitions;
+    RunningPlan* _runningPlan;
+    std::vector<SyncRow*> _rowsOK;
+    std::vector<SyncRow*> _syncMatrix;
+    SyncRow* _myRow;
 };
 std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc);
 } /* namespace alica */

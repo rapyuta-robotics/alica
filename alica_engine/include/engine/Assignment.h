@@ -88,6 +88,7 @@ public:
     bool isValid() const;
     bool isSuccessful() const;
     bool isAnyTaskSuccessful() const;
+    bool isAgentSuccessful(essentials::IdentifierConstPtr id, const EntryPoint* ep) const;
 
     bool hasAgent(essentials::IdentifierConstPtr id) const;
     int size() const

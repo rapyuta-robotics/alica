@@ -144,6 +144,15 @@ bool Assignment::isAnyTaskSuccessful() const
     return false;
 }
 
+bool Assignment::isAgentSuccessful(essentials::IdentifierConstPtr id, const EntryPoint* ep) const
+{
+    if (!_plan) {
+        return false;
+    }
+    const AgentGrp* ag = _successData.getAgents(ep);
+    return ag && std::find(ag->begin(), ag->end(), id) != ag->end();
+}
+
 bool Assignment::hasAgent(essentials::IdentifierConstPtr id) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {

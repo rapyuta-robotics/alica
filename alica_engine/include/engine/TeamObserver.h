@@ -37,11 +37,11 @@ public:
 
     const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
-    int successesInPlan(const Plan* plan);
+    int successesInPlan(const Plan* plan) const;
     SuccessCollection createSuccessCollection(const Plan* plan) const;
     void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
-    void notifyRobotLeftPlan(const AbstractPlan* plan);
+    void notifyRobotLeftPlan(const AbstractPlan* plan) const;
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
@@ -52,10 +52,10 @@ private:
 
     AlicaEngine* _ae;
     Agent* _me;
-    TeamManager* _tm;
+    TeamManager& _tm;
 
     std::mutex _msgQueueMutex;
-    mutable std::mutex successMarkMutex;
+    mutable std::mutex _successMarkMutex;
 
     std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
     std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
