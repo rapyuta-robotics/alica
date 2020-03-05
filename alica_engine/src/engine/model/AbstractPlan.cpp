@@ -1,7 +1,7 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 #include <sstream>
 
 namespace alica

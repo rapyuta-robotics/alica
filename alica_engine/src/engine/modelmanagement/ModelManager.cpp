@@ -16,7 +16,7 @@
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 #include <alica_common_config/debug_output.h>
 
 #include <engine/modelmanagement/ModelManager.h>
