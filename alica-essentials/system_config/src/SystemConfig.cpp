@@ -41,7 +41,7 @@ SystemConfig::SystemConfig()
         rootPath = x;
     }
 
-    // set the domain config folger (1. by env-variable 2. by <domain folder>/etc
+    // set the domain config folder (1. by env-variable 2. by <domain folder>/etc
     x = ::getenv(DOMAIN_CONFIG_FOLDER.c_str());
 
     if (x == NULL) {
