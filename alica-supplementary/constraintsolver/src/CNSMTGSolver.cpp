@@ -3,8 +3,8 @@
 //#define DO_PREPROPAGATION
 //#define CNSMTGSolver_DEBUG
 
-#include "Configuration.h"
-#include "SystemConfig.h"
+#include "essentials/Configuration.h"
+#include "essentials/SystemConfig.h"
 
 #include "CNSat.h"
 #include "FormulaTransform.h"

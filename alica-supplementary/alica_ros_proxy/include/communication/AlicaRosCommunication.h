@@ -11,7 +11,7 @@
 
 #include <engine/IAlicaCommunication.h>
 #include <essentials/Identifier.h>
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 #include <ros/ros.h>
 #include <string>

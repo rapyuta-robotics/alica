@@ -1,5 +1,5 @@
 #include "alica_viewer/alica_plan_parser.h"
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 #include <assert.h>
 #include <engine/AlicaClock.h>
 
