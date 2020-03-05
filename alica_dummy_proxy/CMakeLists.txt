@@ -1,12 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_dummy_proxy)
 
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
+add_compile_options(-std=c++14)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)

@@ -17,7 +17,7 @@ class UtilityFunction;
 
 class BasicUtilityFunction
 {
-  public:
+public:
     BasicUtilityFunction();
     virtual ~BasicUtilityFunction();
 

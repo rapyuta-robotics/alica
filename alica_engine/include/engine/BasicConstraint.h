@@ -2,11 +2,13 @@
 
 #include <memory>
 
-namespace alica {
+namespace alica
+{
 class ProblemDescriptor;
 class RunningPlan;
 
-class BasicConstraint {
+class BasicConstraint
+{
 public:
     virtual ~BasicConstraint() {}
 

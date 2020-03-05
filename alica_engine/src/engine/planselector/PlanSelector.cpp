@@ -9,11 +9,9 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/PlanningProblem.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
@@ -134,7 +132,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     }
 
     // some variables for the do while loop
-    const AgentIDConstPtr localAgentID = _ae->getTeamManager().getLocalAgentID();
+    const essentials::IdentifierConstPtr localAgentID = _ae->getTeamManager().getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     std::vector<RunningPlan*> rpChildren;
@@ -209,17 +207,15 @@ bool PlanSelector::getPlansForStateInternal(
 {
     ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
                                                            << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>");
-
-    // TODO: reintegrate PlanningProblems:
     for (const AbstractPlan* ap : plans) {
-        if (const BehaviourConfiguration* bc = dynamic_cast<const BehaviourConfiguration*>(ap)) {
-            RunningPlan* rp = _pb->makeRunningPlan(bc);
-            // A BehaviourConfiguration is a Plan too (in this context)
-            rp->usePlan(bc);
+        if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
+            RunningPlan* rp = _pb->makeRunningPlan(beh);
+            // A Behaviour is a Plan too (in this context)
+            rp->usePlan(beh);
             o_plans.push_back(rp);
             rp->setParent(planningParent);
 
-            ALICA_DEBUG_MSG("PS: Added Behaviour " << bc->getBehaviour()->getName());
+            ALICA_DEBUG_MSG("PS: Added Behaviour " << beh->getName());
 
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;

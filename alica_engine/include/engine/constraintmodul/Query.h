@@ -12,7 +12,7 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
@@ -75,7 +75,7 @@ public:
     Query();
 
     void addStaticVariable(const alica::Variable* v);
-    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, const AlicaEngine* ae);
+    void addDomainVariable(essentials::IdentifierConstPtr robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
@@ -121,7 +121,7 @@ bool Query::existsSolution(ThreadSafePlanInterface pi)
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
-    return solver.existsSolution(_relevantVariables, cds);
+    return solver->existsSolution(_context.get(), cds);
 }
 
 template <class SolverType, typename ResultType>

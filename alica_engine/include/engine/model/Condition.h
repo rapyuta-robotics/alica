@@ -1,12 +1,4 @@
-/*
- * Condition.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef CONDITION_H_
-#define CONDITION_H_
+#pragma once
 
 #include <memory>
 #include <string>
@@ -22,6 +14,7 @@ class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
 class ModelFactory;
+class ConditionFactory;
 class ExpressionHandler;
 
 /**
@@ -31,7 +24,6 @@ class Condition : public AlicaElement
 {
 public:
     Condition();
-    Condition(int64_t id);
     virtual ~Condition();
 
     /**
@@ -54,6 +46,7 @@ public:
 
 private:
     friend ModelFactory;
+    friend ConditionFactory;
     friend ExpressionHandler;
 
     void setConditionString(const std::string& conditionString);
@@ -88,5 +81,3 @@ private:
     std::string _plugInName; // TODO: is this needed?!
 };
 } // namespace alica
-
-#endif /* CONDITION_H_ */

@@ -2,7 +2,6 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
@@ -19,6 +18,7 @@
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 #include <test_alica.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <gtest/gtest.h>
 #include <list>
@@ -55,7 +55,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             continue;
         }
 
-        aa.senderID = ae->getId<int>(agentId);
+        aa.senderID = ae->getID<int>(agentId);
         if (agentId == 8) {
             aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";

@@ -1,27 +1,33 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaContext.h"
 #include "engine/BehaviourPool.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
+#include "engine/modelmanagement/ModelManager.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/BlackBoard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
-#include "engine/parser/PlanParser.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/AgentIDManager.h>
+#include <essentials/SystemConfig.h>
+#include <essentials/IdentifierConstPtr.h>
+#include <essentials/IDManager.h>
+
+#include <list>
 #include <string>
+#include <unordered_map>
 
 namespace alica
 {
 struct AlicaCreators;
 class Plan;
+class BehaviourPool;
+class Logger;
 class RoleSet;
 class VariableSyncModule;
 class IRoleAssignment;
@@ -33,6 +39,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
+    // TODO: Put idManager* into AlicaContext
     AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
@@ -59,8 +66,8 @@ public:
     const PlanBase& getPlanBase() const { return _planBase; }
     PlanBase& editPlanBase() { return _planBase; }
 
-    const PlanParser& getPlanParser() const { return _planParser; }
-    PlanParser& editPlanParser() { return _planParser; }
+    const ModelManager& getModelManager() const { return _modelManager; }
+    ModelManager& editModelManager() {return _modelManager; }
 
     const PlanRepository& getPlanRepository() const { return _planRepository; }
     PlanRepository& editPlanRepository() { return _planRepository; }
@@ -92,45 +99,54 @@ public:
     void iterationComplete();
     int getVersion() const;
 
-    // AlicaContext forward interface
+    // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
-    std::string getRobotName() const;
+    std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-
-    // AgentIDManager forwarded interface:
-    AgentIDConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID);
     template <class Prototype>
-    AgentIDConstPtr getId(Prototype& idPrototype);
-    AgentIDConstPtr generateId(std::size_t size) { return AgentIDConstPtr(_agentIDManager.generateID(size)); }
+    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE) const;
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
+    essentials::IdentifierConstPtr generateID(std::size_t size);
+    // TODO: Do we need this: essentials::IdentifierConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
 
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies, do not change the declaration order of members.
+    // TODO: Check with regard of the warning...
     AlicaContext& _ctx;
-    essentials::AgentIDManager _agentIDManager;
     PlanRepository _planRepository;
-    PlanParser _planParser;
-    const Plan* _masterPlan;
-    const RoleSet* _roleSet;
+    ModelManager _modelManager;
     TeamManager _teamManager;
-    BehaviourPool _behaviourPool;
     TeamObserver _teamObserver;
+    BehaviourPool _behaviourPool;
     SyncModule _syncModul;
-    std::unique_ptr<AlicaClock> _alicaClock;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    Logger _log;
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
+    BlackBoard _blackboard;
+    Logger _log;
     // TODO: fix this, VariableSyncModule has circular dependency with engine header
     // VariableSyncModule _variableSyncModule;
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
 
-    BlackBoard _blackboard;
+    /**
+     * Pointing to the top level plan of the loaded ALICA program.
+     */
+    const Plan* _masterPlan;
+    /**
+     * Pointing to the current set of known roles.
+     */
+    const RoleSet* _roleSet;
+    /**
+     * Indicates whether the engine should run with a static role assignment
+     * that is based on default roles, or not.
+     */
+    bool _useStaticRoles;
     /**
      * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
      * are sent out.
@@ -141,13 +157,6 @@ private:
      * Set to have the engine's main loop wait on a signal via MayStep
      */
     bool _stepEngine;
-
-    /**
-     * Indicates whether the engine should run with a static role assignment
-     * that is based on default roles, or not.
-     */
-    bool _useStaticRoles;
-
     bool _stepCalled;
 };
 
@@ -156,13 +165,12 @@ private:
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing an int and receiving
- * a pointer to a corresponding AgentID object (in that case an
- * IntRobotID).
+ * a pointer to a corresponding Identifier object.
  */
 template <class Prototype>
-AgentIDConstPtr AlicaEngine::getId(Prototype& idPrototype)
+essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type) const
 {
-    return AgentIDConstPtr(_agentIDManager.getID<Prototype>(idPrototype));
+    return _ctx.getID<Prototype>(idPrototype, type);
 }
 
 template <typename T>

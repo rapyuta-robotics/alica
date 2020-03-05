@@ -8,9 +8,8 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
-#include "essentials/AgentID.h"
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 #include <algorithm>
 #include <iostream>
@@ -34,7 +33,9 @@ class PlanBase;
 class TeamObserver;
 class Plan;
 class RuleBook;
-class BehaviourConfiguration;
+class ConditionStore;
+class CycleManager;
+class Behaviour;
 class IPlanTreeVisitor;
 class SimplePlanTree;
 
@@ -43,18 +44,18 @@ struct PlanStateTriple
     PlanStateTriple()
             : state(nullptr)
             , entryPoint(nullptr)
-            , plan(nullptr)
+            , abstractPlan(nullptr)
     {
     }
     PlanStateTriple(const AbstractPlan* p, const EntryPoint* e, const State* s)
             : state(s)
             , entryPoint(e)
-            , plan(p)
+            , abstractPlan(p)
     {
     }
     const State* state;
     const EntryPoint* entryPoint;
-    const AbstractPlan* plan;
+    const AbstractPlan* abstractPlan;
 };
 
 /**
@@ -98,8 +99,7 @@ public:
     explicit RunningPlan(AlicaEngine* ae);
     RunningPlan(AlicaEngine* ae, const Plan* plan);
     RunningPlan(AlicaEngine* ae, const PlanType* pt);
-    RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc);
-
+    RunningPlan(AlicaEngine* ae, const Behaviour* b);
     static void init();
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -129,8 +129,8 @@ public:
     const PlanStatusInfo& getStatusInfo() const { return _status; }
     const State* getActiveState() const { return _activeTriple.state; }
     const EntryPoint* getActiveEntryPoint() const { return _activeTriple.entryPoint; }
-    const AbstractPlan* getActivePlan() const { return _activeTriple.plan; }
-    const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.plan); }
+    const AbstractPlan* getActivePlan() const { return _activeTriple.abstractPlan; }
+    const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.abstractPlan); }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
@@ -205,7 +205,7 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    AgentIDConstPtr getOwnID() const;
+    essentials::IdentifierConstPtr getOwnID() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:

@@ -13,28 +13,28 @@ class SolverContext;
 
 class ISolverBase
 {
-  public:
+public:
     ISolverBase(AlicaEngine* ae)
-        : _ae(ae)
+            : _ae(ae)
     {
     }
     virtual ~ISolverBase() {}
     virtual SolverVariable* createVariable(int64_t id, SolverContext* ctx) = 0;
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
-  protected:
+protected:
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
-  private:
+private:
     AlicaEngine* _ae;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
-  public:
+public:
     ISolver(AlicaEngine* ae)
-        : ISolverBase(ae)
+            : ISolverBase(ae)
     {
     }
     virtual ~ISolver() {}

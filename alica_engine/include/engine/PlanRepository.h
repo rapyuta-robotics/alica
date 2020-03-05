@@ -1,12 +1,4 @@
-/*
- * PlanRepository.h
- *
- *  Created on: May 28, 2014
- *      Author: Paul Panin
- */
-
-#ifndef PLANREPOSITORY_H_
-#define PLANREPOSITORY_H_
+#pragma once
 
 #include <iostream>
 #include <unordered_map>
@@ -21,17 +13,20 @@ class EntryPoint;
 class Plan;
 class PlanType;
 class Quantifier;
-class RoleDefinitionSet;
+class RoleSet;
 class Role;
 class State;
-class SyncTransition;
+class Synchronisation;
 class TaskRepository;
 class Task;
 class Transition;
+class Condition;
 class Variable;
 class PlanningProblem;
 class ModelFactory;
+class Factory;
 class ExpressionHandler;
+class ModelManager;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -40,7 +35,7 @@ class ExpressionHandler;
  */
 class PlanRepository
 {
-  public:
+public:
     PlanRepository();
     virtual ~PlanRepository();
 
@@ -52,9 +47,9 @@ class PlanRepository
     {
         class iterator
         {
-          public:
+        public:
             iterator(typename MapType<T>::const_iterator inner)
-                : _innerIter(inner)
+                    : _innerIter(inner)
             {
             }
             bool operator!=(const iterator& o) const { return _innerIter != o._innerIter; }
@@ -67,13 +62,13 @@ class PlanRepository
                 return *this;
             }
 
-          private:
+        private:
             typename MapType<T>::const_iterator _innerIter;
         };
 
-      public:
+    public:
         Accessor(const MapType<T>& map)
-            : _ref(map)
+                : _ref(map)
         {
         }
 
@@ -91,12 +86,12 @@ class PlanRepository
 
         iterator begin() const { return iterator(_ref.begin()); }
         iterator end() const { return iterator(_ref.end()); }
+        unsigned long size() const { return _ref.size(); }
 
-      private:
+    private:
         const MapType<T>& _ref;
     };
 
-    const Accessor<BehaviourConfiguration> getBehaviourConfigurations() const { return Accessor<BehaviourConfiguration>(_behaviourConfigurations); }
     const Accessor<Behaviour> getBehaviours() const { return Accessor<Behaviour>(_behaviours); }
     const Accessor<Capability> getCapabilities() const { return Accessor<Capability>(_capabilities); }
     const Accessor<Characteristic> getCharacteristics() const { return Accessor<Characteristic>(_characteristics); }
@@ -104,13 +99,14 @@ class PlanRepository
     const Accessor<Plan> getPlans() const { return Accessor<Plan>(_plans); }
     const Accessor<PlanType> getPlanTypes() const { return Accessor<PlanType>(_planTypes); }
     const Accessor<Quantifier> getQuantifiers() const { return Accessor<Quantifier>(_quantifiers); }
-    const Accessor<RoleDefinitionSet> getRoleDefinitionSets() const { return Accessor<RoleDefinitionSet>(_roleDefinitionSets); }
+    const Accessor<RoleSet> getRoleDefinitionSets() const { return Accessor<RoleSet>(_roleSets); }
     const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
     const Accessor<State> getStates() const { return Accessor<State>(_states); }
-    const Accessor<SyncTransition> getSyncTransitions() const { return Accessor<SyncTransition>(_syncTransitions); }
+    const Accessor<Synchronisation> getSynchronisations() const { return Accessor<Synchronisation>(_synchronisations); }
     const Accessor<TaskRepository> getTaskRepositorys() const { return Accessor<TaskRepository>(_taskRepositories); }
     const Accessor<Task> getTasks() const { return Accessor<Task>(_tasks); }
     const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
+    const Accessor<Condition> getConditoins() const { return Accessor<Condition>(_conditions); }
     const Accessor<Variable> getVariables() const { return Accessor<Variable>(_variables); }
     const Accessor<PlanningProblem> getPlanningProblems() const { return Accessor<PlanningProblem>(_planningProblems); }
 
@@ -122,13 +118,14 @@ class PlanRepository
 
     bool verifyPlanBase() const;
 
-  private:
+private:
     friend ModelFactory;
+    friend Factory;
+    friend ModelManager;
     friend ExpressionHandler;
     MapType<Plan> _plans;
     MapType<Task> _tasks;
     MapType<Behaviour> _behaviours;
-    MapType<BehaviourConfiguration> _behaviourConfigurations;
     MapType<PlanType> _planTypes;
     MapType<Role> _roles;
     MapType<Characteristic> _characteristics;
@@ -136,12 +133,12 @@ class PlanRepository
     MapType<State> _states;
     MapType<EntryPoint> _entryPoints;
     MapType<Transition> _transitions;
-    MapType<SyncTransition> _syncTransitions;
+    MapType<Condition> _conditions;
+    MapType<Synchronisation> _synchronisations;
     MapType<Quantifier> _quantifiers;
     MapType<Variable> _variables;
-    MapType<RoleDefinitionSet> _roleDefinitionSets;
+    MapType<RoleSet> _roleSets;
     MapType<TaskRepository> _taskRepositories;
     MapType<PlanningProblem> _planningProblems;
 };
 } // namespace alica
-#endif /* PLANREPOSITORY_H_ */

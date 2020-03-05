@@ -13,7 +13,7 @@
 #include "engine/model/Transition.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/syncmodule/SyncModule.h>
 
@@ -422,7 +422,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     const State* nextState = nullptr;
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() != nullptr)
+        if (t->getSynchronisation() != nullptr)
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
@@ -466,10 +466,10 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& r)
     const State* nextState = nullptr;
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() == nullptr) {
+        if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_sm.followSyncTransition(t)) {
+        if (_sm.followSyncedTransition(t)) {
             if (t->evalCondition(r)) {
                 nextState = t->getOutState();
                 r.editConstraintStore().addCondition(t->getPreCondition());

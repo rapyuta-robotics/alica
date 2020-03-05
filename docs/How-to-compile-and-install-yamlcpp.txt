@@ -1,0 +1,16 @@
+*** With CMake ***
+
+yaml-cpp uses CMake to support cross-platform building. In a UNIX-like system, the basic steps to build are:
+
+1. Download and install CMake (if you don't have root privileges, just install to a local directory, like ~/bin)
+
+2. From the source directory, run:
+
+mkdir build
+cd build
+cmake .. -DBUILD_SHARED_LIBS=ON
+
+and then the usual
+
+make
+sudo make install

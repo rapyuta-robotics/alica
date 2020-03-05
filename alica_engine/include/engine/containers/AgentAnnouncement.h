@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/IdentifierConstPtr.h>
 
 #include <string>
 #include <tuple>
@@ -19,7 +19,7 @@ struct AgentAnnouncement
             , roleId(0)
     {
     }
-    AgentIDConstPtr senderID;
+    essentials::IdentifierConstPtr senderID;
     uint32_t token;
     std::string senderName;
     uint32_t senderSdk;

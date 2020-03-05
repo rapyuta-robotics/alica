@@ -1,44 +1,64 @@
-/*
- * Behaviour.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#include "engine/model/Behaviour.h"
+#include "engine/model/PostCondition.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/RuntimeCondition.h"
 
 #include <memory>
-
-#include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
-
 #include <sstream>
 
-namespace alica {
+namespace alica
+{
 
 Behaviour::Behaviour()
-        : _implementation(nullptr) {}
+        : _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
+        , _postCondition(nullptr)
+        , _frequency(1)
+        , _deferring(0)
+        , _eventDriven(false)
+{
+}
 
 Behaviour::~Behaviour() {}
 
-std::string Behaviour::toString() const {
+std::string Behaviour::toString(std::string indent) const
+{
     std::stringstream ss;
-    ss << "#Behaviour: " << getName() << std::endl;
-    ss << "\t Configurations: " << getConfigurations().size() << std::endl;
-    for (const BehaviourConfiguration* bc : getConfigurations()) {
-        ss << "\t" << bc->getName() << " " << bc->getId() << std::endl;
+    ss << indent << "#Behaviour: " << getName() << " " << getId() << std::endl;
+    ss << indent << "\teventDriven: " << (_eventDriven ? "true" : "false") << std::endl;
+    ss << indent << "\tfrequency: " << _frequency << std::endl;
+    ss << indent << "\tdeferring: " << _deferring << std::endl;
+    if (this->_preCondition != nullptr) {
+        ss << this->_preCondition->toString(indent + "\t");
     }
-    ss << "#EndBehaviour" << std::endl;
+    if (this->_runtimeCondition != nullptr) {
+        ss << this->_runtimeCondition->toString(indent + "\t");
+    }
+    if (this->_postCondition != nullptr) {
+        ss << this->_postCondition->toString(indent + "\t");
+    }
+    ss << indent << "\tparameters: " << std::endl;
+    for (const auto& entry : this->_parameters) {
+        ss << indent << "\t" << entry.first << " = " << entry.second << std::endl;
+    }
+
+    ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }
 
-void Behaviour::setConfigurations(const BehaviourConfigurationGrp& configurations) {
-    _configurations = configurations;
+void Behaviour::setEventDriven(bool eventDriven)
+{
+    _eventDriven = eventDriven;
 }
 
-void Behaviour::setFileName(const std::string& fileName) {
-    _fileName = fileName;
+void Behaviour::setFrequency(int frequency)
+{
+    _frequency = frequency;
 }
 
-void Behaviour::setImplementation(BasicBehaviour* implementation) {
-    _implementation = implementation;
+void Behaviour::setDeferring(int deferring)
+{
+    _deferring = deferring;
 }
-}  // namespace alica
+
+} // namespace alica

@@ -1,10 +1,3 @@
-/*
- * Condition.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Condition.h"
 
 #include "engine/BasicCondition.h"
@@ -19,13 +12,6 @@ namespace alica
 
 Condition::Condition()
         : _abstractPlan(nullptr)
-        , _basicCondition(nullptr)
-{
-}
-
-Condition::Condition(int64_t id)
-        : AlicaElement(id)
-        , _abstractPlan(nullptr)
         , _basicCondition(nullptr)
 {
 }
@@ -51,8 +37,7 @@ bool Condition::evaluate(const RunningPlan& rp) const
     } else {
         bool ret = false;
         try {
-            // TODO: fix this:
-
+            // TODO: fix const cast below
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer());
         } catch (const std::exception& e) {
             ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());

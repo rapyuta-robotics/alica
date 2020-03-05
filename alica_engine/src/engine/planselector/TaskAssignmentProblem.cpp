@@ -12,7 +12,6 @@
 #include <engine/model/Task.h>
 #include <engine/teammanager/TeamManager.h>
 
-#include <essentials/AgentID.h>
 //#define ALICA_DEBUG_LEVEL_ALL
 
 #include <alica_common_config/debug_output.h>
@@ -142,9 +141,9 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
-    AgentIDConstPtr ownAgentId = _tm.getLocalAgentID();
+    essentials::IdentifierConstPtr ownAgentId = _tm.getLocalAgentID();
     bool haveToRevalute = false;
 
     for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {
@@ -168,7 +167,7 @@ std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
     out << "--------------------TA:--------------------" << std::endl;
     out << "Agent count: " << tap._agents.size() << std::endl;
     out << "AgentIDs: ";
-    for (AgentIDConstPtr id : tap._agents) {
+    for (essentials::IdentifierConstPtr id : tap._agents) {
         out << *id << " ";
     }
     out << std::endl;

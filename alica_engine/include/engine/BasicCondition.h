@@ -10,7 +10,7 @@ class RunningPlan;
 
 class BasicCondition
 {
-  public:
+public:
     BasicCondition();
     virtual ~BasicCondition();
     virtual bool evaluate(std::shared_ptr<RunningPlan> rp) = 0;

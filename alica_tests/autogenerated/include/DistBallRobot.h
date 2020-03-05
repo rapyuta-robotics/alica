@@ -1,13 +1,12 @@
 #pragma once
 
 #include <engine/USummand.h>
+#include <essentials/IdentifierConstPtr.h>
+#include <essentials/IDManager.h>
 
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "engine/AgentIDConstPtr.h"
-#include "essentials/AgentIDManager.h"
 
 namespace alica
 {
@@ -20,13 +19,13 @@ public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
     UtilityInterval eval(IAssignment ass) const override;
-    AgentIDConstPtr robotId;
+    essentials::IdentifierConstPtr robotId;
 
 protected:
     double sb;
     double angleBallOpp;
     double velAngle;
-    essentials::AgentIDManager* manager;
+    essentials::IDManager* manager;
 };
 
 } /* namespace alica */
