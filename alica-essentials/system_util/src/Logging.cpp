@@ -1,4 +1,4 @@
-#include "Logging.h"
+#include "essentials/Logging.h"
 
 #include <essentials/FileSystem.h>
 #include <essentials/SystemConfig.h>
