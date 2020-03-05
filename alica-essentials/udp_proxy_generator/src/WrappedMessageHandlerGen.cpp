@@ -60,7 +60,7 @@ bool parseDefinitionFile(string msgDefFile, vector<WrappedMessage*>& msgList)
 {
     string regstr = "(send|receive)Topic:\\s*(\\S+)\\s*WrappedMsg:\\s*(\\S+)\\s*Msg:\\s*(\\S+)\\s*Opt:\\s*\\[(.*)\\]";
     boost::regex line(regstr);
-    ifstream ifs(msgDefFile);
+    std::ifstream ifs(msgDefFile);
 
     int i = 1;
     while (!ifs.eof()) {
@@ -192,7 +192,7 @@ void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& ms
         cout << "Template: " << tmpl << endl;
         int idx = tmpl.find_last_of('/');
         string basename = tmpl.substr(idx + 1);
-        ifstream ifs(tmpl);
+        std::ifstream ifs(tmpl);
         stringstream ss;
         if (ifs) {
             ss << ifs.rdbuf();
@@ -201,7 +201,7 @@ void processTemplates(string tmplDir, string outDir, vector<WrappedMessage*>& ms
         if (basename.find("WrappedMessageHandler") == 0) {
             string parsedContent = processTemplate(ss, msgList);
 
-            ofstream ofs(outDir + "/" + basename);
+            std::ofstream ofs(outDir + "/" + basename);
             ofs << parsedContent;
             ofs.close();
         }

@@ -6,7 +6,7 @@
 
 class EventTest : public ::testing::Test
 {
-  public:
+public:
     int callbackInt = 0;
     std::condition_variable* cv;
     std::mutex cv_mtx;
