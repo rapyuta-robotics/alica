@@ -1,16 +1,8 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(system_util)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-
-## Enable exception handling for segfaults
-set(CMAKE_CXX_FLAGS "-rdynamic -g -fnon-call-exceptions -ggdb ${CMAKE_CXX_FLAGS}")
+add_compile_options(-std=c++14)
+set(CMAKE_BUILD_TYPE Debug)
 
 find_package(catkin QUIET)
 if(catkin_FOUND)
@@ -22,7 +14,6 @@ endif(catkin_FOUND)
 
 if (catkin_FOUND)
   catkin_package(
-   INCLUDE_DIRS include
    LIBRARIES system_util fsystem
    CATKIN_DEPENDS system_config fsystem
   # DEPENDS system filesystem
@@ -44,3 +35,13 @@ if (NOT catkin_FOUND)
   target_include_directories(system_util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif(NOT catkin_FOUND)
 
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)

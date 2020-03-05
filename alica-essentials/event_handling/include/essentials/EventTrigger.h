@@ -2,15 +2,17 @@
 
 #include "ITrigger.h"
 
-#include <vector>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+#include <vector>
 
-namespace essentials {
-class EventTrigger : public virtual ITrigger {
+namespace essentials
+{
+class EventTrigger : public virtual ITrigger
+{
 public:
     EventTrigger();
     virtual ~EventTrigger();
     void run(bool notifyAll = true);
 };
-}  // namespace essentials
+} // namespace essentials
