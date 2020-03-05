@@ -11,6 +11,8 @@
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
 
+#include <essentials/IDManager.h>
+
 #include <cassert>
 #include <memory>
 #include <string>
@@ -19,7 +21,7 @@
 
 namespace essentials
 {
-class IDManager;
+
 class IdentifierConstPtr;
 } // namespace essentials
 
@@ -289,6 +291,8 @@ public:
      */
     essentials::IdentifierConstPtr getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
 
+    essentials::IdentifierConstPtr generateID(std::size_t size);
+
     // TODO: Implement
     template <class T>
     int set(AlicaOption option, T optval);
@@ -354,5 +358,11 @@ bool AlicaContext::existSolver() const
 {
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
+}
+
+template <class Prototype>
+essentials::IdentifierConstPtr AlicaContext::getID(Prototype& idPrototype, uint8_t type)
+{
+    return this->_idManager->getID<Prototype>(idPrototype, type);
 }
 } // namespace alica

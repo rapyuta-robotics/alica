@@ -1,13 +1,12 @@
 #pragma once
 
 #include <engine/USummand.h>
+#include <essentials/IdentifierConstPtr.h>
+#include <essentials/IDManager.h>
 
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "engine/AgentIDConstPtr.h"
-#include "essentials/AgentIDManager.h"
 
 namespace alica
 {

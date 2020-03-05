@@ -1,7 +1,14 @@
+/*
+ * DummyTestSummand.cpp
+ *
+ *  Created on: Oct 29, 2014
+ *      Author: Stefan Jakob
+ */
+
 #include "DummyTestSummand.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/IAssignment.h"
-#include <essentials/Identifier.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <TestWorldModel.h>
 
 namespace alica

@@ -90,9 +90,9 @@ void TeamManager::readSelfFromConfig()
     constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
     uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
     if (id != notAValidID) {
-        _localAnnouncement.senderID = _engine->getID(id);
+        _localAnnouncement.senderID = _engine->getID<uint64_t>(id);
     } else {
-        _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
+        _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
         ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
         bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
         if (persistId) {

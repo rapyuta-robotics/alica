@@ -30,13 +30,11 @@ UtilityInterval DistBallRobot::eval(IAssignment ass) const
 
     int numAssignedRobots = 0;
 
-    long x8 = 8;
-    std::vector<uint8_t> id8(reinterpret_cast<const uint8_t*>(&x8), (reinterpret_cast<const uint8_t*>(&x8) + sizeof(x8)));
-    essentials::IdentifierConstPtr agentID8 = this->manager->getIDFromBytes(id8.begin().base(), id8.size(), essentials::Identifier::UUID_TYPE);
+    long id8 = 8;
+    essentials::IdentifierConstPtr agentID8 = this->manager->getID<long>(id8);
 
-    long x9 = 9;
-    std::vector<uint8_t> id9(reinterpret_cast<const uint8_t*>(&x9), (reinterpret_cast<const uint8_t*>(&x9) + sizeof(x9)));
-    essentials::IdentifierConstPtr agentID9 = this->manager->getIDFromBytes(id9.begin().base(), id9.size(), essentials::Identifier::UUID_TYPE);
+    long id9 = 9;
+    essentials::IdentifierConstPtr agentID9 = this->manager->getID<long>(id9);
 
     double curPosition;
     for (essentials::IdentifierConstPtr id : ass.getAgentsWorking(_relevantEntryPoints[0])) {

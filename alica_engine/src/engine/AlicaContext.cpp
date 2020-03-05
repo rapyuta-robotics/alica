@@ -2,7 +2,6 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
-#include <essentials/IDManager.h>
 #include <essentials/IdentifierConstPtr.h>
 
 namespace alica
@@ -127,10 +126,14 @@ int AlicaContext::getVersion()
     return ALICA_VERSION;
 }
 
-template <class Prototype>
-essentials::IdentifierConstPtr AlicaContext::getID(Prototype& idPrototype, uint8_t type)
+essentials::IdentifierConstPtr AlicaContext::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type)
 {
-    return this->_idManager->getID(idPrototype, type);
+    return this->_idManager->getIDFromBytes(idBytes, idSize, type);
+}
+
+essentials::IdentifierConstPtr AlicaContext::generateID(std::size_t size)
+{
+    return this->_idManager->generateID(size);
 }
 
 } // namespace alica

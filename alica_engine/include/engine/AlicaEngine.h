@@ -107,11 +107,11 @@ public:
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
-    essentials::IdentifierConstPtr getIdFromBytes(const std::vector<uint8_t>& vectorID) const;
     template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype) const;
-    essentials::IdentifierConstPtr generateId(std::size_t size) const;
+    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE) const;
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
+    essentials::IdentifierConstPtr generateID(std::size_t size);
+    // TODO: Do we need this: essentials::IdentifierConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
 
 private:
     void setStepEngine(bool stepEngine);
@@ -168,9 +168,9 @@ private:
  * a pointer to a corresponding Identifier object.
  */
 template <class Prototype>
-essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype) const
+essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type) const
 {
-    return _ctx.getID<Prototype>(idPrototype);
+    return _ctx.getID<Prototype>(idPrototype, type);
 }
 
 template <typename T>

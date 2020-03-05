@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ASCII"?>
+<alica:Behaviour xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488730695" name="DefendMid" comment="" >
+  <configurations id="1402488763903" name="MidDefendDefault" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" deferring="0" frequency="30" eventDriven="false"/>
+</alica:Behaviour>

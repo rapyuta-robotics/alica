@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825395940"/>
+    <value xPos="94" yPos="85" width="81" height="67"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825395939"/>
+    <value width="704" height="511"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825395941"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825402617"/>
+    <value xPos="203" yPos="239"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825404963"/>
+    <value xPos="82" yPos="249" width="81" height="67"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825409988"/>
+    <value xPos="413" yPos="88" width="161" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825411686"/>
+    <value xPos="393" yPos="255" width="81" height="67" collapsed="false"/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825425833"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825427469"/>
+    <value/>
+  </extensions>
+  <extensions>
+    <key href="MasterSyncTransition.pml#1418825482116"/>
+    <value xPos="94" yPos="189" width="137" height="41"/>
+  </extensions>
+  <extensions>
+    <key href="Behaviour/Attack.beh#1402488866727"/>
+    <value/>
+  </extensions>
+</uiextensionmodel:PmlUiExtensionMap>
