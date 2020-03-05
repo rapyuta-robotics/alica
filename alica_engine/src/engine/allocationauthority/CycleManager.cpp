@@ -3,20 +3,15 @@
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/PlanRepository.h"
-#include "engine/RunningPlan.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
-#include "engine/allocationauthority/EntryPointRobotPair.h"
 #include "engine/containers/EntryPointRobots.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
-#include <SystemConfig.h>
 
+#include <essentials/SystemConfig.h>
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -169,7 +164,7 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (!_enabled) {
         return;
     }
-    AgentIDConstPtr rid = aai.authority;
+    essentials::IdentifierConstPtr rid = aai.authority;
     if (rid == _myID) {
         return;
     }
@@ -232,7 +227,7 @@ bool CycleManager::applyAssignment()
         modifiedSelf = true;
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
-            for (AgentIDConstPtr robot : epr.robots) {
+            for (essentials::IdentifierConstPtr robot : epr.robots) {
                 const EntryPoint* e = _ae->getPlanRepository().getEntryPoints()[epr.entrypoint];
                 bool changed = _rp->editAssignment().updateAgent(robot, e);
                 if (changed) {

@@ -3,7 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 #include <ctime>
 #include <fstream>

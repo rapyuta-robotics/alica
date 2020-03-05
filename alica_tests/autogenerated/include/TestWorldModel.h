@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 #include <essentials/ITrigger.h>
 
 #include <vector>

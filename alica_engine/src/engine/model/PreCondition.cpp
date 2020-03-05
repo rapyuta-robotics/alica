@@ -1,30 +1,28 @@
-/*
- * PreCondition.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/PreCondition.h"
 #include <sstream>
-namespace alica {
+#include <iostream>
+namespace alica
+{
 
-PreCondition::PreCondition(int64_t id)
-        : Condition(id)
-        , _enabled(true) {}
+PreCondition::PreCondition()
+        : _enabled(true)
+{
+}
 
 PreCondition::~PreCondition() {}
 
-std::string PreCondition::toString() const {
+std::string PreCondition::toString(std::string indent) const
+{
     std::stringstream ss;
-    ss << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
-    ss << "\t ConditionString: " << getConditionString() << std::endl;
-    ss << "#EndPreCondition" << std::endl;
+    ss << indent << "#PreCondition: " << getName() << " " << getId() << (_enabled ? "enabled" : "disabled") << std::endl;
+    ss << indent << "\t ConditionString: " << getConditionString() << std::endl;
+    ss << indent << "#EndPreCondition" << std::endl;
     return ss.str();
 }
 
-void PreCondition::setEnabled(bool enabled) {
+void PreCondition::setEnabled(bool enabled)
+{
     _enabled = enabled;
 }
 
-}  // namespace alica
+} // namespace alica

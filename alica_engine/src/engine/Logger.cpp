@@ -1,6 +1,5 @@
 #include "engine/Logger.h"
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
@@ -17,6 +16,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
+#include <essentials/IdentifierConstPtr.h>
 #include <alica_common_config/debug_output.h>
 
 using std::endl;
@@ -35,7 +35,7 @@ Logger::Logger(const AlicaEngine* ae)
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _active = sc["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
     if (_active) {
-        std::string robotName = _ae->getRobotName();
+        std::string agentName = _ae->getLocalAgentName();
         std::string logPath = sc["Alica"]->get<std::string>("Alica.EventLogging.LogFolder", NULL);
         if (!essentials::FileSystem::isDirectory(logPath)) {
             if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
@@ -46,7 +46,7 @@ Logger::Logger(const AlicaEngine* ae)
         struct tm timestruct;
         auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
-        sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << robotName << ".txt";
+        sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << agentName << ".txt";
         _fileWriter.open(sb.str().c_str());
     }
 }
@@ -117,7 +117,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << tm.getTeamSize();
 
     _sBuild << " TeamMember:";
-    for (AgentIDConstPtr id : agents) {
+    for (essentials::IdentifierConstPtr id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }

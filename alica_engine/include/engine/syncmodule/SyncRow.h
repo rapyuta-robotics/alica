@@ -1,7 +1,8 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/Types.h"
+
+#include <essentials/IdentifierConstPtr.h>
 
 #include <vector>
 

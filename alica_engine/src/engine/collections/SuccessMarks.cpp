@@ -94,7 +94,6 @@ void SuccessMarks::removePlan(const AbstractPlan* plan)
  */
 void SuccessMarks::markSuccessfull(const AbstractPlan* p, const EntryPoint* e)
 {
-
     EntryPointGrp& l = _successMarks[p];
     auto i = std::find(l.begin(), l.end(), e);
     if (i == l.end()) {

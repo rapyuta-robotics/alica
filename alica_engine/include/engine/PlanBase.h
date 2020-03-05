@@ -57,7 +57,7 @@ public:
 
     // factory functions
     RunningPlan* makeRunningPlan(const Plan* plan);
-    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc);
+    RunningPlan* makeRunningPlan(const Behaviour* b);
     RunningPlan* makeRunningPlan(const PlanType* pt);
 
 private:

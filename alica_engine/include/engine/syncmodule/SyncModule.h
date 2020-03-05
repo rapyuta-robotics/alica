@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iostream>
 #include <list>
@@ -13,7 +13,7 @@
 namespace alica
 {
 class Transition;
-class SyncTransition;
+class SynchronisationProcess;
 class AlicaEngine;
 class PlanRepository;
 class Synchronisation;
@@ -31,22 +31,22 @@ public:
     void close();
     void tick();
     void setSynchronisation(const Transition* trans, bool holds);
-    bool followSyncTransition(const Transition* trans);
+    bool followSyncedTransition(const Transition* trans);
     void onSyncTalk(std::shared_ptr<SyncTalk> st);
     void onSyncReady(std::shared_ptr<SyncReady> sr);
 
     void sendSyncTalk(SyncTalk& st);
     void sendSyncReady(SyncReady& sr);
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
-    void synchronisationDone(const SyncTransition* st);
+    void synchronisationDone(const Synchronisation* st);
 
 private:
     bool _running;
     const AlicaEngine* _ae;
-    AgentIDConstPtr _myId;
+    essentials::IdentifierConstPtr _myId;
     unsigned long _ticks;
-    std::map<const SyncTransition*, Synchronisation*> _synchSet;
-    std::list<const SyncTransition*> _synchedTransitions;
+    std::map<const Synchronisation*, SynchronisationProcess*> _synchSet;
+    std::list<const Synchronisation*> _synchronisations;
     std::mutex _lomutex;
 };
 

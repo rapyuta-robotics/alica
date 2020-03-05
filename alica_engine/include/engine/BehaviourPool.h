@@ -8,7 +8,7 @@
 namespace alica
 {
 
-class BehaviourConfiguration;
+class Behaviour;
 class BasicBehaviour;
 class AlicaEngine;
 class IBehaviourCreator;
@@ -29,7 +29,7 @@ public:
     void stopAll();
     void terminateAll();
     bool isBehaviourRunningInContext(const RunningPlan& rp) const;
-    const std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
+    const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
 
 private:
     /**
@@ -38,7 +38,7 @@ private:
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
     // TODO: switch to unique ptr
-    std::map<const BehaviourConfiguration*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
+    std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* _ae;
 };
 

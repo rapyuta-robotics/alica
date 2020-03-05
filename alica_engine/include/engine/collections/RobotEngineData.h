@@ -1,8 +1,9 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
 #include <engine/Types.h>
 #include <engine/collections/SuccessMarks.h>
+
+#include <essentials/IdentifierConstPtr.h>
 
 #include <map>
 #include <memory>
@@ -18,7 +19,7 @@ class AlicaEngine;
 class RobotEngineData
 {
 public:
-    RobotEngineData(const AlicaEngine* engine, AgentIDConstPtr agentId);
+    RobotEngineData(const AlicaEngine* engine, essentials::IdentifierConstPtr agentId);
     ~RobotEngineData();
     void initDomainVariables();
 
@@ -38,7 +39,7 @@ private:
     int64_t makeUniqueId(const std::string& s) const;
 
     const AlicaEngine* _engine;
-    AgentIDConstPtr _agentId;
+    essentials::IdentifierConstPtr _agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
      */

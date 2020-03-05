@@ -18,7 +18,7 @@
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/IDManager.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 

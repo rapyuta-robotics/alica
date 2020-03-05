@@ -7,7 +7,6 @@
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
@@ -34,7 +33,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _success(false)
         , _callInit(true)
         , _started(true)
-        , _configuration(nullptr)
+        , _behaviour(nullptr)
         , _msInterval(100)
         , _msDelayedStart(0)
         , _running(false)
@@ -63,27 +62,22 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     return curInRun == rp || (curInRun == nullptr && _context == rp && _started && _running);
 }
 
-void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
+void BasicBehaviour::setBehaviour(const Behaviour* beh)
 {
-    assert(_configuration == nullptr);
-    _configuration = beh;
-    if (_configuration->isEventDriven()) {
+    assert(_behaviour == nullptr);
+    _behaviour = beh;
+    if (_behaviour->isEventDriven()) {
         _runThread = new std::thread(&BasicBehaviour::runInternalTriggered, this);
     } else {
         _runThread = new std::thread(&BasicBehaviour::runInternalTimed, this);
     }
 }
 
-const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
-{
-    return _configuration->getVariableByName(name);
-}
-
 /**
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-AgentIDConstPtr BasicBehaviour::getOwnId() const
+essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }
@@ -106,7 +100,7 @@ bool BasicBehaviour::start()
 {
     _callInit = true;
     _running = true;
-    if (!_configuration->isEventDriven()) {
+    if (!_behaviour->isEventDriven()) {
         _runCV.notify_all();
     }
     return true;
@@ -154,18 +148,6 @@ void BasicBehaviour::initInternal()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
-}
-
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
-{
-    for (const auto& pair : _configuration->getParameters()) {
-        if (pair.first == key) {
-            valueOut = pair.second;
-            return true;
-        }
-    }
-    valueOut.clear();
-    return false;
 }
 
 void BasicBehaviour::runInternalTimed()
@@ -240,6 +222,17 @@ void BasicBehaviour::runInternalTriggered()
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
     _engine->getCommunicator().sendLogMessage(level, message);
+}
+
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
+{
+    const auto& entry = this->_behaviour->getParameters().find(key);
+    if (entry != this->_behaviour->getParameters().end()) {
+        valueOut = entry->second;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 } /* namespace alica */

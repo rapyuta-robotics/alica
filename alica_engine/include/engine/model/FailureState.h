@@ -1,30 +1,22 @@
-/*
- * FailurePoint.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef FAILURESTATE_H_
-#define FAILURESTATE_H_
-
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "TerminalState.h"
 
-namespace alica {
+namespace alica
+{
 
 /**
- * A terminal failure state in a plan. Indicates unsuccesful termination.
+ * A terminal failure state in a plan. Indicates unsuccessful termination.
  */
-class FailureState : public TerminalState {
+class FailureState : public TerminalState
+{
 public:
     FailureState();
     virtual ~FailureState();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
-}  // namespace alica
-
-#endif /* FAILURESTATE_H_ */
+} // namespace alica

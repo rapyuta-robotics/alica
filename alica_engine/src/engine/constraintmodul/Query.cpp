@@ -3,7 +3,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/model/Condition.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/model/Variable.h"
@@ -32,9 +32,9 @@ void Query::addStaticVariable(const Variable* v)
     _queriedStaticVariables.push_back(v);
 }
 
-void Query::addDomainVariable(AgentIDConstPtr robot, const std::string& ident, const AlicaEngine* ae)
+void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::string& ident, const AlicaEngine* ae)
 {
-    _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(robot, ident));
+    _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
 }
 
 void Query::clearDomainVariables()
@@ -104,7 +104,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
 
             // 2. process bindings for plantype
             if (rp->getPlanType() != nullptr) {
-                for (const Parametrisation* p : rp->getPlanType()->getParametrisation()) {
+                for (const VariableBinding* p : rp->getPlanType()->getVariableBindings()) {
                     if (p->getSubPlan() == rp->getActivePlan() && _staticVars.hasCurrently(p->getSubVar())) {
                         _staticVars.editNext().push_back(p->getVar());
                         _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());
@@ -123,7 +123,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
             const State* parent_state = nullptr;
             if (parent && (parent_state = parent->getActiveState()) != nullptr) {
                 _staticVars.editNext().clear();
-                for (const Parametrisation* p : parent_state->getParametrisation()) {
+                for (const VariableBinding* p : parent_state->getParametrisation()) {
                     if ((p->getSubPlan() == rp->getActivePlan() || p->getSubPlan() == rp->getPlanType()) && _staticVars.hasCurrently(p->getSubVar())) {
                         _staticVars.editNext().push_back(p->getVar());
                         _uniqueVarStore.addVarTo(p->getSubVar(), p->getVar());

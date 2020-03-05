@@ -5,13 +5,13 @@
 #include "engine/Logger.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "essentials/AgentIDFactory.h"
-#include <alica_common_config/debug_output.h>
 
-#include <SystemConfig.h>
+#include <alica_common_config/debug_output.h>
+#include <essentials/SystemConfig.h>
+
+#include <limits>
 #include <random>
 #include <utility>
-#include <limits>
 
 namespace alica
 {
@@ -85,22 +85,22 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 void TeamManager::readSelfFromConfig()
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    const std::string localAgentName = _engine->getRobotName();
+    const std::string localAgentName = _engine->getLocalAgentName();
 
     constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
     uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
     if (id != notAValidID) {
-        _localAnnouncement.senderID = _engine->getId(id);
+        _localAnnouncement.senderID = _engine->getID<uint64_t>(id);
     } else {
-        _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
+        _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
         ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
         bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
         if (persistId) {
-            try{
+            try {
                 auto* configLocal = sc["Local"];
                 configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
                 configLocal->store();
-            } catch(...) {
+            } catch (...) {
                 ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
             }
         }
@@ -157,12 +157,12 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
+const Agent* TeamManager::getAgentByID(essentials::IdentifierConstPtr agentId) const
 {
     return getAgent(agentId);
 }
 
-Agent* TeamManager::getAgent(AgentIDConstPtr agentId) const
+Agent* TeamManager::getAgent(essentials::IdentifierConstPtr agentId) const
 {
     AgentsCache::AgentMap& agents = *_agentsCache.get();
     auto agentEntry = agents.find(agentId);
@@ -173,12 +173,12 @@ Agent* TeamManager::getAgent(AgentIDConstPtr agentId) const
     return nullptr;
 }
 
-AgentIDConstPtr TeamManager::getLocalAgentID() const
+essentials::IdentifierConstPtr TeamManager::getLocalAgentID() const
 {
     return _localAgent->getId();
 }
 
-void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(essentials::IdentifierConstPtr agentId, AlicaTime timeLastMsgReceived)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -186,7 +186,7 @@ void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime time
     }
 }
 
-bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentActive(essentials::IdentifierConstPtr agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -199,7 +199,7 @@ bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
  * Checks if an agent is ignored
  * @param agentId an essentials::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentIgnored(essentials::IdentifierConstPtr agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -209,7 +209,7 @@ bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
     return true;
 }
 
-void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
+void TeamManager::setAgentIgnored(essentials::IdentifierConstPtr agentId, const bool ignored) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -217,7 +217,7 @@ void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) c
     }
 }
 
-bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(essentials::IdentifierConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -227,7 +227,7 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(essentials::IdentifierConstPtr agentId, const IdGrp& suceededEps)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -237,7 +237,7 @@ bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceeded
     return false;
 }
 
-const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const
+const DomainVariable* TeamManager::getDomainVariable(essentials::IdentifierConstPtr agentId, const std::string& sort) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {

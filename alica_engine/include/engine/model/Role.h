@@ -1,48 +1,31 @@
-/*
- * Role.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef ROLE_H_
-#define ROLE_H_
-
-#include <unordered_map>
+#pragma once
 #include <string>
+#include <unordered_map>
 
 #include "AlicaElement.h"
 
-namespace alica {
-class RoleTaskMapping;
-class RoleDefinitionSet;
-class Characteristic;
+namespace alica
+{
 class ModelFactory;
+class RoleFactory;
+class RoleSet;
+class Task;
 
-class Role : public AlicaElement {
+class Role : public AlicaElement
+{
 public:
     Role();
     virtual ~Role();
 
     double getPriority(int64_t taskId) const;
-    std::string toString() const override;
-
-    const std::unordered_map<std::string, const Characteristic*>& getCharacteristics() const {
-        return _characteristics;
-    }
-    const RoleDefinitionSet* getRoleDefinitionSet() const { return _roleDefinitionSet; }
-    const RoleTaskMapping* getRoleTaskMapping() const { return _roleTaskMapping; }
+    std::string toString(std::string indent = "") const override;
 
 private:
     friend ModelFactory;
-    void setRoleDefinitionSet(const RoleDefinitionSet* roleDefinitionSet);
-    void setRoleTaskMapping(const RoleTaskMapping* roleTaskMapping);
+    friend RoleFactory;
 
-    std::unordered_map<std::string, const Characteristic*> _characteristics;
-    const RoleTaskMapping* _roleTaskMapping;
-    const RoleDefinitionSet* _roleDefinitionSet;
+    std::unordered_map<Task*, double> _taskPriorities;
+    RoleSet* _roleSet;
 };
 
-}  // namespace alica
-
-#endif /* ROLE_H_ */
+} // namespace alica

@@ -1,14 +1,6 @@
-/*
- * TestConstantValueSummand.h
- *
- *  Created on: Dec 11, 2014
- *      Author: Paul Panin
- */
+#pragma once
 
-#ifndef TESTCONSTANTVALUESUMMAND_H_
-#define TESTCONSTANTVALUESUMMAND_H_
-
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/IdentifierConstPtr.h>
 #include <engine/USummand.h>
 
 namespace alica
@@ -21,12 +13,10 @@ public:
     virtual ~TestConstantValueSummand();
 
     UtilityInterval eval(IAssignment ass) const override;
-    AgentIDConstPtr robotId;
+    essentials::IdentifierConstPtr robotId;
 
 protected:
     double val;
 };
 
 } /* namespace alica */
-
-#endif /* TESTCONSTANTVALUESUMMAND_H_ */

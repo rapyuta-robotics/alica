@@ -1,12 +1,4 @@
-/*
- * RuntimeCondition.h
- *
- *  Created on: Mar 8, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef RUNTIMECONDITION_H_
-#define RUNTIMECONDITION_H_
+#pragma once
 
 #include <string>
 
@@ -18,13 +10,11 @@ class RunningPlan;
 
 class RuntimeCondition : public Condition
 {
-  public:
-    RuntimeCondition(int64_t id);
+public:
+    RuntimeCondition();
     virtual ~RuntimeCondition();
 
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
 } // namespace alica
-
-#endif /* RUNTIMECONDITION_H_ */

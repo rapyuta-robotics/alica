@@ -93,4 +93,4 @@ public:
 private:
     const RunningPlan* _rp;
 };
-}
+} // namespace alica

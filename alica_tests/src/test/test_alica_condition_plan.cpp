@@ -40,7 +40,7 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     const alica::PlanRepository& rep = ae->getPlanRepository();
 
-    const alica::BehaviourConfiguration* beh = rep.getBehaviourConfigurations()[1414068618837];
+    const alica::Behaviour* beh = rep.getBehaviours()[1414068618837];
     ASSERT_NE(beh, nullptr);
     const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);
@@ -58,7 +58,7 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     ASSERT_EQ(beh_y->getId(), 1416488161203);
     bool found = false;
-    for (const alica::Parametrisation* p : state->getParametrisation()) {
+    for (const alica::VariableBinding* p : state->getParametrisation()) {
         ASSERT_EQ(p->getSubPlan(), beh);
         if (p->getSubVar() == beh_y) {
             found = true;
