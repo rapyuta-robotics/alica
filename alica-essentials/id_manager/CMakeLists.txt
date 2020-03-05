@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(id_manager)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 # Define where to find modules for UUID
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake CACHE INTERNAL "" FORCE)
