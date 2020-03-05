@@ -2,21 +2,19 @@
 
 #include "ITrigger.h"
 
+#include <vector>
 #include <chrono>
+#include <thread>
 #include <condition_variable>
 #include <iostream>
-#include <thread>
-#include <vector>
 
-namespace essentials
-{
+namespace essentials {
 
 template <class NotificationClass>
 using t_notificationcallback = void (NotificationClass::*)();
 
 template <class NotificationClass>
-class NotifyTimer : public virtual ITrigger
-{
+class NotifyTimer : public virtual ITrigger {
 public:
     NotifyTimer(long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj);
     ~NotifyTimer();
@@ -29,7 +27,7 @@ public:
     void run(bool notifyAll = false);
     void registerCV(std::condition_variable* condVar);
 
-  private:
+private:
     std::thread* runThread;
     std::chrono::milliseconds msInterval; /** < The time between two fired events */
     bool running, started;
@@ -38,8 +36,8 @@ public:
 };
 
 template <class NotificationClass>
-NotifyTimer<NotificationClass>::NotifyTimer(long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj)
-{
+NotifyTimer<NotificationClass>::NotifyTimer(
+        long msInterval, t_notificationcallback<NotificationClass> callback, NotificationClass* obj) {
     this->started = true;
     this->running = false;
     this->msInterval = std::chrono::milliseconds(msInterval);
@@ -49,10 +47,9 @@ NotifyTimer<NotificationClass>::NotifyTimer(long msInterval, t_notificationcallb
 }
 
 template <class NotificationClass>
-void NotifyTimer<NotificationClass>::run(bool notifyAll)
-{
+void NotifyTimer<NotificationClass>::run(bool notifyAll) {
     while (this->started) {
-        if (!this->started) // for destroying the NotifyTimer
+        if (!this->started)  // for destroying the NotifyTimer
             return;
 
         std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -69,8 +66,7 @@ void NotifyTimer<NotificationClass>::run(bool notifyAll)
 }
 
 template <class NotificationClass>
-NotifyTimer<NotificationClass>::~NotifyTimer()
-{
+NotifyTimer<NotificationClass>::~NotifyTimer() {
     this->running = false;
     this->started = false;
     this->runThread->join();
@@ -78,8 +74,7 @@ NotifyTimer<NotificationClass>::~NotifyTimer()
 }
 
 template <class NotificationClass>
-bool NotifyTimer<NotificationClass>::start()
-{
+bool NotifyTimer<NotificationClass>::start() {
     if (this->started && !this->running) {
         this->running = true;
     }
@@ -87,8 +82,7 @@ bool NotifyTimer<NotificationClass>::start()
 }
 
 template <class NotificationClass>
-bool NotifyTimer<NotificationClass>::stop()
-{
+bool NotifyTimer<NotificationClass>::stop() {
     if (this->started && this->running) {
         this->running = false;
     }
@@ -96,32 +90,26 @@ bool NotifyTimer<NotificationClass>::stop()
 }
 
 template <class NotificationClass>
-bool NotifyTimer<NotificationClass>::isRunning()
-{
+bool NotifyTimer<NotificationClass>::isRunning() {
     return this->running;
 }
 
 template <class NotificationClass>
-bool NotifyTimer<NotificationClass>::isStarted()
-{
+bool NotifyTimer<NotificationClass>::isStarted() {
     return this->started;
 }
 
 template <class NotificationClass>
-void NotifyTimer<NotificationClass>::setInterval(long msInterval)
-{
+void NotifyTimer<NotificationClass>::setInterval(long msInterval) {
     this->msInterval = std::chrono::milliseconds(msInterval);
 }
 
 template <class NotificationClass>
-const long NotifyTimer<NotificationClass>::getInterval() const
-{
+const long NotifyTimer<NotificationClass>::getInterval() const {
     return msInterval.count();
 }
 
 } /* namespace essentials */
 
 template <class NotificationClass>
-inline void essentials::NotifyTimer<NotificationClass>::registerCV(std::condition_variable* condVar)
-{
-}
+inline void essentials::NotifyTimer<NotificationClass>::registerCV(std::condition_variable* condVar) {}

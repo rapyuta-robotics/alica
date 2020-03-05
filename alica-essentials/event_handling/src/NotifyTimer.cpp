@@ -1,5 +1,3 @@
 #include "essentials/NotifyTimer.h"
 
-namespace essentials
-{
-} /* namespace essentials */
+namespace essentials {} /* namespace essentials */

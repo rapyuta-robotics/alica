@@ -16,18 +16,15 @@ using std::make_shared;
 using std::shared_ptr;
 using std::string;
 
-namespace geometry
-{
+namespace geometry {
 
-CNVecEgo::CNVecEgo(double x, double y, double z)
-{
+CNVecEgo::CNVecEgo(double x, double y, double z) {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-CNVecEgo::CNVecEgo(const CNVecEgo& obj)
-{
+CNVecEgo::CNVecEgo(const CNVecEgo& obj) {
     this->x = obj.x;
     this->y = obj.y;
     this->z = obj.z;
@@ -35,15 +32,13 @@ CNVecEgo::CNVecEgo(const CNVecEgo& obj)
 
 CNVecEgo::~CNVecEgo() {}
 
-string CNVecEgo::toString() const
-{
+string CNVecEgo::toString() const {
     std::stringstream ss;
     ss << "CNVecEgo: x: " << x << " y: " << y << " z: " << z << endl;
     return ss.str();
 }
 
-CNVecAllo CNVecEgo::toAllo(CNPositionAllo& me) const
-{
+CNVecAllo CNVecEgo::toAllo(CNPositionAllo& me) const {
     auto allo = CNVecAllo();
 
     // rotate rel point around origin -> rel point with allo orientation

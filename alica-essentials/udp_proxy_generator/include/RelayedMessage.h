@@ -1,28 +1,30 @@
-#pragma once 
+#ifndef RELAYEDMESSAGE_H_
+#define RELAYEDMESSAGE_H_
 
-#include <functional>
 #include <iostream>
+#include <functional>
 
 #include <boost/regex.hpp>
 #include <cstdint>
 
-class RelayedMessage
-{
+using namespace std;
+
+class RelayedMessage {
 public:
-    RelayedMessage(std::string topic, std::string message, std::string options, std::string sendReceive);
+    RelayedMessage(string topic, string message, string options, string sendReceive);
     ~RelayedMessage();
 
-    std::string getRosMessageHandler();
-    std::string getRosJavaMessageHandler();
+    string getRosMessageHandler();
+    string getRosJavaMessageHandler();
 
-    std::string Topic;
-    std::string FullName;
-    std::string BaseName;
-    std::string NameSpace;
-    std::string OptionsString;
-    std::string SendReceiveString;
+    string Topic;
+    string FullName;
+    string BaseName;
+    string NameSpace;
+    string OptionsString;
+    string SendReceiveString;
 
-    std::string FullNameJava;
+    string FullNameJava;
 
     int Ros2UdpQueueLength;
     int Udp2RosQueueLength;
@@ -30,11 +32,12 @@ public:
     std::hash<std::string> hash;
     uint32_t Id;
 
-    std::string getRosCallBackName();
-    std::string getRosJavaCallBackName();
-    std::string getRosClassName();
-    std::string getPublisherName();
+    string getRosCallBackName();
+    string getRosJavaCallBackName();
+    string getRosClassName();
+    string getPublisherName();
 
     bool UseRosTcp;
 };
 
+#endif

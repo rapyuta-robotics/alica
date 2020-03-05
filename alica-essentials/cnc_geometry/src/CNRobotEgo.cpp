@@ -7,12 +7,10 @@ using std::make_shared;
 using std::string;
 using std::vector;
 
-namespace geometry
-{
+namespace geometry {
 
 CNRobotEgo::CNRobotEgo()
-        : velocity()
-{
+        : velocity() {
     this->radius = 0;
     this->id = 0;
     this->certainty = 0;
@@ -23,15 +21,13 @@ CNRobotEgo::CNRobotEgo()
 
 CNRobotEgo::~CNRobotEgo() {}
 
-string CNRobotEgo::toString() const
-{
+string CNRobotEgo::toString() const {
     std::stringstream ss;
     ss << "CNRobotEgo: ID: " << this->id << " Pos: " << this->position << " Velocity: " << this->velocity << std::endl;
     return ss.str();
 }
 
-CNRobotAllo CNRobotEgo::toAllo(CNPositionAllo ownPos)
-{
+CNRobotAllo CNRobotEgo::toAllo(CNPositionAllo ownPos) {
     auto robotAllo = CNRobotAllo();
 
     robotAllo.radius = this->radius;
