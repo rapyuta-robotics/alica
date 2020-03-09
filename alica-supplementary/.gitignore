@@ -38,3 +38,6 @@
 # Ignore generated capnproto code
 *.capnp.h
 *.capnp.c++
+
+# Ignore Intellij/Maven stuff
+**/target/
