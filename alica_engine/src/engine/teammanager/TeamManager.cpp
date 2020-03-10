@@ -67,7 +67,6 @@ TeamManager::TeamManager(AlicaEngine* engine)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
-    readSelfFromConfig();
 }
 
 TeamManager::~TeamManager() {}
@@ -90,6 +89,7 @@ void TeamManager::readSelfFromConfig()
     constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
     uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
     if (id != notAValidID) {
+        std::cout << "[TeamManager] " << id << std::endl;
         _localAnnouncement.senderID = _engine->getID<uint64_t>(id);
     } else {
         _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
@@ -327,6 +327,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
 void TeamManager::init()
 {
+    readSelfFromConfig();
     if (_useAutoDiscovery) {
         _timeLastAnnouncement = _engine->getAlicaClock().now();
         announcePresence();

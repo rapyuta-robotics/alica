@@ -17,6 +17,8 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
 AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : _validTag(ALICA_CTX_GOOD)
+        , _communicator(nullptr)
+        , _idManager(std::make_unique<essentials::IDManager>())
         , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine))
         , _clock(std::make_unique<AlicaClock>())
 {
