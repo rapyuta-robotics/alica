@@ -11,38 +11,52 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
 import java.io.File;
-import java.util.Queue;
+import java.nio.file.Paths;
+import java.util.LinkedList;
 
 public class ConversionTool {
 
     private ModelManager modelManager;
     private DocumentBuilderFactory documentBuilderFactory;
 
-    private Queue<String> filesParsed;
-    private Queue<String> filesToParse;
+    public LinkedList<String> filesParsed;
+    public LinkedList<String> filesToParse;
 
     public ConversionTool() {
         this.modelManager = new ModelManager();
         this.documentBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
+        this.filesParsed = new LinkedList<>();
+        this.filesToParse = new LinkedList<>();
+        Factory.setModelManager(this.modelManager);
+        Factory.setConversionTool(this);
     }
 
     public void convert(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Usage: java -jar ConversionTool(..).jar <output-directory> <path-to-MasterPlan.pml>");
+        if (args.length < 5) {
+            System.err.println("Usage: java -jar ConversionTool(..).jar <plans-path> <roles-path> <tasks-path> <output-directory> <path-to-MasterPlan.pml>");
             return;
         }
-        // set output directories:
-        modelManager.setPlansPath(args[0]);
-        // TODO
-//        modelManager.setRolesPath();
-//        modelManager.setTasksPath();
-        loadPlanTree(args[1]);
+
+        // set paths for parsing old plans, roles, tasks
+        Factory.basePlansPath = args[0];
+        Factory.baseRolesPath = args[1];
+        Factory.baseTasksPath = args[2];
+        Factory.setConversionTool(this);
+
+        // set output directories
+        modelManager.setPlansPath(Paths.get(args[3], "plans").toString());
+        modelManager.setRolesPath(Paths.get(args[3], "roles").toString());
+        modelManager.setTasksPath(Paths.get(args[3], "tasks").toString());
+
+        // start parsing given master plan
+        loadPlanTree(args[4]);
     }
 
-    public Plan loadPlanTree(String pathToMasterPlan) {
+    public void loadPlanTree(String pathToMasterPlan) {
         filesParsed.add(pathToMasterPlan);
-        Plan masterPlan = (Plan) parseFile(pathToMasterPlan, Types.PLAN);
+        parseFile(pathToMasterPlan, Types.PLAN);
         while (!filesToParse.isEmpty()) {
             String fileToParse = filesToParse.poll();
 
@@ -51,7 +65,7 @@ public class ConversionTool {
             File f = new File(fileToParse);
             if(!f.exists() || f.isDirectory()) {
                 System.err.println("[ConversionTool] Cannot find referenced file:" + fileToParse);
-                return null;
+                return;
             }
             filesParsed.add(fileToParse);
             if (fileToParse.endsWith(Extensions.PLAN)) {
@@ -75,12 +89,10 @@ public class ConversionTool {
         for (Behaviour beh : modelManager.getBehaviours()) {
             System.out.println("[ConversionTool] " + beh.toString());
         }
-
-        return masterPlan;
     }
 
     public PlanElement parseFile(String currentFile, String type) {
-        Element node = null;
+        Element node;
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             node = documentBuilder.parse(currentFile).getDocumentElement();

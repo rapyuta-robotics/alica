@@ -1,16 +1,23 @@
 package com.rapyutarobotics.alica.factories;
 
+import com.rapyutarobotics.alica.ConversionTool;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Field;
-import java.util.Dictionary;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Factory {
 
     static ModelManager modelManager;
+    static ConversionTool conversionTool;
+
+    public static String basePlansPath;
+    public static String baseRolesPath;
+    public static String baseTasksPath;
 
     static HashMap<Long, Long> epStateReferences = new HashMap<>();
     static HashMap<Long, Long> epTaskReferences = new HashMap<>();
@@ -46,10 +53,11 @@ public class Factory {
     public static void setModelManager(ModelManager modelManager) {
         Factory.modelManager = modelManager;
     }
+    public static void setConversionTool(ConversionTool conversionTool) { Factory.conversionTool = conversionTool; }
 
     public static void setAttributes(Element node, PlanElement element) {
         try {
-            idField.set(element, node.getAttribute(ID));
+            idField.set(element, Long.parseLong(node.getAttribute(ID)));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -58,34 +66,33 @@ public class Factory {
     }
 
     public static Long getReferencedId(String idString) {
-        // GO ON HERE...
-//        std::size_t idxOfHashtag = idString.find_last_of("#");
-//        if (idxOfHashtag == std::string::npos) {
-//            return stoll(idString);
-//        }
-//        std::string locator = idString.substr(0, idxOfHashtag);
-//        if (!locator.empty()) {
-//            std::string fileReferenced;
-//            if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) ||
-//            essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
-//            essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension)) {
-//                fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
-//            } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
-//                fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
-//            } else if (essentials::FileSystem::endsWith(locator, alica::Strings::roleset_extension)) {
-//                fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseRolePath, locator);
-//            } else {
-//                std::cout << "Factory: Unknown file extension: " << locator << std::endl;
-//            }
-//
-//            if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileReferenced) == std::end(modelManager->filesParsed) &&
-//                    std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileReferenced) ==
-//            std::end(modelManager->filesToParse)) {
-//                modelManager->filesToParse.push_back(fileReferenced);
-//            }
-//        }
-//        return stoll(idString.substr(idxOfHashtag + 1, idString.size() - idxOfHashtag));
-        return 0L;
+        // GO ON HERE... ../Misc/taskrepository.tsk#1225112227903
+        int idxOfHashtag = idString.lastIndexOf('#');
+        if (idxOfHashtag == -1) {
+            return Long.parseLong(idString);
+        }
+        String locator = idString.substring(0, idxOfHashtag);
+        if (!locator.isEmpty()) {
+            String fileReferenced = "";
+            if (locator.endsWith(Extensions.PLAN) ||locator.endsWith(Extensions.BEHAVIOUR) || locator.endsWith(Extensions.PLANTYPE)) {
+                fileReferenced = Paths.get(Factory.basePlansPath, locator).toString();
+            } else if (locator.endsWith(Extensions.TASKREPOSITORY)) {
+                fileReferenced = Paths.get(Factory.baseTasksPath, locator).toString();
+            } else if (locator.endsWith(Extensions.ROLESET)) {
+                fileReferenced = Paths.get(Factory.baseRolesPath, locator).toString();
+            } else {
+                System.out.println("[Factory] Unknown file extension: " + locator);
+            }
+
+            if (!conversionTool.filesParsed.contains(fileReferenced) && !conversionTool.filesToParse.contains(fileReferenced)) {
+                conversionTool.filesToParse.add(fileReferenced);
+            }
+        }
+
+        String idStringTrimmed = idString.substring(idxOfHashtag + 1);
+        System.out.println("[Factory] extracted the following id: '" + idStringTrimmed + "'");
+
+        return Long.parseLong(idStringTrimmed);
     }
 
     public static void storeElement(PlanElement element, String type)
@@ -98,4 +105,6 @@ public class Factory {
         }
         modelManager.storePlanElement(type, element, false);
     }
+
+
 }
