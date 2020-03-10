@@ -21,7 +21,6 @@
 
 namespace essentials
 {
-
 class IdentifierConstPtr;
 } // namespace essentials
 
@@ -206,6 +205,31 @@ public:
     }
 
     /**
+     * Set id manager to be used by this alica framework instance.
+     * Example usage: setIDManager<essentials::IDManager>();
+     *
+     * @note Currently, the only implementation is essentials::IDManager
+     * @note CommunicatorType must be a derived class of IAlicaCommunication
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of communicator. Might be empty.
+     */
+    template <class IDManagerType, class... Args>
+    void setIDManager(Args&&... args);
+
+    /**
+     * Get id manager being used by this alica instance.
+     *
+     * @note Currently, the only implementation is essentials::IDManager
+     * @return A reference to id manager object being used by context
+     */
+    const essentials::IDManager& getIDManager() const
+    {
+        assert(_idManager.get());
+        return *_idManager;
+    }
+
+    /**
      * Add a solver to be used by this alica instance.
      * Example usage: addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
      *
@@ -305,11 +329,13 @@ private:
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 
     uint32_t _validTag;
-    std::unique_ptr<AlicaEngine> _engine;
+    // WARNING: Initialization order dependencies!
+    // Please do not change the declaration order of members.
     std::unique_ptr<IAlicaCommunication> _communicator;
+    std::unique_ptr<essentials::IDManager> _idManager;
+    std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<AlicaClock> _clock;
-    std::unique_ptr<essentials::IDManager> _idManager;
 };
 
 template <class ClockType, class... Args>
@@ -331,6 +357,16 @@ void AlicaContext::setCommunicator(Args&&... args)
     _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+#endif
+}
+
+template <class IDManagerType, class... Args>
+void AlicaContext::setIDManager(Args&&... args)
+{
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _idManager = std::make_unique<IDManagerType>(std::forward<Args>(args)...);
+#else
+    _idManager = std::unique_ptr<IDManagerType>(new IDManagerType(std::forward<Args>(args)...));
 #endif
 }
 

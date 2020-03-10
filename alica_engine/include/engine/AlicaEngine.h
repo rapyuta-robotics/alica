@@ -39,7 +39,6 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    // TODO: Put idManager* into AlicaContext
     AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
     ~AlicaEngine();
 
@@ -115,24 +114,24 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
-    // WARNING: Initialization order dependencies, do not change the declaration order of members.
-    // TODO: Check with regard of the warning...
+    // WARNING: Initialization order dependencies!
+    // Please do not change the declaration order of members.
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     TeamManager _teamManager;
-    TeamObserver _teamObserver;
     BehaviourPool _behaviourPool;
+    TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    PlanBase _planBase;
-    BlackBoard _blackboard;
     Logger _log;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
+    PlanBase _planBase;
     // TODO: fix this, VariableSyncModule has circular dependency with engine header
     // VariableSyncModule _variableSyncModule;
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
+    BlackBoard _blackboard;
 
     /**
      * Pointing to the top level plan of the loaded ALICA program.

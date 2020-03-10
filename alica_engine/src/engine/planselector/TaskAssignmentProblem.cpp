@@ -77,7 +77,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     bool changed = false;
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
-            // revaluate this pa
+            // reevaluate this pa
             curPa->evaluate(nullptr);
             changed = true;
         }
