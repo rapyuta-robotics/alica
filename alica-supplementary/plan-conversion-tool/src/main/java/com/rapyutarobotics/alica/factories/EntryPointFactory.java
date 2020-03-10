@@ -19,7 +19,7 @@ public class EntryPointFactory extends Factory {
             Factory.setAttributes(epNode, ep);
             Factory.storeElement(ep, Types.ENTRYPOINT);
 
-            ep.setPlan((Plan) modelManager.getPlanElement(Long.parseLong(((Element) epNode.getParentNode()).getAttribute(ID))));
+            ep.setPlan((Plan) conversionTool.planElements.get(Long.parseLong(((Element) epNode.getParentNode()).getAttribute(ID))));
             ep.setMinCardinality(Integer.parseInt(epNode.getAttribute(MINCARDINALITY)));
             ep.setMaxCardinality(Integer.parseInt(epNode.getAttribute(MAXCARDINALITY)));
             ep.setSuccessRequired(Boolean.parseBoolean(epNode.getAttribute(SUCCESSREQUIRED)));

@@ -1,9 +1,7 @@
 package com.rapyutarobotics.alica;
 
 import com.rapyutarobotics.alica.factories.*;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
-import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
@@ -11,9 +9,10 @@ import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ConversionTool {
@@ -23,12 +22,14 @@ public class ConversionTool {
 
     public LinkedList<String> filesParsed;
     public LinkedList<String> filesToParse;
+    public HashMap<Long, PlanElement> planElements;
 
     public ConversionTool() {
         this.modelManager = new ModelManager();
         this.documentBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
         this.filesParsed = new LinkedList<>();
         this.filesToParse = new LinkedList<>();
+        this.planElements = new HashMap<>();
         Factory.setModelManager(this.modelManager);
         Factory.setConversionTool(this);
     }
@@ -46,15 +47,42 @@ public class ConversionTool {
         Factory.setConversionTool(this);
 
         // set output directories
-        modelManager.setPlansPath(Paths.get(args[3], "plans").toString());
-        modelManager.setRolesPath(Paths.get(args[3], "roles").toString());
-        modelManager.setTasksPath(Paths.get(args[3], "tasks").toString());
+        Path tmpPath = Paths.get(args[3], "plans");
+        tmpPath.toFile().mkdirs();
+        modelManager.setPlansPath(tmpPath.toString());
+
+        tmpPath = Paths.get(args[3], "roles");
+        tmpPath.toFile().mkdirs();
+        modelManager.setRolesPath(tmpPath.toString());
+
+        tmpPath = Paths.get(args[3], "tasks");
+        tmpPath.toFile().mkdirs();
+        modelManager.setTasksPath(tmpPath.toString());
 
         // start parsing given master plan
         loadPlanTree(args[4]);
+
+        // start serialising of parsed plan elements
+        serialise();
     }
 
-    public void loadPlanTree(String pathToMasterPlan) {
+    private void serialise() {
+        for (PlanElement element : this.planElements.values()) {
+            if (element instanceof Plan) {
+                this.modelManager.storePlanElement(Types.PLAN, element, true);
+            } else if (element instanceof Behaviour) {
+                this.modelManager.storePlanElement(Types.BEHAVIOUR, element, true);
+            } else if (element instanceof PlanType) {
+                this.modelManager.storePlanElement(Types.PLANTYPE, element, true);
+            } else if (element instanceof TaskRepository) {
+                this.modelManager.storePlanElement(Types.TASKREPOSITORY, element, true);
+            } else {
+                System.out.println("[ConversionTool] Skip " + element.toString());
+            }
+        }
+    }
+
+    private void loadPlanTree(String pathToMasterPlan) {
         filesParsed.add(pathToMasterPlan);
         parseFile(pathToMasterPlan, Types.PLAN);
         while (!filesToParse.isEmpty()) {

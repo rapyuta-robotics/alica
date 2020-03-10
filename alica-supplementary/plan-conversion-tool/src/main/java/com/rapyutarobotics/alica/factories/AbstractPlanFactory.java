@@ -11,7 +11,10 @@ public class AbstractPlanFactory extends Factory {
         NodeList listOfVariableNodes = node.getElementsByTagName(VARIABLES);
         for (int i = 0; i < listOfVariableNodes.getLength(); i++) {
             Element variableNode = (Element) listOfVariableNodes.item(i);
-            abstractPlan.addVariable(VariableFactory.create(variableNode));
+            if (variableNode.getParentNode().getNodeName().equals(PLANTAG)) {
+                // filter for those <vars..> nodes that are direct children of <alica:plan..> nodes
+                abstractPlan.addVariable(VariableFactory.create(variableNode));
+            }
         }
     }
 }

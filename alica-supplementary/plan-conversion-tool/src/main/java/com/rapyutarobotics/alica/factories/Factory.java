@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Factory {
-
     static ModelManager modelManager;
     static ConversionTool conversionTool;
 
@@ -21,10 +20,15 @@ public class Factory {
 
     static HashMap<Long, Long> epStateReferences = new HashMap<>();
     static HashMap<Long, Long> epTaskReferences = new HashMap<>();
+    static HashMap<Long, Long> stateInTransitionReferences = new HashMap<>();
+    static HashMap<Long, Long> stateOutTransitionReferences = new HashMap<>();
+    static HashMap<Long, Long> stateAbstractPlanReferences = new HashMap<>();
 
     // Attribute Names in XML
     static String ID = "id";
     static String NAME = "name";
+    static String PLANS = "plans";
+    static String PLANTAG = "alica:Plan";
     static String MASTERPLAN = "masterPlan";
     static String UTILITYTHRESHOLD = "utilityThreshold";
     static String COMMENT = "comment";
@@ -35,7 +39,14 @@ public class Factory {
     static String MAXCARDINALITY = "maxCardinality";
     static String SUCCESSREQUIRED = "successRequired";
     static String STATE = "state";
+    static String STATES = "states";
+    static String XSISUCCESSSTATE = "alica:SuccessState";
+    static String XSIFAILURESTATE = "alica::FailureState";
     static String TASK = "task";
+    static String XSITYPE = "xsi:type";
+    static String INTRANSITIONS = "inTransitions";
+    static String OUTTRANSITIONS = "outTransitions";
+
 
     // Reflection used to access the ID field of a PlanElement.
     // Note: This only works if we have the permission according to
@@ -66,7 +77,6 @@ public class Factory {
     }
 
     public static Long getReferencedId(String idString) {
-        // GO ON HERE... ../Misc/taskrepository.tsk#1225112227903
         int idxOfHashtag = idString.lastIndexOf('#');
         if (idxOfHashtag == -1) {
             return Long.parseLong(idString);
@@ -89,10 +99,7 @@ public class Factory {
             }
         }
 
-        String idStringTrimmed = idString.substring(idxOfHashtag + 1);
-        System.out.println("[Factory] extracted the following id: '" + idStringTrimmed + "'");
-
-        return Long.parseLong(idStringTrimmed);
+        return Long.parseLong(idString.substring(idxOfHashtag + 1));
     }
 
     public static void storeElement(PlanElement element, String type)
