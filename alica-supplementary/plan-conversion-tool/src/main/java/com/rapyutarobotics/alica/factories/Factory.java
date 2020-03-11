@@ -1,6 +1,7 @@
 package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.ConversionTool;
+import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -11,42 +12,27 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Factory {
-    static ModelManager modelManager;
-    static ConversionTool conversionTool;
+    public static ModelManager modelManager;
+    public static ConversionTool conversionTool;
 
     public static String basePlansPath;
     public static String baseRolesPath;
     public static String baseTasksPath;
 
-    static HashMap<Long, Long> epStateReferences = new HashMap<>();
-    static HashMap<Long, Long> epTaskReferences = new HashMap<>();
-    static HashMap<Long, Long> stateInTransitionReferences = new HashMap<>();
-    static HashMap<Long, Long> stateOutTransitionReferences = new HashMap<>();
-    static HashMap<Long, Long> stateAbstractPlanReferences = new HashMap<>();
-
-    // Attribute Names in XML
-    static String ID = "id";
-    static String NAME = "name";
-    static String PLANS = "plans";
-    static String PLANTAG = "alica:Plan";
-    static String MASTERPLAN = "masterPlan";
-    static String UTILITYTHRESHOLD = "utilityThreshold";
-    static String COMMENT = "comment";
-    static String VARIABLES = "vars";
-    static String VARIABLETYPE = "Type";
-    static String ENTRYPOINTS = "entryPoints";
-    static String MINCARDINALITY = "minCardinality";
-    static String MAXCARDINALITY = "maxCardinality";
-    static String SUCCESSREQUIRED = "successRequired";
-    static String STATE = "state";
-    static String STATES = "states";
-    static String XSISUCCESSSTATE = "alica:SuccessState";
-    static String XSIFAILURESTATE = "alica::FailureState";
-    static String TASK = "task";
-    static String XSITYPE = "xsi:type";
-    static String INTRANSITIONS = "inTransitions";
-    static String OUTTRANSITIONS = "outTransitions";
-
+    public static HashMap<Long, Long> epStateReferences = new HashMap<>();
+    public static HashMap<Long, Long> epTaskReferences = new HashMap<>();
+    public static HashMap<Long, Long> stateInTransitionReferences = new HashMap<>();
+    public static HashMap<Long, Long> stateOutTransitionReferences = new HashMap<>();
+    public static HashMap<Long, Long> stateAbstractPlanReferences = new HashMap<>();
+    public static HashMap<Long, Long> conditionVarReferences = new HashMap<>();
+    public static HashMap<Long, Long> quantifierScopeReferences = new HashMap<>();
+    public static HashMap<Long, Long> bindingVarReferences = new HashMap<>();
+    public static HashMap<Long, Long> bindingSubPlanReferences = new HashMap<>();
+    public static HashMap<Long, Long> bindingSubVarReferences = new HashMap<>();
+    public static HashMap<Long, Long> transitionInStateReferences = new HashMap<>();
+    public static HashMap<Long, Long> transitionOutStateReferences = new HashMap<>();
+    public static HashMap<Long, Long> transitionSynchReferences = new HashMap<>();
+    public static HashMap<Long, Long> synchTransitionReferences = new HashMap<>();
 
     // Reflection used to access the ID field of a PlanElement.
     // Note: This only works if we have the permission according to
@@ -68,12 +54,12 @@ public class Factory {
 
     public static void setAttributes(Element node, PlanElement element) {
         try {
-            idField.set(element, Long.parseLong(node.getAttribute(ID)));
+            idField.set(element, Long.parseLong(node.getAttribute(Tags.ID)));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        element.setName(node.getAttribute(NAME));
-        element.setComment(node.getAttribute(COMMENT));
+        element.setName(node.getAttribute(Tags.NAME));
+        element.setComment(node.getAttribute(Tags.COMMENT));
     }
 
     public static Long getReferencedId(String idString) {
@@ -91,10 +77,12 @@ public class Factory {
             } else if (locator.endsWith(Extensions.ROLESET)) {
                 fileReferenced = Paths.get(Factory.baseRolesPath, locator).toString();
             } else {
-                System.out.println("[Factory] Unknown file extension: " + locator);
+                System.err.println("[Factory] Unknown file extension: " + locator);
             }
 
-            if (!conversionTool.filesParsed.contains(fileReferenced) && !conversionTool.filesToParse.contains(fileReferenced)) {
+            if (!fileReferenced.isEmpty()
+                    && !conversionTool.filesParsed.contains(fileReferenced)
+                    && !conversionTool.filesToParse.contains(fileReferenced)) {
                 conversionTool.filesToParse.add(fileReferenced);
             }
         }
