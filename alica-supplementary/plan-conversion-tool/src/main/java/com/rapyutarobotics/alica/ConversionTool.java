@@ -132,12 +132,15 @@ public class ConversionTool {
         if (Types.PLAN.equals(type)) {
             return PlanFactory.create(node);
         } else if (Types.BEHAVIOUR.equals(type)) {
+            // TODO
             return BehaviourFactory.create(node);
         } else if (Types.PLANTYPE.equals(type)) {
+            // TODO
             return PlanTypeFactory.create(node);
         } else if (Types.TASKREPOSITORY.equals(type)) {
             return TaskRepositoryFactory.create(node);
         } else if (Types.ROLESET.equals(type)) {
+            // TODO
             return RoleSetFactory.create(node);
         } else {
             System.err.println("[ConversionTool] Parsing type not handled: " + type);

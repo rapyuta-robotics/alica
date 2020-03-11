@@ -48,5 +48,7 @@ public class Tags {
     public static final String SYNCTIMEOUT = "syncTimeout";
     public static final String TALKTIMEOUT = "talkTimeout";
     public static final String SYNCHEDTRANSITIONS = "synchedTransitions";
+    public static final String TASKS = "tasks";
+    public static final String DESCRIPTION = "description";
 }
 

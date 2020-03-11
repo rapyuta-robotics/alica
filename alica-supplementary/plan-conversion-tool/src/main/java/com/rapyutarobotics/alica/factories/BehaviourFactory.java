@@ -8,6 +8,8 @@ public class BehaviourFactory extends Factory {
     public static Behaviour create(Element node) {
         Behaviour beh = null;
         // TODO
+
+        // TODO: Special treatment of behaviour configurations
         return beh;
     }
 }
