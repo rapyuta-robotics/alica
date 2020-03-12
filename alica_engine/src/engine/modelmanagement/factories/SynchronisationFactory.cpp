@@ -13,7 +13,7 @@ namespace alica
 
         synchronisation->_failOnSyncTimeout = Factory::getValue<bool>(synchronisationNode, alica::Strings::failOnSyncTimeout);
         synchronisation->_syncTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::syncTimeout));
-        synchronisation->_syncTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::talkTimeout));
+        synchronisation->_talkTimeout = AlicaTime::milliseconds(Factory::getValue<int>(synchronisationNode, alica::Strings::talkTimeout));
 
         if (Factory::isValid(synchronisationNode[alica::Strings::inSync])) {
             const YAML::Node& transitions = synchronisationNode[alica::Strings::inSync];
