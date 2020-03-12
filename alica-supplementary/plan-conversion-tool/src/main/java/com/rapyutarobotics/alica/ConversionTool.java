@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -76,6 +77,8 @@ public class ConversionTool {
                 this.modelManager.storePlanElement(Types.PLANTYPE, element, true);
             } else if (element instanceof TaskRepository) {
                 this.modelManager.storePlanElement(Types.TASKREPOSITORY, element, true);
+            } else if (element instanceof RoleSet) {
+                this.modelManager.storePlanElement(Types.ROLESET, element, true);
             } else {
                 System.out.println("[ConversionTool] Skip " + element.toString());
             }
@@ -84,11 +87,12 @@ public class ConversionTool {
 
     private void loadPlanTree(String pathToMasterPlan) {
         filesParsed.add(pathToMasterPlan);
-        parseFile(pathToMasterPlan, Types.PLAN);
+        String fileToParse = pathToMasterPlan;
+        fileToParse = new File(fileToParse).toPath().normalize().toString();
+        parseFile(fileToParse, Types.PLAN);
         while (!filesToParse.isEmpty()) {
-            String fileToParse = filesToParse.poll();
-
-            System.out.println("[ConversionTool] fileToParse: " + fileToParse);
+            fileToParse = filesToParse.poll();
+//            System.out.println("[ConversionTool] fileToParse: " + fileToParse);
 
             File f = new File(fileToParse);
             if(!f.exists() || f.isDirectory()) {
@@ -119,7 +123,7 @@ public class ConversionTool {
         }
     }
 
-    public PlanElement parseFile(String currentFile, String type) {
+    public ArrayList<SerializablePlanElement> parseFile(String currentFile, String type) {
         Element node;
         try {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -129,23 +133,64 @@ public class ConversionTool {
             return null;
         }
 
+        ArrayList<SerializablePlanElement> serializablePlanElements = new ArrayList<>();
         if (Types.PLAN.equals(type)) {
-            return PlanFactory.create(node);
+            Plan plan = PlanFactory.create(node);
+            System.out.println("[ConversionTool] PLAN Relative Path '" + getRelativeDirectory(currentFile, Types.PLAN) + "'");
+            plan.setRelativeDirectory(getRelativeDirectory(currentFile, Types.PLAN));
+            serializablePlanElements.add(plan);
         } else if (Types.BEHAVIOUR.equals(type)) {
-            // TODO
-            return BehaviourFactory.create(node);
+            ArrayList<Behaviour> behaviours = BehaviourFactory.create(node);
+            for (Behaviour behaviour : behaviours) {
+                System.out.println("[ConversionTool] BEHAVIOUR Relative Path '" + getRelativeDirectory(currentFile, Types.BEHAVIOUR) + "'");
+                behaviour.setRelativeDirectory(getRelativeDirectory(currentFile, Types.BEHAVIOUR));
+                serializablePlanElements.add(behaviour);
+            }
         } else if (Types.PLANTYPE.equals(type)) {
-            // TODO
-            return PlanTypeFactory.create(node);
+            PlanType planType =  PlanTypeFactory.create(node);
+            System.out.println("[ConversionTool] PLANTYPE Relative Path '" + getRelativeDirectory(currentFile, Types.PLANTYPE) + "'");
+            planType.setRelativeDirectory(getRelativeDirectory(currentFile, Types.PLANTYPE));
+            serializablePlanElements.add(planType);
         } else if (Types.TASKREPOSITORY.equals(type)) {
-            return TaskRepositoryFactory.create(node);
+            TaskRepository taskRepository = TaskRepositoryFactory.create(node);
+            System.out.println("[ConversionTool] TASKREPOSITORY Relative Path '" + getRelativeDirectory(currentFile, Types.TASKREPOSITORY) + "'");
+            taskRepository.setRelativeDirectory(getRelativeDirectory(currentFile, Types.TASKREPOSITORY));
+            serializablePlanElements.add(taskRepository);
         } else if (Types.ROLESET.equals(type)) {
-            // TODO
-            return RoleSetFactory.create(node);
+            RoleSet roleSet = RoleSetFactory.create(node);
+            System.out.println("[ConversionTool] ROLESET Relative Path '" + getRelativeDirectory(currentFile, Types.ROLESET) + "'");
+            roleSet.setRelativeDirectory(getRelativeDirectory(currentFile, Types.ROLESET));
+            serializablePlanElements.add(roleSet);
+        } else if ("RoleDefinitionSet".equals(type)) {
+            // does not exist in the new plan designer format
+            RoleFactory.create(node);
+            return null;
         } else {
             System.err.println("[ConversionTool] Parsing type not handled: " + type);
             return null;
         }
+        return serializablePlanElements;
+    }
+
+    public String getRelativeDirectory (String absoluteFile, String type) {
+        int baseLength = 0;
+        if (Types.PLAN.equals(type)||Types.BEHAVIOUR.equals(type)||Types.PLANTYPE.equals(type)) {
+            baseLength = Factory.basePlansPath.length();
+        } else if (Types.TASKREPOSITORY.equals(type)) {
+            baseLength = Factory.baseTasksPath.length();
+        } else if (Types.ROLESET.equals(type)) {
+            baseLength = Factory.baseRolesPath.length();
+        } else {
+            System.err.println("[ConversionTool] Parsing type not handled: " + type);
+            return "";
+        }
+
+        int lastSeparatorIdx = absoluteFile.lastIndexOf(File.separatorChar);
+        String relativeDirectory = absoluteFile.substring(baseLength, lastSeparatorIdx);
+        if(!relativeDirectory.isEmpty() && relativeDirectory.charAt(0) == File.separatorChar) {
+            relativeDirectory = relativeDirectory.substring(1);
+        }
+        return relativeDirectory;
     }
 
     public static void main(String[] args) {

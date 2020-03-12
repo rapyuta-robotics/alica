@@ -26,9 +26,9 @@ public class StateFactory extends Factory {
             Element abstractPlanNode = (Element) abstractPlanNodes.item(i);
             Factory.stateAbstractPlanReferences.put(state.getId(), Factory.getReferencedId(abstractPlanNode.getTextContent()));
         }
-        NodeList variableBindingList = stateNode.getElementsByTagName(Tags.VARIABLEBINDING);
-        for (int i = 0; i < variableBindingList.getLength(); i++) {
-            Element variableBindingNode = (Element) variableBindingList.item(i);
+        NodeList variableBindingNodes = stateNode.getElementsByTagName(Tags.VARIABLEBINDING);
+        for (int i = 0; i < variableBindingNodes.getLength(); i++) {
+            Element variableBindingNode = (Element) variableBindingNodes.item(i);
             state.addVariableBinding(VariableBindingFactory.create(variableBindingNode));
         }
 

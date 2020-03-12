@@ -5,6 +5,7 @@ import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Field;
@@ -33,6 +34,9 @@ public class Factory {
     public static HashMap<Long, Long> transitionOutStateReferences = new HashMap<>();
     public static HashMap<Long, Long> transitionSynchReferences = new HashMap<>();
     public static HashMap<Long, Long> synchTransitionReferences = new HashMap<>();
+    public static HashMap<Long, Long> annotedPlanPlanReferences = new HashMap<>();
+    public static HashMap<Long, Long> roleSetRoleReferences = new HashMap<>();
+    public static HashMap<Long, Pair<Long, Double>> roleTaskReferences = new HashMap<>();
 
     // Reflection used to access the ID field of a PlanElement.
     // Note: This only works if we have the permission according to
@@ -71,11 +75,11 @@ public class Factory {
         if (!locator.isEmpty()) {
             String fileReferenced = "";
             if (locator.endsWith(Extensions.PLAN) ||locator.endsWith(Extensions.BEHAVIOUR) || locator.endsWith(Extensions.PLANTYPE)) {
-                fileReferenced = Paths.get(Factory.basePlansPath, locator).toString();
+                fileReferenced = Paths.get(Factory.basePlansPath, locator).normalize().toString();
             } else if (locator.endsWith(Extensions.TASKREPOSITORY)) {
-                fileReferenced = Paths.get(Factory.baseTasksPath, locator).toString();
+                fileReferenced = Paths.get(Factory.baseTasksPath, locator).normalize().toString();
             } else if (locator.endsWith(Extensions.ROLESET)) {
-                fileReferenced = Paths.get(Factory.baseRolesPath, locator).toString();
+                fileReferenced = Paths.get(Factory.baseRolesPath, locator).normalize().toString();
             } else {
                 System.err.println("[Factory] Unknown file extension: " + locator);
             }

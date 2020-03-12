@@ -50,5 +50,17 @@ public class Tags {
     public static final String SYNCHEDTRANSITIONS = "synchedTransitions";
     public static final String TASKS = "tasks";
     public static final String DESCRIPTION = "description";
+    public static final String ACTIVATED = "activated";
+    public static final String PLAN = "plan";
+    public static final String MAPPINGS = "MAPPINGS";
+    public static final String ROLE = "role";
+    public static final String TASKPRIORITIES = "taskPriorities";
+    public static final String VALUE = "value";
+    public static final String KEY = "key";
+    public static final String DEFAULT = "default";
+    public static final String ROLES = "roles";
+    public static final String FREQUENCY = "frequency";
+    public static final String CONFIGURATIONS = "configurations";
+    public static final String DEFERRING = "deferring";
 }
 
