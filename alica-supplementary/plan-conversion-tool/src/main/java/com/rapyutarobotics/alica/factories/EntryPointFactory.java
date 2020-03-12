@@ -1,13 +1,13 @@
 package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.Tags;
-import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
-import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EntryPointFactory extends Factory {
 
@@ -18,7 +18,7 @@ public class EntryPointFactory extends Factory {
 
             EntryPoint ep = new EntryPoint();
             Factory.setAttributes(epNode, ep);
-            Factory.storeElement(ep, Types.ENTRYPOINT);
+            conversionTool.planElements.put(ep.getId(),ep);
 
             ep.setPlan((Plan) conversionTool.planElements.get(Long.parseLong(((Element) epNode.getParentNode()).getAttribute(Tags.ID))));
             ep.setMinCardinality(Integer.parseInt(epNode.getAttribute(Tags.MINCARDINALITY)));
@@ -30,5 +30,21 @@ public class EntryPointFactory extends Factory {
             constructedEntryPoints.add(ep);
         }
         return constructedEntryPoints;
+    }
+
+    public static void attachReferences() {
+        for (HashMap.Entry<Long, Long> entry : Factory.epTaskReferences.entrySet()) {
+            EntryPoint entryPoint = (EntryPoint) conversionTool.planElements.get(entry.getKey());
+            Task task = (Task) conversionTool.planElements.get(entry.getValue());
+            entryPoint.setTask(task);
+        }
+        Factory.epTaskReferences.clear();
+
+        for (HashMap.Entry<Long, Long> entry : Factory.epStateReferences.entrySet()) {
+            EntryPoint entryPoint = (EntryPoint) conversionTool.planElements.get(entry.getKey());
+            State state = (State) conversionTool.planElements.get(entry.getValue());
+            entryPoint.setState(state);
+        }
+        Factory.epStateReferences.clear();
     }
 }

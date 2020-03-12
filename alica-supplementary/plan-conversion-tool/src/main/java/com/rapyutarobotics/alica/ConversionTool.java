@@ -113,14 +113,37 @@ public class ConversionTool {
             }
         }
 
-        // TODO
-//        this->attachReferences();
-//        this->generateTemplateVariables();
-//        this->computeReachabilities();
+        this.attachReferences();
 
         for (Behaviour beh : modelManager.getBehaviours()) {
             System.out.println("[ConversionTool] " + beh.toString());
         }
+    }
+
+    private void loadRoleSet(String pathToRoleSet) {
+        // TODO
+//        std::string roleSetPath;
+//        if (!essentials::FileSystem::findFile(this->baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
+//            roleSetPath = findDefaultRoleSet(baseRolePath);
+//        }
+//
+//        if (!essentials::FileSystem::pathExists(roleSetPath)) {
+//            AlicaEngine::abort("MM: Cannot find RoleSet '" + roleSetPath + "'");
+//        }
+//
+//        RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
+//        RoleSetFactory::attachReferences();
+//        ALICA_INFO_MSG("MM: Parsed the following role set: \n" << roleSet->toString());
+//        return roleSet;
+
+        RoleSetFactory.attachReferences();
+    }
+
+    private void attachReferences() {
+        // these methods call recursively other factories for the job
+        PlanFactory.attachReferences();
+        PlanTypeFactory.attachReferences();
+        BehaviourFactory.attachReferences();
     }
 
     public ArrayList<SerializablePlanElement> parseFile(String currentFile, String type) {

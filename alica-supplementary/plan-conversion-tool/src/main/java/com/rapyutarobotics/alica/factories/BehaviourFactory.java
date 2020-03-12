@@ -25,4 +25,8 @@ public class BehaviourFactory extends Factory {
         }
         return behaviours;
     }
+
+    public static void attachReferences(){
+        ConditionFactory.attachReferences();
+    }
 }

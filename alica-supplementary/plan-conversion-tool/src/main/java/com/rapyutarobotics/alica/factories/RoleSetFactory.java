@@ -1,10 +1,15 @@
 package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.Tags;
+import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Role;
 import de.unikassel.vs.alica.planDesigner.alicamodel.RoleSet;
 import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.HashMap;
 
 public class RoleSetFactory extends Factory {
 
@@ -28,12 +33,23 @@ public class RoleSetFactory extends Factory {
                 for (int j = 0; j < taskPriorities.getLength(); j++) {
                     Element taskPriority = (Element) taskPriorities.item(j);
                     Long taskID = Long.parseLong(taskPriority.getAttribute(Tags.KEY));
-                    Double priority = Double.parseDouble(taskPriority.getAttribute(Tags.VALUE));
-                    Factory.roleTaskReferences.put(roleId, new Pair<Long, Double>(taskID, priority));
+                    Float priority = Float.parseFloat(taskPriority.getAttribute(Tags.VALUE));
+                    Factory.roleTaskReferences.put(roleId, new Pair<Long, Float>(taskID, priority));
                 }
             }
         }
 
         return roleSet;
+    }
+
+    public static void attachReferences() {
+        RoleFactory.attachReferences();
+
+        for (HashMap.Entry<Long, Long> entry : Factory.roleSetRoleReferences.entrySet()) {
+            RoleSet roleSet = (RoleSet) conversionTool.planElements.get(entry.getKey());
+            Role role = (Role) conversionTool.planElements.get(entry.getValue());
+            roleSet.addRole(role);
+        }
+        Factory.roleSetRoleReferences.clear();
     }
 }

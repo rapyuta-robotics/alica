@@ -1,8 +1,12 @@
 package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.Tags;
+import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import org.w3c.dom.Element;
+
+import java.util.HashMap;
 
 public class SynchronisationFactory extends Factory {
 
@@ -21,5 +25,14 @@ public class SynchronisationFactory extends Factory {
         }
 
         return synchronisation;
+    }
+
+    public static void attachReferences() {
+        for (HashMap.Entry<Long, Long> entry : Factory.synchTransitionReferences.entrySet()) {
+            Synchronisation synchronisation = (Synchronisation) conversionTool.planElements.get(entry.getKey());
+            Transition transition = (Transition) conversionTool.planElements.get(entry.getValue());
+            synchronisation.addSyncedTransition(transition);
+        }
+        Factory.synchTransitionReferences.clear();
     }
 }

@@ -10,7 +10,7 @@ public class VariableFactory extends Factory {
     public static Variable create(Element variableNode) {
         Variable variable = new Variable();
         Factory.setAttributes(variableNode, variable);
-        Factory.storeElement(variable, Types.VARIABLE);
+        conversionTool.planElements.put(variable.getId(), variable);
         variable.setVariableType(variableNode.getAttribute(Tags.VARIABLETYPE));
         return variable;
     }

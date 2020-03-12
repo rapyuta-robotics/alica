@@ -1,10 +1,13 @@
 package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.Tags;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Quantifier;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.HashMap;
 
 public class QuantifierFactory extends Factory {
 
@@ -28,5 +31,14 @@ public class QuantifierFactory extends Factory {
         }
 
         return quantifier;
+    }
+
+    public static void attachReferences() {
+        for (HashMap.Entry<Long, Long> entry : Factory.quantifierScopeReferences.entrySet()) {
+            Quantifier quantifier = (Quantifier) conversionTool.planElements.get(entry.getKey());
+            PlanElement planElement = conversionTool.planElements.get(entry.getValue());
+            quantifier.setScope(planElement);
+        }
+        Factory.quantifierScopeReferences.clear();
     }
 }

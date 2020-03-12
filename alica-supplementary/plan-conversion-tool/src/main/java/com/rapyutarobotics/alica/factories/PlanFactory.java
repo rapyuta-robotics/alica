@@ -74,4 +74,12 @@ public class PlanFactory extends Factory{
 
         return plan;
     }
+
+    public static void attachReferences() {
+        EntryPointFactory.attachReferences();
+        StateFactory.attachReferences();
+        TransitionFactory.attachReferences();
+        SynchronisationFactory.attachReferences();
+        ConditionFactory.attachReferences();
+    }
 }

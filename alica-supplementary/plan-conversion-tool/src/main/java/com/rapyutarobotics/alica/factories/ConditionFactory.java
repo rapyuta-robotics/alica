@@ -2,8 +2,11 @@ package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.HashMap;
 
 public class ConditionFactory extends Factory {
     public static void fillConditon(Element conditionNode, Condition condition) {
@@ -21,5 +24,16 @@ public class ConditionFactory extends Factory {
             Element quantifierNode = (Element) quantifierNodes.item(i);
             condition.addQuantifier(QuantifierFactory.create(quantifierNode));
         }
+    }
+
+    public static void attachReferences() {
+        QuantifierFactory.attachReferences();
+
+        for (HashMap.Entry<Long, Long> entry : Factory.conditionVarReferences.entrySet()) {
+            Condition condition = (Condition) conversionTool.planElements.get(entry.getKey());
+            Variable variable = (Variable) conversionTool.planElements.get(entry.getValue());
+            condition.addVariable(variable);
+        }
+        Factory.conditionVarReferences.clear();
     }
 }

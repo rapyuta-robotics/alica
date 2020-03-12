@@ -36,7 +36,7 @@ public class Factory {
     public static HashMap<Long, Long> synchTransitionReferences = new HashMap<>();
     public static HashMap<Long, Long> annotedPlanPlanReferences = new HashMap<>();
     public static HashMap<Long, Long> roleSetRoleReferences = new HashMap<>();
-    public static HashMap<Long, Pair<Long, Double>> roleTaskReferences = new HashMap<>();
+    public static HashMap<Long, Pair<Long, Float>> roleTaskReferences = new HashMap<>();
 
     // Reflection used to access the ID field of a PlanElement.
     // Note: This only works if we have the permission according to
@@ -93,17 +93,4 @@ public class Factory {
 
         return Long.parseLong(idString.substring(idxOfHashtag + 1));
     }
-
-    public static void storeElement(PlanElement element, String type)
-    {
-        // insert into general element map
-        if (modelManager.getPlanElement(element.getId()) != null) {
-            throw new RuntimeException("[Factory] ERROR: ID utilised twice: " + element.getId()
-                    + "\n" + "ELEMENT >" + element.getName() + "< >"
-                    + modelManager.getPlanElement(element.getId()).getName() + "<");
-        }
-        modelManager.storePlanElement(type, element, false);
-    }
-
-
 }
