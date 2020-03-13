@@ -52,7 +52,7 @@ public class Tags {
     public static final String DESCRIPTION = "description";
     public static final String ACTIVATED = "activated";
     public static final String PLAN = "plan";
-    public static final String MAPPINGS = "MAPPINGS";
+    public static final String MAPPINGS = "mappings";
     public static final String ROLE = "role";
     public static final String TASKPRIORITIES = "taskPriorities";
     public static final String VALUE = "value";
