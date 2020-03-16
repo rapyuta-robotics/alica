@@ -35,7 +35,7 @@ public class Factory {
             System.out.println("[Factory] Info - Some element has an empty name in the old XML format. Gonna replace it with its ID: " + element.getId());
         }
         element.setName(name);
-        if (element.getName().equals(""+element.getId())) {
+        if (!(element instanceof AnnotatedPlan) && element.getName().equals(""+element.getId())) {
             System.out.println("[Factory] Info - The name '" + name + "' contains forbidden characters. Gonna replace it with the ID of the corresponding element: " + element.getId());
         }
         element.setComment(node.getAttribute(Tags.COMMENT));

@@ -183,7 +183,11 @@ public class ConversionProcess {
             while (scanner.hasNextLine()) {
                 final String lineFromFile = scanner.nextLine();
                 if (lineFromFile.contains(taskIDString)) {
-
+                    String taskRepoFileString = file.toString();
+                    if (!filesParsed.contains(taskRepoFileString)
+                            && !filesToParse.contains(taskRepoFileString)) {
+                        filesToParse.add(taskRepoFileString);
+                    }
                 }
             }
         }
