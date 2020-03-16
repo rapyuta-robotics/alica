@@ -1,6 +1,9 @@
 package com.rapyutarobotics.alica;
 
 import com.rapyutarobotics.alica.factories.*;
+import de.unikassel.vs.alica.generator.Codegenerator;
+import de.unikassel.vs.alica.generator.GeneratedSourcesManager;
+import de.unikassel.vs.alica.generator.plugin.PluginManager;
 import de.unikassel.vs.alica.planDesigner.alicamodel.*;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Extensions;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
@@ -25,6 +28,7 @@ public class ConversionProcess {
      * Manager from the new Plan Designer.
      */
     private ModelManager modelManager;
+    private PluginManager pluginManager;
     /**
      * Class for parsing XML files.
      */
@@ -40,7 +44,9 @@ public class ConversionProcess {
     private String baseTasksPath;
 
     private boolean outputDirectorySet;
-    private String outputDirectory;
+    private String baseOutputDirectory;
+    private String autogenerationDirectory;
+    private static final String clangFormat = "clang-format";
 
     public HashMap<Long, Long> epStateReferences = new HashMap<>();
     public HashMap<Long, Long> epTaskReferences = new HashMap<>();
@@ -62,6 +68,7 @@ public class ConversionProcess {
 
     public ConversionProcess() {
         this.modelManager = new ModelManager();
+        this.pluginManager = PluginManager.getInstance();
         this.documentBuilderFactory = DocumentBuilderFactory.newDefaultInstance();
         this.filesParsed = new LinkedList<>();
         this.filesToParse = new LinkedList<>();
@@ -92,30 +99,35 @@ public class ConversionProcess {
         this.inputDirectoriesSet = true;
     }
 
+    public void setPluginsPath(String pluginsPath) {
+        this.pluginManager.updateAvailablePlugins(pluginsPath);
+    }
+
     /**
      * Considers the given directory as base path and
      * further creates a "plans", "roles", and "tasks" folder
      * in it.
      *
-     * @param outputDirectory The base path for all further output directories.
+     * @param baseOutputDirectory The base path for all further output directories.
      */
-    public void setOutputDirectory(String outputDirectory) {
+    public void setOutputDirectories(String baseOutputDirectory, String autogenerationDirectory) {
         if (outputDirectorySet) {
-            System.out.println("[ConversionTool] Output directory was set before to '" + this.outputDirectory);
+            System.out.println("[ConversionTool] Output directory was set before to '" + this.baseOutputDirectory);
         }
 
-        this.outputDirectory = outputDirectory;
+        this.baseOutputDirectory = baseOutputDirectory;
+        this.autogenerationDirectory = autogenerationDirectory;
 
         // set output directories: plans, roles, tasks
-        Path tmpPath = Paths.get(outputDirectory, "plans");
+        Path tmpPath = Paths.get(baseOutputDirectory, "plans");
         tmpPath.toFile().mkdirs();
         modelManager.setPlansPath(tmpPath.toString());
 
-        tmpPath = Paths.get(outputDirectory, "roles");
+        tmpPath = Paths.get(baseOutputDirectory, "roles");
         tmpPath.toFile().mkdirs();
         modelManager.setRolesPath(tmpPath.toString());
 
-        tmpPath = Paths.get(outputDirectory, "tasks");
+        tmpPath = Paths.get(baseOutputDirectory, "tasks");
         tmpPath.toFile().mkdirs();
         modelManager.setTasksPath(tmpPath.toString());
 
@@ -162,6 +174,17 @@ public class ConversionProcess {
         return Long.parseLong(referenceString.substring(idxOfHashtag + 1));
     }
 
+    /**
+     * It basically works like getReferencedId(), but as the
+     * task repository is not referenced properly in case of
+     * role-task-priority mappings, this method needs to work
+     * by searching the file system for task repository files
+     * that include the given task id.
+     *
+     * If found, the task repository file is added to the queue
+     * of files that need to be parsed.
+     * @param taskID
+     */
     public void addTaskrepositoryToParseQueue(Long taskID) {
         String taskIDString = "" + taskID;
         File folder = new File(this.baseTasksPath);
@@ -216,6 +239,28 @@ public class ConversionProcess {
 
         // serialises the parsed serializable elements
         this.serialise();
+
+        // autogenerate code
+        this.autogenerate();
+    }
+
+    /**
+     * Generates sourcecode
+     */
+    private void autogenerate() {
+//        for (String name : this.pluginManager.getAvailablePluginNames()) {
+//            System.out.println("[ConversionProcess] Plugin found: " + name);
+//        }
+        this.pluginManager.setDefaultPlugin("DefaultPlugin");
+//        modelManager.loadModelFromDisk();
+        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(),
+                modelManager.getBehaviours(),
+                modelManager.getConditions(),
+                clangFormat,
+                autogenerationDirectory,
+                generatedSourcesManager);
+        codegenerator.generate();
     }
 
     /**

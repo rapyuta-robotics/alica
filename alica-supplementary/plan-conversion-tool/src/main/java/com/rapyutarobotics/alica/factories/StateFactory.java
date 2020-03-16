@@ -58,6 +58,9 @@ public class StateFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.stateAbstractPlanReferences.entrySet()) {
             State state = (State) cp.getElement(entry.getKey());
             AbstractPlan abstractPlan = (AbstractPlan) cp.getElement(entry.getValue());
+            if (abstractPlan == null) {
+                throw new RuntimeException("[StateFactory] No plan known for ID " + entry.getValue());
+            }
             state.addAbstractPlan(abstractPlan);
         }
         cp.stateAbstractPlanReferences.clear();
