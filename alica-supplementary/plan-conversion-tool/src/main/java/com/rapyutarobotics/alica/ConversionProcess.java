@@ -332,6 +332,14 @@ public class ConversionProcess {
             relativeDirectory = relativeDirectory.substring(1);
         }
         element.setRelativeDirectory(relativeDirectory);
+
+        // Repair malformed or empty names. In such cases, that name was set to the id of the element.
+        String idString = ""+element.getId();
+        if (idString.equals(element.getName())) {
+            int lastDotIdx = absoluteFile.lastIndexOf('.');
+            String filenameWithoutExtension = absoluteFile.substring(lastSeparatorIdx+1, lastDotIdx);
+            element.setName(filenameWithoutExtension);
+        }
     }
 
     /**
