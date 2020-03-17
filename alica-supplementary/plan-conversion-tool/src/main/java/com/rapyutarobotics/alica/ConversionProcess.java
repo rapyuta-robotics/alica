@@ -65,6 +65,7 @@ public class ConversionProcess {
     public HashMap<Long, Long> annotedPlanPlanReferences = new HashMap<>();
     public HashMap<Long, Long> roleSetRoleReferences = new HashMap<>();
     public HashMap<Long, Pair<Long, Float>> roleTaskReferences = new HashMap<>();
+    public HashMap<Long, Long> configurationBehaviourMapping = new HashMap<>();
 
     public ConversionProcess() {
         this.modelManager = new ModelManager();
@@ -158,6 +159,7 @@ public class ConversionProcess {
                 fileReferenced = Paths.get(this.baseRolesPath, locator).normalize().toString();
             } else if (locator.endsWith(".pp")) {
                 System.out.println("[ConversionProcess] Info - Planning Problems are not supported anymore. Gonna ignore reference: '" + referenceString + "'");
+                return -1L;
             } else if (locator.endsWith(".rdefset")) {
                 fileReferenced = Paths.get(this.baseRolesPath, locator).normalize().toString();
             } else {
@@ -328,17 +330,18 @@ public class ConversionProcess {
             // noop
             return;
         }
-        ArrayList<SerializablePlanElement> elements = new ArrayList<>();
+
+        SerializablePlanElement element = null;
         if (Types.PLAN.equals(type)) {
-            elements.add(PlanFactory.create(node, this));
+            element =PlanFactory.create(node, this);
         } else if (Types.BEHAVIOUR.equals(type)) {
-            elements = BehaviourFactory.create(node, this);
+            element = BehaviourFactory.create(node, this);
         } else if (Types.PLANTYPE.equals(type)) {
-            elements.add(PlanTypeFactory.create(node, this));
+            element = PlanTypeFactory.create(node, this);
         } else if (Types.TASKREPOSITORY.equals(type)) {
-            elements.add(TaskRepositoryFactory.create(node, this));
+            element = TaskRepositoryFactory.create(node, this);
         } else if (Types.ROLESET.equals(type)) {
-            elements.add(RoleSetFactory.create(node, this));
+            element = RoleSetFactory.create(node, this);
         } else if ("RoleDefinitionSet".equals(type)) {
             // does not exist in the new plan designer format
             RoleFactory.create(node, this);
@@ -346,7 +349,7 @@ public class ConversionProcess {
             throw new RuntimeException("[ConversionTool] Parsing type not handled: " + type);
         }
 
-        for (SerializablePlanElement element : elements) {
+        if (element != null) {
             this.setRelativeDirectory(element, currentFile);
         }
     }

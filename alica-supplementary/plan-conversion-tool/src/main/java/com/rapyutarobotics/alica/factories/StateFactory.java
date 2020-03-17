@@ -27,7 +27,10 @@ public class StateFactory extends Factory {
         NodeList abstractPlanNodes = stateNode.getElementsByTagName(Tags.PLANS);
         for (int i = 0; i  < abstractPlanNodes.getLength(); i++) {
             Element abstractPlanNode = (Element) abstractPlanNodes.item(i);
-            cp.stateAbstractPlanReferences.put(state.getId(), cp.getReferencedId(abstractPlanNode.getTextContent()));
+            Long abstractPlanID = cp.getReferencedId(abstractPlanNode.getTextContent());
+            if (abstractPlanID != -1) {
+                cp.stateAbstractPlanReferences.put(state.getId(), abstractPlanID);
+            }
         }
         NodeList variableBindingNodes = stateNode.getElementsByTagName(Tags.VARIABLEBINDING);
         for (int i = 0; i < variableBindingNodes.getLength(); i++) {
@@ -44,6 +47,9 @@ public class StateFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.stateInTransitionReferences.entrySet()) {
             State state = (State) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
+            if (transition == null) {
+                throw new RuntimeException("[StateFactory] Incoming transition with ID " + entry.getValue() + " unknown!");
+            }
             state.addInTransition(transition);
         }
         cp.stateInTransitionReferences.clear();
@@ -51,15 +57,23 @@ public class StateFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.stateOutTransitionReferences.entrySet()) {
             State state = (State) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
+            if (transition == null) {
+                throw new RuntimeException("[StateFactory] Outgoing transition with ID " + entry.getValue() + " unknown!");
+            }
             state.addOutTransition(transition);
         }
         cp.stateOutTransitionReferences.clear();
 
         for (HashMap.Entry<Long, Long> entry : cp.stateAbstractPlanReferences.entrySet()) {
             State state = (State) cp.getElement(entry.getKey());
-            AbstractPlan abstractPlan = (AbstractPlan) cp.getElement(entry.getValue());
+            AbstractPlan abstractPlan;
+            if (cp.configurationBehaviourMapping.containsKey(entry.getValue())) {
+                abstractPlan = (AbstractPlan) cp.getElement(cp.configurationBehaviourMapping.get(entry.getValue()));
+            } else {
+                abstractPlan = (AbstractPlan) cp.getElement(entry.getValue());
+            }
             if (abstractPlan == null) {
-                throw new RuntimeException("[StateFactory] No plan known for ID " + entry.getValue());
+                throw new RuntimeException("[StateFactory] Abstract plan with ID " + entry.getValue() + " unknown!");
             }
             state.addAbstractPlan(abstractPlan);
         }

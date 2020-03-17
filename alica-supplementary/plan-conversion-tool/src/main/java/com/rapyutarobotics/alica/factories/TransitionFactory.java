@@ -33,23 +33,32 @@ public class TransitionFactory extends Factory {
     public static void attachReferences(ConversionProcess cp) {
         ConditionFactory.attachReferences(cp);
 
-        for (HashMap.Entry<Long, Long> entry : cp.transitionOutStateReferences.entrySet()) {
-            Transition transition = (Transition) cp.getElement(entry.getKey());
-            State state = (State) cp.getElement(entry.getValue());
-            transition.setOutState(state);
-        }
-        cp.transitionOutStateReferences.clear();
-
         for (HashMap.Entry<Long, Long> entry : cp.transitionInStateReferences.entrySet()) {
             Transition transition = (Transition) cp.getElement(entry.getKey());
             State state = (State) cp.getElement(entry.getValue());
+            if (state == null) {
+                throw new RuntimeException("[TransitionFactory] Incoming state with ID " + entry.getValue() + " unknown!");
+            }
             transition.setInState(state);
         }
         cp.transitionInStateReferences.clear();
 
+        for (HashMap.Entry<Long, Long> entry : cp.transitionOutStateReferences.entrySet()) {
+            Transition transition = (Transition) cp.getElement(entry.getKey());
+            State state = (State) cp.getElement(entry.getValue());
+            if (state == null) {
+                throw new RuntimeException("[TransitionFactory] Outgoing state with ID " + entry.getValue() + " unknown!");
+            }
+            transition.setOutState(state);
+        }
+        cp.transitionOutStateReferences.clear();
+
         for (HashMap.Entry<Long, Long> entry : cp.transitionSynchReferences.entrySet()) {
             Transition transition = (Transition) cp.getElement(entry.getKey());
             Synchronisation synchronisation = (Synchronisation) cp.getElement(entry.getValue());
+            if (synchronisation == null) {
+                throw new RuntimeException("[TransitionFactory] Synchronisation with ID " + entry.getValue() + " unknown!");
+            }
             transition.setSynchronisation(synchronisation);
         }
         cp.transitionSynchReferences.clear();

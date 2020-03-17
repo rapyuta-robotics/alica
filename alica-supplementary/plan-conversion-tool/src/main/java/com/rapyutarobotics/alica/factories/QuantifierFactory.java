@@ -38,6 +38,9 @@ public class QuantifierFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.quantifierScopeReferences.entrySet()) {
             Quantifier quantifier = (Quantifier) cp.getElement(entry.getKey());
             PlanElement planElement = cp.getElement(entry.getValue());
+            if (planElement == null) {
+                throw new RuntimeException("[QuantifierFactory] Scope with ID " + entry.getValue() + " unknown!");
+            }
             quantifier.setScope(planElement);
         }
         cp.quantifierScopeReferences.clear();

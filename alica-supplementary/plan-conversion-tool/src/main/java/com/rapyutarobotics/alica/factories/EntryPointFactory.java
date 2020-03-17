@@ -39,6 +39,9 @@ public class EntryPointFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.epTaskReferences.entrySet()) {
             EntryPoint entryPoint = (EntryPoint) cp.getElement(entry.getKey());
             Task task = (Task) cp.getElement(entry.getValue());
+            if (task == null) {
+                throw new RuntimeException("[ConditionFactory] Task with ID " + entry.getValue() + " unknown!");
+            }
             entryPoint.setTask(task);
         }
         cp.epTaskReferences.clear();
@@ -46,6 +49,9 @@ public class EntryPointFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.epStateReferences.entrySet()) {
             EntryPoint entryPoint = (EntryPoint) cp.getElement(entry.getKey());
             State state = (State) cp.getElement(entry.getValue());
+            if (state == null) {
+                throw new RuntimeException("[EntryPointFactory] State with ID " + entry.getValue() + " unknown!");
+            }
             entryPoint.setState(state);
         }
         cp.epStateReferences.clear();

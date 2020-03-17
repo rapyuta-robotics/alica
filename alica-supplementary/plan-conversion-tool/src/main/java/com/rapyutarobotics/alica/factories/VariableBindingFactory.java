@@ -32,6 +32,9 @@ public class VariableBindingFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.bindingSubPlanReferences.entrySet()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Plan plan = (Plan) cp.getElement(entry.getValue());
+            if (plan == null) {
+                throw new RuntimeException("[VariableBindingFactory] Sub plan with ID " + entry.getValue() + " unknown!");
+            }
             variableBinding.setSubPlan(plan);
         }
         cp.bindingSubPlanReferences.clear();
@@ -39,6 +42,9 @@ public class VariableBindingFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.bindingSubVarReferences.entrySet()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
+            if (variable == null) {
+                throw new RuntimeException("[VariableBindingFactory] Sub variable with ID " + entry.getValue() + " unknown!");
+            }
             variableBinding.setSubVariable(variable);
         }
         cp.bindingSubVarReferences.clear();
@@ -46,6 +52,9 @@ public class VariableBindingFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.bindingVarReferences.entrySet()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
+            if (variable == null) {
+                throw new RuntimeException("[VariableBindingFactory] Variable with ID " + entry.getValue() + " unknown!");
+            }
             variableBinding.setVariable(variable);
         }
         cp.bindingVarReferences.clear();

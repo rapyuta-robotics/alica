@@ -36,6 +36,9 @@ public class PlanTypeFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.annotedPlanPlanReferences.entrySet()) {
             AnnotatedPlan annotatedPlan = (AnnotatedPlan) cp.getElement(entry.getKey());
             Plan plan = (Plan) cp.getElement(entry.getValue());
+            if (plan == null) {
+                throw new RuntimeException("[PlanTypeFactory] Plan with ID " + entry.getValue() + " unknown!");
+            }
             annotatedPlan.setPlan(plan);
         }
         cp.annotedPlanPlanReferences.clear();

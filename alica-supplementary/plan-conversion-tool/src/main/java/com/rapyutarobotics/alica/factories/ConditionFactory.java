@@ -33,6 +33,9 @@ public class ConditionFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.conditionVarReferences.entrySet()) {
             Condition condition = (Condition) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
+            if (variable == null) {
+                throw new RuntimeException("[ConditionFactory] Variable with ID " + entry.getValue() + " unknown!");
+            }
             condition.addVariable(variable);
         }
         cp.conditionVarReferences.clear();

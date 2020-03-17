@@ -32,6 +32,9 @@ public class SynchronisationFactory extends Factory {
         for (HashMap.Entry<Long, Long> entry : cp.synchTransitionReferences.entrySet()) {
             Synchronisation synchronisation = (Synchronisation) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
+            if (transition == null) {
+                throw new RuntimeException("[SynchronisationFactory] Transition with ID " + entry.getValue() + " unknown!");
+            }
             synchronisation.addSyncedTransition(transition);
         }
         cp.synchTransitionReferences.clear();

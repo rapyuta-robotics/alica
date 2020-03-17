@@ -52,6 +52,9 @@ public class RoleSetFactory extends Factory {
             RoleSet roleSet = (RoleSet) cp.getElement(entry.getKey());
             Role role = (Role) cp.getElement(entry.getValue());
             roleSet.addRole(role);
+            if (role == null) {
+                throw new RuntimeException("[RoleSetFactory] Role with ID " + entry.getValue() + " unknown!");
+            }
             role.setRoleSet(roleSet);
         }
         cp.roleSetRoleReferences.clear();
