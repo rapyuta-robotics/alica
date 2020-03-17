@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -45,27 +44,27 @@ public class ConversionProcess {
 
     private boolean outputDirectorySet;
     private String baseOutputDirectory;
-    private String autogenerationDirectory;
+    private String codeGenerationPath;
     private static final String clangFormat = "clang-format";
 
-    public HashMap<Long, Long> epStateReferences = new HashMap<>();
-    public HashMap<Long, Long> epTaskReferences = new HashMap<>();
-    public HashMap<Long, Long> stateInTransitionReferences = new HashMap<>();
-    public HashMap<Long, Long> stateOutTransitionReferences = new HashMap<>();
-    public HashMap<Long, Long> stateAbstractPlanReferences = new HashMap<>();
-    public HashMap<Long, Long> conditionVarReferences = new HashMap<>();
-    public HashMap<Long, Long> quantifierScopeReferences = new HashMap<>();
-    public HashMap<Long, Long> bindingVarReferences = new HashMap<>();
-    public HashMap<Long, Long> bindingSubPlanReferences = new HashMap<>();
-    public HashMap<Long, Long> bindingSubVarReferences = new HashMap<>();
-    public HashMap<Long, Long> transitionInStateReferences = new HashMap<>();
-    public HashMap<Long, Long> transitionOutStateReferences = new HashMap<>();
-    public HashMap<Long, Long> transitionSynchReferences = new HashMap<>();
-    public HashMap<Long, Long> synchTransitionReferences = new HashMap<>();
-    public HashMap<Long, Long> annotedPlanPlanReferences = new HashMap<>();
-    public HashMap<Long, Long> roleSetRoleReferences = new HashMap<>();
-    public HashMap<Long, Pair<Long, Float>> roleTaskReferences = new HashMap<>();
-    public HashMap<Long, Long> configurationBehaviourMapping = new HashMap<>();
+    public ReferenceCollection<Long, Long> epStateReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> epTaskReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> stateInTransitionReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> stateOutTransitionReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> stateAbstractPlanReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> conditionVarReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> quantifierScopeReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> bindingVarReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> bindingSubPlanReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> bindingSubVarReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> transitionInStateReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> transitionOutStateReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> transitionSynchReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> synchTransitionReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> annotedPlanPlanReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> roleSetRoleReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Pair<Long, Float>> roleTaskReferences = new ReferenceCollection<>(false);
+    public ReferenceCollection<Long, Long> configurationBehaviourMapping = new ReferenceCollection<>(false);
 
     public ConversionProcess() {
         this.modelManager = new ModelManager();
@@ -117,7 +116,7 @@ public class ConversionProcess {
         }
 
         this.baseOutputDirectory = baseOutputDirectory;
-        this.autogenerationDirectory = autogenerationDirectory;
+        this.codeGenerationPath = autogenerationDirectory;
 
         // set output directories: plans, roles, tasks
         Path tmpPath = Paths.get(baseOutputDirectory, "plans");
@@ -256,11 +255,13 @@ public class ConversionProcess {
         this.pluginManager.setDefaultPlugin("DefaultPlugin");
 //        modelManager.loadModelFromDisk();
         GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        generatedSourcesManager.setCodegenPath(codeGenerationPath);
+        System.out.println("[ConversionProcess] Code generation path: '" + codeGenerationPath + "'");
+
         Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
                 clangFormat,
-                autogenerationDirectory,
                 generatedSourcesManager);
         codegenerator.generate();
     }

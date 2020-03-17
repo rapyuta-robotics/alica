@@ -2,11 +2,12 @@ package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.ConversionProcess;
 import com.rapyutarobotics.alica.Tags;
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.AnnotatedPlan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.PlanType;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class PlanTypeFactory extends Factory {
     public static PlanType create(Element planTypeNode, ConversionProcess cp) {
@@ -33,7 +34,7 @@ public class PlanTypeFactory extends Factory {
     public static void attachReferences(ConversionProcess cp) {
         VariableBindingFactory.attachReferences(cp);
 
-        for (HashMap.Entry<Long, Long> entry : cp.annotedPlanPlanReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.annotedPlanPlanReferences.getEntries()) {
             AnnotatedPlan annotatedPlan = (AnnotatedPlan) cp.getElement(entry.getKey());
             Plan plan = (Plan) cp.getElement(entry.getValue());
             if (plan == null) {

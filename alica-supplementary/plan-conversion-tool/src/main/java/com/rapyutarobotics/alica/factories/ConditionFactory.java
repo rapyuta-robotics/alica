@@ -4,10 +4,9 @@ import com.rapyutarobotics.alica.ConversionProcess;
 import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class ConditionFactory extends Factory {
     public static void fillConditon(Element conditionNode, Condition condition, ConversionProcess cp) {
@@ -30,7 +29,7 @@ public class ConditionFactory extends Factory {
     public static void attachReferences(ConversionProcess cp) {
         QuantifierFactory.attachReferences(cp);
 
-        for (HashMap.Entry<Long, Long> entry : cp.conditionVarReferences.entrySet()) {
+        for (Pair<Long, Long> entry: cp.conditionVarReferences.getEntries()) {
             Condition condition = (Condition) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
             if (variable == null) {

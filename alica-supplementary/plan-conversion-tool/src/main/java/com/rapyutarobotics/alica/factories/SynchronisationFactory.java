@@ -2,12 +2,10 @@ package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.ConversionProcess;
 import com.rapyutarobotics.alica.Tags;
-import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
-
-import java.util.HashMap;
 
 public class SynchronisationFactory extends Factory {
 
@@ -29,7 +27,7 @@ public class SynchronisationFactory extends Factory {
     }
 
     public static void attachReferences(ConversionProcess cp) {
-        for (HashMap.Entry<Long, Long> entry : cp.synchTransitionReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.synchTransitionReferences.getEntries()) {
             Synchronisation synchronisation = (Synchronisation) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
             if (transition == null) {

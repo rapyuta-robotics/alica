@@ -5,10 +5,9 @@ import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Synchronisation;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class TransitionFactory extends Factory {
     public static Transition create(Element transitionNode, ConversionProcess cp) {
@@ -33,7 +32,7 @@ public class TransitionFactory extends Factory {
     public static void attachReferences(ConversionProcess cp) {
         ConditionFactory.attachReferences(cp);
 
-        for (HashMap.Entry<Long, Long> entry : cp.transitionInStateReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.transitionInStateReferences.getEntries()) {
             Transition transition = (Transition) cp.getElement(entry.getKey());
             State state = (State) cp.getElement(entry.getValue());
             if (state == null) {
@@ -43,7 +42,7 @@ public class TransitionFactory extends Factory {
         }
         cp.transitionInStateReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.transitionOutStateReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.transitionOutStateReferences.getEntries()) {
             Transition transition = (Transition) cp.getElement(entry.getKey());
             State state = (State) cp.getElement(entry.getValue());
             if (state == null) {
@@ -53,7 +52,7 @@ public class TransitionFactory extends Factory {
         }
         cp.transitionOutStateReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.transitionSynchReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.transitionSynchReferences.getEntries()) {
             Transition transition = (Transition) cp.getElement(entry.getKey());
             Synchronisation synchronisation = (Synchronisation) cp.getElement(entry.getValue());
             if (synchronisation == null) {

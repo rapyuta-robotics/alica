@@ -5,10 +5,9 @@ import com.rapyutarobotics.alica.Tags;
 import de.unikassel.vs.alica.planDesigner.alicamodel.PlanElement;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Quantifier;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.Types;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class QuantifierFactory extends Factory {
 
@@ -35,7 +34,7 @@ public class QuantifierFactory extends Factory {
     }
 
     public static void attachReferences(ConversionProcess cp) {
-        for (HashMap.Entry<Long, Long> entry : cp.quantifierScopeReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.quantifierScopeReferences.getEntries()) {
             Quantifier quantifier = (Quantifier) cp.getElement(entry.getKey());
             PlanElement planElement = cp.getElement(entry.getValue());
             if (planElement == null) {

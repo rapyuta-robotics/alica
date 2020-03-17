@@ -2,11 +2,12 @@ package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.ConversionProcess;
 import com.rapyutarobotics.alica.Tags;
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Variable;
+import de.unikassel.vs.alica.planDesigner.alicamodel.VariableBinding;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class VariableBindingFactory extends Factory {
     public static VariableBinding create (Element variableBindingNode, ConversionProcess cp) {
@@ -29,7 +30,7 @@ public class VariableBindingFactory extends Factory {
     }
 
     public static void attachReferences(ConversionProcess cp) {
-        for (HashMap.Entry<Long, Long> entry : cp.bindingSubPlanReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.bindingSubPlanReferences.getEntries()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Plan plan = (Plan) cp.getElement(entry.getValue());
             if (plan == null) {
@@ -39,7 +40,7 @@ public class VariableBindingFactory extends Factory {
         }
         cp.bindingSubPlanReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.bindingSubVarReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.bindingSubVarReferences.getEntries()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
             if (variable == null) {
@@ -49,7 +50,7 @@ public class VariableBindingFactory extends Factory {
         }
         cp.bindingSubVarReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.bindingVarReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.bindingVarReferences.getEntries()) {
             VariableBinding variableBinding = (VariableBinding) cp.getElement(entry.getKey());
             Variable variable = (Variable) cp.getElement(entry.getValue());
             if (variable == null) {

@@ -8,8 +8,6 @@ import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
-
 public class RoleFactory extends Factory {
     public static void create(Element roleDefinitionSetNode, ConversionProcess cp) {
         NodeList roleNodes = roleDefinitionSetNode.getElementsByTagName(Tags.ROLES);
@@ -22,7 +20,7 @@ public class RoleFactory extends Factory {
     }
 
     public static void attachReferences(ConversionProcess cp) {
-        for (HashMap.Entry<Long, Pair<Long, Float>> entry : cp.roleTaskReferences.entrySet()) {
+        for (Pair<Long, Pair<Long, Float>> entry : cp.roleTaskReferences.getEntries()) {
             Role role = (Role) cp.getElement(entry.getKey());
             Task task = (Task) cp.getElement(entry.getValue().getKey());
             if (task == null) {

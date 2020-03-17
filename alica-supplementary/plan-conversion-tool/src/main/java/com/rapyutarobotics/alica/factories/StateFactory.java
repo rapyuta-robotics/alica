@@ -2,11 +2,12 @@ package com.rapyutarobotics.alica.factories;
 
 import com.rapyutarobotics.alica.ConversionProcess;
 import com.rapyutarobotics.alica.Tags;
-import de.unikassel.vs.alica.planDesigner.alicamodel.*;
+import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.State;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.HashMap;
 
 public class StateFactory extends Factory {
 
@@ -44,7 +45,7 @@ public class StateFactory extends Factory {
     public static void attachReferences(ConversionProcess cp) {
         VariableBindingFactory.attachReferences(cp);
 
-        for (HashMap.Entry<Long, Long> entry : cp.stateInTransitionReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.stateInTransitionReferences.getEntries()) {
             State state = (State) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
             if (transition == null) {
@@ -54,7 +55,7 @@ public class StateFactory extends Factory {
         }
         cp.stateInTransitionReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.stateOutTransitionReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.stateOutTransitionReferences.getEntries()) {
             State state = (State) cp.getElement(entry.getKey());
             Transition transition = (Transition) cp.getElement(entry.getValue());
             if (transition == null) {
@@ -64,7 +65,7 @@ public class StateFactory extends Factory {
         }
         cp.stateOutTransitionReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.stateAbstractPlanReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.stateAbstractPlanReferences.getEntries()) {
             State state = (State) cp.getElement(entry.getKey());
             AbstractPlan abstractPlan;
             if (cp.configurationBehaviourMapping.containsKey(entry.getValue())) {

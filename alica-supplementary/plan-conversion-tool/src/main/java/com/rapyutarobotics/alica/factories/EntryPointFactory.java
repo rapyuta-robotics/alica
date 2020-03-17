@@ -6,11 +6,11 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.State;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Task;
+import javafx.util.Pair;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class EntryPointFactory extends Factory {
 
@@ -27,6 +27,9 @@ public class EntryPointFactory extends Factory {
             ep.setMinCardinality(Integer.parseInt(epNode.getAttribute(Tags.MINCARDINALITY)));
             ep.setMaxCardinality(Integer.parseInt(epNode.getAttribute(Tags.MAXCARDINALITY)));
             ep.setSuccessRequired(Boolean.parseBoolean(epNode.getAttribute(Tags.SUCCESSREQUIRED)));
+            if (cp.epStateReferences.containsKey(ep.getId())){
+                throw new RuntimeException("[EntryPointFactory] Entrypoint with ID " + ep.getId() + " already two states assigned ");
+            }
             cp.epStateReferences.put(ep.getId(), cp.getReferencedId(epNode.getElementsByTagName(Tags.STATE).item(0).getTextContent()));
             cp.epTaskReferences.put(ep.getId(), cp.getReferencedId(epNode.getElementsByTagName(Tags.TASK).item(0).getTextContent()));
 
@@ -36,7 +39,7 @@ public class EntryPointFactory extends Factory {
     }
 
     public static void attachReferences(ConversionProcess cp) {
-        for (HashMap.Entry<Long, Long> entry : cp.epTaskReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.epTaskReferences.getEntries()) {
             EntryPoint entryPoint = (EntryPoint) cp.getElement(entry.getKey());
             Task task = (Task) cp.getElement(entry.getValue());
             if (task == null) {
@@ -46,7 +49,7 @@ public class EntryPointFactory extends Factory {
         }
         cp.epTaskReferences.clear();
 
-        for (HashMap.Entry<Long, Long> entry : cp.epStateReferences.entrySet()) {
+        for (Pair<Long, Long> entry : cp.epStateReferences.getEntries()) {
             EntryPoint entryPoint = (EntryPoint) cp.getElement(entry.getKey());
             State state = (State) cp.getElement(entry.getValue());
             if (state == null) {
