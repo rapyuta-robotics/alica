@@ -70,11 +70,6 @@ AlicaEngine::~AlicaEngine()
 
 /**
  * Initialise the engine
- * @param bc A behaviourcreator
- * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
- * @param masterPlanName A string, the top-level plan to be used
- * @param roleSetDir A string, the directory in which to search for roleSets. If empty, the base role path will be used.
- * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
@@ -83,14 +78,15 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
-    _auth.init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
-    _syncModul.init();
-    _variableSyncModule->init();
+
     RunningPlan::init();
     _teamManager.init();
+    _syncModul.init();
+    _variableSyncModule->init();
+    _auth.init();
     return everythingWorked;
 }
 

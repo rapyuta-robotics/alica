@@ -24,7 +24,7 @@ public:
     void clear();
     const EntryPointGrp* succeededEntryPoints(const AbstractPlan* p) const;
     void removePlan(const AbstractPlan* plan);
-    void markSuccessfull(const AbstractPlan* p, const EntryPoint* e);
+    void markSuccessful(const AbstractPlan* p, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
     bool anyTaskSucceeded(const AbstractPlan* p) const;

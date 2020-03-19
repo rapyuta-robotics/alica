@@ -1,10 +1,10 @@
 #include "test_alica.h"
 
 #include "engine/IAlicaCommunication.h"
-#include <Plans/Behaviour/NotToTrigger.h>
-#include <Plans/Behaviour/TriggerA.h>
-#include <Plans/Behaviour/TriggerB.h>
-#include <Plans/Behaviour/TriggerC.h>
+#include <Behaviour/NotToTrigger.h>
+#include <Behaviour/TriggerA.h>
+#include <Behaviour/TriggerB.h>
+#include <Behaviour/TriggerC.h>
 #include <TestWorldModel.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
@@ -45,7 +45,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger2);
             continue;
         } else {
-            cout << "BehName: " << iter.first->getName() << endl;
+            std::cout << "BehName: " << iter.first->getName() << std::endl;
             continue;
         }
     }
@@ -64,7 +64,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
             EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {
-            cout << iter.first->getName() << endl;
+            std::cout << iter.first->getName() << std::endl;
             EXPECT_TRUE(false);
         }
     }

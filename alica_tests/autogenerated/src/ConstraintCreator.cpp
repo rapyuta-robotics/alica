@@ -1,70 +1,51 @@
 #include "ConstraintCreator.h"
+
+#include "Authority/constraints/AuthorityTest1414403413451Constraints.h"
+#include "Authority/constraints/AuthorityTestMaster1414403396328Constraints.h"
+#include "Behaviour/constraints/AlwaysFail1532424188199Constraints.h"
+#include "Behaviour/constraints/Attack1402488848841Constraints.h"
+#include "Behaviour/constraints/AttackOpp1402489351885Constraints.h"
+#include "Behaviour/constraints/ConstraintUsingBehaviour1414068597716Constraints.h"
+#include "Behaviour/constraints/CountIndefinitely1529456643148Constraints.h"
+#include "Behaviour/constraints/DefendMid1402488730695Constraints.h"
+#include "Behaviour/constraints/MidFieldStandard1402488696205Constraints.h"
+#include "Behaviour/constraints/NotToTrigger1429017274116Constraints.h"
+#include "Behaviour/constraints/SuccessSpam1522377401286Constraints.h"
+#include "Behaviour/constraints/Tackle1402488939130Constraints.h"
+#include "Behaviour/constraints/TriggerA1428508297492Constraints.h"
+#include "Behaviour/constraints/TriggerB1428508316905Constraints.h"
+#include "Behaviour/constraints/TriggerC1428508355209Constraints.h"
+#include "constraints/AttackPlan1402488634525Constraints.h"
+#include "constraints/BackForth1529456584982Constraints.h"
+#include "constraints/BehaviorSuccessSpamMaster1522377375148Constraints.h"
+#include "constraints/BehaviourTriggerTestPlan1428508768572Constraints.h"
+#include "constraints/ConstraintTestMaster1414068495566Constraints.h"
+#include "constraints/ConstraintTestPlan1414068524245Constraints.h"
+#include "constraints/Defend1402488893641Constraints.h"
+#include "constraints/FailsOnOne1530069246103Constraints.h"
+#include "constraints/GoalPlan1402488870347Constraints.h"
+#include "constraints/HandleFailExplicit1530004915640Constraints.h"
+#include "constraints/HandleFailExplicitMaster1530004940652Constraints.h"
+#include "constraints/MasterPlan1402488437260Constraints.h"
+#include "constraints/MasterPlanTaskAssignment1407152758497Constraints.h"
+#include "constraints/MasterPlanTestConditionPlanType1418042656594Constraints.h"
+#include "constraints/MasterSyncTransition1418825395939Constraints.h"
+#include "constraints/MidFieldPlayPlan1402488770050Constraints.h"
+#include "constraints/MultiAgentTestMaster1413200842973Constraints.h"
+#include "constraints/MultiAgentTestPlan1413200862180Constraints.h"
+#include "constraints/OtherPlan1418042819203Constraints.h"
+#include "constraints/PlanFive1407153703092Constraints.h"
+#include "constraints/PlanFour1407153683051Constraints.h"
+#include "constraints/PlanOne1407153611768Constraints.h"
+#include "constraints/PlanThree1407153663917Constraints.h"
+#include "constraints/PlanTwo1407153645238Constraints.h"
+#include "constraints/PreConditionPlan1418042796751Constraints.h"
+#include "constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
+#include "constraints/RuntimeConditionPlan1418042806575Constraints.h"
+#include "constraints/SimpleTestPlan1412252439925Constraints.h"
+#include "constraints/Tackle1402489318663Constraints.h"
+
 #include <iostream>
-
-#include "Plans/constraints/PlanOne1407153611768Constraints.h"
-
-#include "Plans/constraints/FailsOnOne1530069246103Constraints.h"
-
-#include "Plans/constraints/PlanFour1407153683051Constraints.h"
-
-#include "Plans/constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
-
-#include "Plans/constraints/Defend1402488893641Constraints.h"
-
-#include "Plans/constraints/BackForth1529456584982Constraints.h"
-
-#include "Plans/Authority/constraints/AuthorityTestMaster1414403396328Constraints.h"
-
-#include "Plans/constraints/GoalPlan1402488870347Constraints.h"
-
-#include "Plans/constraints/MasterPlan1402488437260Constraints.h"
-
-#include "Plans/constraints/MasterPlanTestConditionPlanType1418042656594Constraints.h"
-
-#include "Plans/constraints/AttackPlan1402488634525Constraints.h"
-
-#include "Plans/constraints/PlanFive1407153703092Constraints.h"
-
-#include "Plans/constraints/HandleFailExplicit1530004915640Constraints.h"
-
-#include "Plans/Authority/constraints/AuthorityTest1414403413451Constraints.h"
-
-#include "Plans/constraints/SimpleTestPlan1412252439925Constraints.h"
-
-#include "Plans/constraints/RuntimeConditionPlan1418042806575Constraints.h"
-
-#include "Plans/constraints/PlanThree1407153663917Constraints.h"
-
-#include "Plans/constraints/MidFieldPlayPlan1402488770050Constraints.h"
-
-#include "Plans/constraints/HandleFailExplicitMaster1530004940652Constraints.h"
-
-#include "Plans/constraints/Tackle1402489318663Constraints.h"
-
-#include "Plans/constraints/MasterSyncTransition1418825395939Constraints.h"
-
-#include "Plans/constraints/MasterPlanTaskAssignment1407152758497Constraints.h"
-
-#include "Plans/constraints/PlanTwo1407153645238Constraints.h"
-
-#include "Plans/constraints/BehaviorSuccessSpamMaster1522377375148Constraints.h"
-
-#include "Plans/constraints/MultiAgentTestPlan1413200862180Constraints.h"
-
-#include "Plans/constraints/ConstraintTestPlan1414068524245Constraints.h"
-
-#include "Plans/constraints/PreConditionPlan1418042796751Constraints.h"
-
-#include "Plans/constraints/ConstraintTestMaster1414068495566Constraints.h"
-
-#include "Plans/constraints/OtherPlan1418042819203Constraints.h"
-
-#include "Plans/constraints/MultiAgentTestMaster1413200842973Constraints.h"
-
-#include "Plans/constraints/BehaviourTriggerTestPlan1428508768572Constraints.h"
-
-using namespace std;
-using namespace alicaAutogenerated;
 
 namespace alica
 {
@@ -73,30 +54,26 @@ ConstraintCreator::ConstraintCreator() {}
 
 ConstraintCreator::~ConstraintCreator() {}
 
-shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintConfId)
+std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintConfId)
 {
     switch (constraintConfId) {
-
-    case 1403773741874:
-        return make_shared<Constraint1403773741874>();
-        break;
-
     case 1402489460549:
-        return make_shared<Constraint1402489460549>();
+        return std::make_shared<Constraint1402489460549>();
         break;
-
     case 1402489462088:
-        return make_shared<Constraint1402489462088>();
+        return std::make_shared<Constraint1402489462088>();
         break;
-
+    case 1403773741874:
+        return std::make_shared<Constraint1403773741874>();
+        break;
     case 1414068566297:
-        return make_shared<Constraint1414068566297>();
+        return std::make_shared<Constraint1414068566297>();
         break;
-
     default:
-        cerr << "ConstraintCreator: Unknown constraint requested: " << constraintConfId << endl;
-        throw new exception();
+        std::cerr << "ConstraintCreator: Unknown constraint requested: " << constraintConfId << std::endl;
+        throw new std::exception();
         break;
     }
 }
+
 } // namespace alica
