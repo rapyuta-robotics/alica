@@ -1,37 +1,18 @@
-using namespace std;
-
 #include "BehaviourCreator.h"
+#include "Behaviour/AlwaysFail.h"
+#include "Behaviour/Attack.h"
+#include "Behaviour/AttackOpp.h"
+#include "Behaviour/ConstraintUsingBehaviour.h"
+#include "Behaviour/CountIndefinitely.h"
+#include "Behaviour/DefendMid.h"
+#include "Behaviour/MidFieldStandard.h"
+#include "Behaviour/NotToTrigger.h"
+#include "Behaviour/SuccessSpam.h"
+#include "Behaviour/Tackle.h"
+#include "Behaviour/TriggerA.h"
+#include "Behaviour/TriggerB.h"
+#include "Behaviour/TriggerC.h"
 #include "engine/BasicBehaviour.h"
-
-#include "Plans/Behaviour/TriggerC.h"
-
-#include "Plans/Behaviour/DefendMid.h"
-
-#include "Plans/Behaviour/NotToTrigger.h"
-
-#include "Plans/Behaviour/SuccessSpam.h"
-
-#include "Plans/Behaviour/AlwaysFail.h"
-
-#include "Plans/Behaviour/AttackOpp.h"
-
-#include "Plans/Behaviour/TriggerA.h"
-
-#include "Plans/Behaviour/Joystick.h"
-
-#include "Plans/Behaviour/ConstraintUsingBehaviour.h"
-
-#include "Plans/Behaviour/NewBehaviour.h"
-
-#include "Plans/Behaviour/Attack.h"
-
-#include "Plans/Behaviour/TriggerB.h"
-
-#include "Plans/Behaviour/Tackle.h"
-
-#include "Plans/Behaviour/MidFieldStandard.h"
-
-#include "Plans/Behaviour/CountIndefinitely.h"
 
 namespace alica
 {
@@ -40,88 +21,51 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
 {
-    switch (behaviourConfId) {
-
-    case 1428508367402:
-
-        return make_shared<TriggerC>();
+    switch (behaviourId) {
+    case 1402488696205:
+        return std::make_shared<MidFieldStandard>();
         break;
-
-    case 1402488763903:
-
-        return make_shared<DefendMid>();
+    case 1402488730695:
+        return std::make_shared<DefendMid>();
         break;
-
-    case 1429017293301:
-
-        return make_shared<NotToTrigger>();
+    case 1402488848841:
+        return std::make_shared<Attack>();
         break;
-
-    case 1522377419087:
-
-        return make_shared<SuccessSpam>();
+    case 1402488939130:
+        return std::make_shared<Tackle>();
         break;
-
-    case 1532424207423:
-
-        return make_shared<AlwaysFail>();
+    case 1402489351885:
+        return std::make_shared<AttackOpp>();
         break;
-
-    case 1402489366699:
-
-        return make_shared<AttackOpp>();
+    case 1414068597716:
+        return std::make_shared<ConstraintUsingBehaviour>();
         break;
-
-    case 1428508312886:
-
-        return make_shared<TriggerA>();
+    case 1428508297492:
+        return std::make_shared<TriggerA>();
         break;
-
-    case 1421854707061:
-
-        return make_shared<Joystick>();
+    case 1428508316905:
+        return std::make_shared<TriggerB>();
         break;
-
-    case 1414068618837:
-
-        return make_shared<ConstraintUsingBehaviour>();
+    case 1428508355209:
+        return std::make_shared<TriggerC>();
         break;
-
-    case 1413810775049:
-
-        return make_shared<NewBehaviour>();
+    case 1429017274116:
+        return std::make_shared<NotToTrigger>();
         break;
-
-    case 1402488866727:
-
-        return make_shared<Attack>();
+    case 1522377401286:
+        return std::make_shared<SuccessSpam>();
         break;
-
-    case 1428508331620:
-
-        return make_shared<TriggerB>();
+    case 1529456643148:
+        return std::make_shared<CountIndefinitely>();
         break;
-
-    case 1402488956661:
-
-        return make_shared<Tackle>();
+    case 1532424188199:
+        return std::make_shared<AlwaysFail>();
         break;
-
-    case 1402488712657:
-
-        return make_shared<MidFieldStandard>();
-        break;
-
-    case 1529456686038:
-
-        return make_shared<CountIndefinitely>();
-        break;
-
     default:
-        cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
-        throw new exception();
+        std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
+        throw new std::exception();
         break;
     }
 }

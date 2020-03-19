@@ -1,19 +1,64 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1418042656594" name="MasterPlanTestConditionPlanType" comment="" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <states id="1418042656595" name="Start" comment="" entryPoint="1418042656596">
-    <outTransitions>#1418042682960</outTransitions>
-  </states>
-  <states id="1418042674811" name="Plantype" comment="">
-    <plans xsi:type="alica:PlanType">TestPlanType.pty#1418042702402</plans>
-    <inTransitions>#1418042682960</inTransitions>
-  </states>
-  <transitions id="1418042682960" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1418042683692" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1418042656595</inState>
-    <outState>#1418042674811</outState>
-  </transitions>
-  <entryPoints id="1418042656596" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1418042656595</state>
-  </entryPoints>
-</alica:Plan>
+{
+  "id" : 1418042656594,
+  "name" : "MasterPlanTestConditionPlanType",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ ],
+  "masterPlan" : true,
+  "utilityThreshold" : 0.1,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "entryPoints" : [ {
+    "id" : 1418042656596,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "successRequired" : false,
+    "minCardinality" : 0,
+    "maxCardinality" : 2147483647,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1418042656595,
+    "plan" : 1418042656594
+  } ],
+  "states" : [ {
+    "type" : "State",
+    "id" : 1418042656595,
+    "name" : "Start",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1418042656594,
+    "abstractPlans" : [ ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1418042682960 ],
+    "inTransitions" : [ ]
+  }, {
+    "type" : "State",
+    "id" : 1418042674811,
+    "name" : "Plantype",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1418042656594,
+    "abstractPlans" : [ "TestPlanType.pty#1418042702402" ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1418042682960 ]
+  } ],
+  "transitions" : [ {
+    "id" : 1418042682960,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1418042656595,
+    "outState" : 1418042674811,
+    "preCondition" : {
+      "id" : 1418042683692,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  } ],
+  "synchronisations" : [ ]
+}

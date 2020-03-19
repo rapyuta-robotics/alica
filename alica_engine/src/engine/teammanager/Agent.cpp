@@ -46,7 +46,7 @@ void Agent::setTimeout(AlicaTime t)
 
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
-    _engineData.editSuccessMarks().markSuccessfull(plan, entryPoint);
+    _engineData.editSuccessMarks().markSuccessful(plan, entryPoint);
 }
 
 void Agent::setSuccessMarks(const IdGrp& suceededEps)

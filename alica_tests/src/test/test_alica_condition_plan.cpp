@@ -1,5 +1,5 @@
 #include "CounterClass.h"
-#include "Plans/Behaviour/ConstraintUsingBehaviour.h"
+#include "Behaviour/ConstraintUsingBehaviour.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
@@ -12,7 +12,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include <Plans/Behaviour/Attack.h>
+#include <Behaviour/Attack.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
