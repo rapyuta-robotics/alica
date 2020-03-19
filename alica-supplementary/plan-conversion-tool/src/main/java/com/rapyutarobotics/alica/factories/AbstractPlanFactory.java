@@ -13,7 +13,8 @@ public class AbstractPlanFactory extends Factory {
         NodeList listOfVariableNodes = node.getElementsByTagName(Tags.VARIABLES);
         for (int i = 0; i < listOfVariableNodes.getLength(); i++) {
             Element variableNode = (Element) listOfVariableNodes.item(i);
-            if (variableNode.getParentNode().getNodeName().equals(Tags.PLANTAG)) {
+            if (variableNode.getParentNode().getNodeName().equals(Tags.PLANTAG)
+                || variableNode.getParentNode().getNodeName().equals(Tags.CONFIGURATIONS)) {
                 // filter for those <vars..> nodes that are direct children of <alica:plan..> nodes
                 abstractPlan.addVariable(VariableFactory.create(variableNode, cp));
             }
