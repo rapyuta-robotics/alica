@@ -33,14 +33,14 @@ void AlicaEngine::abort(const std::string& msg)
 AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
         : _ctx(ctx)
         , _stepCalled(false)
-        , _log(this)
         , _stepEngine(stepEngine)
+        , _log(this)
         , _modelManager(_planRepository)
         , _teamManager(this)
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
-        , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
+        , _variableSyncModule(this)
         , _auth(this)
         , _planBase(this)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
@@ -85,7 +85,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     RunningPlan::init();
     _teamManager.init();
     _syncModul.init();
-    _variableSyncModule->init();
+    _variableSyncModule.init();
     _auth.init();
     return everythingWorked;
 }

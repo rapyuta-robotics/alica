@@ -13,6 +13,7 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
@@ -22,6 +23,7 @@
 #include <string>
 #include <unordered_map>
 
+
 namespace alica
 {
 struct AlicaCreators;
@@ -29,7 +31,6 @@ class Plan;
 class BehaviourPool;
 class Logger;
 class RoleSet;
-class VariableSyncModule;
 class IRoleAssignment;
 
 class AlicaEngine
@@ -71,8 +72,8 @@ public:
     const PlanRepository& getPlanRepository() const { return _planRepository; }
     PlanRepository& editPlanRepository() { return _planRepository; }
 
-    const VariableSyncModule& getResultStore() const { return *_variableSyncModule; }
-    VariableSyncModule& editResultStore() { return *_variableSyncModule; }
+    const VariableSyncModule& getResultStore() const { return _variableSyncModule; }
+    VariableSyncModule& editResultStore() { return _variableSyncModule; }
 
     const IRoleAssignment& getRoleAssignment() const { return *_roleAssignment; }
     IRoleAssignment& editRoleAssignment() { return *_roleAssignment; }
@@ -128,35 +129,14 @@ private:
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
-    // TODO: fix this, VariableSyncModule has circular dependency with engine header
-    // VariableSyncModule _variableSyncModule;
-    std::unique_ptr<VariableSyncModule> _variableSyncModule;
+    VariableSyncModule _variableSyncModule;
     BlackBoard _blackboard;
-
-    /**
-     * Pointing to the top level plan of the loaded ALICA program.
-     */
-    const Plan* _masterPlan;
-    /**
-     * Pointing to the current set of known roles.
-     */
-    const RoleSet* _roleSet;
-    /**
-     * Indicates whether the engine should run with a static role assignment
-     * that is based on default roles, or not.
-     */
-    bool _useStaticRoles;
-    /**
-     * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
-     * are sent out.
-     * This is useful for a robot on hot standby.
-     */
-    bool _maySendMessages;
-    /**
-     * Set to have the engine's main loop wait on a signal via MayStep
-     */
-    bool _stepEngine;
-    bool _stepCalled;
+    const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
+    const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
+    bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
+    bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 /**

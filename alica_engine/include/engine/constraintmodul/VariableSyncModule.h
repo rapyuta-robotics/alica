@@ -4,8 +4,6 @@
 #include "engine/containers/SolverResult.h"
 #include <alica_solver_interface/Interval.h>
 
-#include "engine/AlicaEngine.h"
-
 #include <essentials/NotifyTimer.h>
 
 #include <vector>
@@ -15,6 +13,7 @@ namespace alica
 class Variable;
 class ResultEntry;
 class IAlicaCommunication;
+class AlicaEngine;
 
 class VariableSyncModule
 {
@@ -66,6 +65,7 @@ private:
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
     const AlicaEngine* _ae;
+    const AlicaClock& _alicaClock;
     bool _running;
     double _distThreshold;
     essentials::NotifyTimer<VariableSyncModule>* _timer;
@@ -81,7 +81,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
 
     std::vector<VotedSeed> seeds;
 
-    AlicaTime earliest = _ae->getAlicaClock().now() - _ttl4Usage;
+    AlicaTime earliest = _alicaClock.now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const std::unique_ptr<ResultEntry>& re : _store) {

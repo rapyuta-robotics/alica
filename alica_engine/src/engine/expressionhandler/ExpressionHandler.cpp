@@ -1,10 +1,3 @@
-/*
- * ExpressionHandler.cpp
- *
- *  Created on: Aug 26, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
