@@ -1,13 +1,7 @@
-/*
- * BasicCondition.cpp
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
+#include "engine/BasicCondition.h"
 
-#include <engine/AlicaEngine.h>
-#include <engine/BasicCondition.h>
-#include <engine/RunningPlan.h>
+#include "engine/AlicaEngine.h"
+#include "engine/RunningPlan.h"
 
 namespace alica
 {
