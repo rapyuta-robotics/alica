@@ -101,7 +101,7 @@ std::string AlicaContext::getLocalAgentName()
     return essentials::SystemConfig::getInstance().getHostname();
 }
 
-void AlicaContext::setRobotName(const std::string& name)
+void AlicaContext::setLocalAgentName(const std::string& name)
 {
     essentials::SystemConfig::getInstance().setHostname(name);
 }

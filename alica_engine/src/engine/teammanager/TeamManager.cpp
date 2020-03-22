@@ -67,6 +67,7 @@ TeamManager::TeamManager(AlicaEngine* engine)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
+    readSelfFromConfig();
 }
 
 TeamManager::~TeamManager() {}
@@ -327,7 +328,6 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
 void TeamManager::init()
 {
-    readSelfFromConfig();
     if (_useAutoDiscovery) {
         _timeLastAnnouncement = _engine->getAlicaClock().now();
         announcePresence();
