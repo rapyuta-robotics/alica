@@ -46,7 +46,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
     // Check whether RC can be called
     EXPECT_TRUE(ae->getPlanBase().getRootNode()->isRuntimeConditionValid());
-    // Check wheter RC has been called
+    // Check whether RC has been called
 
     //	BEFORE
     //	EXPECT_GE(((RunTimeCondition1412781693884*)&*ae->getPlanBase().getRootNode()->getPlan()->getRuntimeCondition()->getBasicCondition())->called,

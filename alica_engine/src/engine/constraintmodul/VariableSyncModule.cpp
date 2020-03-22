@@ -17,7 +17,7 @@ namespace alica
 {
 VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
         : _ae(ae)
-        , _alicaClock(_ae->getAlicaClock())
+        , _alicaClock(ae->getAlicaClock())
         , _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
@@ -25,6 +25,7 @@ VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
         , _ttl4Usage(AlicaTime::zero())
         , _ownResults(nullptr)
 {
+    _alicaClock.now();
 }
 
 VariableSyncModule::~VariableSyncModule()

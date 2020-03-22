@@ -88,7 +88,7 @@ public:
      *
      * @param name Host name
      */
-    static void setRobotName(const std::string& name);
+    static void setLocalAgentName(const std::string& name);
 
     // TODO: better descriptive name for paths
     /**
@@ -331,11 +331,11 @@ private:
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    std::unique_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
-    std::unique_ptr<AlicaClock> _clock;
 };
 
 template <class ClockType, class... Args>

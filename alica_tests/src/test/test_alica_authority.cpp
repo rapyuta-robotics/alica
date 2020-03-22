@@ -92,7 +92,10 @@ TEST(AllocationDifference, MessageCancelsUtil)
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-    auto uSummandAe = aes[0]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
+    const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
+    ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
+    ASSERT_NE(plan->getUtilityFunction(), nullptr) << "UtilityFunction is null!";
+    auto uSummandAe = plan->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr = dynamic_cast<alica::DummyTestSummand*>(uSummandAe);
     dbr->robotId = aes[0]->getTeamManager().getLocalAgentID();
 
