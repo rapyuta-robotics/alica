@@ -8,7 +8,8 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-//#define SM_SUCCES
+
+#define SM_SUCCESS
 
 namespace alica
 {

@@ -197,7 +197,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         rp->addChildren(rpChildren);
     }
 
-    ALICA_DEBUG_MSG("PS: Created RunningPlan: \n" << rp);
+    ALICA_DEBUG_MSG("PS: Created RunningPlan: \n" << *rp);
 
     return rp; // If we return here, this robot is normal assigned
 }

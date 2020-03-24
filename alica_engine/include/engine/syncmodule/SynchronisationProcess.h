@@ -1,8 +1,9 @@
 #pragma once
-//#define SM_MISC
-//#define SM_SUCCESS
-//#define SM_FAILURE
-//#define SM_MESSAGES
+#define SM_MISC
+#define SM_SUCCESS
+#define SM_FAILURE
+#define SM_MESSAGES
+#define ALICA_DEBUG_LEVEL_DEBUG
 
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
@@ -50,7 +51,7 @@ private:
     const AlicaEngine* _ae;
     std::mutex _syncMutex;
     std::mutex _rowOkMutex;
-    SyncModule* _syncModul;
+    SyncModule* _syncModule;
     const Synchronisation* _synchronisation;
     essentials::IdentifierConstPtr _myID;
     SyncData* _lastTalkData;

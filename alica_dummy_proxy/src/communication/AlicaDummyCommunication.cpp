@@ -139,8 +139,8 @@ void InProcQueue<alica::SyncTalk>::process(std::unique_ptr<alica::SyncTalk>& fir
         auto newSt = std::make_shared<alica::SyncTalk>(*first);
         newSt->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         for (size_t i = 0; i < newSt->syncData.size(); ++i) {
-            newSt->syncData[i].robotID = module->getEngine()->getIDFromBytes(
-                    first->syncData[i].robotID->getRaw(), first->syncData[i].robotID->getSize(), first->syncData[i].robotID->getType());
+            newSt->syncData[i].agentID = module->getEngine()->getIDFromBytes(
+                    first->syncData[i].agentID->getRaw(), first->syncData[i].agentID->getSize(), first->syncData[i].agentID->getType());
         }
         module->onSyncTalkReceived(newSt);
     }
