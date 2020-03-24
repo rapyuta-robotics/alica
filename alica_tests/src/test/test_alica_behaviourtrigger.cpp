@@ -60,7 +60,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
         } else if (iter.first->getName() == "TriggerC") {
             EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 0);
             continue;
-        } else if (iter.first->getName() == "NotToTriggerDefault") {
+        } else if (iter.first->getName() == "NotToTrigger") {
             EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {
@@ -97,7 +97,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
         } else if (iter.first->getName() == "TriggerC") {
             EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 4);
             continue;
-        } else if (iter.first->getName() == "NotToTriggerDefault") {
+        } else if (iter.first->getName() == "NotToTrigger") {
             EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {

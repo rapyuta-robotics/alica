@@ -115,7 +115,7 @@
     "outState" : 1402488646220,
     "preCondition" : {
       "id" : 1402489462088,
-      "name" : "1402489462088",
+      "name" : "ConditionNameShootAttack",
       "comment" : "",
       "enabled" : true,
       "conditionString" : "Some nice comment!",

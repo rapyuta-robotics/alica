@@ -25,8 +25,10 @@ bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp)
 std::shared_ptr<UtilityFunction> UtilityFunction1414068524245::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414068524245) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
+
     /*PROTECTED REGION END*/
 }
 } // namespace alica

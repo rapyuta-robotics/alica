@@ -24,8 +24,10 @@ bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp)
 std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402488770050) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
+
     /*PROTECTED REGION END*/
 }
 /**

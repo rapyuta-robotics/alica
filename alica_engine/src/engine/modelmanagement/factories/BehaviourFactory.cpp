@@ -17,10 +17,13 @@ namespace alica
         AbstractPlanFactory::setVariables(node, behaviour);
 
         if (Factory::isValid(node[alica::Strings::frequency])) {
-            behaviour->_frequency = Factory::getValue(node, alica::Strings::frequency, 30);
+            behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 30);
         }
         if (Factory::isValid(node[alica::Strings::deferring])) {
-            behaviour->_deferring = Factory::getValue(node, alica::Strings::deferring, 0);
+            behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
+        }
+        if (Factory::isValid(node[alica::Strings::eventDriven])) {
+            behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
         }
         if (Factory::isValid(node[alica::Strings::preCondition])) {
             behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);

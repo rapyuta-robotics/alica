@@ -1,9 +1,10 @@
 #pragma once
 //#define RS_DEBUG
+#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
-#include <alica_solver_interface/Interval.h>
 
+#include <alica_solver_interface/Interval.h>
 #include <essentials/NotifyTimer.h>
 
 #include <vector>
@@ -25,16 +26,13 @@ public:
     void close();
     void clear();
     void onSolverResult(const SolverResult& msg);
-
     void publishContent();
     void postResult(int64_t vid, Variant result);
 
     template <typename VarType>
     int getSeeds(const std::vector<VarType*>& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const;
-
     VariableSyncModule(const VariableSyncModule&) = delete;
     VariableSyncModule(VariableSyncModule&&) = delete;
-
     VariableSyncModule& operator=(const VariableSyncModule&) = delete;
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
@@ -43,12 +41,9 @@ private:
     {
     public:
         VotedSeed(std::vector<Variant>&& v);
-
         bool takeVector(const std::vector<Variant>& v, const std::vector<Interval<double>>& limits, double distThreshold);
-
         VotedSeed(const VotedSeed&) = delete;
         VotedSeed& operator=(const VotedSeed&) = delete;
-
         VotedSeed(VotedSeed&&);
         VotedSeed& operator=(VotedSeed&&);
 
@@ -65,7 +60,6 @@ private:
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
     const AlicaEngine* _ae;
-    const AlicaClock& _alicaClock;
     bool _running;
     double _distThreshold;
     essentials::NotifyTimer<VariableSyncModule>* _timer;
@@ -81,7 +75,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
 
     std::vector<VotedSeed> seeds;
 
-    AlicaTime earliest = _alicaClock.now() - _ttl4Usage;
+    AlicaTime earliest = _ae->getAlicaClock().now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const std::unique_ptr<ResultEntry>& re : _store) {

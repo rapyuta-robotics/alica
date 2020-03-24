@@ -13,7 +13,6 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
@@ -32,6 +31,7 @@ class BehaviourPool;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
+class VariableSyncModule;
 
 class AlicaEngine
 {
@@ -72,8 +72,8 @@ public:
     const PlanRepository& getPlanRepository() const { return _planRepository; }
     PlanRepository& editPlanRepository() { return _planRepository; }
 
-    const VariableSyncModule& getResultStore() const { return _variableSyncModule; }
-    VariableSyncModule& editResultStore() { return _variableSyncModule; }
+    const VariableSyncModule& getResultStore() const { return *_variableSyncModule; }
+    VariableSyncModule& editResultStore() { return *_variableSyncModule; }
 
     const IRoleAssignment& getRoleAssignment() const { return *_roleAssignment; }
     IRoleAssignment& editRoleAssignment() { return *_roleAssignment; }
@@ -120,6 +120,8 @@ private:
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
+    const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
+    const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     BehaviourPool _behaviourPool;
     TeamObserver _teamObserver;
@@ -129,10 +131,8 @@ private:
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
-    VariableSyncModule _variableSyncModule;
+    VariableSyncModule* _variableSyncModule;
     BlackBoard _blackboard;
-    const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
-    const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
     bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/

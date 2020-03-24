@@ -36,15 +36,15 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _stepEngine(stepEngine)
         , _log(this)
         , _modelManager(_planRepository)
+        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
+        , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this)
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
-        , _variableSyncModule(this)
+        , _variableSyncModule(new VariableSyncModule(this))
         , _auth(this)
         , _planBase(this)
-        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
-        , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
@@ -66,6 +66,7 @@ AlicaEngine::~AlicaEngine()
 {
     _roleSet = nullptr;
     _masterPlan = nullptr;
+    delete _variableSyncModule;
 }
 
 /**
@@ -85,7 +86,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     RunningPlan::init();
     _teamManager.init();
     _syncModul.init();
-    _variableSyncModule.init();
+    _variableSyncModule->init();
     _auth.init();
     return everythingWorked;
 }

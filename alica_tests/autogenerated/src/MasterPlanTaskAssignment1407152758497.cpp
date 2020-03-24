@@ -15,8 +15,10 @@ namespace alica
 std::shared_ptr<UtilityFunction> UtilityFunction1407152758497::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407152758497) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
+
     /*PROTECTED REGION END*/
 }
 } // namespace alica
