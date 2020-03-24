@@ -1,6 +1,5 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
@@ -17,7 +16,6 @@ namespace alica
 {
 VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
         : _ae(ae)
-        , _alicaClock(ae->getAlicaClock())
         , _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
@@ -25,7 +23,6 @@ VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
         , _ttl4Usage(AlicaTime::zero())
         , _ownResults(nullptr)
 {
-    _alicaClock.now();
 }
 
 VariableSyncModule::~VariableSyncModule()
@@ -103,7 +100,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
         re = (*agent_sorted_loc).get();
     }
 
-    AlicaTime now = _alicaClock.now();
+    AlicaTime now = _ae->getAlicaClock().now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
         v.loadFrom(sv.value);
@@ -121,7 +118,7 @@ void VariableSyncModule::publishContent()
     }
 
     _publishData.vars.clear();
-    AlicaTime now = _alicaClock.now();
+    AlicaTime now = _ae->getAlicaClock().now();
     _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
     if (_publishData.vars.empty()) {
         return;
@@ -131,7 +128,7 @@ void VariableSyncModule::publishContent()
 
 void VariableSyncModule::postResult(int64_t vid, Variant result)
 {
-    _ownResults->addValue(vid, result, _alicaClock.now());
+    _ownResults->addValue(vid, result, _ae->getAlicaClock().now());
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)

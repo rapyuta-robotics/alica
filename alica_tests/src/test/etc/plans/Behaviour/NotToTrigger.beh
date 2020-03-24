@@ -6,6 +6,7 @@
   "variables" : [ ],
   "frequency" : 30,
   "deferring" : 0,
+  "eventDriven" : true,
   "preCondition" : null,
   "runtimeCondition" : null,
   "postCondition" : null,

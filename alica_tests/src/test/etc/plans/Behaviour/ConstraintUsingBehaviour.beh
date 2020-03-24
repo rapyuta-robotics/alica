@@ -16,6 +16,7 @@
   } ],
   "frequency" : 30,
   "deferring" : 0,
+  "eventDriven" : false,
   "preCondition" : null,
   "runtimeCondition" : null,
   "postCondition" : null,

@@ -40,7 +40,7 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     const alica::PlanRepository& rep = ae->getPlanRepository();
 
-    const alica::Behaviour* beh = rep.getBehaviours()[1414068618837];
+    const alica::Behaviour* beh = rep.getBehaviours()[1414068597716];
     ASSERT_NE(beh, nullptr);
     const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);
