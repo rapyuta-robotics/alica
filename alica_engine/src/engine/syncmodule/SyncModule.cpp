@@ -48,7 +48,7 @@ void SyncModule::init()
 void SyncModule::close()
 {
     _running = false;
-    cout << "SynchModul: Closed SynchModul" << endl;
+    cout << "SM: Closed SynchModul" << endl;
 }
 void SyncModule::tick()
 {
@@ -61,7 +61,6 @@ void SyncModule::tick()
         _ticks++;
         for (const SynchronisationProcess* s : failedSyncs) {
             delete _synchSet[s->getSynchronisation()];
-            // was without iter before
             _synchSet.erase(s->getSynchronisation());
         }
     }
@@ -106,18 +105,18 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 }
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-#ifdef SM_SUCCES
-    cout << "SyncDONE in SYNCMODUL for synchronisationID: " << sync->getId() << endl;
+#ifdef SM_SUCCESS
+    cout << "SM: Sync done for synchronisationID: " << sync->getId() << endl;
 #endif
 
-#ifdef SM_SUCCES
-    cout << "Remove synchronisationProcess object for synchronisationID: " << sync->getId() << endl;
+#ifdef SM_SUCCESS
+    cout << "SM: Remove synchronisationProcess object for synchronisationID: " << sync->getId() << endl;
 #endif
     delete _synchSet[sync];
     _synchSet.erase(sync);
     _synchronisations.push_back(sync);
-#ifdef SM_SUCCES
-    cout << "SM: SYNC TRIGGER TIME:" << _ae->getAlicaClock().now().inMilliseconds() << endl;
+#ifdef SM_SUCCESS
+    cout << "SM: SYNC TRIGGER TIME: " << _ae->getAlicaClock().now().inMilliseconds() << endl;
 #endif
 }
 
@@ -135,17 +134,14 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
         return;
     }
-#ifdef SM_SUCCES
-    cout << "SyncModul:Handle Synctalk" << endl;
+#ifdef SM_SUCCESS
+    cout << "SM: Handle SyncTalk" << endl;
 #endif
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
-#ifdef SM_SUCCES
-        cout << "SyncModul: TransID" << sd.transitionID << endl;
-        cout << "SyncModul: RobotID" << sd.robotID << endl;
-        cout << "SyncModul: Condition" << sd.conditionHolds << endl;
-        cout << "SyncModul: ACK" << sd.ack << endl;
+#ifdef SM_SUCCESS
+        cout << "SM: " << sd << endl;
 #endif
 
         const Transition* trans = _ae->getPlanRepository().getTransitions().find(sd.transitionID);
@@ -155,11 +151,11 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
             if (trans->getSynchronisation() != nullptr) {
                 synchronisation = trans->getSynchronisation();
             } else {
-                cerr << "SyncModul: Transition " << trans->getId() << " is not connected to a Synchronisation" << endl;
+                cerr << "SM: Transition " << trans->getId() << " is not connected to a Synchronisation" << endl;
                 return;
             }
         } else {
-            cerr << "SyncModul: Could not find Element for Transition with ID: " << sd.transitionID << endl;
+            cerr << "SM: Could not find Transition with ID: " << sd.transitionID << endl;
             return;
         }
 
@@ -178,7 +174,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
                 doAck = syncProc->integrateSyncTalk(st, _ticks);
             }
         }
-        if (!sd.ack && *(st->senderID) == *(sd.robotID) && doAck) {
+        if (!sd.ack && *(st->senderID) == *(sd.agentID) && doAck) {
             toAck.push_back(sd);
         }
     }
@@ -198,7 +194,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     const Synchronisation* synchronisation = _ae->getPlanRepository().getSynchronisations().find(sr->synchronisationID);
 
     if (synchronisation == nullptr) {
-        cout << "SyncModul: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID << endl;
+        cout << "SM: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID << endl;
         return;
     }
     {

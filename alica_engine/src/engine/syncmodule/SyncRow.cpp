@@ -1,14 +1,8 @@
-/*
- * SyncRow.cpp
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#include <algorithm>
 #include <essentials/IdentifierConstPtr.h>
 #include <engine/containers/SyncData.h>
 #include <engine/syncmodule/SyncRow.h>
+
+#include <algorithm>
 #include <iostream>
 
 namespace alica
@@ -50,7 +44,7 @@ void SyncRow::toString()
         std::cout << i << " ";
     }
     std::cout << std::endl;
-    _syncData.toString();
+    std::cout << _syncData;
 }
 
 } /* namespace alica */

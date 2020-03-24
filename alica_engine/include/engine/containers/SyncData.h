@@ -12,7 +12,7 @@ typedef std::tuple<essentials::IdentifierConstPtr, int64_t, bool, bool> stdSyncD
 struct SyncData
 {
     SyncData()
-            : robotID(nullptr)
+            : agentID(nullptr)
             , ack(false)
             , conditionHolds(false)
             , transitionID(0)
@@ -20,28 +20,24 @@ struct SyncData
     }
 
     SyncData(const stdSyncData& s)
-            : robotID(std::get<0>(s))
+            : agentID(std::get<0>(s))
             , transitionID(std::get<1>(s))
             , conditionHolds(std::get<2>(s))
             , ack(std::get<3>(s))
     {
     }
 
-    stdSyncData toStandard() const { return std::make_tuple(robotID, transitionID, conditionHolds, ack); }
+    stdSyncData toStandard() const { return std::make_tuple(agentID, transitionID, conditionHolds, ack); }
 
-    void toString() const
-    {
-        std::cout << "SyncData--> ";
-        std::cout << " RobotId: " << robotID;
-        std::cout << " TransitionID: " << transitionID;
-        std::cout << " ConditionHolds: " << conditionHolds;
-        std::cout << " Acknowledge: " << ack << std::endl;
-    }
-
-    essentials::IdentifierConstPtr robotID;
+    essentials::IdentifierConstPtr agentID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;
 };
+
+inline std::ostream& operator<<(std::ostream& o, const SyncData& sd)
+{
+    return o << "SyncData: TransID " << sd.transitionID << " AgentID " << sd.agentID << (sd.conditionHolds ? " COND" : "!COND") << (sd.ack ? " ACK" : "!ACK") << std::endl;
+}
 
 } /* namespace alica */
