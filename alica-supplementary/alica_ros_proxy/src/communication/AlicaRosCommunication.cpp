@@ -201,7 +201,7 @@ void AlicaRosCommunication::sendSyncTalk(const SyncTalk& st) const
         alica_msgs::SyncData sds;
         sds.ack = sd.ack;
         sds.condition_holds = sd.conditionHolds;
-        sds.robot_id.id = sd.robotID->toByteVector();
+        sds.robot_id.id = sd.agentID->toByteVector();
         sds.transition_id = sd.transitionID;
         sts.sync_data.push_back(sds);
     }
@@ -289,7 +289,7 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st)
         SyncData sds = SyncData();
         sds.ack = sd.ack;
         sds.conditionHolds = sd.condition_holds;
-        sds.robotID = this->ae->getIDFromBytes(sd.robot_id.id.data(),sd.robot_id.id.size(), sd.robot_id.type);
+        sds.agentID = this->ae->getIDFromBytes(sd.robot_id.id.data(),sd.robot_id.id.size(), sd.robot_id.type);
         sds.transitionID = sd.transition_id;
         stPtr->syncData.push_back(std::move(sds));
     }
