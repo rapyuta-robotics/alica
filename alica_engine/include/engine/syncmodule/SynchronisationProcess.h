@@ -1,8 +1,5 @@
 #pragma once
 
-//#define SM_SUCCESS
-//#define ALICA_DEBUG_LEVEL_DEBUG
-
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
@@ -35,7 +32,6 @@ public:
     bool integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick);
     void integrateSyncReady(std::shared_ptr<SyncReady> ready);
     const Synchronisation* getSynchronisation() const;
-    void setSynchronisation(const Synchronisation *synchronisation);
 
 private:
     bool allSyncReady() const;
