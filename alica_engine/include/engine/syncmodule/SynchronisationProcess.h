@@ -1,9 +1,7 @@
 #pragma once
-#define SM_MISC
-#define SM_SUCCESS
-#define SM_FAILURE
-#define SM_MESSAGES
-#define ALICA_DEBUG_LEVEL_DEBUG
+
+//#define SM_SUCCESS
+//#define ALICA_DEBUG_LEVEL_DEBUG
 
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
@@ -29,7 +27,6 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(const AlicaEngine* ae);
     SynchronisationProcess(const AlicaEngine* ae, essentials::IdentifierConstPtr myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);

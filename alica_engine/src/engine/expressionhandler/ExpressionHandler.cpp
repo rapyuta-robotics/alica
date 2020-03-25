@@ -25,10 +25,7 @@ namespace alica
  */
 ExpressionHandler::ExpressionHandler() {}
 
-ExpressionHandler::~ExpressionHandler()
-{
-    // TODO Auto-generated destructor stub
-}
+ExpressionHandler::~ExpressionHandler() {}
 
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.

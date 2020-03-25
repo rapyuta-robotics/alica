@@ -47,7 +47,7 @@ private:
     int _maxConsecutiveChanges;
     bool _changeOccurred;
 
-    PlanChange synchTransitionRule(RunningPlan& r);
+    PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);
     PlanChange topFailRule(RunningPlan& r);
     PlanChange allocationRule(RunningPlan& r);

@@ -124,7 +124,7 @@ void InProcQueue<alica::PlanTreeInfo>::process(std::unique_ptr<alica::PlanTreeIn
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto pti = std::make_shared<alica::PlanTreeInfo>(*first);
+        auto pti = std::make_shared<alica::PlanTreeInfo>((*first).toStandard());
         pti->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         module->onPlanTreeInfoReceived(pti);
     }
@@ -136,7 +136,7 @@ void InProcQueue<alica::SyncTalk>::process(std::unique_ptr<alica::SyncTalk>& fir
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto newSt = std::make_shared<alica::SyncTalk>(*first);
+        auto newSt = std::make_shared<alica::SyncTalk>((*first).toStandard());
         newSt->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         for (size_t i = 0; i < newSt->syncData.size(); ++i) {
             newSt->syncData[i].agentID = module->getEngine()->getIDFromBytes(
@@ -152,7 +152,7 @@ void InProcQueue<alica::SyncReady>::process(std::unique_ptr<alica::SyncReady>& f
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto newSr = std::make_shared<alica::SyncReady>(*first);
+        auto newSr = std::make_shared<alica::SyncReady>((*first).toStandard());
         newSr->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         module->onSyncReadyReceived(newSr);
     }
