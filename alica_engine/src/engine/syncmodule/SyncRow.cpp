@@ -8,43 +8,39 @@
 namespace alica
 {
 
-SyncRow::SyncRow()
-        : _haveData(false)
-{
-}
-
 SyncRow::SyncRow(const SyncData& sd)
         : _syncData(sd)
-        , _haveData(true)
 {
 }
 
 SyncRow::~SyncRow() {}
 
-AgentGrp& SyncRow::getReceivedBy()
+const AgentGrp& SyncRow::getReceivedBy()
 {
     sort(_receivedBy.begin(), _receivedBy.end());
     return _receivedBy;
 }
 
-void SyncRow::setReceivedBy(const AgentGrp& receivedBy)
+AgentGrp& SyncRow::editReceivedBy()
 {
-    _receivedBy = receivedBy;
+    sort(_receivedBy.begin(), _receivedBy.end());
+    return _receivedBy;
 }
 
 void SyncRow::setSyncData(const SyncData& syncData)
 {
     _syncData = syncData;
 }
-void SyncRow::toString()
-{ // TODO: fix this method (doesnt produce a string, but write to cout)
-    std::cout << "SyncRow" << std::endl;
-    std::cout << "ReceivedBy: ";
-    for (essentials::IdentifierConstPtr i : _receivedBy) {
-        std::cout << i << " ";
+
+std::ostream& operator<<(std::ostream& os, const SyncRow& sr)
+{
+    std::stringstream ss;
+    ss << "## SyncRow: ReceivedBy: ";
+    for (essentials::IdentifierConstPtr i : sr._receivedBy) {
+        ss << i << " ";
     }
-    std::cout << std::endl;
-    std::cout << _syncData;
+    ss << std::endl << sr._syncData << "##" << std::endl;
+    return os << ss.str();
 }
 
 } /* namespace alica */
