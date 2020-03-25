@@ -101,7 +101,7 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(200); }
+    virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
     {

@@ -6,11 +6,13 @@
 #include "engine/containers/SyncTalk.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
-#include <engine/syncmodule/SyncModule.h>
-#include <engine/syncmodule/SyncRow.h>
-#include <engine/syncmodule/SynchronisationProcess.h>
+#include "engine/syncmodule/SyncModule.h"
+#include "engine/syncmodule/SyncRow.h"
+#include "engine/syncmodule/SynchronisationProcess.h"
 
+#define ALICA_DEBUG_LEVEL_DEBUG
 #include <alica_common_config/debug_output.h>
+
 namespace alica
 {
 
@@ -36,6 +38,7 @@ SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, essentials
 
 SynchronisationProcess::~SynchronisationProcess()
 {
+    std::lock_guard<mutex> lock(_syncMutex);
     for (auto row : _syncMatrix) {
         delete row;
     }
@@ -91,9 +94,7 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
     if (maySendTalk) {
         std::lock_guard<mutex> lock(_syncMutex);
         if (isSyncComplete()) {
-#ifdef SM_SUCCESS
-            std::cout << "SP: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready" << std::endl;
-#endif
+            ALICA_DEBUG_MSG("SP: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready");
             sendSyncReady();
             _readyForSync = true;
         } else {
@@ -178,11 +179,11 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             }
 
             if (isSyncComplete()) {
-                ALICA_DEBUG_MSG("SP: Synchronisation " << _synchronisation->getId() << " ready");
+                ALICA_DEBUG_MSG("SP: " << _myID << " Synchronisation " << _synchronisation->getId() << " ready");
                 sendSyncReady();
                 _readyForSync = true;
             } else {
-                ALICA_DEBUG_MSG("SP: Synchronisation " << _synchronisation->getId() << " not ready");
+                ALICA_DEBUG_MSG("SP: " << _myID << " Synchronisation " << _synchronisation->getId() << " not ready");
                 // always reset this in case someone revokes his commitment
                 _readyForSync = false;
             }
@@ -197,12 +198,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             }
         }
     }
-
-#ifdef SM_SUCCESS
-    std::stringstream ss;
-    ss << "SP: Process after integrating SyncTalk: " << std::endl << *this << std::endl;
-    std::cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG("SP: " << _myID << "'s Process after integrating SyncTalk: " << std::endl << *this);
 
     return true;
 }
@@ -222,11 +218,7 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
         _receivedSyncReadys.push_back(ready);
     }
 
-#ifdef SM_SUCCESS
-    std::stringstream ss;
-    ss << "SP: Process after integrating SyncReady: " << std::endl << *this << std::endl;
-    std::cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG("SP: " << _myID << "'s Process after integrating SyncReady: " << std::endl << *this);
     // check if all robots are ready
     if (_readyForSync) {
         if (allSyncReady()) {
@@ -235,11 +227,6 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
             _syncModule->synchronisationDone(_synchronisation);
         }
     }
-}
-
-void SynchronisationProcess::setSynchronisation(const Synchronisation* synchronisation)
-{
-    _synchronisation = synchronisation;
 }
 
 void SynchronisationProcess::sendTalk(const SyncData& sd)

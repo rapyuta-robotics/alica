@@ -10,7 +10,8 @@
 #include <engine/syncmodule/SyncModule.h>
 #include <engine/syncmodule/SynchronisationProcess.h>
 
-//#define SM_DEBUG
+#define ALICA_DEBUG_LEVEL_DEBUG
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -44,12 +45,10 @@ void SyncModule::init()
     _ticks = 0;
     _running = true;
     _myId = _ae->getTeamManager().getLocalAgentID();
-    std::cout << "SyncModule: I am " << _myId << std::endl;
 }
 void SyncModule::close()
 {
     _running = false;
-    cout << "SM: Closed SynchModule" << endl;
 }
 /**
  * Collects all failed synchronisation processes
@@ -102,9 +101,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-#ifdef SM_DEBUG
-    cout << "SM: Synchronisation successful for ID: " << sync->getId() << endl;
-#endif
+    ALICA_DEBUG_MSG( "SM: Synchronisation successful for ID: " << sync->getId());
     delete _synchProcessMapping[sync];
     _synchProcessMapping.erase(sync);
     _successfulSynchronisations.push_back(sync);
@@ -136,11 +133,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
         return;
     }
-#ifdef SM_DEBUG
-    std::stringstream ss;
-    ss << "SM: Received SyncTalk" << std::endl << *st << endl;
-    cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG( "SM: " << _myId << " Received SyncTalk" << std::endl << *st );
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
@@ -188,12 +181,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     if (!_running || sr->senderID == _myId || _ae->getTeamManager().isAgentIgnored(sr->senderID)) {
         return;
     }
-
-#ifdef SM_DEBUG
-    std::stringstream ss;
-    ss << "SM: Received SyncReady " << std::endl << *sr << std::endl;
-    std::cout << ss.str();
-#endif
+    ALICA_DEBUG_MSG("SM: " << _myId << " Received SyncReady " << std::endl << *sr);
 
     const Synchronisation* synchronisation = _ae->getPlanRepository().getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
@@ -215,9 +203,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_ae->maySendMessages())
         return;
     st.senderID = _myId;
-#ifdef SM_DEBUG
-    std::cout << "SM: Sending SyncTalk " << std::endl << st << std::endl;
-#endif
+    ALICA_DEBUG_MSG("SM: " << _myId << " Sending SyncTalk " << std::endl << st);
     _ae->getCommunicator().sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
@@ -225,9 +211,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_ae->maySendMessages())
         return;
     sr.senderID = _myId;
-#ifdef SM_DEBUG
-    std::cout << "SM: Sending SyncReady " << std::endl << sr << std::endl;
-#endif
+    ALICA_DEBUG_MSG("SM: " << _myId << " Sending SyncReady " << std::endl << sr );
     _ae->getCommunicator().sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
@@ -237,9 +221,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-#ifdef SM_DEBUG
-    std::cout << "SM: " << this->_ae->getLocalAgentName() << " is sending Acknowledgements " << std::endl << st << std::endl;
-#endif
+    ALICA_DEBUG_MSG("SM: " << _myId << " Sending Acknowledgements " << std::endl << st);
     _ae->getCommunicator().sendSyncTalk(st);
 }
 

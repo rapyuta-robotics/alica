@@ -51,8 +51,8 @@ private:
     std::unique_ptr<SimplePlanTree> sptFromMessage(essentials::IdentifierConstPtr agent, const IdGrp& ids, AlicaTime time) const;
 
     AlicaEngine* _ae;
-    Agent* _me;
     TeamManager& _tm;
+    Agent* _me;
 
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;
