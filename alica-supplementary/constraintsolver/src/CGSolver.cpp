@@ -1,6 +1,7 @@
-#include "CGSolver.h"
+#include "constraintsolver/CGSolver.h"
 
-#include <GSolver.h>
+#include "constraintsolver/GSolver.h"
+
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/constraintmodul/VariableSyncModule.h>
@@ -53,7 +54,7 @@ bool CGSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::sha
 
     for (const std::shared_ptr<ProblemDescriptor>& c : calls) {
         if (dynamic_cast<autodiff::Term*>(c->getConstraint()) == nullptr) {
-            std::cerr << "CGSolver: Constrainttype not compatible with selected solver" << std::endl;
+            std::cerr << "CGSolver: Constraint type not compatible with selected solver" << std::endl;
             return false;
         }
         constraint = constraint & TermPtr(static_cast<autodiff::Term*>(c->getConstraint()));

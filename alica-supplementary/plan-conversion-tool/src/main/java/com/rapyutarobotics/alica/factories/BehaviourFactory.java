@@ -25,7 +25,7 @@ public class BehaviourFactory extends Factory {
                 behaviour.setDeferring(Long.parseLong(configuration.getAttribute(Tags.DEFERRING)));
                 behaviour.setEventDriven(Boolean.parseBoolean(configuration.getAttribute(Tags.EVENTDRIVEN)));
                 // TODO parameters...
-                System.err.println("[BehaviourFactory] TODO - Conversion of parameters of behaviour configurations not supported, yet." + confID);
+                System.err.println("[BehaviourFactory] TODO - Conversion of parameters of behaviour configurations not supported, yet. Behaviour configuration ID: " + confID);
             } else {
                 System.out.println("[BehaviourFactory] Info - Multiple Behaviour Configurations are not supported anymore. Dropping the configuration with ID: " + confID);
             }

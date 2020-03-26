@@ -1,4 +1,4 @@
-#include "CNSMTGSolver.h"
+#include "constraintsolver/CNSMTGSolver.h"
 //#define CNSMTGSOLVER_LOG
 //#define DO_PREPROPAGATION
 //#define CNSMTGSolver_DEBUG
@@ -6,8 +6,8 @@
 #include "essentials/Configuration.h"
 #include "essentials/SystemConfig.h"
 
-#include "CNSat.h"
-#include "FormulaTransform.h"
+#include "constraintsolver/CNSat.h"
+#include "constraintsolver/FormulaTransform.h"
 #include "intervals/IntervalPropagator.h"
 #include "types/Assignment.h"
 #include "types/Clause.h"

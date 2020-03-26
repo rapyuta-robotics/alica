@@ -1,11 +1,7 @@
-using namespace std;
-
 #include "BehaviourCreator.h"
+#include "GSolver/SolverTestBehaviour.h"
+#include "ProblemModule/QueryBehaviour1.h"
 #include "engine/BasicBehaviour.h"
-
-#include "Plans/ProblemModule/QueryBehaviour1.h"
-
-#include "Plans/GSolver/SolverTestBehaviour.h"
 
 namespace alica
 {
@@ -14,23 +10,18 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId)
+std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
 {
-    switch (behaviourConfId) {
-
-    case 1479556115746:
-
-        return make_shared<QueryBehaviour1>();
+    switch (behaviourId) {
+    case 1417424455986:
+        return std::make_shared<SolverTestBehaviour>();
         break;
-
-    case 1417424483320:
-
-        return make_shared<SolverTestBehaviour>();
+    case 1479556104511:
+        return std::make_shared<QueryBehaviour1>();
         break;
-
     default:
-        cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
-        throw new exception();
+        std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
+        throw new std::exception();
         break;
     }
 }

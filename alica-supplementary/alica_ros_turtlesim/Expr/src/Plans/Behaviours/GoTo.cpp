@@ -3,7 +3,7 @@ using namespace std;
 
 /*PROTECTED REGION ID(inccpp1544160969061) ENABLED START*/  // Add additional includes here
 #include <alica_ros_turtlesim/world_model.hpp>
-#include <CGSolver.h>
+#include <constraintsolver/CGSolver.h>
 /*PROTECTED REGION END*/
 namespace alica {
 /*PROTECTED REGION ID(staticVars1544160969061) ENABLED START*/  // initialise static variables here

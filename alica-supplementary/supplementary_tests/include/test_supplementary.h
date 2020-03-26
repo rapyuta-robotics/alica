@@ -7,7 +7,7 @@
 #include "UtilityFunctionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
-#include <CGSolver.h>
+#include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
@@ -50,7 +50,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setRobotName("nase");
+        alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
         ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
@@ -114,7 +114,7 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext::setRobotName(getHostName(i));
+            alica::AlicaContext::setLocalAgentName(getHostName(i));
             alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();

@@ -1,5 +1,5 @@
 
-#include "Plans/VariableHandling/Lvl11524452759599.h"
+#include "VariableHandling/Lvl11524452759599.h"
 #include <test_supplementary.h>
 
 #include "engine/Assignment.h"
@@ -7,7 +7,7 @@
 #include "engine/TeamObserver.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
-#include <CGSolver.h>
+#include <constraintsolver/CGSolver.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -49,12 +49,12 @@ protected:
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
 {
-    cout << "Starting engine..." << endl;
+    std::cout << "Starting engine..." << std::endl;
     aes[0]->start();
     aes[1]->start();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    chrono::milliseconds sleepTime(33);
+    std::chrono::milliseconds sleepTime(33);
     do {
         for (int i = 0; i < 3; ++i) {
             step(aes[0]);
@@ -118,7 +118,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     aes[0]->stepNotify();
     aes[1]->stepNotify();
     do {
-        this_thread::sleep_for(sleepTime);
+        std::this_thread::sleep_for(sleepTime);
     } while (!aes[0]->getPlanBase().isWaiting() || !aes[1]->getPlanBase().isWaiting());
 
     rp1 = aes[0]->getPlanBase().getDeepestNode();
