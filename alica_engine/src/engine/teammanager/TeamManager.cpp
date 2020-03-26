@@ -93,7 +93,7 @@ void TeamManager::readSelfFromConfig()
         _localAnnouncement.senderID = _engine->getID<uint64_t>(id);
     } else {
         _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
-        ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
+        ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
         bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
         if (persistId) {
             try {
@@ -101,7 +101,7 @@ void TeamManager::readSelfFromConfig()
                 configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
                 configLocal->store();
             } catch (...) {
-                ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+                ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
             }
         }
     }
@@ -274,11 +274,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
         return;
     }
 
-    ALICA_DEBUG_MSG("tm: Responding to agent: " << aq.senderID);
+    ALICA_DEBUG_MSG("TM: Responding to agent: " << aq.senderID);
     announcePresence();
 }
 
@@ -298,7 +298,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
         return;
     }
 
@@ -337,7 +337,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    ALICA_DEBUG_MSG("tm: Announcing presence");
+    ALICA_DEBUG_MSG("TM: Announcing presence " << _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _engine->getCommunicator().sendAgentAnnouncement(_localAnnouncement);
     }
