@@ -16,7 +16,7 @@ const Role* IRoleAssignment::getRole(essentials::IdentifierConstPtr robotId) con
         return iter->second;
     } else {
         std::stringstream ss;
-        ss << "RA: There is no role assigned for robot: " << *robotId << std::endl;
+        ss << "RA: There is no role assigned for robot: " << robotId << std::endl;
         AlicaEngine::abort(ss.str());
         return nullptr;
     }
