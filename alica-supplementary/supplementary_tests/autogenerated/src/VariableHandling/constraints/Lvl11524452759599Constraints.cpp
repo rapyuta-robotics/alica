@@ -75,7 +75,28 @@ void Constraint1524453470580::getConstraint(std::shared_ptr<ProblemDescriptor> c
 void Constraint1524453491764::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(cc1524453491764) ENABLED START*/
-    // Please describe your precondition constraint here
+    assert(c->getStaticVars().empty());
+    assert(c->getAgentVars().size() == 2);
+
+    autodiff::Variable* x1v = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[0]);
+    autodiff::Variable* y1v = static_cast<autodiff::Variable*>(c->getAgentVars()[0].getVars()[1]);
+
+    autodiff::Variable* x2v = static_cast<autodiff::Variable*>(c->getAgentVars()[1].getVars()[0]);
+    autodiff::Variable* y2v = static_cast<autodiff::Variable*>(c->getAgentVars()[1].getVars()[1]);
+
+    TermPtr x1 = x1v;
+    TermPtr y1 = y1v;
+    TermPtr x2 = x2v;
+    TermPtr y2 = y2v;
+
+    TermPtr constraint = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) > x1->getOwner()->constant(10000.0);
+    constraint &= x1 > y1;
+    constraint &= x2 > y2;
+
+    c->setConstraint(constraint);
+    TermPtr utility = x1->getOwner()->constant(1.0);
+
+    c->setUtility(utility);
     /*PROTECTED REGION END*/
 }
 } // namespace alica

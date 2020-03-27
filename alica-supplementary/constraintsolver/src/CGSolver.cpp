@@ -105,14 +105,14 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     for (const std::shared_ptr<ProblemDescriptor>& c : calls) {
         TermPtr constraintTerm = dynamic_cast<autodiff::Term*>(c->getConstraint());
         if (constraintTerm.get() == nullptr) {
-            std::cerr << "CGSolver: Constraint type not compatible with selected solver" << std::endl;
+            std::cerr << "CGSolver: Constraint type not compatible with selected solver or constraint does not exist." << std::endl;
             return false;
         }
         constraint = constraint & constraintTerm;
 
         TermPtr utilityTerm = dynamic_cast<autodiff::Term*>(c->getUtility());
         if (utilityTerm.get() == nullptr) {
-            std::cerr << "CGSolver: Utility type not compatible with selected solver" << std::endl;
+            std::cerr << "CGSolver: Utility type not compatible with selected solver  or utility does not exist." << std::endl;
             return false;
         }
         utility = utility + utilityTerm;
