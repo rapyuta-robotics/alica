@@ -29,6 +29,7 @@ public:
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
     bool isValid(uint64_t curTick);
+    bool isSynchronisationDone() { return _synchronisationDone; }
     bool integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick);
     void integrateSyncReady(std::shared_ptr<SyncReady> ready);
     const Synchronisation* getSynchronisation() const;
@@ -58,6 +59,7 @@ private:
     std::vector<SyncRow*> _rowsOK;
     std::vector<SyncRow*> _syncMatrix;
     SyncRow* _myRow;
+    bool _synchronisationDone;
 };
 std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc);
 } /* namespace alica */

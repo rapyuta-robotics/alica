@@ -341,7 +341,6 @@ private:
 template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
-    std::cout << "[AlicaContext] Clock stuff setter! ##########################" << std::endl;
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);

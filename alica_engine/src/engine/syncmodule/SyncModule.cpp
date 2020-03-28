@@ -54,22 +54,25 @@ void SyncModule::close()
  * Collects all failed synchronisation processes
  * and deletes the corresponding mapping.
  *
- * Called by the PlanBase once per iteration.
+ * @remark Called by the PlanBase once per iteration.
  */
 void SyncModule::tick()
 {
-    list<SynchronisationProcess*> failedSyncProcesses;
+    list<SynchronisationProcess*> endedSyncProcesses;
     lock_guard<mutex> lock(_lomutex);
-    // collect failed synchronisation processes
+    // collect ended synchronisation processes
     for (auto iter : _synchProcessMapping) {
         if (!iter.second->isValid(_ticks)) {
-            failedSyncProcesses.push_back(iter.second);
+            endedSyncProcesses.push_back(iter.second);
+        }
+        if (iter.second->isSynchronisationDone()) {
+            endedSyncProcesses.push_front(iter.second);
         }
         _ticks++;
     }
 
     // delete the failed processes from the mapping
-    for (const SynchronisationProcess* s : failedSyncProcesses) {
+    for (const SynchronisationProcess* s : endedSyncProcesses) {
         delete _synchProcessMapping[s->getSynchronisation()];
         _synchProcessMapping.erase(s->getSynchronisation());
     }
@@ -94,16 +97,12 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
     }
 }
 /**
- * Removes the given synchronisation from the mapping of ongoing
- * synchronisation processes and adds the synchronisation to the list
- * of successful synchronisations.
+ * Adds the synchronisation to the list of successful synchronisations.
  * @param sync The successful synchronisation.
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-    ALICA_DEBUG_MSG( "SM: Synchronisation successful for ID: " << sync->getId());
-    delete _synchProcessMapping[sync];
-    _synchProcessMapping.erase(sync);
+    ALICA_DEBUG_MSG( "[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId());
     _successfulSynchronisations.push_back(sync);
 }
 /**
@@ -111,7 +110,7 @@ void SyncModule::synchronisationDone(const Synchronisation* sync)
  * associated with the given transition. If it matches, the found
  * synchronisation is removed from the list of successful synchronisations.
  *
- * Called by the synchronisation rule in the RuleBook.
+ * @remark Called by the synchronisation rule in the RuleBook.
  * @param trans The transition that should be synchronised successful.
  * @return True, if transition is synchronised by a successful synchronisation. False, otherwise.
  */
@@ -133,19 +132,19 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG( "SM: " << _myId << " Received SyncTalk" << std::endl << *st );
+    ALICA_DEBUG_MSG( "[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st );
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
         const Transition* trans = _ae->getPlanRepository().getTransitions().find(sd.transitionID);
         if (trans == nullptr) {
-            cerr << "SM: Could not find Transition " << sd.transitionID << endl;
+            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Could not find Transition " << sd.transitionID);
             return;
         }
 
         const Synchronisation* synchronisation = trans->getSynchronisation();
         if (synchronisation == nullptr) {
-            cerr << "SM: Transition " << trans->getId() << " is not connected to a Synchronisation" << endl;
+            ALICA_ERROR_MSG( "[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation");
             return;
         }
 
@@ -181,11 +180,11 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     if (!_running || sr->senderID == _myId || _ae->getTeamManager().isAgentIgnored(sr->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG("SM: " << _myId << " Received SyncReady " << std::endl << *sr);
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncReady " << std::endl << *sr);
 
     const Synchronisation* synchronisation = _ae->getPlanRepository().getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
-        cerr << "SM: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID << endl;
+        ALICA_ERROR_MSG("[SM (" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID);
         return;
     }
 
@@ -203,7 +202,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_ae->maySendMessages())
         return;
     st.senderID = _myId;
-    ALICA_DEBUG_MSG("SM: " << _myId << " Sending SyncTalk " << std::endl << st);
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncTalk " << std::endl << st);
     _ae->getCommunicator().sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
@@ -211,7 +210,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_ae->maySendMessages())
         return;
     sr.senderID = _myId;
-    ALICA_DEBUG_MSG("SM: " << _myId << " Sending SyncReady " << std::endl << sr );
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr );
     _ae->getCommunicator().sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
@@ -221,7 +220,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-    ALICA_DEBUG_MSG("SM: " << _myId << " Sending Acknowledgements " << std::endl << st);
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending Acknowledgements " << std::endl << st);
     _ae->getCommunicator().sendSyncTalk(st);
 }
 

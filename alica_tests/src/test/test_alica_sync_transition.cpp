@@ -55,11 +55,11 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << *(aes[0]->getTeamManager().getLocalAgentID()) << std::endl;
         step(aes[0]);
-        std::cout << std::flush;
 
         std::cout << i << "AE ----------------------------------------------- " << *(aes[1]->getTeamManager().getLocalAgentID()) << std::endl;
+//        std::cout << "TEST Iteration " << i << std::endl;
         step(aes[1]);
-        std::cout << std::flush;
+//        std::cout << "TEST Iteration " << i+1 << std::endl;
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
@@ -74,6 +74,7 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
         }
         if (i == 5) {
+//            std::cout << "TEST Iteration " << i << std::endl;
             EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
             EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
         }
