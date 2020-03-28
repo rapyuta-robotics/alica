@@ -1,3 +1,4 @@
+#include "engine/syncmodule/SynchronisationProcess.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/TeamObserver.h"
@@ -8,7 +9,6 @@
 #include "engine/model/Transition.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/syncmodule/SyncRow.h"
-#include "engine/syncmodule/SynchronisationProcess.h"
 
 #define ALICA_DEBUG_LEVEL_DEBUG
 #include <alica_common_config/debug_output.h>
@@ -29,6 +29,7 @@ SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, essentials
         , _runningPlan(nullptr)
         , _myRow(nullptr)
         , _lastTalkData(nullptr)
+        , _synchronisationDone(false)
 {
     _syncStartTime = _ae->getAlicaClock().now();
     for (const Transition* t : sync->getInSync()) {
@@ -85,7 +86,9 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
         } else {
             // init my row
             SyncRow* sr = new SyncRow(sd);
-            sr->editReceivedBy().push_back(_myID);
+            if (find(sr->getReceivedBy().begin(), sr->getReceivedBy().end(), _myID) == sr->getReceivedBy().end()) {
+                sr->editReceivedBy().push_back(_myID);
+            }
             _myRow = sr;
             _syncMatrix.push_back(sr);
         }
@@ -94,7 +97,7 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
     if (maySendTalk) {
         std::lock_guard<mutex> lock(_syncMutex);
         if (isSyncComplete()) {
-            ALICA_DEBUG_MSG("SP: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready");
+            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready");
             sendSyncReady();
             _readyForSync = true;
         } else {
@@ -114,10 +117,10 @@ bool SynchronisationProcess::isValid(uint64_t curTick)
         // notify others if I am part of the synchronisation already (i.e. have an own row)
         if (_myRow != nullptr) {
             _myRow->editSyncData().conditionHolds = false;
-            ALICA_DEBUG_MSG("SP: isValid(): Failed due to Sync Timeout!");
+            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: isValid(): Failed due to Sync Timeout!");
             sendTalk(_myRow->getSyncData());
         }
-        ALICA_DEBUG_MSG("SP: isValid(): Not active!!");
+        ALICA_DEBUG_MSG("[SP (" << _myID << ")]: isValid(): Not active!!");
         return false;
     }
 
@@ -134,7 +137,7 @@ bool SynchronisationProcess::isValid(uint64_t curTick)
 
     if (_synchronisation->isFailOnSyncTimeOut()) {
         if (now > _synchronisation->getSyncTimeOut() + _syncStartTime) {
-            ALICA_DEBUG_MSG("SP: Failed due to Sync Timeout!");
+            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Failed due to Sync Timeout!");
             return false;
         }
     }
@@ -155,7 +158,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
         return false;
     }
 
-    ALICA_DEBUG_MSG("SP: Integrate SyncTalk in synchronisation - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
+    ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Integrate SyncTalk in synchronisation");
 
     for (const SyncData& sd : talk->syncData) {
         std::lock_guard<mutex> lock(_syncMutex);
@@ -175,15 +178,17 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
                 newRow->editReceivedBy().push_back(talk->senderID);
                 _syncMatrix.push_back(newRow);
             } else {
-                rowInMatrix->editReceivedBy().push_back(talk->senderID);
+                if (find(rowInMatrix->getReceivedBy().begin(), rowInMatrix->getReceivedBy().end(), talk->senderID) == rowInMatrix->getReceivedBy().end()) {
+                    rowInMatrix->editReceivedBy().push_back(talk->senderID);
+                }
             }
 
             if (isSyncComplete()) {
-                ALICA_DEBUG_MSG("SP: " << _myID << " Synchronisation " << _synchronisation->getId() << " ready");
+                ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " ready");
                 sendSyncReady();
                 _readyForSync = true;
             } else {
-                ALICA_DEBUG_MSG("SP: " << _myID << " Synchronisation " << _synchronisation->getId() << " not ready");
+                ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " not ready");
                 // always reset this in case someone revokes his commitment
                 _readyForSync = false;
             }
@@ -191,15 +196,16 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             // late acks...
             if (_readyForSync) {
                 if (allSyncReady()) {
-                    ALICA_DEBUG_MSG("SP: Synchronisation successful (IntTalk) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
+                    ALICA_DEBUG_MSG(
+                            "[SP (" << _myID << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
                     // notify sync module
                     _syncModule->synchronisationDone(_synchronisation);
+                    _synchronisationDone = true;
                 }
             }
         }
     }
-    ALICA_DEBUG_MSG("SP: " << _myID << "'s Process after integrating SyncTalk: " << std::endl << *this);
-
+    ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Process after integrating SyncTalk: " << std::endl << *this);
     return true;
 }
 
@@ -218,13 +224,14 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
         _receivedSyncReadys.push_back(ready);
     }
 
-    ALICA_DEBUG_MSG("SP: " << _myID << "'s Process after integrating SyncReady: " << std::endl << *this);
+    ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Process after integrating SyncReady: " << std::endl << *this);
     // check if all robots are ready
     if (_readyForSync) {
         if (allSyncReady()) {
             // notify _syncModul
-            ALICA_DEBUG_MSG("SP: Synchronisation successful (IntReady) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
+            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
             _syncModule->synchronisationDone(_synchronisation);
+            _synchronisationDone = true;
         }
     }
 }
