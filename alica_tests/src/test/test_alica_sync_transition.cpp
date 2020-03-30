@@ -57,9 +57,7 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
         step(aes[0]);
 
         std::cout << i << "AE ----------------------------------------------- " << *(aes[1]->getTeamManager().getLocalAgentID()) << std::endl;
-//        std::cout << "TEST Iteration " << i << std::endl;
         step(aes[1]);
-//        std::cout << "TEST Iteration " << i+1 << std::endl;
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
