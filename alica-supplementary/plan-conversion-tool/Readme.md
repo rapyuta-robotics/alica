@@ -36,7 +36,7 @@ At the time of writing this manual, we already converted all plans and auto-gene
 
 4. Prepare Run/Debug configurations, by opening the following dialogue via the drop-down menu right to the green hammer symbol:![Run-Dialogue](./img/Run-Dialogue.png)
 
-   4.1 Add the following **7** program arguments into a run/debug configuration (named Convert*) for converting all plans in the oldetc folder and store them into the newetc folder:
+   4.1 Add the following **7** program arguments into a run/debug configuration (named Convert*) for converting all plans in the oldetc folder and storing them into the newetc folder:
 
    ![Convert*](/home/emmeda/Work/rrws/src/alica-supplementary/plan-conversion-tool/img/Convert*.png)
 
