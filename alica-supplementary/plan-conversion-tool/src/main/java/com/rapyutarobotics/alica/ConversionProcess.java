@@ -49,6 +49,11 @@ public class ConversionProcess {
     private String codeGenerationPath;
     private static final String clangFormat = "clang-format";
 
+    // NOTE: These are the expected defaults for the old plan designer - NOT the new plan designer!
+    private static final String OLD_DEFAULT_PLANS_FOLDER = "plans";
+    private static final String OLD_DEFAULT_TASKS_FOLDER = "Misc";
+    private static final String OLD_DEFAULT_ROLES_FOLDER = "roles";
+
     public ReferenceCollection<Long, Long> epStateReferences = new ReferenceCollection<>(false);
     public ReferenceCollection<Long, Long> epTaskReferences = new ReferenceCollection<>(false);
     public ReferenceCollection<Long, Long> stateInTransitionReferences = new ReferenceCollection<>(true);
@@ -85,6 +90,18 @@ public class ConversionProcess {
 
     public PlanElement getElement(long id) {
         return this.planElements.get(id);
+    }
+
+    /**
+     * Set paths for parsing old plans, tasks, roles.
+     * It expects default names for each folder.
+     * @param basePath The path to the basic directory, typically denoted "etc".
+     */
+    public void setInputDirectory(String basePath) {
+        this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_PLANS_FOLDER).normalize().toFile().toString();
+        this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_ROLES_FOLDER).normalize().toFile().toString();
+        this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_TASKS_FOLDER).normalize().toFile().toString();
+        this.inputDirectoriesSet = true;
     }
 
     /**
