@@ -99,8 +99,8 @@ public class ConversionProcess {
      */
     public void setInputDirectory(String basePath) {
         this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_PLANS_FOLDER).normalize().toFile().toString();
-        this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_ROLES_FOLDER).normalize().toFile().toString();
-        this.basePlansPath = Paths.get(basePath, OLD_DEFAULT_TASKS_FOLDER).normalize().toFile().toString();
+        this.baseRolesPath = Paths.get(basePath, OLD_DEFAULT_ROLES_FOLDER).normalize().toFile().toString();
+        this.baseTasksPath = Paths.get(basePath, OLD_DEFAULT_TASKS_FOLDER).normalize().toFile().toString();
         this.inputDirectoriesSet = true;
     }
 
