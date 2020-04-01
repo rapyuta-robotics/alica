@@ -56,8 +56,6 @@ before_script:
     cd ~/catkin_ws/src && 
     wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
-        REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$' ;
-        ORIGINAL_BRANCH='NO_MATCH' ;
         while read LINE ; do
             echo $LINE ; 
         done < /travis/dependencies.rosinstall ;
