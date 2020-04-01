@@ -21,7 +21,7 @@ cmd="bash -c \"
         if [[ $ORIGINAL_BRANCH != NO_MATCH ]] ; then
             sed -i -e \"s/$ORIGINAL_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ;
             wstool merge -a -y /travis/dependencies.rosinstall ;
-        fi
+        fi ;
         if ! wstool up ; then
             sed -i -e \"s/$BRANCH/$BASE_BRANCH/g\" /travis/dependencies.rosinstall ;
             wstool merge -a -y /travis/dependencies.rosinstall ;
