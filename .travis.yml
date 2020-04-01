@@ -56,11 +56,11 @@ before_script:
     cd ~/catkin_ws/src && 
     wstool init && 
     if [[ -f /travis/dependencies.rosinstall ]] ; then 
-        REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$'
-        ORIGINAL_BRANCH='NO_MATCH'
+        REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$' ;
+        ORIGINAL_BRANCH='NO_MATCH' ;
         while read LINE ; do
-            echo $LINE 
-        done < /travis/dependencies.rosinstall
+            echo $LINE ; 
+        done < /travis/dependencies.rosinstall ;
         if [[ $ORIGINAL_BRANCH != 'NO_MATCH' ]] ; then
             sed -i -e \"s/$ORIGINAL_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ; 
             wstool merge -a -y /travis/dependencies.rosinstall ; 
