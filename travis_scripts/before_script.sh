@@ -18,7 +18,7 @@ cmd="bash -c \"
     cd ~/catkin_ws/src &&
     wstool init &&
     if [[ -f /travis/dependencies.rosinstall ]] ; then
-        if [[ $ORIGINAL_BRANCH != \"NO_MATCH\" ]] ; then
+        if [[ $ORIGINAL_BRANCH != NO_MATCH ]] ; then
             sed -i -e \"s/$ORIGINAL_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ;
             wstool merge -a -y /travis/dependencies.rosinstall ;
         fi
