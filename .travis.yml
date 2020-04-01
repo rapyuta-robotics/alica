@@ -38,7 +38,8 @@ install:
         python-wstool 
         python-catkin-tools 
         ros-$ROS_DISTRO-catkin 
-        ros-$ROS_DISTRO-rostest 
+        ros-$ROS_DISTRO-rostest
+        libyaml-cpp-dev 
         wget 
         curl && 
     source /opt/ros/$ROS_DISTRO/setup.bash && 
