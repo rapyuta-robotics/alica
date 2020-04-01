@@ -11,7 +11,7 @@ while read LINE ; do
         ORIGINAL_BRANCH=${BASH_REMATCH[1]} 
         break 
     fi
-done < ../dependencies.rosinstall 
+done < dependencies.rosinstall 
 
 
 cmd="bash -c \"
