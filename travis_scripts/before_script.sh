@@ -6,16 +6,18 @@ BASE_BRANCH=$2
 REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$'
 ORIGINAL_BRANCH="NO_MATCH"
 
+while read LINE ; do 
+    if [[ $LINE =~ $REGEX ]] ; then
+        ORIGINAL_BRANCH=${BASH_REMATCH[1]} 
+        break 
+    fi
+done < /travis/dependencies.rosinstall 
+
+
 cmd="bash -c \"
     cd ~/catkin_ws/src &&
     wstool init &&
     if [[ -f /travis/dependencies.rosinstall ]] ; then
-        while read LINE ; do
-            if [[ $LINE =~ $REGEX ]] ; then
-                ORIGINAL_BRANCH=${BASH_REMATCH[1]} ;
-                break ;
-            fi
-        done < /travis/dependencies.rosinstall ;
         if [[ $ORIGINAL_BRANCH != \"NO_MATCH\" ]] ; then
             sed -i -e \"s/$ORIGINAL_BRANCH/$BRANCH/g\" /travis/dependencies.rosinstall ;
             wstool merge -a -y /travis/dependencies.rosinstall ;
