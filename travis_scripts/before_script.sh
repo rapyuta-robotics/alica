@@ -1,6 +1,6 @@
 #!/bin/bash
 set -ev
-echo pwd
+echo $PWD
 BRANCH=$1
 BASE_BRANCH=$2
 REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$'
