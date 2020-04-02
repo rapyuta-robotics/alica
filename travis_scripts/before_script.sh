@@ -25,12 +25,11 @@ cmd="bash -c \"
         if ! wstool up ; then
             sed -i -e \"s/$BRANCH/$BASE_BRANCH/g\" /travis/dependencies.rosinstall ;
             wstool merge -a -y /travis/dependencies.rosinstall ;
-            wstool up ;
-        fi ;
-        if ! wstool up ; then
-            sed -i -e \"s/$BASE_BRANCH/$ORIGINAL_BRANCH/g\" /travis/dependencies.rosinstall ;
-            wstool merge -a -y /travis/dependencies.rosinstall ;
-            wstool up ;
+            if ! wstool up ; then
+                sed -i -e \"s/$BASE_BRANCH/$ORIGINAL_BRANCH/g\" /travis/dependencies.rosinstall ;
+                wstool merge -a -y /travis/dependencies.rosinstall ;
+                wstool up ;
+            fi ;
         fi ;
     fi &&
     cd ~/catkin_ws &&
