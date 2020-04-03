@@ -82,11 +82,10 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
-    AgentIDConstPtr _agentId;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
 
-    void readSelfFromConfig();
+    void readSelfFromConfig(AgentIDConstPtr agentID);
     void announcePresence() const;
     void queryPresence() const;
     Agent* getAgent(AgentIDConstPtr agentId) const;
