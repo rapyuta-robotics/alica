@@ -6,7 +6,7 @@ namespace essentials
 AgentID::AgentID(uint64_t prototypeID)
         : _type(UUID_TYPE)
 {
-    this->setID(prototypeID);
+    setID(prototypeID);
 }
 
 AgentID::AgentID(const std::vector<uint8_t>& bytes)
