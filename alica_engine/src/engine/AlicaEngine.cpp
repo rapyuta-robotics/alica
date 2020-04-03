@@ -27,14 +27,14 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, AgentIDConstPtr agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, AgentID* agentID)
         : _ctx(ctx)
         , _stepCalled(false)
         , _log(this)
         , _stepEngine(stepEngine)
         , _agentIDManager(new essentials::AgentIDFactory())
         , _planParser(&_planRepository)
-        , _teamManager(this, agentID)
+        , _teamManager(this, _agentIDManager.getIDFromBytes(agentID->toByteVector()))
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
