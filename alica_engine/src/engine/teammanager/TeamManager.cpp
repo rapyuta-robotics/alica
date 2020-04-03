@@ -59,7 +59,6 @@ TeamManager::TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
-        , _agentId(agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
@@ -68,7 +67,7 @@ TeamManager::TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
-    readSelfFromConfig();
+    readSelfFromConfig(agentID);
 }
 
 TeamManager::~TeamManager() {}
@@ -83,12 +82,12 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig()
+void TeamManager::readSelfFromConfig(AgentIDConstPtr agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getRobotName();
 
-    if (_agentId == nullptr) {
+    if (agentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
         uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
         if (id != notAValidID) {
@@ -108,8 +107,7 @@ void TeamManager::readSelfFromConfig()
             }
         }
     } else {
-        uint64_t id = *_agentId;
-        _localAnnouncement.senderID = _engine->getId(id);
+        _localAnnouncement.senderID = agentID;
     }
 
     std::random_device rd;
