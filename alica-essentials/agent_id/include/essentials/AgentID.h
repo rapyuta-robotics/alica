@@ -14,6 +14,7 @@ class AgentID
         : _type(UUID_TYPE)
     {
     }
+    AgentID(uint64_t prototypeID);
     AgentID(const std::vector<uint8_t>& bytes);
     AgentID(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
     virtual ~AgentID();
@@ -60,9 +61,22 @@ class AgentID
     static const uint8_t UUID_TYPE = 2;
 
   private:
+    template <class Prototype>
+    void setID(Prototype& idPrototype);
+
     std::vector<uint8_t> _id;
     uint8_t _type;
 };
+
+template <class Prototype>
+void AgentID::setID(Prototype& prototypeID)
+{
+    // little-endian encoding
+    // TODO: replace with memcpy or std copy
+    for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
+        _id.push_back(*(((uint8_t*)&prototypeID) + i));
+    }
+}
 
 struct AgentIDComparator
 {
@@ -87,4 +101,4 @@ struct hash<essentials::AgentID>
 {
     std::size_t operator()(const essentials::AgentID& id) const noexcept { return id.hash(); }
 };
-}
+} // namespace std
