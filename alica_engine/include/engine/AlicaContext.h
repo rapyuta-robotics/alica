@@ -126,7 +126,7 @@ public:
      *
      * @note This is the main alica api class
      */
-    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentID* agentID = nullptr);
+    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentID& agentID = AgentID());
 
     /**
      * Destroys AlicaContext object.
@@ -159,7 +159,7 @@ public:
 
     /**
      * Set Alica Clock choose between RosClock or systemClock (std::chrono)
-     * 
+     *
      * @note ClockType must be a derived class of AlicaClock
      * @note This must be called before initializing context
      */
