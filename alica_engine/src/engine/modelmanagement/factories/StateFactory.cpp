@@ -25,10 +25,11 @@ State* StateFactory::create(const YAML::Node& stateNode)
             Factory::stateOutTransitionReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
         }
     }
-    if (Factory::isValid(stateNode[alica::Strings::abstractPlans])) {
-        const YAML::Node& abstractPlans = stateNode[alica::Strings::abstractPlans];
-        for (YAML::const_iterator it = abstractPlans.begin(); it != abstractPlans.end(); ++it) {
-            Factory::stateAbstractPlanReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
+    if (Factory::isValid(stateNode[alica::Strings::confAbstractPlanWrappers])) {
+        const YAML::Node& confAbstractPlanWrappers = stateNode[alica::Strings::confAbstractPlanWrappers];
+        for (YAML::const_iterator it = confAbstractPlanWrappers.begin(); it != confAbstractPlanWrappers.end(); ++it) {
+            // TODO-Confs
+            //            Factory::stateAbstractPlanReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
         }
     }
     if (Factory::isValid(stateNode[alica::Strings::variableBindings])) {
@@ -40,7 +41,8 @@ State* StateFactory::create(const YAML::Node& stateNode)
     return state;
 }
 
-void StateFactory::attachReferences() {
+void StateFactory::attachReferences()
+{
     VariableBindingFactory::attachReferences();
 
     // stateInTransitionReferences
@@ -60,6 +62,7 @@ void StateFactory::attachReferences() {
     Factory::stateOutTransitionReferences.clear();
 
     // stateAbstractPlanReferences
+    // TODO-Confs
     for (std::pair<int64_t, int64_t> pairs : Factory::stateAbstractPlanReferences) {
         State* st = (State*) Factory::getElement(pairs.first);
         AbstractPlan* p = (AbstractPlan*) Factory::getElement(pairs.second);
