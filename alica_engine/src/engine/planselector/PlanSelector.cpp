@@ -14,6 +14,7 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
@@ -76,11 +77,11 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
 /**
  * Solves the task allocation problem for a given state.
  */
-bool PlanSelector::getPlansForState(RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
+bool PlanSelector::getPlansForState(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
     _pap.reset();
     try {
-        return getPlansForStateInternal(planningParent, plans, robotIDs, o_plans);
+        return getPlansForStateInternal(planningParent, wrappers, robotIDs, o_plans);
     } catch (const PoolExhaustedException& pee) {
         ALICA_ERROR_MSG(pee.what());
         _pap.increaseSize();
@@ -180,7 +181,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
             agents.clear();
             rp->getAssignment().getAgentsWorking(ep, agents);
 
-            found = getPlansForStateInternal(rp, rp->getActiveState()->getPlans(), agents, rpChildren);
+            found = getPlansForStateInternal(rp, rp->getActiveState()->getConfAbstractPlanWrappers(), agents, rpChildren);
         } else {
             ALICA_DEBUG_MSG("PS: no recursion due to utilitycheck");
             // Don't calculate children, because we have an
@@ -203,11 +204,12 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 }
 
 bool PlanSelector::getPlansForStateInternal(
-        RunningPlan* planningParent, const AbstractPlanGrp& plans, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
+        RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
     ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent:" << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
-                                                           << " plan count: " << plans.size() << " robot count: " << robotIDs.size() << " ######>");
-    for (const AbstractPlan* ap : plans) {
+                                                           << " plan count: " << wrappers.size() << " robot count: " << robotIDs.size() << " ######>");
+    for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
+        const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
             RunningPlan* rp = _pb->makeRunningPlan(beh);
             // A Behaviour is a Plan too (in this context)

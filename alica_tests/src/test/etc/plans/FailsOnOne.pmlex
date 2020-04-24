@@ -1,0 +1,23 @@
+{
+  "plan" : "FailsOnOne.pml#1530069246103",
+  "uiElementMap" : {
+    "1530069246105" : {
+      "id" : 1587741257394,
+      "name" : "1587741257394",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1530069246104" : {
+      "id" : 1587741257393,
+      "name" : "1587741257393",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

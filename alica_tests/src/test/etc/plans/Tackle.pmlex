@@ -1,0 +1,23 @@
+{
+  "plan" : "Tackle.pml#1402489318663",
+  "uiElementMap" : {
+    "1402489329142" : {
+      "id" : 1587741257408,
+      "name" : "1587741257408",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489329141" : {
+      "id" : 1587741257407,
+      "name" : "1587741257407",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

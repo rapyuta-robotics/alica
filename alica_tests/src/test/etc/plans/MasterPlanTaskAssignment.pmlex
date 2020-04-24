@@ -1,0 +1,77 @@
+{
+  "plan" : "MasterPlanTaskAssignment.pml#1407152758497",
+  "uiElementMap" : {
+    "1407152758498" : {
+      "id" : 1587741257497,
+      "name" : "1587741257497",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152951886" : {
+      "id" : 1587741257498,
+      "name" : "1587741257498",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152758499" : {
+      "id" : 1587741257501,
+      "name" : "1587741257501",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152902493" : {
+      "id" : 1587741257504,
+      "name" : "1587741257504",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152900425" : {
+      "id" : 1587741257503,
+      "name" : "1587741257503",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152894887" : {
+      "id" : 1587741257502,
+      "name" : "1587741257502",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152962295" : {
+      "id" : 1587741257499,
+      "name" : "1587741257499",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407152969078" : {
+      "id" : 1587741257500,
+      "name" : "1587741257500",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

@@ -11,10 +11,10 @@ namespace alica
 {
 class AbstractPlan;
 class AlicaElement;
-class BehaviourConfiguration;
 class Capability;
 class CapValue;
 class Condition;
+class ConfAbstractPlanWrapper;
 class DomainVariable;
 class EntryPoint;
 class FailureState;
@@ -32,9 +32,9 @@ class Transition;
 class Variable;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
+using ConfAbstractPlanWrapperGrp = std::vector<const ConfAbstractPlanWrapper*>;
 using AgentGrp = std::vector<essentials::IdentifierConstPtr>;
 using AlicaElementGrp = std::vector<const AlicaElement*>;
-using BehaviourConfigurationGrp = std::vector<const BehaviourConfiguration*>;
 using CapabilityGrp = std::vector<const Capability*>;
 using CapValueGrp = std::vector<const CapValue*>;
 using ConditionGrp = std::vector<const Condition*>;
@@ -42,7 +42,6 @@ using DomainVariableGrp = std::vector<const DomainVariable*>;
 using EntryPointGrp = std::vector<const EntryPoint*>;
 using FailureStateGrp = std::vector<const FailureState*>;
 using IdGrp = std::vector<int64_t>;
-using ParameterGrp = std::vector<const Parameter*>;
 using VariableBindingGrp = std::vector<const VariableBinding*>;
 using PlanGrp = std::vector<const Plan*>;
 using QuantifierGrp = std::vector<const Quantifier*>;
@@ -54,8 +53,7 @@ using TaskGrp = std::vector<const Task*>;
 using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
-using BehaviourParameterMap = std::unordered_map<std::string, std::string>;
-
+using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<essentials::IdentifierConstPtr, const State*>;
 
 } // namespace alica

@@ -1,7 +1,9 @@
 #include "engine/modelmanagement/factories/StateFactory.h"
 #include "engine/model/State.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/VariableBindingFactory.h"
+#include "engine/modelmanagement/factories/ConfAbstractPlanWrapperFactory.h"
 
 namespace alica
 {
@@ -28,8 +30,7 @@ State* StateFactory::create(const YAML::Node& stateNode)
     if (Factory::isValid(stateNode[alica::Strings::confAbstractPlanWrappers])) {
         const YAML::Node& confAbstractPlanWrappers = stateNode[alica::Strings::confAbstractPlanWrappers];
         for (YAML::const_iterator it = confAbstractPlanWrappers.begin(); it != confAbstractPlanWrappers.end(); ++it) {
-            // TODO-Confs
-            //            Factory::stateAbstractPlanReferences.push_back(std::pair<int64_t, int64_t>(state->getId(), Factory::getReferencedId(*it)));
+            state->_confAbstractPlanWrappers.push_back(ConfAbstractPlanWrapperFactory::create(*it));
         }
     }
     if (Factory::isValid(stateNode[alica::Strings::variableBindings])) {
@@ -44,6 +45,7 @@ State* StateFactory::create(const YAML::Node& stateNode)
 void StateFactory::attachReferences()
 {
     VariableBindingFactory::attachReferences();
+    ConfAbstractPlanWrapperFactory::attachReferences();
 
     // stateInTransitionReferences
     for (std::pair<int64_t, int64_t> pairs : Factory::stateInTransitionReferences) {
@@ -60,14 +62,5 @@ void StateFactory::attachReferences()
         st->_outTransitions.push_back(t);
     }
     Factory::stateOutTransitionReferences.clear();
-
-    // stateAbstractPlanReferences
-    // TODO-Confs
-    for (std::pair<int64_t, int64_t> pairs : Factory::stateAbstractPlanReferences) {
-        State* st = (State*) Factory::getElement(pairs.first);
-        AbstractPlan* p = (AbstractPlan*) Factory::getElement(pairs.second);
-        st->_plans.push_back(p);
-    }
-    Factory::stateAbstractPlanReferences.clear();
 }
 } // namespace alica

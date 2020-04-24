@@ -16,6 +16,7 @@ using namespace std;
 #include "engine/model/Quantifier.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
@@ -67,8 +68,9 @@ protected:
         if (entryPointID != 0) {
             EXPECT_EQ(entryPointID, s->getEntryPoint()->getId()) << "Wrong EntryPoint for state!" << endl;
         }
-        EXPECT_EQ(absPlanIDs.size(), s->getPlans().size()) << "Number of abstractPlans didnt fit plans size." << endl;
-        for (const alica::AbstractPlan* p : s->getPlans()) {
+        EXPECT_EQ(absPlanIDs.size(), s->getConfAbstractPlanWrappers().size()) << "Number of abstractPlans didnt fit plans size." << endl;
+        for (const ConfAbstractPlanWrapper* wrapper : s->getConfAbstractPlanWrappers()) {
+            const alica::AbstractPlan* p = wrapper->getAbstractPlan();
             EXPECT_TRUE(find(absPlanIDs.begin(), absPlanIDs.end(), p->getId()) != absPlanIDs.end()) << "Unknown id for AbstractPlan!" << endl;
         }
         if (inTransitions.size() != 0) {

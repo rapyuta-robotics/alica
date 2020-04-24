@@ -7,6 +7,9 @@
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/Configuration.h"
+#include "engine/model/Parameter.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
@@ -226,9 +229,23 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
-    const auto& entry = this->_behaviour->getParameters().find(key);
-    if (entry != this->_behaviour->getParameters().end()) {
-        valueOut = entry->second;
+    // TODO-Conf: do this only once, when the basic behaviour is instantiated -> it needs to be instantiated once per occurrence in plan tree
+    const auto& wrappers = this->getPlanContext().getRunningPlan()->getActiveState()->getConfAbstractPlanWrappers();
+    const Configuration* configuration = nullptr;
+    for (const auto wrapper : wrappers) {
+        if (wrapper->getAbstractPlan()->getId() == this->_behaviour->getId()) {
+            configuration = wrapper->getConfiguration();
+            break;
+        }
+    }
+
+    if (!configuration) {
+        return false;
+    }
+
+    const auto& parameter = configuration->getParameters().find(key);
+    if (parameter != configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
         return true;
     } else {
         return false;
