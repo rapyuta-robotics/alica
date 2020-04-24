@@ -66,7 +66,7 @@
       "variable" : 1414068572540,
       "subPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
       "subVariable" : "Behaviour/ConstraintUsingBehaviour.beh#1416487733086"
-    }, 1416488166139, 1416488172649 ],
+    } ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
   } ],
