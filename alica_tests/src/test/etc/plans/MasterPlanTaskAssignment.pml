@@ -56,7 +56,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407152758497,
-    "abstractPlans" : [ "PlanOne.pml#1407153611768", "Attack.pty#1407153314946" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662976,
+      "name" : "1587718662976",
+      "comment" : "",
+      "abstractPlan" : "PlanOne.pml#1407153611768",
+      "configuration" : null
+    }, {
+      "id" : 1587718662978,
+      "name" : "1587718662978",
+      "comment" : "",
+      "abstractPlan" : "Attack.pty#1407153314946",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -67,7 +79,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407152758497,
-    "abstractPlans" : [ "MidFieldPlayPlan.pml#1402488770050", "PlanOne.pml#1407153611768" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662981,
+      "name" : "1587718662981",
+      "comment" : "",
+      "abstractPlan" : "MidFieldPlayPlan.pml#1402488770050",
+      "configuration" : null
+    }, {
+      "id" : 1587718662983,
+      "name" : "1587718662983",
+      "comment" : "",
+      "abstractPlan" : "PlanOne.pml#1407153611768",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -78,7 +102,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407152758497,
-    "abstractPlans" : [ "Defend.pml#1402488893641", "PlanOne.pml#1407153611768" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662986,
+      "name" : "1587718662986",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    }, {
+      "id" : 1587718662988,
+      "name" : "1587718662988",
+      "comment" : "",
+      "abstractPlan" : "PlanOne.pml#1407153611768",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -89,7 +125,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407152758497,
-    "abstractPlans" : [ "GoalPlan.pml#1402488870347", "PlanOne.pml#1407153611768" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662991,
+      "name" : "1587718662991",
+      "comment" : "",
+      "abstractPlan" : "GoalPlan.pml#1402488870347",
+      "configuration" : null
+    }, {
+      "id" : 1587718662993,
+      "name" : "1587718662993",
+      "comment" : "",
+      "abstractPlan" : "PlanOne.pml#1407153611768",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

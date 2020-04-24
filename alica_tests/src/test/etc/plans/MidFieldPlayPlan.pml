@@ -45,7 +45,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488770050,
-    "abstractPlans" : [ "Behaviour/MidFieldStandard.beh#1402488696205" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662682,
+      "name" : "1587718662682",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/MidFieldStandard.beh#1402488696205",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489257607, 1402489276995 ],
     "inTransitions" : [ ]
@@ -56,7 +62,25 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488770050,
-    "abstractPlans" : [ "Tackle.pml#1402489318663", "Behaviour/Attack.beh#1402488848841", "Defend.pml#1402488893641" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662685,
+      "name" : "1587718662685",
+      "comment" : "",
+      "abstractPlan" : "Tackle.pml#1402489318663",
+      "configuration" : null
+    }, {
+      "id" : 1587718662687,
+      "name" : "1587718662687",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    }, {
+      "id" : 1587718662689,
+      "name" : "1587718662689",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402489257607 ]
@@ -67,7 +91,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488770050,
-    "abstractPlans" : [ "Behaviour/Tackle.beh#1402488939130" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662692,
+      "name" : "1587718662692",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Tackle.beh#1402488939130",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402489276995 ]
@@ -78,7 +108,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488770050,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402500843072 ],
     "inTransitions" : [ ]
@@ -89,7 +119,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488770050,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402500843072 ]

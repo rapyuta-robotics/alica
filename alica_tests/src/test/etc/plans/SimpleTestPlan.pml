@@ -44,7 +44,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1412252439925,
-    "abstractPlans" : [ "Behaviour/MidFieldStandard.beh#1402488696205" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662588,
+      "name" : "1587718662588",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/MidFieldStandard.beh#1402488696205",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1412761925032 ],
     "inTransitions" : [ ]
@@ -55,7 +61,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1412252439925,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662591,
+      "name" : "1587718662591",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1412761925032 ]

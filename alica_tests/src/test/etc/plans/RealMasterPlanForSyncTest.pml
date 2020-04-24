@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418902217839,
-    "abstractPlans" : [ "MasterSyncTransition.pml#1418825395939" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662652,
+      "name" : "1587718662652",
+      "comment" : "",
+      "abstractPlan" : "MasterSyncTransition.pml#1418825395939",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

@@ -26,7 +26,25 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1428508768572,
-    "abstractPlans" : [ "Behaviour/TriggerA.beh#1428508297492", "Behaviour/TriggerB.beh#1428508316905", "Behaviour/TriggerC.beh#1428508355209" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662751,
+      "name" : "1587718662751",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerA.beh#1428508297492",
+      "configuration" : null
+    }, {
+      "id" : 1587718662753,
+      "name" : "1587718662753",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerB.beh#1428508316905",
+      "configuration" : null
+    }, {
+      "id" : 1587718662755,
+      "name" : "1587718662755",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerC.beh#1428508355209",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1429017235181 ],
     "inTransitions" : [ ]
@@ -37,7 +55,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1428508768572,
-    "abstractPlans" : [ "Behaviour/NotToTrigger.beh#1429017274116" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662758,
+      "name" : "1587718662758",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/NotToTrigger.beh#1429017274116",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1429017235181 ]
