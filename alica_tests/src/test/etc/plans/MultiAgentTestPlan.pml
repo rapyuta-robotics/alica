@@ -46,7 +46,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662849,
+      "name" : "1587718662849",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1413201368286 ],
     "inTransitions" : [ ]
@@ -57,7 +63,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662852,
+      "name" : "1587718662852",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1413201050743 ],
     "inTransitions" : [ ]
@@ -68,7 +80,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662855,
+      "name" : "1587718662855",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1413201367062 ],
     "inTransitions" : [ 1413201050743 ]
@@ -79,7 +97,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1413201368286 ],
@@ -92,7 +110,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1413201367062 ],
@@ -105,7 +123,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200862180,
-    "abstractPlans" : [ "Behaviour/AttackOpp.beh#1402489351885" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662860,
+      "name" : "1587718662860",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/AttackOpp.beh#1402489351885",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

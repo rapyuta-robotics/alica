@@ -19,5 +19,5 @@
   "eventDriven" : false,
   "preCondition" : null,
   "runtimeCondition" : null,
-  "postCondition" : null,
+  "postCondition" : null
 }

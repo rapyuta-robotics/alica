@@ -46,7 +46,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153663917,
-    "abstractPlans" : [ "PlanFour.pml#1407153683051", "GoalPlan.pml#1402488870347" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662883,
+      "name" : "1587718662883",
+      "comment" : "",
+      "abstractPlan" : "PlanFour.pml#1407153683051",
+      "configuration" : null
+    }, {
+      "id" : 1587718662885,
+      "name" : "1587718662885",
+      "comment" : "",
+      "abstractPlan" : "GoalPlan.pml#1402488870347",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -57,7 +69,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153663917,
-    "abstractPlans" : [ "PlanFour.pml#1407153683051", "MidFieldPlayPlan.pml#1402488770050" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662888,
+      "name" : "1587718662888",
+      "comment" : "",
+      "abstractPlan" : "PlanFour.pml#1407153683051",
+      "configuration" : null
+    }, {
+      "id" : 1587718662890,
+      "name" : "1587718662890",
+      "comment" : "",
+      "abstractPlan" : "MidFieldPlayPlan.pml#1402488770050",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -68,7 +92,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153663917,
-    "abstractPlans" : [ "PlanFour.pml#1407153683051", "Defend.pml#1402488893641" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662893,
+      "name" : "1587718662893",
+      "comment" : "",
+      "abstractPlan" : "PlanFour.pml#1407153683051",
+      "configuration" : null
+    }, {
+      "id" : 1587718662895,
+      "name" : "1587718662895",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

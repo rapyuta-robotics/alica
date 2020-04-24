@@ -46,7 +46,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488634525,
-    "abstractPlans" : [ "Tackle.pml#1402489318663", "Behaviour/AttackOpp.beh#1402489351885" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663068,
+      "name" : "1587718663068",
+      "comment" : "",
+      "abstractPlan" : "Tackle.pml#1402489318663",
+      "configuration" : null
+    }, {
+      "id" : 1587718663070,
+      "name" : "1587718663070",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/AttackOpp.beh#1402489351885",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489459382 ],
     "inTransitions" : [ 1402489460694 ]
@@ -57,7 +69,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488634525,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663073,
+      "name" : "1587718663073",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489460694 ],
     "inTransitions" : [ 1402489459382 ]

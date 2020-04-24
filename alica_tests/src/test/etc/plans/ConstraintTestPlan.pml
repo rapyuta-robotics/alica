@@ -45,7 +45,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1414068524245,
-    "abstractPlans" : [ "Behaviour/ConstraintUsingBehaviour.beh#1414068597716" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663002,
+      "name" : "1587718663002",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1416488166139,
       "name" : "MISSING_NAME",
@@ -60,7 +66,7 @@
       "variable" : 1414068572540,
       "subPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
       "subVariable" : "Behaviour/ConstraintUsingBehaviour.beh#1416487733086"
-    } ],
+    }, 1416488166139, 1416488172649 ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
   } ],

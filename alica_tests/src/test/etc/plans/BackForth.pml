@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1529456584982,
-    "abstractPlans" : [ "Behaviour/CountIndefinitely.beh#1529456643148" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587663024659,
+      "name" : "1587663024659",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/CountIndefinitely.beh#1529456643148",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1529456609989 ],
     "inTransitions" : [ 1529456610905 ]
@@ -37,7 +43,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1529456584982,
-    "abstractPlans" : [ "Behaviour/CountIndefinitely.beh#1529456643148" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587663024662,
+      "name" : "1587663024662",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/CountIndefinitely.beh#1529456643148",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1529456610905 ],
     "inTransitions" : [ 1529456609989 ]

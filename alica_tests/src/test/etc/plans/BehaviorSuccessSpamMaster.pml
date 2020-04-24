@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1522377375148,
-    "abstractPlans" : [ "Behaviour/SuccessSpam.beh#1522377401286" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663016,
+      "name" : "1587718663016",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/SuccessSpam.beh#1522377401286",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1522377944058 ],
     "inTransitions" : [ 1522377945069 ]
@@ -37,7 +43,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1522377375148,
-    "abstractPlans" : [ "Behaviour/SuccessSpam.beh#1522377401286" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663020,
+      "name" : "1587718663020",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/SuccessSpam.beh#1522377401286",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1522377945069 ],
     "inTransitions" : [ 1522377944058 ]

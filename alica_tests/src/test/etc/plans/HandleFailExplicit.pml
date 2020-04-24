@@ -26,7 +26,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004915640,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1530004992551 ],
     "inTransitions" : [ ]
@@ -37,7 +37,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004915640,
-    "abstractPlans" : [ "FailsOnOne.pml#1530069246103" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662548,
+      "name" : "1587718662548",
+      "comment" : "",
+      "abstractPlan" : "FailsOnOne.pml#1530069246103",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1530004993680 ],
     "inTransitions" : [ 1530004992551 ]
@@ -48,7 +54,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004915640,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1532424092280 ],
     "inTransitions" : [ 1530004993680 ]
@@ -59,7 +65,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004915640,
-    "abstractPlans" : [ "Behaviour/AlwaysFail.beh#1532424188199" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662553,
+      "name" : "1587718662553",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/AlwaysFail.beh#1532424188199",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1532424112331 ],
     "inTransitions" : [ 1532424092280 ]
@@ -70,7 +82,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004915640,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1532424112331 ]

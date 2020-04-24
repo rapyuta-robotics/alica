@@ -10,10 +10,10 @@
     "name" : "Attacker",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.6,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.6,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638
@@ -22,10 +22,10 @@
     "name" : "Defender",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.5,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.5,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638
@@ -34,10 +34,10 @@
     "name" : "DefendSupporter",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.5,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.5,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638
@@ -46,10 +46,10 @@
     "name" : "Keeper",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.5,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.5,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638
@@ -58,10 +58,10 @@
     "name" : "AttackSupporter",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.5,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.5,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638
@@ -70,10 +70,10 @@
     "name" : "Supporter",
     "comment" : "",
     "taskPriorities" : {
-      "taskrepository.tsk#1407153522080" : 0.5,
-      "taskrepository.tsk#1407153536219" : 0.5,
+      "taskrepository.tsk#1402488486725" : 0.5,
       "taskrepository.tsk#1225112227903" : 0.5,
-      "taskrepository.tsk#1402488486725" : 0.5
+      "taskrepository.tsk#1407153522080" : 0.5,
+      "taskrepository.tsk#1407153536219" : 0.5
     },
     "characteristics" : [ ],
     "roleSet" : 1410440904638

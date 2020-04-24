@@ -35,7 +35,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530069246103,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
