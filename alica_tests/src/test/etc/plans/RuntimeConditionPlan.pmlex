@@ -1,0 +1,23 @@
+{
+  "plan" : "RuntimeConditionPlan.pml#1418042806575",
+  "uiElementMap" : {
+    "1418042806576" : {
+      "id" : 1587741257461,
+      "name" : "1587741257461",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418042806577" : {
+      "id" : 1587741257462,
+      "name" : "1587741257462",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

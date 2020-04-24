@@ -13,9 +13,13 @@
 #include "engine/model/Transition.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/syncmodule/SyncModule.h"
+#include "engine/constraintmodul/ConditionStore.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+
 #include <essentials/SystemConfig.h>
-#include <engine/constraintmodul/ConditionStore.h>
-#include <engine/syncmodule/SyncModule.h>
+
+
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -347,11 +351,11 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     AgentGrp agents;
     rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
 
-    ALICA_DEBUG_MSG(rp.getActiveState()->getPlans().size() << " Plans in State " << rp.getActiveState()->getName());
+    ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
 
     std::vector<RunningPlan*> children;
-    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getPlans(), agents, children);
-    if (!ok || children.size() < rp.getActiveState()->getPlans().size()) {
+    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
+    if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
         ALICA_DEBUG_MSG("RB: PlanAllocFailed " << rp.getActivePlan()->getName());
         return PlanChange::FailChange;
