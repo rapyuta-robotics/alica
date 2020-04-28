@@ -7,6 +7,7 @@
 #include "Behaviour/DefendMid.h"
 #include "Behaviour/MidFieldStandard.h"
 #include "Behaviour/NotToTrigger.h"
+#include "Behaviour/ReadConfigurationBehaviour.h"
 #include "Behaviour/SuccessSpam.h"
 #include "Behaviour/Tackle.h"
 #include "Behaviour/TriggerA.h"
@@ -62,6 +63,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviour
         break;
     case 1532424188199:
         return std::make_shared<AlwaysFail>();
+        break;
+    case 1588061129360:
+        return std::make_shared<ReadConfigurationBehaviour>();
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

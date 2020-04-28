@@ -1,0 +1,13 @@
+{
+  "id" : 1588061129360,
+  "name" : "ReadConfigurationBehaviour",
+  "comment" : "",
+  "relativeDirectory" : "Behaviour",
+  "variables" : [ ],
+  "frequency" : 0,
+  "deferring" : 0,
+  "eventDriven" : false,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "postCondition" : null
+}

@@ -5,6 +5,10 @@
 #include "BackForth1529456584982.h"
 #include "BehaviorSuccessSpamMaster1522377375148.h"
 #include "BehaviourTriggerTestPlan1428508768572.h"
+#include "Configurations/ConfigurationTestPlan1588060981661.h"
+#include "Configurations/ReadConfInPlantypeOne1588061801734.h"
+#include "Configurations/ReadConfInPlantypeTwo1588061815706.h"
+#include "Configurations/ReadConfigurationPlan1588061334567.h"
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
@@ -134,6 +138,18 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long
         break;
     case 1530069246103:
         return std::make_shared<UtilityFunction1530069246103>();
+        break;
+    case 1588060981661:
+        return std::make_shared<UtilityFunction1588060981661>();
+        break;
+    case 1588061334567:
+        return std::make_shared<UtilityFunction1588061334567>();
+        break;
+    case 1588061801734:
+        return std::make_shared<UtilityFunction1588061801734>();
+        break;
+    case 1588061815706:
+        return std::make_shared<UtilityFunction1588061815706>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

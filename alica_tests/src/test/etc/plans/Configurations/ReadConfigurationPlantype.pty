@@ -1,0 +1,21 @@
+{
+  "id" : 1588061351007,
+  "name" : "ReadConfigurationPlantype",
+  "comment" : "",
+  "relativeDirectory" : "Configurations",
+  "variables" : [ ],
+  "variableBindings" : [ ],
+  "annotatedPlans" : [ {
+    "id" : 1588061825583,
+    "name" : "AnnotatedReadConfInPlantypeOne",
+    "comment" : "",
+    "activated" : true,
+    "plan" : "Configurations/ReadConfInPlantypeOne.pml#1588061801734"
+  }, {
+    "id" : 1588061832662,
+    "name" : "AnnotatedReadConfInPlantypeTwo",
+    "comment" : "",
+    "activated" : true,
+    "plan" : "Configurations/ReadConfInPlantypeTwo.pml#1588061815706"
+  } ]
+}

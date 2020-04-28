@@ -11,6 +11,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/Task.h>
 #include <engine/teammanager/TeamManager.h>
+
+//#define ALICA_DEBUG_LEVEL_DEBUG
 #include <alica_common_config/debug_output.h>
 
 namespace alica
