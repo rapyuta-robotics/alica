@@ -10,7 +10,7 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/syncmodule/SyncRow.h"
 
-#define ALICA_DEBUG_LEVEL_DEBUG
+//#define ALICA_DEBUG_LEVEL_DEBUG
 #include <alica_common_config/debug_output.h>
 
 namespace alica

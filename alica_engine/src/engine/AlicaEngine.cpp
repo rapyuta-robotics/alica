@@ -11,9 +11,10 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
 #include <essentials/IDManager.h>
 #include <essentials/SystemConfig.h>
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {

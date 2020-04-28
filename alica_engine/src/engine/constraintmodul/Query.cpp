@@ -15,6 +15,8 @@
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
 
+#include <alica_common_config/debug_output.h>
+
 #include <alica_solver_interface/SolverContext.h>
 #include <alica_solver_interface/SolverTerm.h>
 #include <alica_solver_interface/SolverVariable.h>

@@ -1,0 +1,23 @@
+{
+  "plan" : "Configurations/ConfigurationTestPlan.pml#1588060981661",
+  "uiElementMap" : {
+    "1588060991102" : {
+      "id" : 1588060991103,
+      "name" : "1588060991103",
+      "comment" : "",
+      "x" : -1053,
+      "y" : -188,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1588061024407" : {
+      "id" : 1588061024408,
+      "name" : "1588061024408",
+      "comment" : "",
+      "x" : -1232,
+      "y" : -212,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

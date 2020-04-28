@@ -8,7 +8,6 @@
 #include "engine/modelmanagement/Strings.h"
 
 #include <alica_common_config/debug_output.h>
-
 namespace alica
 {
 
@@ -54,6 +53,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::roleset_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseRolePath, locator);
+        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::configuration_extension)) {
+            fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else {
             std::cout << "Factory: Unknown file extension: " << locator << std::endl;
         }

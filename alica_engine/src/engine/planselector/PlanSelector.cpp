@@ -22,6 +22,9 @@
 
 #include <assert.h>
 
+#define ALICA_DEBUG_LEVEL_DEBUG
+#include <alica_common_config/debug_output.h>
+
 using std::vector;
 
 namespace alica
@@ -42,7 +45,7 @@ PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb)
 PlanSelector::~PlanSelector() {}
 
 /**
- * Edits data from the old running plan to call the method CreateRunningPlan appropriatly.
+ * Edits data from the old running plan to call the method CreateRunningPlan appropriately.
  */
 RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp)
 {
