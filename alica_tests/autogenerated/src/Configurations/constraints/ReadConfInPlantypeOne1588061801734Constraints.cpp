@@ -8,9 +8,12 @@ namespace alica
 // Plan:ReadConfInPlantypeOne
 /*
  * Tasks:
+ * - EP:1588103719479 : DefaultTask (1225112227903)
  *
  * States:
+ * - Default Name (1588103714226)
  *
  * Vars:
  */
+// State: Default Name
 } // namespace alica

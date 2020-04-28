@@ -1,0 +1,23 @@
+{
+  "plan" : "Configurations/ReadConfInPlantypeTwo.pml#1588061815706",
+  "uiElementMap" : {
+    "1588103732464" : {
+      "id" : 1588103732466,
+      "name" : "1588103732466",
+      "comment" : "",
+      "x" : 43,
+      "y" : -22,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1588103730327" : {
+      "id" : 1588103730328,
+      "name" : "1588103730328",
+      "comment" : "",
+      "x" : -212,
+      "y" : -2,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

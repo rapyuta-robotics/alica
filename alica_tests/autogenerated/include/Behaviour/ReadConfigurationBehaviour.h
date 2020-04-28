@@ -2,7 +2,6 @@
 
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1588061129360) ENABLED START*/
-// Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,16 +13,14 @@ public:
     virtual ~ReadConfigurationBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1588061129360) ENABLED START*/
-    // Add additional protected methods here
+    std::string testValue;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1588061129360) ENABLED START*/
-    // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1588061129360) ENABLED START*/
-    // Add additional private methods here
     /*PROTECTED REGION END*/
 };
 } /* namespace alica */
