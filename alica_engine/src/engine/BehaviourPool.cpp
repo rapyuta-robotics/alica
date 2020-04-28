@@ -7,6 +7,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -35,19 +36,22 @@ BehaviourPool::~BehaviourPool() {}
  */
 bool BehaviourPool::init(IBehaviourCreator& bc)
 {
-    const PlanRepository::Accessor<Behaviour>& behaviours = _ae->getPlanRepository().getBehaviours();
-    for (const Behaviour* beh : behaviours) {
-        auto basicBeh = bc.createBehaviour(beh->getId());
-        if (basicBeh != nullptr) {
-            // set stuff from behaviour configuration in basic behaviour object
-            basicBeh->setBehaviour(beh);
-            basicBeh->setDelayedStart(beh->getDeferring());
-            basicBeh->setInterval(1000 / (beh->getFrequency() < 1 ? 1 : beh->getFrequency()));
-            basicBeh->setEngine(_ae);
-            basicBeh->init();
-            _availableBehaviours.insert(make_pair(beh, basicBeh));
-        } else {
-            return false;
+    const PlanRepository::Accessor<ConfAbstractPlanWrapper>& wrappers = _ae->getPlanRepository().getConfAbstractPlanWrappers();
+    for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
+        if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(wrapper->getAbstractPlan())) {
+            auto basicBeh = bc.createBehaviour(behaviour->getId());
+            if (basicBeh != nullptr) {
+                // set stuff from behaviour and configuration in basic behaviour object
+                basicBeh->setConfiguration(wrapper->getConfiguration());
+                basicBeh->setBehaviour(behaviour);
+                basicBeh->setDelayedStart(behaviour->getDeferring());
+                basicBeh->setInterval(1000 / (behaviour->getFrequency() < 1 ? 1 : behaviour->getFrequency()));
+                basicBeh->setEngine(_ae);
+                basicBeh->init();
+                _availableBehaviours.insert(make_pair(behaviour, basicBeh));
+            } else {
+                return false;
+            }
         }
     }
     return true;

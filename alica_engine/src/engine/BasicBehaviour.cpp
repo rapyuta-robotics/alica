@@ -1,5 +1,3 @@
-#define BEH_DEBUG
-
 #include "engine/BasicBehaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
@@ -10,13 +8,13 @@
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include <engine/model/Configuration.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-
 #include <essentials/ITrigger.h>
 
 #include <assert.h>
@@ -44,6 +42,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
         , _context(nullptr)
+        , _configuration(nullptr)
 {
 }
 
@@ -74,6 +73,12 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     } else {
         _runThread = new std::thread(&BasicBehaviour::runInternalTimed, this);
     }
+}
+
+void BasicBehaviour::setConfiguration(const Configuration* conf)
+{
+    assert(_configuration == nullptr);
+    _configuration = conf;
 }
 
 /**
@@ -229,22 +234,13 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
-    // TODO-Conf: do this only once, when the basic behaviour is instantiated -> it needs to be instantiated once per occurrence in plan tree
-    const auto& wrappers = this->getPlanContext().getRunningPlan()->getActiveState()->getConfAbstractPlanWrappers();
-    const Configuration* configuration = nullptr;
-    for (const auto wrapper : wrappers) {
-        if (wrapper->getAbstractPlan()->getId() == this->_behaviour->getId()) {
-            configuration = wrapper->getConfiguration();
-            break;
-        }
-    }
-
-    if (!configuration) {
+    std::cout << "BasicBehaviour: getParameter called!" << std::endl;
+    if (!_configuration) {
         return false;
     }
 
-    const auto& parameter = configuration->getParameters().find(key);
-    if (parameter != configuration->getParameters().end()) {
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
         valueOut = parameter->second->getValue();
         return true;
     } else {

@@ -1,18 +1,9 @@
-/*
- * IBehaviourCreator.h
- *
- *  Created on: Jun 18, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef IBEHAVIOURCREATOR_H_
-#define IBEHAVIOURCREATOR_H_
+#pragma once
 
 #include <memory>
 
 namespace alica
 {
-using std::shared_ptr; // TODO: remove once autogeneration templates can be reworked
 class AlicaEngine;
 class BasicBehaviour;
 
@@ -24,5 +15,3 @@ public:
 };
 
 } /* namespace alica */
-
-#endif /* IBEHAVIOURCREATOR_H_ */
