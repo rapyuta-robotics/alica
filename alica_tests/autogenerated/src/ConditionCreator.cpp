@@ -20,8 +20,7 @@
 #include "Behaviour/TriggerC1428508355209.h"
 #include "BehaviourTriggerTestPlan1428508768572.h"
 #include "Configurations/ConfigurationTestPlan1588060981661.h"
-#include "Configurations/ReadConfInPlantypeOne1588061801734.h"
-#include "Configurations/ReadConfInPlantypeTwo1588061815706.h"
+#include "Configurations/ReadConfInPlantype1588061801734.h"
 #include "Configurations/ReadConfigurationPlan1588061334567.h"
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
@@ -198,6 +197,15 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditio
         break;
     case 1588069615553:
         return std::make_shared<PreCondition1588069615553>();
+        break;
+    case 1588246141557:
+        return std::make_shared<PreCondition1588246141557>();
+        break;
+    case 1588246144841:
+        return std::make_shared<PreCondition1588246144841>();
+        break;
+    case 1588253347213:
+        return std::make_shared<PreCondition1588253347213>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

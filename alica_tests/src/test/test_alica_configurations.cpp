@@ -32,7 +32,7 @@ class AlicaConfigurationPlan : public AlicaTestFixture
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "ConfigurationTestPlan"; }
-    bool stepEngine() const override { return false; }
+    bool stepEngine() const override { return true; }
 };
 
 /**
@@ -41,23 +41,45 @@ protected:
 TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
 {
     ASSERT_NO_SIGNAL
+    CounterClass::called = 0;
     // START ENGINE
     ae->start();
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
-    do {
-        ae->getAlicaClock().sleep(sleepTime);
-    } while (ae->getPlanBase().getRootNode() == nullptr);
+    step(ae);
 
-    // CHECK BEHAVIOURS
-    const std::vector<RunningPlan*> children = ae->getPlanBase().getRootNode()->getChildren();
-    for (const RunningPlan* rp : children) {
-        if (!rp->isBehaviour()) {
-            continue;
-        }
+    const std::vector<RunningPlan*> children1 = ae->getPlanBase().getRootNode()->getChildren();
+    for (const RunningPlan* rp : children1) {
         std::string value;
-        EXPECT_TRUE(rp->getParameter("TestValue", value));
-        EXPECT_TRUE(((alica::ReadConfigurationBehaviour*)rp->getBasicBehaviour())->testValue.compare(value) == 0);
+        EXPECT_TRUE(rp->getParameter("TestValue", value)) << "Missing conf value 'TestValue' in configuration of running plan!";
+        if (rp->isBehaviour()) {
+            // CHECK BEHAVIOURS
+            EXPECT_TRUE(((alica::ReadConfigurationBehaviour*)rp->getBasicBehaviour())->testValue.compare(value) == 0);
+        } else if (rp->getPlanType()) {
+            // CHECK PLANTYPE
+            EXPECT_EQ(rp->getActiveState()->getId(),1588246134801) << "Agent is not in state 'ConfA' of the plan ReadConfInPlantype!";
+        } else {
+            // CHECK PLAN
+            EXPECT_EQ(rp->getActiveState()->getId(),1588069261047) << "Agent is not in state 'StateA' of the plan ReadConfigurationPlan!";
+        }
     }
+
+    // set counter that is checked in the transition of the master plan
+    CounterClass::called = 1;
+    step(ae);
+
+    const std::vector<RunningPlan*> children2 = ae->getPlanBase().getRootNode()->getChildren();
+    for (const RunningPlan* rp : children2) {
+        std::string value;
+        if (rp->getPlanType()) {
+            // CHECK PLANTYPE
+            EXPECT_EQ(rp->getActiveState()->getId(),1588246136647) << "Agent is not in state 'ConfB' of the plan ReadConfInPlantype!";
+        } else {
+            // CHECK PLAN
+            EXPECT_EQ(rp->getActiveState()->getId(),1588069265377) << "Agent is not in state 'StateB' of the plan ReadConfigurationPlan!";
+        }
+    }
+
+    CounterClass::called = 0;
 }
 } // namespace
 } // namespace alica
