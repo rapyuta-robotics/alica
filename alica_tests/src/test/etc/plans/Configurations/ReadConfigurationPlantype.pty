@@ -6,16 +6,10 @@
   "variables" : [ ],
   "variableBindings" : [ ],
   "annotatedPlans" : [ {
-    "id" : 1588061825583,
-    "name" : "AnnotatedReadConfInPlantypeOne",
+    "id" : 1588252870787,
+    "name" : "AnnotatedReadConfInPlantype",
     "comment" : "",
     "activated" : true,
-    "plan" : "Configurations/ReadConfInPlantypeOne.pml#1588061801734"
-  }, {
-    "id" : 1588061832662,
-    "name" : "AnnotatedReadConfInPlantypeTwo",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "Configurations/ReadConfInPlantypeTwo.pml#1588061815706"
+    "plan" : "Configurations/ReadConfInPlantype.pml#1588061801734"
   } ]
 }

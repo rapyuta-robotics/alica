@@ -28,13 +28,14 @@ ReadConfigurationBehaviour::~ReadConfigurationBehaviour()
 void ReadConfigurationBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run1588061129360) ENABLED START*/
-//    std::cout << this->getName() << ": TestValue is " << testValue << std::endl;
+    //    std::cout << this->getName() << ": TestValue is " << testValue << std::endl;
     /*PROTECTED REGION END*/
 }
 void ReadConfigurationBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1588061129360) ENABLED START*/
     getParameter("TestValue", testValue);
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1588061129360) ENABLED START*/

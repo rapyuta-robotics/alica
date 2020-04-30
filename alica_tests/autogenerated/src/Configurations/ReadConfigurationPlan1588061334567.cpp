@@ -35,8 +35,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
 bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1588069612659) ENABLED START*/
-    std::cout << "The PreCondition 1588069612661 in Transition FromDefault NameTo Default Name is not implement yet!" << std::endl;
-    return false;
+    std::string value;
+    rp->getParameter("TestValue", value);
+    return value.compare("1") == 0;
     /*PROTECTED REGION END*/
 }
 /**
@@ -58,8 +59,9 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1588069615552) ENABLED START*/
-    std::cout << "The PreCondition 1588069615553 in Transition FromDefault NameTo Default Name is not implement yet!" << std::endl;
-    return false;
+    std::string value;
+    rp->getParameter("TestValue", value);
+    return value.compare("2") == 0;
     /*PROTECTED REGION END*/
 }
 } // namespace alica

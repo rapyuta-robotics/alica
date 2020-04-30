@@ -65,9 +65,8 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Attack (1402488848841)
  *
  * Tasks in plan:
- *   - AttackTask (1407153522080) (Entrypoint: 1413200877337)
- *   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)
- *   - DefaultTask (1225112227903) (Entrypoint: 1413807260446)
+ *   - AttackTask (1407153522080) (Entrypoint: 1413200877337)*   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)*   - DefaultTask (1225112227903)
+ * (Entrypoint: 1413807260446)
  *
  * States in plan:
  *   - OtherState (1413200877336)
