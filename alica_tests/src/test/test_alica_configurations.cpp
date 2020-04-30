@@ -44,7 +44,6 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
     CounterClass::called = 0;
     // START ENGINE
     ae->start();
-    alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     step(ae);
 
     const std::vector<RunningPlan*> children1 = ae->getPlanBase().getRootNode()->getChildren();
