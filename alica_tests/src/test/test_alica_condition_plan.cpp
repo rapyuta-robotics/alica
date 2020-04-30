@@ -8,7 +8,6 @@
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-//#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"

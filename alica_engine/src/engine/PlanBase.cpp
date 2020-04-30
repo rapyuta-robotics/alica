@@ -317,23 +317,23 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
     _fpEventWait.notify_all();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const Plan* plan)
+RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan));
+    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b)
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, b));
+    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt)
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, pt));
+    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration));
     return _runningPlans.back().get();
 }
 
-const AlicaTime PlanBase::getloopInterval() const
+const AlicaTime PlanBase::getLoopInterval() const
 {
     return _loopInterval;
 }

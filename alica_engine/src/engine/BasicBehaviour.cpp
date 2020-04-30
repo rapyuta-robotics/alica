@@ -234,7 +234,6 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
-    std::cout << "BasicBehaviour: getParameter called!" << std::endl;
     if (!_configuration) {
         return false;
     }

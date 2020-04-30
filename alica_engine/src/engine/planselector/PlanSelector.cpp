@@ -66,9 +66,9 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
     _pap.reset();
     try {
         if (rp.getPlanType() == nullptr) {
-            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, robots, &rp, nullptr, o_currentUtility);
+            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, rp.getConfiguration(), robots, &rp, nullptr, o_currentUtility);
         } else {
-            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), robots, &rp, rp.getPlanType(), o_currentUtility);
+            return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), rp.getConfiguration(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
     } catch (const PoolExhaustedException& pee) {
         ALICA_ERROR_MSG(pee.what());
@@ -93,7 +93,7 @@ bool PlanSelector::getPlansForState(
     }
 }
 
-RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const AgentGrp& robotIDs, const RunningPlan* oldRp,
+RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs, const RunningPlan* oldRp,
         const PlanType* relevantPlanType, double& o_oldUtility)
 {
     PlanGrp newPlanList;
@@ -117,7 +117,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     RunningPlan* rp;
     if (oldRp == nullptr) {
         // preassign other robots, because we dont need a similar assignment
-        rp = _pb->makeRunningPlan(relevantPlanType);
+        rp = _pb->makeRunningPlan(relevantPlanType, configuration);
         ta.preassignOtherAgents();
     } else {
         if (!oldRp->getAssignment().isValid() || !oldRp->isRuntimeConditionValid()) {
@@ -131,7 +131,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
             o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment()).getMax();
         }
         // dont preassign other robots, because we need a similar assignment (not the same)
-        rp = _pb->makeRunningPlan(oldRp->getPlanType());
+        rp = _pb->makeRunningPlan(oldRp->getPlanType(), configuration);
         oldAss = &oldRp->getAssignment();
     }
 
@@ -213,7 +213,7 @@ bool PlanSelector::getPlansForStateInternal(
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
-            RunningPlan* rp = _pb->makeRunningPlan(beh);
+            RunningPlan* rp = _pb->makeRunningPlan(beh, wrapper->getConfiguration());
             // A Behaviour is a Plan too (in this context)
             rp->usePlan(beh);
             o_plans.push_back(rp);
@@ -221,7 +221,7 @@ bool PlanSelector::getPlansForStateInternal(
             ALICA_DEBUG_MSG("PS: Added Behaviour " << beh->getName());
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;
-            RunningPlan* rp = createRunningPlan(planningParent, {p}, robotIDs, nullptr, nullptr, zeroValue);
+            RunningPlan* rp = createRunningPlan(planningParent, {p}, wrapper->getConfiguration(), robotIDs, nullptr, nullptr, zeroValue);
             if (!rp) {
                 ALICA_DEBUG_MSG("PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!");
                 return false;
@@ -229,7 +229,7 @@ bool PlanSelector::getPlansForStateInternal(
             o_plans.push_back(rp);
         } else if (const PlanType* pt = dynamic_cast<const PlanType*>(ap)) {
             double zeroVal;
-            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), robotIDs, nullptr, pt, zeroVal);
+            RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), wrapper->getConfiguration(), robotIDs, nullptr, pt, zeroVal);
             if (!rp) {
                 ALICA_INFO_MSG("PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!");
                 return false;
