@@ -96,6 +96,15 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
+/**
+ * Method is deprecated and will be removed soon. Use
+ * getLocalAgentName() instead.
+ * @return
+ */
+std::string AlicaContext::getRobotName() {
+    return getLocalAgentName();
+}
+
 std::string AlicaContext::getLocalAgentName()
 {
     return essentials::SystemConfig::getInstance().getHostname();
