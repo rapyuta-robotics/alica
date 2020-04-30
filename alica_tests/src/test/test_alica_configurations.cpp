@@ -14,6 +14,7 @@
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "Behaviour/ReadConfigurationBehaviour.h"
 
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -40,20 +41,22 @@ protected:
 TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
 {
     ASSERT_NO_SIGNAL
-    std::cout << "AlicaConfigurationPlan: engine start will be called now!" << std::endl;
+    // START ENGINE
     ae->start();
-    std::cout << "AlicaConfigurationPlan: engine start finished!" << std::endl;
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     do {
         ae->getAlicaClock().sleep(sleepTime);
     } while (ae->getPlanBase().getRootNode() == nullptr);
+
+    // CHECK BEHAVIOURS
     const std::vector<RunningPlan*> children = ae->getPlanBase().getRootNode()->getChildren();
-    std::cout << "Root Name: " << ae->getPlanBase().getRootNode()->getActivePlan()->getName() << std::endl;
-    for (auto& wrapper : ((Plan*)ae->getPlanBase().getRootNode()->getActivePlan())->getStates().at(0)->getConfAbstractPlanWrappers()) {
-        std::cout << "Wrapper Plan Name: " << wrapper->getAbstractPlan()->getName() << std::endl;
-    }
-    for (const RunningPlan* rpChild : children) {
-        std::cout << "AbstractPlan Name: " << rpChild->getActivePlan()->getName() << std::endl;
+    for (const RunningPlan* rp : children) {
+        if (!rp->isBehaviour()) {
+            continue;
+        }
+        std::string value;
+        EXPECT_TRUE(rp->getParameter("TestValue", value));
+        EXPECT_TRUE(((alica::ReadConfigurationBehaviour*)rp->getBasicBehaviour())->testValue.compare(value) == 0);
     }
 }
 } // namespace

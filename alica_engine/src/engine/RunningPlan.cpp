@@ -25,6 +25,8 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/model/Configuration.h"
+#include "engine/model/Parameter.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -51,7 +53,7 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
@@ -59,6 +61,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -69,7 +72,7 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
@@ -77,11 +80,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
+RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
         : _ae(ae)
         , _planType(pt)
         , _behaviour(false)
@@ -89,10 +93,11 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _activeTriple(b, nullptr, nullptr)
@@ -101,6 +106,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b)
         , _basicBehaviour(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -781,6 +787,32 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
 essentials::IdentifierConstPtr RunningPlan::getOwnID() const
 {
     return _ae->getTeamManager().getLocalAgentID();
+}
+
+/**
+ * Tries to find a given key in the configuration of this RunningPlan and
+ * writes the corresponding value into valueOut.
+ * @param key The key to be found in the configuration.
+ * @param valueOut The value, corresponding to the given key.
+ * @return True, if the configuration and the key was present. False, otherwise.
+ */
+bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) const
+{
+    if (!_configuration) {
+        return false;
+    }
+
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const Configuration* RunningPlan::getConfiguration() const {
+    return _configuration;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

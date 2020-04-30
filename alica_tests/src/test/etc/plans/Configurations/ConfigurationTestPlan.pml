@@ -38,30 +38,6 @@
       "comment" : "",
       "abstractPlan" : "Behaviour/ReadConfigurationBehaviour.beh#1588061129360",
       "configuration" : "Configurations/ConfigB.cfg#1588061200689"
-    }, {
-      "id" : 1588061650664,
-      "name" : "1588061650664",
-      "comment" : "",
-      "abstractPlan" : "Configurations/ReadConfigurationPlan.pml#1588061334567",
-      "configuration" : "Configurations/ConfigA.cfg#1588061188681"
-    }, {
-      "id" : 1588061673469,
-      "name" : "1588061673469",
-      "comment" : "",
-      "abstractPlan" : "Configurations/ReadConfigurationPlan.pml#1588061334567",
-      "configuration" : "Configurations/ConfigB.cfg#1588061200689"
-    }, {
-      "id" : 1588061694094,
-      "name" : "1588061694094",
-      "comment" : "",
-      "abstractPlan" : "Configurations/ReadConfigurationPlantype.pty#1588061351007",
-      "configuration" : "Configurations/ConfigA.cfg#1588061188681"
-    }, {
-      "id" : 1588061697634,
-      "name" : "1588061697634",
-      "comment" : "",
-      "abstractPlan" : "Configurations/ReadConfigurationPlantype.pty#1588061351007",
-      "configuration" : "Configurations/ConfigB.cfg#1588061200689"
     } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],

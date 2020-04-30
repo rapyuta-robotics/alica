@@ -78,7 +78,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake inform the team observer about roles of none existing robots
 
     const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository().getPlans();
-    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497));
+    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(planMap.find(1407152758497));
