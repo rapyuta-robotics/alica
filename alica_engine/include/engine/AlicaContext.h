@@ -88,7 +88,7 @@ public:
      * getLocalAgentName() instead.
      * @return
      */
-    [[deprecated]]
+    [[deprecated("use getLocalAgentName(...) instead"]]
     static std::string getRobotName();
 
     /**
