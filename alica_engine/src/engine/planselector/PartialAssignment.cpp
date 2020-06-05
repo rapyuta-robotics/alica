@@ -229,15 +229,15 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     out << std::endl;
     if (p) {
         for (int i = 0; i < static_cast<int>(pa._cardinalities.size()) - PartialAssignment::s_allowIdling ? 1 : 0; ++i) {
-            out << "EPid: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
-                << " cardinality: " << pa._cardinalities[i];
+            out << "EP-Id: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
+                << " Cardinality: " << pa._cardinalities[i];
         }
     }
     out << std::endl;
     out << " Assigned Agents: " << std::endl;
     int i = 0;
     for (int idx : pa._assignment) {
-        out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx << std::endl;
+        out << "Agent: " << pa._problem->getAgents()[i] << " EP-Index: " << idx << std::endl;
         ++i;
     }
     out << std::endl;

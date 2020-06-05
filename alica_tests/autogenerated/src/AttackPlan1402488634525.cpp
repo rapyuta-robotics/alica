@@ -45,7 +45,7 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp)
 }
 /**
  * Outgoing transition:
- *   - Name: 1402489462088, ConditionString: Some nice comment!, Comment:
+ *   - Name: ConditionNameShootAttack, ConditionString: Some nice comment!, Comment:
  *
  * Abstract plans in current state:
  *   - Attack (1402488848841)

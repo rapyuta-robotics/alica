@@ -56,7 +56,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153703092,
-    "abstractPlans" : [ "GoalPlan.pml#1402488870347" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662616,
+      "name" : "1587718662616",
+      "comment" : "",
+      "abstractPlan" : "GoalPlan.pml#1402488870347",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -67,7 +73,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153703092,
-    "abstractPlans" : [ "Defend.pml#1402488893641" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662619,
+      "name" : "1587718662619",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -78,7 +90,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153703092,
-    "abstractPlans" : [ "AttackPlan.pml#1402488634525", "Attack.pty#1407153314946" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662622,
+      "name" : "1587718662622",
+      "comment" : "",
+      "abstractPlan" : "AttackPlan.pml#1402488634525",
+      "configuration" : null
+    }, {
+      "id" : 1587718662624,
+      "name" : "1587718662624",
+      "comment" : "",
+      "abstractPlan" : "Attack.pty#1407153314946",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -89,7 +113,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153703092,
-    "abstractPlans" : [ "MidFieldPlayPlan.pml#1402488770050" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662627,
+      "name" : "1587718662627",
+      "comment" : "",
+      "abstractPlan" : "MidFieldPlayPlan.pml#1402488770050",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

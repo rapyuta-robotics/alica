@@ -12,12 +12,16 @@
 #include "Behaviour/DefendMid1402488730695.h"
 #include "Behaviour/MidFieldStandard1402488696205.h"
 #include "Behaviour/NotToTrigger1429017274116.h"
+#include "Behaviour/ReadConfigurationBehaviour1588061129360.h"
 #include "Behaviour/SuccessSpam1522377401286.h"
 #include "Behaviour/Tackle1402488939130.h"
 #include "Behaviour/TriggerA1428508297492.h"
 #include "Behaviour/TriggerB1428508316905.h"
 #include "Behaviour/TriggerC1428508355209.h"
 #include "BehaviourTriggerTestPlan1428508768572.h"
+#include "Configurations/ConfigurationTestPlan1588060981661.h"
+#include "Configurations/ReadConfInPlantype1588061801734.h"
+#include "Configurations/ReadConfigurationPlan1588061334567.h"
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
@@ -187,6 +191,21 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditio
         break;
     case 1532424113475:
         return std::make_shared<PreCondition1532424113475>();
+        break;
+    case 1588069612661:
+        return std::make_shared<PreCondition1588069612661>();
+        break;
+    case 1588069615553:
+        return std::make_shared<PreCondition1588069615553>();
+        break;
+    case 1588246141557:
+        return std::make_shared<PreCondition1588246141557>();
+        break;
+    case 1588246144841:
+        return std::make_shared<PreCondition1588246144841>();
+        break;
+    case 1588253347213:
+        return std::make_shared<PreCondition1588253347213>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

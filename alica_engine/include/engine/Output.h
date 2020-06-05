@@ -1,7 +1,6 @@
 
 #pragma once
 #include "Types.h"
-#include <alica_common_config/debug_output.h>
 #include <essentials/IdentifierConstPtr.h>
 
 #include <iterator>

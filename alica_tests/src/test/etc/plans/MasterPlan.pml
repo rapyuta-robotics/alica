@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488437260,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662710,
+      "name" : "1587718662710",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402488517667, 1409218318661 ],
     "inTransitions" : [ ]
@@ -37,7 +43,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488437260,
-    "abstractPlans" : [ "Defend.pml#1402488893641" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662713,
+      "name" : "1587718662713",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1409218318661 ]
@@ -48,7 +60,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488437260,
-    "abstractPlans" : [ "GoalPlan.pml#1402488870347" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662716,
+      "name" : "1587718662716",
+      "comment" : "",
+      "abstractPlan" : "GoalPlan.pml#1402488870347",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402488557864 ],
     "inTransitions" : [ 1402488519757 ]
@@ -59,7 +77,25 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488437260,
-    "abstractPlans" : [ "Behaviour/MidFieldStandard.beh#1402488696205", "Behaviour/DefendMid.beh#1402488730695", "MidFieldPlayPlan.pml#1402488770050" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662719,
+      "name" : "1587718662719",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/MidFieldStandard.beh#1402488696205",
+      "configuration" : null
+    }, {
+      "id" : 1587718662721,
+      "name" : "1587718662721",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/DefendMid.beh#1402488730695",
+      "configuration" : null
+    }, {
+      "id" : 1587718662723,
+      "name" : "1587718662723",
+      "comment" : "",
+      "abstractPlan" : "MidFieldPlayPlan.pml#1402488770050",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402488519757 ],
     "inTransitions" : [ 1402488517667 ]
@@ -70,7 +106,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488437260,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402488557864 ],

@@ -85,8 +85,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i > 11 && i < 15) {
             ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
             ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), string("MultiAgentTestPlan"));
-            ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), string("MultiAgentTestPlan"));
+            ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
+            ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
         }
         if (i == 15) {
             for (const auto& iter : aes[0]->getBehaviourPool().getAvailableBehaviours()) {

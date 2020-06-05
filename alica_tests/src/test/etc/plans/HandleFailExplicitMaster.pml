@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1530004940652,
-    "abstractPlans" : [ "HandleFailExplicit.pml#1530004915640" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662811,
+      "name" : "1587718662811",
+      "comment" : "",
+      "abstractPlan" : "HandleFailExplicit.pml#1530004915640",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

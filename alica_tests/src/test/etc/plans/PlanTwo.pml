@@ -46,7 +46,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153645238,
-    "abstractPlans" : [ "PlanThree.pml#1407153663917", "GoalPlan.pml#1402488870347" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662791,
+      "name" : "1587718662791",
+      "comment" : "",
+      "abstractPlan" : "PlanThree.pml#1407153663917",
+      "configuration" : null
+    }, {
+      "id" : 1587718662793,
+      "name" : "1587718662793",
+      "comment" : "",
+      "abstractPlan" : "GoalPlan.pml#1402488870347",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -57,7 +69,25 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153645238,
-    "abstractPlans" : [ "PlanThree.pml#1407153663917", "AttackPlan.pml#1402488634525", "Attack.pty#1407153314946" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662796,
+      "name" : "1587718662796",
+      "comment" : "",
+      "abstractPlan" : "PlanThree.pml#1407153663917",
+      "configuration" : null
+    }, {
+      "id" : 1587718662798,
+      "name" : "1587718662798",
+      "comment" : "",
+      "abstractPlan" : "AttackPlan.pml#1402488634525",
+      "configuration" : null
+    }, {
+      "id" : 1587718662800,
+      "name" : "1587718662800",
+      "comment" : "",
+      "abstractPlan" : "Attack.pty#1407153314946",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -68,7 +98,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1407153645238,
-    "abstractPlans" : [ "PlanThree.pml#1407153663917", "Defend.pml#1402488893641" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662803,
+      "name" : "1587718662803",
+      "comment" : "",
+      "abstractPlan" : "PlanThree.pml#1407153663917",
+      "configuration" : null
+    }, {
+      "id" : 1587718662805,
+      "name" : "1587718662805",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

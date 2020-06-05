@@ -12,8 +12,11 @@ namespace alica {
         static const std::string behaviour_extension = ".beh";
         static const std::string taskrepository = "taskrepository";
         static const std::string taskrepository_extension = ".tsk";
+        static const std::string configuration = "configuration";
+        static const std::string configuration_extension = ".cfg";
         static const std::string task = "task";
         static const std::string state = "state";
+        static const std::string confAbstractPlanWrapper = "confAbstractPlanWrapper";
         static const std::string entryPoint = "entryPoint";
         static const std::string transition = "transition";
         static const std::string synchronisation = "synchronisation";
@@ -46,7 +49,8 @@ namespace alica {
         static const std::string outTransitions = "outTransitions";
         static const std::string variables = "variables";
         static const std::string quantifiers = "quantifiers";
-        static const std::string abstractPlans = "abstractPlans";
+        static const std::string confAbstractPlanWrappers = "confAbstractPlanWrappers";
+        static const std::string abstractPlan = "abstractPlan";
         static const std::string variableType = "variableType";
         static const std::string no_type = "no_type";
         static const std::string variableBindings = "variableBindings";

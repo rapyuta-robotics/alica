@@ -5,7 +5,6 @@
 
 namespace alica
 {
-class BehaviourConfiguration;
 class Behaviour;
 class Capability;
 class Characteristic;
@@ -22,7 +21,8 @@ class Task;
 class Transition;
 class Condition;
 class Variable;
-class PlanningProblem;
+class Configuration;
+class ConfAbstractPlanWrapper;
 class ModelFactory;
 class Factory;
 class ExpressionHandler;
@@ -103,12 +103,14 @@ public:
     const Accessor<Role> getRoles() const { return Accessor<Role>(_roles); }
     const Accessor<State> getStates() const { return Accessor<State>(_states); }
     const Accessor<Synchronisation> getSynchronisations() const { return Accessor<Synchronisation>(_synchronisations); }
-    const Accessor<TaskRepository> getTaskRepositorys() const { return Accessor<TaskRepository>(_taskRepositories); }
+    const Accessor<TaskRepository> getTaskRepositories() const { return Accessor<TaskRepository>(_taskRepositories); }
     const Accessor<Task> getTasks() const { return Accessor<Task>(_tasks); }
     const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
-    const Accessor<Condition> getConditoins() const { return Accessor<Condition>(_conditions); }
+    const Accessor<Condition> getConditions() const { return Accessor<Condition>(_conditions); }
     const Accessor<Variable> getVariables() const { return Accessor<Variable>(_variables); }
-    const Accessor<PlanningProblem> getPlanningProblems() const { return Accessor<PlanningProblem>(_planningProblems); }
+    const Accessor<ConfAbstractPlanWrapper> getConfAbstractPlanWrappers() const { return Accessor<ConfAbstractPlanWrapper>(_confAbstractPlanWrapperRepository); }
+    const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
+
 
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;
@@ -139,6 +141,7 @@ private:
     MapType<Variable> _variables;
     MapType<RoleSet> _roleSets;
     MapType<TaskRepository> _taskRepositories;
-    MapType<PlanningProblem> _planningProblems;
+    MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
+    MapType<Configuration> _configurationRepository;
 };
 } // namespace alica

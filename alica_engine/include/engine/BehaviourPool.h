@@ -7,10 +7,11 @@
 
 namespace alica
 {
-
-class Behaviour;
-class BasicBehaviour;
 class AlicaEngine;
+class Behaviour;
+class Configuration;
+class BasicBehaviour;
+class ConfAbstractPlanWrapper;
 class IBehaviourCreator;
 class RunningPlan;
 
@@ -29,16 +30,17 @@ public:
     void stopAll();
     void terminateAll();
     bool isBehaviourRunningInContext(const RunningPlan& rp) const;
-    const std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
+    const std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
 
 private:
+    const std::shared_ptr<BasicBehaviour> getBasicBehaviour(const Behaviour* behaviour, const Configuration* configuration) const;
     /**
      * Manages behaviours used by the running ALICA program.
      * The key of the map is the behaviour configuration, which is created through the plan designer.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
     // TODO: switch to unique ptr
-    std::map<const Behaviour*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
+    std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* _ae;
 };
 

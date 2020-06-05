@@ -1,5 +1,3 @@
-#define BEH_DEBUG
-
 #include "engine/BasicBehaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
@@ -7,13 +5,16 @@
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/Configuration.h"
+#include "engine/model/Parameter.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+#include <engine/model/Configuration.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-
 #include <essentials/ITrigger.h>
 
 #include <assert.h>
@@ -41,6 +42,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
         , _context(nullptr)
+        , _configuration(nullptr)
 {
 }
 
@@ -71,6 +73,12 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     } else {
         _runThread = new std::thread(&BasicBehaviour::runInternalTimed, this);
     }
+}
+
+void BasicBehaviour::setConfiguration(const Configuration* conf)
+{
+    assert(_configuration == nullptr);
+    _configuration = conf;
 }
 
 /**
@@ -226,9 +234,13 @@ void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
-    const auto& entry = this->_behaviour->getParameters().find(key);
-    if (entry != this->_behaviour->getParameters().end()) {
-        valueOut = entry->second;
+    if (!_configuration) {
+        return false;
+    }
+
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
         return true;
     } else {
         return false;

@@ -1,0 +1,23 @@
+{
+  "plan" : "OtherPlan.pml#1418042819203",
+  "uiElementMap" : {
+    "1418042819206" : {
+      "id" : 1587741257514,
+      "name" : "1587741257514",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418042819204" : {
+      "id" : 1587741257513,
+      "name" : "1587741257513",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

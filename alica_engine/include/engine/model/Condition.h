@@ -1,10 +1,12 @@
 #pragma once
 
-#include <memory>
-#include <string>
 
 #include "AlicaElement.h"
 #include "engine/Types.h"
+
+#include <memory>
+#include <string>
+
 
 namespace alica
 {
@@ -37,7 +39,6 @@ public:
     const std::string& getPlugInName() const { return _plugInName; }
 
     const VariableGrp& getVariables() const { return _variables; }
-    const ParameterGrp& getParameters() const { return _parameters; }
     const QuantifierGrp& getQuantifiers() const { return _quantifiers; }
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
@@ -53,14 +54,12 @@ private:
     void setVariables(const VariableGrp& variables);
     void setPlugInName(const std::string& plugInName);
     void setAbstractPlan(const AbstractPlan* abstractPlan);
-    void setParameters(const ParameterGrp& parameters);
     void setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint);
     void setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition);
     void setQuantifiers(const QuantifierGrp& quantifiers);
 
     std::shared_ptr<BasicCondition> _basicCondition;
     std::shared_ptr<BasicConstraint> _basicConstraint;
-    ParameterGrp _parameters;
 
     /**
      * The static variables used in the constraint of this condition.

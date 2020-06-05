@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402489318663,
-    "abstractPlans" : [ "Behaviour/AttackOpp.beh#1402489351885" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662873,
+      "name" : "1587718662873",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/AttackOpp.beh#1402489351885",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

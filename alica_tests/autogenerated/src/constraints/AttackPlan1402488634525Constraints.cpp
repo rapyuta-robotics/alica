@@ -28,9 +28,9 @@ namespace alica
  * - ConditionString:
  *
  *
- * Plans in State:
- * - Plan Name: Tackle, PlanID: 1402489318663
- * - Plan Name: AttackOpp, PlanID: 1402489351885
+ * AbstractPlans in State:
+ * - AbstractPlan Name: Tackle, PlanID: 1402489318663
+ * - AbstractPlan Name: AttackOpp, PlanID: 1402489351885
  * Static Variables: ABC TestVar1
  * Domain Variables:
  * forall agents in AttackPlan let v = [X, Y]
@@ -47,13 +47,13 @@ void Constraint1402489460549::getConstraint(std::shared_ptr<ProblemDescriptor> c
 // State: Shoot
 /**
  * Transition:
- * - Name: 1402489462088
+ * - Name: ConditionNameShootAttack
  * - Comment:
  * - ConditionString: Some nice comment!
  *
  *
- * Plans in State:
- * - Plan Name: Attack, PlanID: 1402488848841
+ * AbstractPlans in State:
+ * - AbstractPlan Name: Attack, PlanID: 1402488848841
  * Static Variables: TestVar1 VarTest2 NewVar ABC
  * Domain Variables:
  */

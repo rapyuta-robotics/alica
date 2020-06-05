@@ -9,6 +9,5 @@
   "eventDriven" : true,
   "preCondition" : null,
   "runtimeCondition" : null,
-  "postCondition" : null,
-  "parameters" : { }
+  "postCondition" : null
 }

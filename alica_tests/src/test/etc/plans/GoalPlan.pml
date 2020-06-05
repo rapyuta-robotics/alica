@@ -56,7 +56,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488870347,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489173167 ],
     "inTransitions" : [ 1402489205153 ]
@@ -67,7 +67,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488870347,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489205153, 1402489216617 ],
     "inTransitions" : [ 1402489173167 ]
@@ -78,7 +78,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488870347,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402489216617 ],

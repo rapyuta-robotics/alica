@@ -1,0 +1,41 @@
+{
+  "plan" : "Authority/AuthorityTest.pml#1414403413451",
+  "uiElementMap" : {
+    "1414403429950" : {
+      "id" : 1587741257388,
+      "name" : "1587741257388",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1414403429951" : {
+      "id" : 1587741257390,
+      "name" : "1587741257390",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1414403522424" : {
+      "id" : 1587741257391,
+      "name" : "1587741257391",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1414403553717" : {
+      "id" : 1587741257389,
+      "name" : "1587741257389",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

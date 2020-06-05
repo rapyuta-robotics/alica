@@ -34,7 +34,7 @@ public:
     std::string toString(std::string indent = "") const override;
     const Plan* getInPlan() const { return _inPlan; }
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
-    const AbstractPlanGrp& getPlans() const { return _plans; }
+    const ConfAbstractPlanWrapperGrp& getConfAbstractPlanWrappers() const { return _confAbstractPlanWrappers; }
     const TransitionGrp& getInTransitions() const { return _inTransitions; }
     const TransitionGrp& getOutTransitions() const { return _outTransitions; }
     const VariableBindingGrp& getParametrisation() const { return _variableBindingGrp; }
@@ -55,12 +55,12 @@ private:
 
     void setVariableBindings(const VariableBindingGrp &variableBindingGrp);
 
-    void setPlans(const AbstractPlanGrp& plans);
+    void setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers);
 
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
-    AbstractPlanGrp _plans;
+    ConfAbstractPlanWrapperGrp _confAbstractPlanWrappers;
     /**
      * The list of Transitions leading to this state.
      */

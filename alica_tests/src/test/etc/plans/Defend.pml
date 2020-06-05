@@ -26,7 +26,19 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488893641,
-    "abstractPlans" : [ "Behaviour/Tackle.beh#1402488939130", "Tackle.pml#1402489318663" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662824,
+      "name" : "1587718662824",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Tackle.beh#1402488939130",
+      "configuration" : null
+    }, {
+      "id" : 1587718662826,
+      "name" : "1587718662826",
+      "comment" : "",
+      "abstractPlan" : "Tackle.pml#1402489318663",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402488991762 ],
     "inTransitions" : [ 1402488990761 ]
@@ -37,7 +49,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488893641,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1402489071510 ],
@@ -50,7 +62,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488893641,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402488990761, 1402489064693 ],
     "inTransitions" : [ 1402488991762 ]
@@ -61,7 +73,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1402488893641,
-    "abstractPlans" : [ "PlanType.pty#1402489564599" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662831,
+      "name" : "1587718662831",
+      "comment" : "",
+      "abstractPlan" : "PlanType.pty#1402489564599",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1402489071510 ],
     "inTransitions" : [ 1402489064693 ]

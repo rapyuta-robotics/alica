@@ -36,7 +36,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418825395939,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1418825425833 ],
     "inTransitions" : [ ]
@@ -47,7 +47,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418825395939,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1418825427469 ],
     "inTransitions" : [ ]
@@ -58,7 +58,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418825395939,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662770,
+      "name" : "1587718662770",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1418825425833 ]
@@ -69,7 +75,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418825395939,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662773,
+      "name" : "1587718662773",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1418825427469 ]

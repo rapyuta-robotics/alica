@@ -26,7 +26,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418042656594,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1418042682960 ],
     "inTransitions" : [ ]
@@ -37,7 +37,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1418042656594,
-    "abstractPlans" : [ "TestPlanType.pty#1418042702402" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662539,
+      "name" : "1587718662539",
+      "comment" : "",
+      "abstractPlan" : "TestPlanType.pty#1418042702402",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1418042682960 ]
