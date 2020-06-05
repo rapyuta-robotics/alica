@@ -84,6 +84,14 @@ public:
     static std::string getLocalAgentName();
 
     /**
+     * Method is deprecated and will be removed soon. Use
+     * getLocalAgentName() instead.
+     * @return
+     */
+    [[deprecated("use getLocalAgentName(...) instead")]]
+    static std::string getRobotName();
+
+    /**
      * Set host (or agent) name for this process.
      *
      * @param name Host name

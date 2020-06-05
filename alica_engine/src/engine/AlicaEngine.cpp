@@ -43,7 +43,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
-        , _variableSyncModule(new VariableSyncModule(this))
+        , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
@@ -67,7 +67,6 @@ AlicaEngine::~AlicaEngine()
 {
     _roleSet = nullptr;
     _masterPlan = nullptr;
-    delete _variableSyncModule;
 }
 
 /**

@@ -68,6 +68,7 @@ TeamManager::TeamManager(AlicaEngine* engine)
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
     readSelfFromConfig();
+    std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
