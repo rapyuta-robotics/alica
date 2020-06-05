@@ -47,7 +47,7 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine);
+    TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
     essentials::IdentifierConstPtr getLocalAgentID() const;
@@ -76,7 +76,7 @@ public:
     void tick();
 
 private:
-    void readSelfFromConfig();
+    void readSelfFromConfig(essentials::IdentifierConstPtr agentId);
     void announcePresence() const;
     void queryPresence() const;
     Agent* getAgent(essentials::IdentifierConstPtr agentId) const;
