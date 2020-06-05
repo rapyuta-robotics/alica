@@ -11,9 +11,10 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
 #include <essentials/IDManager.h>
 #include <essentials/SystemConfig.h>
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -30,7 +31,7 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
         : _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
@@ -38,7 +39,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _modelManager(_planRepository)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
-        , _teamManager(this)
+        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID->toByteVector().data(), agentID->toByteVector().size()) : nullptr))
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)

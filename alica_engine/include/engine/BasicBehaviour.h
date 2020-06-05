@@ -18,12 +18,9 @@
 
 namespace alica
 {
-// TODO: get rid of this line once generator templates get an overhaul
-using std::string;
-
 class Variable;
 class RunningPlan;
-
+class Configuration;
 class EntryPoint;
 class AlicaEngine;
 
@@ -42,6 +39,7 @@ public:
     const std::string& getName() const { return _name; }
 
     void setBehaviour(const Behaviour* beh);
+    void setConfiguration(const Configuration* conf);
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
@@ -102,6 +100,11 @@ private:
     AlicaEngine* _engine;
     RunningPlan* _context;
 
+    /**
+     * The configuration, that is set in the behaviour pool, associated with
+     * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
+     */
+    const Configuration* _configuration;
     /**
      * is always true except when the behaviour is shutting down
      */

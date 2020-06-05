@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1414068495566,
-    "abstractPlans" : [ "ConstraintTestPlan.pml#1414068524245" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662924,
+      "name" : "1587718662924",
+      "comment" : "",
+      "abstractPlan" : "ConstraintTestPlan.pml#1414068524245",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

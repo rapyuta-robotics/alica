@@ -26,7 +26,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200842973,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1413201226246 ],
     "inTransitions" : [ ]
@@ -37,7 +37,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200842973,
-    "abstractPlans" : [ "MultiAgentTestPlan.pml#1413200862180" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662949,
+      "name" : "1587718662949",
+      "comment" : "",
+      "abstractPlan" : "MultiAgentTestPlan.pml#1413200862180",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1413201388722 ],
     "inTransitions" : [ 1413201226246 ]
@@ -48,7 +54,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1413200842973,
-    "abstractPlans" : [ "Behaviour/Attack.beh#1402488848841" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662952,
+      "name" : "1587718662952",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1413201388722 ]

@@ -9,7 +9,7 @@ namespace alica
 class AlicaEngine;
 
 /**
- * Globally holds information about succeeded entrypoints for a specific robot
+ * Globally holds information about succeeded entry points for a specific robot
  */
 class SuccessMarks
 {

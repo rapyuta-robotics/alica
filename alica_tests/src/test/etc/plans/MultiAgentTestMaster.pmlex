@@ -1,0 +1,59 @@
+{
+  "plan" : "MultiAgentTestMaster.pml#1413200842973",
+  "uiElementMap" : {
+    "1413201213955" : {
+      "id" : 1588238323814,
+      "name" : "1588238323814",
+      "comment" : "",
+      "x" : -76,
+      "y" : -83,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413200842974" : {
+      "id" : 1588238323813,
+      "name" : "1588238323813",
+      "comment" : "",
+      "x" : -228,
+      "y" : -77,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201380359" : {
+      "id" : 1588238323830,
+      "name" : "1588238323830",
+      "comment" : "",
+      "x" : 99,
+      "y" : -97,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413200842975" : {
+      "id" : 1588238323831,
+      "name" : "1588238323831",
+      "comment" : "",
+      "x" : -363,
+      "y" : -76,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201226246" : {
+      "id" : 1588238323832,
+      "name" : "1588238323832",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201388722" : {
+      "id" : 1588238323833,
+      "name" : "1588238323833",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

@@ -16,7 +16,6 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
-#include <alica_common_config/debug_output.h>
 #include <alica_solver_interface/SolverContext.h>
 
 #include <map>
@@ -134,7 +133,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
     int domOffset;
 
     if (!pi.getAlicaEngine()->existSolver<SolverType>()) {
-        ALICA_ERROR_MSG("Query::getSolution: The engine does not have a suitable solver for the given type available.");
+        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
@@ -143,7 +142,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
         return false;
     }
 
-    ALICA_DEBUG_MSG("Query: " << _uniqueVarStore);
+    std::cout << "Query: " << _uniqueVarStore << std::endl;
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
