@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
@@ -15,12 +15,12 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
-AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const AgentID& agentID)
         : _validTag(ALICA_CTX_GOOD)
+        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
         , _idManager(std::make_unique<essentials::IDManager>())
-        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine))
 {
 }
 
