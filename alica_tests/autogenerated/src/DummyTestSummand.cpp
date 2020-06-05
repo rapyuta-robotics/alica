@@ -8,8 +8,8 @@
 #include "DummyTestSummand.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/IAssignment.h"
-#include <essentials/IdentifierConstPtr.h>
 #include <TestWorldModel.h>
+#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {

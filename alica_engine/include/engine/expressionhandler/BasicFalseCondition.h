@@ -1,14 +1,6 @@
-/*
- * BasicFalseExpression.h
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICFALSECONDITION_H_
-#define ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICFALSECONDITION_H_
-
-#include <engine/BasicCondition.h>
+#include "engine/BasicCondition.h"
 
 namespace alica
 {
@@ -23,5 +15,3 @@ public:
 };
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICFALSECONDITION_H_ */

@@ -53,7 +53,7 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine)
+TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
         : _localAgent(nullptr)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
@@ -67,6 +67,8 @@ TeamManager::TeamManager(AlicaEngine* engine)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
+    readSelfFromConfig(agentID);
+    std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
@@ -81,29 +83,32 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig()
+void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getLocalAgentName();
 
-    constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-    uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
-    if (id != notAValidID) {
-        std::cout << "[TeamManager] " << id << std::endl;
-        _localAnnouncement.senderID = _engine->getID<uint64_t>(id);
-    } else {
-        _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
-        ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
-        bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
-        if (persistId) {
-            try {
-                auto* configLocal = sc["Local"];
-                configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-                configLocal->store();
-            } catch (...) {
-                ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+    if (agentID == nullptr) {
+        constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
+        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+        if (id != notAValidID) {
+            _localAnnouncement.senderID = _engine->getID(id);
+        } else {
+            _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
+            ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
+            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+            if (persistId) {
+                try{
+                    auto* configLocal = sc["Local"];
+                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
+                    configLocal->store();
+                } catch(...) {
+                    ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
+                }
             }
         }
+    } else {
+        _localAnnouncement.senderID = agentID;
     }
 
     std::random_device rd;
@@ -274,11 +279,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
         return;
     }
 
-    ALICA_DEBUG_MSG("tm: Responding to agent: " << aq.senderID);
+    ALICA_DEBUG_MSG("TM: Responding to agent: " << aq.senderID);
     announcePresence();
 }
 
@@ -298,7 +303,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
         return;
     }
 
@@ -316,6 +321,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
         }
     }
 
+
     agentInfo = new Agent(_engine, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_engine->getAlicaClock().now());
     _engine->editLog().eventOccurred("New Agent(", aa.senderID, ")");
@@ -327,7 +333,6 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
 void TeamManager::init()
 {
-    readSelfFromConfig();
     if (_useAutoDiscovery) {
         _timeLastAnnouncement = _engine->getAlicaClock().now();
         announcePresence();
@@ -337,7 +342,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    ALICA_DEBUG_MSG("tm: Announcing presence");
+    ALICA_DEBUG_MSG("TM: Announcing presence " << _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _engine->getCommunicator().sendAgentAnnouncement(_localAnnouncement);
     }

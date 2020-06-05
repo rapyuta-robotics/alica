@@ -1,5 +1,6 @@
 #include "engine/model/State.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <sstream>
 #include <iostream>
@@ -48,9 +49,9 @@ void State::setVariableBindings(const VariableBindingGrp& variableBindingGrp)
     _variableBindingGrp = variableBindingGrp;
 }
 
-void State::setPlans(const AbstractPlanGrp& plans)
+void State::setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers)
 {
-    _plans = plans;
+    _confAbstractPlanWrappers = wrappers;
 }
 
 std::string State::toString(std::string indent) const
@@ -67,8 +68,8 @@ std::string State::toString(std::string indent) const
         ss << ((AlicaElement*)trans)->toString(indent + "\t\t");
     }
     ss << indent << "\tAbstract Plans: " << std::endl;
-    for (const AbstractPlan* plans : _plans) {
-        ss << plans->AlicaElement::toString(indent + "\t\t");
+    for (const ConfAbstractPlanWrapper* wrapper : _confAbstractPlanWrappers) {
+        ss << ((AlicaElement*)wrapper->getAbstractPlan())->toString(indent + "\t\t");
     }
     ss << indent << "\tVariable Bindings: " << std::endl;
     for (const VariableBinding* binding : _variableBindingGrp) {

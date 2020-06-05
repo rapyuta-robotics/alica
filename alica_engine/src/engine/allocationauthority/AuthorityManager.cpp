@@ -75,7 +75,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    ALICA_DEBUG_MSG("AM: Tick called! <<<<<<");
+    ALICA_DEBUG_MSG("AM: Tick called!");
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {

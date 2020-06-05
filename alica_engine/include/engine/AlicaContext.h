@@ -84,11 +84,19 @@ public:
     static std::string getLocalAgentName();
 
     /**
+     * Method is deprecated and will be removed soon. Use
+     * getLocalAgentName() instead.
+     * @return
+     */
+    [[deprecated("use getLocalAgentName(...) instead")]]
+    static std::string getRobotName();
+
+    /**
      * Set host (or agent) name for this process.
      *
      * @param name Host name
      */
-    static void setRobotName(const std::string& name);
+    static void setLocalAgentName(const std::string& name);
 
     // TODO: better descriptive name for paths
     /**
@@ -130,7 +138,7 @@ public:
      *
      * @note This is the main alica api class
      */
-    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
+    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
 
     /**
      * Destroys AlicaContext object.
@@ -331,11 +339,11 @@ private:
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    std::unique_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
-    std::unique_ptr<AlicaClock> _clock;
 };
 
 template <class ClockType, class... Args>

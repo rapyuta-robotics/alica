@@ -1,27 +1,93 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1522377375148" name="BehaviorSuccessSpamMaster" comment="" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <states id="1522377375149" name="Normal" comment="" entryPoint="1522377375150">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/SuccessSpam.beh#1522377419087</plans>
-    <inTransitions>#1522377945069</inTransitions>
-    <outTransitions>#1522377944058</outTransitions>
-  </states>
-  <states id="1522377929290" name="Dummy" comment="">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/SuccessSpam.beh#1522377419087</plans>
-    <inTransitions>#1522377944058</inTransitions>
-    <outTransitions>#1522377945069</outTransitions>
-  </states>
-  <transitions id="1522377944058" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1522377944921" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1522377375149</inState>
-    <outState>#1522377929290</outState>
-  </transitions>
-  <transitions id="1522377945069" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1522377946607" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1522377929290</inState>
-    <outState>#1522377375149</outState>
-  </transitions>
-  <entryPoints id="1522377375150" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1522377375149</state>
-  </entryPoints>
-</alica:Plan>
+{
+  "id" : 1522377375148,
+  "name" : "BehaviorSuccessSpamMaster",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ ],
+  "masterPlan" : true,
+  "utilityThreshold" : 0.1,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "entryPoints" : [ {
+    "id" : 1522377375150,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "successRequired" : false,
+    "minCardinality" : 0,
+    "maxCardinality" : 2147483647,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1522377375149,
+    "plan" : 1522377375148
+  } ],
+  "states" : [ {
+    "type" : "State",
+    "id" : 1522377375149,
+    "name" : "Normal",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1522377375148,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663016,
+      "name" : "1587718663016",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/SuccessSpam.beh#1522377401286",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1522377944058 ],
+    "inTransitions" : [ 1522377945069 ]
+  }, {
+    "type" : "State",
+    "id" : 1522377929290,
+    "name" : "Dummy",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1522377375148,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663020,
+      "name" : "1587718663020",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/SuccessSpam.beh#1522377401286",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1522377945069 ],
+    "inTransitions" : [ 1522377944058 ]
+  } ],
+  "transitions" : [ {
+    "id" : 1522377944058,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1522377375149,
+    "outState" : 1522377929290,
+    "preCondition" : {
+      "id" : 1522377944921,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  }, {
+    "id" : 1522377945069,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1522377929290,
+    "outState" : 1522377375149,
+    "preCondition" : {
+      "id" : 1522377946607,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  } ],
+  "synchronisations" : [ ]
+}

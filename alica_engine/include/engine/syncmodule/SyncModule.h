@@ -8,7 +8,6 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-//#define SM_SUCCES
 
 namespace alica
 {
@@ -31,7 +30,7 @@ public:
     void close();
     void tick();
     void setSynchronisation(const Transition* trans, bool holds);
-    bool followSyncedTransition(const Transition* trans);
+    bool isTransitionSuccessfullySynchronised(const Transition* trans);
     void onSyncTalk(std::shared_ptr<SyncTalk> st);
     void onSyncReady(std::shared_ptr<SyncReady> sr);
 
@@ -45,9 +44,9 @@ private:
     const AlicaEngine* _ae;
     essentials::IdentifierConstPtr _myId;
     unsigned long _ticks;
-    std::map<const Synchronisation*, SynchronisationProcess*> _synchSet;
-    std::list<const Synchronisation*> _synchronisations;
-    std::mutex _lomutex;
+    std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
+    std::map<const Synchronisation*, SynchronisationProcess*> _synchProcessMapping; /**< Mapping from synchronisations to their ongoing synchronisation process */
+    std::list<const Synchronisation*> _successfulSynchronisations; /**< List of synchronisations that were achieved/successful */
 };
 
 } // namespace alica

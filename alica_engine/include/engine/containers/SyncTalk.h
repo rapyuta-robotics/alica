@@ -41,4 +41,15 @@ struct SyncTalk
     }
 };
 
+inline std::ostream& operator<<(std::ostream& o, const SyncTalk& st)
+{
+    std::stringstream ss;
+    ss << "## SyncTalk: From " << st.senderID << std::endl;
+    for (SyncData sd : st.syncData) {
+        ss << sd;
+    }
+    ss << "##" << std::endl;
+    return o << ss.str();
+}
+
 } /* namespace alica */

@@ -71,11 +71,6 @@ void Condition::setBasicCondition(const std::shared_ptr<BasicCondition>& basicCo
     _basicCondition = basicCondition;
 }
 
-void Condition::setParameters(const ParameterGrp& parameters)
-{
-    _parameters = parameters;
-}
-
 void Condition::setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint)
 {
     _basicConstraint = basicConstraint;

@@ -16,6 +16,7 @@ using namespace std;
 #include "engine/model/Quantifier.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
@@ -67,8 +68,9 @@ protected:
         if (entryPointID != 0) {
             EXPECT_EQ(entryPointID, s->getEntryPoint()->getId()) << "Wrong EntryPoint for state!" << endl;
         }
-        EXPECT_EQ(absPlanIDs.size(), s->getPlans().size()) << "Number of abstractPlans didnt fit plans size." << endl;
-        for (const alica::AbstractPlan* p : s->getPlans()) {
+        EXPECT_EQ(absPlanIDs.size(), s->getConfAbstractPlanWrappers().size()) << "Number of abstractPlans didnt fit plans size." << endl;
+        for (const ConfAbstractPlanWrapper* wrapper : s->getConfAbstractPlanWrappers()) {
+            const alica::AbstractPlan* p = wrapper->getAbstractPlan();
             EXPECT_TRUE(find(absPlanIDs.begin(), absPlanIDs.end(), p->getId()) != absPlanIDs.end()) << "Unknown id for AbstractPlan!" << endl;
         }
         if (inTransitions.size() != 0) {
@@ -184,10 +186,10 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
                 switch (s->getId()) {
                 case 1402488646220:
-                    checkState(s, 1402488646220, "Attack", "", {1402489366699, 1402489318663}, {1402489460694}, {1402489459382}, 1402488646221);
+                    checkState(s, 1402488646220, "Attack", "", {1402489351885, 1402489318663}, {1402489460694}, {1402489459382}, 1402488646221);
                     break;
                 case 1402489396914:
-                    checkState(s, 1402489396914, "Shoot", "", {1402488866727}, {1402489459382}, {1402489460694});
+                    checkState(s, 1402489396914, "Shoot", "", {1402488848841}, {1402489459382}, {1402489460694});
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -236,7 +238,7 @@ TEST_F(AlicaEngineTest, planParser)
                     }
                     break;
                 case 1402489460694:
-                    checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914, 1402488646220, "Condition-Name-Shoot-Attack", "",
+                    checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914, 1402488646220, "ConditionNameShootAttack", "",
                             "Some nice comment!", "DefaultPlugin", true);
                     break;
                 default:
@@ -261,7 +263,7 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
                 switch (s->getId()) {
                 case 1402488903549:
-                    checkState(s, 1402488903549, "Tackle", "", {1402488956661, 1402489318663}, {1402488990761}, {1402488991762});
+                    checkState(s, 1402488903549, "Tackle", "", {1402488939130, 1402489318663}, {1402488990761}, {1402488991762});
                     break;
                 case 1402488910751:
                     EXPECT_TRUE(s->isFailureState()) << "Should be a FailureState" << endl;
@@ -396,7 +398,7 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
                 switch (s->getId()) {
                 case 1402488437261:
-                    checkState(s, 1402488437261, "Attack", "", {1402488866727}, {}, {1402488517667, 1409218318661}, 1402488437263);
+                    checkState(s, 1402488437261, "Attack", "", {1402488848841}, {}, {1402488517667, 1409218318661}, 1402488437263);
                     break;
                 case 1402488463437:
                     checkState(s, 1402488463437, "Defend", "", {1402488893641}, {1409218318661}, {});
@@ -405,7 +407,7 @@ TEST_F(AlicaEngineTest, planParser)
                     checkState(s, 1402488470615, "Goal", "", {1402488870347}, {1402488519757}, {1402488557864});
                     break;
                 case 1402488477650:
-                    checkState(s, 1402488477650, "MidField", "", {1402488712657, 1402488763903, 1402488770050}, {1402488517667}, {1402488519757});
+                    checkState(s, 1402488477650, "MidField", "", {1402488696205, 1402488730695, 1402488770050}, {1402488517667}, {1402488519757});
                     break;
                 case 1402488536570:
                     EXPECT_TRUE(s->isSuccessState()) << "Should be a successstate!" << endl;
@@ -473,16 +475,16 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
                 switch (s->getId()) {
                 case 1402488787818:
-                    checkState(s, 1402488787818, "Wander", "", {1402488712657}, {}, {1402489257607, 1402489276995}, 1402488787819);
+                    checkState(s, 1402488787818, "Wander", "", {1402488696205}, {}, {1402489257607, 1402489276995}, 1402488787819);
                     break;
                 case 1402489237914:
-                    checkState(s, 1402489237914, "Tackle", "", {1402489318663, 1402488866727, 1402488893641}, {1402489257607}, {});
+                    checkState(s, 1402489237914, "Tackle", "", {1402489318663, 1402488848841, 1402488893641}, {1402489257607}, {});
                     break;
                 case 1402489273401:
-                    checkState(s, 1402489273401, "Sync", "", {1402488956661}, {1402489276995}, {});
+                    checkState(s, 1402489273401, "Sync", "", {1402488939130}, {1402489276995}, {});
                     break;
                 case 1402500830885:
-                    checkState(s, 1402500830885, "Kill", "", {1403773823508}, {}, {1402500843072}, 1402500828244);
+                    checkState(s, 1402500830885, "Kill", "", {}, {}, {1402500843072}, 1402500828244);
                     break;
                 case 1402500833246:
                     checkState(s, 1402500833246, "Shoot", "", {}, {1402500843072}, {});
@@ -550,7 +552,7 @@ TEST_F(AlicaEngineTest, planParser)
             EXPECT_EQ(1, plan->getStates().size()) << "Number of states didnt fit Tackle.pml state size." << endl;
             for (const alica::State* s : plan->getStates()) {
                 cout << "\t" << s->getName() << " ID: " << s->getId() << endl;
-                checkState(s, 1402489329141, "AttackOpp", "", {1402489366699}, {}, {}, 1402489329142);
+                checkState(s, 1402489329141, "AttackOpp", "", {1402489351885}, {}, {}, 1402489329142);
             }
             cout << "EntryPoints: " << endl;
             EXPECT_EQ(1, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;

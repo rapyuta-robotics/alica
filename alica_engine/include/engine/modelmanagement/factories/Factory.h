@@ -27,7 +27,6 @@ public:
 protected:
     static ReferenceList stateInTransitionReferences;
     static ReferenceList stateOutTransitionReferences;
-    static ReferenceList stateAbstractPlanReferences;
     static ReferenceList transitionSynchReferences;
     static ReferenceList synchTransitionReferences;
     static ReferenceList transitionInStateReferences;
@@ -40,10 +39,10 @@ protected:
     static ReferenceList epStateReferences;
     static ReferenceList epTaskReferences;
     static ReferenceList planTypePlanReferences;
+    static ReferenceList wrapperAbstractPlanReferences;
+    static ReferenceList wrapperConfigurationReferences;
     static TripleReferenceList roleTaskReferences;
     static ModelManager* modelManager;
-
-
 
     static const AlicaElement* getElement(const int64_t id);
     static int64_t getReferencedId(const std::string& referenceString);

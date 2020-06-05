@@ -1,15 +1,23 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="OtherPlan.pml#1418042819204"/>
-    <value xPos="184" yPos="188" width="81" height="67"/>
-  </extensions>
-  <extensions>
-    <key href="OtherPlan.pml#1418042819203"/>
-    <value xPos="25" yPos="50" width="684" height="452"/>
-  </extensions>
-  <extensions>
-    <key href="OtherPlan.pml#1418042819206"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "OtherPlan.pml#1418042819203",
+  "uiElementMap" : {
+    "1418042819206" : {
+      "id" : 1587741257514,
+      "name" : "1587741257514",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418042819204" : {
+      "id" : 1587741257513,
+      "name" : "1587741257513",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

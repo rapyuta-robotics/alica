@@ -47,7 +47,7 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine);
+    TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
     essentials::IdentifierConstPtr getLocalAgentID() const;
@@ -76,6 +76,11 @@ public:
     void tick();
 
 private:
+    void readSelfFromConfig(essentials::IdentifierConstPtr agentId);
+    void announcePresence() const;
+    void queryPresence() const;
+    Agent* getAgent(essentials::IdentifierConstPtr agentId) const;
+
     AlicaTime _teamTimeOut;
     AlicaTime _agentAnnouncementTimeInterval;
     AlicaTime _timeLastAnnouncement;
@@ -86,11 +91,6 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
-
-    void readSelfFromConfig();
-    void announcePresence() const;
-    void queryPresence() const;
-    Agent* getAgent(essentials::IdentifierConstPtr agentId) const;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
