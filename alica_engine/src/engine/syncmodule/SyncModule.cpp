@@ -190,7 +190,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 
     {
         lock_guard<mutex> lock(_lomutex);
-        map<const Synchronisation*, SynchronisationProcess*>::iterator i = _synchProcessMapping.find(synchronisation);
+        auto i = _synchProcessMapping.find(synchronisation);
         if (i != _synchProcessMapping.end()) {
             i->second->integrateSyncReady(sr);
         }
