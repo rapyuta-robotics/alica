@@ -53,7 +53,7 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine, AgentIDConstPtr agentID)
+TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
         : _localAgent(nullptr)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
@@ -83,7 +83,7 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig(AgentIDConstPtr agentID)
+void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getLocalAgentName();
@@ -92,9 +92,9 @@ void TeamManager::readSelfFromConfig(AgentIDConstPtr agentID)
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
         uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
         if (id != notAValidID) {
-            _localAnnouncement.senderID = _engine->getId(id);
+            _localAnnouncement.senderID = _engine->getID(id);
         } else {
-            _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
+            _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
             bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
             if (persistId) {
