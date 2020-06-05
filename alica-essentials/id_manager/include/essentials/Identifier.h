@@ -13,6 +13,7 @@ class Identifier
     friend struct std::hash<essentials::Identifier>;
 
 public:
+    Identifier(uint64_t idPrototype);
     Identifier(const std::vector<uint8_t>& idBytes);
     Identifier(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
     virtual ~Identifier();
@@ -58,9 +59,21 @@ public:
     static const uint8_t UUID_TYPE = 1;
 
 private:
+    template <class Prototype>
+    void setID(Prototype& idPrototype);
     std::vector<uint8_t> _id;
     const uint8_t _type;
 };
+
+template <class Prototype>
+void Identifier::setID(Prototype& prototypeID)
+{
+    // little-endian encoding
+    // TODO: replace with memcpy or std copy
+    for (int i = 0; i < static_cast<int>(sizeof(Prototype)); i++) {
+        _id.push_back(*(((uint8_t*)&prototypeID) + i));
+    }
+}
 
 struct IdentifierComparator
 {
