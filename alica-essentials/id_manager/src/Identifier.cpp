@@ -3,6 +3,12 @@
 namespace essentials
 {
 
+Identifier::Identifier(uint64_t prototypeID)
+        : _type(UUID_TYPE)
+{
+    setID(prototypeID);
+}
+
 Identifier::Identifier(const std::vector<uint8_t>& idBytes)
         : _type(UUID_TYPE)
         , _id(idBytes)
