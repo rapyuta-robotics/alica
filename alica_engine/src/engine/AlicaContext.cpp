@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
@@ -15,12 +15,12 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
-AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
         : _validTag(ALICA_CTX_GOOD)
+        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
+        , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
         , _idManager(std::make_unique<essentials::IDManager>())
-        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine))
-        , _clock(std::make_unique<AlicaClock>())
 {
 }
 
@@ -96,12 +96,21 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
+/**
+ * Method is deprecated and will be removed soon. Use
+ * getLocalAgentName() instead.
+ * @return
+ */
+std::string AlicaContext::getRobotName() {
+    return getLocalAgentName();
+}
+
 std::string AlicaContext::getLocalAgentName()
 {
     return essentials::SystemConfig::getInstance().getHostname();
 }
 
-void AlicaContext::setRobotName(const std::string& name)
+void AlicaContext::setLocalAgentName(const std::string& name)
 {
     essentials::SystemConfig::getInstance().setHostname(name);
 }

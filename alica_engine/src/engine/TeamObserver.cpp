@@ -14,6 +14,7 @@
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 
+#include <alica_common_config/debug_output.h>
 #include <essentials/IdentifierConstPtr.h>
 #include <engine/Output.h>
 
@@ -68,7 +69,7 @@ bool TeamObserver::updateTeamPlanTrees()
 void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = _ae->getAlicaClock().now();
-    ALICA_DEBUG_MSG("TO: tick " << time);
+    ALICA_DEBUG_MSG("TO: tick(..) called at " << time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed

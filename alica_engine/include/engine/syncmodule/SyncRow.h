@@ -14,23 +14,21 @@ struct SyncData;
 class SyncRow
 {
 public:
-    SyncRow();
-    SyncRow(const SyncData& sd);
+    SyncRow() = delete;
+    explicit SyncRow(const SyncData& sd);
     virtual ~SyncRow();
-    AgentGrp& getReceivedBy();
-    void setReceivedBy(const AgentGrp& recievedBy);
+
+    const AgentGrp& getReceivedBy();
+    AgentGrp& editReceivedBy();
+
     const SyncData& getSyncData() const { return _syncData; }
     SyncData& editSyncData() { return _syncData; }
     void setSyncData(const SyncData& syncData);
-    void toString();
-    bool hasData() const { return _haveData; }
-    void invalidate() { _haveData = false; }
+
+    friend std::ostream& operator<<(std::ostream& os, const SyncRow& sr);
 
 private:
     SyncData _syncData;
-    bool _haveData;
-    // this vector always has to be sorted
-    AgentGrp _receivedBy;
+    AgentGrp _receivedBy; /**< this vector always has to be sorted */
 };
-
 } /* namespace alica */

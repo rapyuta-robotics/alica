@@ -37,11 +37,6 @@ std::string Behaviour::toString(std::string indent) const
     if (this->_postCondition != nullptr) {
         ss << this->_postCondition->toString(indent + "\t");
     }
-    ss << indent << "\tparameters: " << std::endl;
-    for (const auto& entry : this->_parameters) {
-        ss << indent << "\t" << entry.first << " = " << entry.second << std::endl;
-    }
-
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }

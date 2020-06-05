@@ -3,16 +3,16 @@
 #include "engine/PlanRepository.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Configuration.h"
 #include "engine/modelmanagement/Strings.h"
 
 #include <alica_common_config/debug_output.h>
-
 namespace alica
 {
 
 ReferenceList Factory::stateInTransitionReferences;
 ReferenceList Factory::stateOutTransitionReferences;
-ReferenceList Factory::stateAbstractPlanReferences;
 ReferenceList Factory::synchTransitionReferences;
 ReferenceList Factory::transitionSynchReferences;
 ReferenceList Factory::transitionInStateReferences;
@@ -25,6 +25,8 @@ ReferenceList Factory::quantifierScopeReferences;
 ReferenceList Factory::epStateReferences;
 ReferenceList Factory::epTaskReferences;
 ReferenceList Factory::planTypePlanReferences;
+ReferenceList Factory::wrapperAbstractPlanReferences;
+ReferenceList Factory::wrapperConfigurationReferences;
 TripleReferenceList Factory::roleTaskReferences;
 ModelManager* Factory::modelManager;
 
@@ -51,6 +53,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::roleset_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseRolePath, locator);
+        } else if (essentials::FileSystem::endsWith(locator, alica::Strings::configuration_extension)) {
+            fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else {
             std::cout << "Factory: Unknown file extension: " << locator << std::endl;
         }
@@ -125,6 +129,10 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._roles.emplace(ael->getId(), (Role*) ael);
     } else if (alica::Strings::roleset.compare(type) == 0) {
         modelManager->_planRepository._roleSets.emplace(ael->getId(), (RoleSet*) ael);
+    } else if (alica::Strings::confAbstractPlanWrapper.compare(type) == 0) {
+        modelManager->_planRepository._confAbstractPlanWrapperRepository.emplace(ael->getId(), (ConfAbstractPlanWrapper*) ael);
+    } else if (alica::Strings::configuration.compare(type) == 0) {
+        modelManager->_planRepository._configurationRepository.emplace(ael->getId(), (Configuration*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");

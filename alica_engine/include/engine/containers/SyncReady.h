@@ -26,4 +26,11 @@ struct SyncReady
     stdSyncReady toStandard() { return std::make_tuple(senderID, synchronisationID); }
 };
 
+inline std::ostream& operator<<(std::ostream& o, const SyncReady& sr)
+{
+    std::stringstream ss;
+    ss << "## SyncReady: From " << sr.senderID << " Synchronisation ID " << sr.synchronisationID << "##" << std::endl;
+    return o << ss.str();
+}
+
 } /* namespace alica */

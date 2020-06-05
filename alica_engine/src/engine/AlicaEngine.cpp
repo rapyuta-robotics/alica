@@ -11,9 +11,10 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
 #include <essentials/IDManager.h>
 #include <essentials/SystemConfig.h>
+
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -30,21 +31,21 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
         : _ctx(ctx)
         , _stepCalled(false)
-        , _log(this)
         , _stepEngine(stepEngine)
+        , _log(this)
         , _modelManager(_planRepository)
-        , _teamManager(this)
+        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
+        , _roleSet(_modelManager.loadRoleSet(roleSetName))
+        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID->toByteVector().data(), agentID->toByteVector().size()) : nullptr))
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _planBase(this)
-        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
-        , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
@@ -70,11 +71,6 @@ AlicaEngine::~AlicaEngine()
 
 /**
  * Initialise the engine
- * @param bc A behaviourcreator
- * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
- * @param masterPlanName A string, the top-level plan to be used
- * @param roleSetDir A string, the directory in which to search for roleSets. If empty, the base role path will be used.
- * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
@@ -83,14 +79,15 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
-    _auth.init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
-    _syncModul.init();
-    _variableSyncModule->init();
+
     RunningPlan::init();
     _teamManager.init();
+    _syncModul.init();
+    _variableSyncModule->init();
+    _auth.init();
     return everythingWorked;
 }
 

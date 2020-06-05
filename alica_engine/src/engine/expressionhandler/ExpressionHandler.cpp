@@ -1,10 +1,3 @@
-/*
- * ExpressionHandler.cpp
- *
- *  Created on: Aug 26, 2014
- *      Author: Stefan Jakob
- */
-
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
@@ -32,10 +25,7 @@ namespace alica
  */
 ExpressionHandler::ExpressionHandler() {}
 
-ExpressionHandler::~ExpressionHandler()
-{
-    // TODO Auto-generated destructor stub
-}
+ExpressionHandler::~ExpressionHandler() {}
 
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.

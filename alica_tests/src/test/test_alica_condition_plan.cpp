@@ -1,5 +1,5 @@
 #include "CounterClass.h"
-#include "Plans/Behaviour/ConstraintUsingBehaviour.h"
+#include "Behaviour/ConstraintUsingBehaviour.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
@@ -8,11 +8,10 @@
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-//#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include <Plans/Behaviour/Attack.h>
+#include <Behaviour/Attack.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/constraintmodul/Query.h>
@@ -40,7 +39,7 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     const alica::PlanRepository& rep = ae->getPlanRepository();
 
-    const alica::Behaviour* beh = rep.getBehaviours()[1414068618837];
+    const alica::Behaviour* beh = rep.getBehaviours()[1414068597716];
     ASSERT_NE(beh, nullptr);
     const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);

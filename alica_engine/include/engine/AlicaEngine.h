@@ -22,6 +22,7 @@
 #include <string>
 #include <unordered_map>
 
+
 namespace alica
 {
 struct AlicaCreators;
@@ -29,8 +30,8 @@ class Plan;
 class BehaviourPool;
 class Logger;
 class RoleSet;
-class VariableSyncModule;
 class IRoleAssignment;
+class VariableSyncModule;
 
 class AlicaEngine
 {
@@ -39,7 +40,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
+    AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
     ~AlicaEngine();
 
     // State modifiers:
@@ -110,7 +111,6 @@ public:
     essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE) const;
     essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
     essentials::IdentifierConstPtr generateID(std::size_t size);
-    // TODO: Do we need this: essentials::IdentifierConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
 
 private:
     void setStepEngine(bool stepEngine);
@@ -119,6 +119,8 @@ private:
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
+    const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
+    const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     BehaviourPool _behaviourPool;
     TeamObserver _teamObserver;
@@ -128,35 +130,19 @@ private:
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
-    // TODO: fix this, VariableSyncModule has circular dependency with engine header
-    // VariableSyncModule _variableSyncModule;
+    /**
+     * TODO: Make VariableSyncModule a stack variable.
+     * Currently, it has circular dependency with engine header, because it needs to access
+     * the ALICA clock via the engine in a template method in the VariableSyncModule-Header.
+     * The clock cannot be stored in variable sync module, because it is changed at runtime via the
+     * alica context interface. This happens, e.g., in some alica_tests cases.
+     */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
     BlackBoard _blackboard;
-
-    /**
-     * Pointing to the top level plan of the loaded ALICA program.
-     */
-    const Plan* _masterPlan;
-    /**
-     * Pointing to the current set of known roles.
-     */
-    const RoleSet* _roleSet;
-    /**
-     * Indicates whether the engine should run with a static role assignment
-     * that is based on default roles, or not.
-     */
-    bool _useStaticRoles;
-    /**
-     * Switch the engine between normal operation and silent mode, in which no messages other than debugging information
-     * are sent out.
-     * This is useful for a robot on hot standby.
-     */
-    bool _maySendMessages;
-    /**
-     * Set to have the engine's main loop wait on a signal via MayStep
-     */
-    bool _stepEngine;
-    bool _stepCalled;
+    bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
+    bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 /**

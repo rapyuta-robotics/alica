@@ -1,8 +1,4 @@
 #pragma once
-//#define SM_MISC
-//#define SM_SUCCESS
-//#define SM_FAILURE
-//#define SM_MESSAGES
 
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
@@ -28,16 +24,15 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(const AlicaEngine* ae);
     SynchronisationProcess(const AlicaEngine* ae, essentials::IdentifierConstPtr myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
     bool isValid(uint64_t curTick);
+    bool isSynchronisationDone() { return _synchronisationDone; }
     bool integrateSyncTalk(std::shared_ptr<SyncTalk> talk, uint64_t curTick);
     void integrateSyncReady(std::shared_ptr<SyncReady> ready);
     const Synchronisation* getSynchronisation() const;
-    void setSynchronisation(const Synchronisation *synchronisation);
 
 private:
     bool allSyncReady() const;
@@ -50,7 +45,7 @@ private:
     const AlicaEngine* _ae;
     std::mutex _syncMutex;
     std::mutex _rowOkMutex;
-    SyncModule* _syncModul;
+    SyncModule* _syncModule;
     const Synchronisation* _synchronisation;
     essentials::IdentifierConstPtr _myID;
     SyncData* _lastTalkData;
@@ -64,6 +59,7 @@ private:
     std::vector<SyncRow*> _rowsOK;
     std::vector<SyncRow*> _syncMatrix;
     SyncRow* _myRow;
+    bool _synchronisationDone;
 };
 std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc);
 } /* namespace alica */

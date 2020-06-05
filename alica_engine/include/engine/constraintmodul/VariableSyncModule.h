@@ -1,11 +1,10 @@
 #pragma once
 //#define RS_DEBUG
+#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
+
 #include <alica_solver_interface/Interval.h>
-
-#include "engine/AlicaEngine.h"
-
 #include <essentials/NotifyTimer.h>
 
 #include <vector>
@@ -15,6 +14,7 @@ namespace alica
 class Variable;
 class ResultEntry;
 class IAlicaCommunication;
+class AlicaEngine;
 
 class VariableSyncModule
 {
@@ -26,16 +26,13 @@ public:
     void close();
     void clear();
     void onSolverResult(const SolverResult& msg);
-
     void publishContent();
     void postResult(int64_t vid, Variant result);
 
     template <typename VarType>
     int getSeeds(const std::vector<VarType*>& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const;
-
     VariableSyncModule(const VariableSyncModule&) = delete;
     VariableSyncModule(VariableSyncModule&&) = delete;
-
     VariableSyncModule& operator=(const VariableSyncModule&) = delete;
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
@@ -44,12 +41,9 @@ private:
     {
     public:
         VotedSeed(std::vector<Variant>&& v);
-
         bool takeVector(const std::vector<Variant>& v, const std::vector<Interval<double>>& limits, double distThreshold);
-
         VotedSeed(const VotedSeed&) = delete;
         VotedSeed& operator=(const VotedSeed&) = delete;
-
         VotedSeed(VotedSeed&&);
         VotedSeed& operator=(VotedSeed&&);
 

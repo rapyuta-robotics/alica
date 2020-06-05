@@ -22,10 +22,11 @@
 
 namespace alica
 {
+class AbstractPlan;
 class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
-class AbstractPlan;
+class Configuration;
 class State;
 class EntryPoint;
 class PlanType;
@@ -96,10 +97,10 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(AlicaEngine* ae);
-    RunningPlan(AlicaEngine* ae, const Plan* plan);
-    RunningPlan(AlicaEngine* ae, const PlanType* pt);
-    RunningPlan(AlicaEngine* ae, const Behaviour* b);
+    explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
     static void init();
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -206,6 +207,8 @@ public:
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
     essentials::IdentifierConstPtr getOwnID() const;
+    bool getParameter(const std::string& key, std::string& valueOut) const;
+    const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
 private:
@@ -214,6 +217,7 @@ private:
     // Status Information
     PlanStateTriple _activeTriple;
     PlanStatusInfo _status;
+    const Configuration* _configuration;
 
     std::vector<RunningPlan*> _children;
     RunningPlan* _parent;

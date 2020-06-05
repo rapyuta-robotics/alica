@@ -12,12 +12,13 @@
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
 #include "engine/modelmanagement/factories/StateFactory.h"
-#include "engine/modelmanagement/factories/TerminalStateFactory.h"
 #include "engine/modelmanagement/factories/SynchronisationFactory.h"
+#include "engine/modelmanagement/factories/TerminalStateFactory.h"
 #include "engine/modelmanagement/factories/TransitionFactory.h"
 
 #include "engine/model/Plan.h"
 
+#include <climits>
 #include <vector>
 
 namespace alica
@@ -44,7 +45,13 @@ Plan* PlanFactory::create(const YAML::Node& node)
         for (int i = 0; i < static_cast<int>(entryPoints.size()); ++i) {
             plan->_entryPoints.push_back(entryPoints[i]);
             minCard += entryPoints[i]->getCardinality().getMin();
-            maxCard += entryPoints[i]->getCardinality().getMax();
+            // avoid overflow for maxCard
+            long tmpMax = maxCard;
+            if (tmpMax + entryPoints[i]->getCardinality().getMax() > INT32_MAX) {
+                maxCard = INT32_MAX;
+            } else {
+                maxCard += entryPoints[i]->getCardinality().getMax();
+            }
         }
         plan->setMinCardinality(minCard);
         plan->setMaxCardinality(maxCard);

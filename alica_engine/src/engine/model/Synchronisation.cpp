@@ -35,29 +35,4 @@ std::string Synchronisation::toString(std::string indent) const
     return ss.str();
 }
 
-void Synchronisation::setFailOnSyncTimeOut(bool failOnSyncTimeOut)
-{
-    _failOnSyncTimeout = failOnSyncTimeOut;
-}
-
-void Synchronisation::setSyncTimeOut(AlicaTime syncTimeOut)
-{
-    _syncTimeout = syncTimeOut;
-}
-
-void Synchronisation::setTalkTimeOut(AlicaTime talkTimeOut)
-{
-    _talkTimeout = talkTimeOut;
-}
-
-void Synchronisation::setPlan(const Plan* plan)
-{
-    _plan = plan;
-}
-
-void Synchronisation::setInSync(const TransitionGrp& inSync)
-{
-    _inSync = inSync;
-}
-
 } // namespace alica

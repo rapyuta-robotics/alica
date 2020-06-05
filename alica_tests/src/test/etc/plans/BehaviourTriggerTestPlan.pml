@@ -1,22 +1,88 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1428508768572" name="BehaviourTriggerTestPlan" comment="" masterPlan="true" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <states id="1428508768573" name="NewState" comment="" entryPoint="1428508768574">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/TriggerA.beh#1428508312886</plans>
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/TriggerB.beh#1428508331620</plans>
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/TriggerC.beh#1428508367402</plans>
-    <outTransitions>#1429017235181</outTransitions>
-  </states>
-  <states id="1429017227839" name="NewState" comment="">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/NotToTrigger.beh#1429017293301</plans>
-    <inTransitions>#1429017235181</inTransitions>
-  </states>
-  <transitions id="1429017235181" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1429017236633" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1428508768573</inState>
-    <outState>#1429017227839</outState>
-  </transitions>
-  <entryPoints id="1428508768574" name="MISSING_NAME" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1428508768573</state>
-  </entryPoints>
-</alica:Plan>
+{
+  "id" : 1428508768572,
+  "name" : "BehaviourTriggerTestPlan",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ ],
+  "masterPlan" : true,
+  "utilityThreshold" : 0.1,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "entryPoints" : [ {
+    "id" : 1428508768574,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "successRequired" : false,
+    "minCardinality" : 0,
+    "maxCardinality" : 2147483647,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1428508768573,
+    "plan" : 1428508768572
+  } ],
+  "states" : [ {
+    "type" : "State",
+    "id" : 1428508768573,
+    "name" : "NewState",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1428508768572,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662751,
+      "name" : "1587718662751",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerA.beh#1428508297492",
+      "configuration" : null
+    }, {
+      "id" : 1587718662753,
+      "name" : "1587718662753",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerB.beh#1428508316905",
+      "configuration" : null
+    }, {
+      "id" : 1587718662755,
+      "name" : "1587718662755",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/TriggerC.beh#1428508355209",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1429017235181 ],
+    "inTransitions" : [ ]
+  }, {
+    "type" : "State",
+    "id" : 1429017227839,
+    "name" : "NewState",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1428508768572,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662758,
+      "name" : "1587718662758",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/NotToTrigger.beh#1429017274116",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1429017235181 ]
+  } ],
+  "transitions" : [ {
+    "id" : 1429017235181,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1428508768573,
+    "outState" : 1429017227839,
+    "preCondition" : {
+      "id" : 1429017236633,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  } ],
+  "synchronisations" : [ ]
+}

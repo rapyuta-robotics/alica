@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_engine)
 
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
 
 ##Yaml
