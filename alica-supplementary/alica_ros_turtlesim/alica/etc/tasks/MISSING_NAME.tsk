@@ -1,0 +1,22 @@
+{
+  "id" : 1542881176285,
+  "name" : "MISSING_NAME",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "tasks" : [ {
+    "id" : 1542881176318,
+    "name" : "DefaultTask",
+    "comment" : "Default Task.",
+    "taskRepository" : 1542881176285
+  }, {
+    "id" : 1543224732214,
+    "name" : "LeaderTask",
+    "comment" : "",
+    "taskRepository" : 1542881176285
+  }, {
+    "id" : 1543224747408,
+    "name" : "FollowerTask",
+    "comment" : "",
+    "taskRepository" : 1542881176285
+  } ]
+}

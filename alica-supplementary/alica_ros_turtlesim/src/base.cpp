@@ -4,7 +4,7 @@
 #include <UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
 
-#include <CGSolver.h>
+#include <constraintsolver/CGSolver.h>
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
 #include <ros/ros.h>

@@ -106,7 +106,9 @@ void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInf
     aais.plan_type = aai.planType;
 
     aais.sender_id.id = aai.senderID->toByteVector();
+    aais.sender_id.type = aai.senderID->getType();
     aais.authority.id = aai.authority->toByteVector();
+    aais.authority.type = aai.authority->getType();
 
     for (auto& ep : aai.entryPointRobots) {
         alica_msgs::EntryPointRobots newEP;
@@ -117,6 +119,7 @@ void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInf
             for (size_t j = 0; j < agentId->getSize(); j++) {
                 newEP.robots[i].id.push_back(*(agentId->getRaw() + j));
             }
+            newEP.robots[i].type = agentId->getType();
             i++;
         }
         aais.entrypoints.push_back(newEP);
@@ -139,10 +142,12 @@ void AlicaRosCommunication::sendAlicaEngineInfo(const AlicaEngineInfo& bi) const
     for (auto& robotID : bi.robotIDsWithMe) {
         alica_msgs::AllocationAuthorityInfo::_sender_id_type rosRobotID;
         rosRobotID.id = robotID->toByteVector();
+        rosRobotID.type = robotID->getType();
         bis.robot_ids_with_me.push_back(rosRobotID);
     }
 
     bis.sender_id.id = bi.senderID->toByteVector();
+    bis.sender_id.type = bi.senderID->getType();
 
     if (_isRunning) {
         _alicaEngineInfoPublisher.publish(bis);
@@ -153,6 +158,7 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
 {
     alica_msgs::PlanTreeInfo ptis;
     ptis.sender_id.id = pti.senderID->toByteVector();
+    ptis.sender_id.type = pti.senderID->getType();
 
     ptis.state_ids.reserve(pti.stateIDs.size());
     for (int64_t i : pti.stateIDs) {
@@ -172,8 +178,9 @@ void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    auto robotID = ae->getTeamManager().getLocalAgentID();
-    rss.sender_id.id = robotID->toByteVector();
+    auto agentID = ae->getTeamManager().getLocalAgentID();
+    rss.sender_id.id = agentID->toByteVector();
+    rss.sender_id.type = agentID->getType();
 
     if (_isRunning) {
         _roleSwitchPublisher.publish(rss);
@@ -185,6 +192,7 @@ void AlicaRosCommunication::sendSyncReady(const SyncReady& sr) const
     alica_msgs::SyncReady srs;
 
     srs.sender_id.id = sr.senderID->toByteVector();
+    srs.sender_id.type = sr.senderID->getType();
     srs.sync_transition_id = sr.synchronisationID;
 
     if (_isRunning) {
@@ -196,12 +204,14 @@ void AlicaRosCommunication::sendSyncTalk(const SyncTalk& st) const
 {
     alica_msgs::SyncTalk sts;
     sts.sender_id.id = st.senderID->toByteVector();
+    sts.sender_id.type = st.senderID->getType();
 
     for (auto sd : st.syncData) {
         alica_msgs::SyncData sds;
         sds.ack = sd.ack;
         sds.condition_holds = sd.conditionHolds;
         sds.robot_id.id = sd.agentID->toByteVector();
+        sds.robot_id.type = sd.agentID->getType();
         sds.transition_id = sd.transitionID;
         sts.sync_data.push_back(sds);
     }
@@ -215,6 +225,7 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const
 {
     alica_msgs::SolverResult srs;
     srs.sender_id.id = sr.senderID->toByteVector();
+    srs.sender_id.type = sr.senderID->getType();
 
     for (const SolverVar& sv : sr.vars) {
         alica_msgs::SolverVar svs;
@@ -351,6 +362,7 @@ void AlicaRosCommunication::sendAgentQuery(const AgentQuery& pq) const
 {
     alica_msgs::AgentQuery newpq;
     newpq.sender_id.id = pq.senderID->toByteVector();
+    newpq.sender_id.type = pq.senderID->getType();
     newpq.sender_sdk = pq.senderSdk;
     newpq.plan_hash = pq.planHash;
     if (_isRunning) {
@@ -362,6 +374,7 @@ void AlicaRosCommunication::sendAgentAnnouncement(const AgentAnnouncement& pa) c
 {
     alica_msgs::AgentAnnouncement newpa;
     newpa.sender_id.id = pa.senderID->toByteVector();
+    newpa.sender_id.type = pa.senderID->getType();
     newpa.token = pa.token;
     newpa.sender_name = pa.senderName;
     newpa.sender_sdk = pa.senderSdk;

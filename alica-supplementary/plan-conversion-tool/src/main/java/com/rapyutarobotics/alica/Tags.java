@@ -62,7 +62,8 @@ public class Tags {
     public static final String FREQUENCY = "frequency";
     public static final String CONFIGURATIONS = "configurations";
     public static final String DEFERRING = "deferring";
-    public static final String BEHAVIOURCONFIGURATIONTAG = "alica:BehaviourConfiguration";
     public static final String EVENTDRIVEN = "eventDriven";
+    public static final String PLANTYPETAG = "alica:PlanType";
+    public static final String PARAMETERS = "parameters";
 }
 

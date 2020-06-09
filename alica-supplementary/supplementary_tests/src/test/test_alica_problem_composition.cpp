@@ -1,4 +1,4 @@
-#include <Plans/ProblemModule/QueryBehaviour1.h>
+#include <ProblemModule/QueryBehaviour1.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
 #include <test_supplementary.h>

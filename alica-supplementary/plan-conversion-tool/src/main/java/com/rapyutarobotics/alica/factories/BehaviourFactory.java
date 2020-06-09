@@ -24,8 +24,12 @@ public class BehaviourFactory extends Factory {
                 behaviour.setFrequency(Integer.parseInt(configuration.getAttribute(Tags.FREQUENCY)));
                 behaviour.setDeferring(Long.parseLong(configuration.getAttribute(Tags.DEFERRING)));
                 behaviour.setEventDriven(Boolean.parseBoolean(configuration.getAttribute(Tags.EVENTDRIVEN)));
-                // TODO parameters...
-                System.err.println("[BehaviourFactory] TODO - Conversion of parameters of behaviour configurations not supported, yet." + confID);
+
+                NodeList parameterNodes = configuration.getElementsByTagName(Tags.PARAMETERS);
+                for (int j = 0; j < parameterNodes.getLength(); j++) {
+                    Element parameter = (Element) parameterNodes.item(j);
+                    behaviour.putParameter(parameter.getAttribute(Tags.KEY), parameter.getAttribute(Tags.VALUE));
+                }
             } else {
                 System.out.println("[BehaviourFactory] Info - Multiple Behaviour Configurations are not supported anymore. Dropping the configuration with ID: " + confID);
             }

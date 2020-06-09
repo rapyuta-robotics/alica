@@ -1,4 +1,4 @@
-#include "Plans/GSolver/SolverTestBehaviour.h"
+#include "GSolver/SolverTestBehaviour.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"

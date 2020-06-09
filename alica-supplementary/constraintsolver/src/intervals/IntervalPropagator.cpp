@@ -1,13 +1,6 @@
-/*
- * IntervalPropagator.cpp
- *
- *  Created on: Dec 5, 2014
- *      Author: Philipp
- */
-
 #include "intervals/IntervalPropagator.h"
 
-#include "CNSat.h"
+#include "constraintsolver/CNSat.h"
 #include "intervals/RecursivePropagate.h"
 #include "intervals/ResetIntervals.h"
 #include "intervals/UnsolveableException.h"
