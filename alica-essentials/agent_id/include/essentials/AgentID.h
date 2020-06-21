@@ -24,6 +24,12 @@ class AgentID
     virtual bool operator>(const AgentID& other) const;
     void operator=(const std::vector<uint8_t>& other_id);
     operator bool() const { return !_id.empty(); }
+
+    /**
+     * Tries to convert this ID into an uint64_t.
+     * @throws Exception if ID.size() > sizeof(uint64_t)!
+     * @return uint64_t representation of the bytes in this ID.
+     */
     operator uint64_t() const;
 
     virtual const uint8_t* getRaw() const;

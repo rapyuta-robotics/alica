@@ -34,7 +34,7 @@ TEST(AgentID, ConstructionOfHugeID) {
 TEST(AgentID, ConstructionOfHugeStringBasedID) {
 
     essentials::AgentID* id1;
-    std::string agent_id_param = "instjqndaczdtsshocazkdtgpxknutnrkc79bbd8f95j4wv4";
+    const std::string agent_id_param = "instjqndaczdtsshocazkdtgpxknutnrkc79bbd8f95j4wv4";
     id1 = new essentials::AgentID(std::vector<uint8_t>(agent_id_param.begin(), agent_id_param.end()));
     EXPECT_EQ(id1->getSize(), agent_id_param.size()) << "Maybe one character did take more than one byte?!";
     delete id1;
