@@ -31,6 +31,31 @@ TEST(AgentID, ConstructionOfHugeID) {
     delete id1;
 }
 
+TEST(AgentID, ConstructionOfHugeStringBasedID) {
+
+    essentials::AgentID* id1;
+    const std::string agent_id_param = "instjqndaczdtsshocazkdtgpxknutnrkc79bbd8f95j4wv4";
+    id1 = new essentials::AgentID(std::vector<uint8_t>(agent_id_param.begin(), agent_id_param.end()));
+    EXPECT_EQ(id1->getSize(), agent_id_param.size()) << "Maybe one character did take more than one byte?!";
+    delete id1;
+}
+
+TEST(AgentID, ConversionOfHugeIDtoUInt64_T) {
+    essentials::AgentID* id1;
+    std::string agent_id_param = "instjqndaczdtsshocazkdtgpxknutnrkc79bbd8f95j4wv4";
+    id1 = new essentials::AgentID(std::vector<uint8_t>(agent_id_param.begin(), agent_id_param.end()));
+    bool caughtException = false;
+    try {
+        uint64_t intRepresentation = *id1;
+        std::cout << intRepresentation << std::endl;
+    } catch (std::string& errorString) {
+//        std::cout << errorString << std::endl;
+        caughtException = true;
+    }
+    EXPECT_TRUE(caughtException) << "Conversion of huge ID to uint64_t did not raise an exception!";
+    delete id1;
+}
+
 TEST(AgentID, ToByteVectorReturnsCopy) {
     std::vector<uint8_t> bytes1;
     int size = 100;

@@ -1,10 +1,12 @@
 #include "essentials/AgentID.h"
 
+#include <sstream>
+
 namespace essentials
 {
 
 AgentID::AgentID(uint64_t prototypeID)
-        : _type(UUID_TYPE)
+    : _type(UUID_TYPE)
 {
     setID(prototypeID);
 }
@@ -71,16 +73,28 @@ void AgentID::operator=(const std::vector<uint8_t>& other_id)
 
 AgentID::operator uint64_t() const
 {
+    // check that length of id fits into uint64_t
+    if (sizeof(uint64_t) < _id.size()) {
+        std::stringstream ss;
+        ss << "Conversion of ID " << *this << " to uint64_t is not allowed, because (ID.size() = " << _id.size()
+           << " bytes) > (sizeof(uint64_t) = " << sizeof(uint64_t) << " bytes)!";
+        throw ss.str();
+    }
+
     // Determine the endianness
     constexpr short n = 1;
     bool isLittleEndian = *((char*)(&n)) == 1;
 
     // moving data
-    long long out = 0;
+    uint64_t out = 0;
     if (isLittleEndian) {
         std::copy(_id.begin(), _id.end(), (uint8_t*)(&out));
     } else {
-        int offset = static_cast<int>(sizeof(long long) - _id.size());
+        /**
+         * Note: This is not changing the order of bytes, as it should happen for a different endianness.
+         * Instead it simply moves the bytes at the beginning or end of the range of the uint64_t.
+         */
+        int offset = static_cast<int>(sizeof(uint64_t) - _id.size());
         std::copy(_id.begin(), _id.end(), (uint8_t*)(&out) + offset);
     }
     return out;
