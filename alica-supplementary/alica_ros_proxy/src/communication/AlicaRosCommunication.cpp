@@ -84,7 +84,6 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCou
 
     if (privateQueue) {
         _callbackQueue = new ros::CallbackQueue;
-        _rosNode->setCallbackQueue(_callbackQueue);
         _spinner = new ros::AsyncSpinner(threadCount, _callbackQueue);
     } else {
         _spinner = new ros::AsyncSpinner(threadCount);
