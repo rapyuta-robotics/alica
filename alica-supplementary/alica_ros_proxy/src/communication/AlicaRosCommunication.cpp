@@ -43,38 +43,7 @@ const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 }
 
 AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
-        : IAlicaCommunication(ae)
-{
-    _isRunning = false;
-    _rosNode = new ros::NodeHandle();
-    _spinner = new ros::AsyncSpinner(0);
-
-    _allocationAuthorityInfoPublisher = _rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
-    _allocationAuthorityInfoSubscriber =
-            _rosNode->subscribe(allocationAuthorityInfoTopic, 10, &AlicaRosCommunication::handleAllocationAuthorityRos, (AlicaRosCommunication*) this);
-
-    _alicaEngineInfoPublisher = _rosNode->advertise<alica_msgs::AlicaEngineInfo>(alicaEngineInfoTopic, 2);
-    _roleSwitchPublisher = _rosNode->advertise<alica_msgs::RoleSwitch>(ownRoleTopic, 10);
-
-    _planTreeInfoPublisher = _rosNode->advertise<alica_msgs::PlanTreeInfo>(planTreeInfoTopic, 10);
-    _planTreeInfoSubscriber = _rosNode->subscribe(planTreeInfoTopic, 5, &AlicaRosCommunication::handlePlanTreeInfoRos, (AlicaRosCommunication*) this);
-
-    _syncReadyPublisher = _rosNode->advertise<alica_msgs::SyncReady>(syncReadyTopic, 10);
-    _syncReadySubscriber = _rosNode->subscribe(syncReadyTopic, 5, &AlicaRosCommunication::handleSyncReadyRos, (AlicaRosCommunication*) this);
-
-    _syncTalkPublisher = _rosNode->advertise<alica_msgs::SyncTalk>(syncTalkTopic, 10);
-    _syncTalkSubscriber = _rosNode->subscribe(syncTalkTopic, 5, &AlicaRosCommunication::handleSyncTalkRos, (AlicaRosCommunication*) this);
-
-    _solverResultPublisher = _rosNode->advertise<alica_msgs::SolverResult>(solverResultTopic, 10);
-    _solverResultSubscriber = _rosNode->subscribe(solverResultTopic, 5, &AlicaRosCommunication::handleSolverResult, (AlicaRosCommunication*) this);
-
-    _presenceQueryPublisher = _rosNode->advertise<alica_msgs::AgentQuery>(presenceQueryTopic, 5, true);
-    _presenceQuerySubscriber = _rosNode->subscribe(presenceQueryTopic, 5, &AlicaRosCommunication::handleAgentQuery, (AlicaRosCommunication*) this);
-
-    _presenceAnnouncementPublisher = _rosNode->advertise<alica_msgs::AgentAnnouncement>(presenceAnnouncementTopic, 5, true);
-    _presenceAnnouncementSubscriber =
-            _rosNode->subscribe(presenceAnnouncementTopic, 50, &AlicaRosCommunication::handleAgentAnnouncement, (AlicaRosCommunication*) this);
-}
+        : AlicaRosCommunication(ae, 0, false) {}
 
 AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCount, bool privateQueue)
         : IAlicaCommunication(ae)
