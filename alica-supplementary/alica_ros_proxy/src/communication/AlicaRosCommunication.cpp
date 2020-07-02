@@ -43,11 +43,20 @@ const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 }
 
 AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
+        : AlicaRosCommunication(ae, 0, false) {}
+
+AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCount, bool privateQueue)
         : IAlicaCommunication(ae)
 {
     _isRunning = false;
     _rosNode = new ros::NodeHandle();
-    _spinner = new ros::AsyncSpinner(4);
+
+    if (privateQueue) {
+        _callbackQueue = new ros::CallbackQueue;
+        _spinner = new ros::AsyncSpinner(threadCount, _callbackQueue);
+    } else {
+        _spinner = new ros::AsyncSpinner(threadCount);
+    }
 
     _allocationAuthorityInfoPublisher = _rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
     _allocationAuthorityInfoSubscriber =
@@ -75,6 +84,7 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
     _presenceAnnouncementSubscriber =
             _rosNode->subscribe(presenceAnnouncementTopic, 50, &AlicaRosCommunication::handleAgentAnnouncement, (AlicaRosCommunication*) this);
 }
+
 
 AlicaRosCommunication::~AlicaRosCommunication()
 {

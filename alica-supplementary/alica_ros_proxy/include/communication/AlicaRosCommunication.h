@@ -13,6 +13,7 @@
 #include <SystemConfig.h>
 
 #include <ros/ros.h>
+#include <ros/callback_queue.h>
 #include <string>
 
 using namespace alica;
@@ -24,6 +25,7 @@ class AlicaRosCommunication : public alica::IAlicaCommunication
 {
 public:
     AlicaRosCommunication(AlicaEngine* ae);
+    AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCount, bool privateQueue = false);
     virtual ~AlicaRosCommunication();
 
     void tick();
@@ -53,6 +55,7 @@ public:
 private:
     ros::NodeHandle* _rosNode;
     ros::AsyncSpinner* _spinner;
+    ros::CallbackQueue* _callbackQueue;
 
     ros::Publisher _alicaEngineInfoPublisher;
     ros::Publisher _roleSwitchPublisher;
