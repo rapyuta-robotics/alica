@@ -1,5 +1,5 @@
 set(WARNING "-Wall -Wuninitialized -Wmissing-field-initializers -Werror=pointer-arith -Wno-reorder")
-set(ERROR "-Werror-implicit-function-declaration -Werror=return-type")
+set(ERROR "-Werror=return-type")
 set(C_WARNING "-Wbad-function-cast -Wstrict-prototypes")
 set(CPP_WARNING "")
 set(C_STD "-std=c11")
