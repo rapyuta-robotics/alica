@@ -58,7 +58,7 @@ public class ConversionProcess {
     public ReferenceCollection<Long, Long> epTaskReferences = new ReferenceCollection<>(false);
     public ReferenceCollection<Long, Long> stateInTransitionReferences = new ReferenceCollection<>(true);
     public ReferenceCollection<Long, Long> stateOutTransitionReferences = new ReferenceCollection<>(true);
-    public ReferenceCollection<Long, Long> stateAbstractPlanReferences = new ReferenceCollection<>(true);
+    public ReferenceCollection<Long, Long> wrapperAbstractPlanReferences = new ReferenceCollection<>(true);
     public ReferenceCollection<Long, Long> conditionVarReferences = new ReferenceCollection<>(true);
     public ReferenceCollection<Long, Long> quantifierScopeReferences = new ReferenceCollection<>(false);
     public ReferenceCollection<Long, Long> bindingVarReferences = new ReferenceCollection<>(false);
@@ -71,6 +71,7 @@ public class ConversionProcess {
     public ReferenceCollection<Long, Long> annotedPlanPlanReferences = new ReferenceCollection<>(false);
     public ReferenceCollection<Long, Long> roleSetRoleReferences = new ReferenceCollection<>(true);
     public ReferenceCollection<Long, Pair<Long, Float>> roleTaskReferences = new ReferenceCollection<>(true);
+    // The configurationBehaviourMapping mapping is a help to resolve wrapper2Conf and wrapper2Behaviour references
     public ReferenceCollection<Long, Long> configurationBehaviourMapping = new ReferenceCollection<>(false);
 
     public ConversionProcess() {
