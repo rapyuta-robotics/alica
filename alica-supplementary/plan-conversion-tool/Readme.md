@@ -38,7 +38,7 @@ At the time of writing this manual, we already converted all plans and auto-gene
 
    4.1 Add the following **7** program arguments into a run/debug configuration (named Convert*) for converting all plans in the oldetc folder and storing them into the newetc folder:
 
-   ![Convert*](/home/emmeda/Work/rrws/src/alica-supplementary/plan-conversion-tool/img/Convert*.png)
+   ![Convert*](./img/Convert*.png)
 
    - The absolute path to the directory that contains the old plan files.
    - The absolute path to the directory that contains the old task repository file.
@@ -121,4 +121,5 @@ System.out.println("[BehaviourFactory] Info - Multiple Behaviour Configurations 
 
 * There is only one set of parameters supported for behaviours in the new Plan Designer. This might change in future, but for now only the parameters of the first configuration are converted.
 
-In case of further unexpected problems, please contact Stephan Opfer via Slack or [mail](stephan.opfer@rapyuta-robotics.com).
+In case of further unexpected problems, please contact:
+* Stephan Opfer (slack: [@Stephan](https://rapyuta-robotics.slack.com/team/UUUSVSSBY), mail: stephan.opfer@rapyuta-robotics.com)
