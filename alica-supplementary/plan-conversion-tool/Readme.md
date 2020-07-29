@@ -1,6 +1,6 @@
 # Plan Conversion Tool (PCT)
 
-The purpose of the Plan Conversion Tool (PCT) is to convert ALICA plans from the XML format of the old Plan Designer to the JSON format of the new Plan Designer. While the new Plan Designer has plenty advantages over the the old Plan Designer, the reason for choosing JSON over XML is because it is getting a more  common format in most web-related areas.
+The purpose of the Plan Conversion Tool (PCT) is to convert ALICA plans from the XML format of the old Plan Designer to the JSON format of the new Plan Designer. While the new Plan Designer has plenty advantages over the old Plan Designer, the reason for choosing JSON over XML is because it is getting a more  common format in most web-related areas.
 
 ## How PCT works / Dependencies
 
