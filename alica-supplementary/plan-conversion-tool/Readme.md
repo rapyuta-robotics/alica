@@ -16,8 +16,11 @@ The new Plan Designer and the PCT are Maven-based projects and developed with Je
 
 1. Download the community edition of [Intellij](https://www.jetbrains.com/idea/download/).
 2. Open Intellij and choose the [pom.xml](https://github.com/rapyuta-robotics/alica-supplementary/blob/json-plan-format/plan-conversion-tool/pom.xml) file for opening a project
-3. In order to compile the PCT choose Maven window from the right double click on install. ![Maven-Menu](./img/Maven-Menu.png)
-   Note: For this step, it is required, that you have compiled the new Plan Designer already and therefore have all JARs of the different Plan Designer modules located in your local Maven repository. Under Ubuntu, the local Maven repository is the ".m2" folder in your home directory.
+3. In order to compile the PCT choose Maven window from the right double click on install. 
+
+![Maven-Menu](./img/Maven-Menu.png)
+
+Note: For this step, it is required, that you have compiled the new Plan Designer already and therefore have all JARs of the different Plan Designer modules located in your local Maven repository. Under Ubuntu, the local Maven repository is the ".m2" folder in your home directory.
 
 ## How to use PCT / Step-by-step
 
