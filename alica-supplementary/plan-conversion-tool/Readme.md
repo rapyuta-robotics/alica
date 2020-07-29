@@ -44,9 +44,7 @@ At the time of writing this manual, we already converted all plans and auto-gene
 
    ![Convert*](./img/Convert*.png)
 
-   - The absolute path to the directory that contains the old plan files.
-   - The absolute path to the directory that contains the old task repository file.
-   - The absolute path to the directory that contains the old role set related files.
+   - The absolute path to the oldetc directory
    - The absolute path to the newetc directory
    - The absolute path to the newgen directory
    - The absolute path to the directory, that contains the JAR of the Default Plugin for the new Plan Designer's code generation.
