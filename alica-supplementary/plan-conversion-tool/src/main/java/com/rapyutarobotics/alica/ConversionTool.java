@@ -10,13 +10,16 @@ public class ConversionTool {
         if (args.length == 5) {
             // short version with default sub folders
             conversionProcess.setInputDirectory(args[0]);
+            conversionProcess.setOutputDirectories(args[1], args[2]);
+            conversionProcess.setPluginsPath(args[3]);
+            conversionProcess.run(args[4]);
         } else if (args.length == 7) {
             // long version, specify each folder for plans, tasks, roles
             conversionProcess.setInputDirectories(args[0], args[1], args[2]);
+            conversionProcess.setOutputDirectories(args[3], args[4]);
+            conversionProcess.setPluginsPath(args[5]);
+            conversionProcess.run(args[6]);
         }
-        conversionProcess.setOutputDirectories(args[3], args[4]);
-        conversionProcess.setPluginsPath(args[5]);
-        conversionProcess.run(args[6]);
     }
 
     public static void main(String[] args) {

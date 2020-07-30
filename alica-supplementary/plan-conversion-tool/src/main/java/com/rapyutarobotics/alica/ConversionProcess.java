@@ -268,11 +268,10 @@ public class ConversionProcess {
      * Generates sourcecode
      */
     private void autogenerate() {
-//        for (String name : this.pluginManager.getAvailablePluginNames()) {
-//            System.out.println("[ConversionProcess] Plugin found: " + name);
-//        }
+        for (String name : this.pluginManager.getAvailablePluginNames()) {
+            System.out.println("[ConversionProcess] Plugin found: " + name);
+        }
         this.pluginManager.setDefaultPlugin("DefaultPlugin");
-//        modelManager.loadModelFromDisk();
         GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
         generatedSourcesManager.setCodegenPath(codeGenerationPath);
         System.out.println("[ConversionProcess] Code generation path: '" + codeGenerationPath + "'");
@@ -384,7 +383,7 @@ public class ConversionProcess {
 
         SerializablePlanElement element = null;
         if (Types.PLAN.equals(type)) {
-            element =PlanFactory.create(node, this);
+            element = PlanFactory.create(node, this);
         } else if (Types.BEHAVIOUR.equals(type)) {
             element = BehaviourFactory.create(node, this);
         } else if (Types.PLANTYPE.equals(type)) {
@@ -412,9 +411,9 @@ public class ConversionProcess {
      * @param element      Serializable plan element, whose relative directory should be set.
      * @param absoluteFile The absolute file that helps to determine the relative directory.
      */
-    private void setRelativeDirectory(SerializablePlanElement element, String absoluteFile) {
+    public void setRelativeDirectory(SerializablePlanElement element, String absoluteFile) {
         int baseLength = 0;
-        if (absoluteFile.endsWith(Extensions.PLAN) || absoluteFile.endsWith(Extensions.BEHAVIOUR) || absoluteFile.endsWith(Extensions.PLANTYPE)) {
+        if (absoluteFile.endsWith(Extensions.PLAN) || absoluteFile.endsWith(Extensions.BEHAVIOUR) || absoluteFile.endsWith(Extensions.PLANTYPE) || absoluteFile.endsWith((Extensions.CONFIGURATION))) {
             baseLength = this.basePlansPath.length();
         } else if (absoluteFile.endsWith(Extensions.TASKREPOSITORY)) {
             baseLength = this.baseTasksPath.length();
@@ -470,6 +469,8 @@ public class ConversionProcess {
                 this.modelManager.storePlanElement(Types.TASKREPOSITORY, element, true);
             } else if (element instanceof RoleSet) {
                 this.modelManager.storePlanElement(Types.ROLESET, element, true);
+            } else if (element instanceof Configuration) {
+                this.modelManager.storePlanElement(Types.CONFIGURATION, element, true);
             } else {
 //                System.out.println("[ConversionTool] Info - Skip " + element.toString());
             }

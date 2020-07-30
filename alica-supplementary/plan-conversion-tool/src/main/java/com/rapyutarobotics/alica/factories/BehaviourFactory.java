@@ -17,15 +17,17 @@ public class BehaviourFactory extends Factory {
         NodeList configurationNodes = behaviourNode.getElementsByTagName(Tags.CONFIGURATIONS);
         for (int i = 0; i < configurationNodes.getLength(); i++) {
             Element configurationNode = (Element) configurationNodes.item(i);
-            Configuration configuration = (Configuration) ConfigurationFactory.create(configurationNode, cp);
             if (i == 0) {
-                System.out.println("[BehaviourFactory] Info - Behaviour Configurations are not supported anymore. Variables, frequency, deferring, and eventDriven are taken from configuration with ID: " + configuration.getId());
+                System.out.println("[BehaviourFactory] Info - Behaviour Configurations are not supported anymore. Variables, frequency, deferring, and eventDriven are taken from configuration with ID: " + Long.parseLong(configurationNode.getAttribute(Tags.ID)));
                 AbstractPlanFactory.setVariables(configurationNode, behaviour, cp);
                 behaviour.setFrequency(Integer.parseInt(configurationNode.getAttribute(Tags.FREQUENCY)));
                 behaviour.setDeferring(Long.parseLong(configurationNode.getAttribute(Tags.DEFERRING)));
                 behaviour.setEventDriven(Boolean.parseBoolean(configurationNode.getAttribute(Tags.EVENTDRIVEN)));
             }
-            cp.configurationBehaviourMapping.put(configuration.getId(), behaviour.getId());
+            Configuration configuration = (Configuration) ConfigurationFactory.create(configurationNode, cp);
+            if (configuration != null) {
+                cp.configurationBehaviourMapping.put(configuration.getId(), behaviour.getId());
+            }
         }
 
         return behaviour;

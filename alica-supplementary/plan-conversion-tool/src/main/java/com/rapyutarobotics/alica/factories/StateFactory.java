@@ -26,7 +26,7 @@ public class StateFactory extends Factory {
         NodeList abstractPlanNodes = stateNode.getElementsByTagName(Tags.PLANS);
         for (int i = 0; i  < abstractPlanNodes.getLength(); i++) {
             Element abstractPlanNode = (Element) abstractPlanNodes.item(i);
-            state.addConfAbstractPlanWrapper(createConfAbstractPlanWrapper(abstractPlanNode, cp));
+            state.addConfAbstractPlanWrapper(ConfAbstractPlanWrapperFactory.create(abstractPlanNode, cp));
         }
         NodeList variableBindingNodes = stateNode.getElementsByTagName(Tags.VARIABLEBINDING);
         for (int i = 0; i < variableBindingNodes.getLength(); i++) {
@@ -37,18 +37,9 @@ public class StateFactory extends Factory {
         return state;
     }
 
-    private static ConfAbstractPlanWrapper createConfAbstractPlanWrapper(Element abstractPlanNode, ConversionProcess cp) {
-        // Note: The wrapper did not exist before, so it is okay to let it keep its own new ID, empty name, and comment.
-        ConfAbstractPlanWrapper confAbstractPlanWrapper = new ConfAbstractPlanWrapper();
-        Long abstractPlanID = cp.getReferencedId(abstractPlanNode.getTextContent());
-        if (abstractPlanID != -1) {
-            cp.wrapperAbstractPlanReferences.put(confAbstractPlanWrapper.getId(), abstractPlanID);
-        }
-        return confAbstractPlanWrapper;
-    }
-
     public static void attachReferences(ConversionProcess cp) {
         VariableBindingFactory.attachReferences(cp);
+        ConfAbstractPlanWrapperFactory.attachReferences(cp);
 
         for (Pair<Long, Long> entry : cp.stateInTransitionReferences.getEntries()) {
             State state = (State) cp.getElement(entry.getKey());
@@ -69,22 +60,5 @@ public class StateFactory extends Factory {
             state.addOutTransition(transition);
         }
         cp.stateOutTransitionReferences.clear();
-
-        for (Pair<Long, Long> entry : cp.wrapperAbstractPlanReferences.getEntries()) {
-            ConfAbstractPlanWrapper confAbstractPlanWrapper = (ConfAbstractPlanWrapper) cp.getElement(entry.getKey());
-            AbstractPlan abstractPlan;
-            if (cp.configurationBehaviourMapping.containsKey(entry.getValue())) {
-                abstractPlan = (AbstractPlan) cp.getElement(cp.configurationBehaviourMapping.get(entry.getValue()));
-                confAbstractPlanWrapper.setConfiguration((Configuration) cp.getElement(entry.getValue()));
-            } else {
-                abstractPlan = (AbstractPlan) cp.getElement(entry.getValue());
-            }
-            if (abstractPlan == null) {
-                throw new RuntimeException("[StateFactory] Abstract plan with ID " + entry.getValue() + " unknown!");
-            }
-            confAbstractPlanWrapper.setAbstractPlan(abstractPlan);
-        }
-        cp.wrapperAbstractPlanReferences.clear();
-
     }
 }

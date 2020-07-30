@@ -11,12 +11,14 @@ public class ConfigurationFactory extends Factory {
     public static SerializablePlanElement create(Element configurationNode, ConversionProcess cp) {
         Configuration configuration = new Configuration();
         Factory.setAttributes(configurationNode, configuration);
-        cp.addElement(configuration);
 
         NodeList parameterNodes = configurationNode.getElementsByTagName(Tags.PARAMETERS);
-        for (int j = 0; j < parameterNodes.getLength(); j++) {
-            Element parameter = (Element) parameterNodes.item(j);
-            configuration.putParameter(parameter.getAttribute(Tags.KEY), parameter.getAttribute(Tags.VALUE));
+        if (parameterNodes.getLength() > 0) {
+            cp.addElement(configuration);
+            for (int j = 0; j < parameterNodes.getLength(); j++) {
+                Element parameter = (Element) parameterNodes.item(j);
+                configuration.putParameter(parameter.getAttribute(Tags.KEY), parameter.getAttribute(Tags.VALUE));
+            }
         }
 
         return configuration;
