@@ -41,6 +41,7 @@
 
 # Ignore Intellij/Maven stuff
 **/target/
+*.iml
 
 # Special Folder for testing conversion
 plan-conversion-tool/src/main/test-stuff/
