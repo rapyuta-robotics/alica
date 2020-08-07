@@ -58,7 +58,7 @@ const essentials::Identifier* IDManager::generateID(int size)
     }
 }
 
-const essentials::Identifier* IDManager::getWildcardID() {
+const essentials::Identifier* IDManager::getWildcardID() const {
     return this->wildcardId;
 }
 

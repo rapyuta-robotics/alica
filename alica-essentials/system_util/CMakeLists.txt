@@ -14,9 +14,9 @@ endif(catkin_FOUND)
 
 if (catkin_FOUND)
   catkin_package(
-   LIBRARIES system_util fsystem
+   INCLUDE_DIRS include
+   LIBRARIES system_util
    CATKIN_DEPENDS system_config fsystem
-  # DEPENDS system filesystem
   )
 endif(catkin_FOUND)
 

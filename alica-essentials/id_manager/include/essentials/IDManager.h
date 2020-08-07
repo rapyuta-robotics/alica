@@ -28,7 +28,7 @@ public:
     template <class Prototype>
     const Identifier* getID(Prototype& idPrototype, uint8_t type = Identifier::UUID_TYPE);
     const Identifier* generateID(int size = 16);
-    const Identifier* getWildcardID();
+    const Identifier* getWildcardID() const;
 private:
     std::unordered_set<const Identifier*, essentials::IdentifierHash, essentials::IdentifierEqualsComparator> ids;
     std::mutex idsMutex;
