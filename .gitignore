@@ -46,6 +46,10 @@ local.properties
 # visual studio code
 .vscode/
 
+# clion
+.idea/
+cmake-build-debug/
+
 # system backup files from several editors
 *.swp
 *.*~
