@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_simple_solver
     alica_common_config
     alica_solver_interface
+    alica_test_support
     constraintsolver
     autodiff
 )
