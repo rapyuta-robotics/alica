@@ -21,7 +21,8 @@ include_directories(
 
 add_library(${PROJECT_NAME}
 	src/TestBehaviourCreator.cpp
-        src/TestBehaviourCreator.cpp include/alica/TestBehaviourCreator.h)
+	src/AlicaTestSupportUtility.cpp
+)
 
 target_link_libraries(${PROJECT_NAME}
 	${catkin_LIBRARIES}
