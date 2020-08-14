@@ -11,6 +11,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
+#include <alica/AlicaTestSupportUtility.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -24,12 +25,6 @@
 
 namespace alica
 {
-
-// Don't want to expose engine to app developers
-struct AlicaTestEngineGetter
-{
-    static alica::AlicaEngine* getEngine(alica::AlicaContext* ac) { return ac->_engine.get(); }
-};
 
 class AlicaTestFixtureBase : public ::testing::Test
 {
@@ -59,7 +54,7 @@ protected:
         ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ae = AlicaTestEngineGetter::getEngine(ac);
+        ae = AlicaTestSupportUtility::getEngine(ac);
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
         // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
@@ -123,7 +118,7 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
             // ac->init(creators);
-            alica::AlicaEngine* ae = AlicaTestEngineGetter::getEngine(ac);
+            alica::AlicaEngine* ae = AlicaTestSupportUtility::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
             acs.push_back(ac);

@@ -5,6 +5,7 @@
 
 namespace alica
 {
+class AlicaTestSupportUtility;
 class Behaviour;
 class Capability;
 class Characteristic;
@@ -121,6 +122,7 @@ public:
     bool verifyPlanBase() const;
 
 private:
+    friend class AlicaTestSupportUtility;
     friend ModelFactory;
     friend Factory;
     friend ModelManager;
