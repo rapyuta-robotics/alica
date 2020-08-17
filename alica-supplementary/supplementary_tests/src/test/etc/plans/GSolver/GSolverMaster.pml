@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1417423751087,
-    "abstractPlans" : [ "GSolver/GSolverTestPlan.pml#1417423757243" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636419,
+      "name" : "1597658636419",
+      "comment" : "",
+      "abstractPlan" : "GSolver/GSolverTestPlan.pml#1417423757243",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

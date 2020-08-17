@@ -1,0 +1,23 @@
+{
+  "plan" : "ProblemModule/QueryPlan1.pml#1479556074049",
+  "uiElementMap" : {
+    "1479556074050" : {
+      "id" : 1597658636669,
+      "name" : "1597658636669",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1479556074051" : {
+      "id" : 1597658636670,
+      "name" : "1597658636670",
+      "comment" : "",
+      "x" : -265,
+      "y" : 8,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

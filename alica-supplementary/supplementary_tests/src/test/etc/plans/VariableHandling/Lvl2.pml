@@ -67,7 +67,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1524452793378,
-    "abstractPlans" : [ "VariableHandling/Lvl3.pml#1524452836022" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636528,
+      "name" : "1597658636528",
+      "comment" : "",
+      "abstractPlan" : "VariableHandling/Lvl3.pml#1524452836022",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1524453170258,
       "name" : "MISSING_NAME",
@@ -92,7 +98,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1524452793378,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
