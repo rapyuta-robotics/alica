@@ -1,7 +1,9 @@
 #include "alica/AlicaTestSupportUtility.h"
 
-#include <engine/AlicaContext.h>
-#include <engine/AlicaEngine.h>
+#include "alica/AlicaTestBehaviourCreator.h"
+
+#include <engine/BasicBehaviour.h>
+#include <engine/model/Behaviour.h>
 
 namespace alica
 {
@@ -22,18 +24,25 @@ std::pair<bool, std::string> AlicaTestSupportUtility::getStateName(alica::AlicaC
     return returnPair;
 }
 
-bool AlicaTestSupportUtility::stepUntilStateReached(alica::AlicaContext* ac, int64_t state, uint64_t msTimeout)
+std::unique_ptr<alica::AlicaTestBehaviourTrigger> AlicaTestSupportUtility::makeBehaviourTriggered(
+        alica::AlicaContext* ac, AlicaTestBehaviourCreator* testBehaviourCreator, int64_t behaviourID)
 {
-    std::chrono::milliseconds timeout(msTimeout);
-    auto start = std::chrono::system_clock::now();
-    while (std::chrono::system_clock::now() - start < timeout) {
-        ac->stepEngine();
-        if (ac->isStateActive(state)) {
-            return true;
-        }
+    // make behaviour event driven
+    const Behaviour* constBehaviour = ac->_engine->getPlanRepository().getBehaviours().find(behaviourID);
+    if (constBehaviour == nullptr) {
+        return nullptr;
     }
-    std::cout << "Stuck in state " << ac->_engine->getPlanBase().getDeepestNode()->getActiveState()->getName() << std::endl;
-    return false;
-}
+    Behaviour* behaviour = const_cast<Behaviour*>(constBehaviour);
+    behaviour->setEventDriven(true);
 
+    // create basic behaviour
+    std::shared_ptr<BasicBehaviour> basicBehaviour = testBehaviourCreator->createBehaviour(behaviourID);
+
+    // set trigger
+    std::unique_ptr<alica::AlicaTestBehaviourTrigger> trigger = std::make_unique<alica::AlicaTestBehaviourTrigger>();
+    basicBehaviour->setTrigger(trigger.get());
+
+    // move ownership of trigger
+    return std::move(trigger);
+}
 } // namespace alica

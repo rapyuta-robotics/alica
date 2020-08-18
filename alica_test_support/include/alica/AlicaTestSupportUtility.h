@@ -1,12 +1,21 @@
 #pragma once
 
-#include <string>
+#include "alica/AlicaTestBehaviourTrigger.h"
+
+#include <engine/AlicaContext.h>
+#include <engine/AlicaEngine.h>
+
+#include <chrono>
 #include <functional>
+#include <memory>
+#include <string>
 
 namespace alica
 {
 class AlicaEngine;
 class AlicaContext;
+class AlicaTestBehaviourCreator;
+class AlicaTestBehaviourTrigger;
 class AlicaTestSupportUtility
 {
 public:
@@ -37,6 +46,50 @@ public:
      * @param msTimeout The timeout in milliseconds
      * @return True, if the given state was reached before the timeout. False, otherwise.
      */
-    static bool stepUntilStateReached(alica::AlicaContext* ac, int64_t state, uint64_t msTimeout);
+    template <typename Rep, typename Period>
+    static bool stepUntilStateReached(alica::AlicaContext* ac, int64_t state, std::chrono::duration<Rep, Period> timeout);
+
+    template <typename Rep, typename Period>
+    static bool stepBehaviour(alica::AlicaTestBehaviourTrigger* behaviourTrigger, std::chrono::duration<Rep, Period> timeout);
+
+    /**
+     * IMPORTANT: This method must be called, before the AlicaContext is initialised via its init-Method!
+     *
+     * This method changes the eventDriven property of the referenced behaviour to be true, set an
+     * EventTrigger object for the behaviour and returns the EventTrigger object to the caller.
+     * @param ac The AlicaContext that includes the given behaviour.
+     * @param behaviourID The ID of the behaviour that should be changed to execute in an event driven fashion.
+     * @return The EventTrigger object which can be used to trigger the behaviour, if
+     * the behaviour existed. Nullptr, otherwise.
+     */
+    static std::unique_ptr<alica::AlicaTestBehaviourTrigger> makeBehaviourTriggered(
+            alica::AlicaContext* ac, AlicaTestBehaviourCreator* testBehaviourCreator, int64_t behaviourID);
 };
+
+template <typename Rep, typename Period>
+bool AlicaTestSupportUtility::stepUntilStateReached(alica::AlicaContext* ac, int64_t state, std::chrono::duration<Rep, Period> timeout)
+{
+    auto start = std::chrono::system_clock::now();
+    while (std::chrono::system_clock::now() - start < timeout) {
+        ac->stepEngine();
+        if (ac->isStateActive(state)) {
+            return true;
+        }
+    }
+    std::cout << "Stuck in state " << ac->_engine->getPlanBase().getDeepestNode()->getActiveState()->getName() << std::endl;
+    return false;
+}
+
+template <typename Rep, typename Period>
+bool AlicaTestSupportUtility::stepBehaviour(alica::AlicaTestBehaviourTrigger* behaviourTrigger, std::chrono::duration<Rep, Period> timeout)
+{
+    auto start = std::chrono::system_clock::now();
+    behaviourTrigger->trigger();
+    while (std::chrono::system_clock::now() - start < timeout) {
+        if (behaviourTrigger->behaviourFinishedRun()) {
+            return true;
+        }
+    }
+    return false;
+}
 } // namespace alica
