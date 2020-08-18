@@ -77,6 +77,7 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
 
 void BasicBehaviour::setConfiguration(const Configuration* conf)
 {
+    std::cerr << "BasicBehaviour: config test for " << _name << std::endl;
     assert(_configuration == nullptr);
     _configuration = conf;
 }

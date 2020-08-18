@@ -20,8 +20,9 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-	src/TestBehaviourCreator.cpp
+	src/AlicaTestBehaviourCreator.cpp
 	src/AlicaTestSupportUtility.cpp
+	src/AlicaTestBehaviourTrigger.cpp
     src/mockups/FailBehaviour.cpp
     src/mockups/IdleBehaviour.cpp
     src/mockups/SuccessBehaviour.cpp
