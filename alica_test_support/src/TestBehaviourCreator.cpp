@@ -17,7 +17,8 @@ std::shared_ptr<BasicBehaviour> TestBehaviourCreator::createBehaviour(int64_t be
     }
 }
 
-void TestBehaviourCreator::setBehaviourMockUp(int64_t behaviourId, std::shared_ptr<BasicBehaviour> behaviourMockUp) {
+void TestBehaviourCreator::setBehaviourMockUp(int64_t behaviourId, const std::shared_ptr<BasicBehaviour>& behaviourMockUp)
+{
     auto insertResultIter = _behaviourMockUps.insert(std::make_pair(behaviourId, behaviourMockUp));
     if (!insertResultIter.second) {
         // key already existed, so overwrite its value

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10.2)
 project(alica_test_support)
 
 add_compile_options(-std=c++17)
@@ -22,6 +22,10 @@ include_directories(
 add_library(${PROJECT_NAME}
 	src/TestBehaviourCreator.cpp
 	src/AlicaTestSupportUtility.cpp
+    src/mockups/FailBehaviour.cpp
+    src/mockups/IdleBehaviour.cpp
+    src/mockups/SuccessBehaviour.cpp
+    src/mockups/IMockUpBehaviour.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

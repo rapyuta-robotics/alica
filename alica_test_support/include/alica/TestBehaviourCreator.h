@@ -16,9 +16,8 @@ public:
      * @param defaultBehaviourCreator Reference to your applications behaviour
      * creator
      */
-    TestBehaviourCreator(IBehaviourCreator& defaultBehaviourCreator);
-
-    virtual ~TestBehaviourCreator() {}
+    explicit TestBehaviourCreator(IBehaviourCreator& defaultBehaviourCreator);
+    ~TestBehaviourCreator() override = default;
 
     /**
      * The default interface, used by the ALICA Engine to retrieve
@@ -26,7 +25,7 @@ public:
      * @param behaviourId Id of the requested behaviour.
      * @return std::shared_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
-    virtual std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId);
+    std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId) override;
 
     /**
      * This method allows to configure for which behaviour a mockup will be
@@ -40,10 +39,11 @@ public:
      * @param behaviourId The id that the real behaviour has.
      * @param behaviourMockUp The actual mockup behaviour.
      */
-    void setBehaviourMockUp(int64_t behaviourId, std::shared_ptr<BasicBehaviour> behaviourMockUp);
+    void setBehaviourMockUp(int64_t behaviourId, const std::shared_ptr<BasicBehaviour>& behaviourMockUp);
 
 private:
     std::unordered_map<int64_t, std::shared_ptr<BasicBehaviour>> _behaviourMockUps;
+    // TODO: Make this const, once we agreed to make "createBehaviour" const as well
     IBehaviourCreator& _defaultBehaviourCreator;
 };
 } // namespace alica
