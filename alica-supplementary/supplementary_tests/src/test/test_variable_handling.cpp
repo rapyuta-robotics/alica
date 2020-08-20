@@ -42,8 +42,8 @@ protected:
     virtual void SetUp()
     {
         AlicaTestMultiAgentFixture::SetUp();
-        acs[0]->addSolver<alica::reasoner::CGSolver>();
-        acs[1]->addSolver<alica::reasoner::CGSolver>();
+        tcs[0]->addSolver<alica::reasoner::CGSolver>();
+        tcs[1]->addSolver<alica::reasoner::CGSolver>();
     }
 };
 
