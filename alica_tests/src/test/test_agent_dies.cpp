@@ -114,11 +114,11 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     step(aes[0]);
     step(aes[1]);
 
-    ASSERT_EQ(1, aes[0]->getTeamManager().getActiveAgentIds().size());
-    ASSERT_EQ(1, aes[1]->getTeamManager().getActiveAgentIds().size());
+    ASSERT_EQ(1u, aes[0]->getTeamManager().getActiveAgentIds().size());
+    ASSERT_EQ(1u, aes[1]->getTeamManager().getActiveAgentIds().size());
 
-    ASSERT_EQ(0, aes[0]->getPlanBase().getRootNode()->getChildren().size());
-    ASSERT_EQ(0, aes[1]->getPlanBase().getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, aes[0]->getPlanBase().getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, aes[1]->getPlanBase().getRootNode()->getChildren().size());
 
     const_cast<IAlicaCommunication&>(aes[0]->getCommunicator()).startCommunication();
     const_cast<IAlicaCommunication&>(aes[1]->getCommunicator()).startCommunication();
