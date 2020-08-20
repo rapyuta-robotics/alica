@@ -88,7 +88,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     std::vector<alica::RunningPlan*> o_plans;
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(o_plans.size(), 1);
+    EXPECT_EQ(o_plans.size(), 1u);
 }
 }
 }
