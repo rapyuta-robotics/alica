@@ -6,6 +6,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Configuration.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -25,7 +26,7 @@ BehaviourPool::BehaviourPool(AlicaEngine* ae)
 /**
  * Basic Destructor.
  */
-BehaviourPool::~BehaviourPool() {}
+BehaviourPool::~BehaviourPool() = default;
 
 /**
  * Creates instances of BasicBehaviours, needed according to the PlanRepository, with the help of the given
@@ -37,7 +38,7 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
 {
     const PlanRepository::Accessor<ConfAbstractPlanWrapper>& wrappers = _ae->getPlanRepository().getConfAbstractPlanWrappers();
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
-        if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(wrapper->getAbstractPlan())) {
+        if (const auto* behaviour = dynamic_cast<const Behaviour*>(wrapper->getAbstractPlan())) {
             if (getBasicBehaviour(behaviour, wrapper->getConfiguration())) {
                 // A BasicBehaviour representing this combination of Behaviour and Configuration was created already!
                 continue;
@@ -88,7 +89,7 @@ void BehaviourPool::terminateAll()
  */
 void BehaviourPool::startBehaviour(RunningPlan& rp)
 {
-    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+    if (const auto* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
             // set both directions rp <-> bb
             rp.setBasicBehaviour(bb.get());
@@ -109,7 +110,7 @@ void BehaviourPool::startBehaviour(RunningPlan& rp)
  */
 void BehaviourPool::stopBehaviour(RunningPlan& rp)
 {
-    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+    if (const auto* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
             bb->stop();
         }
@@ -121,7 +122,7 @@ void BehaviourPool::stopBehaviour(RunningPlan& rp)
 
 bool BehaviourPool::isBehaviourRunningInContext(const RunningPlan& rp) const
 {
-    if (const Behaviour* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
+    if (const auto* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
         auto& bb = getBasicBehaviour(beh, rp.getConfiguration());
         return bb && bb->isRunningInContext(&rp);
     }
@@ -130,7 +131,7 @@ bool BehaviourPool::isBehaviourRunningInContext(const RunningPlan& rp) const
 
 const std::shared_ptr<BasicBehaviour> BehaviourPool::getBasicBehaviour(const Behaviour* behaviour, const Configuration* configuration) const
 {
-    for (std::pair<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>> poolEntry : _availableBehaviours) {
+    for (const auto& poolEntry : _availableBehaviours) {
         if (poolEntry.first->getAbstractPlan() == behaviour && poolEntry.first->getConfiguration() == configuration) {
             return poolEntry.second;
         }

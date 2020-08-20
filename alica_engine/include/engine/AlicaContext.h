@@ -29,7 +29,9 @@ namespace alica
 
 class AlicaEngine;
 class IAlicaCommunication;
-class AlicaTestSupportUtility;
+namespace test {
+    class TestContext;
+}
 
 /**
  * Alica options that can be set at runtime.
@@ -332,7 +334,7 @@ public:
     T get(AlicaOption option) const;
 
 private:
-    friend class AlicaTestSupportUtility;
+    friend class alica::test::TestContext;
 
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 

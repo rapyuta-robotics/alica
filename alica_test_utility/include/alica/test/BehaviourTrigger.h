@@ -2,9 +2,9 @@
 
 #include <essentials/ITrigger.h>
 
-namespace alica
+namespace alica::test
 {
-class AlicaTestBehaviourTrigger : public essentials::ITrigger
+class BehaviourTrigger : public essentials::ITrigger
 {
 public:
     void trigger();

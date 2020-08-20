@@ -11,7 +11,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <alica/AlicaTestSupportUtility.h>
+#include <alica/test/TestContext.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -29,7 +29,7 @@ namespace alica
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::AlicaContext* ac;
+    alica::test::TestContext* tc;
     alica::AlicaEngine* ae;
 };
 
@@ -51,10 +51,10 @@ protected:
         alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
-        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-        ASSERT_TRUE(ac->isValid());
-        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ae = AlicaTestSupportUtility::getEngine(ac);
+        tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        ASSERT_TRUE(tc->isValid());
+        tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ae = tc->getEngine();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
         // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
@@ -65,8 +65,8 @@ protected:
 
     void TearDown() override
     {
-        ac->terminate();
-        delete ac;
+        tc->terminate();
+        delete tc;
     }
 };
 
@@ -76,7 +76,7 @@ protected:
     void SetUp() override
     {
         AlicaTestFixture::SetUp();
-        ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        tc->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
     }
     void TearDown() override { AlicaTestFixture::TearDown(); }
 };
@@ -84,7 +84,7 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
-    std::vector<alica::AlicaContext*> acs;
+    std::vector<alica::test::TestContext*> tcs;
     std::vector<alica::AlicaEngine*> aes;
 };
 
@@ -112,23 +112,23 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext::setLocalAgentName(getHostName(i));
-            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-            ASSERT_TRUE(ac->isValid());
-            ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            alica::test::TestContext::setLocalAgentName(getHostName(i));
+            alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+            ASSERT_TRUE(tc->isValid());
+            tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
             // ac->init(creators);
-            alica::AlicaEngine* ae = AlicaTestSupportUtility::getEngine(ac);
+            alica::AlicaEngine* ae = tc->getEngine();
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
-            acs.push_back(ac);
+            tcs.push_back(tc);
             aes.push_back(ae);
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* ac : acs) {
+        for (alica::AlicaContext* ac : tcs) {
             ac->terminate();
             delete ac;
         }

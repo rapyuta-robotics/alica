@@ -1,12 +1,12 @@
 #pragma once
 
-#include "alica/mockups/IMockUpBehaviour.h"
+#include "IMockUpBehaviour.h"
 
-namespace alica::mockups
+namespace alica::test
 {
 class FailBehaviour : public IMockUpBehaviour
 {
-    explicit FailBehaviour(const std::string& nameOfMockedBehaviour, uint32_t iterationsBeforeFail = 0);
+    explicit FailBehaviour(uint32_t iterationsBeforeFail = 0);
     void run(void* msg) override;
 
 private:

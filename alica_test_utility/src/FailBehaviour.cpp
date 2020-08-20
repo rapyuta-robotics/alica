@@ -1,8 +1,8 @@
-#include "alica/mockups/FailBehaviour.h"
-namespace alica::mockups
+#include "alica/test/FailBehaviour.h"
+namespace alica::test
 {
-FailBehaviour::FailBehaviour(const std::string& nameOfMockedBehaviour, uint32_t iterationsBeforeFail)
-        : IMockUpBehaviour(nameOfMockedBehaviour)
+FailBehaviour::FailBehaviour( uint32_t iterationsBeforeFail)
+        : IMockUpBehaviour("FailBehaviour")
         , _iterationsBeforeFail(iterationsBeforeFail)
 {
 }

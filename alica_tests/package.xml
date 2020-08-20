@@ -19,7 +19,7 @@
   <depend>alica_simple_solver</depend>
   <depend>id_ros</depend>
   <depend>alica_solver_interface</depend>
-  <depend>alica_test_support</depend>
+  <depend>alica_test_utility</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
   

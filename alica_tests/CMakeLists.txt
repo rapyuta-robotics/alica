@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_simple_solver
     alica_common_config
     alica_solver_interface
-    alica_test_support
+    alica_test_utility
 )
 
 include_directories(include)
