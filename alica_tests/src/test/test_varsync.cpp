@@ -56,7 +56,7 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 
     int num = vsm.getSeeds(vs, limits, seeds);
     EXPECT_EQ(num, 1);
-    EXPECT_EQ(seeds.size(), 2);
+    EXPECT_EQ(seeds.size(), 2u);
     EXPECT_TRUE(seeds[0].isDouble());
     EXPECT_TRUE(seeds[1].isDouble());
 
