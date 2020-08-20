@@ -71,8 +71,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
     EXPECT_EQ(rp1->getActivePlan()->getName(), "Lvl1");
-    EXPECT_EQ(rp1->getAssignment().size(), 2u);
-    EXPECT_EQ(rp2->getAssignment().size(), 2u);
+    EXPECT_EQ(rp1->getAssignment().size(), 2);
+    EXPECT_EQ(rp2->getAssignment().size(), 2);
 
     EXPECT_EQ(rp1->getActiveState()->getId(), 1524453481856);
     EXPECT_EQ(rp2->getActiveState()->getId(), 1524453481856);
@@ -101,7 +101,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
     EXPECT_LT(result1[0], 0);
     EXPECT_GT(result1[1], 0);
@@ -110,7 +110,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.addDomainVariable(id1, "X", aes[0]);
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(3, result1.size());
+    EXPECT_EQ(3u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
 
     // Cause  agent to move through transition:
@@ -137,7 +137,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
 
     Query q2;
@@ -146,7 +146,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(3, q2.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
 
@@ -157,7 +157,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.addDomainVariable(id1, "Y", aes[0]);
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
 }

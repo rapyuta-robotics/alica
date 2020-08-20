@@ -36,7 +36,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
     const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
-    ASSERT_EQ(deep->getChildren().size(), 1);
+    ASSERT_EQ(deep->getChildren().size(), 1u);
     ASSERT_TRUE((*deep->getChildren().begin())->isBehaviour());
 
     alica::QueryBehaviour1* queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());

@@ -43,7 +43,7 @@ TEST_F(AlicaGSolverPlan, solverTest)
 
     step(ae);
 
-    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
+    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2u) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
