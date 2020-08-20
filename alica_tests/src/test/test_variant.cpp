@@ -45,7 +45,7 @@ TEST(Variant, works)
 
     uint8_t arr[Variant::kVariantSize];
 
-    int ret = v2.serializeTo(arr);
+    uint32_t ret = v2.serializeTo(arr);
     EXPECT_EQ(Variant::kVariantSize, ret);
     ret = v1.loadFrom(arr);
     EXPECT_EQ(Variant::kVariantSize, ret);
