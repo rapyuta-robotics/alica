@@ -8,8 +8,11 @@
 
 namespace alica
 {
+namespace test
+{
+class TestContext;
+}
 
-class AlicaTestSupportUtility;
 class BasicBehaviour;
 class ModelFactory;
 class BehaviourFactory;
@@ -38,7 +41,7 @@ public:
 private:
     friend ModelFactory;
     friend BehaviourFactory;
-    friend AlicaTestSupportUtility;
+    friend alica::test::TestContext;
 
     void setDeferring(int deferring);
     void setEventDriven(bool eventDriven);

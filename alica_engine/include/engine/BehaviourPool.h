@@ -36,10 +36,9 @@ private:
     const std::shared_ptr<BasicBehaviour> getBasicBehaviour(const Behaviour* behaviour, const Configuration* configuration) const;
     /**
      * Manages behaviours used by the running ALICA program.
-     * The key of the map is the behaviour configuration, which is created through the plan designer.
+     * The key of the map is the ConfAbstractPlanWrapper, which is implicitly created through the PlanDesigner.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
-    // TODO: switch to unique ptr
     std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* _ae;
 };

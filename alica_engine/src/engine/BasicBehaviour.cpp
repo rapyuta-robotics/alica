@@ -77,7 +77,6 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
 
 void BasicBehaviour::setConfiguration(const Configuration* conf)
 {
-    std::cerr << "BasicBehaviour: config test for " << _name << std::endl;
     assert(_configuration == nullptr);
     _configuration = conf;
 }
@@ -208,7 +207,7 @@ void BasicBehaviour::runInternalTriggered()
             }
             std::unique_lock<std::mutex> lck(_runLoopMutex);
             _contextInRun = nullptr;
-            _runCV.wait(lck, [this] { return !_started || (_behaviourTrigger->isNotifyCalled(&_runCV) && _running); });
+            _runCV.wait(lck, [this] { return !_started || (_behaviourTrigger && _behaviourTrigger->isNotifyCalled(&_runCV) && _running); });
             _contextInRun = _started ? _context : nullptr;
         }
         if (!_started) {

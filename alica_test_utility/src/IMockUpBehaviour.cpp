@@ -1,6 +1,6 @@
-#include "alica/mockups/IMockUpBehaviour.h"
+#include "alica/test/IMockUpBehaviour.h"
 
-namespace alica::mockups
+namespace alica::test
 {
 IMockUpBehaviour::IMockUpBehaviour(const std::string& nameOfMockedBehaviour)
         : BasicBehaviour(nameOfMockedBehaviour)

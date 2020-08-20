@@ -2,7 +2,7 @@
 
 #include <engine/BasicBehaviour.h>
 
-namespace alica::mockups
+namespace alica::test
 {
 class IMockUpBehaviour : public alica::BasicBehaviour
 {

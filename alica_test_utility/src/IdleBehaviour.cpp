@@ -1,6 +1,6 @@
-#include "alica/mockups/IdleBehaviour.h"
+#include "alica/test/IdleBehaviour.h"
 #include <thread>
-namespace alica::mockups
+namespace alica::test
 {
 void IdleBehaviour::run(void* msg)
 {

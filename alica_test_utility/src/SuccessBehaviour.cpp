@@ -1,9 +1,9 @@
-#include "alica/mockups/SuccessBehaviour.h"
-namespace alica ::mockups
+#include "alica/test/SuccessBehaviour.h"
+namespace alica::test
 {
 
-SuccessBehaviour::SuccessBehaviour(const std::string& nameOfMockedBehaviour, uint32_t iterationsBeforeSuccess)
-        : IMockUpBehaviour(nameOfMockedBehaviour)
+SuccessBehaviour::SuccessBehaviour(uint32_t iterationsBeforeSuccess)
+        : IMockUpBehaviour("SuccesBehaviour")
         , _iterationsBeforeSuccess(iterationsBeforeSuccess){};
 
 void SuccessBehaviour::run(void* msg)

@@ -18,6 +18,10 @@
 
 namespace alica
 {
+namespace test
+{
+class TestContext;
+}
 class Variable;
 class RunningPlan;
 class Configuration;
@@ -87,6 +91,7 @@ protected:
     virtual void onTermination() {}
 
 private:
+    friend alica::test::TestContext;
     void runInternalTimed();
     void runInternalTriggered();
     void initInternal();

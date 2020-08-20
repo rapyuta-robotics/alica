@@ -1,12 +1,11 @@
 #pragma once
 
-#include <memory>
-#include <string>
-
 #include "AlicaElement.h"
 #include "engine/AlicaClock.h"
-
 #include "engine/Types.h"
+
+#include <memory>
+#include <string>
 
 namespace alica
 {

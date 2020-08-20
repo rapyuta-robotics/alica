@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>alica_test_support</name>
+  <name>alica_test_utility</name>
   <version>0.0.1</version>
   <description>The alica_test_support package</description>
 
