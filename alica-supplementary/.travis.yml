@@ -45,6 +45,7 @@ install:
         libyaml-cpp-dev
         libqt5x11extras5-dev
         wget 
+        cmake
         curl && 
     source /opt/ros/$ROS_DISTRO/setup.bash && 
     catkin_init_workspace && 
