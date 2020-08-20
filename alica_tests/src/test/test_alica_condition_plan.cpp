@@ -44,8 +44,8 @@ TEST_F(AlicaConditionPlan, solverTest)
     const alica::State* state = rep.getStates()[1414068524246];
     ASSERT_NE(state, nullptr);
 
-    ASSERT_EQ(beh->getVariables().size(), 2);
-    ASSERT_EQ(state->getParametrisation().size(), 2);
+    ASSERT_EQ(beh->getVariables().size(), 2u);
+    ASSERT_EQ(state->getParametrisation().size(), 2u);
     const alica::Variable* beh_y = nullptr;
     for (const alica::Variable* v : beh->getVariables()) {
         if (v->getName() == "Y") {
