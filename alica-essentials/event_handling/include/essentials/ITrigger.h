@@ -18,9 +18,14 @@ public:
         registeredCVs[condVar] = false;
     }
     virtual void run(bool notifyAll = true) = 0;
-    bool isNotifyCalled(std::condition_variable* cv) { return registeredCVs.find(cv) != registeredCVs.end() && registeredCVs[cv]; }
+    bool isNotifyCalled(std::condition_variable* cv)
+    {
+        std::lock_guard<std::mutex> lock(cvVec_mtx);
+        return registeredCVs.find(cv) != registeredCVs.end() && registeredCVs[cv];
+    }
     void setNotifyCalled(bool called, std::condition_variable* cv)
     {
+        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
         if (registeredCVs.find(cv) != registeredCVs.end()) {
             registeredCVs[cv] = called;
         }
