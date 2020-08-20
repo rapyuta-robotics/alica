@@ -33,6 +33,7 @@ install:
     mkdir -p ~/catkin_ws/src && 
     cd ~/catkin_ws/src && 
     apt-get update && 
+    apt-get upgrade &&
     apt-get install -y 
         build-essential
         python-catkin-pkg 
