@@ -15,7 +15,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-#include <essentials/ITrigger.h>
+#include <essentials/ITrigger.hpp>
 
 #include <assert.h>
 #include <iostream>
@@ -223,7 +223,7 @@ void BasicBehaviour::runInternalTriggered()
             std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
             sendLogMessage(4, err);
         }
-        _behaviourTrigger->setNotifyCalled(false, &_runCV);
+        _behaviourTrigger->setNotifyCalled(&_runCV, false);
     }
 }
 
