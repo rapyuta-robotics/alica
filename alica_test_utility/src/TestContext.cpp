@@ -44,7 +44,7 @@ std::unique_ptr<BehaviourTrigger> TestContext::setBehaviourTrigger(int64_t behav
     if (behaviour) {
         std::unique_ptr<BehaviourTrigger> trigger = std::make_unique<BehaviourTrigger>();
         behaviour->setTrigger(trigger.get());
-        return trigger;
+        return std::move(trigger);
     } else {
         return nullptr;
     }

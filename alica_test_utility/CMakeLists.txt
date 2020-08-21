@@ -23,10 +23,10 @@ add_library(${PROJECT_NAME}
 		src/TestBehaviourCreator.cpp
         src/TestContext.cpp
         src/BehaviourTrigger.cpp
-		src/FailBehaviour.cpp
 		src/IdleBehaviour.cpp
-		src/SuccessBehaviour.cpp
-		src/IMockUpBehaviour.cpp
+        src/IMockUpBehaviour.cpp
+		include/alica/test/SuccessBehaviour.hpp
+		include/alica/test/FailBehaviour.hpp
 )
 
 target_link_libraries(${PROJECT_NAME}

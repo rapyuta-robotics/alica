@@ -26,8 +26,7 @@ public:
 
     /**
      * The default interface, used by the ALICA Engine to retrieve
-     * an instance of a behaviour. The TestBehaviourCreator stores created
-     * behaviours, so that there will only be one instance per ID.
+     * an instance of a behaviour.
      * @param behaviourID Id of the requested behaviour.
      * @return std::shared_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
