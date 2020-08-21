@@ -1,76 +1,74 @@
 #include "essentials/Worker.h"
-#include "essentials/ITrigger.h"
 #include "essentials/Timer.h"
 
 #include <string>
+#include <thread>
 
 namespace essentials
 {
 
-Worker::Worker(std::string name)
-        : name(name)
-        , started(true)
-        , runCV()
+Worker::Worker(std::string name, std::chrono::milliseconds msInterval, std::chrono::milliseconds msDelayedStart)
+        : _name(name)
+        , _started(true)
+        , _runCV()
 {
-    this->timer = new essentials::Timer(0, 0);
-    this->timer->registerCV(&this->runCV);
-    this->runThread = new std::thread(&Worker::runInternal, this);
+    _timer = new essentials::Timer(msInterval, msDelayedStart, true);
+    _timer->registerCV(&_runCV);
+    _runThread = new std::thread(&Worker::runInternal, this);
 }
 
 Worker::~Worker()
 {
-    this->started = false;
-    this->runCV.notify_all();
-    this->timer->start();
-    this->runThread->join();
-    delete this->runThread;
-    delete this->timer;
+    _started = false;
+    _runCV.notify_all();
+    _timer->start();
+    _runThread->join();
+    delete _runThread;
+    delete _timer;
 }
 
 bool Worker::stop()
 {
-    return this->timer->stop();
+    return _timer->stop();
 }
 
 bool Worker::start()
 {
-    return this->timer->start();
+    return _timer->start();
 }
 
-bool Worker::isRunning() const {
-    return this->timer->isRunning();
-}
-
-void Worker::setIntervalMS(std::chrono::milliseconds intervalMS)
+bool Worker::isRunning() const
 {
-    this->timer->setInterval(intervalMS.count());
-}
-
-void Worker::setDelayedStartMS(std::chrono::milliseconds delayedStartMS)
-{
-    this->timer->setDelayedStart(delayedStartMS.count());
+    return _timer->isStarted();
 }
 
 void Worker::runInternal()
 {
-    std::unique_lock<std::mutex> lck(runCV_mtx);
-    while (this->started) {
-        this->runCV.wait(lck, [&] {
-            // protection against spurious wake-ups
-            return !this->started || this->timer->isNotifyCalled(&runCV);
-        });
+    while (_started) {
+        {
+            std::unique_lock<std::mutex> lck(_runCV_mtx);
+            _runCV.wait(lck, [&] {
+                // protection against spurious wake-ups
+                return !_started || _timer->isNotifyCalled(&_runCV);
+            });
+        }
 
-        if (!this->started)
+        if (!_started)
             return;
 
         try {
             this->run();
         } catch (std::exception& e) {
-            std::cerr << "Exception catched:  " << this->name << " - " << e.what() << std::endl;
+            std::cerr << "Exception catched:  " << _name << " - " << e.what() << std::endl;
         }
 
-        this->timer->setNotifyCalled(false, &runCV);
+        _timer->setNotifyCalled(&_runCV, false);
     }
+}
+
+std::string Worker::name() const
+{
+    return _name;
 }
 
 } // namespace essentials

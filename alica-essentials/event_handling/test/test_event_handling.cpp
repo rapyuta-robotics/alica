@@ -15,7 +15,7 @@ public:
     {
         callbackInt++;
         this->cv->notify_one();
-        std::cout << "ZÄHLE HOCH " << callbackInt << std::endl;
+        std::cout << "Counting " << callbackInt << std::endl;
     }
 };
 
@@ -24,7 +24,7 @@ TEST_F(EventTest, timerEvent)
     this->cv = new std::condition_variable();
     std::unique_lock<std::mutex> lck(cv_mtx);
 
-    essentials::Timer timerEvent(1000, 1000);
+    essentials::Timer timerEvent(std::chrono::milliseconds (1000), std::chrono::milliseconds (1000), true);
     timerEvent.registerCV(this->cv);
     timerEvent.start();
 

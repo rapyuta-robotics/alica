@@ -1,40 +1,53 @@
 #pragma once
 
-#include "essentials/ITrigger.h"
+#include "essentials/ITrigger.hpp"
 
 #include <chrono>
 #include <condition_variable>
-#include <iostream>
-#include <thread>
-#include <vector>
+
+namespace std
+{
+class thread;
+}
 
 namespace essentials
 {
 /**
- * The TimerEvent allows to register several condition variables.
+ * The Timer allows to register several condition variables.
  * The condition variables are notified according to the timers configuration.
  */
-class Timer : public virtual ITrigger
+class Timer : public ITrigger
 {
 public:
-    Timer(long msInterval, long msDelayedStart);
-    ~Timer();
+    Timer(std::chrono::milliseconds msInterval, std::chrono::milliseconds msDelayedStart, bool notifyAllThreads);
+    ~Timer() override;
+    /**
+     * Sets the timer to run.
+     * @return True, if the timer will run after this call. False, otherwise.
+     */
     bool start();
+    /**
+     * Sets the timer to stop.
+     * @return True, if the timer will anyways run after this call. False, otherwise.
+     */
     bool stop();
-    bool isRunning();
-    bool isStarted();
-    void setDelayedStart(long msDelayedStart);
-    void setInterval(long msInterval);
-    const long getDelayedStart() const;
-    const long getInterval() const;
-    void run(bool notifyAll = true);
+    /**
+     * Allows to get the running state of the timer.
+     * @return True, if the timer is set to run. False, otherwise.
+     */
+    bool isStarted() const;
+    std::chrono::milliseconds getDelayedStart() const;
+    std::chrono::milliseconds getInterval() const;
+    void run(bool notifyAllThreads) override;
 
-  private:
-    std::thread* runThread;
-    std::chrono::milliseconds msInterval;     /** < The time between two fired events */
-    std::chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
-    bool running, started, triggered;
-    std::mutex cv_mtx;
-    std::condition_variable cv;
+private:
+    bool _running; /** < Is always true except when the timer is shutting down. */
+    bool _started;
+    bool _justStartedAgain;
+    std::thread* _runThread;
+    std::chrono::milliseconds _msInterval;     /** < The time between two fired events */
+    std::chrono::milliseconds _msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
+    std::mutex _cv_mtx;
+    std::condition_variable _cv;
 };
 } /* namespace essentials */

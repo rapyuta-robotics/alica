@@ -1,97 +1,85 @@
 #include "essentials/Timer.h"
 
+#include <thread>
+
 namespace essentials
 {
 
-Timer::Timer(long msInterval, long msDelayedStart)
+Timer::Timer(std::chrono::milliseconds msInterval, std::chrono::milliseconds msDelayedStart, bool notifyAllThreads)
+        : _msInterval(msInterval)
+        , _msDelayedStart(msDelayedStart)
+        , _running(true)
+        , _started(false)
+        , _justStartedAgain(false)
 {
-    this->started = true;
-    this->running = false;
-    this->triggered = false;
-    this->msInterval = std::chrono::milliseconds(msInterval);
-    this->msDelayedStart = std::chrono::milliseconds(msDelayedStart);
-    this->runThread = new std::thread(&Timer::run, this, false);
+    _runThread = new std::thread(&Timer::run, this, notifyAllThreads);
 }
 
 Timer::~Timer()
 {
-    this->running = true;
-    this->started = false;
-    cv.notify_one();
-    this->runThread->join();
-    delete this->runThread;
+    _started = true;
+    _running = false;
+    _cv.notify_one();
+    _runThread->join();
+    delete _runThread;
 }
 
-void Timer::run(bool notifyAll)
+void Timer::run(bool notifyAllThreads)
 {
-    if (msDelayedStart.count() > 0) {
-        std::this_thread::sleep_for(msDelayedStart);
-    }
-
-    while (this->started) {
+    while (_running) {
         {
-            std::unique_lock<std::mutex> lck(cv_mtx);
-            this->cv.wait(lck, [&] { return !this->started || (this->running && this->registeredCVs.size() > 0); });
+            std::unique_lock<std::mutex> lck(_cv_mtx);
+            _cv.wait(lck, [&] { return !_running || _started && isAnyCVRegistered(); });
         }
 
-        if (!this->started) // for destroying the timer
+        if (!_running) // for destroying the timer
             return;
 
+        if (_justStartedAgain) {
+            if (_msDelayedStart.count() > 0) {
+                std::this_thread::sleep_for(_msDelayedStart);
+            }
+            _justStartedAgain = false;
+        }
+
         std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
-        this->notifyAll(notifyAll);
+        notifyEveryCV(notifyAllThreads);
         auto dura = std::chrono::high_resolution_clock::now() - start;
-        //			cout << "TimerEvent: Duration is " <<
-        // chrono::duration_cast<chrono::nanoseconds>(dura).count()
-        //					<< " nanoseconds" << endl;
-        std::this_thread::sleep_for(msInterval - dura);
+        std::this_thread::sleep_for(_msInterval - dura);
     }
 }
 
 bool Timer::start()
 {
-    if (this->started && !this->running) {
-        this->running = true;
-        this->cv.notify_one();
+    if (_running && !_started) {
+        _started = true;
+        _justStartedAgain = true;
+        _cv.notify_one();
     }
-    return this->started && this->running;
+    return _running && _started;
 }
 
 bool Timer::stop()
 {
-    if (this->started && this->running) {
-        this->running = false;
+    if (_running && _started) {
+        _started = false;
     }
-    return this->started && this->running;
+    return _running && _started;
 }
 
-bool Timer::isRunning()
+bool Timer::isStarted() const
 {
-    return this->running;
+    return _started;
 }
 
-bool Timer::isStarted()
+std::chrono::milliseconds Timer::getDelayedStart() const
 {
-    return this->started;
+    return _msDelayedStart;
 }
 
-void Timer::setDelayedStart(long msDelayedStart)
+std::chrono::milliseconds Timer::getInterval() const
 {
-    this->msDelayedStart = std::chrono::milliseconds(msDelayedStart);
-}
-
-const long Timer::getDelayedStart() const
-{
-    return msDelayedStart.count();
-}
-
-void Timer::setInterval(long msInterval)
-{
-    this->msInterval = std::chrono::milliseconds(msInterval);
-}
-
-const long Timer::getInterval() const
-{
-    return msInterval.count();
+    return _msInterval;
 }
 
 } /* namespace essentials */
