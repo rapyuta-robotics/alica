@@ -34,6 +34,7 @@ public:
 protected:
     void notifyAll(bool notifyAll)
     {
+        std::lock_guard<std::mutex> lock(cvVec_mtx);
         for (auto& pair : registeredCVs) {
             pair.second = true;
             if (notifyAll) {
@@ -43,7 +44,6 @@ protected:
             }
         }
     }
-    std::mutex cv_mtx;
     std::mutex cvVec_mtx;
     std::map<std::condition_variable*, bool> registeredCVs;
 };
