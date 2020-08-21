@@ -34,6 +34,7 @@ public:
     std::chrono::milliseconds msInterval;     /** < The time between two fired events */
     std::chrono::milliseconds msDelayedStart; /** < The time between starting the TimerEvent and the first fired event */
     bool running, started, triggered;
+    std::mutex cv_mtx;
     std::condition_variable cv;
 };
 } /* namespace essentials */

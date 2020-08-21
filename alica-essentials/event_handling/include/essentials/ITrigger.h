@@ -34,7 +34,7 @@ public:
 protected:
     void notifyAll(bool notifyAll)
     {
-        std::lock_guard<std::mutex> lock(cvVec_mtx);
+        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
         for (auto& pair : registeredCVs) {
             pair.second = true;
             if (notifyAll) {
