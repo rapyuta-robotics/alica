@@ -69,22 +69,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
             EXPECT_TRUE(false);
         }
     }
-    alicaTests::TestWorldModel::getOne()->trigger1->run();
-    alicaTests::TestWorldModel::getOne()->trigger2->run();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger1->run();
-    alicaTests::TestWorldModel::getOne()->trigger2->run();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger1->run();
-    alicaTests::TestWorldModel::getOne()->trigger2->run();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger2->run();
+    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
     ae->getAlicaClock().sleep(duration * 2);
 

@@ -4,14 +4,20 @@ namespace alica::test
 {
 void BehaviourTrigger::trigger()
 {
-    this->notifyAll(false);
+    this->notifyEveryCV(false);
 }
 
 bool BehaviourTrigger::behaviourFinishedRun()
 {
-    if (registeredCVs.size() > 0) {
-        return !this->isNotifyCalled(registeredCVs.begin()->first);
+    if (isAnyCVRegistered()) {
+        return !this->isNotifyCalled(_cv);
     }
     return false;
 }
-} // namespace alica
+
+void BehaviourTrigger::registerCV(std::condition_variable* cv)
+{
+    ITrigger::registerCV(cv);
+    _cv = cv;
+}
+} // namespace alica::test

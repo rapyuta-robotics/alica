@@ -56,7 +56,7 @@ void VariableSyncModule::init()
         double communicationFrequency = sc["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = new essentials::NotifyTimer<VariableSyncModule>(interval.inMilliseconds(), &VariableSyncModule::publishContent, this);
+            _timer = new essentials::NotifyTimer<VariableSyncModule>(std::chrono::milliseconds(interval.inMilliseconds()), std::chrono::milliseconds (0), &VariableSyncModule::publishContent, this);
         }
         _timer->start();
     }

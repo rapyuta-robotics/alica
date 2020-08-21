@@ -5,7 +5,7 @@
 #include "engine/containers/SolverResult.h"
 
 #include <alica_solver_interface/Interval.h>
-#include <essentials/NotifyTimer.h>
+#include <essentials/NotifyTimer.hpp>
 
 #include <vector>
 
