@@ -12,7 +12,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
-#include <engine/model/Configuration.h>
 
 #include <alica_common_config/debug_output.h>
 
@@ -29,17 +28,8 @@ namespace alica
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
         , _engine(nullptr)
-        //<<<<<<< HEAD
-        //        , _failure(false)
-        //        , _success(false)
-        //        , _callInit(true)
-        //        , _started(true)
         , _behaviour(nullptr)
-        //        , _msInterval(100)
-        //        , _msDelayedStart(0)
-        //        , _running(false)
         , _contextInRun(nullptr)
-        //=======
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
@@ -47,7 +37,6 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _stopCalled(false)
         , _behaviourResult(BehaviourResult::UNKNOWN)
         , _behaviourState(BehaviourState::UNINITIALIZED)
-        //>>>>>>> rr-devel
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
         , _context(nullptr)
@@ -74,17 +63,10 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
 
 void BasicBehaviour::setBehaviour(const Behaviour* beh)
 {
-    //<<<<<<< HEAD
     assert(_behaviour == nullptr);
     _behaviour = beh;
     if (_behaviour->isEventDriven()) {
-        //        _runThread = new std::thread(&BasicBehaviour::runInternalTriggered, this);
-        //=======
-        //    assert(_configuration == nullptr);
-        //    _configuration = beh;
-        //    if (_configuration->isEventDriven()) {
         _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
-        //>>>>>>> rr-devel
     } else {
         _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
     }
@@ -251,18 +233,6 @@ void BasicBehaviour::doRun(bool timed)
         }
     }
 }
-
-// bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
-//{
-//    for (const auto& pair : _configuration->getParameters()) {
-//        if (pair.first == key) {
-//            valueOut = pair.second;
-//            return true;
-//        }
-//    }
-//    valueOut.clear();
-//    return false;
-//}
 
 void BasicBehaviour::runThread(bool timed)
 {

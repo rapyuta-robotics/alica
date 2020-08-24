@@ -119,37 +119,17 @@ private:
     AlicaEngine* _engine;
     RunningPlan* _context;
 
-//<<<<<<< HEAD
     /**
      * The configuration, that is set in the behaviour pool, associated with
      * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
      */
     const Configuration* _configuration;
-//    /**
-//     * is always true except when the behaviour is shutting down
-//     */
-//    bool _started;
-//    bool _callInit;
-//    /**
-//     * The Success flag. Raised by a behaviour to indicate it reached whatever it meant to reach.
-//     */
-//    bool _success;
-//    /**
-//     * The Failure flag. Raised by a behaviour to indicate it has failed in some way.
-//     */
-//    bool _failure;
-//    /**
-//     * Tells us whether the behaviour is currently running (or active)
-//     */
-//    bool _running;
     std::atomic<RunningPlan*> _contextInRun;
-//=======
     SignalState _signalState; // current state of the signal from main thread (start, stop or terminate)
     std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
 
     std::atomic<BehaviourResult> _behaviourResult;
     std::atomic<BehaviourState> _behaviourState;
-//>>>>>>> rr-devel
 
     std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
 
