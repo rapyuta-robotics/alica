@@ -88,7 +88,10 @@ void NotifyTimer<NotificationClass>::runInternal()
             if (_msDelayedStart.count() > 0) {
                 std::this_thread::sleep_for(_msDelayedStart);
             }
-            _justStartedAgain = false;
+            {
+                std::lock_guard<std::mutex> lockGuard(_cv_mtx);
+                _justStartedAgain = false;
+            }
         }
 
         std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
@@ -101,8 +104,11 @@ void NotifyTimer<NotificationClass>::runInternal()
 template <class NotificationClass>
 NotifyTimer<NotificationClass>::~NotifyTimer()
 {
-    _started = false;
-    _running = false;
+    {
+        std::lock_guard<std::mutex> lockGuard(_cv_mtx);
+        _started = false;
+        _running = false;
+    }
     _cv.notify_one();
     _runThread->join();
     delete _runThread;
@@ -112,8 +118,11 @@ template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::start()
 {
     if (_running && !_started) {
-        _started = true;
-        _justStartedAgain = true;
+        {
+            std::lock_guard<std::mutex> lockGuard(_cv_mtx);
+            _started = true;
+            _justStartedAgain = true;
+        }
         _cv.notify_one();
     }
     return _running && _started;
@@ -123,7 +132,10 @@ template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::stop()
 {
     if (_running && _started) {
-        _started = false;
+        {
+            std::lock_guard<std::mutex> lockGuard(_cv_mtx);
+            _started = false;
+        }
     }
     return _running && _started;
 }

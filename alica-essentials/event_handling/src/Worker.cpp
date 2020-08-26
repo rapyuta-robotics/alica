@@ -19,7 +19,10 @@ Worker::Worker(std::string name, std::chrono::milliseconds msInterval, std::chro
 
 Worker::~Worker()
 {
-    _started = false;
+    {
+        std::lock_guard<std::mutex> lockGuard(_runCV_mtx);
+        _started = false;
+    }
     _runCV.notify_all();
     _timer->start();
     _runThread->join();
