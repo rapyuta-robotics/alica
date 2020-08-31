@@ -2,8 +2,8 @@
 
 namespace alica::test
 {
-TestBehaviourCreator::TestBehaviourCreator(IBehaviourCreator& defaultBehaviourCreator)
-        : _defaultBehaviourCreator(defaultBehaviourCreator)
+TestBehaviourCreator::TestBehaviourCreator(std::unique_ptr<IBehaviourCreator> defaultBehaviourCreator)
+        : _defaultBehaviourCreator(std::move(defaultBehaviourCreator))
 {
 }
 
