@@ -21,7 +21,7 @@ public:
      * @param defaultBehaviourCreator Reference to your applications behaviour
      * creator
      */
-    explicit TestBehaviourCreator(alica::IBehaviourCreator& defaultBehaviourCreator);
+    explicit TestBehaviourCreator(std::unique_ptr<alica::IBehaviourCreator> defaultBehaviourCreator);
     ~TestBehaviourCreator() override = default;
 
     /**
@@ -44,7 +44,7 @@ public:
 
 private:
     std::unordered_map<int64_t, std::function<std::shared_ptr<BasicBehaviour>()>> _behaviourCreateFunctions;
-    IBehaviourCreator& _defaultBehaviourCreator;
+    std::unique_ptr<IBehaviourCreator> _defaultBehaviourCreator;
 };
 
 template <class T>
