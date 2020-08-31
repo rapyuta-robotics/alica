@@ -20,7 +20,7 @@ alica::AlicaEngine* TestContext::getEngine()
     return _engine.get();
 }
 
-bool TestContext::prepareStepping(int64_t behaviourID)
+bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
 {
     const Behaviour* constBehaviour = _engine->getPlanRepository().getBehaviours().find(behaviourID);
     if (constBehaviour == nullptr) {

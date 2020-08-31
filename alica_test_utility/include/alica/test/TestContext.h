@@ -56,7 +56,7 @@ public:
      * @param behaviourID The ID of the behaviour that should be changed to execute in an event driven fashion.
      * @return True, if the property could be set. False, otherwise.
      */
-    bool prepareStepping(int64_t behaviourID);
+    bool makeBehaviourEventDriven(int64_t behaviourID);
 
     /**
      * Triggers the given behaviour to execute its run method one time.
