@@ -47,17 +47,17 @@ protected:
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
-    aes[0]->start();
-    aes[1]->start();
+    tcs[0]->startEngine();
+    tcs[1]->startEngine();
     // Allow agents to discover each other
-    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     for (int i = 0; i < 20; i++) {
-        std::cout << i << "AE ----------------------------------------------- " << *(aes[0]->getTeamManager().getLocalAgentID()) << std::endl;
-        step(aes[0]);
+        std::cout << i << "AE ----------------------------------------------- " << *(tcs[0]->getLocalAgentId()) << std::endl;
+        tcs[0]->stepEngine();
 
-        std::cout << i << "AE ----------------------------------------------- " << *(aes[1]->getTeamManager().getLocalAgentID()) << std::endl;
-        step(aes[1]);
+        std::cout << i << "AE ----------------------------------------------- " << *(tcs[1]->getLocalAgentId()) << std::endl;
+        tcs[1]->stepEngine();
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
@@ -68,13 +68,13 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
-            EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825395940);
-            EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
+            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825395940);
+            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
         }
         if (i == 5) {
 //            std::cout << "TEST Iteration " << i << std::endl;
-            EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
-            EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
+            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
+            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
         }
     }
 }

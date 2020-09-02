@@ -49,14 +49,14 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     alica::AgentAnnouncement aa;
     aa.planHash = 0;
-    aa.senderSdk = ae->getVersion();
+    aa.senderSdk = tc->getVersion();
     aa.token = 55;
     for (int agentId = 8; agentId <= 11; ++agentId) {
         if (agentId == 9) {
             continue;
         }
 
-        aa.senderID = ae->getID<int>(agentId);
+        aa.senderID = tc->getID<int>(agentId);
         if (agentId == 8) {
             aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";
@@ -68,22 +68,21 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             aa.senderName = "myo";
         }
 
-        ae->editTeamManager().handleAgentAnnouncement(aa);
+        tc->handleAgentAnnouncement(aa);
         robots.push_back(aa.senderID);
     }
 
-    ae->editTeamManager().tick();
-    ae->editTeamObserver().tick(nullptr);
-    ae->editRoleAssignment().tick();
+    tc->tickTeamManager();
+    tc->tickTeamObserver(nullptr);
+    tc->tickRoleAssignment();
     // fake inform the team observer about roles of none existing robots
 
-    const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository().getPlans();
-    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497), nullptr);
+    alica::RunningPlan* rp = tc->makeRunningPlan(tc->getPlan(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
-    wrapper->setAbstractPlan(planMap.find(1407152758497));
+    wrapper->setAbstractPlan(tc->getPlan(1407152758497));
     inputWrappers.push_back(wrapper);
-    alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
+    alica::PlanSelector* ps = tc->getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);

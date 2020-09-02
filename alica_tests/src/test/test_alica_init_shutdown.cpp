@@ -22,7 +22,7 @@ protected:
 TEST_F(AlicaEngineTestInit, initAndShutdown)
 {
     ASSERT_NO_SIGNAL
-    EXPECT_NE(ae, nullptr);
+    EXPECT_NE(tc, nullptr);
 }
 }
 }
