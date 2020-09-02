@@ -49,8 +49,8 @@ void GoTo::initialiseParameters()
     // Add additional options here
     // add variables to query which is define in editor->Runtime condition->Quantifiers
     _query.clearDomainVariables();
-    _query.addDomainVariable(getOwnId(), "x", getEngine());
-    _query.addDomainVariable(getOwnId(), "y", getEngine());
+    _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "x"));
+    _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "y"));
 
     /*PROTECTED REGION END*/
 }
