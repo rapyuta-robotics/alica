@@ -55,7 +55,7 @@ protected:
         tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-        EXPECT_EQ(tc->init(creators), 0u);
+        EXPECT_EQ(tc->init(creators), 0);
     }
 
     void TearDown() override
@@ -110,7 +110,7 @@ protected:
             alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
             ASSERT_TRUE(tc->isValid());
             tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            EXPECT_EQ(tc->init(creators), 0u);
+            EXPECT_EQ(tc->init(creators), 0);
             tcs.push_back(tc);
         }
     }
