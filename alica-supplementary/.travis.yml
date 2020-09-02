@@ -41,7 +41,8 @@ install:
         ros-$ROS_DISTRO-catkin 
         ros-$ROS_DISTRO-rostest 
         wget 
-        curl && 
+        curl
+        build-essentials && 
     source /opt/ros/$ROS_DISTRO/setup.bash && 
     catkin_init_workspace && 
     cd ~/catkin_ws && 
