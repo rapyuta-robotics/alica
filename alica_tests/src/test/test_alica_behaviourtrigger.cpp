@@ -31,11 +31,11 @@ protected:
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
-    ae->start();
+    tc->startEngine();
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
-    ae->getAlicaClock().sleep(duration);
+    tc->getAlicaClock().sleep(duration);
 
-    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
+    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
             continue;
@@ -51,7 +51,7 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
         }
     }
 
-    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
+    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
             continue;
@@ -72,23 +72,23 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     alicaTests::TestWorldModel::getOne()->trigger1->run(false);
     alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run(false);
     alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger1->run(false);
     alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     alicaTests::TestWorldModel::getOne()->trigger2->run(false);
 
-    ae->getAlicaClock().sleep(duration * 2);
+    tc->getAlicaClock().sleep(duration * 2);
 
-    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
+    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
             continue;

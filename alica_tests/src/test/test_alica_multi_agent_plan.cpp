@@ -49,20 +49,21 @@ protected:
 TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 {
     ASSERT_NO_SIGNAL
-    aes[0]->start();
-    aes[1]->start();
-    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->startEngine();
+    tcs[1]->startEngine();
+    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
     for (int i = 0; i < 20; i++) {
-        ASSERT_TRUE(aes[0]->getPlanBase().isWaiting());
-        ASSERT_TRUE(aes[1]->getPlanBase().isWaiting());
-        std::cout << "AE1 step " << i << "(" << aes[0]->getTeamManager().getLocalAgentID() << ")" << std::endl;
-        step(aes[0]);
+        // I think that is done by stepEngine already
+//        ASSERT_TRUE(tcs[0]->getPlanBase().isWaiting());
+//        ASSERT_TRUE(tcs[1]->getPlanBase().isWaiting());
+        std::cout << "AE1 step " << i << "(" << tcs[0]->getLocalAgentId() << ")" << std::endl;
+        tcs[0]->stepEngine();
 
-        std::cout << "AE2 step " << i << "(" << aes[1]->getTeamManager().getLocalAgentID() << ")" << std::endl;
-        step(aes[1]);
+        std::cout << "AE2 step " << i << "(" << tcs[1]->getLocalAgentId() << ")" << std::endl;
+        tcs[1]->stepEngine();
 
         //        if (i > 24)
         //        {
@@ -74,8 +75,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         //        }
 
         if (i < 10) {
-            ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413200842974);
-            ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413200842974);
+            ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413200842974);
+            ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413200842974);
         }
         if (i == 10) {
             std::cout << "1--------- Initial State passed ---------" << std::endl;
@@ -83,13 +84,13 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
         }
         if (i > 11 && i < 15) {
-            ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
-            ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
+            ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413201213955);
+            ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413201213955);
+            ASSERT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
+            ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
         }
         if (i == 15) {
-            for (const auto& iter : aes[0]->getBehaviourPool().getAvailableBehaviours()) {
+            for (const auto& iter : tcs[0]->getBehaviourPool().getAvailableBehaviours()) {
                 if (iter.second->getName() == "Attack") {
                     ASSERT_GT(static_cast<alica::Attack*>(&*iter.second)->callCounter, 5);
                     if (((alica::Attack*) &*iter.second)->callCounter > 3) {
@@ -103,32 +104,32 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             std::cout << "2--------- Engagement to cooperative plan passed ---------" << std::endl;
         }
         if (i == 16) {
-            ASSERT_TRUE(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
-                        aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
+            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
+                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
                     << std::endl
-                    << aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
+                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
 
-            ASSERT_TRUE(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
-                        aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
+            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
+                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
                     << std::endl
-                    << aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
+                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
             std::cout << "3--------- Passed transitions in subplan passed ---------" << std::endl;
         }
         if (i >= 17 && i <= 18) {
-            ASSERT_TRUE(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
-                        aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
-                    << "AE State: " << aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId()
-                    << " AE2 State: " << aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
-            ASSERT_TRUE(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
-                        aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
-                    << "AE State: " << aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl
-                    << " AE2 State: " << aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl;
+            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
+                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
+                    << "AE State: " << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId()
+                    << " AE2 State: " << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
+            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
+                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
+                    << "AE State: " << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl
+                    << " AE2 State: " << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
+                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl;
             if (i == 18) {
                 std::cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << std::endl;
                 alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201389955(true);
@@ -136,10 +137,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             }
         }
         if (i == 19) {
-            ASSERT_TRUE(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId() == 1413201380359 &&
-                        aes[0]->getPlanBase().getRootNode()->getActiveState()->getId() == 1413201380359)
-                    << " AE State: " << aes[0]->getPlanBase().getRootNode()->getActiveState()->getId()
-                    << " AE2 State: " << aes[1]->getPlanBase().getRootNode()->getActiveState()->getId() << std::endl;
+            ASSERT_TRUE(tcs[1]->getRootNode()->getActiveState()->getId() == 1413201380359 &&
+                                tcs[0]->getRootNode()->getActiveState()->getId() == 1413201380359)
+                    << " AE State: " << tcs[0]->getRootNode()->getActiveState()->getId()
+                    << " AE2 State: " << tcs[1]->getRootNode()->getActiveState()->getId() << std::endl;
         }
     }
 }

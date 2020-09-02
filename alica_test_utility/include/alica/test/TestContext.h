@@ -10,6 +10,7 @@
 #include <engine/model/PlanType.h>
 #include <engine/model/Task.h>
 #include <engine/model/Variable.h>
+#include <engine/PlanRepository.h>
 
 #include <chrono>
 #include <functional>
@@ -24,20 +25,25 @@ class TestContext : public alica::AlicaContext
 {
 public:
     TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
-    /**
-     * This allows to get hold of the AlicaEngine, which is
-     * an inaccessible member variable of the AlicaContext, otherwise.
-     * @return Pointer to the AlicaEngine.
-     */
-//    alica::AlicaEngine* getEngine();
+
+    /////////////////////////////////////
+    // Control functions for tests ... //
+    /////////////////////////////////////
 
     /**
-     * Allows to retrieve the name of an AlicaElement.
-     * @param elementID The ID of the AlicaElement, whose name is requested.
-     * @return The name of the element.
+     * Initialize alica framework and related modules. Note that this
+     * does not start the engine, as it would in case of an AlicaContext.
+     * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     * @return Return code '0' stands for success, any other for corresponding error
+     * @see AlicaCreators
+     * @see startEngine()
      */
-    template <typename AlicaElementType>
-    std::string getName(uint64_t elementID);
+    int init(AlicaCreators& creatorCtx);
+
+    /**
+     * Starts the main thread of the engine to run.
+     */
+    void startEngine();
 
     /**
      * This method requests the engine to step until the given state is reached, or the
@@ -69,6 +75,85 @@ public:
      */
     template <typename Rep, typename Period>
     bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
+
+    void handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement);
+
+    void setTeamTimeout(AlicaTime timeout);
+
+    void tickTeamManager();
+
+    void tickTeamObserver(alica::RunningPlan* root);
+
+    void tickRoleAssignment();
+
+    alica::PlanSelector* getPlanSelector();
+
+    alica::RunningPlan* makeRunningPlan(const alica::Plan* plan,const alica::Configuration* configuration);
+
+    VariableSyncModule& editResultStore();
+
+    //////////////////////////////////////////////////////
+    // Getter for tests ... everything returned is const//
+    //////////////////////////////////////////////////////
+
+    /**
+     * Allows to retrieve the name of an AlicaElement.
+     * @param elementID The ID of the AlicaElement, whose name is requested.
+     * @return The name of the element.
+     */
+    template <typename AlicaElementType>
+    std::string getName(uint64_t elementID);
+
+    /**
+     * Gives access to the deepest running plan node in the engine.
+     * @return Deepest Running Plan Node
+     */
+    const RunningPlan* getDeepestNode();
+
+    /**
+     * Gives access to the root running plan node in the engine.
+     * @return Root Running Plan Node
+     */
+    const RunningPlan* getRootNode();
+
+    /**
+     * Gives access to the blackboard of the engine.
+     * @return BlackBoard
+     */
+    const BlackBoard& getBlackBoard();
+
+    /** Gives access to the behaviour pool of the engine.
+     * @return BehaviourPool
+     */
+    const BehaviourPool& getBehaviourPool();
+
+    /**
+     * Returns the size of the current team.
+     * @return Team Size
+     */
+    int getTeamSize();
+
+    /**
+     * Returns the domain variable identified by the given sort and agent id
+     * @param agentID The ID of the agent, whose domain variable is requested
+     * @param sort The sort of domain variable, that is requested
+     * @return DomainVariable
+     */
+    const DomainVariable* getDomainVariable(essentials::IdentifierConstPtr agentID, std::string sort);
+
+    const alica::Agent* getLocalAgent();
+
+    const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
+
+    const Plan* getPlan(int64_t planID);
+
+    const alica::PlanRepository::Accessor<Plan> getPlans();
+
+    const Behaviour* getBehaviour(int64_t behaviourID);
+
+    const alica::PlanRepository::Accessor<Behaviour> getBehaviours();
+
+    const State* getState(int64_t stateID);
 
 private:
     struct hash_pair
