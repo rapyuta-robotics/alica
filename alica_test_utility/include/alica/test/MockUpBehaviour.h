@@ -4,10 +4,10 @@
 
 namespace alica::test
 {
-class IMockUpBehaviour : public alica::BasicBehaviour
+class MockUpBehaviour : public alica::BasicBehaviour
 {
 public:
-    explicit IMockUpBehaviour(const std::string& nameOfMockedBehaviour);
+    explicit MockUpBehaviour(const std::string& nameOfMockedBehaviour);
 
 protected:
     uint32_t iterationsCounter() const;

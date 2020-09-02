@@ -29,7 +29,7 @@ public:
      * an inaccessible member variable of the AlicaContext, otherwise.
      * @return Pointer to the AlicaEngine.
      */
-    alica::AlicaEngine* getEngine();
+//    alica::AlicaEngine* getEngine();
 
     /**
      * Allows to retrieve the name of an AlicaElement.

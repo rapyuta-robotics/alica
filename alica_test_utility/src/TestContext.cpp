@@ -15,10 +15,10 @@ TestContext::TestContext(const std::string& roleSetName, const std::string& mast
 {
 }
 
-alica::AlicaEngine* TestContext::getEngine()
-{
-    return _engine.get();
-}
+//alica::AlicaEngine* TestContext::getEngine()
+//{
+//    return _engine.get();
+//}
 
 bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
 {
