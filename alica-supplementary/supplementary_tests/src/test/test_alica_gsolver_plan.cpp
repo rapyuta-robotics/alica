@@ -39,9 +39,9 @@ TEST_F(AlicaGSolverPlan, solverTest)
     ASSERT_NO_SIGNAL
 
     std::cout << "Starting engine..." << std::endl;
-    ae->start();
+    tc->startEngine();
 
-    step(ae);
+    tc->stepEngine();
 
     ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2u) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);

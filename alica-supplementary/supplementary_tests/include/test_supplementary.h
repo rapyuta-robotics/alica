@@ -30,7 +30,6 @@ class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
     alica::test::TestContext* tc;
-    alica::AlicaEngine* ae;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -51,14 +50,9 @@ protected:
         tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
         ASSERT_TRUE(tc->isValid());
         tc->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-
-        ae = tc->getEngine();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-        // Applications are supposed to call AlicaContext::init() api. Unit tests on the other hand need finer control.
-        // ac->init(creators);
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        EXPECT_TRUE(ae->init(creators));
+        EXPECT_EQ(tc->init(creators), 0u);
     }
 
     void TearDown() override
@@ -84,7 +78,6 @@ class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
     std::vector<alica::test::TestContext*> tcs;
-    std::vector<alica::AlicaEngine*> aes;
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
@@ -113,11 +106,8 @@ protected:
             alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
             ASSERT_TRUE(tc->isValid());
             tc->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-            alica::AlicaEngine* ae = tc->getEngine();
-            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            EXPECT_TRUE(ae->init(creators));
+            EXPECT_EQ(tc->init(creators), 0u);
             tcs.push_back(tc);
-            aes.push_back(ae);
         }
     }
 
@@ -132,4 +122,3 @@ protected:
 }
 extern std::jmp_buf restore_point;
 void signalHandler(int signal);
-void step(alica::AlicaEngine* ae);
