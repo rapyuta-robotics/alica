@@ -34,6 +34,7 @@ install:
     cd ~/catkin_ws/src && 
     apt-get update && 
     apt-get install -y 
+        build-essential
         python-catkin-pkg 
         python-rosdep 
         python-wstool 
@@ -41,8 +42,7 @@ install:
         ros-$ROS_DISTRO-catkin 
         ros-$ROS_DISTRO-rostest 
         wget 
-        curl
-        build-essentials && 
+        curl &&
     source /opt/ros/$ROS_DISTRO/setup.bash && 
     catkin_init_workspace && 
     cd ~/catkin_ws && 
