@@ -20,13 +20,11 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-		src/TestBehaviourCreator.cpp
-        src/TestContext.cpp
-        src/BehaviourTrigger.cpp
-		src/IdleBehaviour.cpp
-        src/IMockUpBehaviour.cpp
-		include/alica/test/SuccessBehaviour.hpp
-		include/alica/test/FailBehaviour.hpp
+	src/TestBehaviourCreator.cpp
+	src/TestContext.cpp
+	src/BehaviourTrigger.cpp
+	src/IdleBehaviour.cpp
+	src/MockUpBehaviour.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

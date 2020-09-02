@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IMockUpBehaviour.h"
+#include "MockUpBehaviour.h"
 
 #include <cstdint>
 
 namespace alica::test
 {
 template <uint32_t iterationsBeforeFail>
-class FailBehaviour : public IMockUpBehaviour
+class FailBehaviour : public MockUpBehaviour
 {
 public:
     FailBehaviour();
@@ -20,7 +20,7 @@ private:
 
 template <uint32_t iterationsBeforeFail>
 FailBehaviour<iterationsBeforeFail>::FailBehaviour()
-        : IMockUpBehaviour("FailBehaviour")
+        : MockUpBehaviour("FailBehaviour")
         , _iterationsBeforeFail(iterationsBeforeFail)
 {
 }
@@ -29,7 +29,7 @@ template <uint32_t iterationsBeforeFail>
 void FailBehaviour<iterationsBeforeFail>::run(void* msg)
 {
     if (iterationsCounter() >= _iterationsBeforeFail && !this->isFailure()) {
-        this->setFailure();
+        setFailure();
     }
     incIterationsCounter();
 }
