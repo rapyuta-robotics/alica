@@ -1,5 +1,4 @@
 #include "essentials/Worker.h"
-#include "essentials/Timer.h"
 
 #include <string>
 #include <thread>
@@ -12,9 +11,9 @@ Worker::Worker(std::string name, std::chrono::milliseconds msInterval, std::chro
         , _started(true)
         , _runCV()
 {
-    _timer = new essentials::Timer(msInterval, msDelayedStart, true);
+    _timer = std::make_unique<essentials::NotifyTimer<Worker>>(msInterval, msDelayedStart, true);
     _timer->registerCV(&_runCV);
-    _runThread = new std::thread(&Worker::runInternal, this);
+    _runThread = std::make_unique<std::thread>(&Worker::runInternal, this);
 }
 
 Worker::~Worker()
@@ -26,8 +25,6 @@ Worker::~Worker()
     _runCV.notify_all();
     _timer->start();
     _runThread->join();
-    delete _runThread;
-    delete _timer;
 }
 
 bool Worker::stop()

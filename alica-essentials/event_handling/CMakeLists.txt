@@ -17,8 +17,6 @@ include_directories(include)
 add_library(event_handling
     src/EventTrigger.cpp
     src/Worker.cpp
-    src/Timer.cpp
-    include/essentials/NotifyTimer.hpp
 )
 
 if (NOT catkin_FOUND)

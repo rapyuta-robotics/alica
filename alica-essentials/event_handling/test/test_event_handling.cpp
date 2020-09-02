@@ -2,7 +2,7 @@
 #include <string>
 #include <thread>
 
-#include <essentials/Timer.h>
+#include <essentials/NotifyTimer.hpp>
 
 class EventTest : public ::testing::Test
 {
@@ -24,7 +24,7 @@ TEST_F(EventTest, timerEvent)
     this->cv = new std::condition_variable();
     std::unique_lock<std::mutex> lck(cv_mtx);
 
-    essentials::Timer timerEvent(std::chrono::milliseconds (1000), std::chrono::milliseconds (1000), true);
+    essentials::NotifyTimer<EventTest> timerEvent(std::chrono::milliseconds (1000), std::chrono::milliseconds (1000), true);
     timerEvent.registerCV(this->cv);
     timerEvent.start();
 

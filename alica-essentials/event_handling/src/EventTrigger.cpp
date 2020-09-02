@@ -4,6 +4,6 @@ namespace essentials
 {
 void EventTrigger::run(bool notifyAll)
 {
-    this->notifyEveryCV(notifyAll);
+    notifyEveryCV(notifyAll);
 }
 } // namespace essentials

@@ -2,7 +2,7 @@
 
 #include <condition_variable>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 
 namespace essentials
@@ -65,7 +65,7 @@ protected:
 
 private:
     std::mutex cvVec_mtx;
-    std::map<std::condition_variable*, bool> registeredCVs;
+    std::unordered_map<std::condition_variable*, bool> registeredCVs;
 };
 
 } /* namespace essentials */

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "essentials/NotifyTimer.hpp"
+
 #include <chrono>
 #include <condition_variable>
 #include <string>
@@ -26,12 +28,12 @@ public:
 private:
     void runInternal();
 
-    std::string _name;              /** < The name of this worker. */
-    bool _started;                  /** < Is always true except when the worker is shutting down. */
-    essentials::Timer* _timer;      /** < Triggers the condition_variable of the runThread. */
-    std::mutex _runCV_mtx;          /** < For creating the unique_lock, passed to _runCV.wait(..) */
-    std::condition_variable _runCV; /** < ConditionVariable which is registered at the timer object */
-    std::thread* _runThread;        /** < Executes the runInternal and thereby the abstract run method. */
+    std::string _name;                                    /** < The name of this worker. */
+    bool _started;                                        /** < Is always true except when the worker is shutting down. */
+    std::unique_ptr<essentials::NotifyTimer<Worker>> _timer;      /** < Triggers the condition_variable of the runThread. */
+    std::mutex _runCV_mtx;                                /** < For creating the unique_lock, passed to _runCV.wait(..) */
+    std::condition_variable _runCV;                       /** < ConditionVariable which is registered at the timer object */
+    std::unique_ptr<std::thread> _runThread;              /** < Executes the runInternal and thereby the abstract run method. */
 };
 
 } // namespace essentials
