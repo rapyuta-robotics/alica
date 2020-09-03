@@ -46,16 +46,16 @@ public:
     std::chrono::milliseconds getInterval() const;
 
 private:
-    void run(bool notifyAllThreads) override;  /** < The method executed by the notify timer thread */
+    void run(bool notifyAllThreads) override; /** < The method executed by the notify timer thread */
+    std::mutex _cv_mtx;
+    std::condition_variable _cv;
+    t_notificationcallback<NotificationClass> _callback;
+    NotificationClass* _obj;
     bool _running;                             /** < Is always true except when the notify timer is shutting down. */
     bool _started;                             /** < True, if the NotifyTimer is active. False, otherwise. */
     std::chrono::milliseconds _msInterval;     /** < The milliseconds between two calls to the callback. */
     std::chrono::milliseconds _msDelayedStart; /** < The milliseconds between (re)starting the NotifyTimer and the callback call. */
     std::unique_ptr<std::thread> _runThread;
-    t_notificationcallback<NotificationClass> _callback;
-    NotificationClass* _obj;
-    std::mutex _cv_mtx;
-    std::condition_variable _cv;
 };
 
 template <class NotificationClass>
@@ -65,10 +65,15 @@ NotifyTimer<NotificationClass>::NotifyTimer(std::chrono::milliseconds msInterval
         , _msDelayedStart(msDelayedStart)
         , _running(true)
         , _started(false)
-        , _runThread(std::make_unique<std::thread>(&NotifyTimer::run, this, false))
         , _callback(callback)
         , _obj(obj)
 {
+    /**
+     * We initialise the thread in the body of the constructor
+     * because this guarantees to have all control variables
+     * for this thread initialised properly before it starts.
+     */
+    _runThread = std::make_unique<std::thread>(&NotifyTimer::run, this, false);
 }
 
 template <class NotificationClass>
@@ -77,9 +82,9 @@ NotifyTimer<NotificationClass>::NotifyTimer(std::chrono::milliseconds msInterval
         , _msDelayedStart(msDelayedStart)
         , _running(true)
         , _started(false)
-        , _runThread(std::make_unique<std::thread>(&NotifyTimer::run, this, notifyAllThreads))
         , _obj(nullptr)
 {
+    _runThread = std::make_unique<std::thread>(&NotifyTimer::run, this, notifyAllThreads);
 }
 
 template <class NotificationClass>
@@ -98,7 +103,7 @@ void NotifyTimer<NotificationClass>::run(bool notifyAllThreads)
             std::this_thread::sleep_for(_msDelayedStart);
         }
 
-        while (_started) {
+        while (isStarted()) {
             std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
             if (_obj != nullptr) {
                 (_obj->*_callback)();
@@ -107,6 +112,7 @@ void NotifyTimer<NotificationClass>::run(bool notifyAllThreads)
             }
             auto dura = std::chrono::high_resolution_clock::now() - start;
             std::this_thread::sleep_for(_msInterval - dura);
+//            std::cout << "[NotifyTimer] Finished one iteration." << std::endl;
         }
     }
 }
@@ -114,43 +120,48 @@ void NotifyTimer<NotificationClass>::run(bool notifyAllThreads)
 template <class NotificationClass>
 NotifyTimer<NotificationClass>::~NotifyTimer()
 {
+//    std::cout << "[NotifyTimer] DESTRUCT: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     {
         std::lock_guard<std::mutex> lockGuard(_cv_mtx);
+//        std::cout << "[NotifyTimer] DESTRUCT!" << std::endl;
         _started = false;
         _running = false;
     }
-    _cv.notify_one();
+    _cv.notify_all();
     _runThread->join();
 }
 
 template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::start()
 {
+//    std::cout << "[NotifyTimer] START: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
+    std::lock_guard<std::mutex> lockGuard(_cv_mtx);
     if (_running && !_started) {
-        {
-            std::lock_guard<std::mutex> lockGuard(_cv_mtx);
-            _started = true;
-        }
-        _cv.notify_one();
+//        std::cout << "[NotifyTimer] START called!" << std::endl;
+        _started = true;
     }
+    _cv.notify_all();
     return _running && _started;
 }
 
 template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::stop()
 {
+//    std::cout << "[NotifyTimer] STOP: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
+    std::lock_guard<std::mutex> lockGuard(_cv_mtx);
     if (_running && _started) {
-        {
-            std::lock_guard<std::mutex> lockGuard(_cv_mtx);
-            _started = false;
-        }
+//        std::cout << "[NotifyTimer] STOP called!" << std::endl;
+        _started = false;
     }
+
     return _running && _started;
 }
 
 template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::isStarted()
 {
+    std::lock_guard<std::mutex> lockGuard(_cv_mtx); // achieves adhearing to memory barries
+//    std::cout << "[NotifyTimer] IS-STARTED: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     return _started;
 }
 
