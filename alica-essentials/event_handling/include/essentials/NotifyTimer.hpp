@@ -112,7 +112,6 @@ void NotifyTimer<NotificationClass>::run(bool notifyAllThreads)
             }
             auto dura = std::chrono::high_resolution_clock::now() - start;
             std::this_thread::sleep_for(_msInterval - dura);
-//            std::cout << "[NotifyTimer] Finished one iteration." << std::endl;
         }
     }
 }
@@ -120,10 +119,8 @@ void NotifyTimer<NotificationClass>::run(bool notifyAllThreads)
 template <class NotificationClass>
 NotifyTimer<NotificationClass>::~NotifyTimer()
 {
-//    std::cout << "[NotifyTimer] DESTRUCT: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     {
         std::lock_guard<std::mutex> lockGuard(_cv_mtx);
-//        std::cout << "[NotifyTimer] DESTRUCT!" << std::endl;
         _started = false;
         _running = false;
     }
@@ -134,10 +131,8 @@ NotifyTimer<NotificationClass>::~NotifyTimer()
 template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::start()
 {
-//    std::cout << "[NotifyTimer] START: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     std::lock_guard<std::mutex> lockGuard(_cv_mtx);
     if (_running && !_started) {
-//        std::cout << "[NotifyTimer] START called!" << std::endl;
         _started = true;
     }
     _cv.notify_all();
@@ -147,10 +142,8 @@ bool NotifyTimer<NotificationClass>::start()
 template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::stop()
 {
-//    std::cout << "[NotifyTimer] STOP: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     std::lock_guard<std::mutex> lockGuard(_cv_mtx);
     if (_running && _started) {
-//        std::cout << "[NotifyTimer] STOP called!" << std::endl;
         _started = false;
     }
 
@@ -161,7 +154,6 @@ template <class NotificationClass>
 bool NotifyTimer<NotificationClass>::isStarted()
 {
     std::lock_guard<std::mutex> lockGuard(_cv_mtx); // achieves adhearing to memory barries
-//    std::cout << "[NotifyTimer] IS-STARTED: _started: " << std::boolalpha << _started << " _running: " << _running << std::endl;
     return _started;
 }
 

@@ -16,33 +16,33 @@ public:
 
     virtual void registerCV(std::condition_variable* condVar)
     {
-        std::lock_guard<std::mutex> lock(cvVec_mtx);
-        registeredCVs[condVar] = false;
+        std::lock_guard<std::mutex> lock(_cvVecMtx);
+        _registeredCVs[condVar] = false;
     }
     bool isNotifyCalled(std::condition_variable* cv)
     {
-        std::lock_guard<std::mutex> lock(cvVec_mtx);
-        return registeredCVs.find(cv) != registeredCVs.end() && registeredCVs[cv];
+        std::lock_guard<std::mutex> lock(_cvVecMtx);
+        return _registeredCVs.find(cv) != _registeredCVs.end() && _registeredCVs[cv];
     }
     void setNotifyCalled(std::condition_variable* cv, bool called)
     {
-        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
-        if (registeredCVs.find(cv) != registeredCVs.end()) {
-            registeredCVs[cv] = called;
+        std::lock_guard<std::mutex> lockGuard(_cvVecMtx);
+        if (_registeredCVs.find(cv) != _registeredCVs.end()) {
+            _registeredCVs[cv] = called;
         }
     }
 
 protected:
     bool isAnyCVRegistered()
     {
-        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
-        return !registeredCVs.empty();
+        std::lock_guard<std::mutex> lockGuard(_cvVecMtx);
+        return !_registeredCVs.empty();
     }
     void notifyOneCV(std::condition_variable* cv, bool notifyAllThreads)
     {
-        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
-        if (registeredCVs.find(cv) != registeredCVs.end()) {
-            registeredCVs[cv] = true;
+        std::lock_guard<std::mutex> lockGuard(_cvVecMtx);
+        if (_registeredCVs.find(cv) != _registeredCVs.end()) {
+            _registeredCVs[cv] = true;
             if (notifyAllThreads) {
                 cv->notify_all();
             } else {
@@ -52,8 +52,8 @@ protected:
     }
     void notifyEveryCV(bool notifyAllThreads)
     {
-        std::lock_guard<std::mutex> lockGuard(cvVec_mtx);
-        for (auto& pair : registeredCVs) {
+        std::lock_guard<std::mutex> lockGuard(_cvVecMtx);
+        for (auto& pair : _registeredCVs) {
             pair.second = true;
             if (notifyAllThreads) {
                 pair.first->notify_all();
@@ -64,8 +64,8 @@ protected:
     }
 
 private:
-    std::mutex cvVec_mtx;
-    std::unordered_map<std::condition_variable*, bool> registeredCVs;
+    std::mutex _cvVecMtx;
+    std::unordered_map<std::condition_variable*, bool> _registeredCVs;
 };
 
 } /* namespace essentials */
