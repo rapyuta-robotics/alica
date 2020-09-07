@@ -16,7 +16,6 @@ include_directories(include)
 
 add_library(event_handling
     src/EventTrigger.cpp
-    src/Worker.cpp
 )
 
 if (NOT catkin_FOUND)
