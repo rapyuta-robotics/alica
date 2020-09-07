@@ -37,14 +37,14 @@ protected:
 TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 {
     ASSERT_NO_SIGNAL
-    ae->start();
+    tc->startEngine();
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     do {
-        ae->getAlicaClock().sleep(sleepTime);
-    } while (ae->getPlanBase().getRootNode() == nullptr);
+        tc->getAlicaClock().sleep(sleepTime);
+    } while (tc->getRootNode() == nullptr);
 
     // Check whether RC can be called
-    EXPECT_TRUE(ae->getPlanBase().getRootNode()->isRuntimeConditionValid());
+    EXPECT_TRUE(tc->getRootNode()->isRuntimeConditionValid());
     // Check whether RC has been called
 
     //	BEFORE
@@ -53,16 +53,16 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
 
     EXPECT_GE(CounterClass::called, 1);
     // Check final state
-    EXPECT_EQ(ae->getPlanBase().getRootNode()->getActiveState()->getId(), 1412761855746);
+    EXPECT_EQ(tc->getRootNode()->getActiveState()->getId(), 1412761855746);
     // Check execution of final state behaviour
-    EXPECT_EQ(ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour()->getName(), std::string("Attack"));
+    EXPECT_EQ(tc->getRootNode()->getChildren()[0]->getBasicBehaviour()->getName(), std::string("Attack"));
     // Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on
     // Attack
-    EXPECT_GT(((alica::Attack*) ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour())->callCounter, (sleepTime.inSeconds()) * 29 - 15);
-    EXPECT_GT(((alica::Attack*) ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour())->initCounter, 0);
+    EXPECT_GT(((alica::Attack*) tc->getRootNode()->getChildren()[0]->getBasicBehaviour())->callCounter, (sleepTime.inSeconds()) * 29 - 15);
+    EXPECT_GT(((alica::Attack*) tc->getRootNode()->getChildren()[0]->getBasicBehaviour())->initCounter, 0);
 
     // Check whether we have been in state1 to execute midfield standard
-    for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
+    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
         if (iter.second->getName() == "MidFieldStandard") {
             EXPECT_GT(((alica::MidFieldStandard*) &*iter.second)->callCounter, 10);
         }

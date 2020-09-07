@@ -3,10 +3,10 @@
 #include "engine/RunningPlan.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/model/Condition.h"
-#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/model/Variable.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 #include <engine/constraintmodul/ConditionStore.h>
@@ -37,6 +37,10 @@ void Query::addStaticVariable(const Variable* v)
 void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::string& ident, const AlicaEngine* ae)
 {
     _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
+}
+
+void Query::addDomainVariable(const DomainVariable* domainVariable) {
+    _queriedDomainVariables.push_back(domainVariable);
 }
 
 void Query::clearDomainVariables()

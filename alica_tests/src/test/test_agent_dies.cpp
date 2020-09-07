@@ -58,94 +58,94 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 
-    acs[0]->setClock<TestClock>();
-    acs[1]->setClock<TestClock>();
+    tcs[0]->setClock<TestClock>();
+    tcs[1]->setClock<TestClock>();
 
-    aes[0]->start();
-    aes[1]->start();
+    tcs[0]->startEngine();
+    tcs[1]->startEngine();
     // Let agent announce their presence
-    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     // Process presence announcement
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
     RunningPlan::setAssignmentProtectionTime(AlicaTime::seconds(1000.0));
-    aes[0]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
-    aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
-    step(aes[0]);
-    step(aes[1]);
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    tcs[0]->setTeamTimeout(AlicaTime::milliseconds(500));
+    tcs[1]->setTeamTimeout(AlicaTime::milliseconds(500));
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
     alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
     alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
 
-    step(aes[0]);
-    step(aes[1]);
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
-    ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getActiveState()->getId(), 1413201213955);
+    ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413201213955);
+    ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413201213955);
 
-    ASSERT_EQ(2, aes[0]->getTeamManager().getActiveAgentIds().size());
-    ASSERT_EQ(2, aes[1]->getTeamManager().getActiveAgentIds().size());
+    ASSERT_EQ(2, tcs[0]->getTeamSize());
+    ASSERT_EQ(2, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
-    ASSERT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
+    ASSERT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
+    ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
 
-    ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
 
-    const_cast<IAlicaCommunication&>(aes[0]->getCommunicator()).stopCommunication();
-    const_cast<IAlicaCommunication&>(aes[1]->getCommunicator()).stopCommunication();
+    const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).stopCommunication();
+    const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).stopCommunication();
 
-    step(aes[0]);
-    step(aes[1]);
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(2000));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(2000));
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(2000));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(2000));
 
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    ASSERT_EQ(1, aes[0]->getTeamManager().getActiveAgentIds().size());
-    ASSERT_EQ(1, aes[1]->getTeamManager().getActiveAgentIds().size());
+    ASSERT_EQ(1, tcs[0]->getTeamSize());
+    ASSERT_EQ(1, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(0, aes[0]->getPlanBase().getRootNode()->getChildren().size());
-    ASSERT_EQ(0, aes[1]->getPlanBase().getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, tcs[0]->getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, tcs[1]->getRootNode()->getChildren().size());
 
-    const_cast<IAlicaCommunication&>(aes[0]->getCommunicator()).startCommunication();
-    const_cast<IAlicaCommunication&>(aes[1]->getCommunicator()).startCommunication();
+    const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).startCommunication();
+    const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).startCommunication();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    step(aes[0]);
-    step(aes[1]);
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    ASSERT_EQ(2, aes[0]->getTeamManager().getActiveAgentIds().size());
-    ASSERT_EQ(2, aes[1]->getTeamManager().getActiveAgentIds().size());
+    ASSERT_EQ(2, tcs[0]->getTeamSize());
+    ASSERT_EQ(2, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
 }
 }
 }

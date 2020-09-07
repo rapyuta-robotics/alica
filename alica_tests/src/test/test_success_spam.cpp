@@ -39,11 +39,11 @@ protected:
 TEST_F(AlicaSpamSuccess, runBehaviour)
 {
     ASSERT_NO_SIGNAL
-    ae->start();
+    tc->startEngine();
     for (int i = 0; i < 30 * 6; ++i) {
-        step(ae);
+        tc->stepEngine();
     }
-    EXPECT_NE(ae->getPlanBase().getRootNode(), nullptr);
+    EXPECT_NE(tc->getRootNode(), nullptr);
 }
 }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_test_utility</name>
+  <version>0.0.1</version>
+  <description>The alica_test_support package</description>
+
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <author email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</author> 
+
+  <depend>alica_engine</depend>
+  <depend>alica_dummy_proxy</depend>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

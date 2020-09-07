@@ -74,6 +74,8 @@ public:
     Query();
 
     void addStaticVariable(const alica::Variable* v);
+    void addDomainVariable(const DomainVariable* domainVariable);
+    [[deprecated("use addDomainVariable(const DomainVariable* domainVariable) instead")]]
     void addDomainVariable(essentials::IdentifierConstPtr robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();

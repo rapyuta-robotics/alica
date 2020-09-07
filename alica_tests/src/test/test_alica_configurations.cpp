@@ -43,10 +43,10 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
     ASSERT_NO_SIGNAL
     CounterClass::called = 0;
     // START ENGINE
-    ae->start();
-    step(ae);
+    tc->startEngine();
+    tc->stepEngine();
 
-    const std::vector<RunningPlan*> children1 = ae->getPlanBase().getRootNode()->getChildren();
+    const std::vector<RunningPlan*> children1 = tc->getRootNode()->getChildren();
     for (const RunningPlan* rp : children1) {
         std::string value;
         EXPECT_TRUE(rp->getParameter("TestValue", value)) << "Missing conf value 'TestValue' in configuration of running plan!";
@@ -64,9 +64,9 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
 
     // set counter that is checked in the transition of the master plan
     CounterClass::called = 1;
-    step(ae);
+    tc->stepEngine();
 
-    const std::vector<RunningPlan*> children2 = ae->getPlanBase().getRootNode()->getChildren();
+    const std::vector<RunningPlan*> children2 = tc->getRootNode()->getChildren();
     for (const RunningPlan* rp : children2) {
         std::string value;
         if (rp->getPlanType()) {
