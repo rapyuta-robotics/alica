@@ -1,43 +1,59 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413200842974"/>
-    <value xPos="95" yPos="113" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413200842973"/>
-    <value width="825" height="406"/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413200842975"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestPlan.pml#1413200862180"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413201213955"/>
-    <value xPos="254" yPos="116" width="192" height="86" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413201226246"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413201380359"/>
-    <value xPos="474" yPos="119" width="71" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestMaster.pml#1413201388722"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Behaviour/Attack.beh#1402488866727"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MultiAgentTestPlan.pml#1413200862180"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "MultiAgentTestMaster.pml#1413200842973",
+  "uiElementMap" : {
+    "1413201213955" : {
+      "id" : 1588238323814,
+      "name" : "1588238323814",
+      "comment" : "",
+      "x" : -76,
+      "y" : -83,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413200842974" : {
+      "id" : 1588238323813,
+      "name" : "1588238323813",
+      "comment" : "",
+      "x" : -228,
+      "y" : -77,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201380359" : {
+      "id" : 1588238323830,
+      "name" : "1588238323830",
+      "comment" : "",
+      "x" : 99,
+      "y" : -97,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413200842975" : {
+      "id" : 1588238323831,
+      "name" : "1588238323831",
+      "comment" : "",
+      "x" : -363,
+      "y" : -76,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201226246" : {
+      "id" : 1588238323832,
+      "name" : "1588238323832",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1413201388722" : {
+      "id" : 1588238323833,
+      "name" : "1588238323833",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

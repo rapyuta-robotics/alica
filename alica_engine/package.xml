@@ -17,7 +17,7 @@
   <depend>fsystem</depend>
   <depend>event_handling</depend>
   <depend>system_util</depend>
-  <depend>agent_id</depend>
+  <depend>id_manager</depend>
 
   <test_depend>gtest</test_depend>
 </package>

@@ -1,26 +1,27 @@
-/*
- * Plan.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/Plan.h"
 
 #include <assert.h>
 
 #include "engine/model/EntryPoint.h"
+#include "engine/model/PreCondition.h"
+#include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
+#include "engine/model/Variable.h"
+
+//#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
 Plan::Plan(int64_t id)
         : AbstractPlan(id)
-        , _postCondition(nullptr)
         , _minCardinality(0)
         , _maxCardinality(0)
+        , _masterPlan(false)
+        , _utilityFunction(nullptr)
         , _utilityThreshold(1.0)
+        , _runtimeCondition(nullptr)
+        , _preCondition(nullptr)
 {
 }
 
@@ -78,9 +79,9 @@ void Plan::setMinCardinality(int minCardinality)
     _minCardinality = minCardinality;
 }
 
-void Plan::setPostCondition(const PostCondition* postCondition)
+void Plan::setMasterPlan(bool masterPlan)
 {
-    _postCondition = postCondition;
+    _masterPlan = masterPlan;
 }
 
 void Plan::setStates(const StateGrp& states)
@@ -93,14 +94,40 @@ void Plan::setSuccessStates(const SuccessStateGrp& successStates)
     _successStates = successStates;
 }
 
-void Plan::setSyncTransitions(const SyncTransitionGrp& syncTransitions)
+void Plan::setSynchronisations(const SynchronisationGrp& synchronisations)
 {
-    _syncTransitions = syncTransitions;
+    _synchronisations = synchronisations;
 }
 
 void Plan::setTransitions(const TransitionGrp& transitions)
 {
     _transitions = transitions;
+}
+
+std::string Plan::toString(std::string indent) const
+{
+    std::stringstream ss;
+    ss << indent << "#Plan: " << AbstractPlan::toString(indent);
+    ss << indent << "\tIsMasterPlan: " << this->_masterPlan << std::endl;
+    ss << indent << "\tUtility Threshold: " << this->_utilityThreshold << std::endl;
+    if (this->_preCondition != nullptr) {
+        ss << this->_preCondition->toString(indent);
+    }
+    if (this->_runtimeCondition != nullptr) {
+        ss << this->_runtimeCondition->toString(indent);
+    }
+    for (const EntryPoint* ep : this->_entryPoints) {
+        ss << ep->toString(indent + "\t");
+    }
+    for (const State* state : this->_states) {
+        ss << state->toString(indent + "\t");
+    }
+    for (const Variable* var : this->getVariables()) {
+        ss << var->toString(indent + "\t");
+    }
+
+    ss << indent << "#EndPlan:" << std::endl;
+    return ss.str();
 }
 
 } // namespace alica

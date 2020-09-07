@@ -11,7 +11,7 @@ namespace alica
 template <class VarType>
 class SimpleContext : public SolverContext
 {
-  public:
+public:
     SimpleContext() {}
     VarType* createVariable(int64_t id)
     {
@@ -22,7 +22,7 @@ class SimpleContext : public SolverContext
     const std::vector<std::unique_ptr<VarType>>& getVariables() const { return _vars; }
     virtual void clear() override { _vars.clear(); }
 
-  private:
+private:
     std::vector<std::unique_ptr<VarType>> _vars;
 };
-}
+} // namespace alica

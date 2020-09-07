@@ -1,43 +1,50 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="AttackPlan.pml#1402488646220"/>
-    <value xPos="144" yPos="132" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402488634525"/>
-    <value width="721" height="522"/>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402488646221"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402489396914"/>
-    <value xPos="366" yPos="288" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="Tackle.pml#1402489318663"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Behaviour/AttackOpp.beh#1402489366699"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Behaviour/Attack.beh#1402488866727"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402489459382"/>
-    <value>
-      <bendpoints xPos="296" yPos="390"/>
-    </value>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402489460694"/>
-    <value>
-      <bendpoints xPos="484" yPos="216"/>
-    </value>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "AttackPlan.pml#1402488634525",
+  "uiElementMap" : {
+    "1402489459382" : {
+      "id" : 1585648302724,
+      "name" : "1585648302724",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489460694" : {
+      "id" : 1585648302725,
+      "name" : "1585648302725",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489396914" : {
+      "id" : 1585648302722,
+      "name" : "1585648302722",
+      "comment" : "",
+      "x" : 64,
+      "y" : -85,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402488646220" : {
+      "id" : 1585648302721,
+      "name" : "1585648302721",
+      "comment" : "",
+      "x" : -169,
+      "y" : -97,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402488646221" : {
+      "id" : 1585648302723,
+      "name" : "1585648302723",
+      "comment" : "",
+      "x" : -359,
+      "y" : -41,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

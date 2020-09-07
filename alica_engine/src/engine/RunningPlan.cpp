@@ -17,7 +17,6 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
-#include "engine/model/BehaviourConfiguration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
@@ -26,6 +25,8 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/model/Configuration.h"
+#include "engine/model/Parameter.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -52,7 +53,7 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
@@ -60,6 +61,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -70,7 +72,7 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
@@ -78,11 +80,12 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
-    _activeTriple.plan = plan;
+    _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
+RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
         : _ae(ae)
         , _planType(pt)
         , _behaviour(false)
@@ -90,18 +93,20 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const BehaviourConfiguration* bc)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
-        , _activeTriple(bc, nullptr, nullptr)
+        , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
         , _basicBehaviour(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -169,15 +174,23 @@ void RunningPlan::setAllocationNeeded(bool need)
  */
 bool RunningPlan::evalPreCondition() const
 {
-    if (_activeTriple.plan == nullptr) {
+    if (_activeTriple.abstractPlan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         assert(false);
     }
-    if (_activeTriple.plan->getPreCondition() == nullptr) {
+
+    const PreCondition* preCondition = nullptr;
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        preCondition = behaviour->getPreCondition();
+    }
+    if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        preCondition = plan->getPreCondition();
+    }
+    if (preCondition == nullptr) {
         return true;
     }
     try {
-        return _activeTriple.plan->getPreCondition()->evaluate(*this);
+        return preCondition->evaluate(*this);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -190,20 +203,27 @@ bool RunningPlan::evalPreCondition() const
  */
 bool RunningPlan::evalRuntimeCondition() const
 {
-    if (_activeTriple.plan == nullptr) {
+    if (_activeTriple.abstractPlan == nullptr) {
         ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
-    if (_activeTriple.plan->getRuntimeCondition() == nullptr) {
+    const RuntimeCondition* runtimeCondition = nullptr;
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        runtimeCondition = behaviour->getRuntimeCondition();
+    }
+    if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        runtimeCondition = plan->getRuntimeCondition();
+    }
+    if (runtimeCondition== nullptr) {
         _status.runTimeConditionStatus = EvalStatus::True;
         return true;
     }
     try {
-        bool ret = _activeTriple.plan->getRuntimeCondition()->evaluate(*this);
+        bool ret = runtimeCondition->evaluate(*this);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.plan->getName() << " " << e.what());
+        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what());
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -254,16 +274,16 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cout << "END CHILDREN of " << (_activeTriple.plan == nullptr ? "NULL" : _activeTriple.plan->getName()) << std::endl;
+        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
     }
 }
 
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
-    if (_activeTriple.plan != plan) {
+    if (_activeTriple.abstractPlan != plan) {
         _status.planStartTime = _ae->getAlicaClock().now();
         revokeAllConstraints();
-        _activeTriple.plan = plan;
+        _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
     }
 }
@@ -271,7 +291,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
 void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
-        AgentIDConstPtr mid = getOwnID();
+        essentials::IdentifierConstPtr mid = getOwnID();
         _assignment.removeAgent(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
@@ -291,9 +311,9 @@ void RunningPlan::useState(const State* s)
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
-                AgentIDConstPtr mid = getOwnID();
+                essentials::IdentifierConstPtr mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->editTeamManager().setSuccess(mid, _activeTriple.plan, _activeTriple.entryPoint);
+                _ae->editTeamManager().setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
         }
     }
@@ -449,7 +469,7 @@ void RunningPlan::deactivate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
-        _ae->editTeamObserver().notifyRobotLeftPlan(_activeTriple.plan);
+        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
     }
     revokeAllConstraints();
     deactivateChildren();
@@ -486,7 +506,7 @@ bool RunningPlan::areAllChildrenStatus(PlanStatus ps) const
     }
     // In case of a state, make sure that all children are actually running
     if (_activeTriple.state) {
-        return _children.size() >= _activeTriple.state->getPlans().size();
+        return _children.size() >= _activeTriple.state->getConfAbstractPlanWrappers().size();
     }
     return true;
 }
@@ -576,8 +596,14 @@ void RunningPlan::revokeAllConstraints()
 
 void RunningPlan::attachPlanConstraints()
 {
-    _constraintStore.addCondition(_activeTriple.plan->getPreCondition());
-    _constraintStore.addCondition(_activeTriple.plan->getRuntimeCondition());
+    if (const Behaviour* behaviour = dynamic_cast<const Behaviour*>(_activeTriple.abstractPlan)) {
+        _constraintStore.addCondition(behaviour->getPreCondition());
+        _constraintStore.addCondition(behaviour->getRuntimeCondition());
+    } else if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
+        _constraintStore.addCondition(plan->getPreCondition());
+        _constraintStore.addCondition(plan->getRuntimeCondition());
+    }
+
 }
 
 bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
@@ -593,12 +619,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     bool ret = false;
     AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
-        AgentIDConstPtr id = spt->getAgentId();
+        essentials::IdentifierConstPtr id = spt->getAgentId();
         const bool freezeAgent = keepState && _assignment.getStateOfAgent(id) == getActiveState();
         if (freezeAgent) {
             continue;
         }
-        if (spt->getState()->getInPlan() != _activeTriple.plan) { // the robot is no longer participating in this plan
+        if (spt->getState()->getInPlan() != _activeTriple.abstractPlan) { // the robot is no longer participating in this plan
             if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 if (ep != nullptr) {
@@ -637,12 +663,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
-        AgentIDConstPtr ownId = getOwnID();
+        essentials::IdentifierConstPtr ownId = getOwnID();
         for (int i = 0; i < _assignment.getEntryPointCount(); ++i) {
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (AgentIDConstPtr rob : robs) {
+            for (essentials::IdentifierConstPtr rob : robs) {
                 if (rob == ownId) {
                     continue;
                 }
@@ -677,7 +703,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (AgentIDConstPtr rob : robs) {
+            for (essentials::IdentifierConstPtr rob : robs) {
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif.editSubtractions().emplace_back(ep, rob);
@@ -758,16 +784,42 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
     }
 }
 
-AgentIDConstPtr RunningPlan::getOwnID() const
+essentials::IdentifierConstPtr RunningPlan::getOwnID() const
 {
     return _ae->getTeamManager().getLocalAgentID();
+}
+
+/**
+ * Tries to find a given key in the configuration of this RunningPlan and
+ * writes the corresponding value into valueOut.
+ * @param key The key to be found in the configuration.
+ * @param valueOut The value, corresponding to the given key.
+ * @return True, if the configuration and the key was present. False, otherwise.
+ */
+bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) const
+{
+    if (!_configuration) {
+        return false;
+    }
+
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const Configuration* RunningPlan::getConfiguration() const {
+    return _configuration;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
 {
     out << "######## RP ##########" << std::endl;
     PlanStateTriple ptz = r.getActiveTriple();
-    out << "Plan: " + (ptz.plan != nullptr ? ptz.plan->getName() : "NULL") << std::endl;
+    out << "Plan: " + (ptz.abstractPlan != nullptr ? ptz.abstractPlan->getName() : "NULL") << std::endl;
     out << "PlanType: " << (r.getPlanType() != nullptr ? r.getPlanType()->getName() : "NULL") << std::endl;
     out << "ActState: " << (ptz.state != nullptr ? ptz.state->getName() : "NULL") << std::endl;
     out << "Task: " << (ptz.entryPoint != nullptr ? ptz.entryPoint->getTask()->getName() : "NULL") << std::endl;
@@ -780,7 +832,15 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << "FailHandlingNeeded: " << psi.failHandlingNeeded << "\t";
     out << "FailCount: " << psi.failCount << std::endl;
     out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
-    out << "Status: " << getPlanStatusName(psi.status) << std::endl;
+    if (!r.isBehaviour()) {
+        out << "Status: " << getPlanStatusName(psi.status) << std::endl;
+    } else if (r.getBasicBehaviour()->isSuccess()) {
+        out << "Status: " << getPlanStatusName(PlanStatus::Success) << std::endl;
+    } else if (r.getBasicBehaviour()->isFailure()) {
+        out << "Status: " << getPlanStatusName(PlanStatus::Failed) << std::endl;
+    } else {
+        out << "Status: " << getPlanStatusName(PlanStatus::Running) << std::endl;
+    }
     out << std::endl;
     if (!r.isBehaviour()) {
         out << "Assignment:" << r._assignment;
@@ -789,10 +849,10 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     if (!r._children.empty()) {
         out << " ( ";
         for (const RunningPlan* c : r._children) {
-            if (c->_activeTriple.plan == nullptr) {
+            if (c->_activeTriple.abstractPlan == nullptr) {
                 out << "NULL PLAN, ";
             } else
-                out << c->_activeTriple.plan->getName() + ", ";
+                out << c->_activeTriple.abstractPlan->getName() + ", ";
         }
         out << ")";
     }

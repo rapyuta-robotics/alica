@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
+
 #include <memory>
 
 namespace alica
@@ -10,7 +11,7 @@ class RunningPlan;
 
 class BasicCondition
 {
-  public:
+public:
     BasicCondition();
     virtual ~BasicCondition();
     virtual bool evaluate(std::shared_ptr<RunningPlan> rp) = 0;

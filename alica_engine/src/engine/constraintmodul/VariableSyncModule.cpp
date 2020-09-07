@@ -1,7 +1,5 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
-#include "SystemConfig.h"
-#include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
@@ -9,6 +7,8 @@
 #include "engine/teammanager/TeamManager.h"
 #include <algorithm>
 #include <cmath>
+
+#include <essentials/SystemConfig.h>
 
 #include <assert.h>
 
@@ -43,7 +43,7 @@ void VariableSyncModule::init()
     _ttl4Usage = AlicaTime::milliseconds(sc["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
     _distThreshold = sc["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
 
-    AgentIDConstPtr ownId = _ae->getTeamManager().getLocalAgentID();
+    essentials::IdentifierConstPtr ownId = _ae->getTeamManager().getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));

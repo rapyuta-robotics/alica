@@ -1,47 +1,86 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825395940"/>
-    <value xPos="94" yPos="85" width="81" height="67"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825395939"/>
-    <value width="704" height="511"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825395941"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825402617"/>
-    <value xPos="203" yPos="239"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825404963"/>
-    <value xPos="82" yPos="249" width="81" height="67"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825409988"/>
-    <value xPos="413" yPos="88" width="161" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825411686"/>
-    <value xPos="393" yPos="255" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825425833"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825427469"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MasterSyncTransition.pml#1418825482116"/>
-    <value xPos="94" yPos="189" width="137" height="41"/>
-  </extensions>
-  <extensions>
-    <key href="Behaviour/Attack.beh#1402488866727"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "MasterSyncTransition.pml#1418825395939",
+  "uiElementMap" : {
+    "1418825427469" : {
+      "id" : 1585061880306,
+      "name" : "1585061880306",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825402617" : {
+      "id" : 1585061880304,
+      "name" : "1585061880304",
+      "comment" : "",
+      "x" : -334,
+      "y" : 190,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825425833" : {
+      "id" : 1585061880305,
+      "name" : "1585061880305",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825482116" : {
+      "id" : 1585061880307,
+      "name" : "1585061880307",
+      "comment" : "",
+      "x" : -146,
+      "y" : 54,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825411686" : {
+      "id" : 1585061880302,
+      "name" : "1585061880302",
+      "comment" : "",
+      "x" : 155,
+      "y" : 161,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825395941" : {
+      "id" : 1585061880303,
+      "name" : "1585061880303",
+      "comment" : "",
+      "x" : -324,
+      "y" : -18,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825395940" : {
+      "id" : 1585061880299,
+      "name" : "1585061880299",
+      "comment" : "",
+      "x" : -185,
+      "y" : -36,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825409988" : {
+      "id" : 1585061880301,
+      "name" : "1585061880301",
+      "comment" : "",
+      "x" : 125,
+      "y" : -44,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1418825404963" : {
+      "id" : 1585061880300,
+      "name" : "1585061880300",
+      "comment" : "",
+      "x" : -192,
+      "y" : 159,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

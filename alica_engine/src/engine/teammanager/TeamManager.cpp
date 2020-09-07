@@ -5,13 +5,13 @@
 #include "engine/Logger.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "essentials/AgentIDFactory.h"
-#include <alica_common_config/debug_output.h>
 
-#include <SystemConfig.h>
+#include <alica_common_config/debug_output.h>
+#include <essentials/SystemConfig.h>
+
+#include <limits>
 #include <random>
 #include <utility>
-#include <limits>
 
 namespace alica
 {
@@ -53,7 +53,7 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine)
+TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
         : _localAgent(nullptr)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
@@ -67,7 +67,8 @@ TeamManager::TeamManager(AlicaEngine* engine)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
         _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
     }
-    readSelfFromConfig();
+    readSelfFromConfig(agentID);
+    std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
@@ -82,28 +83,32 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig()
+void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    const std::string localAgentName = _engine->getRobotName();
+    const std::string localAgentName = _engine->getLocalAgentName();
 
-    constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-    uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
-    if (id != notAValidID) {
-        _localAnnouncement.senderID = _engine->getId(id);
-    } else {
-        _localAnnouncement.senderID = _engine->generateId(DEFAULT_AGENT_ID_SIZE);
-        ALICA_DEBUG_MSG("tm: Auto generated id " << _localAnnouncement.senderID);
-        bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
-        if (persistId) {
-            try{
-                auto* configLocal = sc["Local"];
-                configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-                configLocal->store();
-            } catch(...) {
-                ALICA_ERROR_MSG("tm: impossible to store ID " << _localAnnouncement.senderID);
+    if (agentID == nullptr) {
+        constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
+        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+        if (id != notAValidID) {
+            _localAnnouncement.senderID = _engine->getID(id);
+        } else {
+            _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
+            ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
+            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+            if (persistId) {
+                try{
+                    auto* configLocal = sc["Local"];
+                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
+                    configLocal->store();
+                } catch(...) {
+                    ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
+                }
             }
         }
+    } else {
+        _localAnnouncement.senderID = agentID;
     }
 
     std::random_device rd;
@@ -157,12 +162,12 @@ int TeamManager::getTeamSize() const
     return teamSize;
 }
 
-const Agent* TeamManager::getAgentByID(AgentIDConstPtr agentId) const
+const Agent* TeamManager::getAgentByID(essentials::IdentifierConstPtr agentId) const
 {
     return getAgent(agentId);
 }
 
-Agent* TeamManager::getAgent(AgentIDConstPtr agentId) const
+Agent* TeamManager::getAgent(essentials::IdentifierConstPtr agentId) const
 {
     AgentsCache::AgentMap& agents = *_agentsCache.get();
     auto agentEntry = agents.find(agentId);
@@ -173,12 +178,12 @@ Agent* TeamManager::getAgent(AgentIDConstPtr agentId) const
     return nullptr;
 }
 
-AgentIDConstPtr TeamManager::getLocalAgentID() const
+essentials::IdentifierConstPtr TeamManager::getLocalAgentID() const
 {
     return _localAgent->getId();
 }
 
-void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(essentials::IdentifierConstPtr agentId, AlicaTime timeLastMsgReceived)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -186,7 +191,7 @@ void TeamManager::setTimeLastMsgReceived(AgentIDConstPtr agentId, AlicaTime time
     }
 }
 
-bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentActive(essentials::IdentifierConstPtr agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -199,7 +204,7 @@ bool TeamManager::isAgentActive(AgentIDConstPtr agentId) const
  * Checks if an agent is ignored
  * @param agentId an essentials::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
+bool TeamManager::isAgentIgnored(essentials::IdentifierConstPtr agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -209,7 +214,7 @@ bool TeamManager::isAgentIgnored(AgentIDConstPtr agentId) const
     return true;
 }
 
-void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) const
+void TeamManager::setAgentIgnored(essentials::IdentifierConstPtr agentId, const bool ignored) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -217,7 +222,7 @@ void TeamManager::setAgentIgnored(AgentIDConstPtr agentId, const bool ignored) c
     }
 }
 
-bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(essentials::IdentifierConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -227,7 +232,7 @@ bool TeamManager::setSuccess(AgentIDConstPtr agentId, const AbstractPlan* plan, 
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(essentials::IdentifierConstPtr agentId, const IdGrp& suceededEps)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -237,7 +242,7 @@ bool TeamManager::setSuccessMarks(AgentIDConstPtr agentId, const IdGrp& suceeded
     return false;
 }
 
-const DomainVariable* TeamManager::getDomainVariable(AgentIDConstPtr agentId, const std::string& sort) const
+const DomainVariable* TeamManager::getDomainVariable(essentials::IdentifierConstPtr agentId, const std::string& sort) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -274,11 +279,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
         return;
     }
 
-    ALICA_DEBUG_MSG("tm: Responding to agent: " << aq.senderID);
+    ALICA_DEBUG_MSG("TM: Responding to agent: " << aq.senderID);
     announcePresence();
 }
 
@@ -298,7 +303,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("tm: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
+        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
         return;
     }
 
@@ -315,6 +320,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
             agentRole = role->getName();
         }
     }
+
 
     agentInfo = new Agent(_engine, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_engine->getAlicaClock().now());
@@ -336,7 +342,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    ALICA_DEBUG_MSG("tm: Announcing presence");
+    ALICA_DEBUG_MSG("TM: Announcing presence " << _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _engine->getCommunicator().sendAgentAnnouncement(_localAnnouncement);
     }

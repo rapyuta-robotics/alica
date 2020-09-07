@@ -7,8 +7,6 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 
-#include <essentials/AgentID.h>
-
 #include <map>
 #include <sstream>
 #include <string>
@@ -69,7 +67,7 @@ private:
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;
-    bool addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentIDConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap);
+    bool addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
     int _expansionCount;

@@ -1,21 +1,13 @@
-/*
- * BasicTrueCondition.h
- *
- *  Created on: Oct 8, 2014
- *      Author: Stefan Jakob
- */
+#pragma once
 
-#ifndef ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICTRUECONDITION_H_
-#define ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICTRUECONDITION_H_
-
-#include <engine/BasicCondition.h>
+#include "engine/BasicCondition.h"
 
 namespace alica
 {
 
 class BasicTrueCondition : public BasicCondition
 {
-  public:
+public:
     BasicTrueCondition();
     virtual ~BasicTrueCondition();
 
@@ -23,5 +15,3 @@ class BasicTrueCondition : public BasicCondition
 };
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_SRC_ENGINE_EXPRESSIONHANDLER_BASICTRUECONDITION_H_ */

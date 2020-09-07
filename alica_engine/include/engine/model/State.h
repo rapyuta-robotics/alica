@@ -8,9 +8,12 @@ namespace alica
 class Plan;
 class Transition;
 class AbstractPlan;
-class Parametrisation;
+class VariableBinding;
 class EntryPoint;
 class ModelFactory;
+class StateFactory;
+class TerminalStateFactory;
+class ModelManager;
 
 /**
  * A State is a plan element inhabitable by agents, which contains sub-plans, sub-plantypes, and behaviours.
@@ -26,15 +29,15 @@ public:
     };
     State();
     State(StateType t);
-    State(int64_t id);
     virtual ~State();
 
+    std::string toString(std::string indent = "") const override;
     const Plan* getInPlan() const { return _inPlan; }
     const EntryPoint* getEntryPoint() const { return _entryPoint; }
-    const AbstractPlanGrp& getPlans() const { return _plans; }
+    const ConfAbstractPlanWrapperGrp& getConfAbstractPlanWrappers() const { return _confAbstractPlanWrappers; }
     const TransitionGrp& getInTransitions() const { return _inTransitions; }
     const TransitionGrp& getOutTransitions() const { return _outTransitions; }
-    const ParametrisationGrp& getParametrisation() const { return _parametrisation; }
+    const VariableBindingGrp& getParametrisation() const { return _variableBindingGrp; }
 
     bool isTerminal() const { return _type != NORMAL; }
     bool isSuccessState() const { return _type == SUCCESS; }
@@ -42,24 +45,22 @@ public:
 
 private:
     friend ModelFactory;
+    friend StateFactory;
+    friend TerminalStateFactory;
+    friend ModelManager;
     void setInPlan(const Plan* inPlan);
 
     void setInTransitions(const TransitionGrp& inTransitions);
     void setOutTransitions(const TransitionGrp& outTransition);
 
-    void setParametrisation(const ParametrisationGrp& parametrisation);
+    void setVariableBindings(const VariableBindingGrp &variableBindingGrp);
 
-    void setPlans(const AbstractPlanGrp& plans);
-
-    void setSuccessState(bool successState);
-    void setFailureState(bool failureState);
-
-    void setTerminal(bool terminal);
+    void setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers);
 
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
      */
-    AbstractPlanGrp _plans;
+    ConfAbstractPlanWrapperGrp _confAbstractPlanWrappers;
     /**
      * The list of Transitions leading to this state.
      */
@@ -69,9 +70,9 @@ private:
      */
     TransitionGrp _outTransitions;
     /**
-     * The list of Parametrisations, which bind variables of sub-plans to variables in this state's plan.
+     * The list of VariableBindings, which bind variables of sub-plans to variables in this state's plan.
      */
-    ParametrisationGrp _parametrisation;
+    VariableBindingGrp _variableBindingGrp;
     /**
      * The plan containing this state.
      */

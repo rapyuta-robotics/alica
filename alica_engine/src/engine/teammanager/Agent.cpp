@@ -1,6 +1,5 @@
 #include "engine/teammanager/Agent.h"
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaEngine.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
@@ -8,6 +7,8 @@
 #include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
+
+#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -45,7 +46,7 @@ void Agent::setTimeout(AlicaTime t)
 
 void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
-    _engineData.editSuccessMarks().markSuccessfull(plan, entryPoint);
+    _engineData.editSuccessMarks().markSuccessful(plan, entryPoint);
 }
 
 void Agent::setSuccessMarks(const IdGrp& suceededEps)

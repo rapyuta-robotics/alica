@@ -1,15 +1,15 @@
 #include "test_alica.h"
 
 #include "engine/IAlicaCommunication.h"
-#include <Plans/Behaviour/NotToTrigger.h>
-#include <Plans/Behaviour/TriggerA.h>
-#include <Plans/Behaviour/TriggerB.h>
-#include <Plans/Behaviour/TriggerC.h>
+#include "engine/model/ConfAbstractPlanWrapper.h"
+#include <Behaviour/NotToTrigger.h>
+#include <Behaviour/TriggerA.h>
+#include <Behaviour/TriggerB.h>
+#include <Behaviour/TriggerC.h>
 #include <TestWorldModel.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
 #include <engine/PlanBase.h>
-#include <engine/model/BehaviourConfiguration.h>
 #include <essentials/EventTrigger.h>
 
 #include <condition_variable>
@@ -36,36 +36,36 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     ae->getAlicaClock().sleep(duration);
 
     for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getName() == "TriggerA") {
+        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
             continue;
-        } else if (iter.first->getName() == "TriggerB") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
             continue;
-        } else if (iter.first->getName() == "TriggerC") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
             iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger2);
             continue;
         } else {
-            cout << "BehName: " << iter.first->getName() << endl;
+            std::cout << "BehName: " << iter.first->getName() << std::endl;
             continue;
         }
     }
 
     for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getName() == "TriggerA") {
+        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
             continue;
-        } else if (iter.first->getName() == "TriggerB") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
             EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 0);
             continue;
-        } else if (iter.first->getName() == "TriggerC") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
             EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 0);
             continue;
-        } else if (iter.first->getName() == "NotToTriggerDefault") {
+        } else if (iter.first->getAbstractPlan()->getName() == "NotToTrigger") {
             EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {
-            cout << iter.first->getName() << endl;
+            std::cout << iter.first->getAbstractPlan()->getName() << std::endl;
             EXPECT_TRUE(false);
         }
     }
@@ -89,16 +89,16 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     ae->getAlicaClock().sleep(duration * 2);
 
     for (auto iter : ae->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getName() == "TriggerA") {
+        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
             EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
             continue;
-        } else if (iter.first->getName() == "TriggerB") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
             EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 3);
             continue;
-        } else if (iter.first->getName() == "TriggerC") {
+        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
             EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 4);
             continue;
-        } else if (iter.first->getName() == "NotToTriggerDefault") {
+        } else if (iter.first->getAbstractPlan()->getName() == "NotToTrigger") {
             EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
             continue;
         } else {

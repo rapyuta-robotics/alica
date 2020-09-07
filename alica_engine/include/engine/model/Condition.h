@@ -1,18 +1,12 @@
-/*
- * Condition.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
+#pragma once
 
-#ifndef CONDITION_H_
-#define CONDITION_H_
+
+#include "AlicaElement.h"
+#include "engine/Types.h"
 
 #include <memory>
 #include <string>
 
-#include "AlicaElement.h"
-#include "engine/Types.h"
 
 namespace alica
 {
@@ -22,6 +16,7 @@ class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
 class ModelFactory;
+class ConditionFactory;
 class ExpressionHandler;
 
 /**
@@ -31,7 +26,6 @@ class Condition : public AlicaElement
 {
 public:
     Condition();
-    Condition(int64_t id);
     virtual ~Condition();
 
     /**
@@ -45,7 +39,6 @@ public:
     const std::string& getPlugInName() const { return _plugInName; }
 
     const VariableGrp& getVariables() const { return _variables; }
-    const ParameterGrp& getParameters() const { return _parameters; }
     const QuantifierGrp& getQuantifiers() const { return _quantifiers; }
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
@@ -54,20 +47,19 @@ public:
 
 private:
     friend ModelFactory;
+    friend ConditionFactory;
     friend ExpressionHandler;
 
     void setConditionString(const std::string& conditionString);
     void setVariables(const VariableGrp& variables);
     void setPlugInName(const std::string& plugInName);
     void setAbstractPlan(const AbstractPlan* abstractPlan);
-    void setParameters(const ParameterGrp& parameters);
     void setBasicConstraint(const std::shared_ptr<BasicConstraint>& basicConstraint);
     void setBasicCondition(const std::shared_ptr<BasicCondition>& basicCondition);
     void setQuantifiers(const QuantifierGrp& quantifiers);
 
     std::shared_ptr<BasicCondition> _basicCondition;
     std::shared_ptr<BasicConstraint> _basicConstraint;
-    ParameterGrp _parameters;
 
     /**
      * The static variables used in the constraint of this condition.
@@ -88,5 +80,3 @@ private:
     std::string _plugInName; // TODO: is this needed?!
 };
 } // namespace alica
-
-#endif /* CONDITION_H_ */

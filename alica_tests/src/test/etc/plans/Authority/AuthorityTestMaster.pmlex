@@ -1,31 +1,4 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="AuthorityTest.pml#1414403413451"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTestMaster.pml#1414403396329"/>
-    <value xPos="297" yPos="95" width="152" height="86" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTestMaster.pml#1414403396328"/>
-    <value width="508" height="363"/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTestMaster.pml#1414403396331"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTestMaster.pml#1414403820806"/>
-    <value xPos="168" yPos="107" width="65" height="67"/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTestMaster.pml#1414403840950"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="AuthorityTest.pml#1414403413451"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "Authority/AuthorityTestMaster.pml#1414403396328",
+  "uiElementMap" : { }
+}

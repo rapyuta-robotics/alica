@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
+#include <essentials/IdentifierConstPtr.h>
 
 #include <iostream>
 #include <list>
@@ -8,12 +8,11 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-//#define SM_SUCCES
 
 namespace alica
 {
 class Transition;
-class SyncTransition;
+class SynchronisationProcess;
 class AlicaEngine;
 class PlanRepository;
 class Synchronisation;
@@ -31,23 +30,23 @@ public:
     void close();
     void tick();
     void setSynchronisation(const Transition* trans, bool holds);
-    bool followSyncTransition(const Transition* trans);
+    bool isTransitionSuccessfullySynchronised(const Transition* trans);
     void onSyncTalk(std::shared_ptr<SyncTalk> st);
     void onSyncReady(std::shared_ptr<SyncReady> sr);
 
     void sendSyncTalk(SyncTalk& st);
     void sendSyncReady(SyncReady& sr);
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
-    void synchronisationDone(const SyncTransition* st);
+    void synchronisationDone(const Synchronisation* st);
 
 private:
     bool _running;
     const AlicaEngine* _ae;
-    AgentIDConstPtr _myId;
+    essentials::IdentifierConstPtr _myId;
     unsigned long _ticks;
-    std::map<const SyncTransition*, Synchronisation*> _synchSet;
-    std::list<const SyncTransition*> _synchedTransitions;
-    std::mutex _lomutex;
+    std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
+    std::map<const Synchronisation*, SynchronisationProcess*> _synchProcessMapping; /**< Mapping from synchronisations to their ongoing synchronisation process */
+    std::list<const Synchronisation*> _successfulSynchronisations; /**< List of synchronisations that were achieved/successful */
 };
 
 } // namespace alica

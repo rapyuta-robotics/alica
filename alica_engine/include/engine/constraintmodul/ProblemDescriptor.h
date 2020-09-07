@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/collections/AgentVariables.h"
-#include "essentials/AgentID.h"
 #include <alica_solver_interface/Interval.h>
 #include <memory>
 #include <utility>

@@ -1,31 +1,24 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(alica_engine)
 
-## Change to use clang ... unfortunately it doesnt work :(
-#set(CMAKE_CXX_COMPILER "clang")
-#
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+add_compile_options(-std=c++17)
+set(CMAKE_BUILD_TYPE Debug)
 
-## Enable backtraces
-set(CMAKE_CXX_FLAGS "-rdynamic ${CMAKE_CXX_FLAGS}")
+##Yaml
+find_package(yaml-cpp REQUIRED)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS agent_id system_config fsystem event_handling system_util alica_common_config alica_solver_interface)
+  find_package(catkin REQUIRED COMPONENTS id_manager system_config fsystem event_handling system_util alica_common_config alica_solver_interface)
 else (catkin_FOUND)
-  set(catkin_LIBRARIES "agent_id" "system_config" "fsystem" "event_handling" "system_util" "alica_common_config" "alica_solver_interface")
+  set(catkin_LIBRARIES "id_manager" "system_config" "fsystem" "event_handling" "system_util" "alica_common_config" "alica_solver_interface")
 endif(catkin_FOUND)
 
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS agent_id system_config fsystem event_handling system_util alica_solver_interface alica_common_config
-  #  DEPENDS tinyxml
+    CATKIN_DEPENDS id_manager system_config fsystem event_handling system_util alica_common_config alica_solver_interface
   )
 endif(catkin_FOUND)
 
@@ -35,18 +28,17 @@ endif(catkin_FOUND)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${YAML_CPP_INCLUDE_DIR})
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
+add_library(${PROJECT_NAME} ${alica_SOURCES})
+set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_library(alica_engine
-    ${alica_SOURCES};
-)
-target_link_libraries(alica_engine ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 if (NOT catkin_FOUND)
- target_include_directories(alica_engine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
 
 install(TARGETS ${PROJECT_NAME}

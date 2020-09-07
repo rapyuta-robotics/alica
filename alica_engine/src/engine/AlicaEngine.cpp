@@ -1,6 +1,4 @@
-
 #include "engine/AlicaEngine.h"
-#include <SystemConfig.h>
 
 #include "engine/IRoleAssignment.h"
 #include "engine/StaticRoleAssignment.h"
@@ -8,9 +6,15 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
+#include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
+#include "engine/syncmodule/SyncModule.h"
+#include "engine/teammanager/TeamManager.h"
+
+#include <essentials/IDManager.h>
+#include <essentials/SystemConfig.h>
+
 #include <alica_common_config/debug_output.h>
-#include <essentials/AgentIDManager.h>
 
 namespace alica
 {
@@ -27,22 +31,21 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
         : _ctx(ctx)
         , _stepCalled(false)
-        , _log(this)
         , _stepEngine(stepEngine)
-        , _agentIDManager(new essentials::AgentIDFactory())
-        , _planParser(&_planRepository)
-        , _teamManager(this)
+        , _log(this)
+        , _modelManager(_planRepository)
+        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
+        , _roleSet(_modelManager.loadRoleSet(roleSetName))
+        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID->toByteVector().data(), agentID->toByteVector().size()) : nullptr))
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _planBase(this)
-        , _masterPlan(_planParser.parsePlanTree(masterPlanName))
-        , _roleSet(_planParser.parseRoleSet(roleSetName))
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
@@ -68,11 +71,6 @@ AlicaEngine::~AlicaEngine()
 
 /**
  * Initialise the engine
- * @param bc A behaviourcreator
- * @param roleSetName A string, the roleset to be used. If empty, a default roleset is looked for
- * @param masterPlanName A string, the top-level plan to be used
- * @param roleSetDir A string, the directory in which to search for roleSets. If empty, the base role path will be used.
- * @param stepEngine A bool, whether or not the engine should start in stepped mode
  * @return bool true if everything worked false otherwise
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
@@ -81,14 +79,15 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
-    _auth.init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
-    _syncModul.init();
-    _variableSyncModule->init();
+
     RunningPlan::init();
     _teamManager.init();
+    _syncModul.init();
+    _variableSyncModule->init();
+    _auth.init();
     return everythingWorked;
 }
 
@@ -104,10 +103,8 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
-
     _behaviourPool.stopAll();
     _behaviourPool.terminateAll();
-
     _planBase.stop();
     _auth.close();
     _syncModul.close();
@@ -125,9 +122,9 @@ const AlicaClock& AlicaEngine::getAlicaClock() const
     return _ctx.getAlicaClock();
 }
 
-std::string AlicaEngine::getRobotName() const
+std::string AlicaEngine::getLocalAgentName() const
 {
-    return _ctx.getRobotName();
+    return _ctx.getLocalAgentName();
 }
 
 /**
@@ -180,11 +177,23 @@ void AlicaEngine::stepNotify()
  * Otherwise, it creates a new one, stores and returns it.
  *
  * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding AgentID object.
+ * message and receiving a pointer to a corresponding Identifier object.
  */
-AgentIDConstPtr AlicaEngine::getIdFromBytes(const std::vector<uint8_t>& idByteVector)
+essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type) const
 {
-    return AgentIDConstPtr(_agentIDManager.getIDFromBytes(idByteVector));
+    return _ctx.getIDFromBytes(idBytes, idSize, type);
 }
+
+/**
+ * Generates random ID of given size.
+ * @param size
+ * @return The ID Object
+ */
+essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
+{
+    return _ctx.generateID(size);
+}
+
+
 
 } // namespace alica

@@ -13,9 +13,13 @@
 #include "engine/model/Transition.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/TeamManager.h"
-#include <SystemConfig.h>
-#include <engine/constraintmodul/ConditionStore.h>
-#include <engine/syncmodule/SyncModule.h>
+#include "engine/syncmodule/SyncModule.h"
+#include "engine/constraintmodul/ConditionStore.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+
+#include <essentials/SystemConfig.h>
+
+
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -55,7 +59,7 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
         AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
     }
 
-    RunningPlan* main = _pb->makeRunningPlan(masterPlan);
+    RunningPlan* main = _pb->makeRunningPlan(masterPlan, nullptr);
 
     main->setAllocationNeeded(true);
 
@@ -347,11 +351,11 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     AgentGrp agents;
     rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
 
-    ALICA_DEBUG_MSG(rp.getActiveState()->getPlans().size() << " Plans in State " << rp.getActiveState()->getName());
+    ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
 
     std::vector<RunningPlan*> children;
-    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getPlans(), agents, children);
-    if (!ok || children.size() < rp.getActiveState()->getPlans().size()) {
+    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
+    if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
         ALICA_DEBUG_MSG("RB: PlanAllocFailed " << rp.getActivePlan()->getName());
         return PlanChange::FailChange;
@@ -422,7 +426,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     const State* nextState = nullptr;
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() != nullptr)
+        if (t->getSynchronisation() != nullptr)
             continue;
         if (t->evalCondition(r)) {
             nextState = t->getOutState();
@@ -450,50 +454,53 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
 /**
  * Moves the agent along a synchronized transition, if the corresponding transition holds and the team
  * deems the transition as synchronized.
- * @param r A shared_ptr of a RunningPlan
+ * @param rp A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::synchTransitionRule(RunningPlan& r)
+PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
 {
-    assert(!r.isRetired());
+    assert(!rp.isRetired());
     ALICA_DEBUG_MSG("RB: Sync-Rule called.");
-    ALICA_DEBUG_MSG("RB: Sync RP \n" << r);
+    ALICA_DEBUG_MSG("RB: Sync RP \n" << rp);
 
-    if (r.getActiveState() == nullptr) {
+    if (rp.getActiveState() == nullptr) {
         return PlanChange::NoChange;
     }
 
     const State* nextState = nullptr;
 
-    for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSyncTransition() == nullptr) {
+    for (const Transition* t : rp.getActiveState()->getOutTransitions()) {
+        if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_sm.followSyncTransition(t)) {
-            if (t->evalCondition(r)) {
+        if (_sm.isTransitionSuccessfullySynchronised(t)) {
+            if (t->evalCondition(rp)) {
+                // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
-                r.editConstraintStore().addCondition(t->getPreCondition());
+                rp.editConstraintStore().addCondition(t->getPreCondition());
                 break;
             } else {
+                // adds a new synchronisation process or updates existing
                 _sm.setSynchronisation(t, false);
             }
         } else {
-            _sm.setSynchronisation(t, t->evalCondition(r));
+            // adds a new synchronisation process or updates existing
+            _sm.setSynchronisation(t, t->evalCondition(rp));
         }
     }
     if (nextState == nullptr) {
         return PlanChange::NoChange;
     }
 
-    ALICA_DEBUG_MSG("RB: SynchTransition" << r.getActivePlan()->getName());
+    rp.moveState(nextState);
+    rp.setAllocationNeeded(true);
 
-    r.moveState(nextState);
+    ALICA_DEBUG_MSG("RB: Follow synchronised transition in plan " << rp.getActivePlan()->getName());
+    _log.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
 
-    r.setAllocationNeeded(true);
-    _log.eventOccurred("SynchTrans(", r.getActivePlan()->getName(), ")");
-    if (r.getActiveState()->isSuccessState())
+    if (rp.getActiveState()->isSuccessState())
         return PlanChange::SuccesChange;
-    else if (r.getActiveState()->isFailureState())
+    else if (rp.getActiveState()->isFailureState())
         return PlanChange::FailChange;
     return PlanChange::InternalChange;
 }

@@ -1,29 +1,36 @@
 #pragma once
 
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<AgentIDConstPtr, int64_t> stdSyncReady;
+typedef std::tuple<essentials::IdentifierConstPtr, int64_t> stdSyncReady;
 struct SyncReady
 {
     SyncReady()
             : senderID(nullptr)
-            , syncTransitionID(0)
+            , synchronisationID(0)
     {
     }
-    AgentIDConstPtr senderID;
-    int64_t syncTransitionID;
+    essentials::IdentifierConstPtr senderID;
+    int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)
             : senderID(std::get<0>(s))
-            , syncTransitionID(std::get<1>(s))
+            , synchronisationID(std::get<1>(s))
     {
     }
 
-    stdSyncReady toStandard() { return std::make_tuple(senderID, syncTransitionID); }
+    stdSyncReady toStandard() { return std::make_tuple(senderID, synchronisationID); }
 };
+
+inline std::ostream& operator<<(std::ostream& o, const SyncReady& sr)
+{
+    std::stringstream ss;
+    ss << "## SyncReady: From " << sr.senderID << " Synchronisation ID " << sr.synchronisationID << "##" << std::endl;
+    return o << ss.str();
+}
 
 } /* namespace alica */
