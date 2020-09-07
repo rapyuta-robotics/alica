@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <ros/ros.h>
-#include <test_alica.h>
 
 int main(int argc, char** argv)
 {

@@ -132,4 +132,4 @@ constexpr Interval<T> operator/(const Interval<T> a, T b)
 {
     return Interval<T>(a.getMin() / b, a.getMax() / b);
 }
-}
+} // namespace alica

@@ -1,56 +1,46 @@
-/*
- * SyncRow.cpp
- *
- *  Created on: Aug 27, 2014
- *      Author: Stefan Jakob
- */
-
-#include <algorithm>
-#include <engine/AgentIDConstPtr.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <engine/containers/SyncData.h>
 #include <engine/syncmodule/SyncRow.h>
+
+#include <algorithm>
 #include <iostream>
 
 namespace alica
 {
 
-SyncRow::SyncRow()
-        : _haveData(false)
-{
-}
-
 SyncRow::SyncRow(const SyncData& sd)
         : _syncData(sd)
-        , _haveData(true)
 {
 }
 
 SyncRow::~SyncRow() {}
 
-AgentGrp& SyncRow::getReceivedBy()
+const AgentGrp& SyncRow::getReceivedBy()
 {
     sort(_receivedBy.begin(), _receivedBy.end());
     return _receivedBy;
 }
 
-void SyncRow::setReceivedBy(const AgentGrp& receivedBy)
+AgentGrp& SyncRow::editReceivedBy()
 {
-    _receivedBy = receivedBy;
+    sort(_receivedBy.begin(), _receivedBy.end());
+    return _receivedBy;
 }
 
 void SyncRow::setSyncData(const SyncData& syncData)
 {
     _syncData = syncData;
 }
-void SyncRow::toString()
-{ // TODO: fix this method (doesnt produce a string, but write to cout)
-    std::cout << "SyncRow" << std::endl;
-    std::cout << "ReceivedBy: ";
-    for (AgentIDConstPtr i : _receivedBy) {
-        std::cout << i << " ";
+
+std::ostream& operator<<(std::ostream& os, const SyncRow& sr)
+{
+    std::stringstream ss;
+    ss << "## SyncRow: ReceivedBy: ";
+    for (essentials::IdentifierConstPtr i : sr._receivedBy) {
+        ss << i << " ";
     }
-    std::cout << std::endl;
-    _syncData.toString();
+    ss << std::endl << sr._syncData << "##" << std::endl;
+    return os << ss.str();
 }
 
 } /* namespace alica */

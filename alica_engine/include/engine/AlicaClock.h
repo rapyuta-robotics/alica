@@ -59,6 +59,8 @@ public:
         return AlicaTime(1000000000LL * 60LL * 60LL * n);
     }
 
+    AlicaTime abs() { return AlicaTime(std::abs(_time)); }
+
     constexpr AlicaTime operator+(const AlicaTime& t) const { return AlicaTime(_time + t.inNanoseconds()); }
 
     constexpr AlicaTime operator-(const AlicaTime& t) const { return AlicaTime(_time - t.inNanoseconds()); }

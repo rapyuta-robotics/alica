@@ -1,7 +1,8 @@
 #pragma once
 
-#include "engine/AgentIDConstPtr.h"
 #include "engine/containers/SyncData.h"
+
+#include <essentials/IdentifierConstPtr.h>
 
 #include <tuple>
 #include <vector>
@@ -9,7 +10,7 @@
 namespace alica
 {
 
-typedef std::tuple<AgentIDConstPtr, std::vector<stdSyncData>> stdSyncTalk;
+typedef std::tuple<essentials::IdentifierConstPtr, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk
 {
     SyncTalk()
@@ -18,7 +19,7 @@ struct SyncTalk
     }
     ~SyncTalk() {}
 
-    AgentIDConstPtr senderID;
+    essentials::IdentifierConstPtr senderID;
     std::vector<SyncData> syncData;
 
     SyncTalk(const stdSyncTalk& s)
@@ -39,5 +40,16 @@ struct SyncTalk
         return std::make_tuple(senderID, std::move(r));
     }
 };
+
+inline std::ostream& operator<<(std::ostream& o, const SyncTalk& st)
+{
+    std::stringstream ss;
+    ss << "## SyncTalk: From " << st.senderID << std::endl;
+    for (SyncData sd : st.syncData) {
+        ss << sd;
+    }
+    ss << "##" << std::endl;
+    return o << ss.str();
+}
 
 } /* namespace alica */

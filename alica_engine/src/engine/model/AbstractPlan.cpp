@@ -1,13 +1,7 @@
-/*
- * AbstractPlan.cpp
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
-#include <SystemConfig.h>
+
+#include <essentials/SystemConfig.h>
 #include <sstream>
 
 namespace alica
@@ -15,9 +9,6 @@ namespace alica
 
 AbstractPlan::AbstractPlan()
         : AlicaElement()
-        , _masterPlan(false)
-        , _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
 
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
@@ -26,9 +17,6 @@ AbstractPlan::AbstractPlan()
 
 AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
-        , _masterPlan(false)
-        , _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
@@ -36,16 +24,15 @@ AbstractPlan::AbstractPlan(int64_t id)
 
 AbstractPlan::~AbstractPlan() {}
 
-std::string AbstractPlan::toString() const
+std::string AbstractPlan::toString(std::string indent) const
 {
     std::stringstream ss;
-    ss << AlicaElement::toString();
-    ss << "IsMasterPlan: " << (isMasterPlan() ? "true" : "false") << std::endl;
-    ss << "Filename: " << _fileName << std::endl;
+    ss << indent << AlicaElement::toString(indent);
+    ss << indent << "\tFilename: " << _fileName << std::endl;
     return ss.str();
 }
 
-const Variable* AbstractPlan::getVariableByName(const std::string& name) const
+const Variable* AbstractPlan::getVariable(const std::string& name) const
 {
     for (const Variable* variable : _variables) {
         if (variable->getName() == name) {
@@ -74,11 +61,6 @@ bool AbstractPlan::containsVar(const std::string& name) const
     return false;
 }
 
-void AbstractPlan::setMasterPlan(bool masterPlan)
-{
-    _masterPlan = masterPlan;
-}
-
 void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
 {
     _authorityTimeInterval = authorithyTimeInterval;
@@ -87,21 +69,6 @@ void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) co
 void AbstractPlan::setFileName(const std::string& fileName)
 {
     _fileName = fileName;
-}
-
-void AbstractPlan::setVariables(const VariableGrp& variables)
-{
-    _variables = variables;
-}
-
-void AbstractPlan::setRuntimeCondition(RuntimeCondition* runtimeCondition)
-{
-    _runtimeCondition = runtimeCondition;
-}
-
-void AbstractPlan::setPreCondition(PreCondition* preCondition)
-{
-    _preCondition = preCondition;
 }
 
 } // namespace alica

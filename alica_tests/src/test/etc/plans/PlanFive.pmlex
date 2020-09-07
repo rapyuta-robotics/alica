@@ -1,59 +1,77 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="PlanFive.pml#1407153717808"/>
-    <value xPos="216" yPos="34" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153703092"/>
-    <value width="696" height="504"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153717809"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153972059"/>
-    <value xPos="392" yPos="280"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153973706"/>
-    <value xPos="478" yPos="267"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153975075"/>
-    <value xPos="344" yPos="276"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153985762"/>
-    <value xPos="230" yPos="249" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153987910"/>
-    <value xPos="242" yPos="125" width="134" height="110" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="PlanFive.pml#1407153989550"/>
-    <value xPos="237" yPos="363" width="81" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="AttackPlan.pml#1402488634525"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Defend.pml#1402488893641"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="MidFieldPlayPlan.pml#1402488770050"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="GoalPlan.pml#1402488870347"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Attack.pty#1407153314946"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "PlanFive.pml#1407153703092",
+  "uiElementMap" : {
+    "1407153989550" : {
+      "id" : 1587741257419,
+      "name" : "1587741257419",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153717808" : {
+      "id" : 1587741257396,
+      "name" : "1587741257396",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153717809" : {
+      "id" : 1587741257432,
+      "name" : "1587741257432",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153973706" : {
+      "id" : 1587741257434,
+      "name" : "1587741257434",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153972059" : {
+      "id" : 1587741257433,
+      "name" : "1587741257433",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153987910" : {
+      "id" : 1587741257418,
+      "name" : "1587741257418",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153985762" : {
+      "id" : 1587741257405,
+      "name" : "1587741257405",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1407153975075" : {
+      "id" : 1587741257435,
+      "name" : "1587741257435",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

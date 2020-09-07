@@ -3,7 +3,8 @@
 #include "engine/Assignment.h"
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
-#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/Behaviour.h"
+
 #include <essentials/ITrigger.h>
 #include <essentials/Timer.h>
 
@@ -17,12 +18,9 @@
 
 namespace alica
 {
-// TODO: get rid of this line once generator templates get an overhaul
-using std::string;
-
 class Variable;
 class RunningPlan;
-
+class Configuration;
 class EntryPoint;
 class AlicaEngine;
 
@@ -39,12 +37,12 @@ public:
     bool isRunningInContext(const RunningPlan* rp) const;
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
-    const BehaviourParameterMap& getParameters() const { return _configuration->getParameters(); }
 
-    void setConfiguration(const BehaviourConfiguration* beh);
+    void setBehaviour(const Behaviour* beh);
+    void setConfiguration(const Configuration* conf);
 
-    const VariableGrp& getVariables() const { return _configuration->getVariables(); }
-    const Variable* getVariableByName(const std::string& name) const;
+    const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
+    const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
     bool stop();
     bool start();
@@ -74,7 +72,7 @@ public:
     virtual void init() {}
 
 protected:
-    AgentIDConstPtr getOwnId() const;
+    essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
     /**
@@ -117,10 +115,16 @@ private:
      */
     std::string _name;
 
-    const BehaviourConfiguration* _configuration;
+    const Behaviour* _behaviour;
     AlicaEngine* _engine;
     RunningPlan* _context;
 
+    /**
+     * The configuration, that is set in the behaviour pool, associated with
+     * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
+     */
+    const Configuration* _configuration;
+    std::atomic<RunningPlan*> _contextInRun;
     SignalState _signalState; // current state of the signal from main thread (start, stop or terminate)
     std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
 

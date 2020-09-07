@@ -7,11 +7,9 @@
 
 #include <test_alica.h>
 
-#include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
-#include <engine/RunningPlan.h>
 
-#include <SystemConfig.h>
+#include <essentials/SystemConfig.h>
 
 #include <gtest/gtest.h>
 #include <string.h>

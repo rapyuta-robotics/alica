@@ -1,52 +1,189 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1402488770050" name="MidFieldPlayPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="3" maxCardinality="2147483647">
-  <conditions xsi:type="alica:RuntimeCondition" id="1402489260911" name="NewRuntimeCondition" comment="" conditionString="" pluginName="DefaultPlugin"/>
-  <states id="1402488787818" name="Wander" comment="" entryPoint="1402488787819">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/MidFieldStandard.beh#1402488712657</plans>
-    <outTransitions>#1402489257607</outTransitions>
-    <outTransitions>#1402489276995</outTransitions>
-  </states>
-  <states id="1402489237914" name="Tackle" comment="">
-    <plans xsi:type="alica:Plan">Tackle.pml#1402489318663</plans>
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Attack.beh#1402488866727</plans>
-    <plans xsi:type="alica:Plan">Defend.pml#1402488893641</plans>
-    <inTransitions>#1402489257607</inTransitions>
-  </states>
-  <states id="1402489273401" name="Sync" comment="">
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/Tackle.beh#1402488956661</plans>
-    <inTransitions>#1402489276995</inTransitions>
-  </states>
-  <states id="1402500830885" name="Kill" comment="" entryPoint="1402500828244">
-    <plans xsi:type="alica:PlanningProblem">TestPlanningProblem.pp#1403773823508</plans>
-    <outTransitions>#1402500843072</outTransitions>
-  </states>
-  <states id="1402500833246" name="Shoot" comment="">
-    <inTransitions>#1402500843072</inTransitions>
-  </states>
-  <transitions id="1402489257607" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402489258509" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1402488787818</inState>
-    <outState>#1402489237914</outState>
-  </transitions>
-  <transitions id="1402489276995" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402489278408" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1402488787818</inState>
-    <outState>#1402489273401</outState>
-    <synchronisation>#1402500865502</synchronisation>
-  </transitions>
-  <transitions id="1402500843072" name="MISSING_NAME" comment="" msg="">
-    <preCondition id="1402500844446" name="MISSING_NAME" comment="" conditionString="" pluginName="DefaultPlugin" enabled="true"/>
-    <inState>#1402500830885</inState>
-    <outState>#1402500833246</outState>
-    <synchronisation>#1402500865502</synchronisation>
-  </transitions>
-  <synchronisations id="1402500865502" name="SynChro" comment="" synchedTransitions="1402500843072 1402489276995" talkTimeout="30" syncTimeout="10000" failOnSyncTimeOut="false"/>
-  <entryPoints id="1402488787819" name="MISSING_NAME" comment="" successRequired="true" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1402488787818</state>
-  </entryPoints>
-  <entryPoints id="1402500828244" name="NewEntryPoint" comment="" successRequired="false" minCardinality="3" maxCardinality="5">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1402500830885</state>
-  </entryPoints>
-</alica:Plan>
+{
+  "id" : 1402488770050,
+  "name" : "MidFieldPlayPlan",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ ],
+  "masterPlan" : false,
+  "utilityThreshold" : 0.1,
+  "preCondition" : null,
+  "runtimeCondition" : {
+    "id" : 1402489260911,
+    "name" : "NewRuntimeCondition",
+    "comment" : "",
+    "enabled" : false,
+    "conditionString" : "",
+    "pluginName" : "DefaultPlugin",
+    "variables" : [ ],
+    "quantifiers" : [ ]
+  },
+  "entryPoints" : [ {
+    "id" : 1402488787819,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "successRequired" : true,
+    "minCardinality" : 0,
+    "maxCardinality" : 2147483647,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1402488787818,
+    "plan" : 1402488770050
+  }, {
+    "id" : 1402500828244,
+    "name" : "NewEntryPoint",
+    "comment" : "",
+    "successRequired" : false,
+    "minCardinality" : 3,
+    "maxCardinality" : 5,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1402500830885,
+    "plan" : 1402488770050
+  } ],
+  "states" : [ {
+    "type" : "State",
+    "id" : 1402488787818,
+    "name" : "Wander",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1402488770050,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662682,
+      "name" : "1587718662682",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/MidFieldStandard.beh#1402488696205",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1402489257607, 1402489276995 ],
+    "inTransitions" : [ ]
+  }, {
+    "type" : "State",
+    "id" : 1402489237914,
+    "name" : "Tackle",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1402488770050,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662685,
+      "name" : "1587718662685",
+      "comment" : "",
+      "abstractPlan" : "Tackle.pml#1402489318663",
+      "configuration" : null
+    }, {
+      "id" : 1587718662687,
+      "name" : "1587718662687",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
+      "configuration" : null
+    }, {
+      "id" : 1587718662689,
+      "name" : "1587718662689",
+      "comment" : "",
+      "abstractPlan" : "Defend.pml#1402488893641",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1402489257607 ]
+  }, {
+    "type" : "State",
+    "id" : 1402489273401,
+    "name" : "Sync",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1402488770050,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718662692,
+      "name" : "1587718662692",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/Tackle.beh#1402488939130",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1402489276995 ]
+  }, {
+    "type" : "State",
+    "id" : 1402500830885,
+    "name" : "Kill",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1402488770050,
+    "confAbstractPlanWrappers" : [ ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1402500843072 ],
+    "inTransitions" : [ ]
+  }, {
+    "type" : "State",
+    "id" : 1402500833246,
+    "name" : "Shoot",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1402488770050,
+    "confAbstractPlanWrappers" : [ ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1402500843072 ]
+  } ],
+  "transitions" : [ {
+    "id" : 1402489257607,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1402488787818,
+    "outState" : 1402489237914,
+    "preCondition" : {
+      "id" : 1402489258509,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  }, {
+    "id" : 1402489276995,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1402488787818,
+    "outState" : 1402489273401,
+    "preCondition" : {
+      "id" : 1402489278408,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : 1402500865502
+  }, {
+    "id" : 1402500843072,
+    "name" : "MISSING_NAME",
+    "comment" : "",
+    "inState" : 1402500830885,
+    "outState" : 1402500833246,
+    "preCondition" : {
+      "id" : 1402500844446,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : "",
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : 1402500865502
+  } ],
+  "synchronisations" : [ {
+    "id" : 1402500865502,
+    "name" : "SynChro",
+    "comment" : "",
+    "talkTimeout" : 30,
+    "syncTimeout" : 10000,
+    "failOnSyncTimeout" : false,
+    "plan" : 1402488770050,
+    "syncedTransitions" : [ 1402500843072, 1402489276995 ]
+  } ]
+}

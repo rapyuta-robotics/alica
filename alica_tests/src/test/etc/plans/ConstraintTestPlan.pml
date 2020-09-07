@@ -1,26 +1,75 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:Plan xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1414068524245" name="ConstraintTestPlan" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" priority="0.0" minCardinality="0" maxCardinality="2147483647">
-  <conditions xsi:type="alica:RuntimeCondition" id="1414068566297" name="NewRuntimeCondition" comment="" conditionString="" pluginName="DefaultPlugin">
-    <vars>#1414068572540</vars>
-    <vars>#1414068576620</vars>
-  </conditions>
-  <vars id="1414068572540" name="X" comment="" Type=""/>
-  <vars id="1414068576620" name="Y" comment="" Type=""/>
-  <states id="1414068524246" name="constraintRunner" comment="" entryPoint="1414068524247">
-    <parametrisation id="1416488166139" name="MISSING_NAME" comment="">
-      <subplan xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</subplan>
-      <subvar>Behaviour/ConstraintUsingBehaviour.beh#1416488161203</subvar>
-      <var>#1414068576620</var>
-    </parametrisation>
-    <parametrisation id="1416488172649" name="MISSING_NAME" comment="">
-      <subplan xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</subplan>
-      <subvar>Behaviour/ConstraintUsingBehaviour.beh#1416487733086</subvar>
-      <var>#1414068572540</var>
-    </parametrisation>
-    <plans xsi:type="alica:BehaviourConfiguration">Behaviour/ConstraintUsingBehaviour.beh#1414068618837</plans>
-  </states>
-  <entryPoints id="1414068524247" name="" comment="" successRequired="false" minCardinality="0" maxCardinality="2147483647">
-    <task>../Misc/taskrepository.tsk#1225112227903</task>
-    <state>#1414068524246</state>
-  </entryPoints>
-</alica:Plan>
+{
+  "id" : 1414068524245,
+  "name" : "ConstraintTestPlan",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ {
+    "id" : 1414068572540,
+    "name" : "X",
+    "comment" : "",
+    "variableType" : ""
+  }, {
+    "id" : 1414068576620,
+    "name" : "Y",
+    "comment" : "",
+    "variableType" : ""
+  } ],
+  "masterPlan" : false,
+  "utilityThreshold" : 0.1,
+  "preCondition" : null,
+  "runtimeCondition" : {
+    "id" : 1414068566297,
+    "name" : "NewRuntimeCondition",
+    "comment" : "",
+    "enabled" : false,
+    "conditionString" : "",
+    "pluginName" : "DefaultPlugin",
+    "variables" : [ 1414068572540, 1414068576620 ],
+    "quantifiers" : [ ]
+  },
+  "entryPoints" : [ {
+    "id" : 1414068524247,
+    "name" : "1414068524247",
+    "comment" : "",
+    "successRequired" : false,
+    "minCardinality" : 0,
+    "maxCardinality" : 2147483647,
+    "task" : "taskrepository.tsk#1225112227903",
+    "state" : 1414068524246,
+    "plan" : 1414068524245
+  } ],
+  "states" : [ {
+    "type" : "State",
+    "id" : 1414068524246,
+    "name" : "constraintRunner",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1414068524245,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1587718663002,
+      "name" : "1587718663002",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ {
+      "id" : 1416488166139,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "variable" : 1414068576620,
+      "subPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
+      "subVariable" : "Behaviour/ConstraintUsingBehaviour.beh#1416488161203"
+    }, {
+      "id" : 1416488172649,
+      "name" : "MISSING_NAME",
+      "comment" : "",
+      "variable" : 1414068572540,
+      "subPlan" : "Behaviour/ConstraintUsingBehaviour.beh#1414068597716",
+      "subVariable" : "Behaviour/ConstraintUsingBehaviour.beh#1416487733086"
+    } ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ ]
+  } ],
+  "transitions" : [ ],
+  "synchronisations" : [ ]
+}

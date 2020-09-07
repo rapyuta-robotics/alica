@@ -9,7 +9,7 @@ namespace alica
 class AlicaEngine;
 
 /**
- * Globally holds information about succeeded entrypoints for a specific robot
+ * Globally holds information about succeeded entry points for a specific robot
  */
 class SuccessMarks
 {
@@ -24,7 +24,7 @@ public:
     void clear();
     const EntryPointGrp* succeededEntryPoints(const AbstractPlan* p) const;
     void removePlan(const AbstractPlan* plan);
-    void markSuccessfull(const AbstractPlan* p, const EntryPoint* e);
+    void markSuccessful(const AbstractPlan* p, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
     bool anyTaskSucceeded(const AbstractPlan* p) const;

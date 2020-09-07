@@ -20,4 +20,4 @@ std::ostream& operator<<(std::ostream& os, const AlicaTime& time)
 {
     return os << time.inNanoseconds();
 }
-}
+} // namespace alica

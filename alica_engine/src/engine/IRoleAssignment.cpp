@@ -9,14 +9,14 @@ IRoleAssignment::IRoleAssignment()
 {
 }
 
-const Role* IRoleAssignment::getRole(AgentIDConstPtr robotId) const
+const Role* IRoleAssignment::getRole(essentials::IdentifierConstPtr robotId) const
 {
     auto iter = _robotRoleMapping.find(robotId);
     if (iter != _robotRoleMapping.end()) {
         return iter->second;
     } else {
         std::stringstream ss;
-        ss << "RA: There is no role assigned for robot: " << *robotId << std::endl;
+        ss << "RA: There is no role assigned for robot: " << robotId << std::endl;
         AlicaEngine::abort(ss.str());
         return nullptr;
     }

@@ -11,10 +11,13 @@ class FailureState;
 class SuccessState;
 class PostCondition;
 class State;
-class SyncTransition;
+class Synchronisation;
 class Transition;
-class ModelFactory;
 class ExpressionHandler;
+class PlanFactory;
+class PreCondition;
+class RuntimeCondition;
+
 /**
  * An ALICA plan
  */
@@ -36,27 +39,34 @@ public:
 
     int getMaxCardinality() const { return _maxCardinality; }
     int getMinCardinality() const { return _minCardinality; }
+    bool isMasterPlan() const { return _masterPlan; }
 
     UtilityFunction* getUtilityFunction() const { return _utilityFunction.get(); }
     double getUtilityThreshold() const { return _utilityThreshold; }
 
-    const PostCondition* getPostCondition() const { return _postCondition; }
-
     const TransitionGrp& getTransitions() const { return _transitions; }
-    const SyncTransitionGrp& getSyncTransitions() const { return _syncTransitions; }
+    const SynchronisationGrp& getSynchronisations() const { return _synchronisations; }
+    const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
+    const PreCondition* getPreCondition() const { return _preCondition; }
+
+    std::string toString(std::string indent = "") const;
 
 private:
     friend ModelFactory;
+    friend PlanFactory;
     friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);
     void setSuccessStates(const SuccessStateGrp& succesPoints);
     void setMaxCardinality(int maxCardinality);
     void setMinCardinality(int minCardinality);
+    void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
     void setStates(const StateGrp& states);
-    void setSyncTransitions(const SyncTransitionGrp& syncTransitions);
+    void setSynchronisations(const SynchronisationGrp &synchronisations);
     void setTransitions(const TransitionGrp& transitions);
+    void setRuntimeCondition(RuntimeCondition* runtimeCondition);
+    void setPreCondition(PreCondition* preCondition);
 
     int _minCardinality;
     int _maxCardinality;
@@ -64,18 +74,30 @@ private:
     StateGrp _states;
     SuccessStateGrp _successStates;
     FailureStateGrp _failureStates;
-    SyncTransitionGrp _syncTransitions;
+    SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    const PostCondition* _postCondition;
+
     /**
      * This plan's Utility function
      */
-    // TOD: change shared to unique ptr (this requires a change to autogeneration templates)
+    // TODO: change shared to unique ptr (this requires a change to autogeneration templates)
     std::shared_ptr<UtilityFunction> _utilityFunction;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
      */
     double _utilityThreshold;
+    /**
+     *  Whether this plan is marked as a MasterPlan.
+     */
+    bool _masterPlan;
+    /**
+     * This behaviour's runtime condition.
+     */
+    RuntimeCondition* _runtimeCondition;
+    /**
+     * This behaviour's precondition
+     */
+    PreCondition* _preCondition;
 };
 
 } // namespace alica

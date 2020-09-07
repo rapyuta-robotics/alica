@@ -5,18 +5,24 @@
 
 #pragma once
 
-#include <assert.h>
-#include <memory>
-#include <string>
-#include <type_traits>
-#include <unordered_map>
-
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "essentials/AgentID.h"
+
+#include <essentials/IDManager.h>
+
+#include <cassert>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
+
+namespace essentials
+{
+class IdentifierConstPtr;
+} // namespace essentials
 
 namespace alica
 {
@@ -24,7 +30,6 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestEngineGetter;
-using AgentID = essentials::AgentID;
 
 /**
  * Alica options that can be set at runtime.
@@ -76,6 +81,14 @@ public:
      *
      * @return The agent name under which the engine operates, a string
      */
+    static std::string getLocalAgentName();
+
+    /**
+     * Method is deprecated and will be removed soon. Use
+     * getLocalAgentName() instead.
+     * @return
+     */
+    [[deprecated("use getLocalAgentName(...) instead")]]
     static std::string getRobotName();
 
     /**
@@ -83,7 +96,7 @@ public:
      *
      * @param name Host name
      */
-    static void setRobotName(const std::string& name);
+    static void setLocalAgentName(const std::string& name);
 
     // TODO: better descriptive name for paths
     /**
@@ -125,7 +138,7 @@ public:
      *
      * @note This is the main alica api class
      */
-    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine);
+    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
 
     /**
      * Destroys AlicaContext object.
@@ -158,7 +171,7 @@ public:
 
     /**
      * Set Alica Clock choose between RosClock or systemClock (std::chrono)
-     * 
+     *
      * @note ClockType must be a derived class of AlicaClock
      * @note This must be called before initializing context
      */
@@ -197,6 +210,31 @@ public:
     {
         assert(_communicator.get());
         return *_communicator;
+    }
+
+    /**
+     * Set id manager to be used by this alica framework instance.
+     * Example usage: setIDManager<essentials::IDManager>();
+     *
+     * @note Currently, the only implementation is essentials::IDManager
+     * @note CommunicatorType must be a derived class of IAlicaCommunication
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of communicator. Might be empty.
+     */
+    template <class IDManagerType, class... Args>
+    void setIDManager(Args&&... args);
+
+    /**
+     * Get id manager being used by this alica instance.
+     *
+     * @note Currently, the only implementation is essentials::IDManager
+     * @return A reference to id manager object being used by context
+     */
+    const essentials::IDManager& getIDManager() const
+    {
+        assert(_idManager.get());
+        return *_idManager;
     }
 
     /**
@@ -248,14 +286,44 @@ public:
     /**
      * Returns agent id for this alica context.
      *
-     * @return Object representing id.
+     * @return Object representing id of local agent.
      */
-    AgentID getLocalAgentId() const;
+    essentials::IdentifierConstPtr getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously
      */
     void stepEngine();
+
+    /**
+     * If present, returns the ID corresponding to the given prototype.
+     * Otherwise, it creates a new one, stores, and returns it.
+     *
+     * This method can be used, e.g., for passing an int and receiving
+     * a pointer to a corresponding ID object.
+     * @tparam Prototype Datatype of given prototyp id
+     * @param idPrototype The prototyp id
+     * @param type Type of requested ID Object
+     * @return ID object
+     */
+    template <class Prototype>
+    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
+
+    /**
+     * If present, returns the ID corresponding to the given bytes.
+     * Otherwise, it creates a new one, stores, and returns it.
+     *
+     * This method can be used, e.g., for passing a part of a ROS
+     * message and receiving a pointer to a corresponding ID object.
+     *
+     * @param idBytes Bytes that represent the ID
+     * @param idSize Number of bytes
+     * @param type Type of requested ID object
+     * @return ID object
+     */
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
+
+    essentials::IdentifierConstPtr generateID(std::size_t size);
 
     // TODO: Implement
     template <class T>
@@ -269,10 +337,13 @@ private:
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 
     uint32_t _validTag;
-    std::unique_ptr<AlicaEngine> _engine;
-    std::unique_ptr<IAlicaCommunication> _communicator;
-    std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+    // WARNING: Initialization order dependencies!
+    // Please do not change the declaration order of members.
     std::unique_ptr<AlicaClock> _clock;
+    std::unique_ptr<IAlicaCommunication> _communicator;
+    std::unique_ptr<essentials::IDManager> _idManager;
+    std::unique_ptr<AlicaEngine> _engine;
+    std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
 };
 
 template <class ClockType, class... Args>
@@ -294,6 +365,16 @@ void AlicaContext::setCommunicator(Args&&... args)
     _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+#endif
+}
+
+template <class IDManagerType, class... Args>
+void AlicaContext::setIDManager(Args&&... args)
+{
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _idManager = std::make_unique<IDManagerType>(std::forward<Args>(args)...);
+#else
+    _idManager = std::unique_ptr<IDManagerType>(new IDManagerType(std::forward<Args>(args)...));
 #endif
 }
 
@@ -322,4 +403,10 @@ bool AlicaContext::existSolver() const
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
 }
+
+template <class Prototype>
+essentials::IdentifierConstPtr AlicaContext::getID(Prototype& idPrototype, uint8_t type)
+{
+    return this->_idManager->getID<Prototype>(idPrototype, type);
 }
+} // namespace alica
