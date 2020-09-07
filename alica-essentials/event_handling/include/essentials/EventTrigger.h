@@ -4,7 +4,7 @@
 
 namespace essentials
 {
-class EventTrigger : public virtual ITrigger
+class EventTrigger : public ITrigger
 {
 public:
     void run(bool notifyAll) override;
