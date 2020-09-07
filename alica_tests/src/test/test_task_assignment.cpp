@@ -2,7 +2,6 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/AgentIDConstPtr.h"
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
@@ -14,11 +13,13 @@
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentAnnouncement.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Plan.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 #include <test_alica.h>
+#include <essentials/IdentifierConstPtr.h>
 
 #include <gtest/gtest.h>
 #include <list>
@@ -55,7 +56,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             continue;
         }
 
-        aa.senderID = ae->getId<int>(agentId);
+        aa.senderID = ae->getID<int>(agentId);
         if (agentId == 8) {
             aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";
@@ -77,13 +78,15 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake inform the team observer about roles of none existing robots
 
     const alica::PlanRepository::Accessor<alica::Plan>& planMap = ae->getPlanRepository().getPlans();
-    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497));
-    alica::AbstractPlanGrp inputPlans;
-    inputPlans.push_back(planMap.find(1407152758497));
+    alica::RunningPlan* rp = ae->editPlanBase().makeRunningPlan(planMap.find(1407152758497), nullptr);
+    alica::ConfAbstractPlanWrapperGrp inputWrappers;
+    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    wrapper->setAbstractPlan(planMap.find(1407152758497));
+    inputWrappers.push_back(wrapper);
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputPlans, robots, o_plans);
+    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1);
 }

@@ -8,7 +8,7 @@ class RunningPlan;
 
 class IPlanTreeVisitor
 {
-  public:
+public:
     virtual ~IPlanTreeVisitor() {}
     virtual void visit(RunningPlan& r) = 0;
 };

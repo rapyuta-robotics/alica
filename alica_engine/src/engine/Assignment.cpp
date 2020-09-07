@@ -8,19 +8,19 @@
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
-#include <essentials/AgentID.h>
+#include <essentials/Identifier.h>
 
 #include <assert.h>
 
 namespace alica
 {
 
-bool AgentStatePairs::hasAgent(const AgentIDConstPtr id) const
+bool AgentStatePairs::hasAgent(const essentials::IdentifierConstPtr id) const
 {
     return std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; }) != _data.end();
 }
 
-const State* AgentStatePairs::getStateOfAgent(const AgentIDConstPtr id) const
+const State* AgentStatePairs::getStateOfAgent(const essentials::IdentifierConstPtr id) const
 {
     auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
     return it == _data.end() ? nullptr : it->second;
@@ -33,7 +33,7 @@ void AgentStatePairs::removeAllIn(const AgentGrp& agents)
             _data.end());
 }
 
-void AgentStatePairs::setStateOfAgent(const AgentIDConstPtr id, const State* s)
+void AgentStatePairs::setStateOfAgent(const essentials::IdentifierConstPtr id, const State* s)
 {
     auto it = std::find_if(_data.begin(), _data.end(), [id](AgentStatePair asp) { return asp.first == id; });
     if (it != _data.end()) {
@@ -88,7 +88,7 @@ Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
     for (int i = 0; i < numEps; ++i) {
         assert(p->getEntryPoints()[i]->getId() == aai.entryPointRobots[i].entrypoint);
         _assignmentData[i].editRaw().reserve(aai.entryPointRobots[i].robots.size());
-        for (AgentIDConstPtr agent : aai.entryPointRobots[i].robots) {
+        for (essentials::IdentifierConstPtr agent : aai.entryPointRobots[i].robots) {
             _assignmentData[i].emplace_back(agent, _plan->getEntryPoints()[i]->getState());
         }
     }
@@ -144,7 +144,7 @@ bool Assignment::isAnyTaskSuccessful() const
     return false;
 }
 
-bool Assignment::isAgentSuccessful(AgentIDConstPtr id, const EntryPoint* ep) const
+bool Assignment::isAgentSuccessful(essentials::IdentifierConstPtr id, const EntryPoint* ep) const
 {
     if (!_plan) {
         return false;
@@ -153,7 +153,7 @@ bool Assignment::isAgentSuccessful(AgentIDConstPtr id, const EntryPoint* ep) con
     return ag && std::find(ag->begin(), ag->end(), id) != ag->end();
 }
 
-bool Assignment::hasAgent(AgentIDConstPtr id) const
+bool Assignment::hasAgent(essentials::IdentifierConstPtr id) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
         if (asps.hasAgent(id)) {
@@ -163,7 +163,7 @@ bool Assignment::hasAgent(AgentIDConstPtr id) const
     return false;
 }
 
-const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
+const EntryPoint* Assignment::getEntryPointOfAgent(essentials::IdentifierConstPtr id) const
 {
     int i = 0;
     for (const AgentStatePairs& asps : _assignmentData) {
@@ -175,7 +175,7 @@ const EntryPoint* Assignment::getEntryPointOfAgent(AgentIDConstPtr id) const
     return nullptr;
 }
 
-const State* Assignment::getStateOfAgent(AgentIDConstPtr id) const
+const State* Assignment::getStateOfAgent(essentials::IdentifierConstPtr id) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
         const State* s = asps.getStateOfAgent(id);
@@ -189,7 +189,7 @@ const State* Assignment::getStateOfAgent(AgentIDConstPtr id) const
 void Assignment::getAllAgents(AgentGrp& o_agents) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
-        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
     }
 }
 
@@ -202,14 +202,14 @@ void Assignment::getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) cons
 {
     const AgentStatePairs& asp = getAgentStates(ep);
     o_agents.reserve(asp.size());
-    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
 }
 
 void Assignment::getAgentsWorking(int idx, AgentGrp& o_agents) const
 {
     const AgentStatePairs& asp = getAgentStates(idx);
     o_agents.reserve(asp.size());
-    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+    std::transform(asp.begin(), asp.end(), std::back_inserter(o_agents), [](AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
 }
 
 void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const
@@ -220,7 +220,7 @@ void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_a
         if (ep == eps[i]) {
             o_agents.reserve(_assignmentData[i].size() + _successData.getRaw()[i].size());
             std::transform(_assignmentData[i].begin(), _assignmentData[i].end(), std::back_inserter(o_agents),
-                    [](AgentStatePair asp) -> AgentIDConstPtr { return asp.first; });
+                    [](AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
             std::copy(_successData.getRaw()[i].begin(), _successData.getRaw()[i].end(), std::back_inserter(o_agents));
             return;
         }
@@ -281,12 +281,12 @@ void Assignment::clear()
     }
 }
 
-bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e)
+bool Assignment::updateAgent(essentials::IdentifierConstPtr agent, const EntryPoint* e)
 {
     return updateAgent(agent, e, nullptr);
 }
 
-bool Assignment::updateAgent(AgentIDConstPtr agent, const EntryPoint* e, const State* s)
+bool Assignment::updateAgent(essentials::IdentifierConstPtr agent, const EntryPoint* e, const State* s)
 {
     bool found = false;
     bool inserted = false;
@@ -347,7 +347,7 @@ void Assignment::setAllToInitialState(const AgentGrp& agents, const EntryPoint* 
         const bool isTargetEp = ep->getIndex() == i;
         if (isTargetEp) {
             const State* s = ep->getState();
-            for (AgentIDConstPtr id : agents) {
+            for (essentials::IdentifierConstPtr id : agents) {
                 auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](AgentStatePair asp) { return asp.first == id; });
                 if (it == _assignmentData[i].end()) {
                     _assignmentData[i].emplace_back(id, s);
@@ -386,7 +386,7 @@ bool Assignment::removeAllIn(const AgentGrp& limit, const State* watchState)
     const int epCount = _assignmentData.size();
     for (int i = 0; i < epCount; ++i) {
         for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
-            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            essentials::IdentifierConstPtr id = _assignmentData[i].getRaw()[j].first;
             if (std::find(limit.begin(), limit.end(), id) != limit.end()) {
                 ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
                 _assignmentData[i].removeAt(j);
@@ -402,7 +402,7 @@ bool Assignment::removeAllNotIn(const AgentGrp& limit, const State* watchState)
     const int epCount = _assignmentData.size();
     for (int i = 0; i < epCount; ++i) {
         for (int j = _assignmentData[i].size() - 1; j >= 0; --j) {
-            AgentIDConstPtr id = _assignmentData[i].getRaw()[j].first;
+            essentials::IdentifierConstPtr id = _assignmentData[i].getRaw()[j].first;
             if (std::find(limit.begin(), limit.end(), id) == limit.end()) {
                 ret = ret || _assignmentData[i].getRaw()[j].second == watchState;
                 _assignmentData[i].removeAt(j);
@@ -411,7 +411,7 @@ bool Assignment::removeAllNotIn(const AgentGrp& limit, const State* watchState)
     }
     return ret;
 }
-void Assignment::removeAgent(AgentIDConstPtr agent)
+void Assignment::removeAgent(essentials::IdentifierConstPtr agent)
 {
     const int epCount = _assignmentData.size();
     for (int i = 0; i < epCount; ++i) {

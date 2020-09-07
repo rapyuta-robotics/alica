@@ -1,10 +1,3 @@
-/*
- * AlicaDummyCommunication.h
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
 #pragma once
 
 #include <engine/IAlicaCommunication.h>

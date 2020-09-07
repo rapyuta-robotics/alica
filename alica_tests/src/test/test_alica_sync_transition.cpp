@@ -72,6 +72,7 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
         }
         if (i == 5) {
+//            std::cout << "TEST Iteration " << i << std::endl;
             EXPECT_EQ(aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
             EXPECT_EQ(aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
         }

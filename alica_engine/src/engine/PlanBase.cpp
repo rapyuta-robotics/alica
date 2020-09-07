@@ -97,6 +97,7 @@ void PlanBase::start(const Plan* masterPlan)
         _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
     }
 }
+
 /**
  * The Engine's main loop
  */
@@ -158,8 +159,8 @@ void PlanBase::run(const Plan* masterPlan)
         if (_deepestNode && _deepestNode->isRetired()) {
             _deepestNode = nullptr;
         }
-            // remove deletable plans:
-            // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
+        // remove deletable plans:
+        // this should be done just before clearing fpEvents, to make sure no spurious pointers remain
 #ifdef ALICA_DEBUG_ENABLED
         int retiredCount = 0;
         int inActiveCount = 0;
@@ -221,7 +222,6 @@ void PlanBase::run(const Plan* masterPlan)
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
                     _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
-
                 } else {
                     _statusMessage->currentState = "NONE";
                 }
@@ -317,23 +317,23 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
     _fpEventWait.notify_all();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const Plan* plan)
+RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan));
+    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const BehaviourConfiguration* bc)
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, bc));
+    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt)
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, pt));
+    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration));
     return _runningPlans.back().get();
 }
 
-const AlicaTime PlanBase::getloopInterval() const
+const AlicaTime PlanBase::getLoopInterval() const
 {
     return _loopInterval;
 }

@@ -4,8 +4,10 @@
 #include <stdint.h>
 #include <vector>
 
-namespace alica {
-struct SolverVar {
+namespace alica
+{
+struct SolverVar
+{
     int64_t id;
     uint8_t value[Variant::kVariantSize];
 };

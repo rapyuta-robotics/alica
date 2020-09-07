@@ -1,26 +1,21 @@
 #include "engine/TeamObserver.h"
 
 #include "engine/AlicaEngine.h"
-#include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
-#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
-#include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/collections/SuccessCollection.h"
-#include "engine/collections/SuccessMarks.h"
 #include "engine/containers/PlanTreeInfo.h"
 #include "engine/model/AbstractPlan.h"
-#include "engine/model/Characteristic.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
-#include <SystemConfig.h>
 
-#include <engine/AgentIDConstPtr.h>
+#include <alica_common_config/debug_output.h>
+#include <essentials/IdentifierConstPtr.h>
 #include <engine/Output.h>
 
 namespace alica
@@ -62,7 +57,7 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    std::vector<AgentIDConstPtr> deactivatedAgentIds;
+    std::vector<essentials::IdentifierConstPtr> deactivatedAgentIds;
     bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
     for (auto agent : deactivatedAgentIds) {
         _simplePlanTrees.erase(agent);
@@ -74,7 +69,7 @@ bool TeamObserver::updateTeamPlanTrees()
 void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = _ae->getAlicaClock().now();
-    ALICA_DEBUG_MSG("TO: tick " << time);
+    ALICA_DEBUG_MSG("TO: tick(..) called at " << time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
@@ -259,7 +254,7 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
  * believed to be left in the plan.
  * @param plan The AbstractPlan left by the robot
  */
-void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan)
+void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan) const
 {
     for (const auto& ele : _simplePlanTrees) {
         if (ele.second->containsPlan(plan)) {
@@ -282,11 +277,11 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
 
 /**
  * Constructs a SimplePlanTree from a received message
- * @param robotId The id of the other robot.
+ * @param agentId The id of the other agent.
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return a SimplePlanTree
  */
-std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentIDConstPtr agentId, const IdGrp& ids, AlicaTime time) const
+std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(essentials::IdentifierConstPtr agentId, const IdGrp& ids, AlicaTime time) const
 {
     ALICA_DEBUG_MSG("Spt from robot " << agentId);
     ALICA_DEBUG_MSG(ids);

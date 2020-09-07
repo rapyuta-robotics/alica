@@ -55,7 +55,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
     if (_localAgentID < aai.senderID) {
         // notify TO that evidence about other robots is available
         for (EntryPointRobots epr : aai.entryPointRobots) {
-            for (AgentIDConstPtr rid : epr.robots) {
+            for (essentials::IdentifierConstPtr rid : epr.robots) {
                 if (rid != _localAgentID) {
                     tm.setTimeLastMsgReceived(rid, now);
                 }
@@ -75,7 +75,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    ALICA_DEBUG_MSG("AM: Tick called! <<<<<<");
+    ALICA_DEBUG_MSG("AM: Tick called!");
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {

@@ -1,12 +1,27 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:PlanType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1407153314946" name="Attack" comment="" masterPlan="false" utilityFunction="" utilityThreshold="0.1" >
-  <plans id="1407153357692" name="" comment="" activated="true">
-    <plan>AttackPlan.pml#1402488634525</plan>
-  </plans>
-  <plans id="1407153361565" name="" comment="" activated="true">
-    <plan>GoalPlan.pml#1402488870347</plan>
-  </plans>
-  <plans id="1407153363136" name="" comment="" activated="true">
-    <plan>Tackle.pml#1402489318663</plan>
-  </plans>
-</alica:PlanType>
+{
+  "id" : 1407153314946,
+  "name" : "Attack",
+  "comment" : "",
+  "relativeDirectory" : "",
+  "variables" : [ ],
+  "variableBindings" : [ ],
+  "annotatedPlans" : [ {
+    "id" : 1407153357692,
+    "name" : "AnnotatedAttackPlan",
+    "comment" : "",
+    "activated" : true,
+    "plan" : "AttackPlan.pml#1402488634525"
+  }, {
+    "id" : 1407153361565,
+    "name" : "AnnotatedGoalPlan",
+    "comment" : "",
+    "activated" : true,
+    "plan" : "GoalPlan.pml#1402488870347"
+  }, {
+    "id" : 1407153363136,
+    "name" : "AnnotatedTackle",
+    "comment" : "",
+    "activated" : true,
+    "plan" : "Tackle.pml#1402489318663"
+  } ]
+}

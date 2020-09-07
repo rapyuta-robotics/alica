@@ -4,6 +4,7 @@
 #include <engine/allocationauthority/AllocationDifference.h>
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
+#include <engine/modelmanagement/factories/TaskFactory.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
@@ -53,21 +54,21 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::AllocationDifference result;
     util.setReason(alica::AllocationDifference::Reason::utility);
     msg.setReason(alica::AllocationDifference::Reason::message);
-    alica::Task t1(1, false);
-    alica::Task t2(2, false);
+    alica::Task t1;
+    alica::Task t2;
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 
-    const char* aname = "aa";
-    const char* bname = "bb";
+    essentials::IDManager idManager;
+    int idA1 = 1;
+    int idA2 = 2;
+    essentials::IdentifierConstPtr a1 = idManager.getID<int>(idA1);
+    essentials::IdentifierConstPtr a2 = idManager.getID<int>(idA2);
 
-    essentials::AgentID a1(reinterpret_cast<const uint8_t*>(aname), 2);
-    essentials::AgentID a2(reinterpret_cast<const uint8_t*>(bname), 2);
-
-    alica::EntryPointRobotPair aTot1(&e1, &a1);
-    alica::EntryPointRobotPair bTot1(&e1, &a2);
-    alica::EntryPointRobotPair aTot2(&e2, &a1);
-    alica::EntryPointRobotPair bTot2(&e2, &a2);
+    alica::EntryPointRobotPair aTot1(&e1, a1);
+    alica::EntryPointRobotPair bTot1(&e1, a2);
+    alica::EntryPointRobotPair aTot2(&e2, a1);
+    alica::EntryPointRobotPair bTot2(&e2, a2);
 
     ASSERT_EQ(a1, a1);
     ASSERT_NE(a1, a2);
@@ -91,7 +92,10 @@ TEST(AllocationDifference, MessageCancelsUtil)
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-    auto uSummandAe = aes[0]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
+    const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
+    ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
+    ASSERT_NE(plan->getUtilityFunction(), nullptr) << "UtilityFunction is null!";
+    auto uSummandAe = plan->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr = dynamic_cast<alica::DummyTestSummand*>(uSummandAe);
     dbr->robotId = aes[0]->getTeamManager().getLocalAgentID();
 
@@ -99,8 +103,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
     dbr2->robotId = aes[1]->getTeamManager().getLocalAgentID();
 
-    alica::AgentIDConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
-    alica::AgentIDConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
+    essentials::IdentifierConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
+    essentials::IdentifierConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
     aes[0]->start();

@@ -30,7 +30,7 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
 
     for (const alica::Behaviour* behaviour : ae->getPlanRepository().getBehaviours()) {
         ASSERT_NE(behaviour, nullptr);
-        cout << "Behaviour: " << behaviour->getName() << endl;
+        std::cout << "Behaviour: " << behaviour->getName() << std::endl;
     }
 }
 }

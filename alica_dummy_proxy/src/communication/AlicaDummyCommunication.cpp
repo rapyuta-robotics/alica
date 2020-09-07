@@ -1,10 +1,3 @@
-/*
- * AlicaDummyCommunication.cpp
- *
- *  Created on: Mar 13, 2015
- *      Author: Paul Panin
- */
-
 #include "communication/AlicaDummyCommunication.h"
 
 #include <condition_variable>
@@ -113,11 +106,12 @@ void InProcQueue<alica::AllocationAuthorityInfo>::process(std::unique_ptr<alica:
     alica::AllocationAuthorityInfo newInfo(*first);
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
-        newInfo.senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
-        newInfo.authority = module->getEngine()->getIdFromBytes(first->authority->toByteVector());
+        newInfo.senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
+        newInfo.authority = module->getEngine()->getIDFromBytes(first->authority->getRaw(), first->authority->getSize(), first->authority->getType());
         for (size_t i = 0; i < newInfo.entryPointRobots.size(); ++i) {
             for (size_t j = 0; j < newInfo.entryPointRobots[i].robots.size(); ++j) {
-                newInfo.entryPointRobots[i].robots[j] = module->getEngine()->getIdFromBytes(first->entryPointRobots[i].robots[j]->toByteVector());
+                newInfo.entryPointRobots[i].robots[j] = module->getEngine()->getIDFromBytes(first->entryPointRobots[i].robots[j]->getRaw(),
+                        first->entryPointRobots[i].robots[j]->getSize(), first->entryPointRobots[i].robots[j]->getType());
             }
         }
         module->onAuthorityInfoReceived(newInfo);
@@ -130,8 +124,8 @@ void InProcQueue<alica::PlanTreeInfo>::process(std::unique_ptr<alica::PlanTreeIn
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto pti = std::make_shared<alica::PlanTreeInfo>(*first);
-        pti->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
+        auto pti = std::make_shared<alica::PlanTreeInfo>((*first));
+        pti->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         module->onPlanTreeInfoReceived(pti);
     }
 }
@@ -142,10 +136,11 @@ void InProcQueue<alica::SyncTalk>::process(std::unique_ptr<alica::SyncTalk>& fir
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto newSt = std::make_shared<alica::SyncTalk>(*first);
-        newSt->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
+        auto newSt = std::make_shared<alica::SyncTalk>((*first));
+        newSt->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         for (size_t i = 0; i < newSt->syncData.size(); ++i) {
-            newSt->syncData[i].robotID = module->getEngine()->getIdFromBytes(first->syncData[i].robotID->toByteVector());
+            newSt->syncData[i].agentID = module->getEngine()->getIDFromBytes(
+                    first->syncData[i].agentID->getRaw(), first->syncData[i].agentID->getSize(), first->syncData[i].agentID->getType());
         }
         module->onSyncTalkReceived(newSt);
     }
@@ -157,8 +152,8 @@ void InProcQueue<alica::SyncReady>::process(std::unique_ptr<alica::SyncReady>& f
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
     for (AlicaDummyCommunication* module : registeredModules) {
         // Each module expects ownership of shared_ptr
-        auto newSr = std::make_shared<alica::SyncReady>(*first);
-        newSr->senderID = module->getEngine()->getIdFromBytes(first->senderID->toByteVector());
+        auto newSr = std::make_shared<alica::SyncReady>((*first));
+        newSr->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         module->onSyncReadyReceived(newSr);
     }
 }
@@ -167,9 +162,8 @@ template <>
 void InProcQueue<alica::SolverResult>::process(std::unique_ptr<alica::SolverResult>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    alica::AgentIDConstPtr prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
-        first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
+        first->senderID = module->getEngine()->getIDFromBytes(first->senderID->getRaw(), first->senderID->getSize(), first->senderID->getType());
         module->onSolverResult(*first);
     }
 }
@@ -178,9 +172,9 @@ template <>
 void InProcQueue<alica::AgentAnnouncement>::process(std::unique_ptr<alica::AgentAnnouncement>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    alica::AgentIDConstPtr prev = first->senderID;
+    essentials::IdentifierConstPtr prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
-        first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
+        first->senderID = module->getEngine()->getIDFromBytes(prev->getRaw(), prev->getSize(), prev->getType());
         module->onAgentAnnouncement(*first);
     }
 }
@@ -189,9 +183,9 @@ template <>
 void InProcQueue<alica::AgentQuery>::process(std::unique_ptr<alica::AgentQuery>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    alica::AgentIDConstPtr prev = first->senderID;
+    essentials::IdentifierConstPtr prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
-        first->senderID = module->getEngine()->getIdFromBytes(prev->toByteVector());
+        first->senderID = module->getEngine()->getIDFromBytes(prev->getRaw(), prev->getSize(), prev->getType());
         module->onAgentQuery(*first);
     }
 }

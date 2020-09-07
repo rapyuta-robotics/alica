@@ -1,26 +1,18 @@
-/*
- * PostCondition.h
- *
- *  Created on: Mar 5, 2014
- *      Author: Stephan Opfer
- */
-
-#ifndef POSTCONDITION_H_
-#define POSTCONDITION_H_
+#pragma once
 
 #include <string>
 
 #include "Condition.h"
 
-namespace alica {
+namespace alica
+{
 
-class PostCondition : public Condition {
+class PostCondition : public Condition
+{
 public:
-    PostCondition(int64_t id = 0);
+    PostCondition();
     virtual ~PostCondition();
-    std::string toString() const override;
+    std::string toString(std::string indent = "") const override;
 };
 
-}  // namespace alica
-
-#endif /* POSTCONDITION_H_ */
+} // namespace alica

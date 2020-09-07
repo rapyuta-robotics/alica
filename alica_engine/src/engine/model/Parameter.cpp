@@ -1,10 +1,13 @@
 #include <engine/model/Parameter.h>
 
-namespace alica {
+namespace alica
+{
 
 Parameter::Parameter()
         : _key("")
-        , _value("") {}
+        , _value("")
+{
+}
 
 Parameter::~Parameter() {}
 

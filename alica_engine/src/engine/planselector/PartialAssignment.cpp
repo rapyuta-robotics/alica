@@ -16,7 +16,7 @@ namespace
 {
 // constexpr int INFINITE = std::numeric_limits<int>::max();
 constexpr int64_t PRECISION = 0x40000000;
-}
+} // namespace
 
 bool PartialAssignment::s_allowIdling = true;
 
@@ -122,7 +122,7 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
  * If the robot has already assigned itself, this method updates the partial assignment accordingly
  */
 // TODO: this is pretty inefficient
-bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentIDConstPtr agent, int idx)
+bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, essentials::IdentifierConstPtr agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
         const int numEps = static_cast<int>(_plan->getEntryPoints().size());
@@ -223,21 +223,21 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
     out << "Utility: " << pa._utility << std::endl;
     out << "Agents: ";
-    for (AgentIDConstPtr agent : pa._problem->getAgents()) {
+    for (essentials::IdentifierConstPtr agent : pa._problem->getAgents()) {
         out << *agent << " ";
     }
     out << std::endl;
     if (p) {
         for (int i = 0; i < static_cast<int>(pa._cardinalities.size()) - PartialAssignment::s_allowIdling ? 1 : 0; ++i) {
-            out << "EPid: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
-                << " cardinality: " << pa._cardinalities[i];
+            out << "EP-Id: " << p->getEntryPoints()[i]->getId() << " Task: " << p->getEntryPoints()[i]->getTask()->getName()
+                << " Cardinality: " << pa._cardinalities[i];
         }
     }
     out << std::endl;
     out << " Assigned Agents: " << std::endl;
     int i = 0;
     for (int idx : pa._assignment) {
-        out << "Agent: " << pa._problem->getAgents()[i] << " Ep: " << idx << std::endl;
+        out << "Agent: " << pa._problem->getAgents()[i] << " EP-Index: " << idx << std::endl;
         ++i;
     }
     out << std::endl;

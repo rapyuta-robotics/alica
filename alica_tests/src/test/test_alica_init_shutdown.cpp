@@ -1,15 +1,6 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/PlanRepository.h"
-#include "engine/model/Plan.h"
-#include <communication/AlicaDummyCommunication.h>
+#include <engine/DefaultUtilityFunction.h>
 #include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 #include <test_alica.h>
 
 namespace alica

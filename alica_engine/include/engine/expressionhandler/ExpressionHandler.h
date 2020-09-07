@@ -1,15 +1,9 @@
-/*
- * ExpressionHandler.h
- *
- *  Created on: Aug 26, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef EXPRESSIONHANDLER_H_
-#define EXPRESSIONHANDLER_H_
+#pragma once
 
 namespace alica
 {
+class RunningPlan;
+class Plan;
 class Condition;
 class PlanRepository;
 class AlicaCreators;
@@ -29,6 +23,4 @@ private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);
 };
 
-} /* namespace alica */
-
-#endif /* EXPRESSIONHANDLER_H_ */
+} // namespace alica

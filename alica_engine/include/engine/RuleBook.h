@@ -1,7 +1,5 @@
 #pragma once
 
-//#define RULE_debug
-
 #include "engine/PlanChange.h"
 
 #include <memory>
@@ -19,7 +17,6 @@ class Transition;
 class State;
 class EntryPoint;
 class ConditionStore;
-class StateCollection;
 class CycleManager;
 class UtilityFunction;
 class AlicaEngine;
@@ -50,7 +47,7 @@ private:
     int _maxConsecutiveChanges;
     bool _changeOccurred;
 
-    PlanChange synchTransitionRule(RunningPlan& r);
+    PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);
     PlanChange topFailRule(RunningPlan& r);
     PlanChange allocationRule(RunningPlan& r);

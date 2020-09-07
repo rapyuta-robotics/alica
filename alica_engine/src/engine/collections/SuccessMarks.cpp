@@ -15,6 +15,8 @@ namespace alica
  */
 SuccessMarks::SuccessMarks() {}
 
+SuccessMarks::~SuccessMarks() {}
+
 /**
  * Update with an IdGrp of EntryPoint ids, as received by a message
  */
@@ -36,8 +38,6 @@ void SuccessMarks::update(const AlicaEngine* ae, const IdGrp& succeededEps)
         }
     }
 }
-
-SuccessMarks::~SuccessMarks() {}
 
 /**
  * Drop every mark not occurring in plans passed as argument.
@@ -92,9 +92,8 @@ void SuccessMarks::removePlan(const AbstractPlan* plan)
  * @param p An AbstractPlan*
  * @param e An EntryPoint*
  */
-void SuccessMarks::markSuccessfull(const AbstractPlan* p, const EntryPoint* e)
+void SuccessMarks::markSuccessful(const AbstractPlan* p, const EntryPoint* e)
 {
-
     EntryPointGrp& l = _successMarks[p];
     auto i = std::find(l.begin(), l.end(), e);
     if (i == l.end()) {

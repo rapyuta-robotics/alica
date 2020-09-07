@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& out, const VariableGrp& vg)
     }
     return out;
 }
-}
+} // namespace
 /**
  * Default constructor
  */

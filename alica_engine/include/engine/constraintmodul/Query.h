@@ -12,11 +12,10 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
-#include "engine/model/Parametrisation.h"
+#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 
-#include <alica_common_config/debug_output.h>
 #include <alica_solver_interface/SolverContext.h>
 
 #include <map>
@@ -75,7 +74,7 @@ public:
     Query();
 
     void addStaticVariable(const alica::Variable* v);
-    void addDomainVariable(AgentIDConstPtr robot, const std::string& ident, const AlicaEngine* ae);
+    void addDomainVariable(essentials::IdentifierConstPtr robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
@@ -121,7 +120,7 @@ bool Query::existsSolution(ThreadSafePlanInterface pi)
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
-    return solver.existsSolution(_relevantVariables, cds);
+    return solver->existsSolution(_context.get(), cds);
 }
 
 template <class SolverType, typename ResultType>
@@ -134,7 +133,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
     int domOffset;
 
     if (!pi.getAlicaEngine()->existSolver<SolverType>()) {
-        ALICA_ERROR_MSG("Query::getSolution: The engine does not have a suitable solver for the given type available.");
+        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
@@ -143,7 +142,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
         return false;
     }
 
-    ALICA_DEBUG_MSG("Query: " << _uniqueVarStore);
+    std::cout << "Query: " << _uniqueVarStore << std::endl;
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;

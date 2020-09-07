@@ -3,13 +3,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-namespace alica {
+namespace alica
+{
 
-class ByteArray {
+class ByteArray
+{
 public:
     ByteArray()
             : _begin(nullptr)
-            , _size(0) {}
+            , _size(0)
+    {
+    }
     ByteArray(const int8_t* src, int32_t size);
     ByteArray(int32_t size);
     ~ByteArray() { free(_begin); }
@@ -29,4 +33,4 @@ private:
     int8_t* _begin;
     int32_t _size;
 };
-}  // namespace alica
+} // namespace alica

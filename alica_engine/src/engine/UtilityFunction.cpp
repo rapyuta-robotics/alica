@@ -12,7 +12,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
 #include "engine/model/RoleSet.h"
-#include "engine/model/RoleTaskMapping.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
 
@@ -103,23 +102,13 @@ void UtilityFunction::init(AlicaEngine* ae)
     _priorityMatrix.clear();
     const RoleSet* roleSet = ae->getRoleSet();
 
-    for (const RoleTaskMapping* rtm : roleSet->getRoleTaskMappings()) {
-        const int64_t roleId = rtm->getRole()->getId();
+    for (const Role* role : roleSet->getRoles()) {
+        const int64_t roleId = role->getId();
         int64_t taskId;
         _roleHighestPriorityMap.insert(std::pair<int64_t, double>(roleId, 0.0));
         for (const EntryPoint* ep : _plan->getEntryPoints()) {
             taskId = ep->getTask()->getId();
-            double curPrio = 0.0;
-            auto iter = rtm->getTaskPriorities().find(taskId);
-            if (iter == rtm->getTaskPriorities().end()) {
-                ALICA_ERROR_MSG("UF: There is no priority for the task " << taskId << " in the roleTaskMapping of the role " << rtm->getRole()->getName()
-                                                                         << " with id " << roleId << "!\n We are in the UF for the plan " << _plan->getName()
-                                                                         << "!");
-                AlicaEngine::abort("Error in Utility data, cannot continue.");
-                return;
-            } else {
-                curPrio = iter->second;
-            }
+            double curPrio = role->getPriority(taskId);
             _priorityMatrix[TaskRoleStruct(taskId, roleId)] = curPrio;
             if (_roleHighestPriorityMap.at(roleId) < curPrio) {
                 _roleHighestPriorityMap.at(roleId) = curPrio;
@@ -132,7 +121,7 @@ void UtilityFunction::init(AlicaEngine* ae)
 }
 
 /**
- *  Calls Init() for every utiltiyfunction.
+ *  Calls Init() for every utility function.
  * Is called and the end of AlicaEngine.Init(..), because it
  * needs the current roleset (circular dependency otherwise).
  */
@@ -154,8 +143,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         return priResult;
     }
     // SUM UP HEURISTIC PART OF PRIORITY UTILITY
-
-    for (AgentIDConstPtr agentID : ass.getUnassignedAgents()) {
+    for (essentials::IdentifierConstPtr agentID : ass.getUnassignedAgents()) {
         const auto highestPriority = _roleHighestPriorityMap.find(_ae->getRoleAssignment().getRole(agentID)->getId());
         assert(highestPriority != _roleHighestPriorityMap.end());
         priResult.setMax(priResult.getMax() + highestPriority->second);
@@ -166,7 +154,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         const EntryPoint* ep = ass.getEntryPoint(i);
         const int64_t taskId = ep->getTask()->getId();
 
-        for (AgentIDConstPtr agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
+        for (essentials::IdentifierConstPtr agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
             double curPrio = 0;
             const int64_t roleId = _ae->getRoleAssignment().getRole(agent)->getId();
             const auto mit = _priorityMatrix.find(TaskRoleStruct{taskId, roleId});
@@ -216,7 +204,7 @@ UtilityInterval UtilityFunction::getSimilarity(IAssignment newAss, const Assignm
         numOldAssignedRobots += oldRobots.size();
 
         if (!newRobots.empty()) {
-            for (AgentIDConstPtr oldRobot : oldRobots) {
+            for (essentials::IdentifierConstPtr oldRobot : oldRobots) {
                 if (std::find(newRobots.begin(), newRobots.end(), oldRobot) != newRobots.end()) {
                     simUI.setMin(simUI.getMin() + 1);
                 } else if (ep->getMaxCardinality() > newRobots.size() && std::find(newAss.getUnassignedAgents().begin(), newAss.getUnassignedAgents().end(),

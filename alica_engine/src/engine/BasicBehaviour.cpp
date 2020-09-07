@@ -1,5 +1,3 @@
-#define BEH_DEBUG
-
 #include "engine/BasicBehaviour.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
@@ -7,15 +5,15 @@
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/BehaviourConfiguration.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-
-#include <essentials/ITrigger.h>
 
 #include <assert.h>
 #include <iostream>
@@ -30,6 +28,8 @@ namespace alica
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
         , _engine(nullptr)
+        , _behaviour(nullptr)
+        , _contextInRun(nullptr)
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
@@ -61,27 +61,28 @@ bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
     return _context == rp && (getSignalState() == SignalState::START || isBehaviourStarted());
 }
 
-void BasicBehaviour::setConfiguration(const BehaviourConfiguration* beh)
+void BasicBehaviour::setBehaviour(const Behaviour* beh)
 {
-    assert(_configuration == nullptr);
-    _configuration = beh;
-    if (_configuration->isEventDriven()) {
+    assert(_behaviour == nullptr);
+    _behaviour = beh;
+    if (_behaviour->isEventDriven()) {
         _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
     } else {
         _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
     }
 }
 
-const Variable* BasicBehaviour::getVariableByName(const std::string& name) const
+void BasicBehaviour::setConfiguration(const Configuration* conf)
 {
-    return _configuration->getVariableByName(name);
+    assert(_configuration == nullptr);
+    _configuration = conf;
 }
 
 /**
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-AgentIDConstPtr BasicBehaviour::getOwnId() const
+essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }
@@ -96,7 +97,7 @@ bool BasicBehaviour::stop()
         setSignalState(SignalState::STOP);
         setStopCalled(true);
     }
-    if (_configuration->isEventDriven()) {
+    if (_behaviour->isEventDriven()) {
         _runCV.notify_all();
     }
     return true;
@@ -111,7 +112,10 @@ bool BasicBehaviour::start()
         std::lock_guard<std::mutex> lck(_runLoopMutex);
         setSignalState(SignalState::START);
     }
-    _runCV.notify_all();
+
+    if (!_behaviour->isEventDriven()) {
+        _runCV.notify_all();
+    }
     return true;
 }
 
@@ -152,9 +156,7 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 bool BasicBehaviour::doWait()
 {
     std::unique_lock<std::mutex> lck(_runLoopMutex);
-    _runCV.wait(lck, [this] {
-        return getSignalState() == SignalState::START || isTerminated();
-    });
+    _runCV.wait(lck, [this] { return getSignalState() == SignalState::START || isTerminated(); });
     if (isTerminated()) {
         return false;
     }
@@ -205,8 +207,8 @@ void BasicBehaviour::doRun(bool timed)
                 sendLogMessage(4, err);
             }
             AlicaTime duration = _engine->getAlicaClock().now() - start;
-            ALICA_WARNING_MSG_IF(
-                duration > _msInterval + AlicaTime::microseconds(100), "BB: Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
+            ALICA_WARNING_MSG_IF(duration > _msInterval + AlicaTime::microseconds(100),
+                    "BB: Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
             if (duration < _msInterval) {
                 _engine->getAlicaClock().sleep(_msInterval - duration);
             }
@@ -215,16 +217,14 @@ void BasicBehaviour::doRun(bool timed)
         while (true) {
             {
                 std::unique_lock<std::mutex> lck(_runLoopMutex);
-                _runCV.wait(lck, [this] {
-                    return _behaviourTrigger->isNotifyCalled(&_runCV) || isStopCalled() || isTerminated();
-                });
+                _runCV.wait(lck, [this] { return _behaviourTrigger->isNotifyCalled(&_runCV) || isStopCalled() || isTerminated(); });
                 if (isTerminated() || isStopCalled()) {
                     doStop();
                     return;
                 }
             }
             try {
-                run(nullptr);
+                run(static_cast<void*>(_behaviourTrigger));
             } catch (const std::exception& e) {
                 std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
                 sendLogMessage(4, err);
@@ -232,18 +232,6 @@ void BasicBehaviour::doRun(bool timed)
             _behaviourTrigger->setNotifyCalled(false, &_runCV);
         }
     }
-}
-
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
-{
-    for (const auto& pair : _configuration->getParameters()) {
-        if (pair.first == key) {
-            valueOut = pair.second;
-            return true;
-        }
-    }
-    valueOut.clear();
-    return false;
 }
 
 void BasicBehaviour::runThread(bool timed)
@@ -259,6 +247,23 @@ void BasicBehaviour::runThread(bool timed)
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
 {
     _engine->getCommunicator().sendLogMessage(level, message);
+}
+
+bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
+{
+    if (!_configuration) {
+        valueOut.clear();
+        return false;
+    }
+
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
+        return true;
+    } else {
+        valueOut.clear();
+        return false;
+    }
 }
 
 } /* namespace alica */

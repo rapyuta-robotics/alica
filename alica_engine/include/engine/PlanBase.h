@@ -48,7 +48,7 @@ public:
 
     std::condition_variable* getStepModeCV();
 
-    const AlicaTime getloopInterval() const;
+    const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
     void start(const Plan* masterPlan);
@@ -56,9 +56,9 @@ public:
     bool isWaiting() const { return _isWaiting; }
 
     // factory functions
-    RunningPlan* makeRunningPlan(const Plan* plan);
-    RunningPlan* makeRunningPlan(const BehaviourConfiguration* bc);
-    RunningPlan* makeRunningPlan(const PlanType* pt);
+    RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
 
 private:
     void run(const Plan* masterPlan);
