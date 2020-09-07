@@ -30,25 +30,25 @@ TEST_F(BackForthTest, testing)
     SimpleSwitches::reset();
 
     ASSERT_EQ(CounterClass::called, 0);
-    ae->start();
-    step(ae);
+    tc->startEngine();
+    tc->stepEngine();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     int curCount = CounterClass::called;
     ASSERT_GT(curCount, 0);
-    ASSERT_EQ(ae->getPlanBase().getRootNode()->getActiveState()->getId(), 1529456584983);
+    ASSERT_EQ(tc->getRootNode()->getActiveState()->getId(), 1529456584983);
 
     SimpleSwitches::set(0, true);
-    step(ae);
+    tc->stepEngine();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
     ASSERT_GT(CounterClass::called, curCount);
     curCount = CounterClass::called;
-    ASSERT_EQ(ae->getPlanBase().getRootNode()->getActiveState()->getId(), 1529456591410);
+    ASSERT_EQ(tc->getRootNode()->getActiveState()->getId(), 1529456591410);
 
     SimpleSwitches::set(1, true);
     for (int i = 0; i < 10; ++i) {
-        step(ae);
+        tc->stepEngine();
         ASSERT_GT(CounterClass::called, curCount);
         curCount = CounterClass::called;
     }

@@ -37,15 +37,13 @@ TEST_F(AlicaConditionPlan, solverTest)
 {
     ASSERT_NO_SIGNAL
 
-    const alica::PlanRepository& rep = ae->getPlanRepository();
-
-    const alica::Behaviour* beh = rep.getBehaviours()[1414068597716];
+    const alica::Behaviour* beh = tc->getBehaviour(1414068597716);
     ASSERT_NE(beh, nullptr);
-    const alica::State* state = rep.getStates()[1414068524246];
+    const alica::State* state = tc->getState(1414068524246);
     ASSERT_NE(state, nullptr);
 
-    ASSERT_EQ(beh->getVariables().size(), 2);
-    ASSERT_EQ(state->getParametrisation().size(), 2);
+    ASSERT_EQ(beh->getVariables().size(), 2u);
+    ASSERT_EQ(state->getParametrisation().size(), 2u);
     const alica::Variable* beh_y = nullptr;
     for (const alica::Variable* v : beh->getVariables()) {
         if (v->getName() == "Y") {
@@ -65,17 +63,17 @@ TEST_F(AlicaConditionPlan, solverTest)
     }
     ASSERT_TRUE(found) << "Sub variable not found in parametrisation";
 
-    ae->start();
-    step(ae);
+    tc->startEngine();
+    tc->stepEngine();
 
-    alica::BasicBehaviour* basicBehaviour = ae->getPlanBase().getRootNode()->getChildren()[0]->getBasicBehaviour();
+    alica::BasicBehaviour* basicBehaviour = tc->getRootNode()->getChildren()[0]->getBasicBehaviour();
     alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
     ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
-    ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1) << "Wrong result size";
-    const alica::ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
+    ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1u) << "Wrong result size";
+    const alica::ByteArray& ba = tc->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
     std::string resultingString(reinterpret_cast<const char*>(ba.begin()), ba.size());
     EXPECT_EQ("1414068576620", resultingString); // id of variable at highest level
 }
