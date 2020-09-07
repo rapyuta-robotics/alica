@@ -66,8 +66,8 @@ QT5_WRAP_UI(alica_client_UIS_H ${alica_UIS})
 set(CMAKE_CURRENT_BINARY_DIR "${_cmake_current_binary_dir}")
 
 add_library(AlicaWidget src/alica/AlicaWidget.cpp  ${alica_client_UIS_H})
-
 target_link_libraries(AlicaWidget ${catkin_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTWIDGETS_LIBRARY})
+add_dependencies(AlicaWidget alica_msgs_generate_messages_cpp)
 
 install(FILES plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
