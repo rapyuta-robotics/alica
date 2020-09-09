@@ -152,14 +152,7 @@ ActiveAgentView TeamManager::getActiveAgents() const
 
 int TeamManager::getTeamSize() const
 {
-    AgentsCache::AgentMap& agents = *_agentsCache.get();
-    int teamSize = 0;
-    for (auto& agentEntry : agents) {
-        if (agentEntry.second->isActive()) {
-            ++teamSize;
-        }
-    }
-    return teamSize;
+    return ActiveAgentIdView(_agentsCache.get()).size();
 }
 
 const Agent* TeamManager::getAgentByID(essentials::IdentifierConstPtr agentId) const
