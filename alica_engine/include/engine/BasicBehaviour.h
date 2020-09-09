@@ -5,9 +5,6 @@
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 
-#include <essentials/ITrigger.h>
-#include <essentials/Timer.h>
-
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -16,8 +13,16 @@
 #include <thread>
 #include <vector>
 
+namespace essentials {
+    class ITrigger;
+}
+
 namespace alica
 {
+namespace test
+{
+class TestContext;
+}
 class Variable;
 class RunningPlan;
 class Configuration;
@@ -87,6 +92,7 @@ protected:
     virtual void onTermination() {}
 
 private:
+    friend alica::test::TestContext;
     enum BehaviourResult { UNKNOWN, SUCCESS, FAILURE };
     enum BehaviourState { UNINITIALIZED, INITIALIZING, RUNNING, TERMINATING };
     enum SignalState { START, STOP, TERMINATE };

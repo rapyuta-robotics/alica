@@ -76,7 +76,7 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(robots.empty());
 
     as1.getAgentsInState(s1, robots);
-    ASSERT_EQ(robots.size(), 3);
+    ASSERT_EQ(robots.size(), 3u);
 
     ASSERT_EQ(robots[0], robot1);
     ASSERT_EQ(robots[1], robot2);

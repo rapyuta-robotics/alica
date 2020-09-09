@@ -34,7 +34,7 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 {
     ASSERT_NO_SIGNAL
 
-    VariableSyncModule& vsm = ae->editResultStore();
+    VariableSyncModule& vsm = tc->editResultStore();
 
     Variant v1(1.23);
     Variant v2(-10.0);
@@ -56,7 +56,7 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
 
     int num = vsm.getSeeds(vs, limits, seeds);
     EXPECT_EQ(num, 1);
-    EXPECT_EQ(seeds.size(), 2);
+    EXPECT_EQ(seeds.size(), 2u);
     EXPECT_TRUE(seeds[0].isDouble());
     EXPECT_TRUE(seeds[1].isDouble());
 

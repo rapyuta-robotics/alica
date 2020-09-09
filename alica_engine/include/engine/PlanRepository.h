@@ -108,9 +108,11 @@ public:
     const Accessor<Transition> getTransitions() const { return Accessor<Transition>(_transitions); }
     const Accessor<Condition> getConditions() const { return Accessor<Condition>(_conditions); }
     const Accessor<Variable> getVariables() const { return Accessor<Variable>(_variables); }
-    const Accessor<ConfAbstractPlanWrapper> getConfAbstractPlanWrappers() const { return Accessor<ConfAbstractPlanWrapper>(_confAbstractPlanWrapperRepository); }
+    const Accessor<ConfAbstractPlanWrapper> getConfAbstractPlanWrappers() const
+    {
+        return Accessor<ConfAbstractPlanWrapper>(_confAbstractPlanWrapperRepository);
+    }
     const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
-
 
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;
