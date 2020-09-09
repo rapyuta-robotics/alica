@@ -22,7 +22,7 @@ protected:
 TEST_F(PlanBaseTest, planBaseTest)
 {
     // TODO test something
-    ae->start();
+    tc->startEngine();
     sleep(1);
 }
 }

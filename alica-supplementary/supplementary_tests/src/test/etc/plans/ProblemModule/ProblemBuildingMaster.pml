@@ -36,7 +36,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1479556022226,
-    "abstractPlans" : [ "ProblemModule/ProbBuildingLevel1.pml#1479557378264" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636476,
+      "name" : "1597658636476",
+      "comment" : "",
+      "abstractPlan" : "ProblemModule/ProbBuildingLevel1.pml#1479557378264",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1479557551007,
       "name" : "MISSING_NAME",
@@ -61,7 +67,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1479556022226,
-    "abstractPlans" : [ "ProblemModule/ProbBuildingLevel1_1.pml#1479557664989" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636487,
+      "name" : "1597658636487",
+      "comment" : "",
+      "abstractPlan" : "ProblemModule/ProbBuildingLevel1_1.pml#1479557664989",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ 1479557591331 ]

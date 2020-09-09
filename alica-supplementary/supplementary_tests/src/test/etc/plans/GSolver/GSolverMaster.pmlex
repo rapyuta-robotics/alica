@@ -1,0 +1,23 @@
+{
+  "plan" : "GSolver/GSolverMaster.pml#1417423751087",
+  "uiElementMap" : {
+    "1417423751088" : {
+      "id" : 1597658636686,
+      "name" : "1597658636686",
+      "comment" : "",
+      "x" : -110,
+      "y" : 5,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1417423751089" : {
+      "id" : 1597658636687,
+      "name" : "1597658636687",
+      "comment" : "",
+      "x" : -547,
+      "y" : 15,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

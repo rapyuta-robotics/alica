@@ -16,6 +16,7 @@
   <depend>alica_dummy_proxy</depend>
   <depend>alica_simple_solver</depend>
   <depend>alica_solver_interface</depend>
+  <depend>alica_test_utility</depend>
   <depend>constraintsolver</depend>
   <depend>autodiff</depend>
 

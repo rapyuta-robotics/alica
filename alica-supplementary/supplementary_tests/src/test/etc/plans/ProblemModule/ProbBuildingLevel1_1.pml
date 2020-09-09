@@ -36,7 +36,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1479557664989,
-    "abstractPlans" : [ "ProblemModule/QueryPlan2.pml#1479718449392" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636434,
+      "name" : "1597658636434",
+      "comment" : "",
+      "abstractPlan" : "ProblemModule/QueryPlan2.pml#1479718449392",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

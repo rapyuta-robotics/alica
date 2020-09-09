@@ -45,7 +45,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1417423757243,
-    "abstractPlans" : [ "GSolver/SolverTestBehaviour.beh#1417424455986" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636404,
+      "name" : "1597658636404",
+      "comment" : "",
+      "abstractPlan" : "GSolver/SolverTestBehaviour.beh#1417424455986",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1417444715623,
       "name" : "MISSING_NAME",

@@ -1,0 +1,23 @@
+{
+  "plan" : "ProblemModule/ProbBuildingLevel1.pml#1479557378264",
+  "uiElementMap" : {
+    "1479557378265" : {
+      "id" : 1597658636656,
+      "name" : "1597658636656",
+      "comment" : "",
+      "x" : 13,
+      "y" : -8,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1479557378266" : {
+      "id" : 1597658636658,
+      "name" : "1597658636658",
+      "comment" : "",
+      "x" : -191,
+      "y" : 3,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

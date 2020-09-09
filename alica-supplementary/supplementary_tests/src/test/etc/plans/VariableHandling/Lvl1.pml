@@ -50,7 +50,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1524452759599,
-    "abstractPlans" : [ "VariableHandling/VHPLanType.pty#1524452770528" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636548,
+      "name" : "1597658636548",
+      "comment" : "",
+      "abstractPlan" : "VariableHandling/VHPLanType.pty#1524452770528",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1524453528169,
       "name" : "MISSING_NAME",
@@ -75,7 +81,7 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1524452759599,
-    "abstractPlans" : [ ],
+    "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1524453490345 ],
     "inTransitions" : [ ]

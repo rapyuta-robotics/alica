@@ -52,7 +52,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1479556074049,
-    "abstractPlans" : [ "ProblemModule/QueryBehaviour1.beh#1479556104511" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636505,
+      "name" : "1597658636505",
+      "comment" : "",
+      "abstractPlan" : "ProblemModule/QueryBehaviour1.beh#1479556104511",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1479557255352,
       "name" : "MISSING_NAME",

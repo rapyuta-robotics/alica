@@ -1,0 +1,23 @@
+{
+  "plan" : "VariableHandling/Lvl3.pml#1524452836022",
+  "uiElementMap" : {
+    "1524452836024" : {
+      "id" : 1597658636673,
+      "name" : "1597658636673",
+      "comment" : "",
+      "x" : -278,
+      "y" : -19,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1524452836023" : {
+      "id" : 1597658636672,
+      "name" : "1597658636672",
+      "comment" : "",
+      "x" : 13,
+      "y" : -13,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

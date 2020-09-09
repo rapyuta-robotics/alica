@@ -45,7 +45,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1524452721452,
-    "abstractPlans" : [ "VariableHandling/Lvl1.pml#1524452759599" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636570,
+      "name" : "1597658636570",
+      "comment" : "",
+      "abstractPlan" : "VariableHandling/Lvl1.pml#1524452759599",
+      "configuration" : null
+    } ],
     "variableBindings" : [ {
       "id" : 1524463056023,
       "name" : "MISSING_NAME",

@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1479718449392,
-    "abstractPlans" : [ "ProblemModule/QueryBehaviour1.beh#1479556104511" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1597658636425,
+      "name" : "1597658636425",
+      "comment" : "",
+      "abstractPlan" : "ProblemModule/QueryBehaviour1.beh#1479556104511",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

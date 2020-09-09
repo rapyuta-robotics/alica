@@ -27,16 +27,16 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 {
     ASSERT_NO_SIGNAL
 
-    ae->start();
+    tc->startEngine();
 
     for (int i = 0; i < 6; ++i) {
-        step(ae);
+        tc->stepEngine();
     }
 
-    const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
+    const alica::RunningPlan* deep = tc->getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
-    ASSERT_EQ(deep->getChildren().size(), 1);
+    ASSERT_EQ(deep->getChildren().size(), 1u);
     ASSERT_TRUE((*deep->getChildren().begin())->isBehaviour());
 
     alica::QueryBehaviour1* queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());

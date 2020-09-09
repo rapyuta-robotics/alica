@@ -42,37 +42,37 @@ protected:
     virtual void SetUp()
     {
         AlicaTestMultiAgentFixture::SetUp();
-        acs[0]->addSolver<alica::reasoner::CGSolver>();
-        acs[1]->addSolver<alica::reasoner::CGSolver>();
+        tcs[0]->addSolver<alica::reasoner::CGSolver>();
+        tcs[1]->addSolver<alica::reasoner::CGSolver>();
     }
 };
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
 {
     std::cout << "Starting engine..." << std::endl;
-    aes[0]->start();
-    aes[1]->start();
-    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    tcs[0]->startEngine();
+    tcs[1]->startEngine();
+    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     std::chrono::milliseconds sleepTime(33);
     do {
         for (int i = 0; i < 3; ++i) {
-            step(aes[0]);
-            step(aes[1]);
+            tcs[0]->stepEngine();
+            tcs[1]->stepEngine();
         }
-    } while (aes[0]->getTeamManager().getTeamSize() != 2 || aes[1]->getTeamManager().getTeamSize() != 2);
+    } while (tcs[0]->getTeamSize() != 2 || tcs[1]->getTeamSize() != 2);
 
-    const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
-    const RunningPlan* rp2 = aes[0]->getPlanBase().getDeepestNode();
+    const RunningPlan* rp1 = tcs[0]->getDeepestNode();
+    const RunningPlan* rp2 = tcs[1]->getDeepestNode();
 
-    essentials::IdentifierConstPtr id1 = aes[0]->getTeamManager().getLocalAgentID();
-    essentials::IdentifierConstPtr id2 = aes[1]->getTeamManager().getLocalAgentID();
+    essentials::IdentifierConstPtr id1 = tcs[0]->getLocalAgentId();
+    essentials::IdentifierConstPtr id2 = tcs[1]->getLocalAgentId();
     EXPECT_NE(id1, id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
     EXPECT_EQ(rp1->getActivePlan()->getName(), "Lvl1");
-    EXPECT_EQ(rp1->getAssignment().size(), 2u);
-    EXPECT_EQ(rp2->getAssignment().size(), 2u);
+    EXPECT_EQ(rp1->getAssignment().size(), 2);
+    EXPECT_EQ(rp2->getAssignment().size(), 2);
 
     EXPECT_EQ(rp1->getActiveState()->getId(), 1524453481856);
     EXPECT_EQ(rp2->getActiveState()->getId(), 1524453481856);
@@ -82,7 +82,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     alica::Query q1;
 
-    q1.addDomainVariable(id1, "X", aes[0]);
+    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_FALSE(ok);
     EXPECT_TRUE(result1.empty());
@@ -101,31 +101,28 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
     EXPECT_LT(result1[0], 0);
     EXPECT_GT(result1[1], 0);
     EXPECT_LT(result1[0] + result1[1], 10.0);
     EXPECT_GT(result1[0] + result1[1], -10.0);
-    q1.addDomainVariable(id1, "X", aes[0]);
+    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(3, result1.size());
+    EXPECT_EQ(3u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
 
     // Cause  agent to move through transition:
     vhStartCondition = true;
-    aes[0]->stepNotify();
-    aes[1]->stepNotify();
-    do {
-        std::this_thread::sleep_for(sleepTime);
-    } while (!aes[0]->getPlanBase().isWaiting() || !aes[1]->getPlanBase().isWaiting());
+    tcs[0]->stepEngine();
+    tcs[1]->stepEngine();
 
-    rp1 = aes[0]->getPlanBase().getDeepestNode();
-    rp2 = aes[1]->getPlanBase().getDeepestNode();
+    rp1 = tcs[0]->getDeepestNode();
+    rp2 = tcs[1]->getDeepestNode();
 
-    EXPECT_EQ(1524452836023, rp1->getActiveState()->getId()); // lvl3
-    EXPECT_EQ(1524453248579, rp2->getActiveState()->getId()); // Dummy in lvl2
+    EXPECT_TRUE(tcs[0]->isStateActive(1524452836023)); // lvl3
+    EXPECT_TRUE(tcs[1]->isStateActive(1524453248579)); // Dummy in lvl2
 
     q1.clearStaticVariables();
     q1.clearDomainVariables();
@@ -137,27 +134,27 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
 
     Query q2;
-    q2.addDomainVariable(id2, "X", aes[1]);
-    q2.addDomainVariable(id2, "Y", aes[1]);
+    q2.addDomainVariable(tcs[1]->getDomainVariable(id2, "X"));
+    q2.addDomainVariable(tcs[1]->getDomainVariable(id2, "Y"));
 
     ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(3, q2.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
 
     q1.clearStaticVariables();
     q1.clearDomainVariables();
 
-    q1.addDomainVariable(id1, "X", aes[0]);
-    q1.addDomainVariable(id1, "Y", aes[0]);
+    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
+    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "Y"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
-    EXPECT_EQ(2, result1.size());
+    EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
 }
