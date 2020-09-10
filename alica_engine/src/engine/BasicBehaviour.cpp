@@ -67,6 +67,7 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     assert(_behaviour == nullptr);
     _behaviour = beh;
     if (_behaviour->isEventDriven()) {
+        assert(_behaviourTrigger != nullptr);
         _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
     } else {
         _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
