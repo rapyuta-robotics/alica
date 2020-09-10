@@ -4,7 +4,7 @@ namespace alica
 {
 
 AlicaViewerRosInterface::AlicaViewerRosInterface(int argc, char* argv[])
-    : _agent_id_manager(new essentials::AgentIDManager(new essentials::AgentIDFactory()))
+    : _agent_id_manager(new essentials::IDManager())
 {
     ros::init(argc, argv, "alica_viewer");
     ros::start(); // explicitly needed since our nodehandle is going out of scope.
@@ -42,14 +42,14 @@ void AlicaViewerRosInterface::run()
 void AlicaViewerRosInterface::alicaEngineInfoCallback(const alica_msgs::AlicaEngineInfo& msg)
 {
     AlicaEngineInfo aei;
-    aei.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id);
+    aei.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id.data(), msg.sender_id.id.size(), msg.sender_id.type);
     aei.masterPlan = msg.master_plan;
     aei.currentPlan = msg.current_plan;
     aei.currentState = msg.current_state;
     aei.currentRole = msg.current_role;
     aei.currentTask = msg.current_task;
     for (const auto& robotID : msg.robot_ids_with_me) {
-        aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(robotID.id));
+        aei.robotIDsWithMe.push_back(_agent_id_manager->getIDFromBytes(robotID.id.data(), robotID.id.size(), robotID.type));
     }
     Q_EMIT alicaEngineInfoUpdate(aei);
 }
@@ -57,7 +57,7 @@ void AlicaViewerRosInterface::alicaEngineInfoCallback(const alica_msgs::AlicaEng
 void AlicaViewerRosInterface::alicaPlanInfoCallback(const alica_msgs::PlanTreeInfo& msg)
 {
     PlanTreeInfo pti;
-    pti.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id);
+    pti.senderID = _agent_id_manager->getIDFromBytes(msg.sender_id.id.data(), msg.sender_id.id.size(), msg.sender_id.type);
     for (int64_t i : msg.state_ids) {
         pti.stateIDs.push_back(i);
     }

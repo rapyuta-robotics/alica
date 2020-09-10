@@ -7,7 +7,7 @@
 #include <alica_msgs/PlanTreeInfo.h>
 #include <engine/containers/AlicaEngineInfo.h>
 #include <engine/containers/PlanTreeInfo.h>
-#include <essentials/AgentIDManager.h>
+#include <essentials/IDManager.h>
 
 namespace alica
 {
@@ -34,7 +34,7 @@ class AlicaViewerRosInterface : public QThread
     ros::Subscriber _alicaEngineInfoSub;
     ros::Subscriber _alicaPlanInfoSub;
     ros::Timer _timer;
-    essentials::AgentIDManager* _agent_id_manager;
+    essentials::IDManager* _agent_id_manager;
 };
 
 } // namespace alica

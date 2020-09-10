@@ -1,22 +1,13 @@
-#include <FileSystem.h>
-#include <Plans/ProblemModule/QueryBehaviour1.h>
-#include <SystemConfig.h>
-#include <chrono>
-#include <communication/AlicaRosCommunication.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
+#include <ProblemModule/QueryBehaviour1.h>
 #include <engine/PlanBase.h>
-#include <engine/RunningPlan.h>
-#include <engine/constraintmodul/Query.h>
 #include <engine/model/Variable.h>
+#include <test_supplementary.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
-#include <iostream>
-#include <memory>
+
 #include <string>
-#include <test_supplementary.h>
-#include <thread>
 #include <vector>
+#include <chrono>
 
 namespace supplementary
 {
@@ -36,16 +27,16 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 {
     ASSERT_NO_SIGNAL
 
-    ae->start();
+    tc->startEngine();
 
     for (int i = 0; i < 6; ++i) {
-        step(ae);
+        tc->stepEngine();
     }
 
-    const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
+    const alica::RunningPlan* deep = tc->getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
-    ASSERT_EQ(deep->getChildren().size(), 1);
+    ASSERT_EQ(deep->getChildren().size(), 1u);
     ASSERT_TRUE((*deep->getChildren().begin())->isBehaviour());
 
     alica::QueryBehaviour1* queryBehaviour1 = dynamic_cast<alica::QueryBehaviour1*>((*deep->getChildren().begin())->getBasicBehaviour());

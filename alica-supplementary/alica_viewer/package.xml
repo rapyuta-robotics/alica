@@ -14,7 +14,8 @@
   <depend>roscpp</depend>
   <depend>libqt4-dev</depend>
 
-  <depend>agent_id</depend>
-  <depend>alica_msgs</depend>
+  <depend>id_ros</depend>
   <depend>alica_engine</depend>
+  <depend>alica_msgs</depend>
+  <depend>alica_ros_proxy</depend>
 </package>

@@ -1,34 +1,28 @@
-using namespace std;
-
 #include "BehaviourCreator.h"
+#include "Behaviours/Go2RandomPosition.h"
+#include "Behaviours/GoTo.h"
 #include "engine/BasicBehaviour.h"
 
-#include "Plans/Behaviours/Go2RandomPosition.h"
-
-#include "Plans/Behaviours/GoTo.h"
-
-namespace alica {
+namespace alica
+{
 
 BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourConfId) {
-    switch (behaviourConfId) {
-        case 1542881996304:
-
-            return make_shared<Go2RandomPosition>();
-            break;
-
-        case 1544160989370:
-
-            return make_shared<GoTo>();
-            break;
-
-        default:
-            cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourConfId << endl;
-            throw new exception();
-            break;
+std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
+{
+    switch (behaviourId) {
+    case 1542881969548:
+        return std::make_shared<Go2RandomPosition>();
+        break;
+    case 1544160969061:
+        return std::make_shared<GoTo>();
+        break;
+    default:
+        std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
+        throw new std::exception();
+        break;
     }
 }
-}  // namespace alica
+} // namespace alica

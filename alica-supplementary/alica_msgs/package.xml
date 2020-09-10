@@ -13,7 +13,7 @@
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>message_runtime</depend>
-  <depend>agent_id</depend>
+  <depend>id_ros</depend>
 
   <export>
   </export>

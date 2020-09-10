@@ -1,17 +1,17 @@
-#ifndef CONSTRAINTCREATOR_H_
-#define CONSTRAINTCREATOR_H_
+#pragma once
 
 #include <engine/IConstraintCreator.h>
 #include <memory>
 
-namespace alica {
+namespace alica
+{
 
-class ConstraintCreator : public IConstraintCreator {
+class ConstraintCreator : public IConstraintCreator
+{
 public:
     ConstraintCreator();
     virtual ~ConstraintCreator();
-    shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
+    std::shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
 };
 
 } /* namespace alica */
-#endif /* CONSTRAINTCREATOR_H_ */

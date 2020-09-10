@@ -1,4 +1,4 @@
-#include "Plans/GSolver/SolverTestBehaviour.h"
+#include "GSolver/SolverTestBehaviour.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BehaviourPool.h"
@@ -39,11 +39,11 @@ TEST_F(AlicaGSolverPlan, solverTest)
     ASSERT_NO_SIGNAL
 
     std::cout << "Starting engine..." << std::endl;
-    ae->start();
+    tc->startEngine();
 
-    step(ae);
+    tc->stepEngine();
 
-    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2) << "Wrong result size";
+    ASSERT_EQ(alica::SolverTestBehaviour::result.size(), 2u) << "Wrong result size";
     EXPECT_GT(alica::SolverTestBehaviour::result[0], 4000);
     EXPECT_LT(alica::SolverTestBehaviour::result[0], 5000);
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);

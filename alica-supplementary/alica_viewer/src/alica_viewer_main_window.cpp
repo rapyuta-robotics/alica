@@ -34,7 +34,7 @@ AlicaViewerMainWindow::AlicaViewerMainWindow(int argc, char* argv[], QWidget* pa
 
     _ui.agentIdComboBox->addItem("Combined");
     _ui.agentIdComboBox->addItem("All");
-    for (AgentIDConstPtr agentId : _agentIdVector) {
+    for (essentials::IdentifierConstPtr agentId : _agentIdVector) {
         const AgentInfo* ai = _alicaPlan.getAgentInfo(agentId);
         if (ai) {
             _ui.agentIdComboBox->addItem(QString::fromStdString(ai->name));
@@ -49,6 +49,7 @@ AlicaViewerMainWindow::AlicaViewerMainWindow(int argc, char* argv[], QWidget* pa
 
 elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* planTreeNode)
 {
+    std::cout << "alica_viewer_main_window: AddStateToScene!" << std::endl;
     if (planTreeNode == nullptr) {
         return nullptr;
     }
@@ -59,7 +60,7 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
         AgentGrp robotIds;
         planTreeNode->getRobotsSorted(robotIds);
         std::string robotIdList = "[ ";
-        for (AgentIDConstPtr robotId : robotIds) {
+        for (essentials::IdentifierConstPtr robotId : robotIds) {
             robotIdList += _alicaPlan.getAgentInfo(robotId)->name + std::string(", ");
         }
         robotIdList.erase(robotIdList.end() - 2, robotIdList.end());
@@ -102,6 +103,8 @@ elastic_nodes::Node* AlicaViewerMainWindow::addStateToScene(const PlanTree* plan
 
 void AlicaViewerMainWindow::updateNodes()
 {
+
+    std::cout << "alica_viewer_main_window: updateNodes!" << std::endl;
     _scene->clear();
     int indexSelected = _ui.agentIdComboBox->currentIndex();
     const PlanTreeMap& ptMap = _alicaPlan.getPlanTrees();

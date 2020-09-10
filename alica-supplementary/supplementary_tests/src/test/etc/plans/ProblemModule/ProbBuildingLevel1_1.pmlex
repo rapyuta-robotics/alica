@@ -1,19 +1,23 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="ProbBuildingLevel1_1.pml#1479557690962"/>
-    <value xPos="231" yPos="118" width="82" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="ProbBuildingLevel1_1.pml#1479557664989"/>
-    <value width="684" height="460"/>
-  </extensions>
-  <extensions>
-    <key href="ProbBuildingLevel1_1.pml#1479557690963"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="QueryPlan2.pml#1479718449392"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "ProblemModule/ProbBuildingLevel1_1.pml#1479557664989",
+  "uiElementMap" : {
+    "1479557690962" : {
+      "id" : 1597658636661,
+      "name" : "1597658636661",
+      "comment" : "",
+      "x" : -7,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1479557690963" : {
+      "id" : 1597658636665,
+      "name" : "1597658636665",
+      "comment" : "",
+      "x" : -369,
+      "y" : 3,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

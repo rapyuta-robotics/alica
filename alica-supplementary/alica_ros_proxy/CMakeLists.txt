@@ -1,11 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_ros_proxy)
 
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
@@ -32,10 +28,11 @@ include_directories(
 )
 
 add_library(alica_ros_proxy
-	src/clock/AlicaROSClock.cpp src/communication/AlicaRosCommunication.cpp
+	src/clock/AlicaROSClock.cpp
+	src/communication/AlicaRosCommunication.cpp
 )
 
-add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp agent_id_generate_messages_cpp)
+add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp id_ros_generate_messages_cpp)
 
 target_link_libraries(alica_ros_proxy
   ${catkin_LIBRARIES}

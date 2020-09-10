@@ -1,7 +1,7 @@
-agent_id/AgentID sender_id
+id_ros/ID sender_id
 string master_plan
 string current_plan
 string current_state
 string current_role
 string current_task
-agent_id/AgentID[] robot_ids_with_me
+id_ros/ID[] robot_ids_with_me

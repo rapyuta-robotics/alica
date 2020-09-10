@@ -1,4 +1,4 @@
-agent_id/AgentID sender_id
+id_ros/ID sender_id
 uint32 token
 string sender_name
 uint32 sender_sdk

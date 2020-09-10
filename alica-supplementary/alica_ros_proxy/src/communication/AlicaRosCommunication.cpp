@@ -1,20 +1,17 @@
 #include "communication/AlicaRosCommunication.h"
 
-#include "Configuration.h"
-#include "SystemConfig.h"
-#include "engine/AlicaEngine.h"
-#include "engine/containers/AgentAnnouncement.h"
-#include "engine/containers/AgentQuery.h"
-#include "engine/containers/AlicaEngineInfo.h"
-#include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/RoleSwitch.h"
-#include "engine/containers/SolverResult.h"
-#include "engine/containers/SolverVar.h"
-#include "engine/containers/SyncData.h"
-#include "engine/containers/SyncReady.h"
-#include "engine/containers/SyncTalk.h"
-#include "essentials/AgentIDFactory.h"
+#include <essentials/Configuration.h>
+#include <engine/AlicaEngine.h>
+#include <engine/containers/AlicaEngineInfo.h>
+#include <engine/containers/PlanTreeInfo.h>
+#include <engine/containers/RoleSwitch.h>
+#include <engine/containers/SolverResult.h>
+#include <engine/containers/SolverVar.h>
+#include <engine/containers/SyncData.h>
+#include <engine/containers/SyncReady.h>
+#include <engine/containers/SyncTalk.h>
+#include <engine/containers/AgentQuery.h>
+#include <engine/teammanager/TeamManager.h>
 
 #include <ros/console.h>
 #include <ros/node_handle.h>
@@ -109,17 +106,20 @@ void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInf
     aais.plan_type = aai.planType;
 
     aais.sender_id.id = aai.senderID->toByteVector();
+    aais.sender_id.type = aai.senderID->getType();
     aais.authority.id = aai.authority->toByteVector();
+    aais.authority.type = aai.authority->getType();
 
     for (auto& ep : aai.entryPointRobots) {
         alica_msgs::EntryPointRobots newEP;
         newEP.entry_point = ep.entrypoint;
         int i = 0;
-        for (auto& robotId : ep.robots) {
+        for (auto& agentId : ep.robots) {
             newEP.robots.push_back(alica_msgs::EntryPointRobots::_robots_type::value_type());
-            for (int j = 0; j < robotId->getSize(); j++) {
-                newEP.robots[i].id.push_back(*(robotId->getRaw() + j));
+            for (size_t j = 0; j < agentId->getSize(); j++) {
+                newEP.robots[i].id.push_back(*(agentId->getRaw() + j));
             }
+            newEP.robots[i].type = agentId->getType();
             i++;
         }
         aais.entrypoints.push_back(newEP);
@@ -142,10 +142,12 @@ void AlicaRosCommunication::sendAlicaEngineInfo(const AlicaEngineInfo& bi) const
     for (auto& robotID : bi.robotIDsWithMe) {
         alica_msgs::AllocationAuthorityInfo::_sender_id_type rosRobotID;
         rosRobotID.id = robotID->toByteVector();
+        rosRobotID.type = robotID->getType();
         bis.robot_ids_with_me.push_back(rosRobotID);
     }
 
     bis.sender_id.id = bi.senderID->toByteVector();
+    bis.sender_id.type = bi.senderID->getType();
 
     if (_isRunning) {
         _alicaEngineInfoPublisher.publish(bis);
@@ -156,6 +158,7 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
 {
     alica_msgs::PlanTreeInfo ptis;
     ptis.sender_id.id = pti.senderID->toByteVector();
+    ptis.sender_id.type = pti.senderID->getType();
 
     ptis.state_ids.reserve(pti.stateIDs.size());
     for (int64_t i : pti.stateIDs) {
@@ -175,8 +178,9 @@ void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    auto robotID = ae->getTeamManager().getLocalAgentID();
-    rss.sender_id.id = robotID->toByteVector();
+    auto agentID = ae->getTeamManager().getLocalAgentID();
+    rss.sender_id.id = agentID->toByteVector();
+    rss.sender_id.type = agentID->getType();
 
     if (_isRunning) {
         _roleSwitchPublisher.publish(rss);
@@ -188,7 +192,8 @@ void AlicaRosCommunication::sendSyncReady(const SyncReady& sr) const
     alica_msgs::SyncReady srs;
 
     srs.sender_id.id = sr.senderID->toByteVector();
-    srs.sync_transition_id = sr.syncTransitionID;
+    srs.sender_id.type = sr.senderID->getType();
+    srs.sync_transition_id = sr.synchronisationID;
 
     if (_isRunning) {
         _syncReadyPublisher.publish(srs);
@@ -199,12 +204,14 @@ void AlicaRosCommunication::sendSyncTalk(const SyncTalk& st) const
 {
     alica_msgs::SyncTalk sts;
     sts.sender_id.id = st.senderID->toByteVector();
+    sts.sender_id.type = st.senderID->getType();
 
     for (auto sd : st.syncData) {
         alica_msgs::SyncData sds;
         sds.ack = sd.ack;
         sds.condition_holds = sd.conditionHolds;
-        sds.robot_id.id = sd.robotID->toByteVector();
+        sds.robot_id.id = sd.agentID->toByteVector();
+        sds.robot_id.type = sd.agentID->getType();
         sds.transition_id = sd.transitionID;
         sts.sync_data.push_back(sds);
     }
@@ -218,6 +225,7 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const
 {
     alica_msgs::SolverResult srs;
     srs.sender_id.id = sr.senderID->toByteVector();
+    srs.sender_id.type = sr.senderID->getType();
 
     for (const SolverVar& sv : sr.vars) {
         alica_msgs::SolverVar svs;
@@ -234,11 +242,11 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const
 void AlicaRosCommunication::handleAllocationAuthorityRos(const alica_msgs::AllocationAuthorityInfo& aaimsg)
 {
     AllocationAuthorityInfo aai;
-    aai.senderID = ae->getIdFromBytes(aaimsg.sender_id.id);
+    aai.senderID = ae->getIDFromBytes(aaimsg.sender_id.id.data(), aaimsg.sender_id.id.size(), aaimsg.sender_id.type);
     aai.planId = aaimsg.plan_id;
     aai.parentState = aaimsg.parent_state;
     aai.planType = aaimsg.plan_type;
-    aai.authority = ae->getIdFromBytes(aaimsg.authority.id);
+    aai.authority = ae->getIDFromBytes(aaimsg.authority.id.data(), aaimsg.authority.id.size(), aaimsg.authority.type);
 
     aai.entryPointRobots.reserve(aaimsg.entrypoints.size());
     for (const auto& ep : aaimsg.entrypoints) {
@@ -246,7 +254,7 @@ void AlicaRosCommunication::handleAllocationAuthorityRos(const alica_msgs::Alloc
         newEP.entrypoint = ep.entry_point;
         newEP.robots.reserve(ep.robots.size());
         for (auto robotID : ep.robots) {
-            newEP.robots.push_back(ae->getIdFromBytes(robotID.id));
+            newEP.robots.push_back(ae->getIDFromBytes(robotID.id.data(), robotID.id.size(), robotID.type));
         }
 
         aai.entryPointRobots.push_back(newEP);
@@ -260,7 +268,7 @@ void AlicaRosCommunication::handleAllocationAuthorityRos(const alica_msgs::Alloc
 void AlicaRosCommunication::handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pti)
 {
     auto ptiPtr = make_shared<PlanTreeInfo>();
-    ptiPtr->senderID = ae->getIdFromBytes(pti->sender_id.id);
+    ptiPtr->senderID = ae->getIDFromBytes(pti->sender_id.id.data(), pti->sender_id.id.size(), pti->sender_id.type);
     for (int64_t i : pti->state_ids) {
         ptiPtr->stateIDs.push_back(i);
     }
@@ -276,9 +284,8 @@ void AlicaRosCommunication::handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pt
 void AlicaRosCommunication::handleSyncReadyRos(alica_msgs::SyncReadyPtr sr)
 {
     auto srPtr = make_shared<SyncReady>();
-    srPtr->senderID = ae->getIdFromBytes(sr->sender_id.id);
-    srPtr->syncTransitionID = sr->sync_transition_id;
-
+    srPtr->senderID = ae->getIDFromBytes(sr->sender_id.id.data(), sr->sender_id.id.size(), sr->sender_id.type);
+    srPtr->synchronisationID = sr->sync_transition_id;
     if (_isRunning) {
         onSyncReadyReceived(srPtr);
     }
@@ -287,14 +294,13 @@ void AlicaRosCommunication::handleSyncReadyRos(alica_msgs::SyncReadyPtr sr)
 void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st)
 {
     auto stPtr = make_shared<SyncTalk>();
-    stPtr->senderID = ae->getIdFromBytes(st->sender_id.id);
-
+    stPtr->senderID = ae->getIDFromBytes(st->sender_id.id.data(), st->sender_id.id.size(), st->sender_id.type);
     stPtr->syncData.reserve(st->sync_data.size());
     for (const auto& sd : st->sync_data) {
         SyncData sds = SyncData();
         sds.ack = sd.ack;
         sds.conditionHolds = sd.condition_holds;
-        sds.robotID = ae->getIdFromBytes(sd.robot_id.id);
+        sds.agentID = ae->getIDFromBytes(sd.robot_id.id.data(),sd.robot_id.id.size(), sd.robot_id.type);
         sds.transitionID = sd.transition_id;
         stPtr->syncData.push_back(std::move(sds));
     }
@@ -307,7 +313,7 @@ void AlicaRosCommunication::handleSyncTalkRos(alica_msgs::SyncTalkPtr st)
 void AlicaRosCommunication::handleSolverResult(const alica_msgs::SolverResult& sr)
 {
     SolverResult osr;
-    osr.senderID = ae->getIdFromBytes(sr.sender_id.id);
+    osr.senderID = ae->getIDFromBytes(sr.sender_id.id.data(), sr.sender_id.id.size(), sr.sender_id.type);
     osr.vars.reserve(sr.vars.size());
 
     for (const auto& sv : sr.vars) {
@@ -325,7 +331,7 @@ void AlicaRosCommunication::handleSolverResult(const alica_msgs::SolverResult& s
 void AlicaRosCommunication::handleAgentQuery(const alica_msgs::AgentQuery& pq)
 {
     AgentQuery newpq;
-    newpq.senderID = ae->getIdFromBytes(pq.sender_id.id);
+    newpq.senderID = ae->getIDFromBytes(pq.sender_id.id.data(), pq.sender_id.id.size(), pq.sender_id.type);
     newpq.senderSdk = pq.sender_sdk;
     newpq.planHash = pq.plan_hash;
 
@@ -337,7 +343,7 @@ void AlicaRosCommunication::handleAgentQuery(const alica_msgs::AgentQuery& pq)
 void AlicaRosCommunication::handleAgentAnnouncement(const alica_msgs::AgentAnnouncement& pa)
 {
     AgentAnnouncement newpa;
-    newpa.senderID = ae->getIdFromBytes(pa.sender_id.id);
+    newpa.senderID = ae->getIDFromBytes(pa.sender_id.id.data(), pa.sender_id.id.size(), pa.sender_id.type);
     newpa.token = pa.token;
     newpa.senderName = pa.sender_name;
     newpa.senderSdk = pa.sender_sdk;
@@ -356,6 +362,7 @@ void AlicaRosCommunication::sendAgentQuery(const AgentQuery& pq) const
 {
     alica_msgs::AgentQuery newpq;
     newpq.sender_id.id = pq.senderID->toByteVector();
+    newpq.sender_id.type = pq.senderID->getType();
     newpq.sender_sdk = pq.senderSdk;
     newpq.plan_hash = pq.planHash;
     if (_isRunning) {
@@ -367,6 +374,7 @@ void AlicaRosCommunication::sendAgentAnnouncement(const AgentAnnouncement& pa) c
 {
     alica_msgs::AgentAnnouncement newpa;
     newpa.sender_id.id = pa.senderID->toByteVector();
+    newpa.sender_id.type = pa.senderID->getType();
     newpa.token = pa.token;
     newpa.sender_name = pa.senderName;
     newpa.sender_sdk = pa.senderSdk;

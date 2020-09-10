@@ -34,3 +34,14 @@
 # Ignore clion stuff
 **/.idea
 **/cmake-build-debug/
+
+# Ignore generated capnproto code
+*.capnp.h
+*.capnp.c++
+
+# Ignore Intellij/Maven stuff
+**/target/
+*.iml
+
+# Special Folder for testing conversion
+plan-conversion-tool/src/main/test-stuff/

@@ -1,13 +1,12 @@
 #include <gtest/gtest.h>
 
-#include "GSolver.h"
+#include "constraintsolver/GSolver.h"
+#include "constraintsolver/CNSMTGSolver.h"
 #include "autodiff/AutoDiff.h"
 
-#include "autodiff/ConstraintBuilder.h"
-#include <SystemConfig.h>
+#include <autodiff/ConstraintBuilder.h>
+#include <essentials/SystemConfig.h>
 #include <engine/AlicaClock.h>
-
-#include "CNSMTGSolver.h"
 
 #include <ros/package.h>
 #include <ros/ros.h>
