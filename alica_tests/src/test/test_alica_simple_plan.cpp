@@ -62,11 +62,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     EXPECT_GT(((alica::Attack*) tc->getRootNode()->getChildren()[0]->getBasicBehaviour())->initCounter, 0);
 
     // Check whether we have been in state1 to execute midfield standard
-    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.second->getName() == "MidFieldStandard") {
-            EXPECT_GT(((alica::MidFieldStandard*) &*iter.second)->callCounter, 10);
-        }
-    }
+    EXPECT_GT(std::dynamic_pointer_cast<alica::MidFieldStandard>(tc->getBasicBehaviour(1402488696205, 0))->callCounter, 10);
     CounterClass::called = 0;
 }
 }

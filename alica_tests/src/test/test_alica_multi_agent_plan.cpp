@@ -90,16 +90,12 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
         }
         if (i == 15) {
-            for (const auto& iter : tcs[0]->getBehaviourPool().getAvailableBehaviours()) {
-                if (iter.second->getName() == "Attack") {
-                    ASSERT_GT(static_cast<alica::Attack*>(&*iter.second)->callCounter, 5);
-                    if (((alica::Attack*) &*iter.second)->callCounter > 3) {
-                        alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
-                        alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);
-                        alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201370590(true);
-                        alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201370590(true);
-                    }
-                }
+            ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(tcs[0]->getBasicBehaviour(1402488848841, 0))->callCounter, 5);
+            if (std::dynamic_pointer_cast<alica::Attack>(tcs[0]->getBasicBehaviour(1402488848841, 0))->callCounter > 3) {
+                alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
+                alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);
+                alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201370590(true);
+                alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201370590(true);
             }
             std::cout << "2--------- Engagement to cooperative plan passed ---------" << std::endl;
         }

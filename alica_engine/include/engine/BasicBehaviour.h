@@ -67,6 +67,7 @@ public:
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
     void setTrigger(essentials::ITrigger* trigger);
+    bool isTriggeredRunFinished();
 
     void sendLogMessage(int level, const std::string& message) const;
 

@@ -5,12 +5,13 @@
 #include "BehaviourTrigger.h"
 
 #include <engine/AlicaEngine.h>
+#include <engine/PlanRepository.h>
 #include <engine/model/Behaviour.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/model/PlanType.h>
 #include <engine/model/Task.h>
 #include <engine/model/Variable.h>
-#include <engine/PlanRepository.h>
+#include <engine/BasicBehaviour.h>
 
 #include <chrono>
 #include <functional>
@@ -65,6 +66,33 @@ public:
     bool makeBehaviourEventDriven(int64_t behaviourID);
 
     /**
+     * Adds the given trigger to the lookup table of triggers, if none is known already for
+     * the given behaviour and configuration ID pair.
+     * @param behaviourID
+     * @param configurationID
+     * @param trigger Optional trigger, if empty a standard trigger is created and returned.
+     */
+
+    /**
+     * Adds the given trigger to the lookup table of triggers, if none is known already for
+     * the given behaviour and configuration ID pair.
+     * @param behaviourID ID of the Behaviour
+     * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
+     * @param trigger Optional trigger, if empty a standard trigger is created and returned.
+     * @return Returns the created trigger, if no trigger was passed. Otherwise, the passed trigger is returned.
+     */
+    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
+
+    /**
+     * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
+     * to check properties of their domain specific behaviours.
+     * @param behaviourID ID of the Behaviour
+     * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
+     * @return Shared Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
+     */
+    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID);
+
+    /**
      * Triggers the given behaviour to execute its run method one time.
      *
      * @param timeout Timeout for waiting the behaviour to finish its run method.
@@ -75,15 +103,6 @@ public:
      */
     template <typename Rep, typename Period>
     bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
-
-    /**
-     * Adds the given trigger to the lookup table of triggers, if none is known already for
-     * the given behaviour and configuration ID pair.
-     * @param behaviourID
-     * @param configurationID
-     * @param trigger
-     */
-    void addBehaviourTrigger(int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger);
 
     void handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement);
 
@@ -97,7 +116,7 @@ public:
 
     alica::PlanSelector* getPlanSelector();
 
-    alica::RunningPlan* makeRunningPlan(const alica::Plan* plan,const alica::Configuration* configuration);
+    alica::RunningPlan* makeRunningPlan(const alica::Plan* plan, const alica::Configuration* configuration);
 
     VariableSyncModule& editResultStore();
 
@@ -134,7 +153,7 @@ public:
     /** Gives access to the behaviour pool of the engine.
      * @return BehaviourPool
      */
-//    const BehaviourPool& getBehaviourPool();
+    //    const BehaviourPool& getBehaviourPool();
 
     /**
      * Returns the size of the current team.
@@ -175,9 +194,11 @@ private:
             return hash1 ^ hash2;
         }
     };
-    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID);
-    std::unique_ptr<BehaviourTrigger> createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID);
+
+    std::shared_ptr<BehaviourTrigger> createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID);
+
     std::unordered_map<std::pair<int64_t, int64_t>, std::shared_ptr<essentials::ITrigger>, hash_pair> _behaviourTriggers;
+    bool _initCalled;
 };
 
 template <typename AlicaElementType>
@@ -223,20 +244,17 @@ bool TestContext::stepBehaviour(std::chrono::duration<Rep, Period> timeout, int6
 {
     auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
     auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
-    if (behaviourTriggerEntry == _behaviourTriggers.end()) {
-        _behaviourTriggers[behaviourConfKey] = createStandardBehaviourTrigger(behaviourID, configurationID);
-    }
-    if (_behaviourTriggers[behaviourConfKey]) {
+    if (behaviourTriggerEntry != _behaviourTriggers.end()) {
         _behaviourTriggers[behaviourConfKey]->run(false);
     } else {
-        std::cerr << "[TestContext] Given <behaviourID,configurationID>-Pair is unknown in case of <" << behaviourID << ", " << configurationID << ">"
-                  << std::endl;
-        return false;
+        std::cerr << "[TestContext] There is not trigger known for the given <behaviourID,configurationID>-Pair in case of <" << behaviourID << ", "
+                  << configurationID << ">. Either trigger it yourself or register the trigger to the TestContext first." << std::endl;
     }
 
+    auto basicBehaviour = getBasicBehaviour(behaviourID, configurationID);
     auto start = std::chrono::system_clock::now();
     while (std::chrono::system_clock::now() - start < timeout) {
-        if (!_behaviourTriggers[behaviourConfKey]->isNotifyCalled(/*... condition variable of behaviour ...*/)) {
+        if (basicBehaviour->isTriggeredRunFinished()) {
             return true;
         }
     }

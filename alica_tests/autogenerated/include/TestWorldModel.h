@@ -38,8 +38,8 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
-    essentials::ITrigger* trigger1;
-    essentials::ITrigger* trigger2;
+    std::shared_ptr<essentials::ITrigger> trigger1;
+    std::shared_ptr<essentials::ITrigger> trigger2;
 
     void reset();
 
