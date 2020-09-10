@@ -76,6 +76,15 @@ public:
     template <typename Rep, typename Period>
     bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
 
+    /**
+     * Adds the given trigger to the lookup table of triggers, if none is known already for
+     * the given behaviour and configuration ID pair.
+     * @param behaviourID
+     * @param configurationID
+     * @param trigger
+     */
+    void addBehaviourTrigger(int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger);
+
     void handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement);
 
     void setTeamTimeout(AlicaTime timeout);
@@ -125,7 +134,7 @@ public:
     /** Gives access to the behaviour pool of the engine.
      * @return BehaviourPool
      */
-    const BehaviourPool& getBehaviourPool();
+//    const BehaviourPool& getBehaviourPool();
 
     /**
      * Returns the size of the current team.
@@ -166,8 +175,9 @@ private:
             return hash1 ^ hash2;
         }
     };
-    std::unique_ptr<BehaviourTrigger> setBehaviourTrigger(int64_t behaviourID, int64_t configurationID);
-    std::unordered_map<std::pair<int64_t, int64_t>, std::unique_ptr<alica::test::BehaviourTrigger>, hash_pair> _behaviourTriggers;
+    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID);
+    std::unique_ptr<BehaviourTrigger> createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID);
+    std::unordered_map<std::pair<int64_t, int64_t>, std::shared_ptr<essentials::ITrigger>, hash_pair> _behaviourTriggers;
 };
 
 template <typename AlicaElementType>
@@ -214,18 +224,19 @@ bool TestContext::stepBehaviour(std::chrono::duration<Rep, Period> timeout, int6
     auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
     auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
     if (behaviourTriggerEntry == _behaviourTriggers.end()) {
-        _behaviourTriggers[behaviourConfKey] = setBehaviourTrigger(behaviourID, configurationID);
+        _behaviourTriggers[behaviourConfKey] = createStandardBehaviourTrigger(behaviourID, configurationID);
     }
     if (_behaviourTriggers[behaviourConfKey]) {
-        _behaviourTriggers[behaviourConfKey]->trigger();
+        _behaviourTriggers[behaviourConfKey]->run(false);
     } else {
         std::cerr << "[TestContext] Given <behaviourID,configurationID>-Pair is unknown in case of <" << behaviourID << ", " << configurationID << ">"
                   << std::endl;
         return false;
     }
+
     auto start = std::chrono::system_clock::now();
     while (std::chrono::system_clock::now() - start < timeout) {
-        if (_behaviourTriggers[behaviourConfKey]->behaviourFinishedRun()) {
+        if (!_behaviourTriggers[behaviourConfKey]->isNotifyCalled(/*... condition variable of behaviour ...*/)) {
             return true;
         }
     }
