@@ -18,14 +18,14 @@ typedef std::shared_ptr<ConfigNode> ConfigNodePtr;
 
 class ConfigNode
 {
-  public:
+public:
     typedef enum {
         Node = 0,
         Leaf = 1,
         Comment = 2,
     } Type;
 
-  protected:
+protected:
     std::string name;
     std::string value;
     ConfigNode* parent;
@@ -33,44 +33,44 @@ class ConfigNode
     int depth;
     Type type;
 
-  public:
+public:
     ConfigNode(const std::string& name)
-        : name(name)
-        , value()
-        , parent(nullptr)
-        , children()
-        , depth(0)
-        , type(Node)
+            : name(name)
+            , value()
+            , parent(nullptr)
+            , children()
+            , depth(0)
+            , type(Node)
     {
     }
 
     ConfigNode(Type type, const std::string& name)
-        : name(name)
-        , value()
-        , parent(nullptr)
-        , children()
-        , depth(0)
-        , type(type)
+            : name(name)
+            , value()
+            , parent(nullptr)
+            , children()
+            , depth(0)
+            , type(type)
     {
     }
 
     ConfigNode(const std::string& name, const std::string& value)
-        : name(name)
-        , value(value)
-        , parent(nullptr)
-        , children()
-        , depth(0)
-        , type(Leaf)
+            : name(name)
+            , value(value)
+            , parent(nullptr)
+            , children()
+            , depth(0)
+            , type(Leaf)
     {
     }
 
     ConfigNode(const ConfigNode& other)
-        : name(other.name)
-        , value(other.value)
-        , parent(other.parent)
-        , children(other.children)
-        , depth(other.depth)
-        , type(other.type)
+            : name(other.name)
+            , value(other.value)
+            , parent(other.parent)
+            , children(other.children)
+            , depth(other.depth)
+            , type(other.type)
     {
     }
 

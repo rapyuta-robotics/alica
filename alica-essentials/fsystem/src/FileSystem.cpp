@@ -1,4 +1,4 @@
-#include "FileSystem.h"
+#include "essentials/FileSystem.h"
 #include <cstring>
 #include <dirent.h>
 #include <fstream>
@@ -19,17 +19,18 @@ FileSystem::FileSystem() {}
 FileSystem::~FileSystem() {}
 
 /**
- * Helpfull method to get the location of the currently executed executable.
+ * Helpful method to get the location of the currently executed executable.
  * @return The path to the running executable.
  */
 std::string FileSystem::getSelfPath()
 {
     int size = 100;
     char* buff = NULL;
-    buff = (char*)malloc(size);
+    buff = (char*) malloc(size);
+    std::string retString;
 
     while (1) {
-        buff = (char*)realloc(buff, size);
+        buff = (char*) realloc(buff, size);
         ssize_t len = ::readlink("/proc/self/exe", buff, size);
 
         if (len < 0) {
@@ -41,16 +42,15 @@ std::string FileSystem::getSelfPath()
             size *= 2;
         } else {
             buff[len] = '\0';
-            std::string retString = std::string(buff);
+            retString = std::string(buff);
             free(buff);
-            return retString;
+            return retString.substr(0, retString.find_last_of(PATH_SEPARATOR));
         }
     }
-    return NULL;
 }
 
 /**
- * Helpfull method to get currently executed executable NOT including its path.
+ * Helpful method to get currently executed executable NOT including its path.
  * @return The path to the running executable.
  */
 std::string FileSystem::getSelfExeName()
@@ -68,7 +68,28 @@ std::string FileSystem::getSelfExeName()
  */
 std::string FileSystem::getSelf()
 {
-    return getSelfPath();
+    int size = 100;
+    char* buff = NULL;
+    buff = (char*) malloc(size);
+
+    while (1) {
+        buff = (char*) realloc(buff, size);
+        ssize_t len = ::readlink("/proc/self/exe", buff, size);
+
+        if (len < 0) {
+            free(buff);
+            return NULL;
+        }
+
+        if (len == size) {
+            size *= 2;
+        } else {
+            buff[len] = '\0';
+            std::string retString = std::string(buff);
+            free(buff);
+            return retString;
+        }
+    }
 }
 
 bool FileSystem::findFile(const std::string& path, const std::string& file, std::string& path_found)
