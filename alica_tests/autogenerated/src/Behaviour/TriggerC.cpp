@@ -18,7 +18,7 @@ TriggerC::TriggerC()
     // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    setTrigger(alicaTests::TestWorldModel::getOne()->trigger2);
+    setTrigger(alicaTests::TestWorldModel::getOne()->trigger2.get());
     /*PROTECTED REGION END*/
 }
 TriggerC::~TriggerC()

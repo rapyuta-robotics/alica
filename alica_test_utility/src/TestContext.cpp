@@ -13,11 +13,13 @@ namespace alica::test
 
 TestContext::TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
         : AlicaContext(roleSetName, masterPlanName, stepEngine, agentID)
+        , _initCalled(false)
 {
 }
 
 int TestContext::init(AlicaCreators& creatorCtx)
 {
+    _initCalled = true;
     if (_communicator) {
         _communicator->startCommunication();
     }
@@ -35,6 +37,7 @@ void TestContext::startEngine()
 
 bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
 {
+    assert(_initCalled == false);
     const Behaviour* constBehaviour = _engine->getPlanRepository().getBehaviours().find(behaviourID);
     if (constBehaviour == nullptr) {
         return false;
@@ -43,27 +46,42 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     return true;
 }
 
-void TestContext::addBehaviourTrigger(int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger)
+std::shared_ptr<essentials::ITrigger> TestContext::addBehaviourTrigger(
+        int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger)
 {
+    // create and set a trigger, if none is passed
+    std::shared_ptr<essentials::ITrigger> behaviourTrigger;
+    if (!trigger) {
+        behaviourTrigger = createStandardBehaviourTrigger(behaviourID, configurationID);
+    } else {
+        behaviourTrigger = trigger;
+    }
+
+    // register the trigger in the TestContext trigger-map
     auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
     auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
     if (behaviourTriggerEntry == _behaviourTriggers.end()) {
-        _behaviourTriggers[behaviourConfKey] = trigger;
+        _behaviourTriggers[behaviourConfKey] = behaviourTrigger;
     } else {
-        std::cerr << "[TestContext] Trigger for behaviourID " << behaviourID << " and configurationID " << configurationID << " already set!" << std::endl;
+        std::cerr << "[TestContext] Trigger for behaviourID " << behaviourID << " and configurationID " << configurationID << " already exists!" << std::endl;
     }
+
+    // return the registered trigger
+    return behaviourTrigger;
 }
 
-std::unique_ptr<BehaviourTrigger> TestContext::createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID)
+std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
 {
-    std::shared_ptr<alica::BasicBehaviour> behaviour = getBasicBehaviour(behaviourID, configurationID);
-    if (behaviour) {
-        std::unique_ptr<BehaviourTrigger> trigger = std::make_unique<BehaviourTrigger>();
-        behaviour->setTrigger(trigger.get());
-        return std::move(trigger);
-    } else {
-        return nullptr;
+    assert(_initCalled == true);
+    std::shared_ptr<alica::BasicBehaviour> behaviour = nullptr;
+    for (auto& behaviourEntry : _engine->getBehaviourPool().getAvailableBehaviours()) {
+        if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
+                (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
+                                      : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
+            behaviour = behaviourEntry.second;
+        }
     }
+    return behaviour;
 }
 
 void TestContext::handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement)
@@ -179,17 +197,16 @@ const State* TestContext::getState(int64_t stateID)
 // Private methods ...                              //
 //////////////////////////////////////////////////////
 
-std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
+std::shared_ptr<BehaviourTrigger> TestContext::createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID)
 {
-    std::shared_ptr<alica::BasicBehaviour> behaviour = nullptr;
-    for (auto& behaviourEntry : _engine->getBehaviourPool().getAvailableBehaviours()) {
-        if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
-                (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
-                                      : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
-            behaviour = behaviourEntry.second;
-        }
+    std::shared_ptr<alica::BasicBehaviour> behaviour = getBasicBehaviour(behaviourID, configurationID);
+    if (behaviour) {
+        std::shared_ptr<BehaviourTrigger> trigger = std::make_shared<BehaviourTrigger>();
+        behaviour->setTrigger(trigger.get());
+        return trigger;
+    } else {
+        return nullptr;
     }
-    return behaviour;
 }
 
 } // namespace alica::test

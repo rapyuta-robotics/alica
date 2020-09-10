@@ -67,6 +67,7 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     assert(_behaviour == nullptr);
     _behaviour = beh;
     if (_behaviour->isEventDriven()) {
+        std::cerr << "[BasicBehaviour] BehaviourName: " << beh->getName() << std::endl;
         assert(_behaviourTrigger != nullptr);
         _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
     } else {
@@ -153,6 +154,13 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 {
     _behaviourTrigger = trigger;
     _behaviourTrigger->registerCV(&_runCV);
+}
+
+bool BasicBehaviour::isTriggeredRunFinished() {
+    if (!_behaviourTrigger)
+        return false;
+
+    return !_behaviourTrigger->isNotifyCalled(&_runCV);
 }
 
 bool BasicBehaviour::doWait()

@@ -31,81 +31,43 @@ protected:
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508297492, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508316905, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508355209, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1429017274116, 0))->callCounter, 0);
+
     tc->startEngine();
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     tc->getAlicaClock().sleep(duration);
 
-    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
-            iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
-            iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger1);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
-            iter.second->setTrigger(alicaTests::TestWorldModel::getOne()->trigger2);
-            continue;
-        } else {
-            std::cout << "BehName: " << iter.first->getName() << std::endl;
-            continue;
-        }
-    }
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508297492, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508316905, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508355209, 0))->callCounter, 0);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1429017274116, 0))->callCounter, 0);
 
-    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
-            EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 0);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
-            EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 0);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
-            EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 0);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "NotToTrigger") {
-            EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
-            continue;
-        } else {
-            std::cout << iter.first->getAbstractPlan()->getName() << std::endl;
-            EXPECT_TRUE(false);
-        }
-    }
-    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
-    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
-    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger1->run(false);
-    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    alicaTests::TestWorldModel::getOne()->trigger2->run(false);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     tc->getAlicaClock().sleep(duration * 2);
 
-    for (auto iter : tc->getBehaviourPool().getAvailableBehaviours()) {
-        if (iter.first->getAbstractPlan()->getName() == "TriggerA") {
-            EXPECT_EQ(((alica::TriggerA*) (&*iter.second))->callCounter, 3);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerB") {
-            EXPECT_EQ(((alica::TriggerB*) (&*iter.second))->callCounter, 3);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "TriggerC") {
-            EXPECT_EQ(((alica::TriggerC*) (&*iter.second))->callCounter, 4);
-            continue;
-        } else if (iter.first->getAbstractPlan()->getName() == "NotToTrigger") {
-            EXPECT_EQ(((alica::NotToTrigger*) (&*iter.second))->callCounter, 0);
-            continue;
-        } else {
-            EXPECT_TRUE(false);
-        }
-    }
-    std::cout << "Finished" << std::endl;
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508297492, 0))->callCounter, 3);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508316905, 0))->callCounter, 3);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1428508355209, 0))->callCounter, 4);
+    EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerA>(tc->getBasicBehaviour(1429017274116, 0))->callCounter, 0);
 }
 }
 }
