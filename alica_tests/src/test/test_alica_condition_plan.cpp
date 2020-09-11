@@ -66,8 +66,7 @@ TEST_F(AlicaConditionPlan, solverTest)
     tc->startEngine();
     tc->stepEngine();
 
-    alica::BasicBehaviour* basicBehaviour = tc->getRootNode()->getChildren()[0]->getBasicBehaviour();
-    alica::ConstraintUsingBehaviour* constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(basicBehaviour);
+    std::shared_ptr<alica::ConstraintUsingBehaviour> constraintUsingBehaviour = std::dynamic_pointer_cast<alica::ConstraintUsingBehaviour>(tc->getBasicBehaviour(1414068597716,0));
     ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 

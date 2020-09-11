@@ -68,13 +68,13 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825395940);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825404963);
+            EXPECT_TRUE(tcs[0]->isStateActive(1418825395940));
+            EXPECT_TRUE(tcs[1]->isStateActive(1418825404963));
         }
         if (i == 5) {
 //            std::cout << "TEST Iteration " << i << std::endl;
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825409988);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1418825411686);
+            EXPECT_TRUE(tcs[0]->isStateActive(1418825409988));
+            EXPECT_TRUE(tcs[1]->isStateActive(1418825411686));
         }
     }
 }

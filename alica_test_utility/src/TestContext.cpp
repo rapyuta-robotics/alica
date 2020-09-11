@@ -49,10 +49,10 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
 std::shared_ptr<essentials::ITrigger> TestContext::addBehaviourTrigger(
         int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger)
 {
-    // create and set a trigger, if none is passed
+    // create a trigger, if none is passed
     std::shared_ptr<essentials::ITrigger> behaviourTrigger;
     if (!trigger) {
-        behaviourTrigger = createStandardBehaviourTrigger(behaviourID, configurationID);
+        behaviourTrigger = std::make_shared<BehaviourTrigger>();
     } else {
         behaviourTrigger = trigger;
     }
@@ -84,39 +84,9 @@ std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviour
     return behaviour;
 }
 
-void TestContext::handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement)
-{
-    _engine->editTeamManager().handleAgentAnnouncement(agentAnnouncement);
-}
-
 void TestContext::setTeamTimeout(AlicaTime timeout)
 {
     _engine->editTeamManager().setTeamTimeout(timeout);
-}
-
-void TestContext::tickTeamManager()
-{
-    _engine->editTeamManager().tick();
-}
-
-void TestContext::tickTeamObserver(alica::RunningPlan* root)
-{
-    _engine->editTeamObserver().tick(root);
-}
-
-void TestContext::tickRoleAssignment()
-{
-    _engine->editRoleAssignment().tick();
-}
-
-alica::PlanSelector* TestContext::getPlanSelector()
-{
-    return _engine->getPlanBase().getPlanSelector();
-}
-
-alica::RunningPlan* TestContext::makeRunningPlan(const alica::Plan* plan, const alica::Configuration* configuration)
-{
-    return _engine->editPlanBase().makeRunningPlan(plan, configuration);
 }
 
 VariableSyncModule& TestContext::editResultStore()
@@ -128,25 +98,10 @@ VariableSyncModule& TestContext::editResultStore()
 // Getter for tests ... everything returned is const//
 //////////////////////////////////////////////////////
 
-const RunningPlan* TestContext::getDeepestNode()
-{
-    return _engine->getPlanBase().getDeepestNode();
-}
-
-const RunningPlan* TestContext::getRootNode()
-{
-    return _engine->getPlanBase().getRootNode();
-}
-
 const BlackBoard& TestContext::getBlackBoard()
 {
     return _engine->getBlackBoard();
 }
-
-// const BehaviourPool& TestContext::getBehaviourPool()
-//{
-//    return _engine->getBehaviourPool();
-//}
 
 int TestContext::getTeamSize()
 {
@@ -193,20 +148,31 @@ const State* TestContext::getState(int64_t stateID)
     return _engine->getPlanRepository().getStates().find(stateID);
 }
 
+bool TestContext::isPlanActive(int64_t id) const
+{
+    return isPlanActiveHelper(_engine->getPlanBase().getRootNode(), id);
+}
+
 //////////////////////////////////////////////////////
 // Private methods ...                              //
 //////////////////////////////////////////////////////
 
-std::shared_ptr<BehaviourTrigger> TestContext::createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID)
+bool TestContext::isPlanActiveHelper(const RunningPlan* rp, int64_t id) const
 {
-    std::shared_ptr<alica::BasicBehaviour> behaviour = getBasicBehaviour(behaviourID, configurationID);
-    if (behaviour) {
-        std::shared_ptr<BehaviourTrigger> trigger = std::make_shared<BehaviourTrigger>();
-        behaviour->setTrigger(trigger.get());
-        return trigger;
-    } else {
-        return nullptr;
+    if (!rp) {
+        return false;
     }
-}
 
+    const AbstractPlan* abstractPlan = rp->getActivePlan();
+    if (abstractPlan && abstractPlan->getId() == id) {
+        return true;
+    }
+    const std::vector<RunningPlan*>& children = rp->getChildren();
+    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
+        if (isPlanActiveHelper(children[i], id)) {
+            return true;
+        }
+    }
+    return false;
+}
 } // namespace alica::test

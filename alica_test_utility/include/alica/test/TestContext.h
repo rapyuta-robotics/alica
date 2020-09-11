@@ -68,20 +68,12 @@ public:
     /**
      * Adds the given trigger to the lookup table of triggers, if none is known already for
      * the given behaviour and configuration ID pair.
-     * @param behaviourID
-     * @param configurationID
-     * @param trigger Optional trigger, if empty a standard trigger is created and returned.
-     */
-
-    /**
-     * Adds the given trigger to the lookup table of triggers, if none is known already for
-     * the given behaviour and configuration ID pair.
      * @param behaviourID ID of the Behaviour
      * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
      * @param trigger Optional trigger, if empty a standard trigger is created and returned.
      * @return Returns the created trigger, if no trigger was passed. Otherwise, the passed trigger is returned.
      */
-    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
+    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(int64_t behaviourID, int64_t configurationID = 0, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
 
     /**
      * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
@@ -90,7 +82,7 @@ public:
      * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
      * @return Shared Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
      */
-    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID);
+    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
 
     /**
      * Triggers the given behaviour to execute its run method one time.
@@ -104,19 +96,7 @@ public:
     template <typename Rep, typename Period>
     bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
 
-    void handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement);
-
     void setTeamTimeout(AlicaTime timeout);
-
-    void tickTeamManager();
-
-    void tickTeamObserver(alica::RunningPlan* root);
-
-    void tickRoleAssignment();
-
-    alica::PlanSelector* getPlanSelector();
-
-    alica::RunningPlan* makeRunningPlan(const alica::Plan* plan, const alica::Configuration* configuration);
 
     VariableSyncModule& editResultStore();
 
@@ -133,27 +113,10 @@ public:
     std::string getName(uint64_t elementID);
 
     /**
-     * Gives access to the deepest running plan node in the engine.
-     * @return Deepest Running Plan Node
-     */
-    const RunningPlan* getDeepestNode();
-
-    /**
-     * Gives access to the root running plan node in the engine.
-     * @return Root Running Plan Node
-     */
-    const RunningPlan* getRootNode();
-
-    /**
      * Gives access to the blackboard of the engine.
      * @return BlackBoard
      */
     const BlackBoard& getBlackBoard();
-
-    /** Gives access to the behaviour pool of the engine.
-     * @return BehaviourPool
-     */
-    //    const BehaviourPool& getBehaviourPool();
 
     /**
      * Returns the size of the current team.
@@ -183,6 +146,8 @@ public:
 
     const State* getState(int64_t stateID);
 
+    bool isPlanActive(int64_t id) const;
+
 private:
     struct hash_pair
     {
@@ -194,8 +159,7 @@ private:
             return hash1 ^ hash2;
         }
     };
-
-    std::shared_ptr<BehaviourTrigger> createStandardBehaviourTrigger(int64_t behaviourID, int64_t configurationID);
+    bool isPlanActiveHelper(const RunningPlan* rp, int64_t id) const;
 
     std::unordered_map<std::pair<int64_t, int64_t>, std::shared_ptr<essentials::ITrigger>, hash_pair> _behaviourTriggers;
     bool _initCalled;
@@ -205,6 +169,7 @@ template <typename AlicaElementType>
 std::string TestContext::getName(uint64_t elementID)
 {
     const AlicaElement* element = nullptr;
+    std::string elementName = "<ERROR-ELEMENT-UNKNOWN>";
     if (std::is_same<AlicaElementType, alica::State>::value) {
         element = _engine->getPlanRepository().getStates().find(elementID);
     } else if (std::is_same<AlicaElementType, alica::Plan>::value) {
@@ -219,10 +184,13 @@ std::string TestContext::getName(uint64_t elementID)
         element = _engine->getPlanRepository().getEntryPoints().find(elementID);
     } else if (std::is_same<AlicaElementType, alica::Variable>::value) {
         element = _engine->getPlanRepository().getVariables().find(elementID);
-    } else {
-        return "<ELEMENT-UNKNOWN>";
     }
-    return element->getName();
+
+    if (element) {
+        elementName = element->getName();
+    }
+
+    return elementName;
 }
 
 template <typename Rep, typename Period>
@@ -244,10 +212,11 @@ bool TestContext::stepBehaviour(std::chrono::duration<Rep, Period> timeout, int6
 {
     auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
     auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
+
     if (behaviourTriggerEntry != _behaviourTriggers.end()) {
         _behaviourTriggers[behaviourConfKey]->run(false);
     } else {
-        std::cerr << "[TestContext] There is not trigger known for the given <behaviourID,configurationID>-Pair in case of <" << behaviourID << ", "
+        std::cerr << "[TestContext] There is no trigger known for the given <behaviourID,configurationID>-Pair in case of <" << behaviourID << ", "
                   << configurationID << ">. Either trigger it yourself or register the trigger to the TestContext first." << std::endl;
     }
 

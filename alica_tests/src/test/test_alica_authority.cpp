@@ -122,13 +122,13 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         tcs[1]->stepEngine();
 
         if (i == 1) {
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
+            EXPECT_TRUE(tcs[0]->isStateActive(1414403553717));
+            EXPECT_TRUE(tcs[1]->isStateActive(1414403553717));
         }
 
         if (i == 20) {
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403429950);
+            EXPECT_TRUE(tcs[0]->isStateActive(1414403553717));
+            EXPECT_TRUE(tcs[1]->isStateActive(1414403429950));
         }
     }
 }

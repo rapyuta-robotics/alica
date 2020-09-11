@@ -24,17 +24,17 @@ TEST_F(FailureHandling, continueOnFailure)
     tc->startEngine();
     tc->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530004915641);
+    ASSERT_TRUE(tc->isStateActive(1530004915641));
 
     SimpleSwitches::set(0, true);
     tc->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530069246104);
+    ASSERT_TRUE(tc->isStateActive(1530069246104));
 
     SimpleSwitches::set(1, true);
     tc->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530004975275);
+    ASSERT_TRUE(tc->isStateActive(1530004975275));
 
     SimpleSwitches::set(2, true);
     tc->stepEngine(); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
@@ -45,7 +45,7 @@ TEST_F(FailureHandling, continueOnFailure)
     // This happens if the fp-event comes while the engine is still processing.
     tc->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1532424097662);
+    ASSERT_TRUE(tc->isStateActive(1532424097662));
 }
-}
-}
+} // namespace
+} // namespace alica

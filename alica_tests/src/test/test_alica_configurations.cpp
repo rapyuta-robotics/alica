@@ -46,37 +46,24 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
     tc->startEngine();
     tc->stepEngine();
 
-    const std::vector<RunningPlan*> children1 = tc->getRootNode()->getChildren();
-    for (const RunningPlan* rp : children1) {
-        std::string value;
-        EXPECT_TRUE(rp->getParameter("TestValue", value)) << "Missing conf value 'TestValue' in configuration of running plan!";
-        if (rp->isBehaviour()) {
-            // CHECK BEHAVIOURS
-            EXPECT_TRUE(((alica::ReadConfigurationBehaviour*)rp->getBasicBehaviour())->testValue.compare(value) == 0);
-        } else if (rp->getPlanType()) {
-            // CHECK PLANTYPE
-            EXPECT_EQ(rp->getActiveState()->getId(),1588246134801) << "Agent is not in state 'ConfA' of the plan ReadConfInPlantype!";
-        } else {
-            // CHECK PLAN
-            EXPECT_EQ(rp->getActiveState()->getId(),1588069261047) << "Agent is not in state 'StateA' of the plan ReadConfigurationPlan!";
-        }
-    }
+    // CHECK PLANTYPE
+    EXPECT_TRUE(tc->isStateActive(1588246134801)) << "Agent is not in state 'ConfA' of the plan ReadConfInPlantype!";
+    // CHECK PLAN
+    EXPECT_TRUE(tc->isStateActive(1588069261047)) << "Agent is not in state 'StateA' of the plan ReadConfigurationPlan!";
+    // CHECK BEHAVIOURS - CONF A
+    EXPECT_TRUE(std::dynamic_pointer_cast<alica::ReadConfigurationBehaviour>(tc->getBasicBehaviour(1588061129360,1588061188681))->testValue.compare("1") == 0);
+    // CHECK BEHAVIOURS - CONF B
+    EXPECT_TRUE(std::dynamic_pointer_cast<alica::ReadConfigurationBehaviour>(tc->getBasicBehaviour(1588061129360,1588061200689))->testValue.compare("2") == 0);
 
     // set counter that is checked in the transition of the master plan
     CounterClass::called = 1;
     tc->stepEngine();
 
-    const std::vector<RunningPlan*> children2 = tc->getRootNode()->getChildren();
-    for (const RunningPlan* rp : children2) {
-        std::string value;
-        if (rp->getPlanType()) {
-            // CHECK PLANTYPE
-            EXPECT_EQ(rp->getActiveState()->getId(),1588246136647) << "Agent is not in state 'ConfB' of the plan ReadConfInPlantype!";
-        } else {
-            // CHECK PLAN
-            EXPECT_EQ(rp->getActiveState()->getId(),1588069265377) << "Agent is not in state 'StateB' of the plan ReadConfigurationPlan!";
-        }
-    }
+    // CHECK PLANTYPE
+    EXPECT_TRUE(tc->isStateActive(1588246136647)) << "Agent is not in state 'ConfB' of the plan ReadConfInPlantype!";
+
+    // CHECK PLAN
+    EXPECT_TRUE(tc->isStateActive(1588069265377)) << "Agent is not in state 'StateB' of the plan ReadConfigurationPlan!";
 
     CounterClass::called = 0;
 }

@@ -85,17 +85,17 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
     getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413201213955);
-    ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413201213955);
+    ASSERT_TRUE(tcs[0]->isStateActive(1413201213955));
+    ASSERT_TRUE(tcs[1]->isStateActive(1413201213955));
 
     ASSERT_EQ(2, tcs[0]->getTeamSize());
     ASSERT_EQ(2, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
-    ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
+    ASSERT_TRUE(tcs[0]->isPlanActive(1413200862180));
+    ASSERT_TRUE(tcs[1]->isPlanActive(1413200862180));
 
-    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, AlicaTestsEngineGetter::getEngine(tcs[0])->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, AlicaTestsEngineGetter::getEngine(tcs[1])->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
 
     const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).stopCommunication();
     const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).stopCommunication();
@@ -117,8 +117,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     ASSERT_EQ(1, tcs[0]->getTeamSize());
     ASSERT_EQ(1, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(0u, tcs[0]->getRootNode()->getChildren().size());
-    ASSERT_EQ(0u, tcs[1]->getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, AlicaTestsEngineGetter::getEngine(tcs[0])->getPlanBase().getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, AlicaTestsEngineGetter::getEngine(tcs[1])->getPlanBase().getRootNode()->getChildren().size());
 
     const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).startCommunication();
     const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).startCommunication();
@@ -144,8 +144,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     ASSERT_EQ(2, tcs[0]->getTeamSize());
     ASSERT_EQ(2, tcs[1]->getTeamSize());
 
-    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, AlicaTestsEngineGetter::getEngine(tcs[0])->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, AlicaTestsEngineGetter::getEngine(tcs[1])->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
 }
 }
 }

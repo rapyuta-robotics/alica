@@ -43,7 +43,7 @@ TEST_F(AlicaSpamSuccess, runBehaviour)
     for (int i = 0; i < 30 * 6; ++i) {
         tc->stepEngine();
     }
-    EXPECT_NE(tc->getRootNode(), nullptr);
+    EXPECT_TRUE(tc->isPlanActive(1522377375148));
 }
 }
 }
