@@ -18,8 +18,8 @@
 #include "engine/planselector/PlanSelector.h"
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
-#include <test_alica.h>
 #include <essentials/IdentifierConstPtr.h>
+#include <test_alica.h>
 
 #include <gtest/gtest.h>
 #include <list>
@@ -68,26 +68,26 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             aa.senderName = "myo";
         }
 
-        tc->handleAgentAnnouncement(aa);
+        AlicaTestsEngineGetter::getEngine(tc)->editTeamManager().handleAgentAnnouncement(aa);
         robots.push_back(aa.senderID);
     }
 
-    tc->tickTeamManager();
-    tc->tickTeamObserver(nullptr);
-    tc->tickRoleAssignment();
-    // fake inform the team observer about roles of none existing robots
+    AlicaTestsEngineGetter::getEngine(tc)->editTeamManager().tick();
+    AlicaTestsEngineGetter::getEngine(tc)->editTeamObserver().tick(nullptr);
+    AlicaTestsEngineGetter::getEngine(tc)->editRoleAssignment().tick();
 
-    alica::RunningPlan* rp = tc->makeRunningPlan(tc->getPlan(1407152758497), nullptr);
+    // fake inform the team observer about roles of none existing robots
+    alica::RunningPlan* rp = new RunningPlan(AlicaTestsEngineGetter::getEngine(tc), tc->getPlan(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(tc->getPlan(1407152758497));
     inputWrappers.push_back(wrapper);
-    alica::PlanSelector* ps = tc->getPlanSelector();
+    alica::PlanSelector* ps = AlicaTestsEngineGetter::getEngine(tc)->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
 }
-}
-}
+} // namespace
+} // namespace alica

@@ -78,7 +78,7 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     aa.senderID = tcs[0]->getID(id);
     aa.roleId = 1222973297047; // Attacker
     aa.senderName = "myo";
-    tcs[0]->handleAgentAnnouncement(aa);
+    AlicaTestsEngineGetter::getEngine(tcs[0])->editTeamManager().handleAgentAnnouncement(aa);
     tcs[0]->stepEngine();
     const alica::Agent* myodiscovered = tcs[0]->getAgentByID(tcs[0]->getID(id));
     ASSERT_EQ(myodiscovered, nullptr);

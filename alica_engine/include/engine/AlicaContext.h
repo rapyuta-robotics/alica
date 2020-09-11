@@ -29,6 +29,7 @@ namespace alica
 
 class AlicaEngine;
 class IAlicaCommunication;
+class AlicaTestsEngineGetter;
 namespace test {
     class TestContext;
 }
@@ -335,6 +336,7 @@ public:
 
 private:
     friend class alica::test::TestContext;
+    friend class ::alica::AlicaTestsEngineGetter;
 
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 

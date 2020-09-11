@@ -56,27 +56,15 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     tcs[1]->stepEngine();
 
     for (int i = 0; i < 20; i++) {
-        // I think that is done by stepEngine already
-//        ASSERT_TRUE(tcs[0]->getPlanBase().isWaiting());
-//        ASSERT_TRUE(tcs[1]->getPlanBase().isWaiting());
         std::cout << "AE1 step " << i << "(" << tcs[0]->getLocalAgentId() << ")" << std::endl;
         tcs[0]->stepEngine();
 
         std::cout << "AE2 step " << i << "(" << tcs[1]->getLocalAgentId() << ")" << std::endl;
         tcs[1]->stepEngine();
 
-        //        if (i > 24)
-        //        {
-        //            if (aes[0]->getPlanBase().getDeepestNode() != nullptr)
-        //                cout << "AE: " << aes[0]->getPlanBase().getDeepestNode()->toString() << endl;
-        //            if (aes[1]->getPlanBase().getDeepestNode() != nullptr)
-        //                cout << "AE2: " << aes[1]->getPlanBase().getDeepestNode()->toString() << endl;
-        //            cout << "-------------------------" << endl;
-        //        }
-
         if (i < 10) {
-            ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413200842974);
-            ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413200842974);
+            ASSERT_TRUE(tcs[0]->isStateActive(1413200842974));
+            ASSERT_TRUE(tcs[1]->isStateActive(1413200842974));
         }
         if (i == 10) {
             std::cout << "1--------- Initial State passed ---------" << std::endl;
@@ -84,10 +72,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
         }
         if (i > 11 && i < 15) {
-            ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413201213955);
-            ASSERT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
-            ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getName(), std::string("MultiAgentTestPlan"));
+            ASSERT_TRUE(tcs[0]->isStateActive(1413201213955));
+            ASSERT_TRUE(tcs[1]->isStateActive(1413201213955));
+            ASSERT_TRUE(tcs[0]->isPlanActive(1413200862180));
+            ASSERT_TRUE(tcs[1]->isPlanActive(1413200862180));
         }
         if (i == 15) {
             ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(tcs[0]->getBasicBehaviour(1402488848841, 0))->callCounter, 5);
@@ -100,32 +88,26 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             std::cout << "2--------- Engagement to cooperative plan passed ---------" << std::endl;
         }
         if (i == 16) {
-            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
-                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
+            ASSERT_TRUE(tcs[1]->isStateActive(1413201030936) || tcs[0]->isStateActive(1413201030936))
                     << std::endl
-                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
+                    << "TCS[1] " << (tcs[1]->isStateActive(1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
+                    << "TCS[0] " << (tcs[0]->isStateActive(1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << std::endl;
 
-            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
-                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
+            ASSERT_TRUE(tcs[1]->isStateActive(1413807264574) || tcs[0]->isStateActive(1413807264574))
                     << std::endl
-                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
+                    << "TCS[1] " << (tcs[1]->isStateActive(1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
+                    << "TCS[0] " << (tcs[0]->isStateActive(1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << std::endl;
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
             std::cout << "3--------- Passed transitions in subplan passed ---------" << std::endl;
         }
         if (i >= 17 && i <= 18) {
-            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936 ||
-                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413201030936)
-                    << "AE State: " << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId()
-                    << " AE2 State: " << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << std::endl;
-            ASSERT_TRUE(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574 ||
-                                tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() == 1413807264574)
-                    << "AE State: " << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl
-                    << " AE2 State: " << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId() << " "
-                    << tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->toString() << std::endl;
+            ASSERT_TRUE(tcs[1]->isStateActive(1413201030936) || tcs[0]->isStateActive(1413201030936))
+                    << "TCS[0] State: " << (tcs[0]->isStateActive(1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
+                    << "TCS[1] State: " << (tcs[1]->isStateActive(1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << std::endl;
+            ASSERT_TRUE(tcs[1]->isStateActive(1413807264574) || tcs[0]->isStateActive(1413807264574))
+                    << "TCS[0] State: " << (tcs[0]->isStateActive(1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
+                    << "TCS[1] State: " << (tcs[1]->isStateActive(1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << std::endl;
             if (i == 18) {
                 std::cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << std::endl;
                 alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201389955(true);
@@ -133,12 +115,11 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             }
         }
         if (i == 19) {
-            ASSERT_TRUE(tcs[1]->getRootNode()->getActiveState()->getId() == 1413201380359 &&
-                                tcs[0]->getRootNode()->getActiveState()->getId() == 1413201380359)
-                    << " AE State: " << tcs[0]->getRootNode()->getActiveState()->getId()
-                    << " AE2 State: " << tcs[1]->getRootNode()->getActiveState()->getId() << std::endl;
+            ASSERT_TRUE(tcs[1]->isStateActive(1413201380359) && tcs[0]->isStateActive(1413201380359))
+                    << "TCS[0] State: " << (tcs[0]->isStateActive(1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << " "
+                    << "TCS[1] State: " << (tcs[1]->isStateActive(1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << std::endl;
         }
     }
 }
-}
-}
+} // namespace
+} // namespace alica

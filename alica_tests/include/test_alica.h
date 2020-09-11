@@ -7,11 +7,11 @@
 #include "UtilityFunctionCreator.h"
 #include <TestWorldModel.h>
 
+#include <alica/test/TestContext.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <alica/test/TestContext.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -25,6 +25,17 @@
 
 namespace alica
 {
+
+/**
+ * This Getter-Struct provides access to the engine for alica
+ * tests. Application tests however should not have access to the
+ * engine directly, but must live with the API of the
+ * Alica TestContext class.
+ */
+struct AlicaTestsEngineGetter
+{
+    static alica::AlicaEngine* getEngine(alica::test::TestContext* tc) { return tc->_engine.get(); }
+};
 
 class AlicaTestFixtureBase : public ::testing::Test
 {
@@ -123,7 +134,7 @@ protected:
         }
     }
 };
-}
+} // namespace alica
 
 extern std::jmp_buf restore_point;
 void signalHandler(int signal);
