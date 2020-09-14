@@ -92,9 +92,25 @@ protected:
 
 private:
     friend alica::test::TestContext;
-    enum BehaviourResult { UNKNOWN, SUCCESS, FAILURE };
-    enum BehaviourState { UNINITIALIZED, INITIALIZING, RUNNING, TERMINATING };
-    enum SignalState { START, STOP, TERMINATE };
+    enum BehaviourResult
+    {
+        UNKNOWN,
+        SUCCESS,
+        FAILURE
+    };
+    enum BehaviourState
+    {
+        UNINITIALIZED,
+        INITIALIZING,
+        RUNNING,
+        TERMINATING
+    };
+    enum SignalState
+    {
+        START,
+        STOP,
+        TERMINATE
+    };
 
     SignalState getSignalState() const { return _signalState; }
     void setSignalState(SignalState signalState) { _signalState = signalState; }
@@ -130,7 +146,7 @@ private:
      */
     const Configuration* _configuration;
     std::atomic<RunningPlan*> _contextInRun;
-    SignalState _signalState; // current state of the signal from main thread (start, stop or terminate)
+    SignalState _signalState;      // current state of the signal from main thread (start, stop or terminate)
     std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
 
     std::atomic<BehaviourResult> _behaviourResult;
