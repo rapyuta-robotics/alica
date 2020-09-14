@@ -157,7 +157,8 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
     _behaviourTrigger->registerCV(&_runCV);
 }
 
-bool BasicBehaviour::isTriggeredRunFinished() {
+bool BasicBehaviour::isTriggeredRunFinished()
+{
     if (!_behaviourTrigger)
         return false;
 
