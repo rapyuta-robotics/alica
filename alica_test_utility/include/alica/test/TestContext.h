@@ -203,7 +203,7 @@ bool TestContext::stepUntilStateReached(int64_t state, std::chrono::duration<Rep
             return true;
         }
     }
-    std::cerr << "[TestContext] Stuck in state " << _engine->getPlanBase().getDeepestNode()->getActiveState()->toString() << std::endl;
+    std::cerr << "[TestContext] Stuck in state: " << std::endl << _engine->getPlanBase().getDeepestNode()->getActiveState()->toString() << std::endl;
     return false;
 }
 
