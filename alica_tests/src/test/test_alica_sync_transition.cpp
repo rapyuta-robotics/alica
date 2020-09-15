@@ -47,17 +47,17 @@ protected:
 TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
-    tcs[0]->startEngine();
-    tcs[1]->startEngine();
+    aes[0]->start();
+    aes[1]->start();
     // Allow agents to discover each other
-    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     for (int i = 0; i < 20; i++) {
-        std::cout << i << "AE ----------------------------------------------- " << *(tcs[0]->getLocalAgentId()) << std::endl;
-        tcs[0]->stepEngine();
+        std::cout << i << "AE ----------------------------------------------- " << *(acs[0]->getLocalAgentId()) << std::endl;
+        acs[0]->stepEngine();
 
-        std::cout << i << "AE ----------------------------------------------- " << *(tcs[1]->getLocalAgentId()) << std::endl;
-        tcs[1]->stepEngine();
+        std::cout << i << "AE ----------------------------------------------- " << *(acs[1]->getLocalAgentId()) << std::endl;
+        acs[1]->stepEngine();
 
         if (i == 2) {
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
@@ -68,13 +68,13 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
-            EXPECT_TRUE(tcs[0]->isStateActive(1418825395940));
-            EXPECT_TRUE(tcs[1]->isStateActive(1418825404963));
+            EXPECT_TRUE(acs[0]->isStateActive(1418825395940));
+            EXPECT_TRUE(acs[1]->isStateActive(1418825404963));
         }
         if (i == 5) {
 //            std::cout << "TEST Iteration " << i << std::endl;
-            EXPECT_TRUE(tcs[0]->isStateActive(1418825409988));
-            EXPECT_TRUE(tcs[1]->isStateActive(1418825411686));
+            EXPECT_TRUE(acs[0]->isStateActive(1418825409988));
+            EXPECT_TRUE(acs[1]->isStateActive(1418825411686));
         }
     }
 }

@@ -167,7 +167,7 @@ TEST_F(AlicaEngineTest, planParser)
 {
     ASSERT_NO_SIGNAL
 
-    const auto& plans = tc->getPlans();
+    const auto& plans = ae->getPlanRepository().getPlans();
 
     cout << "Printing plans from Repository: " << endl;
     for (const alica::Plan* plan : plans) {
