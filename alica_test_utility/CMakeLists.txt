@@ -24,7 +24,7 @@ add_library(${PROJECT_NAME}
 	src/TestContext.cpp
 	src/BehaviourTrigger.cpp
 	src/IdleBehaviour.cpp
-	src/MockUpBehaviour.cpp
+    src/SuccessOrFailBehaviour.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

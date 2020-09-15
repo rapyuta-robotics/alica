@@ -1,0 +1,1 @@
+#include "alica/test/SuccessOrFailBehaviour.hpp"
