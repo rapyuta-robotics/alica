@@ -1,18 +1,20 @@
-
 #include "VariableHandling/Lvl11524452759599.h"
-#include <test_supplementary.h>
+#include "test_supplementary.h"
 
-#include "engine/Assignment.h"
-#include "engine/PlanBase.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include <constraintsolver/CGSolver.h>
+#include <alica/test/Util.h>
 #include <communication/AlicaRosCommunication.h>
+#include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
+#include <engine/Assignment.h>
+#include <engine/PlanBase.h>
+#include <engine/TeamObserver.h>
 #include <engine/constraintmodul/Query.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
+
 #include <gtest/gtest.h>
+
 #include <iostream>
 #include <thread>
 
@@ -42,31 +44,31 @@ protected:
     virtual void SetUp()
     {
         AlicaTestMultiAgentFixture::SetUp();
-        tcs[0]->addSolver<alica::reasoner::CGSolver>();
-        tcs[1]->addSolver<alica::reasoner::CGSolver>();
+        acs[0]->addSolver<alica::reasoner::CGSolver>();
+        acs[1]->addSolver<alica::reasoner::CGSolver>();
     }
 };
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
 {
     std::cout << "Starting engine..." << std::endl;
-    tcs[0]->startEngine();
-    tcs[1]->startEngine();
-    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    aes[0]->start();
+    aes[1]->start();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     std::chrono::milliseconds sleepTime(33);
     do {
         for (int i = 0; i < 3; ++i) {
-            tcs[0]->stepEngine();
-            tcs[1]->stepEngine();
+            acs[0]->stepEngine();
+            acs[1]->stepEngine();
         }
-    } while (tcs[0]->getTeamSize() != 2 || tcs[1]->getTeamSize() != 2);
+    } while (alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
 
-    const RunningPlan* rp1 = tcs[0]->getDeepestNode();
-    const RunningPlan* rp2 = tcs[1]->getDeepestNode();
+    const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
+    const RunningPlan* rp2 = aes[1]->getPlanBase().getDeepestNode();
 
-    essentials::IdentifierConstPtr id1 = tcs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = tcs[1]->getLocalAgentId();
+    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
+    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
     EXPECT_NE(id1, id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());
@@ -82,7 +84,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     alica::Query q1;
 
-    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
+    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_FALSE(ok);
     EXPECT_TRUE(result1.empty());
@@ -107,7 +109,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_GT(result1[1], 0);
     EXPECT_LT(result1[0] + result1[1], 10.0);
     EXPECT_GT(result1[0] + result1[1], -10.0);
-    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
+    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(3u, result1.size());
@@ -115,14 +117,14 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     // Cause  agent to move through transition:
     vhStartCondition = true;
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    rp1 = tcs[0]->getDeepestNode();
-    rp2 = tcs[1]->getDeepestNode();
+    rp1 = aes[0]->getPlanBase().getDeepestNode();
+    rp2 = aes[1]->getPlanBase().getDeepestNode();
 
-    EXPECT_TRUE(tcs[0]->isStateActive(1524452836023)); // lvl3
-    EXPECT_TRUE(tcs[1]->isStateActive(1524453248579)); // Dummy in lvl2
+    EXPECT_TRUE(acs[0]->isStateActive(1524452836023)); // lvl3
+    EXPECT_TRUE(acs[1]->isStateActive(1524453248579)); // Dummy in lvl2
 
     q1.clearStaticVariables();
     q1.clearDomainVariables();
@@ -138,8 +140,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_EQ(4, q1.getPartCount());
 
     Query q2;
-    q2.addDomainVariable(tcs[1]->getDomainVariable(id2, "X"));
-    q2.addDomainVariable(tcs[1]->getDomainVariable(id2, "Y"));
+    q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
+    q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
 
     ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
     EXPECT_TRUE(ok);
@@ -150,13 +152,13 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.clearStaticVariables();
     q1.clearDomainVariables();
 
-    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "X"));
-    q1.addDomainVariable(tcs[0]->getDomainVariable(id1, "Y"));
+    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
+    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "Y"));
     ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
     EXPECT_GT(result1[0] + 0.001, result1[1]);
 }
-}
-}
+} // namespace
+} // namespace supplementary

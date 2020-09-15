@@ -7,11 +7,11 @@
 #include "UtilityFunctionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
+#include <alica/test/TestContext.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <alica/test/TestContext.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -23,13 +23,28 @@
 
 #define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
 
+namespace alica
+{
+/**
+ * This Getter-Struct provides access to the engine for alica
+ * tests. Application tests however should not have access to the
+ * engine directly, but must live with the API of the
+ * Alica TestContext class.
+ */
+struct AlicaTestsEngineGetter
+{
+    static alica::AlicaEngine* getEngine(alica::AlicaContext* ac) { return ac->_engine.get(); }
+};
+} // namespace alica
+
 namespace supplementary
 {
 
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::test::TestContext* tc;
+    alica::AlicaContext* ac;
+    alica::AlicaEngine* ae;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -47,18 +62,20 @@ protected:
         alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
-        tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-        ASSERT_TRUE(tc->isValid());
-        tc->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+        ac = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        ASSERT_TRUE(ac->isValid());
+        ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-        EXPECT_EQ(tc->init(creators), 0);
+                                      std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        EXPECT_TRUE(ae->init(creators));
     }
 
     void TearDown() override
     {
-        tc->terminate();
-        delete tc;
+        ac->terminate();
+        delete ac;
     }
 };
 
@@ -68,8 +85,8 @@ protected:
     void SetUp() override
     {
         AlicaTestFixture::SetUp();
-        tc->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        tc->addSolver<alica::reasoner::CGSolver>();
+        ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        ac->addSolver<alica::reasoner::CGSolver>();
     }
     void TearDown() override { AlicaTestFixture::TearDown(); }
 };
@@ -77,7 +94,8 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
-    std::vector<alica::test::TestContext*> tcs;
+    std::vector<alica::AlicaContext*> acs;
+    std::vector<alica::AlicaEngine*> aes;
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
@@ -106,19 +124,22 @@ protected:
             alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
             ASSERT_TRUE(tc->isValid());
             tc->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-            EXPECT_EQ(tc->init(creators), 0);
-            tcs.push_back(tc);
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(tc);
+            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+            EXPECT_TRUE(ae->init(creators));
+            acs.push_back(tc);
+            aes.push_back(ae);
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* tc : tcs) {
+        for (alica::AlicaContext* tc : acs) {
             tc->terminate();
             delete tc;
         }
     }
 };
-}
+} // namespace supplementary
 extern std::jmp_buf restore_point;
 void signalHandler(int signal);

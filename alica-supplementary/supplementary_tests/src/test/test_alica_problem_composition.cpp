@@ -27,13 +27,13 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 {
     ASSERT_NO_SIGNAL
 
-    tc->startEngine();
+    ae->start();
 
     for (int i = 0; i < 6; ++i) {
-        tc->stepEngine();
+        ac->stepEngine();
     }
 
-    const alica::RunningPlan* deep = tc->getDeepestNode();
+    const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
     ASSERT_FALSE(deep == nullptr);
     ASSERT_EQ(deep->getChildren().size(), 1u);
