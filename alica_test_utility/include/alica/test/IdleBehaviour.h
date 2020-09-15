@@ -1,14 +1,14 @@
 #pragma once
 
-#include "MockUpBehaviour.h"
+#include "SuccessOrFailBehaviour.hpp"
 
 namespace alica::test
 {
-class IdleBehaviour : public MockUpBehaviour
+class IdleBehaviour : public BasicBehaviour
 {
 public:
     explicit IdleBehaviour()
-            : MockUpBehaviour("IdleBehaviour"){};
+            : BasicBehaviour("IdleBehaviour"){};
     void run(void* msg) override;
 };
 } // namespace alica::mockups
