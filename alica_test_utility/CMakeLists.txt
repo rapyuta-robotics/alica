@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME}
 	src/BehaviourTrigger.cpp
 	src/IdleBehaviour.cpp
     src/SuccessOrFailBehaviour.cpp
+	src/Util.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

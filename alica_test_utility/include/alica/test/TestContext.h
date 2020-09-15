@@ -5,13 +5,13 @@
 #include "BehaviourTrigger.h"
 
 #include <engine/AlicaEngine.h>
+#include <engine/BasicBehaviour.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/Behaviour.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/model/PlanType.h>
 #include <engine/model/Task.h>
 #include <engine/model/Variable.h>
-#include <engine/BasicBehaviour.h>
 
 #include <chrono>
 #include <functional>
@@ -26,10 +26,6 @@ class TestContext : public alica::AlicaContext
 {
 public:
     TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
-
-    /////////////////////////////////////
-    // Control functions for tests ... //
-    /////////////////////////////////////
 
     /**
      * Initialize alica framework and related modules. Note that this
@@ -48,7 +44,8 @@ public:
 
     /**
      * This method requests the engine to step until the given state is reached, or the
-     * time is over.
+     * time is over. This method does not consider states that the engine just passes through,
+     * therefore you can only reliably check for states whose outgoing transitions are blocked.
      * @param state The state that the AlicaContext should reach before the timeout.
      * @param msTimeout The timeout in milliseconds
      * @return True, if the given state was reached before the timeout. False, otherwise.
@@ -70,10 +67,11 @@ public:
      * the given behaviour and configuration ID pair.
      * @param behaviourID ID of the Behaviour
      * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
-     * @param trigger Optional trigger, if empty a standard trigger is created and returned.
+     * @param trigger Optional trigger, if not given, a standard trigger is created and returned.
      * @return Returns the created trigger, if no trigger was passed. Otherwise, the passed trigger is returned.
      */
-    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(int64_t behaviourID, int64_t configurationID = 0, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
+    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(
+            int64_t behaviourID, int64_t configurationID = 0, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
 
     /**
      * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
@@ -96,14 +94,6 @@ public:
     template <typename Rep, typename Period>
     bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
 
-    void setTeamTimeout(AlicaTime timeout);
-
-    VariableSyncModule& editResultStore();
-
-    //////////////////////////////////////////////////////
-    // Getter for tests ... everything returned is const//
-    //////////////////////////////////////////////////////
-
     /**
      * Allows to retrieve the name of an AlicaElement.
      * @param elementID The ID of the AlicaElement, whose name is requested.
@@ -111,13 +101,6 @@ public:
      */
     template <typename AlicaElementType>
     std::string getName(uint64_t elementID);
-
-    /**
-     * Gives access to the blackboard of the engine.
-     * @return BlackBoard
-     */
-    const BlackBoard& getBlackBoard();
-
     /**
      * Returns the size of the current team.
      * @return Team Size
@@ -125,27 +108,24 @@ public:
     int getTeamSize();
 
     /**
-     * Returns the domain variable identified by the given sort and agent id
-     * @param agentID The ID of the agent, whose domain variable is requested
-     * @param sort The sort of domain variable, that is requested
-     * @return DomainVariable
+     * Provides access to the local agent.
+     * @return const pointer to the local agent.
      */
-    const DomainVariable* getDomainVariable(essentials::IdentifierConstPtr agentID, std::string sort);
-
     const alica::Agent* getLocalAgent();
 
+    /**
+     * Provides access to the agent with the given ID.
+     * @param agentID
+     * @return const pointer to the agent with the given ID.
+     */
     const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
 
-    const Plan* getPlan(int64_t planID);
-
-    const alica::PlanRepository::Accessor<Plan> getPlans();
-
-    const Behaviour* getBehaviour(int64_t behaviourID);
-
-    const alica::PlanRepository::Accessor<Behaviour> getBehaviours();
-
-    const State* getState(int64_t stateID);
-
+    /**
+     * Just like isStateActive(id), this returns true if the
+     * agent has an active state in the plan with the given ID.
+     * @param id ID of the plan.
+     * @return True if plan is active, false otherwise.
+     */
     bool isPlanActive(int64_t id) const;
 
 private:
