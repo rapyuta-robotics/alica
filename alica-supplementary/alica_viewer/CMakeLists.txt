@@ -57,7 +57,7 @@ set(CMAKE_CURRENT_BINARY_DIR "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DES
 QT5_WRAP_UI(UIS_HEADERS ui/alica_viewer_main_window.ui)
 set(CMAKE_CURRENT_BINARY_DIR "${_cmake_current_binary_dir}")
 
-set(QT_CPP_SOURCES 
+set(QT_CPP_SOURCES
         src/elastic_nodes/block.cpp
         src/elastic_nodes/edge.cpp
         src/elastic_nodes/node.cpp
@@ -68,7 +68,7 @@ set(QT_CPP_SOURCES
         src/graphics_view_zoom.cpp
 )
 
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
     ${QT_CPP_SOURCES}
     ${UIS_HEADERS}
     ${MOC_SOURCES}
@@ -96,4 +96,8 @@ install(DIRECTORY include/${PROJECT_NAME}/
 
 install(DIRECTORY launch/
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(FILES ${UIS_HEADERS}
+        DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
 )
