@@ -1,18 +1,11 @@
-/*
- * CNSat.cpp
- *
- *  Created on: Dec 4, 2014
- *      Author: Philipp
- */
-
-#include "CNSat.h"
+#include "constraintsolver/CNSat.h"
 //#define CNSatDebug
 //#define CNSat_Call_Debug
 
 #define CN_SAT_CALLBACK_SOLVER
 
-#include "CNSMTGSolver.h"
-#include "Decider.h"
+#include "constraintsolver/CNSMTGSolver.h"
+#include "constraintsolver/Decider.h"
 #include "types/Clause.h"
 #include "types/DecisionLevel.h"
 #include "types/Lit.h"

@@ -4,7 +4,7 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    ROS_INFO("Started Alica Viewer Application.");
+    std::cout << "Started Alica Viewer Application.\n";
 
     alica::AlicaViewerMainWindow window(argc, argv);
     window.show();

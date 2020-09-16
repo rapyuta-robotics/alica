@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<alica:TaskRepository xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:alica="http:///de.uni_kassel.vs.cn" id="1542881176285" name="MISSING_NAME" comment="" defaultTask="1542881176318">
-  <tasks id="1542881176318" name="DefaultTask" comment="" description="Default Task."/>
-  <tasks id="1543224732214" name="LeaderTask" comment="" description=""/>
-  <tasks id="1543224747408" name="FollowerTask" comment="" description=""/>
-</alica:TaskRepository>

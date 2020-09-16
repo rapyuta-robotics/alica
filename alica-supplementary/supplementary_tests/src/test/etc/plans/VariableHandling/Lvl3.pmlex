@@ -1,19 +1,23 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="Lvl3.pml#1524452836023"/>
-    <value xPos="76" yPos="29" width="80" height="70"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl3.pml#1524452836022"/>
-    <value xPos="115" yPos="291" width="422" height="229"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl3.pml#1524452836024"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Lvl3.pml#1524452937477"/>
-    <value xPos="273" yPos="173"/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "VariableHandling/Lvl3.pml#1524452836022",
+  "uiElementMap" : {
+    "1524452836024" : {
+      "id" : 1597658636673,
+      "name" : "1597658636673",
+      "comment" : "",
+      "x" : -278,
+      "y" : -19,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1524452836023" : {
+      "id" : 1597658636672,
+      "name" : "1597658636672",
+      "comment" : "",
+      "x" : 13,
+      "y" : -13,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

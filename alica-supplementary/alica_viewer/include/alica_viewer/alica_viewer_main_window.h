@@ -3,13 +3,12 @@
 #include <QMainWindow>
 
 #include "alica_viewer/alica_plan_parser.h"
-#include "alica_viewer/alica_viewer_ros_interface.h"
 #include "alica_viewer/graphics_view_zoom.h"
-#include "ui_alica_viewer_main_window.h"
+#include "alica_viewer_ros_interface.h"
+#include <ui_alica_viewer_main_window.h>
 
 namespace elastic_nodes
 {
-
 class Node;
 class Edge;
 } // namespace elastic_nodes
@@ -43,7 +42,6 @@ class AlicaViewerMainWindow : public QMainWindow
     AlicaPlan _alicaPlan;
     AgentGrp _agentIdVector;
     int _offset;
-    ros::Timer _timer;
 };
 
 } // namespace alica

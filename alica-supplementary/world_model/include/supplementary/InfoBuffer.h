@@ -204,6 +204,22 @@ class InfoBuffer
         return true;
     }
 
+    std::shared_ptr<const InformationElement<T>> popLast()
+    {
+        std::lock_guard<std::mutex> guard(mtx_);
+
+        auto last = this->getLastInternal();
+        if(!last) {
+            return nullptr;
+        }
+
+        this->infoElementCounter--;
+        this->ringBuffer[index] = nullptr;
+        this->index = (this->index-1) % this->bufferSize;
+
+        return last;
+    }
+
   protected:
     /**
      * Sets the out parameter to the n-th last element, if it exists without locking the mutex

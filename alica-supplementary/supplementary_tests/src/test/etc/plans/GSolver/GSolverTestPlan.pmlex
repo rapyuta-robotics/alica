@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="GSolverTestPlan.pml#1417423777544"/>
-    <value xPos="196" yPos="116" width="75" height="65" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="GSolverTestPlan.pml#1417423757243"/>
-    <value width="609" height="375"/>
-  </extensions>
-  <extensions>
-    <key href="GSolverTestPlan.pml#1417423777546"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="SolverTestBehaviour.beh#1417424483320"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="GSolverTestPlan.pml#1417424512343"/>
-    <value xPos="245" yPos="239"/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "GSolver/GSolverTestPlan.pml#1417423757243",
+  "uiElementMap" : {
+    "1417423777544" : {
+      "id" : 1597658636684,
+      "name" : "1597658636684",
+      "comment" : "",
+      "x" : -19,
+      "y" : 23,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1417423777546" : {
+      "id" : 1597658636685,
+      "name" : "1597658636685",
+      "comment" : "",
+      "x" : -317,
+      "y" : 34,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

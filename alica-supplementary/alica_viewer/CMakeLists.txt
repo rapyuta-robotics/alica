@@ -1,23 +1,30 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(alica_viewer)
 
 ##################
 ## Dependencies ##
 ##################
+add_compile_options(-std=c++14 -pthread)
 
 add_compile_options(${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS})
 
 set(PKG_DEPS
-        roscpp
-        alica_msgs
         alica_engine
         alica_common_config
-        agent_id
+        id_ros
+        alica_msgs
+        alica_ros_proxy
 )
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(Qt5Widgets REQUIRED)
+SET(QT_WRAP_CPP TRUE)
 
-catkin_package()
+catkin_package(
+    INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
+    LIBRARIES alica_viewer alica_msgs
+    CATKIN_DEPENDS alica_engine alica_ros_proxy alica_msgs
+    #DEPENDS system_lib
+)
 
 ###########
 ## Build ##
@@ -42,12 +49,12 @@ set(QT_CPP_HEADERS
 )
 
 # generate MOC sources
-qt5_wrap_cpp(MOC_SOURCES ${QT_CPP_HEADERS})
+QT5_WRAP_CPP(MOC_SOURCES ${QT_CPP_HEADERS})
 
 # ensure generated header files are being created in the devel space
 set(_cmake_current_binary_dir "${CMAKE_CURRENT_BINARY_DIR}")
 set(CMAKE_CURRENT_BINARY_DIR "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
-qt5_wrap_ui(UIS_HEADERS ui/alica_viewer_main_window.ui)
+QT5_WRAP_UI(UIS_HEADERS ui/alica_viewer_main_window.ui)
 set(CMAKE_CURRENT_BINARY_DIR "${_cmake_current_binary_dir}")
 
 set(QT_CPP_SOURCES
@@ -71,6 +78,7 @@ target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
 )
+
 
 #############
 ## Install ##

@@ -1,31 +1,41 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="Lvl1.pml#1524452759600"/>
-    <value xPos="230" yPos="56" width="143" height="92" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl1.pml#1524452759599"/>
-    <value xPos="85" yPos="208" width="576" height="241"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl1.pml#1524452759601"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="VHPlanType.pty#1524452770528"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="Lvl1.pml#1524453470580"/>
-    <value xPos="357" yPos="173"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl1.pml#1524453481856"/>
-    <value xPos="66" yPos="59" width="80" height="70"/>
-  </extensions>
-  <extensions>
-    <key href="Lvl1.pml#1524453490345"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "VariableHandling/Lvl1.pml#1524452759599",
+  "uiElementMap" : {
+    "1524453481856" : {
+      "id" : 1597658636680,
+      "name" : "1597658636680",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1524452759601" : {
+      "id" : 1597658636681,
+      "name" : "1597658636681",
+      "comment" : "",
+      "x" : -230,
+      "y" : 5,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1524452759600" : {
+      "id" : 1597658636679,
+      "name" : "1597658636679",
+      "comment" : "",
+      "x" : 157,
+      "y" : 3,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1524453490345" : {
+      "id" : 1597658636682,
+      "name" : "1597658636682",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

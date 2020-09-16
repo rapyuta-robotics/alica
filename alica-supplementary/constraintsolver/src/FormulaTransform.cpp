@@ -1,13 +1,6 @@
-/*
- * FormulaTransform.cpp
- *
- *  Created on: Dec 4, 2014
- *      Author: Philipp
- */
+#include "constraintsolver/FormulaTransform.h"
 
-#include "FormulaTransform.h"
-
-#include "CNSat.h"
+#include "constraintsolver/CNSat.h"
 #include "types/Clause.h"
 #include "types/Lit.h"
 #include "types/Var.h"

@@ -1,13 +1,7 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.1)
 project(constraintsolver)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 -ggdb ${CMAKE_CXX_FLAGS}")
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   fsystem
@@ -21,17 +15,13 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
- # exporting include/constraintsolver is required to avoid breaking existing code
- # TODO: fix existing code to include headers using constraintsolver/<header> & then remove this
- INCLUDE_DIRS include include/constraintsolver
+ INCLUDE_DIRS include
  LIBRARIES constraintsolver
  CATKIN_DEPENDS fsystem autodiff roslib alica_solver_interface alica_common_config
 )
 
 include_directories(
   include
-  # TODO: see comment in catkin_package() above to remove this
-  include/constraintsolver
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -73,14 +63,6 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
-)
-
-# install headers under constraintsolver/ to global include/ [required to avoid breaking existing code]
-# TODO: fix existing code to include headers using constraintsolver/<header> & then remove this
-install(DIRECTORY include/constraintsolver/
   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE

@@ -1,13 +1,6 @@
-/*
- * Decider.cpp
- *
- *  Created on: Dec 11, 2014
- *      Author: Philipp
- */
+#include "constraintsolver/Decider.h"
 
-#include "Decider.h"
-
-#include "CNSat.h"
+#include "constraintsolver/CNSat.h"
 #include "types/Clause.h"
 #include "types/DecisionLevel.h"
 #include "types/Lit.h"

@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="ASCII"?>
-<uiextensionmodel:PmlUiExtensionMap xmlns:uiextensionmodel="http:///de.uni_kassel.vs.cn/planDesigner/pmlextension/uiextensionmodel">
-  <extensions>
-    <key href="QueryPlan1.pml#1479556074050"/>
-    <value xPos="138" yPos="88" width="82" height="67" collapsed="false"/>
-  </extensions>
-  <extensions>
-    <key href="QueryPlan1.pml#1479556074049"/>
-    <value width="537" height="340"/>
-  </extensions>
-  <extensions>
-    <key href="QueryPlan1.pml#1479556074051"/>
-    <value/>
-  </extensions>
-  <extensions>
-    <key href="QueryPlan1.pml#1479556084493"/>
-    <value xPos="322" yPos="248"/>
-  </extensions>
-  <extensions>
-    <key href="QueryBehaviour1.beh#1479556115746"/>
-    <value/>
-  </extensions>
-</uiextensionmodel:PmlUiExtensionMap>
+{
+  "plan" : "ProblemModule/QueryPlan1.pml#1479556074049",
+  "uiElementMap" : {
+    "1479556074050" : {
+      "id" : 1597658636669,
+      "name" : "1597658636669",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1479556074051" : {
+      "id" : 1597658636670,
+      "name" : "1597658636670",
+      "comment" : "",
+      "x" : -265,
+      "y" : 8,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

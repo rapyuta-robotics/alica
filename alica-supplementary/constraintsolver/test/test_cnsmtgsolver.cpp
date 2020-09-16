@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "CNSMTGSolver.h"
-#include "CNSat.h"
-#include "GSolver.h"
+#include "constraintsolver/CNSMTGSolver.h"
+#include "constraintsolver/CNSat.h"
+#include "constraintsolver/GSolver.h"
 #include <autodiff/AutoDiff.h>
 
 #include <cstdlib>
