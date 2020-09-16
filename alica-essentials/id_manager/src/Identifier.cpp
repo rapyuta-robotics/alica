@@ -1,5 +1,7 @@
 #include "essentials/Identifier.h"
 
+#include <sstream>
+
 namespace essentials
 {
 
@@ -71,12 +73,20 @@ Identifier& Identifier::operator=(const std::vector<uint8_t>& idBytes)
 
 Identifier::operator uint64_t() const
 {
+    // check that length of id fits into uint64_t
+    if (sizeof(uint64_t) < _id.size()) {
+        std::stringstream ss;
+        ss << "Conversion of ID " << *this << " to uint64_t is not allowed, because (ID.size() = " << _id.size()
+           << " bytes) > (sizeof(uint64_t) = " << sizeof(uint64_t) << " bytes)!";
+        throw ss.str();
+    }
+
     // Determine the endianness
     constexpr short n = 1;
     bool isLittleEndian = *((char*) (&n)) == 1;
 
     // moving data
-    long long out = 0;
+    uint64_t out = 0;
     if (isLittleEndian) {
         std::copy(_id.begin(), _id.end(), (uint8_t*) (&out));
     } else {
