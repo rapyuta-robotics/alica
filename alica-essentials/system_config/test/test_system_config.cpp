@@ -1,9 +1,8 @@
-#include "SystemConfig.h"
+#include "essentials/SystemConfig.h"
 
 #include <gtest/gtest.h>
-#include <iostream>
+
 #include <string>
-#include <typeinfo>
 
 // Declare a test
 TEST(SystemConfigBasics, readValues)

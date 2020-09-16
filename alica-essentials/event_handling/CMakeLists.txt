@@ -1,13 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(event_handling)
 
-## Use c++ 11x std
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+add_compile_options(-std=c++14)
 
 find_package(catkin QUIET)
 
@@ -15,21 +9,17 @@ if(catkin_FOUND)
 	catkin_package(
 	  INCLUDE_DIRS include
 	  LIBRARIES event_handling
-	 #CATKIN_DEPENDS other_catkin_pkg
-	 #DEPENDS pthread
 	)
 endif(catkin_FOUND)
 
 include_directories(include)
 
 add_library(event_handling
-   src/Timer.cpp
-   src/EventTrigger.cpp
-   src/Worker.cpp
+    src/EventTrigger.cpp
 )
 
 if (NOT catkin_FOUND)
-  target_include_directories(event_handling PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+    target_include_directories(event_handling PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif(NOT catkin_FOUND)
 
 # TESTS
@@ -49,10 +39,10 @@ else(catkin_FOUND)
 endif(catkin_FOUND)
 
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
 install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+    DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
 )

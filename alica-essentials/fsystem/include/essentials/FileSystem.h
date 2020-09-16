@@ -8,7 +8,7 @@ namespace essentials
 
 class FileSystem
 {
-  public:
+public:
     virtual ~FileSystem();
     static std::string getSelfPath();
     static std::string getSelf();
@@ -30,7 +30,7 @@ class FileSystem
     static const std::string PARENTDIR;
     static const char PATH_SEPARATOR;
 
-  private:
+private:
     FileSystem();
 };
 

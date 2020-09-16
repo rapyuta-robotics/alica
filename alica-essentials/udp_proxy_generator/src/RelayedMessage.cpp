@@ -3,7 +3,8 @@
 // Alternative hasing function
 // http://stackoverflow.com/questions/98153/whats-the-best-hashing-algorithm-to-use-on-a-stl-string-when-using-hash-map
 // These guys says it works well... colpa sua
-uint32_t hash32(const char* s, unsigned int seed = 0) {
+uint32_t hash32(const char* s, unsigned int seed = 0)
+{
     unsigned int hash = seed;
     while (*s) {
         hash = hash * 101 + *s++;
@@ -11,7 +12,8 @@ uint32_t hash32(const char* s, unsigned int seed = 0) {
     return hash;
 }
 
-RelayedMessage::RelayedMessage(string topic, string message, string options, string sendReceive) {
+RelayedMessage::RelayedMessage(std::string topic, std::string message, std::string options, std::string sendReceive)
+{
     this->Ros2UdpQueueLength = 5;
     this->Udp2RosQueueLength = 5;
     this->Topic = topic;
@@ -21,9 +23,9 @@ RelayedMessage::RelayedMessage(string topic, string message, string options, str
     this->Id = hash32(topic.c_str());
 
     int lastSlash = message.find_last_of('/');
-    if (lastSlash == string::npos) {
+    if (lastSlash == std::string::npos) {
         // throw new Exception("unqualified Message Name: "+qualifiedName);
-        cout << "No Namespace given, assuming std_msgs" << endl;
+        std::cout << "No Namespace given, assuming std_msgs" << std::endl;
         this->BaseName = message;
         this->NameSpace = "std_msgs/";
         this->FullName = "std_msgs/" + message;
@@ -36,7 +38,7 @@ RelayedMessage::RelayedMessage(string topic, string message, string options, str
         this->FullNameJava = message;
     }
 
-    this->UseRosTcp = (options.find("tcpros") != string::npos);
+    this->UseRosTcp = (options.find("tcpros") != std::string::npos);
 
     boost::regex Ros2UdpQueueRE("Ros2UdpQueueLength\\s*=\\s*([0-9]+)");
     boost::regex Udp2RosQueueRE("Ros2UdpQueueLength\\s*=\\s*([0-9]+)");
@@ -55,30 +57,34 @@ RelayedMessage::RelayedMessage(string topic, string message, string options, str
 
 RelayedMessage::~RelayedMessage() {}
 
-string RelayedMessage::getRosCallBackName() {
-    return string("onRos") + BaseName + to_string(Id);
+std::string RelayedMessage::getRosCallBackName()
+{
+    return std::string("onRos") + BaseName + std::to_string(Id);
 }
 
-string RelayedMessage::getRosJavaCallBackName() {
-    return string("OnRos") + BaseName + to_string(Id) + "Listener";
+std::string RelayedMessage::getRosJavaCallBackName()
+{
+    return std::string("OnRos") + BaseName + std::to_string(Id) + "Listener";
 }
 
-string RelayedMessage::getRosClassName() {
-    string ret = FullName;
-    while (ret.find("/") != string::npos) {
+std::string RelayedMessage::getRosClassName()
+{
+    std::string ret = FullName;
+    while (ret.find("/") != std::string::npos) {
         ret.replace(ret.find("/"), 1, "::");
     }
 
     return ret;
 }
 
-string RelayedMessage::getPublisherName() {
-    return string("pub") + to_string(Id);
+std::string RelayedMessage::getPublisherName()
+{
+    return std::string("pub") + std::to_string(Id);
 }
 
-string RelayedMessage::getRosMessageHandler() {
-    string ret =
-            string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
+std::string RelayedMessage::getRosMessageHandler()
+{
+    std::string ret = std::string("void ") + getRosCallBackName() + "(const ros::MessageEvent<" + getRosClassName() + ">& event) {\n";
     ret += "\tif(0 == event.getPublisherName().compare(ownRosName)) return;\n";
     ret += "uint8_t* buffer = NULL;\n";
     ret += "\tconst " + getRosClassName() + "::ConstPtr& message = event.getMessage();\n";
@@ -89,7 +95,7 @@ string RelayedMessage::getRosMessageHandler() {
 
     ret += "\t\tros::serialization::OStream stream(buffer+sizeof(uint32_t), serial_size);\n";
 
-    ret += "\t\t*((uint32_t*)buffer) = " + to_string(Id) + "u;\n";
+    ret += "\t\t*((uint32_t*)buffer) = " + std::to_string(Id) + "u;\n";
 
     ret += "\t\tros::serialization::serialize(stream, *message);\n";
 
@@ -105,16 +111,15 @@ string RelayedMessage::getRosMessageHandler() {
     return ret;
 }
 
-string RelayedMessage::getRosJavaMessageHandler() {
-    string ret = string("\tprivate class ") + getRosJavaCallBackName() + " implements MessageListener {\n";
+std::string RelayedMessage::getRosJavaMessageHandler()
+{
+    std::string ret = std::string("\tprivate class ") + getRosJavaCallBackName() + " implements MessageListener {\n";
     ret += "\t@Override\npublic void onNewMessage(Object o) {\n";
     ret += "\t\t" + BaseName + " converted = (" + BaseName + ") o;\n";
-    ret += "\t\tMessageSerializer<" + BaseName +
-           "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName + "\");\n";
+    ret += "\t\tMessageSerializer<" + BaseName + "> serializer = node.getMessageSerializationFactory().newMessageSerializer(\"" + FullName + "\");\n";
     ret += "\t\tChannelBuffer buffer = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN,64000);\n";
     ret += "\t\tserializer.serialize(converted,buffer);\n";
-    ret += "\t\tByteBuffer idBuf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt((int) " +
-           to_string(Id) + "l);\n";
+    ret += "\t\tByteBuffer idBuf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt((int) " + std::to_string(Id) + "l);\n";
     ret += "\t\tChannelBuffer finalBuf = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN, idBuf.array(), "
            "buffer.array());\n";
     ret += "\t\ttry {\n";
@@ -127,6 +132,6 @@ string RelayedMessage::getRosJavaMessageHandler() {
     ret += "\t\t}\n\n";
     ret += "\t}\n";
     ret += "\t}\n\n";
-    ret += "{Root.topicHashmap.put(\"" + Topic + "\", " + to_string(Id) + "l);}";
+    ret += "{Root.topicHashmap.put(\"" + Topic + "\", " + std::to_string(Id) + "l);}";
     return ret;
 }

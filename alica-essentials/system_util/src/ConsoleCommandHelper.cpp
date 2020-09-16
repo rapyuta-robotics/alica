@@ -1,26 +1,23 @@
-/*
- * ConsoleCommandHelper.cpp
- *
- *  Created on: Apr 15, 2015
- *      Author: Stephan Opfer
- */
-
-#include "ConsoleCommandHelper.h"
+#include "essentials/ConsoleCommandHelper.h"
 #include <stdio.h>
 
 using namespace std;
 
-namespace essentials {
+namespace essentials
+{
 
-ConsoleCommandHelper::ConsoleCommandHelper() {
+ConsoleCommandHelper::ConsoleCommandHelper()
+{
     // TODO Auto-generated constructor stub
 }
 
-ConsoleCommandHelper::~ConsoleCommandHelper() {
+ConsoleCommandHelper::~ConsoleCommandHelper()
+{
     // TODO Auto-generated destructor stub
 }
 
-std::string ConsoleCommandHelper::exec(const char* cmd) {
+std::string ConsoleCommandHelper::exec(const char* cmd)
+{
     FILE* pipe = popen(cmd, "r");
     if (!pipe)
         return "ERROR";

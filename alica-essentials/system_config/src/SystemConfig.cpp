@@ -1,6 +1,6 @@
-#include "SystemConfig.h"
+#include "essentials/SystemConfig.h"
 
-#include "Configuration.h"
+#include "essentials/Configuration.h"
 
 #include <unistd.h>
 
@@ -41,13 +41,16 @@ SystemConfig::SystemConfig()
         rootPath = x;
     }
 
-    // set the domain config folger (1. by env-variable 2. by <domain folder>/etc
+    // set the domain config folder (1. by env-variable 2. by <domain folder>/etc
     x = ::getenv(DOMAIN_CONFIG_FOLDER.c_str());
 
     if (x == NULL) {
         configPath = FileSystem::combinePaths(rootPath, "/etc");
     } else {
         configPath = x;
+    }
+    if (!essentials::FileSystem::endsWith(configPath, essentials::FileSystem::PATH_SEPARATOR)) {
+        configPath = configPath + essentials::FileSystem::PATH_SEPARATOR;
     }
     if (!FileSystem::pathExists(configPath)) {
         cerr << "SC: Could not find config directory: \"" << configPath << "\"" << endl;
@@ -189,12 +192,18 @@ void SystemConfig::setHostname(const std::string& newHostname)
 
 void SystemConfig::setRootPath(string rootPath)
 {
+    if (!essentials::FileSystem::endsWith(rootPath, essentials::FileSystem::PATH_SEPARATOR)) {
+        rootPath = rootPath + essentials::FileSystem::PATH_SEPARATOR;
+    }
     this->rootPath = rootPath;
     cout << "SC: Update Root:           \"" << rootPath << "\"" << endl;
 }
 
 void SystemConfig::setConfigPath(string configPath)
 {
+    if (!essentials::FileSystem::endsWith(configPath, essentials::FileSystem::PATH_SEPARATOR)) {
+        configPath = configPath + essentials::FileSystem::PATH_SEPARATOR;
+    }
     this->configPath = configPath;
     cout << "SC: Update ConfigRoot:     \"" << configPath << "\"" << endl;
 }
@@ -229,4 +238,4 @@ string SystemConfig::getEnv(const string& var)
         return val;
     }
 }
-}
+} // namespace supplementary

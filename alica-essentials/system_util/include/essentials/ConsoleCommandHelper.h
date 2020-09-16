@@ -1,18 +1,12 @@
-/*
- * ConsoleCommandHelper.h
- *
- *  Created on: Apr 15, 2015
- *      Author: Stephan Opfer
- */
-
-#ifndef SUPPLEMENTARY_SYSTEM_UTIL_SRC_CONSOLECOMMANDHELPER_H_
-#define SUPPLEMENTARY_SYSTEM_UTIL_SRC_CONSOLECOMMANDHELPER_H_
+#pragma once 
 
 #include <string>
 
-namespace essentials {
+namespace essentials
+{
 
-class ConsoleCommandHelper {
+class ConsoleCommandHelper
+{
 public:
     ConsoleCommandHelper();
     virtual ~ConsoleCommandHelper();
@@ -21,4 +15,3 @@ public:
 
 } /* namespace essentials */
 
-#endif /* SUPPLEMENTARY_SYSTEM_UTIL_SRC_CONSOLECOMMANDHELPER_H_ */

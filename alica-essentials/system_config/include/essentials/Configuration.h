@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-//#include "boost/lexical_cast.hpp"
 
 #include "ConfigNode.h"
 
@@ -18,7 +17,7 @@ namespace essentials
 {
 class Configuration
 {
-  protected:
+protected:
     static const char LIST_ELEMENT_SEPERATOR = ',';
     std::string filename;
     void collect(ConfigNode* node, std::vector<std::string>* params, size_t offset, std::vector<ConfigNode*>* result);

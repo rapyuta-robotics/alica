@@ -1,16 +1,12 @@
 #pragma once
 
-#include "ITrigger.h"
+#include "ITrigger.hpp"
 
-#include <vector>
-#include <mutex>
-#include <condition_variable>
-
-namespace essentials {
-class EventTrigger : public virtual ITrigger {
+namespace essentials
+{
+class EventTrigger : public ITrigger
+{
 public:
-    EventTrigger();
-    virtual ~EventTrigger();
-    void run(bool notifyAll = true);
+    void run(bool notifyAll) override;
 };
-}  // namespace essentials
+} // namespace essentials
