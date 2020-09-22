@@ -5,6 +5,11 @@
 namespace essentials
 {
 
+Identifier::Identifier()
+        : _type(UUID_TYPE)
+{
+}
+
 Identifier::Identifier(uint64_t prototypeID)
         : _type(UUID_TYPE)
 {
