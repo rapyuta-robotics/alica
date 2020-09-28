@@ -1,52 +1,68 @@
 ## Tutorial
 ### 1. Overview
-This tutorial is extension of ros turtlesim. By following this tutorial, you will learn 
-- ALICA core concepts
-- how to create multi agent collaboration application with ALICA
+This tutorial is extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn 
+- the core concepts of the ALICA language
+- how to achieve multi-agent collaboration with the ALICA framework
 
-In this tutorial, you will create application as below. ALICA will assign “Leader” task to one turtle and “Follower” to the other turtles. ALICA move turtles to the goal position based on the distance constraints.
+In this tutorial, you will create an application as shown in the picture below. The ALICA engine will assign the “Leader” task to one turtle and the “Follower” task to the other turtles. Further, the ALICA engine will move the turtles to their goal positions based on distance constraints.
 
 ![overview](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/overview.png)
 ![alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/alica_ros_turtlesim.gif)
 
 ### 2. Prerequisite
-You need to be familiar with following tools.
-- [ROS kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu)
+You need to be familiar with following topics and tools:
+- [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
-### 3. ALICA basics and Core concepts
-Brief explanation on ALICA core concepts. Please refere to [ALICA](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/alica.html) for the detailed information.
+### 3. The ALICA Language - Basics and Core Concepts
+We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the resources on the [ALICA Homepage](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/alica.html) of the Distributed Systems Department of the University of Kassel for more detailed information in a series of related publications.
 ##### Plan
-Plan is state machine in tree structure. Plan can include plans and states and each states have `Behaviour`s. ALICA  assign entrypoint of the  state tree to the agent, e.g. robot based on `Role`, `Task`, `Constraints` and `Utility function`.
-ALICA  manage state transitions based on user code. The alica-plan-designer generates code strucutre and developer implement state transition logics. 
-Developer can create plan using alica-plan-designer.
+A plan is a state machine in tree structure. Plans can include plans and states and each state has can include`Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
+The ALICA engine manages state transitions based on the developers code. The ALICA plan designer generates method stubs that a developer will fill with state transition logic. The developer can create plans using the ALICA plan designer.
+
 ##### Behaviour
-Developer can write robot behaviour at each state in C++ code. alica-plan-designer generate code structure and developer implement behaviour logics. In this tutorial, there are `Go2RandomPosition` and `GoTo`.
-Turtles are teleported to random position with `Go2RandomPosition` and 
-Role: Role is task preference of the agent. Role describes physical difference among agents , e.g. robot arm and AGV. In this tutorial all agent have same `Turtle` Role.
+The developer can write robot behaviours in C++ for each state. The ALICA plan designer generates method stubs and the developer implements the behaviour logic in these stubs. In this tutorial, there are the `Go2RandomPosition` and `GoTo` behaviour.
+The turtles are teleported to random position with `Go2RandomPosition` and they go to their target position with  the `GoTo` behaviour.
+
+##### Role
+
+A role is a task preference of the agent and it describes physical difference among agents , e.g., differences between a robotic arm and an AGV. In this tutorial all agent have same role:  `Turtle`
+
 ##### Task
-Task is assign  based on `Role` and `Utility function` by ALICA. Tassk is entry point of state machine. ALICA realize multi agent collaboration by assigning Task to agent. In this tutorial, there are `Leader task` and `Follower task`. One turtle is assigned `Leader` and move to center, other turtles are assigned `Follower` and align circle.
+A task is assigned to an agent based on the `Role` of that agent and based on the `Utility function` of the plan. A task identifies an entry point of a state machine. The ALICA engine realises multi-agent collaboration by assigning tasks to agents. In this tutorial, there are the `Leader` and the `Follower` task. One turtle is assigned the `Leader` task and it moves to the centre. The other turtles are assigned the `Follower` task and they align in a circle.
 ##### Constraints
-Developer can set constraints to the plans. ALICA can solve constraints and return answer. In this tutorial, turtles align circle by constraints.
-Worldmodel: World model represents agent model in the world. World model is a interface between ALICA and other software, e.g. ROS and lower API.
+Developers can set constraints to plans. The ALICA engine can solve constraints and return corresponding answers. In this tutorial, the turtles align in a circle defined by distance constraints.
+
+##### Worldmodel
+
+The world model represents the model of the world from the perspective of an agent. Further, the world model can be an interface between the ALICA engine and other software, e.g., ROS and lower API.
 
 ![coreconcept](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/coreconcept.png)
 
-### 4. Set up workspace
-Creating workspace by following steps in Ubuntu16.04 terminal.
+### 4. Setup of the Catkin Workspace
+We need to creating a catkin workspace by executing the following steps in an Ubuntu18.04 terminal.
+
+1. Check out the required repositories:
+
 ```
 mkdir -p catkin_ws/src
 cd catkin_ws/src
 git clone https://github.com/rapyuta-robotics/alica.git
 git clone https://github.com/rapyuta-robotics/alica-essentials.git
 git clone https://github.com/rapyuta-robotics/alica-supplementary.git
+```
 
-# remove existing turtlesim files. You will reproduce these files.
-# you can jump to 8. "Build and Run" for testing application before deleting
+2. Remove existing turtlesim files. You will reproduce these files (You can jump to step 8. "Build and Run" for testing application before deleting the files):
+
+```
 cd src/alica-supplementary
 rm -r alica_ros_turtlesim/Expr 
 rm -r alica_ros_turtlesim/alica
+```
 
+3. Create the alica_ros_turtlesim package with additional subfolders:
+
+```
 catkin_create_pkg alica_ros_turtlesim roscpp turtlesim geometry_msgs alica_engine agent_id alica_ros_proxy constraintsolver
 mkdir -p alica_ros_turtlesim/alica/etc/plans/behaviours
 mkdir -p alica_ros_turtlesim/alica/etc/roles
@@ -54,8 +70,8 @@ mkdir -p alica_ros_turtlesim/alica/etc/Misc
 mkdir -p alica_ros_turtlesim/Expr
 ```
 
-### 5. Set up alica plan designer
-Plan designer is a user interface to design application with ALICA.
+### 5. Setup of the ALICA Plan Designer
+The ALICA plan designer is a user interface to design applications with the ALICA framwork.
 ##### Start alica plan designer by following steps
 
 ```
@@ -130,7 +146,7 @@ We will explain only `base_node.cpp` which is related to ALICA.
 
     - L47:  This is state transition condition from ‘Init’ to ‘Move’. This success condition is met by setSuccess in behaviour logic which is explained later in behaviour.
     - L75: This is state transition condition from ‘Move’ to ‘Init’. This condition is met by publishing rostopic ‘/init’.
-			
+	
 - Expr/src/Plans/constraints/Move***.cpp
 	In this file, you need to implement constraints logic.
     ![constraints](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/constraints.png)
@@ -158,7 +174,7 @@ We will explain only `base_node.cpp` which is related to ALICA.
     - L24-25: add query and result which are used to get solver result.
 
 - Expr/src/Behaviours/GoTo.cpp
-    
+  
     ![gotocpp](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/gotocpp.png)
     - L5: include world model
     - L27~30: In `run` function,  get result from solver. CGSolver solve constraints defined in the  Expr/src/Plans/constraints/Move***.cpp
