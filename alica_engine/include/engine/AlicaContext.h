@@ -140,7 +140,7 @@ public:
      *
      * @note This is the main alica api class
      */
-    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID = nullptr);
+    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID = essentials::Identifier());
 
     /**
      * Destroys AlicaContext object.
