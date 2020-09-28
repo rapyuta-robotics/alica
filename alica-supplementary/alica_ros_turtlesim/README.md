@@ -71,22 +71,43 @@ mkdir -p alica_ros_turtlesim/Expr
 ```
 
 ### 5. Setup of the ALICA Plan Designer
-The ALICA plan designer is a user interface to design applications with the ALICA framwork.
-##### Start alica plan designer by following steps
+The ALICA plan designer is a user interface to design applications with the ALICA framework.
+##### Start the ALICA plan designer by following steps
+
+The [GitHUB repository of the Plan Designer](https://github.com/rapyuta-robotics/alica-plan-designer-fx) includes the different releases of the Plan Designer. Download the two JAR-files from the latest release on the [release page](https://github.com/rapyuta-robotics/alica-plan-designer-fx/releases) and place them in a folder structure like this:
 
 ```
-cd catkin_ws/src/alica-plan-designer
-./bin/start.sh
+~/alica_plan_designer/PlanDesignerFX-X.Y.Z.jar
+~/alica_plan_designer/plugins/alica-plan-designer-fx-default-plugin-X.Y.Z-SNAPSHOT.jar
 ```
-![plan-designer_project_config](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan-designer_project_config.png)
-##### Plan designer setting
-Create project: input root path to your alica ws and change expr as well.
-#todo add image
-Window -> Preference -> Plan Designer -> Condition plugin
-/home/yu/alica_ws/src/alica-plan-designer/ should be path to alica-plan-designer
-![plan-designer_condition_plugin](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan-designer_condition_plugin.png)
 
-### 6. Create plan using plan desginer
+For starting the Plan Designer, you must have [Java OpenJDK 11 installed](https://wiki.ubuntuusers.de/Java/Installation/OpenJDK/) and [set as your default Java version](https://computingforgeeks.com/how-to-set-default-java-version-on-ubuntu-debian/). Afterwards you can start the Plan Designer with the following command on your terminal:
+
+```
+cd ~/alica_plan_designer
+java -jar PlanDesignerFX-X.Y.Z.jar
+```
+
+ When you start the Plan Designer the first time, its main window should look like this:
+
+![Empty Plan Designer](doc/Empty-PlanDesigner.png)
+
+##### Configure the Plan Designer
+
+1. Open the *Edit* menu from the top menu bar and choose *Configure* in order to open the Configuration window:![Configuration Window](doc/plan_designer_config.png)
+2. Fill out the fields one after another.
+   1. **Source Code Editor:** The Plan Designer supports to open auto generated code from within the Plan Designer. For this it will open the editor you will enter in this field, parametrised with the path to the respective auto generated file. At the moment, probably only "gedit" will work.
+   2. **Clang Formatter:** Just enter "clang-format". Nothing else is supported at the moment.
+   3. **Available Configurations:** As no configuration is available, yet, you need to create one by double clicking on the first empty line under *Available Configurations* and enter a name for your configuration, e.g. alica_ros_turtlesim. Press *Enter* to confirm your entry.
+   4. **Plans Folder:** Enter the path to your projects plan-folder.
+   5. **Roles Folder:** Enter the path to your projects roles-folder.
+   6. **Tasks Folder:** Enter the path to your projects tasks-folder.
+   7. **Gen-Src Folder:** Enter the path to the folder, where you want the Plan Designer to generate its source code into.
+   8. **Plugins Folder:** Enter the path to folder with the code generation plugins, you want to use. Most likely choose the path that includes the JAR of the Default Plugin module. Please note that if there are other JARs in the plugin folder, which are no plugin for the Plan Designer, it is likely that this will cause issues like NullPointerException and similar.
+   9. **Default Plugin:** Choose the code generation plugin, that should be configured as default plugin from the drop down menu. If nothing shows up, the configured *Plugins Folder* does not contain a code generation plugin.
+3. Save the configuration and set it active. If something goes wrong at this point, you probably have made a mistake in the last step.
+
+### 6. Create the Tutorial Plans with the Plan Desginer
  In this section, you will create plan using plan designer. This tutorial has two plans, `Master` and `Move`. `Master` plan has `Init` and `Move` state. `Move` plan has `Move2Center` and `AlignCircle` state.
  In the `Init` state, turtle is teleported to the random state(`Go2RandomPosition` behaviour) and transit to the `Move` state. 
 ![plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan.png)
@@ -197,16 +218,3 @@ Run application with roslaunch. video
 `roslaunch alica_ros_turtlesim turtle.launch name:=turtle1`
 - Start moving. 
 `rostopic pub /init std_msgs/Empty "{}" `
-
-### 9. ADVANCE Tutorial(Coming Soon?)
-- Debugging tools
-- App with constraints utility
-    modify constraints
-- App with inter agent communication
-    implement inter agent communication
-    modify constraints
-- App with Utility function
-    modify with plan designer
-    implement utility function
-    each turtle have different spec, e.g. speed, size and etc
-    customize utility function
