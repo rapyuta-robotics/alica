@@ -5,6 +5,11 @@
 namespace essentials
 {
 
+Identifier::Identifier()
+        : _type(UUID_TYPE)
+{
+}
+
 Identifier::Identifier(uint64_t prototypeID)
         : _type(UUID_TYPE)
 {
@@ -34,12 +39,15 @@ uint8_t Identifier::getType() const
 
 bool Identifier::operator==(const Identifier& other) const
 {
+    if(_id.empty() || other._id.empty()) {
+        return false;
+    } 
     return (_id == other._id);
 }
 
 bool Identifier::operator!=(const Identifier& other) const
 {
-    return (_id != other._id);
+    return !(other == *this);
 }
 
 bool Identifier::operator<(const Identifier& other) const

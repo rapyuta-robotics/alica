@@ -13,6 +13,7 @@ class Identifier
     friend struct std::hash<essentials::Identifier>;
 
 public:
+    Identifier();
     Identifier(uint64_t idPrototype);
     Identifier(const std::vector<uint8_t>& idBytes);
     Identifier(const uint8_t* idBytes, int idSize, uint8_t type = UUID_TYPE);
