@@ -31,7 +31,7 @@
     "successRequired" : true,
     "minCardinality" : 1,
     "maxCardinality" : 1,
-    "task" : "MISSING_NAME.tsk#1543224732214",
+    "task" : "TaskRepository.tsk#1543224732214",
     "state" : 1542882041936,
     "plan" : 1542882005838
   }, {
@@ -41,7 +41,7 @@
     "successRequired" : false,
     "minCardinality" : 0,
     "maxCardinality" : 2147483647,
-    "task" : "MISSING_NAME.tsk#1543224747408",
+    "task" : "TaskRepository.tsk#1543224747408",
     "state" : 1542882494678,
     "plan" : 1542882005838
   } ],
@@ -52,7 +52,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1542882005838,
-    "abstractPlans" : [ "Behaviours/GoTo.beh#1544160969061" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1601278930757,
+      "name" : "1601278930757",
+      "comment" : "",
+      "abstractPlan" : "Behaviours/GoTo.beh#1544160969061",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -63,7 +69,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1542882005838,
-    "abstractPlans" : [ "Behaviours/GoTo.beh#1544160969061" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1601278930760,
+      "name" : "1601278930760",
+      "comment" : "",
+      "abstractPlan" : "Behaviours/GoTo.beh#1544160969061",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]

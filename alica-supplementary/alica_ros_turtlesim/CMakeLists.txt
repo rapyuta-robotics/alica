@@ -6,14 +6,14 @@ project(alica_ros_turtlesim)
 ##################
 
 set(PKG_DEPS
-        roscpp
-        alica_engine
-        alica_common_config
-        id_ros
-        alica_ros_proxy
-        constraintsolver
-        turtlesim
-        geometry_msgs
+    roscpp
+    alica_engine
+    alica_common_config
+    id_ros
+    alica_ros_proxy
+    constraintsolver
+    turtlesim
+    geometry_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})

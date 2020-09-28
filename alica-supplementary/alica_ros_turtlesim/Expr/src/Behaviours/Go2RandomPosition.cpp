@@ -30,7 +30,7 @@ void Go2RandomPosition::run(void* msg)
 {
     /*PROTECTED REGION ID(run1542881969548) ENABLED START*/
     // Add additional options here
-    // code for generate random value between 0 and 10 which is defualt turtlesim area size
+    // code for generate random value between 0 and 10 which is default turtlesim area size
     std::random_device seed_gen;
     std::default_random_engine engine(seed_gen());
     std::uniform_real_distribution<> dist(0, 10.0);

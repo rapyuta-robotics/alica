@@ -15,7 +15,7 @@
     "successRequired" : false,
     "minCardinality" : 0,
     "maxCardinality" : 2147483647,
-    "task" : "MISSING_NAME.tsk#1542881176318",
+    "task" : "TaskRepository.tsk#1542881176318",
     "state" : 1542881176280,
     "plan" : 1542881176278
   } ],
@@ -26,7 +26,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1542881176278,
-    "abstractPlans" : [ "Behaviours/Go2RandomPosition.beh#1542881969548" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1601278930769,
+      "name" : "1601278930769",
+      "comment" : "",
+      "abstractPlan" : "Behaviours/Go2RandomPosition.beh#1542881969548",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1542881645594 ],
     "inTransitions" : [ 1542881648973 ]
@@ -37,7 +43,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1542881176278,
-    "abstractPlans" : [ "Move.pml#1542882005838" ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1601278930772,
+      "name" : "1601278930772",
+      "comment" : "",
+      "abstractPlan" : "Move.pml#1542882005838",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ 1542881648973 ],
     "inTransitions" : [ 1542881645594 ]
