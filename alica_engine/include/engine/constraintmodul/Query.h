@@ -144,7 +144,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
         return false;
     }
 
-    std::cout << "Query: " << _uniqueVarStore << std::endl;
+    //std::cout << "Query: " << _uniqueVarStore << std::endl;
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;
