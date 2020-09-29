@@ -60,7 +60,7 @@ void SuccessOrFailBehaviour<iterationsBeforeTrigger>::initialiseParameters()
 {
     // Note: We require the BehaviourMockups to be default constructable, therefore we cannot set the _triggerSuccess flag on construction time.
     std::lock_guard<std::mutex> lockGuard(_triggerMutex);
-    assert(_triggerTypeSet && "[SuccessOrFailBehavour] Please call setTriggerType(bool triggerSuccess) once before starting the behaviour the first time.");
+    assert(_triggerTypeSet && "[SuccessOrFailBehaviour] Please call setTriggerType(bool triggerSuccess) once before starting the behaviour the first time.");
 }
 
 template <uint32_t iterationsBeforeTrigger>

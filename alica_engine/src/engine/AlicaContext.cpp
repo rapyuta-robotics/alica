@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
@@ -53,12 +52,10 @@ int AlicaContext::terminate()
     return 0;
 }
 
-bool AlicaContext::isValid()
+bool AlicaContext::isValid() const
 {
     return _validTag == ALICA_CTX_GOOD;
 }
-
-
 
 void AlicaContext::stepEngine()
 {
@@ -78,7 +75,8 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
  * getLocalAgentName() instead.
  * @return
  */
-std::string AlicaContext::getRobotName() {
+std::string AlicaContext::getRobotName()
+{
     return getLocalAgentName();
 }
 

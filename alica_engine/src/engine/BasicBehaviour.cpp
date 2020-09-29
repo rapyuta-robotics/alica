@@ -159,6 +159,7 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 
 bool BasicBehaviour::isTriggeredRunFinished()
 {
+    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
     if (!_behaviourTrigger)
         return false;
 

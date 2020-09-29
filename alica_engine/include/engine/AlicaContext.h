@@ -276,7 +276,7 @@ public:
      *
      * @return True if object is a valid context, false otherwise
      */
-    bool isValid();
+    bool isValid() const;
 
     /**
      * Returns agent id for this alica context.
@@ -327,10 +327,8 @@ public:
     T get(AlicaOption option) const;
 
 private:
-    friend class alica::test::TestContext;
     friend class ::alica::AlicaTestsEngineGetter;
-
-    static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
+    friend class ::alica::test::TestContext;
 
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!

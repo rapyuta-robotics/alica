@@ -118,7 +118,7 @@ public:
      * @param agentID
      * @return const pointer to the agent with the given ID.
      */
-    const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
+//    const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
 
     /**
      * Checks if the state identified by id is currently active.
@@ -147,7 +147,6 @@ private:
             return hash1 ^ hash2;
         }
     };
-    bool isPlanActiveHelper(const RunningPlan* rp, int64_t id) const;
 
     std::unordered_map<std::pair<int64_t, int64_t>, std::shared_ptr<essentials::ITrigger>, hash_pair> _behaviourTriggers;
     bool _initCalled;

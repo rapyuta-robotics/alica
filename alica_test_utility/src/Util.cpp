@@ -13,6 +13,7 @@ std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, 
                 (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
                                       : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
             behaviour = behaviourEntry.second;
+            break;
         }
     }
     return behaviour;
