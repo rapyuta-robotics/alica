@@ -37,7 +37,7 @@ Developers can set constraints to plans. The ALICA engine can solve constraints 
 
 The world model represents the model of the world from the perspective of an agent. Further, the world model can be an interface between the ALICA engine and other software, e.g., ROS and lower API.
 
-![coreconcept](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/coreconcept.png)
+![coreconcept](doc/coreconcept.png)
 
 ## 4. Setup of the Catkin Workspace
 We need to creating a catkin workspace by executing the following steps in an Ubuntu18.04 terminal.
