@@ -14,7 +14,7 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
-AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
+AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
         : _validTag(ALICA_CTX_GOOD)
         , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
         , _clock(std::make_unique<AlicaClock>())
@@ -110,16 +110,6 @@ void AlicaContext::getVersion(int& major, int& minor, int& patch)
 int AlicaContext::getVersion()
 {
     return ALICA_VERSION;
-}
-
-essentials::IdentifierConstPtr AlicaContext::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type)
-{
-    return this->_idManager->getIDFromBytes(idBytes, idSize, type);
-}
-
-essentials::IdentifierConstPtr AlicaContext::generateID(std::size_t size)
-{
-    return this->_idManager->generateID(size);
 }
 
 } // namespace alica

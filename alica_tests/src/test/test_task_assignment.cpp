@@ -57,7 +57,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             continue;
         }
 
-        aa.senderID = ac->getID<int>(agentId);
+        aa.senderID = ac->getIDManager().getID<int>(agentId);
         if (agentId == 8) {
             aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";
