@@ -61,12 +61,12 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     ASSERT_EQ(2, tcs[1]->getTeamSize());
 
     uint64_t id = 8;
-    const alica::Agent* hairydiscovered = tcs[0]->getAgentByID(tcs[0]->getID(id));
+    const alica::Agent* hairydiscovered = tcs[0]->getAgentByID(tcs[0]->getIDManager().getID(id));
     const alica::Agent* hairyoriginal = tcs[1]->getLocalAgent();
     verifyAgents(hairydiscovered, hairyoriginal);
 
     id = 9;
-    const alica::Agent* nasediscovered = tcs[1]->getAgentByID(tcs[1]->getID(id));
+    const alica::Agent* nasediscovered = tcs[1]->getAgentByID(tcs[1]->getIDManager().getID(id));
     const alica::Agent* naseoriginal = tcs[0]->getLocalAgent();
     verifyAgents(nasediscovered, naseoriginal);
 
@@ -75,12 +75,12 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     alica::AgentAnnouncement aa;
     aa.planHash = tcs[0]->getVersion() + 1;
     aa.senderSdk = tcs[0]->getVersion();
-    aa.senderID = tcs[0]->getID(id);
+    aa.senderID = tcs[0]->getIDManager().getID(id);
     aa.roleId = 1222973297047; // Attacker
     aa.senderName = "myo";
     tcs[0]->handleAgentAnnouncement(aa);
     tcs[0]->stepEngine();
-    const alica::Agent* myodiscovered = tcs[0]->getAgentByID(tcs[0]->getID(id));
+    const alica::Agent* myodiscovered = tcs[0]->getAgentByID(tcs[0]->getIDManager().getID(id));
     ASSERT_EQ(myodiscovered, nullptr);
 }
 }
