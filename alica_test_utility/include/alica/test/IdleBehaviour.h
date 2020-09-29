@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SuccessOrFailBehaviour.hpp"
+#include <engine/BasicBehaviour.h>
 
 namespace alica::test
 {
