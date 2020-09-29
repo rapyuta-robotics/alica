@@ -123,8 +123,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     rp1 = aes[0]->getPlanBase().getDeepestNode();
     rp2 = aes[1]->getPlanBase().getDeepestNode();
 
-    EXPECT_TRUE(acs[0]->isStateActive(1524452836023)); // lvl3
-    EXPECT_TRUE(acs[1]->isStateActive(1524453248579)); // Dummy in lvl2
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1524452836023)); // lvl3
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1524453248579)); // Dummy in lvl2
 
     q1.clearStaticVariables();
     q1.clearDomainVariables();
