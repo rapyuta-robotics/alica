@@ -58,29 +58,7 @@ bool AlicaContext::isValid()
     return _validTag == ALICA_CTX_GOOD;
 }
 
-bool AlicaContext::isStateActiveHelper(const RunningPlan* rp, int64_t id)
-{
-    if (!rp) {
-        return false;
-    }
 
-    const State* activeState = rp->getActiveState();
-    if (activeState && activeState->getId() == id) {
-        return true;
-    }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isStateActiveHelper(children[i], id)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool AlicaContext::isStateActive(int64_t id) const
-{
-    return isStateActiveHelper(_engine->getPlanBase().getRootNode(), id);
-}
 
 void AlicaContext::stepEngine()
 {

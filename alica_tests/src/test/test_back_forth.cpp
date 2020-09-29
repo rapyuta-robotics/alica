@@ -1,11 +1,15 @@
+#include <test_alica.h>
+
 #include "CounterClass.h"
 #include "SimpleSwitches.h"
+
+#include <alica/test/Util.h>
 #include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
 
 #include <gtest/gtest.h>
+
 #include <iostream>
-#include <test_alica.h>
 #include <thread>
 
 namespace alica
@@ -36,7 +40,7 @@ TEST_F(BackForthTest, testing)
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     int curCount = CounterClass::called;
     ASSERT_GT(curCount, 0);
-    ASSERT_TRUE(ac->isStateActive(1529456584983));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1529456584983));
 
     SimpleSwitches::set(0, true);
     ac->stepEngine();
@@ -44,7 +48,7 @@ TEST_F(BackForthTest, testing)
 
     ASSERT_GT(CounterClass::called, curCount);
     curCount = CounterClass::called;
-    ASSERT_TRUE(ac->isStateActive(1529456591410));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1529456591410));
 
     SimpleSwitches::set(1, true);
     for (int i = 0; i < 10; ++i) {
@@ -53,5 +57,5 @@ TEST_F(BackForthTest, testing)
         curCount = CounterClass::called;
     }
 }
-}
-}
+} // namespace
+} // namespace alica

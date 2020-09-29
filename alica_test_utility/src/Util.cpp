@@ -18,6 +18,30 @@ std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, 
     return behaviour;
 }
 
+bool Util::isStateActive(alica::AlicaEngine* ae, int64_t id)
+{
+    return isStateActiveHelper(ae->getPlanBase().getRootNode(), id);
+}
+
+bool Util::isStateActiveHelper(const RunningPlan* rp, int64_t id)
+{
+    if (!rp) {
+        return false;
+    }
+
+    const State* activeState = rp->getActiveState();
+    if (activeState && activeState->getId() == id) {
+        return true;
+    }
+    const std::vector<RunningPlan*>& children = rp->getChildren();
+    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
+        if (isStateActiveHelper(children[i], id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Util::isPlanActive(alica::AlicaEngine* ae, int64_t id)
 {
     return isPlanActiveHelper(ae->getPlanBase().getRootNode(), id);

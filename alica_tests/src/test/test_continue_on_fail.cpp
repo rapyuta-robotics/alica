@@ -1,8 +1,10 @@
-#include "SimpleSwitches.h"
-#include "engine/IAlicaCommunication.h"
 #include "test_alica.h"
 
+#include "SimpleSwitches.h"
+
+#include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
+#include <alica/test/Util.h>
 
 namespace alica
 {
@@ -24,17 +26,17 @@ TEST_F(FailureHandling, continueOnFailure)
     ae->start();
     ac->stepEngine();
 
-    ASSERT_TRUE(ac->isStateActive(1530004915641));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530004915641));
 
     SimpleSwitches::set(0, true);
     ac->stepEngine();
 
-    ASSERT_TRUE(ac->isStateActive(1530069246104));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530069246104));
 
     SimpleSwitches::set(1, true);
     ac->stepEngine();
 
-    ASSERT_TRUE(ac->isStateActive(1530004975275));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530004975275));
 
     SimpleSwitches::set(2, true);
     ac->stepEngine(); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
@@ -45,7 +47,7 @@ TEST_F(FailureHandling, continueOnFailure)
     // This happens if the fp-event comes while the engine is still processing.
     ac->stepEngine();
 
-    ASSERT_TRUE(ac->isStateActive(1532424097662));
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1532424097662));
 }
 } // namespace
 } // namespace alica
