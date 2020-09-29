@@ -83,16 +83,6 @@ int TestContext::getTeamSize()
     return Util::getTeamSize(_engine.get());
 }
 
-const alica::Agent* TestContext::getLocalAgent()
-{
-    return Util::getLocalAgent(_engine.get());
-}
-
-//const alica::Agent* TestContext::getAgentByID(essentials::IdentifierConstPtr agentID)
-//{
-//    return Util::getAgentByID(_engine.get(), agentID);
-//}
-
 bool TestContext::isStateActive(int64_t id) const
 {
     return Util::isStateActive(_engine.get(), id);

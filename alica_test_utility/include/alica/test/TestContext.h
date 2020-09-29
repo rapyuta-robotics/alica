@@ -108,19 +108,6 @@ public:
     int getTeamSize();
 
     /**
-     * Provides access to the local agent.
-     * @return const pointer to the local agent.
-     */
-    const alica::Agent* getLocalAgent();
-
-    /**
-     * Provides access to the agent with the given ID.
-     * @param agentID
-     * @return const pointer to the agent with the given ID.
-     */
-//    const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
-
-    /**
      * Checks if the state identified by id is currently active.
      * This method should be used only when engine is trigger based.
      * @param id ID of the state.
