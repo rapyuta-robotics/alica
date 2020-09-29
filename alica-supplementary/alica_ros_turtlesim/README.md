@@ -1,5 +1,5 @@
-## Tutorial
-### 1. Overview
+# Turtlesim Tutorial
+## 1. Overview
 This tutorial is extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn 
 - the core concepts of the ALICA language
 - how to achieve multi-agent collaboration with the ALICA framework
@@ -9,37 +9,37 @@ In this tutorial, you will create an application as shown in the picture below. 
 ![overview](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/overview.png)
 ![alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/alica_ros_turtlesim.gif)
 
-### 2. Prerequisite
+## 2. Prerequisite
 You need to be familiar with following topics and tools:
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
-### 3. The ALICA Language - Basics and Core Concepts
+## 3. The ALICA Language - Basics and Core Concepts
 We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the resources on the [ALICA Homepage](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/alica.html) of the Distributed Systems Department of the University of Kassel for more detailed information in a series of related publications.
-##### Plan
+### Plan
 A plan is a state machine in tree structure. Plans can include plans and states and each state has can include`Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
 The ALICA engine manages state transitions based on the developers code. The ALICA plan designer generates method stubs that a developer will fill with state transition logic. The developer can create plans using the ALICA plan designer.
 
-##### Behaviour
+### Behaviour
 The developer can write robot behaviours in C++ for each state. The ALICA plan designer generates method stubs and the developer implements the behaviour logic in these stubs. In this tutorial, there are the `Go2RandomPosition` and `GoTo` behaviour.
 The turtles are teleported to random position with `Go2RandomPosition` and they go to their target position with  the `GoTo` behaviour.
 
-##### Role
+### Role
 
 A role is a task preference of the agent and it describes physical difference among agents , e.g., differences between a robotic arm and an AGV. In this tutorial all agent have same role:  `Turtle`
 
-##### Task
+### Task
 A task is assigned to an agent based on the `Role` of that agent and based on the `Utility function` of the plan. A task identifies an entry point of a state machine. The ALICA engine realises multi-agent collaboration by assigning tasks to agents. In this tutorial, there are the `Leader` and the `Follower` task. One turtle is assigned the `Leader` task and it moves to the centre. The other turtles are assigned the `Follower` task and they align in a circle.
-##### Constraints
+### Constraints
 Developers can set constraints to plans. The ALICA engine can solve constraints and return corresponding answers. In this tutorial, the turtles align in a circle defined by distance constraints.
 
-##### Worldmodel
+### Worldmodel
 
 The world model represents the model of the world from the perspective of an agent. Further, the world model can be an interface between the ALICA engine and other software, e.g., ROS and lower API.
 
 ![coreconcept](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/coreconcept.png)
 
-### 4. Setup of the Catkin Workspace
+## 4. Setup of the Catkin Workspace
 We need to creating a catkin workspace by executing the following steps in an Ubuntu18.04 terminal.
 
 1. Check out the required repositories:
@@ -70,9 +70,9 @@ mkdir -p alica_ros_turtlesim/alica/etc/Misc
 mkdir -p alica_ros_turtlesim/Expr
 ```
 
-### 5. Setup of the ALICA Plan Designer
+## 5. Setup of the ALICA Plan Designer
 The ALICA plan designer is a user interface to design applications with the ALICA framework.
-##### Start the ALICA plan designer by following steps
+### 5.1 Start the ALICA plan designer by following steps
 
 The [GitHUB repository of the Plan Designer](https://github.com/rapyuta-robotics/alica-plan-designer-fx) includes the different releases of the Plan Designer. Download the two JAR-files from the latest release on the [release page](https://github.com/rapyuta-robotics/alica-plan-designer-fx/releases) and place them in a folder structure like this:
 
@@ -92,7 +92,7 @@ java -jar PlanDesignerFX-X.Y.Z.jar
 
 ![Empty Plan Designer](doc/Empty-PlanDesigner.png)
 
-##### Configure the Plan Designer
+### 5.2 Configure the Plan Designer
 
 1. Open the *Edit* menu from the top menu bar and choose *Configure* in order to open the Configuration window:![Configuration Window](doc/plan_designer_config.png)
 2. Fill out the fields one after another.
@@ -107,57 +107,62 @@ java -jar PlanDesignerFX-X.Y.Z.jar
    9. **Default Plugin:** Choose the code generation plugin, that should be configured as default plugin from the drop down menu. If nothing shows up, the configured *Plugins Folder* does not contain a code generation plugin.
 3. Save the configuration and set it active. If something goes wrong at this point, you probably have made a mistake in the last step.
 
-### 6. Create the Tutorial Plans with the Plan Desginer
- In this section, you will create plan using plan designer. This tutorial has two plans, `Master` and `Move`. `Master` plan has `Init` and `Move` state. `Move` plan has `Move2Center` and `AlignCircle` state.
- In the `Init` state, turtle is teleported to the random state(`Go2RandomPosition` behaviour) and transit to the `Move` state. 
-![plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/plan.png)
+## 6. Create the Tutorial Plans with the Plan Desginer
+In this section, you will create plans using the ALICA plan designer. In this tutorial there are two plans, `Master` and `Move`. The `Master` plan has an `Init` and `Move` state.  The `Move` plan includes the `Move2Center` and the `AlignCircle` state. In the `Init` state, the turtle is teleported to a random position (`Go2RandomPosition` behaviour) and then transitions to the `Move` state. 
+
+![plan](doc/plan.png)
 
 
-##### 6.1 Plan design		
-###### 6.1.1 Master plan
-![master_plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/master_plan.png)
-1. right click on Explore -> New -> Plan
-2. input Filename with `Master` then plan will open.
-3. click top blue `Master` and change `Master Plan` true in the Properties.(top bar become red from blue)
-4. Change “NewState“ with `Init`
-5. Add state named `Move`
-6. Add transition `Init` to `Move` and `Move` to `Init`.
-7. Add `Go2RandomPosition` bahaviour to “Init” state under /Plans/behaviours
-8. Add `Move` plan to `Move` state under /Plans
+## 6.1 Create the Master Plan	
+![master_plan](doc/master_plan.png)
+1. Right click on the plans folder of the FileTreeView -> New -> Plan
+2. Input Filename with `Master` then the plan will be opened.
+3. Check the masterPlan checkbox in the properties (Icon should turn red).
+4. Add states named `Init` and `Move`
+5. Add transition from `Init` to `Move` and from `Move` to `Init` (Bendpoints can be created by clicking with the active transition tool onto a transition).
+6. Create an entrypoint (choose default task) and connect it with the `Init` state. 
+7. Create the behaviour subfolder in the plans folder of the FileTreeView.
+8. Create the `Go2RandomPosition` behaviour in the behaviour subfolder .
+9. Drag'n'Drop the `Go2RandomPosition` behaviour from the RepositoryView to the `Init` state.
+10. Create the `Move` plan in the plans folder and drag'n'drop it into the `Move` state.
 
-###### 6.1.2 Move plan
-![move_plan](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/move_plan.png)
-1. Add `Move2Center` state and `AlignCircle` state
-2. Add `GoTo` behaivour to  `Move2Center` state and `AlignCircle` state under /Plans/behaviours
-3. Add “Entry point” and Task.
-Change Task name to `Leader` and `Follower`.
-4. Add “Runtime Condition” to the plan.
-5. Add “x, y” “Quantifiers” in Runtime condition properties
-				* these quantifiers will be used in writing constraints.
-![runtime_condition](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/runtime_condition.png)
+### 6.2 Move plan
+![move_plan](doc/move_plan.png)
+1. Open the `Move` plan and add two states:  `Move2Center` and `AlignCircle` 
+2. Add two entrypoints with new tasks: `Leader` and `Follower`
+3. Connect the `Leader` Task-Entrypoint to `Move2Center` and the `Follower` Task-EntryPoint to AlignCircle.
+4. Create the `GoTo` behaivour under /plans/behaviours and add it to the  `Move2Center` state and the `AlignCircle` state 
+5. Add a “Runtime Condition” to the `Move` plan by choosing the default plugin for it.
+6. Add “x y” “Quantifiers” in Runtime condition properties
+      * these quantifiers will be used in writing constraints.
+      ![runtime_condition](doc/runtime_condition.png)
 
-###### 6.1.3 Add Role
-1. Define Role -> “Add Role” -> input “Turtle”
-** Role is physical difference, i.e. Arm and AGV 
-2. Right click on Explore -> New -> Roleset -> select “Master.pml” in Choose plan 
-3. Open Roleset.rset -> Expand all -> auto layout, then you will see
-#todo add iamge
-Change Default to true as above image.
-![roleset](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/roleset.png)
+### 6.3 Create the RoleSet
 
+1. Create a the Roleset in the roles folder
+2. Define Role “Turtle”
+3. Check the defaultRoleSet checkbox
+4. Set Priority of FollowerTask to 0.1
+5. ![roleset](doc/roleset.png)
 
-4. Generate code by open any plan -> right click -> Codegeneration -> Generate all expression validators
+### 6.4 Generate Method Stubs
 
-### 7. Implement Logics 
+Start the code generation by opening the  "Codegeneration" menu and choose "Generate Code". Everything will be generated into the Expr folder of the alica_ros_turtlesim package.
+
+## 7. Implement Logics 
+
 After ALICA generate code structure, developer need to modify/implement logic. In this section, necessary code changes are explained. 
-#### 7.1 World model
+### 7.1 World model
+
 We will explain only `base_node.cpp` which is related to ALICA. 
 ![base](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/base.png)
+
 - L13: initialize World model. Since one agent has one world model, this method is class static method
 - L15~19: Setting up ALICA-supplementray. ALICA supplementary is supporting class of ALICA.
 - L21~31: Setting up ALICA Engine. 
 
-#### 7.2 Plan
+### 7.2 Plan
+
 <plan name>.cpp file has "evaluate" function runs with specific frequency which is set in Alica.conf. "evaluate" function has state transition logic. constraints/<plan name>.cpp has "getConstraints" function which is used to provide constraints.
 
 - Expr/src/Plans/Master***.cpp(*** is a id number which is generated by alica-plan-designer)
@@ -178,7 +183,7 @@ We will explain only `base_node.cpp` which is related to ALICA.
     - L74: add constraints for `Leader` agent. Leader agent moves to center of circle within tolearence
     - L83~L99: Iterate other agent to add constraints to keep distance among `Follower` agents.
 
-#### 7.3  Behaviour
+### 7.3  Behaviour
 <behaviour name>.cpp file has `run` function which keep running at specific frequency which is set in Alica.conf.
 - Expr/src/Behaviours/Go2RandomPosition.cpp
     In this file, implement turtle teleportation
@@ -202,15 +207,15 @@ We will explain only `base_node.cpp` which is related to ALICA.
     - L32~33: move turtle to the solver result position via world model.
     - L41~43: add variable to query. “x” and “y” was defined when  “Quantifiers” of “Runtime Condition” was added in the alica-plan-designer
 
-### 8. Build and Run
-#### 8.1 Build
+## 8. Build and Run
+### 8.1 Build
 follow the standard ros build step.
 ```
 cd catkin_ws
 source /opt/ros/kinetic/setup.bash
 catkin build alica_ros_turtlesim
 ```
-#### 8.2 Run
+### 8.2 Run
 Run application with roslaunch. video
 - Launch turtlesim
 			`roslaunch alica_ros_turtlesim env.launch`
