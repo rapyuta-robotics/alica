@@ -7,7 +7,6 @@
 #include "UtilityFunctionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
-#include <alica/test/TestContext.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
@@ -62,7 +61,7 @@ protected:
         alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
-        ac = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -121,22 +120,22 @@ protected:
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext::setLocalAgentName(getHostName(i));
-            alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-            ASSERT_TRUE(tc->isValid());
-            tc->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(tc);
+            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+            ASSERT_TRUE(ac->isValid());
+            ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
-            acs.push_back(tc);
+            acs.push_back(ac);
             aes.push_back(ae);
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* tc : acs) {
-            tc->terminate();
-            delete tc;
+        for (alica::AlicaContext* ac : acs) {
+            ac->terminate();
+            delete ac;
         }
     }
 };
