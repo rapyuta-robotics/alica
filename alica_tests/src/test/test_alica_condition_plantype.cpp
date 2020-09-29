@@ -1,6 +1,11 @@
+#include "test_alica.h"
+
 #include "TestConstantValueSummand.h"
 #include "TestWorldModel.h"
 
+#include <alica/test/Util.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
@@ -9,12 +14,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <alica/test/Util.h>
 
 #include <gtest/gtest.h>
-#include <test_alica.h>
 
 namespace alica
 {
@@ -63,30 +64,30 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
         //		}
         if (i == 2) {
             // Should be OtherPlan --> State
-            EXPECT_TRUE(ac->isStateActive(1418042819204));
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
         }
         if (i == 5) {
             alicaTests::TestWorldModel::getOne()->setRuntimeCondition1418042967134(true);
         }
         if (i == 6) {
             // Should be RunTimeCondition --> State
-            EXPECT_TRUE(ac->isStateActive(1418042806576));
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
         }
         if (i == 10) {
             alicaTests::TestWorldModel::getOne()->setRuntimeCondition1418042967134(false);
         }
         if (i == 12) {
             // Should be OtherPlan --> State
-            EXPECT_TRUE(ac->isStateActive(1418042819204));
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
         }
         if (i == 13) {
             alicaTests::TestWorldModel::getOne()->setPreCondition1418042929966(true);
         }
         if (i > 14) {
             // Should be PreCondition --> State
-            EXPECT_TRUE(ac->isStateActive(1418042796752));
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042796752));
         }
     }
 }
-}
-}
+} // namespace
+} // namespace alica

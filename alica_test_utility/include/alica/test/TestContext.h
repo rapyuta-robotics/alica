@@ -121,7 +121,15 @@ public:
     const alica::Agent* getAgentByID(essentials::IdentifierConstPtr agentID);
 
     /**
-     * Similar to AlicaContext::isStateActive(id), this returns true if the
+     * Checks if the state identified by id is currently active.
+     * This method should be used only when engine is trigger based.
+     * @param id ID of the state.
+     * @return True if the state identified by id is currently active, false otherwise.
+     */
+    bool isStateActive(int64_t id) const;
+
+    /**
+     * Similar to isStateActive(id), this returns true if the
      * agent has an active state in the plan with the given ID.
      * @param id ID of the plan.
      * @return True if plan is active, false otherwise.

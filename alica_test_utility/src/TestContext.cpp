@@ -93,6 +93,11 @@ const alica::Agent* TestContext::getAgentByID(essentials::IdentifierConstPtr age
     return Util::getAgentByID(_engine.get(), agentID);
 }
 
+bool TestContext::isStateActive(int64_t id) const
+{
+    return Util::isStateActive(_engine.get(), id);
+}
+
 bool TestContext::isPlanActive(int64_t id) const
 {
     return Util::isPlanActive(_engine.get(), id);

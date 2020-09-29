@@ -1,3 +1,4 @@
+#include "test_alica.h"
 
 #include "Behaviour/Attack.h"
 #include "Behaviour/MidFieldStandard.h"
@@ -18,8 +19,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/State.h>
+
 #include <gtest/gtest.h>
-#include <test_alica.h>
 
 namespace alica
 {
@@ -51,7 +52,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     // Check whether RC has been called
     EXPECT_GE(CounterClass::called, 1);
     // Check final state
-    EXPECT_TRUE(ac->isStateActive(1412761855746));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1412761855746));
     // Check execution of final state behaviour
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1402488848841));
     // Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on

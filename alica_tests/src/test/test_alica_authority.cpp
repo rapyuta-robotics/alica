@@ -1,12 +1,4 @@
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/allocationauthority/AllocationDifference.h>
-#include <engine/allocationauthority/EntryPointRobotPair.h>
-#include <engine/model/Task.h>
-#include <engine/modelmanagement/factories/TaskFactory.h>
-#include <gtest/gtest.h>
-#include <test_alica.h>
+#include "test_alica.h"
 
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
@@ -14,14 +6,27 @@
 #include "DummyTestSummand.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
-#include "engine/TeamObserver.h"
-#include "engine/UtilityFunction.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
+
+#include <engine/PlanBase.h>
+#include <engine/PlanRepository.h>
+#include <engine/TeamObserver.h>
+#include <engine/UtilityFunction.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
+#include <engine/teammanager/TeamManager.h>
+
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <engine/IAlicaCommunication.h>
+#include <engine/allocationauthority/AllocationDifference.h>
+#include <engine/allocationauthority/EntryPointRobotPair.h>
+#include <engine/model/Task.h>
+#include <engine/modelmanagement/factories/TaskFactory.h>
+#include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
+
+#include <gtest/gtest.h>
+
 
 namespace alica
 {
@@ -122,13 +127,13 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         acs[1]->stepEngine();
 
         if (i == 1) {
-            EXPECT_TRUE(acs[0]->isStateActive(1414403553717));
-            EXPECT_TRUE(acs[1]->isStateActive(1414403553717));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
         }
 
         if (i == 20) {
-            EXPECT_TRUE(acs[0]->isStateActive(1414403553717));
-            EXPECT_TRUE(acs[1]->isStateActive(1414403429950));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
         }
     }
 }

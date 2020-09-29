@@ -279,14 +279,6 @@ public:
     bool isValid();
 
     /**
-     * Checks if the state identified by id is currently active.
-     * This method should be used only when engine is trigger based.
-     *
-     * @return True if the state identified by id is currently active, false otherwise
-     */
-    bool isStateActive(int64_t id) const;
-
-    /**
      * Returns agent id for this alica context.
      *
      * @return Object representing id of local agent.

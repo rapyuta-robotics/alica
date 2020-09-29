@@ -1,5 +1,6 @@
-#include "TestWorldModel.h"
 #include "test_alica.h"
+
+#include "TestWorldModel.h"
 
 #include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
@@ -87,8 +88,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
     getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_TRUE(acs[0]->isStateActive(1413201213955));
-    ASSERT_TRUE(acs[1]->isStateActive(1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201213955));
 
     ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
     ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
