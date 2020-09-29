@@ -31,7 +31,7 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::IdentifierConstPtr agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
         : _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
@@ -39,7 +39,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _modelManager(_planRepository)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
-        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID->toByteVector().data(), agentID->toByteVector().size()) : nullptr))
+        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID.toByteVector().data(), agentID.toByteVector().size()) : nullptr))
         , _syncModul(this)
         , _behaviourPool(this)
         , _teamObserver(this)
@@ -179,9 +179,9 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding Identifier object.
  */
-essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type) const
+essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type)
 {
-    return _ctx.getIDFromBytes(idBytes, idSize, type);
+    return _ctx.getIDManager().getIDFromBytes(idBytes, idSize, type);
 }
 
 /**
@@ -191,9 +191,7 @@ essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idByte
  */
 essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
 {
-    return _ctx.generateID(size);
+    return _ctx.getIDManager().generateID(size);
 }
-
-
 
 } // namespace alica
