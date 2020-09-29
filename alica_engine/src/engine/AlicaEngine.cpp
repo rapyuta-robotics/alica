@@ -179,9 +179,9 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding Identifier object.
  */
-essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type) const
+essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type)
 {
-    return _ctx.getIDFromBytes(idBytes, idSize, type);
+    return _ctx.getIDManager().getIDFromBytes(idBytes, idSize, type);
 }
 
 /**
@@ -191,9 +191,7 @@ essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idByte
  */
 essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
 {
-    return _ctx.generateID(size);
+    return _ctx.getIDManager().generateID(size);
 }
-
-
 
 } // namespace alica

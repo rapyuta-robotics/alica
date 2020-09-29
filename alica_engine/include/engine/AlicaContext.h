@@ -219,7 +219,6 @@ public:
      * Example usage: setIDManager<essentials::IDManager>();
      *
      * @note Currently, the only implementation is essentials::IDManager
-     * @note CommunicatorType must be a derived class of IAlicaCommunication
      * @note This must be called before initializing context
      *
      * @param args Arguments to be forwarded to constructor of communicator. Might be empty.
@@ -233,7 +232,7 @@ public:
      * @note Currently, the only implementation is essentials::IDManager
      * @return A reference to id manager object being used by context
      */
-    const essentials::IDManager& getIDManager() const
+    essentials::IDManager& getIDManager() const
     {
         assert(_idManager.get());
         return *_idManager;
@@ -296,36 +295,6 @@ public:
      * Execute one step of engine synchronously
      */
     void stepEngine();
-
-    /**
-     * If present, returns the ID corresponding to the given prototype.
-     * Otherwise, it creates a new one, stores, and returns it.
-     *
-     * This method can be used, e.g., for passing an int and receiving
-     * a pointer to a corresponding ID object.
-     * @tparam Prototype Datatype of given prototyp id
-     * @param idPrototype The prototyp id
-     * @param type Type of requested ID Object
-     * @return ID object
-     */
-    template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
-
-    /**
-     * If present, returns the ID corresponding to the given bytes.
-     * Otherwise, it creates a new one, stores, and returns it.
-     *
-     * This method can be used, e.g., for passing a part of a ROS
-     * message and receiving a pointer to a corresponding ID object.
-     *
-     * @param idBytes Bytes that represent the ID
-     * @param idSize Number of bytes
-     * @param type Type of requested ID object
-     * @return ID object
-     */
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
-
-    essentials::IdentifierConstPtr generateID(std::size_t size);
 
     // TODO: Implement
     template <class T>
@@ -404,11 +373,5 @@ bool AlicaContext::existSolver() const
 {
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
-}
-
-template <class Prototype>
-essentials::IdentifierConstPtr AlicaContext::getID(Prototype& idPrototype, uint8_t type)
-{
-    return this->_idManager->getID<Prototype>(idPrototype, type);
 }
 } // namespace alica

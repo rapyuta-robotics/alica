@@ -108,8 +108,8 @@ public:
     template <class SolverType>
     bool existSolver() const;
     template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE) const;
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE) const;
+    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
     essentials::IdentifierConstPtr generateID(std::size_t size);
 
 private:
@@ -153,9 +153,9 @@ private:
  * a pointer to a corresponding Identifier object.
  */
 template <class Prototype>
-essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type) const
+essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type)
 {
-    return _ctx.getID<Prototype>(idPrototype, type);
+    return _ctx.getIDManager().getID<Prototype>(idPrototype, type);
 }
 
 template <typename T>
