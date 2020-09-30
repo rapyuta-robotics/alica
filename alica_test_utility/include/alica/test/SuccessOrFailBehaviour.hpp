@@ -8,7 +8,7 @@ template <uint32_t iterationsBeforeTrigger>
 class SuccessOrFailBehaviour : public alica::BasicBehaviour
 {
 public:
-    SuccessOrFailBehaviour<iterationsBeforeTrigger>();
+    SuccessOrFailBehaviour();
     void run(void* msg) override;
     void setTriggerType(bool triggerSuccess);
 
