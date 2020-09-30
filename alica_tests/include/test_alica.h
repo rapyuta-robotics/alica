@@ -4,32 +4,42 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
+#include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
-#include <TestWorldModel.h>
 
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <alica/test/TestContext.h>
+
+#include <gtest/gtest.h>
+#include <ros/ros.h>
 
 #include <csetjmp>
 #include <csignal>
 #include <string>
-
-#include <ros/ros.h>
-
-#include <gtest/gtest.h>
 
 #define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
 
 namespace alica
 {
 
+/**
+ * This Getter-Struct provides access to the engine for alica
+ * tests. Application tests however should not have access to the
+ * engine directly, but must live with the API of the
+ * Alica TestContext class.
+ */
+struct AlicaTestsEngineGetter
+{
+    static alica::AlicaEngine* getEngine(alica::AlicaContext* ac) { return ac->_engine.get(); }
+};
+
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::test::TestContext* tc;
+    alica::AlicaContext* ac;
+    alica::AlicaEngine* ae;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -50,18 +60,20 @@ protected:
         alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
-        tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-        ASSERT_TRUE(tc->isValid());
-        tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        ASSERT_TRUE(ac->isValid());
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-        EXPECT_EQ(tc->init(creators), 0);
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        EXPECT_TRUE(ae->init(creators));
     }
 
     void TearDown() override
     {
-        tc->terminate();
-        delete tc;
+        ac->terminate();
+        delete ac;
     }
 };
 
@@ -71,7 +83,7 @@ protected:
     void SetUp() override
     {
         AlicaTestFixture::SetUp();
-        tc->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
+        ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
     }
     void TearDown() override { AlicaTestFixture::TearDown(); }
 };
@@ -79,7 +91,8 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
-    std::vector<alica::test::TestContext*> tcs;
+    std::vector<alica::AlicaContext*> acs;
+    std::vector<alica::AlicaEngine*> aes;
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
@@ -106,24 +119,27 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::test::TestContext::setLocalAgentName(getHostName(i));
-            alica::test::TestContext* tc = new alica::test::TestContext(getRoleSetName(), getMasterPlanName(), stepEngine());
-            ASSERT_TRUE(tc->isValid());
-            tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            EXPECT_EQ(tc->init(creators), 0);
-            tcs.push_back(tc);
+            alica::AlicaContext::setLocalAgentName(getHostName(i));
+            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+            ASSERT_TRUE(ac->isValid());
+            ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+            EXPECT_TRUE(ae->init(creators));
+            acs.push_back(ac);
+            aes.push_back(ae);
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* ac : tcs) {
+        for (alica::AlicaContext* ac : acs) {
             ac->terminate();
             delete ac;
         }
     }
 };
-}
+} // namespace alica
 
 extern std::jmp_buf restore_point;
 void signalHandler(int signal);

@@ -14,7 +14,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-#include <essentials/ITrigger.hpp>
 
 #include <assert.h>
 #include <iostream>
@@ -150,8 +149,21 @@ bool BasicBehaviour::isFailure() const
 
 void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 {
+    if (!trigger)
+        return;
+
+    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
     _behaviourTrigger = trigger;
     _behaviourTrigger->registerCV(&_runCV);
+}
+
+bool BasicBehaviour::isTriggeredRunFinished()
+{
+    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
+    if (!_behaviourTrigger)
+        return false;
+
+    return !_behaviourTrigger->isNotifyCalled(&_runCV);
 }
 
 bool BasicBehaviour::doWait()
@@ -175,7 +187,7 @@ void BasicBehaviour::doInit(bool timed)
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("BB: Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
 }
 
@@ -209,7 +221,7 @@ void BasicBehaviour::doRun(bool timed)
             }
             AlicaTime duration = _engine->getAlicaClock().now() - start;
             ALICA_WARNING_MSG_IF(duration > _msInterval + AlicaTime::microseconds(100),
-                    "BB: Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
+                    "[BasicBehaviour] Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
             if (duration < _msInterval) {
                 _engine->getAlicaClock().sleep(_msInterval - duration);
             }
@@ -218,7 +230,7 @@ void BasicBehaviour::doRun(bool timed)
         while (true) {
             {
                 std::unique_lock<std::mutex> lck(_runLoopMutex);
-                _runCV.wait(lck, [this] { return _behaviourTrigger->isNotifyCalled(&_runCV) || isStopCalled() || isTerminated(); });
+                _runCV.wait(lck, [this] { return (_behaviourTrigger && _behaviourTrigger->isNotifyCalled(&_runCV)) || isStopCalled() || isTerminated(); });
                 if (isTerminated() || isStopCalled()) {
                     doStop();
                     return;

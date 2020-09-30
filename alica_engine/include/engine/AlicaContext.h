@@ -29,6 +29,7 @@ namespace alica
 
 class AlicaEngine;
 class IAlicaCommunication;
+class AlicaTestsEngineGetter;
 namespace test {
     class TestContext;
 }
@@ -274,15 +275,7 @@ public:
      *
      * @return True if object is a valid context, false otherwise
      */
-    bool isValid();
-
-    /**
-     * Checks if the state identified by id is currently active.
-     * This method should be used only when engine is trigger based.
-     *
-     * @return True if the state identified by id is currently active, false otherwise
-     */
-    bool isStateActive(int64_t id) const;
+    bool isValid() const;
 
     /**
      * Returns agent id for this alica context.
@@ -303,9 +296,8 @@ public:
     T get(AlicaOption option) const;
 
 private:
-    friend class alica::test::TestContext;
-
-    static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
+    friend class ::alica::AlicaTestsEngineGetter;
+    friend class ::alica::test::TestContext;
 
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
@@ -374,4 +366,5 @@ bool AlicaContext::existSolver() const
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
 }
+
 } // namespace alica

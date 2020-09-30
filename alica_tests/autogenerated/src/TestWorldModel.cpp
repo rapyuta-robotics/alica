@@ -1,10 +1,3 @@
-/*
- * TestWorldModel.cpp
- *
- *  Created on: Oct 14, 2014
- *      Author: Stefan Jakob
- */
-
 #include "TestWorldModel.h"
 
 #include <essentials/EventTrigger.h>
@@ -33,8 +26,6 @@ TestWorldModel::TestWorldModel()
 
 TestWorldModel::~TestWorldModel()
 {
-    delete trigger1;
-    delete trigger2;
 }
 
 void TestWorldModel::reset()

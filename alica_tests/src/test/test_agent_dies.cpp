@@ -1,17 +1,20 @@
+#include "test_alica.h"
+
+#include "TestWorldModel.h"
+
+#include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
+#include <engine/PlanBase.h>
+#include <engine/TeamObserver.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
 #include <engine/model/Task.h>
-#include <gtest/gtest.h>
-#include <test_alica.h>
+#include <engine/teammanager/TeamManager.h>
 
-#include "TestWorldModel.h"
-#include "engine/PlanBase.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
-#include <communication/AlicaDummyCommunication.h>
+#include <gtest/gtest.h>
 
 namespace alica
 {
@@ -58,94 +61,94 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 
-    tcs[0]->setClock<TestClock>();
-    tcs[1]->setClock<TestClock>();
+    acs[0]->setClock<TestClock>();
+    acs[1]->setClock<TestClock>();
 
-    tcs[0]->startEngine();
-    tcs[1]->startEngine();
+    aes[0]->start();
+    aes[1]->start();
     // Let agent announce their presence
-    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     // Process presence announcement
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
     RunningPlan::setAssignmentProtectionTime(AlicaTime::seconds(1000.0));
-    tcs[0]->setTeamTimeout(AlicaTime::milliseconds(500));
-    tcs[1]->setTeamTimeout(AlicaTime::milliseconds(500));
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    aes[0]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
+    aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
     alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
     alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_EQ(tcs[0]->getRootNode()->getActiveState()->getId(), 1413201213955);
-    ASSERT_EQ(tcs[1]->getRootNode()->getActiveState()->getId(), 1413201213955);
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201213955));
 
-    ASSERT_EQ(2, tcs[0]->getTeamSize());
-    ASSERT_EQ(2, tcs[1]->getTeamSize());
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
-    ASSERT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
-    ASSERT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActivePlan()->getId(), 1413200862180);
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], 1413200862180));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 1413200862180));
 
-    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
 
-    const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).stopCommunication();
-    const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).stopCommunication();
+    const_cast<IAlicaCommunication&>(acs[0]->getCommunicator()).stopCommunication();
+    const_cast<IAlicaCommunication&>(acs[1]->getCommunicator()).stopCommunication();
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(2000));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(2000));
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(2000));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(2000));
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    ASSERT_EQ(1, tcs[0]->getTeamSize());
-    ASSERT_EQ(1, tcs[1]->getTeamSize());
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1]));
 
-    ASSERT_EQ(0u, tcs[0]->getRootNode()->getChildren().size());
-    ASSERT_EQ(0u, tcs[1]->getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, aes[0]->getPlanBase().getRootNode()->getChildren().size());
+    ASSERT_EQ(0u, aes[1]->getPlanBase().getRootNode()->getChildren().size());
 
-    const_cast<IAlicaCommunication&>(tcs[0]->getCommunicator()).startCommunication();
-    const_cast<IAlicaCommunication&>(tcs[1]->getCommunicator()).startCommunication();
+    const_cast<IAlicaCommunication&>(acs[0]->getCommunicator()).startCommunication();
+    const_cast<IAlicaCommunication&>(acs[1]->getCommunicator()).startCommunication();
 
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    getTestClock(tcs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(tcs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
 
-    ASSERT_EQ(2, tcs[0]->getTeamSize());
-    ASSERT_EQ(2, tcs[1]->getTeamSize());
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
-    ASSERT_EQ(2, tcs[0]->getRootNode()->getChildren()[0]->getAssignment().size());
-    ASSERT_EQ(2, tcs[1]->getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
+    ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
 }
-}
-}
+} // namespace
+} // namespace alica

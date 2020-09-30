@@ -1,8 +1,10 @@
-#include "SimpleSwitches.h"
-#include "engine/IAlicaCommunication.h"
 #include "test_alica.h"
 
+#include "SimpleSwitches.h"
+
+#include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
+#include <alica/test/Util.h>
 
 namespace alica
 {
@@ -21,31 +23,31 @@ TEST_F(FailureHandling, continueOnFailure)
 {
     ASSERT_NO_SIGNAL
     SimpleSwitches::reset();
-    tc->startEngine();
-    tc->stepEngine();
+    ae->start();
+    ac->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530004915641);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530004915641));
 
     SimpleSwitches::set(0, true);
-    tc->stepEngine();
+    ac->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530069246104);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530069246104));
 
     SimpleSwitches::set(1, true);
-    tc->stepEngine();
+    ac->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1530004975275);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1530004975275));
 
     SimpleSwitches::set(2, true);
-    tc->stepEngine(); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
+    ac->stepEngine(); // Behavior should be triggered and fail immediately, causing a fast path event before the next line.
 
-    tc->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
     // in rare cases the fast path event may not be reacted on in this iteration and one more step is needed.
     // This happens if the fp-event comes while the engine is still processing.
-    tc->stepEngine();
+    ac->stepEngine();
 
-    ASSERT_EQ(tc->getDeepestNode()->getActiveState()->getId(), 1532424097662);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1532424097662));
 }
-}
-}
+} // namespace
+} // namespace alica

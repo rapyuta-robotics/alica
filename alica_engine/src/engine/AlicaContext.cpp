@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
@@ -53,34 +52,9 @@ int AlicaContext::terminate()
     return 0;
 }
 
-bool AlicaContext::isValid()
+bool AlicaContext::isValid() const
 {
     return _validTag == ALICA_CTX_GOOD;
-}
-
-bool AlicaContext::isStateActiveHelper(const RunningPlan* rp, int64_t id)
-{
-    if (!rp) {
-        return false;
-    }
-    const State* activeState = rp->getActiveState();
-    if (activeState && activeState->getId() == id) {
-        return true;
-    }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isStateActiveHelper(children[i], id)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool AlicaContext::isStateActive(int64_t id) const
-{
-    // This method should be used only when engine is trigger based
-    assert(_engine->getStepEngine());
-    return isStateActiveHelper(_engine->getPlanBase().getRootNode(), id);
 }
 
 void AlicaContext::stepEngine()
@@ -101,7 +75,8 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
  * getLocalAgentName() instead.
  * @return
  */
-std::string AlicaContext::getRobotName() {
+std::string AlicaContext::getRobotName()
+{
     return getLocalAgentName();
 }
 

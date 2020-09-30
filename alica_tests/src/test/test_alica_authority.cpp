@@ -1,12 +1,4 @@
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/allocationauthority/AllocationDifference.h>
-#include <engine/allocationauthority/EntryPointRobotPair.h>
-#include <engine/model/Task.h>
-#include <engine/modelmanagement/factories/TaskFactory.h>
-#include <gtest/gtest.h>
-#include <test_alica.h>
+#include "test_alica.h"
 
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
@@ -14,14 +6,27 @@
 #include "DummyTestSummand.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
-#include "engine/TeamObserver.h"
-#include "engine/UtilityFunction.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
+
+#include <engine/PlanBase.h>
+#include <engine/PlanRepository.h>
+#include <engine/TeamObserver.h>
+#include <engine/UtilityFunction.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
+#include <engine/teammanager/TeamManager.h>
+
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <engine/IAlicaCommunication.h>
+#include <engine/allocationauthority/AllocationDifference.h>
+#include <engine/allocationauthority/EntryPointRobotPair.h>
+#include <engine/model/Task.h>
+#include <engine/modelmanagement/factories/TaskFactory.h>
+#include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
+
+#include <gtest/gtest.h>
+
 
 namespace alica
 {
@@ -92,25 +97,25 @@ TEST(AllocationDifference, MessageCancelsUtil)
 TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
-    const Plan* plan = tcs[0]->getPlan(1414403413451);
+    const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
     ASSERT_NE(plan->getUtilityFunction(), nullptr) << "UtilityFunction is null!";
     auto uSummandAe = plan->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr = dynamic_cast<alica::DummyTestSummand*>(uSummandAe);
-    dbr->robotId = tcs[0]->getLocalAgentId();
+    dbr->robotId = acs[0]->getLocalAgentId();
 
-    auto uSummandAe2 = tcs[1]->getPlan(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
+    auto uSummandAe2 = aes[1]->getPlanRepository().getPlans().find(1414403413451)->getUtilityFunction()->getUtilSummands()[0].get();
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
-    dbr2->robotId = tcs[1]->getLocalAgentId();
+    dbr2->robotId = acs[1]->getLocalAgentId();
 
-    essentials::IdentifierConstPtr id1 = tcs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = tcs[1]->getLocalAgentId();
+    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
+    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
-    tcs[0]->startEngine();
-    tcs[1]->startEngine();
+    aes[0]->start();
+    aes[1]->start();
 
-    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
     alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
 
@@ -118,17 +123,17 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
-        tcs[0]->stepEngine();
-        tcs[1]->stepEngine();
+        acs[0]->stepEngine();
+        acs[1]->stepEngine();
 
         if (i == 1) {
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
         }
 
         if (i == 20) {
-            EXPECT_EQ(tcs[0]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403553717);
-            EXPECT_EQ(tcs[1]->getRootNode()->getChildren()[0]->getActiveState()->getId(), 1414403429950);
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
         }
     }
 }

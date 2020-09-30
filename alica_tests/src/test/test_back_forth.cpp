@@ -1,11 +1,15 @@
+#include <test_alica.h>
+
 #include "CounterClass.h"
 #include "SimpleSwitches.h"
+
+#include <alica/test/Util.h>
 #include <engine/AlicaEngine.h>
 #include <engine/PlanBase.h>
 
 #include <gtest/gtest.h>
+
 #include <iostream>
-#include <test_alica.h>
 #include <thread>
 
 namespace alica
@@ -30,28 +34,28 @@ TEST_F(BackForthTest, testing)
     SimpleSwitches::reset();
 
     ASSERT_EQ(CounterClass::called, 0);
-    tc->startEngine();
-    tc->stepEngine();
+    ae->start();
+    ac->stepEngine();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     int curCount = CounterClass::called;
     ASSERT_GT(curCount, 0);
-    ASSERT_EQ(tc->getRootNode()->getActiveState()->getId(), 1529456584983);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1529456584983));
 
     SimpleSwitches::set(0, true);
-    tc->stepEngine();
+    ac->stepEngine();
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
     ASSERT_GT(CounterClass::called, curCount);
     curCount = CounterClass::called;
-    ASSERT_EQ(tc->getRootNode()->getActiveState()->getId(), 1529456591410);
+    ASSERT_TRUE(alica::test::Util::isStateActive(ae, 1529456591410));
 
     SimpleSwitches::set(1, true);
     for (int i = 0; i < 10; ++i) {
-        tc->stepEngine();
+        ac->stepEngine();
         ASSERT_GT(CounterClass::called, curCount);
         curCount = CounterClass::called;
     }
 }
-}
-}
+} // namespace
+} // namespace alica
