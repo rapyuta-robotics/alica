@@ -1,17 +1,19 @@
+#include "TestWorldModel.h"
+#include "test_alica.h"
+
+#include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
+#include <engine/PlanBase.h>
+#include <engine/TeamObserver.h>
+#include <engine/model/Plan.h>
+#include <engine/model/State.h>
 #include <engine/model/Task.h>
-#include <gtest/gtest.h>
-#include <test_alica.h>
+#include <engine/teammanager/TeamManager.h>
 
-#include "TestWorldModel.h"
-#include "engine/PlanBase.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Plan.h"
-#include "engine/model/State.h"
-#include "engine/teammanager/TeamManager.h"
-#include <communication/AlicaDummyCommunication.h>
+#include <gtest/gtest.h>
 
 namespace alica
 {
@@ -48,40 +50,40 @@ protected:
 TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
 {
     ASSERT_NO_SIGNAL
-    ASSERT_EQ(1, tcs[0]->getTeamSize());
-    ASSERT_EQ(1, tcs[1]->getTeamSize());
-    tcs[0]->startEngine();
-    tcs[1]->startEngine();
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1]));
+    aes[0]->start();
+    aes[1]->start();
     // Let agent announce their presence
-    tcs[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     // Process presence announcement
-    tcs[0]->stepEngine();
-    tcs[1]->stepEngine();
-    ASSERT_EQ(2, tcs[0]->getTeamSize());
-    ASSERT_EQ(2, tcs[1]->getTeamSize());
+    acs[0]->stepEngine();
+    acs[1]->stepEngine();
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
     uint64_t id = 8;
-    const alica::Agent* hairydiscovered = tcs[0]->getAgentByID(tcs[0]->getIDManager().getID(id));
-    const alica::Agent* hairyoriginal = tcs[1]->getLocalAgent();
+    const alica::Agent* hairydiscovered = alica::test::Util::getAgentByID(aes[0], aes[0]->getID(id));
+    const alica::Agent* hairyoriginal = alica::test::Util::getLocalAgent(aes[1]);
     verifyAgents(hairydiscovered, hairyoriginal);
 
     id = 9;
-    const alica::Agent* nasediscovered = tcs[1]->getAgentByID(tcs[1]->getIDManager().getID(id));
-    const alica::Agent* naseoriginal = tcs[0]->getLocalAgent();
+    const alica::Agent* nasediscovered = alica::test::Util::getAgentByID(aes[1], aes[1]->getID(id));
+    const alica::Agent* naseoriginal = alica::test::Util::getLocalAgent(aes[0]);
     verifyAgents(nasediscovered, naseoriginal);
 
     // Reject agent with mismatching plan hash
     id = 11;
     alica::AgentAnnouncement aa;
-    aa.planHash = tcs[0]->getVersion() + 1;
-    aa.senderSdk = tcs[0]->getVersion();
-    aa.senderID = tcs[0]->getIDManager().getID(id);
+    aa.planHash = acs[0]->getVersion() + 1;
+    aa.senderSdk = acs[0]->getVersion();
+    aa.senderID = aes[0]->getID(id);
     aa.roleId = 1222973297047; // Attacker
     aa.senderName = "myo";
-    tcs[0]->handleAgentAnnouncement(aa);
-    tcs[0]->stepEngine();
-    const alica::Agent* myodiscovered = tcs[0]->getAgentByID(tcs[0]->getIDManager().getID(id));
+    aes[0]->editTeamManager().handleAgentAnnouncement(aa);
+    acs[0]->stepEngine();
+    const alica::Agent* myodiscovered = alica::test::Util::getAgentByID(aes[0], aes[0]->getID(id));
     ASSERT_EQ(myodiscovered, nullptr);
 }
-}
-}
+} // namespace
+} // namespace alica

@@ -1,6 +1,7 @@
 #include "alica/test/TestContext.h"
 
 #include "alica/test/TestBehaviourCreator.h"
+#include "alica/test/Util.h"
 
 #include <engine/BasicBehaviour.h>
 #include <engine/IRoleAssignment.h>
@@ -13,11 +14,13 @@ namespace alica::test
 
 TestContext::TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
         : AlicaContext(roleSetName, masterPlanName, stepEngine, agentID)
+        , _initCalled(false)
 {
 }
 
 int TestContext::init(AlicaCreators& creatorCtx)
 {
+    _initCalled = true;
     if (_communicator) {
         _communicator->startCommunication();
     }
@@ -35,6 +38,8 @@ void TestContext::startEngine()
 
 bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
 {
+    assert(_initCalled == false &&
+            "[TestContext] The method makeBehaviourEventDriven(behaviourID) must be called, before the TestContext is initialised via its init-Method!");
     const Behaviour* constBehaviour = _engine->getPlanRepository().getBehaviours().find(behaviourID);
     if (constBehaviour == nullptr) {
         return false;
@@ -43,132 +48,49 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     return true;
 }
 
-std::unique_ptr<BehaviourTrigger> TestContext::setBehaviourTrigger(int64_t behaviourID, int64_t configurationID)
+std::shared_ptr<essentials::ITrigger> TestContext::addBehaviourTrigger(
+        int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger)
 {
-    std::shared_ptr<alica::BasicBehaviour> behaviour = nullptr;
-    for (auto& behaviourEntry : _engine->getBehaviourPool().getAvailableBehaviours()) {
-        if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
-                (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
-                                      : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
-            behaviour = behaviourEntry.second;
-        }
-    }
-
-    if (behaviour) {
-        std::unique_ptr<BehaviourTrigger> trigger = std::make_unique<BehaviourTrigger>();
-        behaviour->setTrigger(trigger.get());
-        return std::move(trigger);
+    // create a trigger, if none is passed
+    std::shared_ptr<essentials::ITrigger> behaviourTrigger;
+    if (!trigger) {
+        behaviourTrigger = std::make_shared<BehaviourTrigger>();
     } else {
-        return nullptr;
+        behaviourTrigger = trigger;
     }
+
+    // register the trigger in the TestContext trigger-map
+    auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
+    auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
+    if (behaviourTriggerEntry == _behaviourTriggers.end()) {
+        _behaviourTriggers[behaviourConfKey] = behaviourTrigger;
+    } else {
+        std::cerr << "[TestContext] Trigger for behaviourID " << behaviourID << " and configurationID " << configurationID << " already exists!" << std::endl;
+    }
+
+    // return the registered trigger
+    return behaviourTrigger;
 }
 
-void TestContext::handleAgentAnnouncement(alica::AgentAnnouncement agentAnnouncement)
+std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
 {
-    _engine->editTeamManager().handleAgentAnnouncement(agentAnnouncement);
-}
-
-void TestContext::setTeamTimeout(AlicaTime timeout)
-{
-    _engine->editTeamManager().setTeamTimeout(timeout);
-}
-
-void TestContext::tickTeamManager()
-{
-    _engine->editTeamManager().tick();
-}
-
-void TestContext::tickTeamObserver(alica::RunningPlan* root)
-{
-    _engine->editTeamObserver().tick(root);
-}
-
-void TestContext::tickRoleAssignment()
-{
-    _engine->editRoleAssignment().tick();
-}
-
-alica::PlanSelector* TestContext::getPlanSelector()
-{
-    return _engine->getPlanBase().getPlanSelector();
-}
-
-alica::RunningPlan* TestContext::makeRunningPlan(const alica::Plan* plan, const alica::Configuration* configuration)
-{
-    return _engine->editPlanBase().makeRunningPlan(plan, configuration);
-}
-
-VariableSyncModule& TestContext::editResultStore() {
-    return _engine->editResultStore();
-}
-
-//////////////////////////////////////////////////////
-// Getter for tests ... everything returned is const//
-//////////////////////////////////////////////////////
-
-const RunningPlan* TestContext::getDeepestNode()
-{
-    return _engine->getPlanBase().getDeepestNode();
-}
-
-const RunningPlan* TestContext::getRootNode()
-{
-    return _engine->getPlanBase().getRootNode();
-}
-
-const BlackBoard& TestContext::getBlackBoard()
-{
-    return _engine->getBlackBoard();
-}
-
-const BehaviourPool& TestContext::getBehaviourPool()
-{
-    return _engine->getBehaviourPool();
+    assert(_initCalled == true);
+    return Util::getBasicBehaviour(_engine.get(), behaviourID, configurationID);
 }
 
 int TestContext::getTeamSize()
 {
-    return _engine->getTeamManager().getTeamSize();
+    return Util::getTeamSize(_engine.get());
 }
 
-const DomainVariable* TestContext::getDomainVariable(essentials::IdentifierConstPtr agentID, std::string sort)
+bool TestContext::isStateActive(int64_t id) const
 {
-    return _engine->getTeamManager().getDomainVariable(agentID, sort);
+    return Util::isStateActive(_engine.get(), id);
 }
 
-const alica::Agent* TestContext::getLocalAgent()
+bool TestContext::isPlanActive(int64_t id) const
 {
-    return _engine->getTeamManager().getLocalAgent();
-}
-
-const alica::Agent* TestContext::getAgentByID(essentials::IdentifierConstPtr agentID)
-{
-    return _engine->getTeamManager().getAgentByID(agentID);
-}
-
-const Plan* TestContext::getPlan(int64_t planID)
-{
-    return _engine->getPlanRepository().getPlans().find(planID);
-}
-
-const alica::PlanRepository::Accessor<Plan> TestContext::getPlans()
-{
-    return _engine->getPlanRepository().getPlans();
-}
-
-const Behaviour* TestContext::getBehaviour(int64_t behaviourID)
-{
-    return _engine->getPlanRepository().getBehaviours().find(behaviourID);
-}
-
-const alica::PlanRepository::Accessor<Behaviour> TestContext::getBehaviours()
-{
-    return _engine->getPlanRepository().getBehaviours();
-}
-
-const State* TestContext::getState(int64_t stateID)
-{
-    return _engine->getPlanRepository().getStates().find(stateID);
+    return Util::isPlanActive(_engine.get(), id);
 }
 
 } // namespace alica::test

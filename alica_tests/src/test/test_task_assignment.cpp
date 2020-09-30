@@ -1,30 +1,31 @@
+#include "test_alica.h"
+
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
-#include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
-#include "engine/IRoleAssignment.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
-#include "engine/RunningPlan.h"
-#include "engine/TeamObserver.h"
-#include "engine/collections/RobotEngineData.h"
-#include "engine/collections/RobotProperties.h"
-#include "engine/containers/AgentAnnouncement.h"
-#include "engine/model/AbstractPlan.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
-#include "engine/model/Plan.h"
-#include "engine/planselector/PlanSelector.h"
-#include "engine/teammanager/Agent.h"
-#include "engine/teammanager/TeamManager.h"
-#include <test_alica.h>
+
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
+#include <engine/IRoleAssignment.h>
+#include <engine/PlanBase.h>
+#include <engine/PlanRepository.h>
+#include <engine/RunningPlan.h>
+#include <engine/TeamObserver.h>
+#include <engine/collections/RobotEngineData.h>
+#include <engine/collections/RobotProperties.h>
+#include <engine/containers/AgentAnnouncement.h>
+#include <engine/model/AbstractPlan.h>
+#include <engine/model/ConfAbstractPlanWrapper.h>
+#include <engine/model/Plan.h>
+#include <engine/planselector/PlanSelector.h>
+#include <engine/teammanager/Agent.h>
+#include <engine/teammanager/TeamManager.h>
 #include <essentials/IdentifierConstPtr.h>
 
 #include <gtest/gtest.h>
+
 #include <list>
-#include <memory>
-#include <ros/ros.h>
 #include <vector>
 
 namespace alica
@@ -49,14 +50,14 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     alica::AgentAnnouncement aa;
     aa.planHash = 0;
-    aa.senderSdk = tc->getVersion();
+    aa.senderSdk = ac->getVersion();
     aa.token = 55;
     for (int agentId = 8; agentId <= 11; ++agentId) {
         if (agentId == 9) {
             continue;
         }
 
-        aa.senderID = tc->getIDManager().getID<int>(agentId);
+        aa.senderID = ac->getIDManager().getID<int>(agentId);
         if (agentId == 8) {
             aa.roleId = 1222973297047; // Attacker
             aa.senderName = "hairy";
@@ -68,26 +69,26 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
             aa.senderName = "myo";
         }
 
-        tc->handleAgentAnnouncement(aa);
+        ae->editTeamManager().handleAgentAnnouncement(aa);
         robots.push_back(aa.senderID);
     }
 
-    tc->tickTeamManager();
-    tc->tickTeamObserver(nullptr);
-    tc->tickRoleAssignment();
-    // fake inform the team observer about roles of none existing robots
+    ae->editTeamManager().tick();
+    ae->editTeamObserver().tick(nullptr);
+    ae->editRoleAssignment().tick();
 
-    alica::RunningPlan* rp = tc->makeRunningPlan(tc->getPlan(1407152758497), nullptr);
+    // fake inform the team observer about roles of none existing robots
+    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
-    wrapper->setAbstractPlan(tc->getPlan(1407152758497));
+    wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
     inputWrappers.push_back(wrapper);
-    alica::PlanSelector* ps = tc->getPlanSelector();
+    alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
 }
-}
-}
+} // namespace
+} // namespace alica
