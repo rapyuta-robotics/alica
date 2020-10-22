@@ -1,7 +1,3 @@
-
-
-[TOC]
-
 # Documentation
 
 The documentation of the ALICA Framework is organised in small articles that are readable in 5-10 minutes. Therefore, you can use it as a lookup dictionary. However, we also tried to arrange the articles in an order that allows you to read the documentation as a whole, from start to end. 
@@ -10,12 +6,12 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 ## The ALICA Language
 
-## Propositional ALICA
+### Propositional ALICA
 
 The propositional part of ALICA includes the core concepts that are relevant to all use cases and application scenarios.
 
-1. [Domain-Independence](articles/domain_independence.md)
-2. [Behaviours](articles/behaviours.md)
+1. [Domain-Independence](docs/articles/domain-independence.md)
+2. [Behaviours](docs/articles/behaviours.md)
 3. Finite-State Machines
 4. Entrypoints
 5. Conditions
@@ -24,7 +20,7 @@ The propositional part of ALICA includes the core concepts that are relevant to 
 8. Utility Functions
 9. Roles
 
-## General ALICA
+### General ALICA
 
 General ALICA extents Propositional ALICA with concepts that enable more sophisticated use cases by utilising configurations, variables, and problem solvers.
 
