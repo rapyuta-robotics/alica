@@ -3,3 +3,8 @@ gem "github-pages", group: :jekyll_plugins
 title: The ALICA Framework
 description: A Language for Interactive Cooperative Agents
 show_downloads: false
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
