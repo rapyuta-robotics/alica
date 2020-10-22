@@ -10,8 +10,8 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 The propositional part of ALICA includes the core concepts that are relevant to all use cases and application scenarios.
 
-1. [Domain-Independence](docs/articles/domain-independence.md)
-2. [Behaviours](docs/articles/behaviours.md)
+1. [Domain-Independence](./articles/domain-independence.html)
+2. [Behaviours](./articles/behaviours.html)
 3. Finite-State Machines
 4. Entrypoints
 5. Conditions
