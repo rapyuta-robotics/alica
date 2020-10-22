@@ -58,10 +58,9 @@ install(DIRECTORY include/
 ## Doxygen ##
 #############
 
-option(BUILD_DOC "Generate Doxygen Documentation" OFF)
-#set(BUILD_DOC OFF)
 find_package(Doxygen)
-if (DOXYGEN_FOUND AND BUILD_DOC)
+option(BUILD_DOXYGEN "Generate Doxygen Documentation")
+if (DOXYGEN_FOUND AND BUILD_DOXYGEN)
   # set input and output files
   set(DOCS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../docs/doxygen)
   set(DOXYGEN_IN ${DOCS_DIR}/../Doxyfile.in)
@@ -77,6 +76,6 @@ if (DOXYGEN_FOUND AND BUILD_DOC)
     COMMENT "Generating API documentation with Doxygen into ${DOCS_DIR}"
     VERBATIM
   )
-elseif (BUILD_DOC)
+elseif (BUILD_DOXYGEN)
         message("Doxygen needs to be installed to generate the Doxygen Documentation for ${PROJECT_NAME}")
-endif (DOXYGEN_FOUND AND BUILD_DOC)
+endif (DOXYGEN_FOUND AND BUILD_DOXYGEN)
