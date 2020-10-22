@@ -92,3 +92,6 @@ alica_plan_designer/bin/linux.gtk.x86/configuration
 # clion
 **/.idea
 **/cmake-build-debug
+
+# doxygen
+**/doxygen
