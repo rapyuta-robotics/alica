@@ -31,7 +31,10 @@ General ALICA extents Propositional ALICA with concepts that enable more sophist
 
 ## The ALICA Engine
 
-To be done: Implementation specific things, like AlicaContext, interfaces for clock, solvers, configs, communication, code structure of generated code, etc.
+To be done: 
+
+- Implementation specific things, like AlicaContext, interfaces for clock, solvers, configs, communication, code structure of generated code, etc.
+- Maybe implementations in different languages in future (Java and Python are currently work-in-progress)
 
 ## The ALICA Plan Designer
 
