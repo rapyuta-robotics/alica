@@ -12,7 +12,7 @@ The propositional part of ALICA includes the core concepts that are relevant to 
 
 1. [Domain-Independence](./articles/domain-independence.md)
 2. [Behaviours](./articles/behaviours.md)
-3. Finite-State Machines
+3. [Finite-State Machines](./articles/finite-state_machines.md)
 4. Entrypoints
 5. Conditions
 6. Plans
