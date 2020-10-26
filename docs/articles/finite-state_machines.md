@@ -20,4 +20,4 @@ A FSM can be executed by multiple agents at the same time. In that case, each ag
 
 ### Example: Cleaning Up
 
-![FSM Example: Cleaning Up](/home/emmeda/Work/amrws/src/rr_amr_lbc/alica/docs/images/fsm_example.svg)
+![FSM Example: Cleaning Up](../images/fsm_example.svg)
