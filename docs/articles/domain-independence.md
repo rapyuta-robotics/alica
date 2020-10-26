@@ -1,6 +1,6 @@
 # Domain-Independence
 
-The domain-independence of the ALICA Framework allowed to build a substantial [application portfolio](./articles/application_portfolio.md) over the time. In this article, we explain how the ALICA Language supports this domain-independence by encapsulating domain-specific elements in distinct core concepts.
+The domain-independence of the ALICA Framework allowed to build a substantial [application portfolio](application_portfolio.md) over the time. In this article, we explain how the ALICA Language supports this domain-independence by encapsulating domain-specific elements in distinct core concepts.
 
 The four concepts that include domain-specific content are:
 
