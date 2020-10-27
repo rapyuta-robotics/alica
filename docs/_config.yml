@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+theme: jekyll-theme-slate
 gem "github-pages", group: :jekyll_plugins
 title: The ALICA Framework
 description: A Language for Interactive Cooperative Agents
