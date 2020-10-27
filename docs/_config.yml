@@ -8,3 +8,4 @@ plugins:
 relative_links:
   enabled: true
   collections: true
+google_analytics: UA-53174037-1
