@@ -24,7 +24,7 @@ As you can see by the different tasks, the two FSMs have a different purpose but
 
 An open question now is: How do agents in the first FSM get to know about items found and identified by agents in the second FSM?
 
-Obviously this part is about specifics of the household domain. Therefore, it would be fair to implement the domain-specific information sharing outside the scope of the ALICA program and only provide the agents with available domain-specific information via the domain-specific code of behaviours and conditions. However, the core concepts of the [General ALICA](../README.md#General-ALICA) part also provide features that help to address this issue.
+Obviously this part is about specifics of the household domain. Therefore, it would be fair to implement the domain-specific information sharing outside the scope of the ALICA program and only provide the agents with available domain-specific information via the domain-specific code of behaviours and conditions. However, the core concepts of [General ALICA](../README.md#General-ALICA) also provide features that help to address this issue.
 
 ## Success Semantics
 
