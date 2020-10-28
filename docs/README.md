@@ -8,27 +8,23 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 ### Propositional ALICA
 
-The propositional part of ALICA includes the core concepts that are relevant to all use cases and application scenarios.
+#### Core Concepts
 
-1. [Domain-Independence](./articles/domain-independence.md)
-2. [Behaviours](./articles/behaviours.md)
-3. [Finite-State Machines](./articles/finite-state_machines.md)
-4. [Conditions](./articles/conditions.md)
-5. [Entrypoints](./articles/entrypoints.md)
-6. [Tasks](./articles/tasks.md)
-7. [Plans](./articles/plans.md)
-8. Plantypes
-9. Utility Functions
-10. Roles
+[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), Plantypes, Utility Functions, Roles
+
+#### Algorithms
+
+Task Allocation, Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
 
 ### General ALICA
 
-General ALICA extents Propositional ALICA with concepts that enable more sophisticated use cases by utilising configurations, variables, and problem solvers.
+#### Core Concepts
 
-1. Configurations
-2. Variables
-3. Constraints
-4. Solvers
+Configurations, Variables, Constraints, Solvers
+
+#### Algorithms
+
+Constraint Queries, Constraint Composition, Constraint Management, Variable Synchronisation
 
 ## The ALICA Engine
 
