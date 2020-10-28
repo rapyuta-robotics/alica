@@ -37,3 +37,6 @@ If the item is placed back correctly, the agent enters the success state and the
 Now with this example in mind, you can see that states describe what an agent should do, while transitions are passed when certain goals are achieved. **Please note:** This semantics is slightly different from normal FSM semantics, where states typically describe states of the world and another state is reached by executing an action attached to a transition. 
 
 Finally, the core concepts of [tasks](tasks.md), [entrypoints](entrypoints.md), [plans](plans.md), and [plan hierarchies](plan_hierarchies.md) are closely related to FSM as well, but they are explained in their own articles for keeping each article short.
+
+**NAV** prev: [Behaviours](behaviours.md) *top: [Domain-Independence](domain-independence.md)* *next: [Conditions](conditions.md)*
+

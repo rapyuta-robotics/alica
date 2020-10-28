@@ -5,3 +5,5 @@ In the ALICA language, the concept of a task describes an abstract kind of struc
 Therefore, tasks annotate FSMs by being attached to their [entrypoints](entrypoints.md). FSMs that have the same task attached to their [entrypoints](entrypoints.md) are expected to be similar with respect to the actions that are executed in the FSMs. This allows the ALICA Engine to decide which agent should execute which FSM. More details about how the ALICA Framework solves the problem of assigning FSMs to agents are given in the [task allocation article](task_allocation.md). 
 
 **Remember:** A task is just an abstract way of annotating FSMs and should be reusable for multiple FSMs that do similar things.
+
+**NAV** prev: [Entrypoints](entrypoints.md) *top: [Domain-Independence](domain-independence.md)* *next: [Plans](plans.md)*

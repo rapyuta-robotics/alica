@@ -14,3 +14,5 @@ In 2009 the ALICA Framework was born and since then proved its usability and rob
 |                        | [iFollow](https://www.ifollow.fr/) showed interest in the ALICA Framework for coordinating their AGVs in 2019. |
 | Web Services           | The [Distributed Systems Research Group](http://www.uni-kassel.de/eecs/fachgebiete/vs/) utilised ALICA for the coordination of the co-evolution process of web services in their research project [PROSECCO](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/prosecco.html) from 2015 until 2019. |
 
+**NAV** *top: [Domain-Independence](domain-independence.md)*
+
