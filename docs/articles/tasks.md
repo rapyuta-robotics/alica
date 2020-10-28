@@ -6,4 +6,4 @@ Therefore, tasks annotate FSMs by being attached to their [entrypoints](entrypoi
 
 **Remember:** A task is just an abstract way of annotating FSMs and should be reusable for multiple FSMs that do similar things.
 
-**NAV** prev: [Entrypoints](entrypoints.md) *top: [Overview](README.md)* *next: [Plans](plans.md)*
+**NAV** prev: [Entrypoints](entrypoints.md) *top: [Overview](../README.md)* *next: [Plans](plans.md)*
