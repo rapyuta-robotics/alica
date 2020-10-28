@@ -31,3 +31,5 @@ Obviously this part is about specifics of the household domain. Therefore, it wo
 For the progress in an ALICA program, it is important to know when a plan is successful or when it failed. 
 
 to be done
+
+**NAV** *prev: [Tasks](tasks.md)*  *top: [Overview](README.md)* *next: [Plantypes](plantypes.md)*
