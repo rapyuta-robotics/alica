@@ -20,5 +20,5 @@ Please note the different semantics between postconditions and the other two con
 
 Table 1 gives a concise overview of all three condition types, together with the core concepts, where they are used and their corresponding semantics in these contexts.
 
-**NAV** prev: [Finite-State Machines](finite-state_machines.md) *top: [Domain-Independence](domain-independence.md)* *next: [Entrypoints](entrypoints.md)*
+**NAV** prev: [Finite-State Machines](finite-state_machines.md) *top: [Overview](README.md)* *next: [Entrypoints](entrypoints.md)*
 
