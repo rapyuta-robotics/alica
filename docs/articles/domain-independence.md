@@ -17,4 +17,4 @@ Additionally to these four concepts, the notion of a particular [task](finite-st
 
 You want to know how all these element work together? Then we recommend to read the article about [behaviours](behaviours.md) as they are the most fundamental building block of the ALICA Language.
 
-**NAV** *top: [Domain-Independence](domain-independence.md)* *next: [Behaviours](behaviours.md)*
+**NAV** *top: [Documentation](README.md)* *next: [Behaviours](behaviours.md)*

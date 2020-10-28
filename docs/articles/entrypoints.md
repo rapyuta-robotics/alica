@@ -8,4 +8,4 @@ The *maximum cardinality* of an entrypoint defines the maximum number of agents 
 
 Another core concept that is attached to an entrypoint is the concept of [tasks](tasks.md) in the ALICA language. Tasks are explained in their own article.
 
-**NAV** prev: [Conditions](conditions.md) *top: [Domain-Independence](domain-independence.md)* *next: [Tasks](tasks.md)*
+**NAV** prev: [Conditions](conditions.md) *top: [Overview](README.md)* *next: [Tasks](tasks.md)*
