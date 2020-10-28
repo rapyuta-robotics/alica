@@ -38,5 +38,5 @@ Now with this example in mind, you can see that states describe what an agent sh
 
 Finally, the core concepts of [tasks](tasks.md), [entrypoints](entrypoints.md), [plans](plans.md), and [plan hierarchies](plan_hierarchies.md) are closely related to FSM as well, but they are explained in their own articles for keeping each article short.
 
-**NAV** prev: [Behaviours](behaviours.md) *top: [Overview](README.md)* *next: [Conditions](conditions.md)*
+**NAV** prev: [Behaviours](behaviours.md) *top: [Overview](../README.md)* *next: [Conditions](conditions.md)*
 
