@@ -16,3 +16,5 @@ Simply put, while the domain expert defines the thresholds for reaching a goal p
 Additionally to these four concepts, the notion of a particular [task](finite-state_machines.md) and [role](roles.md) is also domain-specific, although no domain-specific code needs to be provided in that case. Instead, the ALICA Framework support the modelling of tasks and roles directly.
 
 You want to know how all these element work together? Then we recommend to read the article about [behaviours](behaviours.md) as they are the most fundamental building block of the ALICA Language.
+
+**NAV** *top: [Domain-Independence](domain-independence.md)* *next: [Behaviours](behaviours.md)*
