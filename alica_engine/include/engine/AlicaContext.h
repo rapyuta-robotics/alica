@@ -295,6 +295,13 @@ public:
     template <class T>
     T get(AlicaOption option) const;
 
+    /**
+     * Sets the path and name for the yaml configuration file.
+     * @param configPath Relative path to the yaml configuration file
+     * @param configName Name of the yaml configuration file, defaults to Alica
+     */
+    void setConfigPathYaml(std::string configPath, std::string configName = "Alica");
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -307,6 +314,9 @@ private:
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+
+    std::string configPath;
+    std::string configName;
 };
 
 template <class ClockType, class... Args>
