@@ -1,14 +1,3 @@
-# message and service generated files
-msg_gen/
-msg_cs_gen/
-srv_gen/
-srv_cs_gen/
-proxy_gen/
-idl_gen/
-
-# documentation
-doc/
-
 # log files
 log/temp/
 
@@ -24,31 +13,8 @@ devel/
 *.mdb
 *.o
 
-# ignore that eclipse stuff
-*.pydevproject
-.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.classpath
-.settings/
-.loadpath
-/src/main/resources/rebel.xml
-# External tool builders
-.externalToolBuilders/ 
-
 # visual studio code
 .vscode/
-
-# clion
-.idea/
-cmake-build-debug/
 
 # system backup files from several editors
 *.swp
@@ -56,42 +22,6 @@ cmake-build-debug/
 _*.py
 _*.pyc
 
-# vision distance look up table
-DistanceLookup.dat
-RayLookup.dat
-
-# unknown? please comment
-autom4te.cache
-config.log
-config.status
-*.la
-*.lo
-
-# K-Develop Project files
-*.kdev4
-*.kdev4/
-
-# QT-Creator Project files
-*.txt.user
-qtcreator-build/
-
-#ignore eagle backup something
-*.*#*
-*.epf
-
-# negated patterns (have to below rules, they overright)
-!alica_plan_designer/bin
-alica_plan_designer/bin/linux.gtk.x86_64/workspace
-alica_plan_designer/bin/linux.gtk.x86_64/configuration
-alica_plan_designer/bin/linux.gtk.x86/workspace
-alica_plan_designer/bin/linux.gtk.x86/configuration
-
-# coala
-*.orig
-
 # clion
 **/.idea
 **/cmake-build-debug
-
-# doxygen
-**/doxygen
