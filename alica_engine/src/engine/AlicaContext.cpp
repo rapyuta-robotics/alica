@@ -2,6 +2,7 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/IdentifierConstPtr.h>
+#include "engine/ConfigInizializer.h"
 
 namespace alica
 {
@@ -30,6 +31,14 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
+    if (_configPath) {
+        ConfigInitializer configInitializer(_configPath, _configName);
+        YAML::Node* _configRootNode = configInitializer.loadConfig();
+    } else {
+        ConfigInitializer configInitializer;
+        YAML::Node* _configRootNode = configInitializer.loadConfig();
+    }
+    
     if (_communicator) {
         _communicator->startCommunication();
     }
