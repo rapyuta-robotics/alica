@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# this shell script fails, if any command in it fails
+set -e 
+
 # absolut path to this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
