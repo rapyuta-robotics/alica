@@ -315,8 +315,8 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
 
-    std::string configPath;
-    std::string configName;
+    std::string _configPath;
+    std::string _configName;
 };
 
 template <class ClockType, class... Args>
