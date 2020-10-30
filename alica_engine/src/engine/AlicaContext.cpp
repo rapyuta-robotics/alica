@@ -102,8 +102,8 @@ void AlicaContext::setConfigPath(const std::string& path)
 
 void AlicaContext::setConfigPath(const std::string& configPath, const std::string& configName)
 {
-    this->configPath = configPath;
-    this->configName = configName;
+    this->_configPath = configPath;
+    this->_configName = configName;
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
