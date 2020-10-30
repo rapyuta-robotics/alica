@@ -100,6 +100,12 @@ void AlicaContext::setConfigPath(const std::string& path)
     essentials::SystemConfig::getInstance().setConfigPath(path);
 }
 
+void AlicaContext::setConfigPath(const std::string& configPath, const std::string& configName)
+{
+    this->configPath = configPath;
+    this->configName = configName;
+}
+
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
 {
     major = ALICA_VERSION_MAJOR;
