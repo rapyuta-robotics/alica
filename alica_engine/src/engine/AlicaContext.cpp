@@ -2,7 +2,7 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/IdentifierConstPtr.h>
-#include "engine/ConfigInizializer.h"
+#include "engine/ConfigInitializer.h"
 
 namespace alica
 {
@@ -31,14 +31,10 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
-    if (_configPath) {
-        ConfigInitializer configInitializer(_configPath, _configName);
-        YAML::Node* _configRootNode = configInitializer.loadConfig();
-    } else {
-        ConfigInitializer configInitializer;
-        YAML::Node* _configRootNode = configInitializer.loadConfig();
+    if (!_configRootNode) {
+        initConfig();
     }
-    
+
     if (_communicator) {
         _communicator->startCommunication();
     }
@@ -109,10 +105,10 @@ void AlicaContext::setConfigPath(const std::string& path)
     essentials::SystemConfig::getInstance().setConfigPath(path);
 }
 
-void AlicaContext::setConfigPath(const std::string& configPath, const std::string& configName)
+void AlicaContext::initConfig(const std::string configPath, const std::string configName)
 {
-    this->_configPath = configPath;
-    this->_configName = configName;
+    ConfigInitializer configInitializer;
+    _configRootNode = configInitializer.loadConfig(configPath, configName);
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
