@@ -18,6 +18,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <yaml-cpp/yaml.h>
 
 namespace essentials
 {
@@ -300,7 +301,7 @@ public:
      * @param configPath Relative path to the yaml configuration file
      * @param configName Name of the yaml configuration file, defaults to Alica
      */
-    void setConfigPathYaml(std::string configPath, std::string configName = "Alica");
+    void setConfigPath(std::string configPath, std::string configName = "Alica");
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
@@ -317,6 +318,7 @@ private:
 
     std::string _configPath;
     std::string _configName;
+    YAML::Node _configRootNode;
 };
 
 template <class ClockType, class... Args>
