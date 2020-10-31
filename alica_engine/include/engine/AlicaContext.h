@@ -298,10 +298,10 @@ public:
 
     /**
      * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file.
+     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
      * @param configName Name of the yaml configuration file, defaults to Alica.
      */
-    void initConfig(std::string configPath, std::string configName = "Alica");
+    void initConfig(std::string configPath = "/etc", std::string configName = "Alica");
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
