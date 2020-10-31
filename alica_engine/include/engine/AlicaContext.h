@@ -110,6 +110,14 @@ public:
      */
     static void setRootPath(const std::string& path);
 
+    //TODO: Rename to setRootPath after removing old SystemConfig and static setRootPath function
+    /**
+     * Set root path for this process.
+     *
+     * @param path Root path
+     */
+    void setRootPathNonStatic(const std::string& path);
+
     /**
      * Set config path for this process.
      *
@@ -319,6 +327,8 @@ private:
     std::string _configPath;
     std::string _configName;
     YAML::Node _configRootNode;
+
+    std::string _rootPath;
 };
 
 template <class ClockType, class... Args>

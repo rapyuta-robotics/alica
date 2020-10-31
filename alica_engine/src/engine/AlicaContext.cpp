@@ -108,7 +108,12 @@ void AlicaContext::setConfigPath(const std::string& path)
 void AlicaContext::initConfig(const std::string configPath, const std::string configName)
 {
     ConfigInitializer configInitializer;
-    _configRootNode = configInitializer.loadConfig(configPath, configName);
+    _configRootNode = configInitializer.loadConfig(_rootPath + configPath, configName);
+}
+
+void AlicaContext::setRootPathNonStatic(const std::string& path)
+{
+    _rootPath = path;
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
