@@ -1,18 +1,12 @@
-#include "ConfigInitializer.h"
+#include "engine/ConfigInitializer.h"
 
 namespace alica
 {
-    ConfigInitializer::ConfigInitializer(std::string configPath = "/etc", std::string configName = "Alica")
+    YAML::Node ConfigInitializer::loadConfig(std::string configPath, std::string configName)
     {
-        _configPath = configPath;
-        _configName = configName;
-    }
-
-    YAML::Node* ConfigInitializer::loadConfig()
-    {
-        YAML::Node* node;
+        YAML::Node node;
         try {
-            node = new YAML::LoadFile(_configPath + "/" + _configName + ".yaml");
+            node = YAML::LoadFile(configPath + "/" + configName + ".yaml");
         } catch (YAML::BadFile& badFile) {
             AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
         }
