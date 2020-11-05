@@ -58,8 +58,11 @@ install(DIRECTORY include/
 ## Doxygen ##
 #############
 
-find_package(Doxygen)
+# The BUILD_DOXYGEN option can be set via
+# catkin build <package_name> --cmake-args -DBUILD_DOXYGEN=ON
 option(BUILD_DOXYGEN "Generate Doxygen Documentation")
+
+find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND AND BUILD_DOXYGEN)
   # set input and output files
   set(DOCS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../docs/doxygen)
@@ -77,5 +80,5 @@ if (DOXYGEN_FOUND AND BUILD_DOXYGEN)
     VERBATIM
   )
 elseif (BUILD_DOXYGEN)
-        message("Doxygen needs to be installed to generate the Doxygen Documentation for ${PROJECT_NAME}")
+  message("Doxygen needs to be installed to generate the Doxygen Documentation for ${PROJECT_NAME}")
 endif (DOXYGEN_FOUND AND BUILD_DOXYGEN)
