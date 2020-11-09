@@ -110,14 +110,6 @@ public:
      */
     static void setRootPath(const std::string& path);
 
-    //TODO: Rename to setRootPath after removing old SystemConfig and static setRootPath function
-    /**
-     * Set root path for this process.
-     *
-     * @param path Root path
-     */
-    void setRootPathNonStatic(const std::string& path);
-
     /**
      * Set config path for this process.
      *
@@ -307,9 +299,13 @@ public:
     /**
      * Initializes yaml configuration.
      * @param configPath Relative path to the yaml configuration file, defaults to /etc.
-     * @param configName Name of the yaml configuration file, defaults to Alica.
      */
-    void initConfig(std::string configPath = "/etc", std::string configName = "Alica");
+    void initConfig(std::string configPath = "./etc/Alica.yaml");
+
+    const YAML::Node& getConfig() const
+    {
+        return _configRootNode;
+    };
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
@@ -323,12 +319,7 @@ private:
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
-
-    std::string _configPath;
-    std::string _configName;
     YAML::Node _configRootNode;
-
-    std::string _rootPath;
 };
 
 template <class ClockType, class... Args>
