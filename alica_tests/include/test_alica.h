@@ -61,6 +61,12 @@ protected:
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
         ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+
+        char cwd[4096];
+        ::getcwd(cwd, 4096);
+        std::string rootPath = cwd;
+        ac->initConfig(rootPath + "/etc/Alica.yaml");
+
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -121,6 +127,12 @@ protected:
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext::setLocalAgentName(getHostName(i));
             alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+
+            char cwd[4096];
+            ::getcwd(cwd, 4096);
+            std::string rootPath = cwd;
+            ac->initConfig(rootPath + "/etc/Alica.yaml");
+
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
