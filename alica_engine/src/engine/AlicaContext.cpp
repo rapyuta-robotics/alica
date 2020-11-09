@@ -105,15 +105,13 @@ void AlicaContext::setConfigPath(const std::string& path)
     essentials::SystemConfig::getInstance().setConfigPath(path);
 }
 
-void AlicaContext::initConfig(const std::string configPath, const std::string configName)
+void AlicaContext::initConfig(const std::string configPath)
 {
-    ConfigInitializer configInitializer;
-    _configRootNode = configInitializer.loadConfig(_rootPath + configPath, configName);
-}
-
-void AlicaContext::setRootPathNonStatic(const std::string& path)
-{
-    _rootPath = path;
+    try {
+        _configRootNode = YAML::LoadFile(configPath);
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
+    }
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
