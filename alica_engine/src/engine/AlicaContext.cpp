@@ -2,7 +2,6 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/IdentifierConstPtr.h>
-#include "engine/ConfigInitializer.h"
 
 namespace alica
 {
