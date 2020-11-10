@@ -17,6 +17,7 @@ class AlicaElement;
 class Plan;
 class RoleSet;
 class Factory;
+class AlicaEngine;
 
 /**
  * Parse the plan tree from disk and writes it back. Fills the PlanRepository and holds all existing elements.
@@ -25,6 +26,7 @@ class ModelManager
 {
 public:
     ModelManager(PlanRepository& planRepository);
+    ModelManager(PlanRepository& planRepository, AlicaEngine* ae);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
