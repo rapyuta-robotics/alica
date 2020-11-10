@@ -89,6 +89,9 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
+    const AlicaContext& getContext() { return _ctx; }
+    AlicaContext& editContext() { return _ctx; }
+
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
 
@@ -176,4 +179,5 @@ bool AlicaEngine::existSolver() const
 {
     return _ctx.existSolver<SolverType>();
 }
+
 } // namespace alica
