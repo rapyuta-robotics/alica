@@ -37,6 +37,7 @@ ModelManager::ModelManager(PlanRepository& planRepository)
 
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
+        , _ae(ae)
         , sc(essentials::SystemConfig::getInstance())
 {
     this->domainConfigFolder = this->sc.getConfigPath();

@@ -36,6 +36,7 @@ public:
 private:
     friend Factory;
 
+    AlicaEngine* _ae;
     essentials::SystemConfig& sc;
     std::string domainConfigFolder;
     std::string basePlanPath;
