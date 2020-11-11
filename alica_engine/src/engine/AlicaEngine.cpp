@@ -36,7 +36,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
-        , _modelManager(_planRepository)
+        , _modelManager(_planRepository, this)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID.toByteVector().data(), agentID.toByteVector().size()) : nullptr))
