@@ -326,6 +326,11 @@ public:
         return _configPath;
     };
 
+    AlicaEngine* getEngine() const
+    {
+        return _engine.get();
+    };
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
