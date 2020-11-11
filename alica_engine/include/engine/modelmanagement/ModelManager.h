@@ -31,6 +31,7 @@ public:
 
     bool idExists(const int64_t id) const;
     const EntryPoint* generateIdleEntryPoint();
+    void reloadConfig();
 
 private:
     friend Factory;

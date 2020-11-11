@@ -28,11 +28,16 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
 {
+    reloadConfig();
+    Factory::setModelManager(this);
+}
+
+void ModelManager::reloadConfig()
+{
     this->domainConfigFolder = this->_ae->getContext().getConfigPath();
     this->basePlanPath = getBasePath("PlanDir");
     this->baseRolePath = getBasePath("RoleDir");
     this->baseTaskPath = getBasePath("TaskDir");
-    Factory::setModelManager(this);
 }
 
 std::string ModelManager::getBasePath(const std::string& configKey)
