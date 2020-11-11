@@ -129,7 +129,7 @@ void AlicaContext::initConfig(const std::string configPath)
             std::cerr << "AC: Error setting configPath for: " << configPath << std::endl;
             return;
         }
-        _configPath = configPath.substr(0, index);
+        _configPath = configPath.substr(0, index + 1);
     } catch (YAML::BadFile& badFile) {
         AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
     }
