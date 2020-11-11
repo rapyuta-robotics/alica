@@ -27,12 +27,16 @@ AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& ma
 AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                            const std::string& fullConfigPath, const essentials::Identifier& agentID)
         : _validTag(ALICA_CTX_GOOD)
-        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
-        , _clock(std::make_unique<AlicaClock>())
-        , _communicator(nullptr)
-        , _idManager(std::make_unique<essentials::IDManager>())
+//        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
+//        , _clock(std::make_unique<AlicaClock>())
+//        , _communicator(nullptr)
+//        , _idManager(std::make_unique<essentials::IDManager>())
 {
     initConfig(fullConfigPath);
+    _clock = std::make_unique<AlicaClock>();
+    _communicator = nullptr;
+    _idManager = std::make_unique<essentials::IDManager>();
+    _engine = std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID);
 }
 
 AlicaContext::~AlicaContext()
