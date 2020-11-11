@@ -115,7 +115,7 @@ void AlicaContext::initConfig(const std::string configPath)
         }
         _configPath = configPath.substr(0, index);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
+        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
     }
 }
 
