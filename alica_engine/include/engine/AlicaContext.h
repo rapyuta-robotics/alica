@@ -307,6 +307,11 @@ public:
         return _configRootNode;
     };
 
+    const std::string getConfigPath() const
+    {
+        return _configPath;
+    };
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -319,7 +324,9 @@ private:
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+
     YAML::Node _configRootNode;
+    std::string _configPath;
 };
 
 template <class ClockType, class... Args>
