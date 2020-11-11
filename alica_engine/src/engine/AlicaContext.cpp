@@ -32,6 +32,7 @@ AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& ma
         , _communicator(nullptr)
         , _idManager(std::make_unique<essentials::IDManager>())
 {
+    initConfig(fullConfigPath);
 }
 
 AlicaContext::~AlicaContext()
