@@ -40,7 +40,7 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         , _ae(ae)
         , sc(essentials::SystemConfig::getInstance())
 {
-    this->domainConfigFolder = this->sc.getConfigPath();
+    this->domainConfigFolder = this->_ae->getContext().getConfigPath();
     this->basePlanPath = getBasePath("Alica.PlanDir");
     this->baseRolePath = getBasePath("Alica.RoleDir");
     this->baseTaskPath = getBasePath("Alica.TaskDir");
