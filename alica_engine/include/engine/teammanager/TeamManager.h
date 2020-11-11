@@ -50,6 +50,8 @@ public:
     TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
+    void reloadConfig(essentials::IdentifierConstPtr agentId = nullptr);
+
     essentials::IdentifierConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
     Agent* editLocalAgent() { return _localAgent; }

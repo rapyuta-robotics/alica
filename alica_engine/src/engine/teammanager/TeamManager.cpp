@@ -60,18 +60,23 @@ TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr age
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
-    _useAutoDiscovery = sc["Alica"]->get<bool>("Alica.AutoDiscovery", NULL);
-    if (_useAutoDiscovery) {
-        _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
-        _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
-    }
-    readSelfFromConfig(agentID);
+    reloadConfig(agentID);
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
+
+void TeamManager::reloadConfig(essentials::IdentifierConstPtr agentID)
+{
+    const YAML::Node& config = _engine->getContext().getConfig();
+    _teamTimeOut = AlicaTime::milliseconds(config["Alica"]["TeamTimeOut"].as<unsigned long>());
+    _useAutoDiscovery = config["Alica"]["AutoDiscovery"].as<bool>();
+    if (_useAutoDiscovery) {
+        _agentAnnouncementTimeInterval = AlicaTime::seconds(config["Alica"]["AgentAnnouncementTimeInterval"].as<unsigned long>());
+        _announcementRetries = config["Alica"]["AnnouncementRetries"].as<int>();
+    }
+    readSelfFromConfig(agentID);
+}
 
 void TeamManager::setTeamTimeout(AlicaTime t)
 {
