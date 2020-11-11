@@ -25,7 +25,6 @@ class AlicaEngine;
 class ModelManager
 {
 public:
-    ModelManager(PlanRepository& planRepository);
     ModelManager(PlanRepository& planRepository, AlicaEngine* ae);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);

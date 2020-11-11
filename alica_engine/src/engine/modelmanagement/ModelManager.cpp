@@ -24,26 +24,15 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository)
-        : _planRepository(planRepository)
-        , sc(essentials::SystemConfig::getInstance())
-{
-    this->domainConfigFolder = this->sc.getConfigPath();
-    this->basePlanPath = getBasePath("Alica.PlanDir");
-    this->baseRolePath = getBasePath("Alica.RoleDir");
-    this->baseTaskPath = getBasePath("Alica.TaskDir");
-    Factory::setModelManager(this);
-}
-
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
         , sc(essentials::SystemConfig::getInstance())
 {
     this->domainConfigFolder = this->_ae->getContext().getConfigPath();
-    this->basePlanPath = getBasePath("Alica.PlanDir");
-    this->baseRolePath = getBasePath("Alica.RoleDir");
-    this->baseTaskPath = getBasePath("Alica.TaskDir");
+    this->basePlanPath = getBasePath("PlanDir");
+    this->baseRolePath = getBasePath("RoleDir");
+    this->baseTaskPath = getBasePath("TaskDir");
     Factory::setModelManager(this);
 }
 
@@ -51,7 +40,8 @@ std::string ModelManager::getBasePath(const std::string& configKey)
 {
     std::string basePath;
     try {
-        basePath = this->sc["Alica"]->get<std::string>(configKey.c_str(), NULL);
+//        basePath = this->sc["Alica"]->get<std::string>(configKey.c_str(), NULL);
+        basePath = this->_ae->getContext().getConfig()["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
     }
