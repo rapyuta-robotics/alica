@@ -60,7 +60,7 @@ protected:
         alica::AlicaContext::setLocalAgentName("nase");
         alica::AlicaContext::setRootPath(path);
         alica::AlicaContext::setConfigPath(path + "/etc");
-        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), "./etc/Alica.yaml");
+        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -121,7 +121,7 @@ protected:
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext::setLocalAgentName(getHostName(i));
-            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), "./etc/Alica.yaml");
+            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
