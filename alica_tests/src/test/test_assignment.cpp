@@ -3,6 +3,7 @@
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
+#include <engine/AlicaContext.h>
 
 #include <essentials/IDManager.h>
 #include <essentials/SystemConfig.h>
@@ -45,8 +46,10 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 > *robot2);
     ASSERT_TRUE(*robot1 < *robot3);
 
+    alica::AlicaContext *ac = new alica::AlicaContext("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
+
     PlanRepository repo;
-    ModelManager modelManager(repo);
+    ModelManager modelManager(repo, ac->getEngine());
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 
