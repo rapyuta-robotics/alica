@@ -108,6 +108,7 @@ void AlicaContext::initConfig(const std::string configPath)
 {
     try {
         _configRootNode = YAML::LoadFile(configPath);
+        _configPath = configPath;
     } catch (YAML::BadFile& badFile) {
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
