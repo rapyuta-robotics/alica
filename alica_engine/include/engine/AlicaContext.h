@@ -323,7 +323,7 @@ public:
 
     const std::string getConfigPath() const
     {
-        return _configPath;
+        return "./etc/";
     };
 
 private:
