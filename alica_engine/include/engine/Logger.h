@@ -69,6 +69,7 @@ public:
     void iterationEnds(const RunningPlan* p);
     void close();
     void logToConsole(const std::string& logString);
+    void reloadConfig();
 
 private:
     void processString(const std::string& str);

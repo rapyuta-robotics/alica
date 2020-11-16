@@ -34,6 +34,13 @@ Logger::Logger(const AlicaEngine* ae)
         , _receivedEvent(false)
         , _fileWriter()
 {
+    reloadConfig();
+}
+
+Logger::~Logger() {}
+
+void Logger::reloadConfig()
+{
     const YAML::Node& config = _ae->getContext().getConfig();
     _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
@@ -52,8 +59,6 @@ Logger::Logger(const AlicaEngine* ae)
         _fileWriter.open(sb.str().c_str());
     }
 }
-
-Logger::~Logger() {}
 
 /**
  * Notify the logger that an event occurred which changed the plan tree.
