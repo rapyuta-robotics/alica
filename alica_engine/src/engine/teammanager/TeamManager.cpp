@@ -103,7 +103,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         } else {
             _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
-            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+//            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
+            bool persistId = config["Alica"]["PersistID"].as<bool>(false);
             if (persistId) {
                 try{
                     auto* configLocal = sc["Local"];
