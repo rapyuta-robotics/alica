@@ -34,11 +34,11 @@ Logger::Logger(const AlicaEngine* ae)
         , _receivedEvent(false)
         , _fileWriter()
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _active = sc["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
+    const YAML::Node& config = _ae->getContext().getConfig();
+    _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
         std::string agentName = _ae->getLocalAgentName();
-        std::string logPath = sc["Alica"]->get<std::string>("Alica.EventLogging.LogFolder", NULL);
+        std::string logPath = config["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
         if (!essentials::FileSystem::isDirectory(logPath)) {
             if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
                 AlicaEngine::abort("Cannot create log folder: ", logPath);
