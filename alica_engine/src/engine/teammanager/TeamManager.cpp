@@ -7,7 +7,6 @@
 #include "engine/containers/AgentQuery.h"
 
 #include <alica_common_config/debug_output.h>
-#include <essentials/SystemConfig.h>
 
 #include <limits>
 #include <random>
