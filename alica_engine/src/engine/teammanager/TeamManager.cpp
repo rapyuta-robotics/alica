@@ -90,6 +90,8 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 
 void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
+    const YAML::Node& config = _engine->getContext().getConfig();
+
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getLocalAgentName();
 
