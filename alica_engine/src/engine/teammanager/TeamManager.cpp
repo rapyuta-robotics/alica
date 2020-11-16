@@ -110,8 +110,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 //                    auto* configLocal = sc["Local"];
 //                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
 //                    configLocal->store();
-                    config["Local"][_engine->getLocalAgentName()]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
-                    std::cerr << "SET THE ID ----------------------------------------" << std::endl;
+                    config["Local"][localAgentName]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
                 } catch(...) {
                     ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
                 }
