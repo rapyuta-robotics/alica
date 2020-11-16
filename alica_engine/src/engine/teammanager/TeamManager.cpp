@@ -136,14 +136,25 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         }
     }
 
-    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", NULL);
-    for (const std::string& s : *properties) {
-        if (s == "ID" || s == "DefaultRole") {
+//    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", NULL);
+//    for (const std::string& s : *properties) {
+//        if (s == "ID" || s == "DefaultRole") {
+//            continue;
+//        }
+//
+//        std::string svalue = sc["Local"]->get<std::string>("Local", s.c_str(), NULL);
+//        _localAnnouncement.capabilities.emplace_back(s, svalue);
+//    }
+
+    const YAML::Node localConfigNode = config["Local"][localAgentName];
+    for (YAML::const_iterator it = localConfigNode.begin(); it != localConfigNode.end(); ++it) {
+        std::string key = it->first.as<std::string>();
+        YAML::Node value = it->second;
+        if (key == "ID" || key == "DefaultRole") {
             continue;
         }
-
-        std::string svalue = sc["Local"]->get<std::string>("Local", s.c_str(), NULL);
-        _localAnnouncement.capabilities.emplace_back(s, svalue);
+        std::string svalue = localConfigNode[key].as<std::string>();
+        _localAnnouncement.capabilities.emplace_back(key, svalue);
     }
 
     _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);
