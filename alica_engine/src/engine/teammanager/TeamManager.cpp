@@ -127,7 +127,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
     _localAnnouncement.senderSdk = _engine->getVersion();
     // TODO: add plan hash
     _localAnnouncement.planHash = 0;
-    const std::string myRole = sc["Local"]->get<std::string>("Local", "DefaultRole", NULL);
+//    const std::string myRole = sc["Local"]->get<std::string>("Local", "DefaultRole", NULL);
+    const std::string myRole = config["Local"][localAgentName]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
         if (role->getName() == myRole) {
