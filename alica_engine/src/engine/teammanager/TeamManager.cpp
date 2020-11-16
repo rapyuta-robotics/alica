@@ -90,7 +90,7 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 
 void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
-    const YAML::Node& config = _engine->getContext().getConfig();
+    YAML::Node config = _engine->getContext().getConfig();
 
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     const std::string localAgentName = _engine->getLocalAgentName();
@@ -107,9 +107,11 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
             bool persistId = config["Alica"]["PersistID"].as<bool>(false);
             if (persistId) {
                 try{
-                    auto* configLocal = sc["Local"];
-                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-                    configLocal->store();
+//                    auto* configLocal = sc["Local"];
+//                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
+//                    configLocal->store();
+                    config["Local"][_engine->getLocalAgentName()]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
+                    std::cerr << "SET THE ID ----------------------------------------" << std::endl;
                 } catch(...) {
                     ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
                 }
