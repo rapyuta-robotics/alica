@@ -97,20 +97,15 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 
     if (agentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-//        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
         uint64_t id = config["Local"][localAgentName]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
             _localAnnouncement.senderID = _engine->getID(id);
         } else {
             _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
-//            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
             bool persistId = config["Alica"]["PersistID"].as<bool>(false);
             if (persistId) {
                 try{
-//                    auto* configLocal = sc["Local"];
-//                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-//                    configLocal->store();
                     config["Local"][localAgentName]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
                 } catch(...) {
                     ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
@@ -127,7 +122,6 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
     _localAnnouncement.senderSdk = _engine->getVersion();
     // TODO: add plan hash
     _localAnnouncement.planHash = 0;
-//    const std::string myRole = sc["Local"]->get<std::string>("Local", "DefaultRole", NULL);
     const std::string myRole = config["Local"][localAgentName]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
@@ -135,16 +129,6 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
             _localAnnouncement.roleId = role->getId();
         }
     }
-
-//    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", NULL);
-//    for (const std::string& s : *properties) {
-//        if (s == "ID" || s == "DefaultRole") {
-//            continue;
-//        }
-//
-//        std::string svalue = sc["Local"]->get<std::string>("Local", s.c_str(), NULL);
-//        _localAnnouncement.capabilities.emplace_back(s, svalue);
-//    }
 
     const YAML::Node localConfigNode = config["Local"][localAgentName];
     for (YAML::const_iterator it = localConfigNode.begin(); it != localConfigNode.end(); ++it) {
