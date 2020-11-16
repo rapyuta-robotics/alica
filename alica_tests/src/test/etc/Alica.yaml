@@ -6,7 +6,7 @@
 #  <AGENTCAPABILITY_2>: TEST_CAPABILITY_1
 
 Local:
-  hairy:
+  nase:
     ID: 9
     DefaultRole: Defender
     AverageTranslation: 3000.0
@@ -20,7 +20,7 @@ Local:
     LocalizationSuccess: -1
     HasActiveBallHandler: true
 
-  nase:
+  hairy:
     ID: 8
     DefaultRole: Attacker
     OwnTeamColour: magenta

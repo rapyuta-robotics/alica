@@ -97,7 +97,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 
     if (agentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+//        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+        uint64_t id = config["Local"][localAgentName]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
             _localAnnouncement.senderID = _engine->getID(id);
         } else {
