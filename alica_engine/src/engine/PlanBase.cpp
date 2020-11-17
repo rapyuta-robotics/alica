@@ -39,11 +39,10 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-
-    double freq = sc["Alica"]->get<double>("Alica.EngineFrequency", NULL);
-    double minbcfreq = sc["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
-    double maxbcfreq = sc["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
+    const YAML::Node& config = _ae->getContext().getConfig();
+    double freq = config["Alica"]["EngineFrequency"].as<double>();
+    double minbcfreq = config["Alica"]["MinBroadcastFrequency"].as<double>();
+    double maxbcfreq = config["Alica"]["MaxBroadcastFrequency"].as<double>();
 
     if (freq > 1000) {
         AlicaEngine::abort("PB: ALICA should not be used with more than 1000Hz");
@@ -63,9 +62,9 @@ PlanBase::PlanBase(AlicaEngine* ae)
 
     AlicaTime halfLoopTime = _loopTime / 2;
 
-    _sendStatusMessages = sc["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
+    _sendStatusMessages = config["Alica"]["StatusMessages"]["Enabled"].as<bool>();
     if (_sendStatusMessages) {
-        double stfreq = sc["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
+        double stfreq = config["Alica"]["StatusMessages"]["Frequency"].as<double>();
         if (stfreq > freq) {
             AlicaEngine::abort("PB: Alica.conf: Status messages frequency must not exceed the engine frequency");
         }
