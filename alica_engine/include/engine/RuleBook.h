@@ -46,6 +46,7 @@ private:
     Logger& _log;
     int _maxConsecutiveChanges;
     bool _changeOccurred;
+    AlicaEngine* _ae;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);

@@ -39,6 +39,7 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _pb(pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
+        , _ae(ae)
 {
     essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _maxConsecutiveChanges = sc["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
