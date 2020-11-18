@@ -19,6 +19,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_set>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -101,7 +102,7 @@ public:
     RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
     RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
     RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
-    static void init();
+    static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
     virtual ~RunningPlan();

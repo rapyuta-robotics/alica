@@ -82,7 +82,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
-    RunningPlan::init();
+    RunningPlan::init(_ctx.getConfig());
     _teamManager.init();
     _syncModul.init();
     _variableSyncModule->init();

@@ -461,7 +461,7 @@ void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePair
     if (_initialized) {
         return;
     }
-    
+
     for (int i = 0; i < keyValuePairs.size(); i++) {
         setOption<T>(keyValuePairs.get(0).first, keyValuePairs.get(1).second);
     }

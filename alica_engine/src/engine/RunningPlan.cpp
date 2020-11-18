@@ -42,10 +42,10 @@ namespace
 AlicaTime s_assignmentProtectionTime = AlicaTime::zero();
 }
 
-void RunningPlan::init()
+void RunningPlan::init(const YAML::Node& config)
 {
     s_assignmentProtectionTime =
-            AlicaTime::milliseconds((essentials::SystemConfig::getInstance())["Alica"]->get<unsigned long>("Alica.AssignmentProtectionTime", NULL));
+            AlicaTime::milliseconds(config["Alica"]["AssignmentProtectionTime"].as<unsigned long>());
 }
 
 void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
