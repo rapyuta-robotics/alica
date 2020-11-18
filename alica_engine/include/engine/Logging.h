@@ -11,8 +11,8 @@ namespace alica
 {
 namespace logging
 {
-std::string getLogFilename(const std::string& file);
-std::string getErrLogFilename(const std::string& file);
+std::string getLogFilename(AlicaEngine* ae, const std::string& file);
+std::string getErrLogFilename(AlicaEngine* ae, const std::string& file);
 
 struct None
 {
