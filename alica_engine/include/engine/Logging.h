@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string>
+#include "engine/AlicaEngine.h"
 
 namespace alica
 {
