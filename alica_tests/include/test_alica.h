@@ -58,7 +58,6 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         alica::AlicaContext::setLocalAgentName("nase");
-//        alica::AlicaContext::setConfigPath(path + "/etc");
         ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
 
         ASSERT_TRUE(ac->isValid());
@@ -113,7 +112,6 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-//        alica::AlicaContext::setConfigPath(path + "/etc");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
