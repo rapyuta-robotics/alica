@@ -104,14 +104,6 @@ public:
      */
     static void setLocalAgentName(const std::string& name);
 
-    // TODO: better descriptive name for paths
-    /**
-     * Set root path for this process.
-     *
-     * @param path Root path
-     */
-    static void setRootPath(const std::string& path);
-
     /**
      * Set config path for this process.
      *
