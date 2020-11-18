@@ -103,7 +103,10 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
             bool persistId = config["Alica"]["PersistID"].as<bool>(false);
             if (persistId) {
                 try{
-                    config["Local"][localAgentName]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
+                    std::string path = "Local." + localAgentName + ".ID";
+                    uint64_t value = static_cast<uint64_t>(*_localAnnouncement.senderID);
+                    _engine->editContext().setOption<uint64_t>(path, value);
+//                    config["Local"][localAgentName]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
                 } catch(...) {
                     ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
                 }
