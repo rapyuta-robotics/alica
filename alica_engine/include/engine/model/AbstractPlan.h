@@ -24,9 +24,6 @@ class AlicaEngine;
 class AbstractPlan : public AlicaElement
 {
 public:
-    AbstractPlan();
-    AbstractPlan(int64_t id);
-
     AbstractPlan(AlicaEngine *ae);
     AbstractPlan(AlicaEngine *ae, int64_t id);
 

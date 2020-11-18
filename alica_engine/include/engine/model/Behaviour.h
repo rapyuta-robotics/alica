@@ -19,6 +19,7 @@ class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
 class PostCondition;
+class AlicaEngine;
 
 /**
  * Represents a Behaviour within the plan tree
@@ -26,7 +27,7 @@ class PostCondition;
 class Behaviour : public AbstractPlan
 {
 public:
-    Behaviour();
+    Behaviour(AlicaEngine* ae);
     virtual ~Behaviour();
 
     std::string toString(std::string indent = "") const;

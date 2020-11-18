@@ -172,11 +172,11 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(node);
+        Plan* plan = PlanFactory::create(_ae, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(node);
+        Behaviour* behaviour = BehaviourFactory::create(_ae, node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -184,7 +184,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(node);
+        PlanType* planType = PlanTypeFactory::create(_ae, node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {
