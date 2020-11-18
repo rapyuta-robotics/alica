@@ -333,16 +333,6 @@ public:
         return _engine.get();
     };
 
-    const std::string getLogPath() const
-    {
-        return _logPath;
-    }
-
-    void setLogPath(const std::string& logPath)
-    {
-        _logPath = logPath;
-    }
-
     template<class T>
     void setOption(std::string& path, T value);
 
@@ -364,7 +354,6 @@ private:
 
     YAML::Node _configRootNode;
     std::string _configPath;
-    std::string _logPath;
     bool _initialized;
 
     template <class T>
