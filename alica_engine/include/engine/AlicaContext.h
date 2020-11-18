@@ -449,13 +449,6 @@ void AlicaContext::setOption(std::string& path, T value)
                     setOption(it->second, params, value, depth + 1);
                 }
             }
-//        std::cerr << std::string(depth * 2, ' ');
-//        if (it->second.IsScalar()) {
-//            std::cerr << it->first << ": " << it->second << std::endl;
-//        } else {
-//            std::cerr << it->first << std::endl;
-//            printNode(it->second, depth + 1);
-//        }
         }
     }
 
