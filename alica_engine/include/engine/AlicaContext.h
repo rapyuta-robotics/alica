@@ -346,6 +346,9 @@ public:
     template<class T>
     void setOption(std::string& path, T value);
 
+    template<class T>
+    void setOption(std::vector<std::pair<std::string, T>> keyValuePairs);
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -438,18 +441,30 @@ void AlicaContext::setOption(std::string& path, T value)
     setOption(_configRootNode, params, value, depth);
 }
 
-    template <class T>
-    void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
-    {
-        for (YAML::const_iterator it = node.begin(); it != node.end(); ++it){
-            if (params[depth] == it->first.as<std::string>()){
-                if (depth == params.size() - 1) {
-                    node = value;
-                } else {
-                    setOption(it->second, params, value, depth + 1);
-                }
+template <class T>
+void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
+{
+    for (YAML::const_iterator it = node.begin(); it != node.end(); ++it){
+        if (params[depth] == it->first.as<std::string>()){
+            if (depth == params.size() - 1) {
+                node = value;
+            } else {
+                setOption(it->second, params, value, depth + 1);
             }
         }
     }
+}
+
+template <class T>
+void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs)
+{
+    if (_initialized) {
+        return;
+    }
+    
+    for (int i = 0; i < keyValuePairs.size(); i++) {
+        setOption<T>(keyValuePairs.get(0).first, keyValuePairs.get(1).second);
+    }
+}
 
 } // namespace alica
