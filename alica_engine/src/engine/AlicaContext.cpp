@@ -115,10 +115,10 @@ void AlicaContext::setLocalAgentName(const std::string& name)
     essentials::SystemConfig::getInstance().setHostname(name);
 }
 
-void AlicaContext::setConfigPath(const std::string& path)
-{
-    essentials::SystemConfig::getInstance().setConfigPath(path);
-}
+//void AlicaContext::setConfigPath(const std::string& path)
+//{
+//    essentials::SystemConfig::getInstance().setConfigPath(path);
+//}
 
 void AlicaContext::initConfig(const std::string configPath)
 {

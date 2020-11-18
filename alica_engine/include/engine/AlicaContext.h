@@ -104,12 +104,12 @@ public:
      */
     static void setLocalAgentName(const std::string& name);
 
-    /**
-     * Set config path for this process.
-     *
-     * @param path Config path
-     */
-    static void setConfigPath(const std::string& path);
+//    /**
+//     * Set config path for this process.
+//     *
+//     * @param path Config path
+//     */
+//    static void setConfigPath(const std::string& path);
 
     /**
      * Get version of Alica engine.
