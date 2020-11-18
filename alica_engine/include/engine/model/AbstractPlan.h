@@ -16,6 +16,7 @@ class ModelFactory;
 class ExpressionHandler;
 class ModelManager;
 class AbstractPlanFactory;
+class AlicaEngine;
 
 /**
  * Super class of plans, plantypes and behaviours.
@@ -25,6 +26,9 @@ class AbstractPlan : public AlicaElement
 public:
     AbstractPlan();
     AbstractPlan(int64_t id);
+
+    AbstractPlan(AlicaEngine *ae);
+    AbstractPlan(AlicaEngine *ae, int64_t id);
 
     virtual ~AbstractPlan();
 
