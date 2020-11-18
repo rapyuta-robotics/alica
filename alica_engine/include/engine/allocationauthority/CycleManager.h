@@ -35,6 +35,7 @@ public:
     bool needsSending() const;
     void sent();
     bool haveAuthority() const { return _state == CycleState::overriding; }
+    void reloadConfig();
 
 private:
     enum CycleState
