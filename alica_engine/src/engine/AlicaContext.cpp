@@ -46,6 +46,10 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
+    if (_initialized) {
+        return -1;
+    }
+
     if (!_configRootNode) {
         initConfig();
     }
@@ -56,6 +60,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
     if (_engine->init(creatorCtx)) {
         _engine->start();
+        _initialized = true;
         return 0;
     }
     return -1;
@@ -134,6 +139,15 @@ void AlicaContext::initConfig(const std::string configPath)
         AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
     }
 }
+
+//template <class T>
+//void AlicaContext::setOption(std::string& path, T value)
+//{
+//    PathParser pathParser;
+//    std::vector<std::string> params = pathParser.getParams('.', path.c_str());
+//    int depth = 0;
+//    setOption(_configRootNode, params, value, depth);
+//}
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
 {

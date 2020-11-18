@@ -19,6 +19,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
+#include "engine/util/PathParser.h"
 
 namespace essentials
 {
@@ -31,6 +32,7 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
+
 namespace test {
     class TestContext;
 }
@@ -341,6 +343,9 @@ public:
         _logPath = logPath;
     }
 
+    template<class T>
+    void setOption(std::string& path, T value);
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -357,6 +362,10 @@ private:
     YAML::Node _configRootNode;
     std::string _configPath;
     std::string _logPath;
+    bool _initialized;
+
+    template <class T>
+    void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
 };
 
 template <class ClockType, class... Args>
@@ -416,5 +425,38 @@ bool AlicaContext::existSolver() const
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
 }
+
+template <class T>
+void AlicaContext::setOption(std::string& path, T value)
+{
+    if (_initialized) {
+        return;
+    }
+    PathParser pathParser;
+    std::vector<std::string> params = pathParser.getParams('.', path.c_str());
+    unsigned int depth = 0;
+    setOption(_configRootNode, params, value, depth);
+}
+
+    template <class T>
+    void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
+    {
+        for (YAML::const_iterator it = node.begin(); it != node.end(); ++it){
+            if (params[depth] == it->first.as<std::string>()){
+                if (depth == params.size() - 1) {
+                    node = value;
+                } else {
+                    setOption(it->second, params, value, depth + 1);
+                }
+            }
+//        std::cerr << std::string(depth * 2, ' ');
+//        if (it->second.IsScalar()) {
+//            std::cerr << it->first << ": " << it->second << std::endl;
+//        } else {
+//            std::cerr << it->first << std::endl;
+//            printNode(it->second, depth + 1);
+//        }
+        }
+    }
 
 } // namespace alica
