@@ -9,8 +9,6 @@
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/SystemConfig.h>
-
 #include <algorithm>
 #include <iostream>
 #include <list>
