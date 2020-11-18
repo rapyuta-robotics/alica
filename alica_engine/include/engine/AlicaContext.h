@@ -340,6 +340,7 @@ private:
     YAML::Node _configRootNode;
     std::string _configPath;
     bool _initialized;
+    std::string _localAgentName;
 
     template <class T>
     void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
