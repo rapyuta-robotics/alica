@@ -1,12 +1,13 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
+#include "engine/AlicaEngine.h"
 
 #include <essentials/SystemConfig.h>
+#include <yaml-cpp/yaml.h>
 #include <sstream>
 
 namespace alica
 {
-
 AbstractPlan::AbstractPlan()
         : AlicaElement()
 
@@ -19,8 +20,8 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    const YAML::Node& config = ae->getContext().getConfig();
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
 }
 
 AbstractPlan::AbstractPlan(int64_t id)
@@ -33,8 +34,8 @@ AbstractPlan::AbstractPlan(int64_t id)
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    const YAML::Node& config = ae->getContext().getConfig();
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
 }
 
 AbstractPlan::~AbstractPlan() {}
