@@ -12,7 +12,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <essentials/IDManager.h>
-#include <essentials/SystemConfig.h>
 
 #include <alica_common_config/debug_output.h>
 
@@ -48,10 +47,10 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
-    _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
-    _useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
+    const YAML::Node& config = _ctx.getConfig();
+    PartialAssignment::allowIdling(config["Alica"]["AllowIdling"].as<bool>());
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+    _useStaticRoles = config["Alica"]["UseStaticRoles"].as<bool>();
     if (!_useStaticRoles) {
         AlicaEngine::abort("Unknown RoleAssignment Type!");
     }
