@@ -6,7 +6,6 @@
 #include <engine/AlicaContext.h>
 
 #include <essentials/IDManager.h>
-#include <essentials/SystemConfig.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -25,12 +24,7 @@ TEST(Assignment, RobotsInserted)
     ros::NodeHandle nh;
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
-
-    // bring up the SystemConfig with the corresponding path
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
-    sc.setHostname("nase");
+    nh.param<std::string>("/rootPath", path, ".");
 
     essentials::IDManager idManager;
     int b1 = 2;
