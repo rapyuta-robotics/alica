@@ -17,8 +17,6 @@
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
-#include <essentials/SystemConfig.h>
-
 
 
 //#define ALICA_DEBUG_LEVEL_ALL

@@ -8,6 +8,7 @@
 #include "engine/modelmanagement/Strings.h"
 
 #include <alica_common_config/debug_output.h>
+#include <essentials/FileSystem.h>
 namespace alica
 {
 

@@ -2,7 +2,6 @@
 #include "engine/model/Variable.h"
 #include "engine/AlicaEngine.h"
 
-#include <essentials/SystemConfig.h>
 #include <yaml-cpp/yaml.h>
 #include <sstream>
 
