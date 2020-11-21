@@ -46,7 +46,8 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 > *robot2);
     ASSERT_TRUE(*robot1 < *robot3);
 
-    alica::AlicaContext *ac = new alica::AlicaContext("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
+    alica::AlicaContext *ac = new alica::AlicaContext();
+    ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
 
     PlanRepository repo;
     ModelManager modelManager(repo, ac->getEngine());
