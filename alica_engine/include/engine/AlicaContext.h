@@ -10,6 +10,7 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/util/PathParser.h"
 
 #include <essentials/IDManager.h>
 
@@ -19,7 +20,6 @@
 #include <type_traits>
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
-#include "engine/util/PathParser.h"
 
 namespace essentials
 {
