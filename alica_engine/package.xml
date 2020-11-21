@@ -12,8 +12,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>alica_common_config</depend>
   <depend>alica_solver_interface</depend>
-
-  <depend>system_config</depend>
+  
   <depend>fsystem</depend>
   <depend>event_handling</depend>
   <depend>system_util</depend>
