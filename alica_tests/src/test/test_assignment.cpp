@@ -47,6 +47,7 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 < *robot3);
 
     alica::AlicaContext *ac = new alica::AlicaContext();
+    ac->setLocalAgentName("nase");
     ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
 
     PlanRepository repo;

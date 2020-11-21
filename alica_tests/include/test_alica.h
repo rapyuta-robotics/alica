@@ -57,8 +57,8 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setLocalAgentName("nase");
         ac = new alica::AlicaContext();
+        ac->setLocalAgentName("nase");
         ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
 
         ASSERT_TRUE(ac->isValid());
@@ -117,8 +117,8 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext::setLocalAgentName(getHostName(i));
             alica::AlicaContext* ac = new alica::AlicaContext();
+            ac->setLocalAgentName(getHostName(i));
             ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
 
             ASSERT_TRUE(ac->isValid());

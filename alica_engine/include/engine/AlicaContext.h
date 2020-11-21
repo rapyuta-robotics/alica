@@ -87,22 +87,14 @@ public:
      *
      * @return The agent name under which the engine operates, a string
      */
-    static std::string getLocalAgentName();
-
-    /**
-     * Method is deprecated and will be removed soon. Use
-     * getLocalAgentName() instead.
-     * @return
-     */
-    [[deprecated("use getLocalAgentName(...) instead")]]
-    static std::string getRobotName();
+    std::string getLocalAgentName();
 
     /**
      * Set host (or agent) name for this process.
      *
      * @param name Host name
      */
-    static void setLocalAgentName(const std::string& name);
+    void setLocalAgentName(const std::string& name);
 
     /**
      * Get version of Alica engine.
