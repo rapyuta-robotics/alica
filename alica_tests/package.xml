@@ -13,7 +13,6 @@
 
   <depend>alica_engine</depend>
   <depend>alica_common_config</depend>
-  <depend>system_config</depend>
   <depend>roscpp</depend>
   <depend>alica_dummy_proxy</depend>
   <depend>alica_simple_solver</depend>

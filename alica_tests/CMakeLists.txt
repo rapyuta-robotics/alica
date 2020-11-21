@@ -6,7 +6,6 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(catkin REQUIRED COMPONENTS 
     roscpp
-    system_config
     fsystem
     event_handling
     id_ros
