@@ -72,7 +72,6 @@ int AlicaContext::terminate()
         _communicator->stopCommunication();
     }
     _engine->terminate();
-    essentials::SystemConfig::getInstance().shutdown();
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
