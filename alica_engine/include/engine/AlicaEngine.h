@@ -14,7 +14,6 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
 #include <essentials/IDManager.h>
 
