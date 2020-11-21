@@ -13,7 +13,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>alica_engine</depend>
-  <depend>system_config</depend>
+<!--  <depend>system_config</depend>-->
   <depend>alica_common_config</depend>
 
 </package>
