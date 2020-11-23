@@ -4,6 +4,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
+#include <engine/ConfigChangeListener.h>
 
 #include <essentials/IdentifierConstPtr.h>
 
@@ -45,13 +46,13 @@ private:
     mutable std::mutex _agentsMutex;
 };
 
-class TeamManager
+class TeamManager : ConfigChangeListener
 {
 public:
     TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
-    void reloadConfig(essentials::IdentifierConstPtr agentId = nullptr);
+    void reload(const YAML::Node& config) override;
 
     essentials::IdentifierConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
@@ -94,6 +95,7 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
+    essentials::IdentifierConstPtr& _localAgentID;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>

@@ -54,27 +54,27 @@ bool AgentsCache::addAgent(Agent* agent)
 
 TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
         : _localAgent(nullptr)
+        , _localAgentID(agentID)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
 {
-    reloadConfig(agentID);
+    reload(_engine->getContext().getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
 
-void TeamManager::reloadConfig(essentials::IdentifierConstPtr agentID)
+void TeamManager::reload(const YAML::Node& config)
 {
-    const YAML::Node& config = _engine->getContext().getConfig();
     _teamTimeOut = AlicaTime::milliseconds(config["Alica"]["TeamTimeOut"].as<unsigned long>());
     _useAutoDiscovery = config["Alica"]["AutoDiscovery"].as<bool>();
     if (_useAutoDiscovery) {
         _agentAnnouncementTimeInterval = AlicaTime::seconds(config["Alica"]["AgentAnnouncementTimeInterval"].as<unsigned long>());
         _announcementRetries = config["Alica"]["AnnouncementRetries"].as<int>();
     }
-    readSelfFromConfig(agentID);
+    readSelfFromConfig(_localAgentID);
 }
 
 void TeamManager::setTeamTimeout(AlicaTime t)
@@ -106,7 +106,6 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
                     std::string path = "Local." + localAgentName + ".ID";
                     uint64_t value = static_cast<uint64_t>(*_localAnnouncement.senderID);
                     _engine->editContext().setOption<uint64_t>(path, value);
-//                    config["Local"][localAgentName]["ID"] = static_cast<uint64_t>(*_localAnnouncement.senderID);
                 } catch(...) {
                     ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
                 }
