@@ -138,4 +138,23 @@ void AlicaContext::reloadAll()
     }
 }
 
+void AlicaContext::subscribe(ConfigChangeListener *listener)
+{
+    _configChangeListeners.push_back(listener);
+}
+
+void AlicaContext::unsubscribe(ConfigChangeListener *listener)
+{
+
+    auto it = _configChangeListeners.begin();
+    for (it; it != _configChangeListeners.end(); ++it) {
+        if ((*it) == listener) {
+            break;
+        }
+    }
+    if (it != _configChangeListeners.end()) {
+        _configChangeListeners.erase(it);
+    }
+}
+
 } // namespace alica

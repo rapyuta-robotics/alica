@@ -294,6 +294,8 @@ public:
               const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
 
     void reloadAll();
+    void subscribe(ConfigChangeListener* listener);
+    void unsubscribe(ConfigChangeListener* listener);
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
