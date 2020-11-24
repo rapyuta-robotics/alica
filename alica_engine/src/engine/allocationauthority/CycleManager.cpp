@@ -31,15 +31,13 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
-    reloadConfig();
+    reload(_ae->getContext().getConfig());
 }
 
 CycleManager::~CycleManager() {}
 
-void CycleManager::reloadConfig()
+void CycleManager::reload(const YAML::Node& config)
 {
-    YAML::Node config = _ae->getContext().getConfig();
-
     _maxAllocationCycles = config["Alica"]["CycleDetection"]["CycleCount"].as<int>();
     _enabled = config["Alica"]["CycleDetection"]["Enabled"].as<bool>();
     _minimalOverrideTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
