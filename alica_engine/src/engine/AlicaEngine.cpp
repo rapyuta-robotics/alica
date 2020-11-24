@@ -92,6 +92,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+    _ctx.setInitialized(true);
     return everythingWorked;
 }
 

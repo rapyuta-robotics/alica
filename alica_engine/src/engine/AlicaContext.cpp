@@ -60,7 +60,6 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
     if (_engine->init(creatorCtx)) {
         _engine->start();
-        _initialized = true;
         return 0;
     }
     return -1;
@@ -129,6 +128,11 @@ void AlicaContext::getVersion(int& major, int& minor, int& patch)
 int AlicaContext::getVersion()
 {
     return ALICA_VERSION;
+}
+
+void AlicaContext::setInitialized(bool initialized)
+{
+    _initialized = initialized;
 }
 
 void AlicaContext::reloadAll()

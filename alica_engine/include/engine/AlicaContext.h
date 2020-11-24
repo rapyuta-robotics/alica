@@ -297,6 +297,8 @@ public:
     void subscribe(ConfigChangeListener* listener);
     void unsubscribe(ConfigChangeListener* listener);
 
+    void setInitialized(bool initialized);
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -312,9 +314,9 @@ private:
 
     YAML::Node _configRootNode;
     std::string _configPath;
-    bool _initialized;
     std::string _localAgentName;
     std::vector<ConfigChangeListener*> _configChangeListeners;
+    bool _initialized;
 
     template <class T>
     void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
