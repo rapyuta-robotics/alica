@@ -38,21 +38,6 @@ namespace test {
 }
 
 /**
- * Alica options that can be set at runtime.
- * They are either not part of conf files or app might want to override them at runtime.
- */
-enum class AlicaOption : int
-{
-    ALICA_THREADPOOL_SIZE,
-    ALICA_ENGINE_FREQUENCY,
-    ALICA_MIN_BROADCAST_FREQUENCY,
-    ALICA_MAX_BROADCAST_FREQUENCY,
-    ALICA_TEAM_TIMEOUT,
-    ALICA_ASSIGNMENT_PROTECTION_TIME
-    // More to come
-};
-
-/**
  * Alica creators that framework uses to instantiate various behaviours, utilities, conditions or constraints.
  */
 struct AlicaCreators
@@ -276,12 +261,6 @@ public:
      * Execute one step of engine synchronously
      */
     void stepEngine();
-
-    // TODO: Implement
-    template <class T>
-    int set(AlicaOption option, T optval);
-    template <class T>
-    T get(AlicaOption option) const;
 
     /**
      * Initializes yaml configuration.
