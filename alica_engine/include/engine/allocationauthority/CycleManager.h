@@ -37,7 +37,7 @@ public:
     bool needsSending() const;
     void sent();
     bool haveAuthority() const { return _state == CycleState::overriding; }
-    void reload(const YAML::Node& config);
+    void reload(const YAML::Node& config) override;
 
 private:
     enum CycleState
