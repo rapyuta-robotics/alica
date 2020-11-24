@@ -47,13 +47,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    const YAML::Node& config = _ctx.getConfig();
-    PartialAssignment::allowIdling(config["Alica"]["AllowIdling"].as<bool>());
-    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
-    _useStaticRoles = config["Alica"]["UseStaticRoles"].as<bool>();
-    if (!_useStaticRoles) {
-        AlicaEngine::abort("Unknown RoleAssignment Type!");
-    }
+    reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
         AlicaEngine::abort("Error in parsed plans.");
@@ -66,6 +60,16 @@ AlicaEngine::~AlicaEngine()
 {
     _roleSet = nullptr;
     _masterPlan = nullptr;
+}
+
+void AlicaEngine::reload(const YAML::Node& config)
+{
+    PartialAssignment::allowIdling(config["Alica"]["AllowIdling"].as<bool>());
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+    _useStaticRoles = config["Alica"]["UseStaticRoles"].as<bool>();
+    if (!_useStaticRoles) {
+        AlicaEngine::abort("Unknown RoleAssignment Type!");
+    }
 }
 
 /**
