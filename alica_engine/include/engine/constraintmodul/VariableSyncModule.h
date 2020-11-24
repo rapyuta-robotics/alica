@@ -16,7 +16,7 @@ class ResultEntry;
 class IAlicaCommunication;
 class AlicaEngine;
 
-class VariableSyncModule
+class VariableSyncModule : ConfigChangeListener
 {
 public:
     VariableSyncModule(const AlicaEngine* ae);
@@ -28,7 +28,7 @@ public:
     void onSolverResult(const SolverResult& msg);
     void publishContent();
     void postResult(int64_t vid, Variant result);
-    void reloadConfig();
+    void reload(const YAML::Node& config) override;
 
     template <typename VarType>
     int getSeeds(const std::vector<VarType*>& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const;

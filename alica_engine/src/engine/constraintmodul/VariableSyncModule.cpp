@@ -34,16 +34,15 @@ void VariableSyncModule::init()
     if (_running) {
         return;
     }
-    reloadConfig();
+    reload(_ae->getContext().getConfig());
     _running = true;
 }
 
-void VariableSyncModule::reloadConfig()
+void VariableSyncModule::reload(const YAML::Node& config)
 {
     if (_running) {
         return;
     }
-    const YAML::Node& config = _ae->getContext().getConfig();
     bool communicationEnabled = config["Alica"]["CSPSolving"]["EnableCommunication"].as<bool>();
     _ttl4Communication = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Communication"].as<long>());
     _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
