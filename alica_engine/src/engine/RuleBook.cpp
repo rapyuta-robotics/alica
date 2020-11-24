@@ -39,12 +39,16 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _changeOccurred(true)
         , _ae(ae)
 {
-    const YAML::Node& config = _ae->getContext().getConfig();
-    _maxConsecutiveChanges = config["Alica"]["MaxRuleApplications"].as<int>();
+    reload(_ae->getContext().getConfig());
     assert(_ps && _pb);
 }
 
 RuleBook::~RuleBook() {}
+
+void RuleBook::reload(const YAML::Node& config)
+{
+    _maxConsecutiveChanges = config["Alica"]["MaxRuleApplications"].as<int>();
+}
 
 /**
  * Implementation of the Init Rule

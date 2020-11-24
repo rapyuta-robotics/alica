@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/PlanChange.h"
+#include "engine/ConfigChangeListener.h"
 
 #include <memory>
 
@@ -26,7 +27,7 @@ class TeamManager;
 /**
  * Defines the operational semantics of the used ALICA dialect.
  */
-class RuleBook
+class RuleBook : ConfigChangeListener
 {
 public:
     RuleBook(AlicaEngine* ae, PlanBase* pb);
@@ -37,6 +38,7 @@ public:
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
+    void reload(const YAML::Node& config) override;
 
 private:
     const TeamManager& _tm;
