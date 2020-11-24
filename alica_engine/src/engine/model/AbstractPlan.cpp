@@ -18,6 +18,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
+    ae->editContext().subscribe(this);
     reload(ae->getContext().getConfig());
 }
 

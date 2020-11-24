@@ -47,6 +47,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
+    _ctx.subscribe(this);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {

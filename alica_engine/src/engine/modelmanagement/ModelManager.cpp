@@ -28,6 +28,7 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
 {
+    _ae->editContext().subscribe(this);
     reload(_ae->getContext().getConfig());
     Factory::setModelManager(this);
 }

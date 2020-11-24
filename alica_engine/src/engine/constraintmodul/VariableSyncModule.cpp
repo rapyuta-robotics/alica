@@ -12,7 +12,7 @@
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
+VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
         : _ae(ae)
         , _running(false)
         , _timer(nullptr)
@@ -34,6 +34,7 @@ void VariableSyncModule::init()
     if (_running) {
         return;
     }
+    _ae->editContext().subscribe(this);
     reload(_ae->getContext().getConfig());
     _running = true;
 }

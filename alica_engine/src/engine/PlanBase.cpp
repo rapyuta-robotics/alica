@@ -39,6 +39,7 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
+    _ae->editContext().subscribe(this);
     reload(_ae->getContext().getConfig());
 }
 
