@@ -39,7 +39,11 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    const YAML::Node& config = _ae->getContext().getConfig();
+    reload(_ae->getContext().getConfig());
+}
+
+void PlanBase::reload(const YAML::Node& config)
+{
     double freq = config["Alica"]["EngineFrequency"].as<double>();
     double minbcfreq = config["Alica"]["MinBroadcastFrequency"].as<double>();
     double maxbcfreq = config["Alica"]["MaxBroadcastFrequency"].as<double>();

@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
+#include "engine/ConfigChangeListener.h"
 #include <algorithm>
 #include <condition_variable>
 #include <engine/containers/AlicaEngineInfo.h>
@@ -37,7 +38,7 @@ class Plan;
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
  */
-class PlanBase
+class PlanBase : ConfigChangeListener
 {
 public:
     PlanBase(AlicaEngine* ae);
@@ -59,6 +60,8 @@ public:
     RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
     RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
     RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
+
+    void reload(const YAML::Node& config);
 
 private:
     void run(const Plan* masterPlan);
