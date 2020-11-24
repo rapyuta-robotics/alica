@@ -28,11 +28,11 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
 {
-    reloadConfig();
+    reload(_ae->getContext().getConfig());
     Factory::setModelManager(this);
 }
 
-void ModelManager::reloadConfig()
+void ModelManager::reload(const YAML::Node& config)
 {
     this->domainConfigFolder = this->_ae->getContext().getConfigPath();
     this->basePlanPath = getBasePath("PlanDir");
