@@ -3,6 +3,7 @@
 #include "AlicaElement.h"
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
+#include "engine/ConfigChangeListener.h"
 
 #include <memory>
 #include <string>
@@ -21,7 +22,7 @@ class AlicaEngine;
 /**
  * Super class of plans, plantypes and behaviours.
  */
-class AbstractPlan : public AlicaElement
+class AbstractPlan : public AlicaElement, ConfigChangeListener
 {
 public:
     AbstractPlan(AlicaEngine *ae);
@@ -39,6 +40,8 @@ public:
 
     std::string toString(std::string indent = "") const override;
     const std::string& getFileName() const { return _fileName; }
+
+    void reload(const YAML::Node& config) override;
 
 private:
     friend ModelFactory;

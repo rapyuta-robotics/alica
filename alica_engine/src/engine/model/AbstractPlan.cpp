@@ -12,18 +12,21 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    const YAML::Node& config = ae->getContext().getConfig();
-    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
+    reload(ae->getContext().getConfig());
 }
 
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    const YAML::Node& config = ae->getContext().getConfig();
-    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
+    reload(ae->getContext().getConfig());
 }
 
 AbstractPlan::~AbstractPlan() {}
+
+void AbstractPlan::reload(const YAML::Node& config)
+{
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
+}
 
 std::string AbstractPlan::toString(std::string indent) const
 {
