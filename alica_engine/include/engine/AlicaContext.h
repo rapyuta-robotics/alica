@@ -11,6 +11,7 @@
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/PathParser.h"
+#include "engine/ConfigChangeListener.h"
 
 #include <essentials/IDManager.h>
 
@@ -284,13 +285,15 @@ public:
     };
 
     template<class T>
-    void setOption(std::string& path, T value);
+    void setOption(std::string& path, T value, bool reload = true);
 
     template<class T>
-    void setOption(std::vector<std::pair<std::string, T>> keyValuePairs);
+    void setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true);
 
     void buildObjects(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
               const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
+
+    void reloadAll();
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
@@ -309,6 +312,7 @@ private:
     std::string _configPath;
     bool _initialized;
     std::string _localAgentName;
+    std::vector<ConfigChangeListener*> _configChangeListeners;
 
     template <class T>
     void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
@@ -373,7 +377,7 @@ bool AlicaContext::existSolver() const
 }
 
 template <class T>
-void AlicaContext::setOption(std::string& path, T value)
+void AlicaContext::setOption(std::string& path, T value, bool reload)
 {
     if (_initialized) {
         return;
@@ -382,6 +386,10 @@ void AlicaContext::setOption(std::string& path, T value)
     std::vector<std::string> params = pathParser.getParams('.', path.c_str());
     unsigned int depth = 0;
     setOption(_configRootNode, params, value, depth);
+
+    if (reload) {
+        reloadAll();
+    }
 }
 
 template <class T>
@@ -399,14 +407,18 @@ void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T
 }
 
 template <class T>
-void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs)
+void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload)
 {
     if (_initialized) {
         return;
     }
 
     for (int i = 0; i < keyValuePairs.size(); i++) {
-        setOption<T>(keyValuePairs.get(0).first, keyValuePairs.get(1).second);
+        setOption<T>(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
+    }
+
+    if (reload) {
+        reloadAll();
     }
 }
 

@@ -131,4 +131,11 @@ int AlicaContext::getVersion()
     return ALICA_VERSION;
 }
 
+void AlicaContext::reloadAll()
+{
+    for (auto it = _configChangeListeners.begin(); it != _configChangeListeners.end(); ++it) {
+        (*it)->reload(getConfig());
+    }
+}
+
 } // namespace alica
