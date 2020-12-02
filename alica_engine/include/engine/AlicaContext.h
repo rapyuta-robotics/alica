@@ -273,11 +273,6 @@ public:
         return _configPath;
     };
 
-    AlicaEngine* getEngine() const
-    {
-        return _engine.get();
-    };
-
     template<class T>
     void setOption(std::string& path, T value, bool reload = true);
 
