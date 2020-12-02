@@ -11,6 +11,8 @@
 #include <ros/ros.h>
 #include <vector>
 
+#include "test_alica.h"
+
 using alica::Assignment;
 using alica::EntryPoint;
 using alica::ModelManager;
@@ -44,7 +46,8 @@ TEST(Assignment, RobotsInserted)
     ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
 
     PlanRepository repo;
-    ModelManager modelManager(repo, ac->getEngine());
+    auto *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
+    ModelManager modelManager(repo, ae);
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 
