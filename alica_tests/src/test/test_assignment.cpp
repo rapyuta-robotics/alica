@@ -46,7 +46,7 @@ TEST(Assignment, RobotsInserted)
     ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
 
     PlanRepository repo;
-    auto *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
+    alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae);
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
