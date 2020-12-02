@@ -56,6 +56,15 @@ TEST_F(AlicaTestYamlConfig, InitAlicaContextWithConfig)
     SetUp();
     const YAML::Node& node = ac->getConfig();
     printNode(node, 0);
+
+    EXPECT_EQ(false, node["Local"]["nase"]["IsGoalie"].as<bool>());
+    EXPECT_EQ(9, node["Local"]["nase"]["ID"].as<int>());
+    EXPECT_EQ(4000.0f, node["Local"]["hairy"]["MaxTranslation"].as<float>());
+    EXPECT_EQ(8, node["Local"]["hairy"]["ID"].as<int>());
+
+    EXPECT_EQ(30, node["Alica"]["EngineFrequency"].as<int>());
+    EXPECT_EQ("plans", node["Alica"]["PlanDir"].as<std::string>());
+    EXPECT_EQ(45, node["Alica"]["CycleDetection"]["HistorySize"].as<int>());
 }
 
 } //namespace alica
