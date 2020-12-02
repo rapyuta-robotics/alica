@@ -64,6 +64,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_configurations.cpp
         src/test/test_yaml_cfg.cpp
         src/test/test_path_parser.cpp
+        src/test/test_config_change.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
