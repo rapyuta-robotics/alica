@@ -24,7 +24,6 @@ TEST(Assignment, RobotsInserted)
     ros::NodeHandle nh;
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
-    nh.param<std::string>("/rootPath", path, ".");
 
     essentials::IDManager idManager;
     int b1 = 2;
