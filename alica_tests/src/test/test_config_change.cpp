@@ -17,7 +17,7 @@ namespace alica
 
     AlicaContext *ac = new alica::AlicaContext();
     ac->setLocalAgentName("nase");
-    ac->buildObjects("RoleSet", "MasterPlan", true, path + "/etc/Alica.yaml");
+    ac->buildObjects("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
 
     ac->setOption<int>(p, 50);
     EXPECT_EQ(50, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());

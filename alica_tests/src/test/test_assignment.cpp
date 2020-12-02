@@ -43,7 +43,7 @@ TEST(Assignment, RobotsInserted)
 
     alica::AlicaContext *ac = new alica::AlicaContext();
     ac->setLocalAgentName("nase");
-    ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica.yaml");
+    ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
 
     PlanRepository repo;
     alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);

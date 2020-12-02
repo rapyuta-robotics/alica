@@ -95,7 +95,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 
     if (agentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-        uint64_t id = config["Local"][localAgentName]["ID"].as<uint64_t>(notAValidID);
+        uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
             _localAnnouncement.senderID = _engine->getID(id);
         } else {
@@ -104,7 +104,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
             bool persistId = config["Alica"]["PersistID"].as<bool>(false);
             if (persistId) {
                 try{
-                    std::string path = "Local." + localAgentName + ".ID";
+                    std::string path = "Local.ID";
                     uint64_t value = static_cast<uint64_t>(*_localAnnouncement.senderID);
                     _engine->editContext().setOption<uint64_t>(path, value);
                 } catch(...) {
@@ -124,7 +124,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
     _localAnnouncement.senderSdk = _engine->getVersion();
     // TODO: add plan hash
     _localAnnouncement.planHash = 0;
-    const std::string myRole = config["Local"][localAgentName]["DefaultRole"].as<std::string>();
+    const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
         if (role->getName() == myRole) {
@@ -132,7 +132,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         }
     }
 
-    const YAML::Node localConfigNode = config["Local"][localAgentName];
+    const YAML::Node localConfigNode = config["Local"];
     for (YAML::const_iterator it = localConfigNode.begin(); it != localConfigNode.end(); ++it) {
         std::string key = it->first.as<std::string>();
         YAML::Node value = it->second;

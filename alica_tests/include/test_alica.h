@@ -59,7 +59,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         ac = new alica::AlicaContext();
         ac->setLocalAgentName("nase");
-        ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
+        ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica_nase.yaml");
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -119,7 +119,8 @@ protected:
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac = new alica::AlicaContext();
             ac->setLocalAgentName(getHostName(i));
-            ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica.yaml");
+            ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(),
+                             path + "/etc/Alica_" + getHostName(i) + ".yaml");
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
