@@ -263,12 +263,6 @@ public:
      */
     void stepEngine();
 
-    /**
-     * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
-     */
-    void initConfig(std::string configPath = "./etc/Alica.yaml");
-
     const YAML::Node& getConfig() const
     {
         return _configRootNode;
@@ -320,6 +314,12 @@ private:
 
     template <class T>
     void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
+
+    /**
+     * Initializes yaml configuration.
+     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
+     */
+    void initConfig(std::string configPath = "./etc/Alica.yaml");
 };
 
 template <class ClockType, class... Args>
