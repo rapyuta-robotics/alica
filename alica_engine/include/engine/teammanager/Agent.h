@@ -43,6 +43,7 @@ public:
 
 private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
+    void updateAgentValues(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
     essentials::IdentifierConstPtr _id;
