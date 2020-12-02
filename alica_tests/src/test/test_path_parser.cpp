@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-#include "engine/util/PathParser.h"
+#include "engine/util/ConfigPathParser.h"
 
 TEST(PathParserTest, parsePath)
 {
-    PathParser pathParser;
+    ConfigPathParser pathParser;
     std::vector<std::string> params = pathParser.getParams('.', "Alica.Test.Path.To.Value");
 
     EXPECT_EQ("Alica", params[0]);

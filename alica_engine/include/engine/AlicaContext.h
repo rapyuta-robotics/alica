@@ -10,7 +10,7 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "engine/util/PathParser.h"
+#include "engine/util/ConfigPathParser.h"
 #include "engine/ConfigChangeListener.h"
 
 #include <essentials/IDManager.h>
@@ -381,8 +381,8 @@ void AlicaContext::setOption(std::string& path, T value, bool reload)
     if (_initialized) {
         return;
     }
-    PathParser pathParser;
-    std::vector<std::string> params = pathParser.getParams('.', path.c_str());
+    ConfigPathParser configPathParser;
+    std::vector<std::string> params = configPathParser.getParams('.', path.c_str());
     unsigned int depth = 0;
     setOption(_configRootNode, params, value, depth);
 

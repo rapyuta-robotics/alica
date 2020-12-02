@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-class PathParser
+class ConfigPathParser
 {
 public:
     /**
