@@ -113,7 +113,9 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
             }
         }
     } else {
-        _localAnnouncement.senderID = agentID;
+        if (!_localAgent) {
+            _localAnnouncement.senderID = agentID;
+        }
     }
 
     std::random_device rd;
@@ -141,9 +143,13 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         _localAnnouncement.capabilities.emplace_back(key, svalue);
     }
 
-    _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);
-    _localAgent->setLocal(true);
-    _agentsCache.addAgent(_localAgent);
+    if (!_localAgent) {
+        _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);
+        _localAgent->setLocal(true);
+        _agentsCache.addAgent(_localAgent);
+    } else {
+        _localAgent->updateAgentValues(_engine, _teamTimeOut, myRole, _localAnnouncement);
+    }
 }
 
 ActiveAgentIdView TeamManager::getActiveAgentIds() const
