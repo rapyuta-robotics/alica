@@ -263,29 +263,84 @@ public:
      */
     void stepEngine();
 
+    /**
+     * Getter for YAML Node containing the agents config data.
+     *
+     * @return const YAML::Node& containing the agents config data.
+     */
     const YAML::Node& getConfig() const
     {
         return _configRootNode;
     };
 
+    /**
+     * Getter for the config path.
+     *
+     * @return Path to the agent's config file.
+     */
     const std::string getConfigPath() const
     {
         return _configPath;
     };
 
+    /**
+     * Set config values for the agent.
+     *
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
     template<class T>
     void setOption(std::string& path, T value, bool reload = true);
 
+    /**
+     * Set config values for the agent.
+     *
+     * @param keyValuePairs Vector of key value pairs
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
     template<class T>
     void setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true);
 
     void buildObjects(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
               const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
 
+    /**
+     * Reload all subscribed components
+     */
     void reloadAll();
+
+    /**
+     * Subscribe to config updates.
+     *
+     * @param listener ConfigChangeListener ptr to the component
+     */
     void subscribe(ConfigChangeListener* listener);
+
+    /**
+     * Unsubscribe from config updates.
+     *
+     * @param listener ConfigChangeListener ptr to the component
+     */
     void unsubscribe(ConfigChangeListener* listener);
 
+    /**
+     * Set initialized status of AlicaContext.
+     *
+     * @param initialized Status of initialization of AlicaContext.
+     */
     void setInitialized(bool initialized);
 
 private:
@@ -307,8 +362,22 @@ private:
     std::vector<ConfigChangeListener*> _configChangeListeners;
     bool _initialized = false;
 
+    /**
+     * Recursively iterate through YAML node structure.
+     * Set given value at the given configuration path.
+     *
+     * @param node YAML node of the config section.
+     * @param path Vector containing the splitted path to the config value.
+     * @param value Value to set in the config.
+     * @param depth Recursive depth, does increase by one every iteration.
+     *
+     * @note A depth of 0 corresponds to the highest config level, for example Alica, Local, ...
+     * @note A depth of 1 corresponds to the second highest config level, for example Alica.TeamTimeOut, ...
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
     template <class T>
-    void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
+    void setOption(YAML::Node node, std::vector<std::string> path, T value, unsigned int depth);
 
     /**
      * Initializes yaml configuration.
