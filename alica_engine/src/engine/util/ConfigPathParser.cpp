@@ -8,7 +8,7 @@ std::vector<std::string> ConfigPathParser::getParams(char separator, const std::
         std::string::size_type p = 0;
         std::string::size_type q;
         std::string charString = temp;
-        while ((q = charString.find(seperator, p)) != std::string::npos) {
+        while ((q = charString.find(separator, p)) != std::string::npos) {
             params.emplace_back(temp, p, q - p);
             p = q + 1;
         }
