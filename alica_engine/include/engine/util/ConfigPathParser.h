@@ -13,7 +13,7 @@ public:
      * @param ap
      * @return The list of strings after everything was splitted.
      */
-    std::vector<std::string> getParams(char seperator, const char* path);
+    std::vector<std::string> getParams(char seperator, const std::string& path);
 };
 
 

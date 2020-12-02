@@ -382,7 +382,7 @@ void AlicaContext::setOption(std::string& path, T value, bool reload)
         return;
     }
     ConfigPathParser configPathParser;
-    std::vector<std::string> params = configPathParser.getParams('.', path.c_str());
+    std::vector<std::string> params = configPathParser.getParams('.', path);
     unsigned int depth = 0;
     setOption(_configRootNode, params, value, depth);
 

@@ -22,6 +22,6 @@ TEST(PathParserTest, parsePath)
     EXPECT_EQ("Path.To.Value", params[1]);
     EXPECT_EQ(2u, params.size());
 
-    params = pathParser.getParams(';', nullptr);
+    params = pathParser.getParams(';', "");
     EXPECT_TRUE(params.empty());
 }
