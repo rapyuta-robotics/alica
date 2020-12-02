@@ -1,6 +1,6 @@
 #include "engine/util/ConfigPathParser.h"
 
-std::vector<std::string> ConfigPathParser::getParams(char seperator, const std::string& path)
+std::vector<std::string> ConfigPathParser::getParams(char separator, const std::string& path)
 {
     std::vector<std::string> params = std::vector<std::string>();
     if (!path.empty()) {
