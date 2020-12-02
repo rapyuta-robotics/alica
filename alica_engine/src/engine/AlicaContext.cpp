@@ -151,7 +151,7 @@ void AlicaContext::unsubscribe(ConfigChangeListener *listener)
 {
 
     auto it = _configChangeListeners.begin();
-    for (it; it != _configChangeListeners.end(); ++it) {
+    for (; it != _configChangeListeners.end(); ++it) {
         if ((*it) == listener) {
             break;
         }
