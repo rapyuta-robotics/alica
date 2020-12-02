@@ -316,7 +316,7 @@ private:
     std::string _configPath;
     std::string _localAgentName;
     std::vector<ConfigChangeListener*> _configChangeListeners;
-    bool _initialized;
+    bool _initialized = false;
 
     template <class T>
     void setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth);
@@ -399,14 +399,10 @@ void AlicaContext::setOption(std::string& path, T value, bool reload)
 template <class T>
 void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
 {
-    for (YAML::const_iterator it = node.begin(); it != node.end(); ++it){
-        if (params[depth] == it->first.as<std::string>()){
-            if (depth == params.size() - 1) {
-                node = value;
-            } else {
-                setOption(it->second, params, value, depth + 1);
-            }
-        }
+    if (depth == params.size()) {
+        node = value;
+    } else {
+        setOption<T>(node[params[depth]], params, value, depth + 1);
     }
 }
 
@@ -418,7 +414,7 @@ void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePair
     }
 
     for (int i = 0; i < keyValuePairs.size(); i++) {
-        setOption<T>(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
+        setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
     }
 
     if (reload) {
