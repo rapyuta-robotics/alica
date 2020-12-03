@@ -41,9 +41,8 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 > *robot2);
     ASSERT_TRUE(*robot1 < *robot3);
 
-    alica::AlicaContext *ac = new alica::AlicaContext();
+    alica::AlicaContext *ac = new alica::AlicaContext("Roleset", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
     ac->setLocalAgentName("nase");
-    ac->buildObjects("Roleset", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
 
     PlanRepository repo;
     alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
