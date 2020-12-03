@@ -108,14 +108,7 @@ public:
      * @note This is the main alica api class
      */
     AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                 const essentials::Identifier& agentID = essentials::Identifier());
-
-    /**
-     * Creates AlicaContext object.
-     *
-     * @note This is the main alica api class
-     */
-    AlicaContext();
+                 const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
 
     /**
      * Destroys AlicaContext object.
