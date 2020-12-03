@@ -114,6 +114,8 @@ public:
     essentials::IdentifierConstPtr generateID(std::size_t size);
 
     void reload(const YAML::Node& config) override;
+    const YAML::Node& getConfig() const;
+
 
 private:
     void setStepEngine(bool stepEngine);

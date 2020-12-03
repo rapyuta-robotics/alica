@@ -165,6 +165,11 @@ void AlicaEngine::setStepEngine(bool stepEngine)
     _stepEngine = stepEngine;
 }
 
+const YAML::Node& AlicaEngine::getConfig() const
+{
+    return _ctx.getConfig();
+}
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
