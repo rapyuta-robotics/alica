@@ -25,7 +25,8 @@ class BehaviourTrigger;
 class TestContext : public alica::AlicaContext
 {
 public:
-    TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID = essentials::Identifier());
+    TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+                const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
 
     /**
      * Initialize alica framework and related modules. Note that this
