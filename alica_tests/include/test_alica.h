@@ -57,9 +57,8 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext();
+        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica_nase.yaml");
         ac->setLocalAgentName("nase");
-        ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(), path + "/etc/Alica_nase.yaml");
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -117,10 +116,9 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext* ac = new alica::AlicaContext();
+            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine(),
+                                                              path + "/etc/Alica_" + getHostName(i) + ".yaml");
             ac->setLocalAgentName(getHostName(i));
-            ac->buildObjects(getRoleSetName(), getMasterPlanName(), stepEngine(),
-                             path + "/etc/Alica_" + getHostName(i) + ".yaml");
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
