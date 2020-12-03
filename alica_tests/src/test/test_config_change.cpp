@@ -15,9 +15,8 @@ namespace alica
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    AlicaContext *ac = new alica::AlicaContext();
+    AlicaContext *ac = new alica::AlicaContext("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
     ac->setLocalAgentName("nase");
-    ac->buildObjects("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
 
     ac->setOption<int>(p, 50);
     EXPECT_EQ(50, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
