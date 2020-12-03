@@ -307,9 +307,6 @@ public:
     template<class T>
     void setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true);
 
-    void buildObjects(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-              const std::string& fullConfigPath, const essentials::Identifier& agentID = essentials::Identifier());
-
     /**
      * Reload all subscribed components
      */
