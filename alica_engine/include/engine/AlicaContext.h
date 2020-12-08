@@ -364,7 +364,7 @@ private:
      * @note A depth of 0 corresponds to the highest config level, for example Alica, Local, ...
      * @note A depth of 1 corresponds to the second highest config level, for example Alica.TeamTimeOut, ...
      *
-     * @return True if value was set correctly. False otherwise.
+     * @return True if all values are set correctly. False if at least one value could not be set.
      */
     template <class T>
     bool setOption(YAML::Node node, std::vector<std::string> path, T value, unsigned int depth);
@@ -467,13 +467,15 @@ bool AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T
 template <class T>
 bool AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload)
 {
-    bool success = false;
+    bool success = true;
     if (_initialized) {
         return false;
     }
 
     for (int i = 0; i < keyValuePairs.size(); i++) {
-        success = setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
+        if (!setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false)) {
+            success = false;
+        }
     }
 
     if (reload) {
