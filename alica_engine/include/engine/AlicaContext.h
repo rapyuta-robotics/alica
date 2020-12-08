@@ -289,7 +289,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    void setOption(std::string& path, T value, bool reload = true);
+    bool setOption(std::string& path, T value, bool reload = true);
 
     /**
      * Set config values for the agent.
@@ -305,7 +305,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    void setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true);
+    bool setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true);
 
     /**
      * Reload all subscribed components
@@ -367,7 +367,7 @@ private:
      * @return True if value was set correctly. False otherwise.
      */
     template <class T>
-    void setOption(YAML::Node node, std::vector<std::string> path, T value, unsigned int depth);
+    bool setOption(YAML::Node node, std::vector<std::string> path, T value, unsigned int depth);
 
     /**
      * Initializes yaml configuration.
@@ -435,45 +435,52 @@ bool AlicaContext::existSolver() const
 }
 
 template <class T>
-void AlicaContext::setOption(std::string& path, T value, bool reload)
+bool AlicaContext::setOption(std::string& path, T value, bool reload)
 {
     if (_initialized) {
-        return;
+        return false;
     }
     ConfigPathParser configPathParser;
     std::vector<std::string> params = configPathParser.getParams('.', path);
     unsigned int depth = 0;
-    setOption(_configRootNode, params, value, depth);
+    bool success = setOption(_configRootNode, params, value, depth);
 
     if (reload) {
         reloadAll();
     }
+    return success;
 }
 
 template <class T>
-void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
+bool AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
 {
+    bool success = false;
     if (depth == params.size()) {
         node = value;
+        success = true;
     } else {
-        setOption<T>(node[params[depth]], params, value, depth + 1);
+        success = setOption<T>(node[params[depth]], params, value, depth + 1);
     }
+    return success;
 }
 
 template <class T>
-void AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload)
+bool AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload)
 {
+    bool success = false;
     if (_initialized) {
-        return;
+        return false;
     }
 
     for (int i = 0; i < keyValuePairs.size(); i++) {
-        setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
+        success = setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false);
     }
 
     if (reload) {
         reloadAll();
     }
+
+    return success;
 }
 
 } // namespace alica
