@@ -13,7 +13,7 @@ namespace logging
  */
 std::string getLogFilename(AlicaEngine* ae, const std::string& file)
 {
-    std::string logPath = ae->getContext().getConfig()["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
+    std::string logPath = ae->getConfig()["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
     auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     char mbstr[100];
     // strcpy(mbstr, "CheckManagedExecutable_CPP"); // what was this for???

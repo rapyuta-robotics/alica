@@ -12,14 +12,14 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    reload(ae->getContext().getConfig());
+    reload(ae->getConfig());
 }
 
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    ae->editContext().subscribe(this);
-    reload(ae->getContext().getConfig());
+    ae->subscribe(this);
+    reload(ae->getConfig());
 }
 
 AbstractPlan::~AbstractPlan() {}

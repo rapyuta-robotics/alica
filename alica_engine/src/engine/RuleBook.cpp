@@ -39,8 +39,8 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _changeOccurred(true)
         , _ae(ae)
 {
-    _ae->editContext().subscribe(this);
-    reload(_ae->getContext().getConfig());
+    _ae->subscribe(this);
+    reload(_ae->getConfig());
     assert(_ps && _pb);
 }
 

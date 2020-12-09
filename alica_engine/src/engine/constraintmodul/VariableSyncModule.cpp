@@ -34,8 +34,8 @@ void VariableSyncModule::init()
     if (_running) {
         return;
     }
-    _ae->editContext().subscribe(this);
-    reload(_ae->getContext().getConfig());
+    _ae->subscribe(this);
+    reload(_ae->getConfig());
     _running = true;
 }
 

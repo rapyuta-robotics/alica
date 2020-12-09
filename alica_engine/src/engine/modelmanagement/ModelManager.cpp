@@ -28,14 +28,14 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
 {
-    _ae->editContext().subscribe(this);
-    reload(_ae->getContext().getConfig());
+    _ae->subscribe(this);
+    reload(_ae->getConfig());
     Factory::setModelManager(this);
 }
 
 void ModelManager::reload(const YAML::Node& config)
 {
-    domainConfigFolder = _ae->getContext().getConfigPath();
+    domainConfigFolder = _ae->getConfigPath();
     basePlanPath = getBasePath("PlanDir");
     baseRolePath = getBasePath("RoleDir");
     baseTaskPath = getBasePath("TaskDir");
@@ -45,7 +45,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
 {
     std::string basePath;
     try {
-        basePath = _ae->getContext().getConfig()["Alica"][configKey].as<std::string>();
+        basePath = _ae->getConfig()["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
     }

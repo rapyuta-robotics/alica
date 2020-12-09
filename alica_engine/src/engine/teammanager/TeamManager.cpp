@@ -60,8 +60,8 @@ TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr age
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
 {
-    _engine->editContext().subscribe(this);
-    reload(_engine->getContext().getConfig());
+    _engine->subscribe(this);
+    reload(_engine->getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
@@ -90,7 +90,7 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 
 void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
 {
-    YAML::Node config = _engine->getContext().getConfig();
+    YAML::Node config = _engine->getConfig();
     const std::string localAgentName = _engine->getLocalAgentName();
 
     if (agentID == nullptr) {

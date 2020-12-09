@@ -39,8 +39,8 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    _ae->editContext().subscribe(this);
-    reload(_ae->getContext().getConfig());
+    _ae->subscribe(this);
+    reload(_ae->getConfig());
 }
 
 void PlanBase::reload(const YAML::Node& config)

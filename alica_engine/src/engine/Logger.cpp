@@ -42,7 +42,7 @@ Logger::~Logger() {}
 
 void Logger::reloadConfig()
 {
-    const YAML::Node& config = _ae->getContext().getConfig();
+    const YAML::Node& config = _ae->getConfig();
     _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
         std::string agentName = _ae->getLocalAgentName();

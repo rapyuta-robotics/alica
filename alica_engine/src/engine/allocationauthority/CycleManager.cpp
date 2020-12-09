@@ -31,8 +31,8 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
-    _ae->editContext().subscribe(this);
-    reload(_ae->getContext().getConfig());
+    _ae->subscribe(this);
+    reload(_ae->getConfig());
 }
 
 CycleManager::~CycleManager() {}
