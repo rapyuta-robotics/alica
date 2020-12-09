@@ -353,21 +353,6 @@ private:
     bool _initialized = false;
 
     /**
-     * Recursively iterate through YAML node structure.
-     * Set given value at the given configuration path.
-     *
-     * @param node YAML node of the config section.
-     * @param path Vector containing the splitted path to the config value.
-     * @param value Value to set in the config.
-     * @param depth Recursive depth, does increase by one every iteration.
-     *
-     * @note A depth of 0 corresponds to the highest config level, for example Alica, Local, ...
-     * @note A depth of 1 corresponds to the second highest config level, for example Alica.TeamTimeOut, ...
-     */
-    template <class T>
-    void setOption(YAML::Node node, const std::vector<std::string>& path, const T& value, const unsigned int& depth);
-
-    /**
      * Initializes yaml configuration.
      * @param configPath Relative path to the yaml configuration file, defaults to /etc.
      */
@@ -457,16 +442,6 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
         reloadAll();
     }
     return true;
-}
-
-template <class T>
-void AlicaContext::setOption(YAML::Node node, const std::vector<std::string>& params, const T& value, const unsigned int& depth)
-{
-    if (depth == params.size()) {
-        node = value;
-    } else {
-        setOption<T>(node[params[depth]], params, value, depth + 1);
-    }
 }
 
 template <class T>
