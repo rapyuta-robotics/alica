@@ -440,8 +440,15 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
     }
     ConfigPathParser configPathParser;
     std::vector<std::string> params = configPathParser.getParams('.', path);
+
     try {
-        setOption(_configRootNode, params, value, 0);
+        YAML::Node currentNode;
+        currentNode.reset(_configRootNode);
+
+        for (std::string param : params) {
+            currentNode.reset(currentNode[param]);
+        }
+        currentNode = value;
     } catch (const YAML::InvalidNode& e) {
         return false;
     }
