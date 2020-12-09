@@ -88,9 +88,6 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
-    const AlicaContext& getContext() const { return _ctx; }
-    AlicaContext& editContext() { return _ctx; }
-
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
 
