@@ -320,6 +320,13 @@ public:
     void subscribe(ConfigChangeListener* listener);
 
     /**
+     * Subscribe to config updates.
+     *
+     * @param reloadFunctionPtr Ptr to the reload function of the subscribing component
+     */
+    void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
+
+    /**
      * Unsubscribe from config updates.
      *
      * @param listener ConfigChangeListener ptr to the component
@@ -350,6 +357,7 @@ private:
     std::string _configPath;
     std::string _localAgentName;
     std::vector<ConfigChangeListener*> _configChangeListeners;
+    std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
     bool _initialized = false;
 
     /**

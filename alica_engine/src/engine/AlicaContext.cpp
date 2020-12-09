@@ -133,6 +133,11 @@ void AlicaContext::subscribe(ConfigChangeListener *listener)
     _configChangeListeners.push_back(listener);
 }
 
+void AlicaContext::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
+{
+    _reloadFunctionPtrs.push_back(reloadFunctionPtr);
+};
+
 void AlicaContext::unsubscribe(ConfigChangeListener *listener)
 {
 

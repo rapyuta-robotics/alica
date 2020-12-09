@@ -114,7 +114,7 @@ public:
     const YAML::Node& getConfig() const;
     void subscribe(ConfigChangeListener* listener);
     std::string getConfigPath() const;
-
+    void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
 
 private:
     void setStepEngine(bool stepEngine);

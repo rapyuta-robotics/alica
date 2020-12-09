@@ -175,6 +175,11 @@ void AlicaEngine::subscribe(ConfigChangeListener* listener)
     _ctx.subscribe(listener);
 }
 
+void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
+{
+    _ctx.subscribe(reloadFunctionPtr);
+};
+
 std::string AlicaEngine::getConfigPath() const
 {
     return _ctx.getConfigPath();
