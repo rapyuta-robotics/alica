@@ -47,7 +47,10 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    _ctx.subscribe(this);
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        AlicaEngine::reload(config);
+    };
+    _ctx.subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
@@ -168,11 +171,6 @@ void AlicaEngine::setStepEngine(bool stepEngine)
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
-}
-
-void AlicaEngine::subscribe(ConfigChangeListener* listener)
-{
-    _ctx.subscribe(listener);
 }
 
 void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
