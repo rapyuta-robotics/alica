@@ -101,16 +101,6 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         } else {
             _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
-            bool persistId = config["Alica"]["PersistID"].as<bool>(false);
-            if (persistId) {
-                try{
-                    std::string path = "Local.ID";
-                    uint64_t value = static_cast<uint64_t>(*_localAnnouncement.senderID);
-                    _engine->editContext().setOption<uint64_t>(path, value);
-                } catch(...) {
-                    ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
-                }
-            }
         }
     } else {
         if (!_localAgent) {
