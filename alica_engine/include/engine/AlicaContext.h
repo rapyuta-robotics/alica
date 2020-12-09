@@ -452,8 +452,8 @@ bool AlicaContext::setOption(const std::vector<std::pair<std::string, T>>& keyVa
         return false;
     }
 
-    for (int i = 0; i < keyValuePairs.size(); i++) {
-        if (!setOption(keyValuePairs.get(0).first, keyValuePairs.get(1).second, false)) {
+    for (const auto& keyValuePair : keyValuePairs) {
+        if (!setOption<T>(keyValuePair.first, keyValuePair.second, false)) {
             success = false;
         }
     }
