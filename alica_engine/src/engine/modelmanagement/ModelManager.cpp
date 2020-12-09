@@ -35,17 +35,17 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
 
 void ModelManager::reload(const YAML::Node& config)
 {
-    this->domainConfigFolder = this->_ae->getContext().getConfigPath();
-    this->basePlanPath = getBasePath("PlanDir");
-    this->baseRolePath = getBasePath("RoleDir");
-    this->baseTaskPath = getBasePath("TaskDir");
+    domainConfigFolder = _ae->getContext().getConfigPath();
+    basePlanPath = getBasePath("PlanDir");
+    baseRolePath = getBasePath("RoleDir");
+    baseTaskPath = getBasePath("TaskDir");
 }
 
 std::string ModelManager::getBasePath(const std::string& configKey)
 {
     std::string basePath;
     try {
-        basePath = this->_ae->getContext().getConfig()["Alica"][configKey].as<std::string>();
+        basePath = _ae->getContext().getConfig()["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
     }
@@ -55,7 +55,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     }
 
     if (!essentials::FileSystem::isPathRooted(basePath)) {
-        basePath = this->domainConfigFolder + basePath;
+        basePath = domainConfigFolder + basePath;
     }
 
     ALICA_INFO_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
@@ -69,15 +69,15 @@ std::string ModelManager::getBasePath(const std::string& configKey)
 Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 {
     std::string masterPlanPath;
-    if (!essentials::FileSystem::findFile(this->basePlanPath, masterPlanName + alica::Strings::plan_extension, masterPlanPath)) {
+    if (!essentials::FileSystem::findFile(basePlanPath, masterPlanName + alica::Strings::plan_extension, masterPlanPath)) {
         AlicaEngine::abort("MM: Cannot find MasterPlan '" + masterPlanName + "'");
     }
 
-    this->filesParsed.push_back(masterPlanPath);
+    filesParsed.push_back(masterPlanPath);
     Plan* masterPlan = (Plan*) parseFile(masterPlanPath, alica::Strings::plan);
-    while (this->filesToParse.size() > 0) {
-        std::string fileToParse = this->filesToParse.front();
-        this->filesToParse.pop_front();
+    while (filesToParse.size() > 0) {
+        std::string fileToParse = filesToParse.front();
+        filesToParse.pop_front();
 
         ALICA_DEBUG_MSG("MM: fileToParse: " << fileToParse);
 
@@ -100,9 +100,9 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         }
     }
 
-    this->attachReferences();
-    this->generateTemplateVariables();
-    this->computeReachabilities();
+    attachReferences();
+    generateTemplateVariables();
+    computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
         ALICA_INFO_MSG("MM: " << beh->toString());
@@ -114,7 +114,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
     std::string roleSetPath;
-    if (!essentials::FileSystem::findFile(this->baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
+    if (!essentials::FileSystem::findFile(baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
         roleSetPath = findDefaultRoleSet(baseRolePath);
     }
 
@@ -137,7 +137,7 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
 {
     std::string rolesetDir = dir;
     if (!essentials::FileSystem::isPathRooted(rolesetDir)) {
-        rolesetDir = essentials::FileSystem::combinePaths(this->baseRolePath, rolesetDir);
+        rolesetDir = essentials::FileSystem::combinePaths(baseRolePath, rolesetDir);
     }
     if (!essentials::FileSystem::isDirectory(rolesetDir)) {
         AlicaEngine::abort("MM: RoleSet directory does not exist: " + rolesetDir);
@@ -204,13 +204,13 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
 
 bool ModelManager::idExists(const int64_t id) const
 {
-    return this->elements.find(id) != this->elements.end();
+    return elements.find(id) != elements.end();
 }
 
 const AlicaElement* ModelManager::getElement(const int64_t id)
 {
-    auto mapEntry = this->elements.find(id);
-    if (mapEntry != this->elements.end()) {
+    auto mapEntry = elements.find(id);
+    if (mapEntry != elements.end()) {
         return mapEntry->second;
     }
     return nullptr;
