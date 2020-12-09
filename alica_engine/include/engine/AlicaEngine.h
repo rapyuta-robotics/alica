@@ -115,6 +115,7 @@ public:
 
     void reload(const YAML::Node& config) override;
     const YAML::Node& getConfig() const;
+    void subscribe(ConfigChangeListener* listener);
 
 
 private:

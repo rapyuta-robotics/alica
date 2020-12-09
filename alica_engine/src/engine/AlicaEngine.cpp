@@ -170,6 +170,11 @@ const YAML::Node& AlicaEngine::getConfig() const
     return _ctx.getConfig();
 }
 
+void AlicaEngine::subscribe(ConfigChangeListener* listener)
+{
+    _ctx.subscribe(listener);
+}
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
