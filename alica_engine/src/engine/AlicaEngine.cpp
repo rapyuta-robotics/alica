@@ -175,6 +175,11 @@ void AlicaEngine::subscribe(ConfigChangeListener* listener)
     _ctx.subscribe(listener);
 }
 
+std::string AlicaEngine::getConfigPath() const
+{
+    return _ctx.getConfigPath();
+}
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
