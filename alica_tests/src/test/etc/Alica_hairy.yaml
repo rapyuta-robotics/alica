@@ -20,27 +20,6 @@ Local:
   LocalizationSuccess: -1
   HasActiveBallHandler: true
 
-Global:
-  Dimensions:
-    DiameterRobot: 500.0
-  Team:
-    teamMember1:
-      ID: 0
-      DefaultRole: Default_Role_1
-      Speed: Fast
-
-    teamMember2:
-      ID: 1
-      DefaultRole: Default_Role_2
-      Speed: Fast
-
-  TeamDefault:
-    DefaultRole: Default_Role
-    Speed: Fast
-
-  RolePriority:
-    Assistent: 1
-
 Alica:
   #ms
   TeamTimeOut: 10000
