@@ -289,7 +289,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    bool setOption(std::string& path, T value, bool reload = true) noexcept;
+    bool setOption(const std::string& path, const T& value, const bool& reload = true) noexcept;
 
     /**
      * Set config values for the agent.
@@ -305,7 +305,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    bool setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload = true) noexcept;
+    bool setOption(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool& reload = true) noexcept;
 
     /**
      * Reload all subscribed components
@@ -365,7 +365,7 @@ private:
      * @note A depth of 1 corresponds to the second highest config level, for example Alica.TeamTimeOut, ...
      */
     template <class T>
-    void setOption(YAML::Node node, std::vector<std::string> path, T value, unsigned int depth);
+    void setOption(YAML::Node node, const std::vector<std::string>& path, const T& value, const unsigned int& depth);
 
     /**
      * Initializes yaml configuration.
@@ -433,16 +433,15 @@ bool AlicaContext::existSolver() const
 }
 
 template <class T>
-bool AlicaContext::setOption(std::string& path, T value, bool reload) noexcept
+bool AlicaContext::setOption(const std::string& path, const T& value, const bool& reload) noexcept
 {
     if (_initialized) {
         return false;
     }
     ConfigPathParser configPathParser;
     std::vector<std::string> params = configPathParser.getParams('.', path);
-    unsigned int depth = 0;
     try {
-        setOption(_configRootNode, params, value, depth);
+        setOption(_configRootNode, params, value, 0);
     } catch (const YAML::InvalidNode& e) {
         return false;
     }
@@ -454,7 +453,7 @@ bool AlicaContext::setOption(std::string& path, T value, bool reload) noexcept
 }
 
 template <class T>
-void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T value, unsigned int depth)
+void AlicaContext::setOption(YAML::Node node, const std::vector<std::string>& params, const T& value, const unsigned int& depth)
 {
     if (depth == params.size()) {
         node = value;
@@ -464,7 +463,7 @@ void AlicaContext::setOption(YAML::Node node, std::vector<std::string> params, T
 }
 
 template <class T>
-bool AlicaContext::setOption(std::vector<std::pair<std::string, T>> keyValuePairs, bool reload) noexcept
+bool AlicaContext::setOption(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool& reload) noexcept
 {
     bool success = true;
     if (_initialized) {
