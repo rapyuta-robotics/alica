@@ -79,7 +79,7 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
-std::string AlicaContext::getLocalAgentName()
+std::string AlicaContext::getLocalAgentName() const
 {
     return _localAgentName;
 }

@@ -73,7 +73,7 @@ public:
      *
      * @return The agent name under which the engine operates, a string
      */
-    std::string getLocalAgentName();
+    std::string getLocalAgentName() const;
 
     /**
      * Set host (or agent) name for this process.
