@@ -31,7 +31,7 @@ class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
 
-class AlicaEngine : ConfigChangeListener
+class AlicaEngine
 {
 public:
     static void abort(const std::string& msg);
@@ -110,7 +110,7 @@ public:
     essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
     essentials::IdentifierConstPtr generateID(std::size_t size);
 
-    void reload(const YAML::Node& config) override;
+    void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
     std::string getConfigPath() const;
     void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
