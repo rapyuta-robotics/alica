@@ -11,7 +11,6 @@
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/ConfigPathParser.h"
-#include "engine/ConfigChangeListener.h"
 
 #include <essentials/IDManager.h>
 
@@ -320,13 +319,6 @@ public:
     void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
 
     /**
-     * Unsubscribe from config updates.
-     *
-     * @param listener ConfigChangeListener ptr to the component
-     */
-    void unsubscribe(ConfigChangeListener* listener);
-
-    /**
      * Set initialized status of AlicaContext.
      *
      * @param initialized Status of initialization of AlicaContext.
@@ -349,7 +341,6 @@ private:
     YAML::Node _configRootNode;
     std::string _configPath;
     std::string _localAgentName;
-    std::vector<ConfigChangeListener*> _configChangeListeners;
     std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
     bool _initialized = false;
 
