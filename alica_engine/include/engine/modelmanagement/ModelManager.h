@@ -1,7 +1,5 @@
 #pragma once
 
-#include "engine/ConfigChangeListener.h"
-
 #include <yaml-cpp/yaml.h>
 
 #include <string>
@@ -24,7 +22,7 @@ class AlicaEngine;
 /**
  * Parse the plan tree from disk and writes it back. Fills the PlanRepository and holds all existing elements.
  */
-class ModelManager : ConfigChangeListener
+class ModelManager
 {
 public:
     ModelManager(PlanRepository& planRepository, AlicaEngine* ae);
@@ -33,7 +31,7 @@ public:
 
     bool idExists(const int64_t id) const;
     const EntryPoint* generateIdleEntryPoint();
-    void reload(const YAML::Node& config) override;
+    void reload(const YAML::Node& config);
 
 private:
     friend Factory;

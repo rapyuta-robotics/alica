@@ -1,9 +1,9 @@
 #pragma once
 
 #include "engine/PlanChange.h"
-#include "engine/ConfigChangeListener.h"
 
 #include <memory>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -27,7 +27,7 @@ class TeamManager;
 /**
  * Defines the operational semantics of the used ALICA dialect.
  */
-class RuleBook : ConfigChangeListener
+class RuleBook
 {
 public:
     RuleBook(AlicaEngine* ae, PlanBase* pb);
@@ -38,7 +38,7 @@ public:
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
-    void reload(const YAML::Node& config) override;
+    void reload(const YAML::Node& config);
 
 private:
     const TeamManager& _tm;

@@ -4,7 +4,6 @@
 #include "engine/AlicaClock.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/ConfigChangeListener.h"
 
 #include <mutex>
 #include <thread>
@@ -21,7 +20,7 @@ class AlicaEngine;
 /**
  * Responsibile for detecting cycles in assignment updates and reactions to these
  */
-class CycleManager : ConfigChangeListener
+class CycleManager
 {
 public:
     CycleManager(AlicaEngine* ae, RunningPlan* p);
@@ -37,7 +36,7 @@ public:
     bool needsSending() const;
     void sent();
     bool haveAuthority() const { return _state == CycleState::overriding; }
-    void reload(const YAML::Node& config) override;
+    void reload(const YAML::Node& config);
 
 private:
     enum CycleState

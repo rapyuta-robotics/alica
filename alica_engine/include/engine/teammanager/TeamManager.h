@@ -4,7 +4,6 @@
 #include <engine/AlicaClock.h>
 #include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
-#include <engine/ConfigChangeListener.h>
 
 #include <essentials/IdentifierConstPtr.h>
 
@@ -13,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <mutex>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -46,13 +46,13 @@ private:
     mutable std::mutex _agentsMutex;
 };
 
-class TeamManager : ConfigChangeListener
+class TeamManager
 {
 public:
     TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
-    void reload(const YAML::Node& config) override;
+    void reload(const YAML::Node& config);
 
     essentials::IdentifierConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
