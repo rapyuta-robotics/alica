@@ -31,7 +31,10 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
-    _ae->subscribe(this);
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        CycleManager::reload(config);
+    };
+    _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
 }
 

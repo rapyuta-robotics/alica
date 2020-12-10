@@ -12,13 +12,20 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        AbstractPlan::reload(config);
+    };
+    ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }
 
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    ae->subscribe(this);
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        AbstractPlan::reload(config);
+    };
+    ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }
 

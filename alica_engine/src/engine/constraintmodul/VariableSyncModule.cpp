@@ -34,7 +34,10 @@ void VariableSyncModule::init()
     if (_running) {
         return;
     }
-    _ae->subscribe(this);
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        VariableSyncModule::reload(config);
+    };
+    _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
     _running = true;
 }

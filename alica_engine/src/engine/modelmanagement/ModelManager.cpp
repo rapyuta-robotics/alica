@@ -28,7 +28,10 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
         : _planRepository(planRepository)
         , _ae(ae)
 {
-    _ae->subscribe(this);
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
+        ModelManager::reload(config);
+    };
+    _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
     Factory::setModelManager(this);
 }
