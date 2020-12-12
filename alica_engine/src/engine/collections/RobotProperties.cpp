@@ -24,6 +24,11 @@ RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& d
 //    }
 }
 
+void RobotProperties::setDefaultRole(const std::string& defaultRole)
+{
+    _defaultRole = defaultRole;
+}
+
 RobotProperties::~RobotProperties() {}
 
 } /* namespace alica */

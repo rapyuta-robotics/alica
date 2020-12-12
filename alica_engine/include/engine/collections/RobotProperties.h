@@ -23,6 +23,7 @@ public:
     ~RobotProperties();
 
     const std::string& getDefaultRole() const { return _defaultRole; }
+    void setDefaultRole(const std::string& defaultRole);
 
     friend std::ostream& operator<<(std::ostream& os, const alica::RobotProperties& obj)
     {
