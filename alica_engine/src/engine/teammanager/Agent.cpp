@@ -31,13 +31,9 @@ Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& de
 
 Agent::~Agent() {}
 
-void Agent::updateAgentValues(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa)
+void Agent::setDefaultRole(const std::string& defaultRole)
 {
-    _timeout = timeout;
-    _token = aa.token;
-    _name = aa.senderName;
-    _sdk = aa.senderSdk;
-    _planHash = aa.planHash;
+    _properties.setDefaultRole(defaultRole);
 }
 
 void Agent::setLocal(bool local)
