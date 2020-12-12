@@ -123,8 +123,8 @@ void AlicaContext::setInitialized(bool initialized)
 
 void AlicaContext::reloadAll()
 {
-    for (auto it = _configChangeListeners.begin(); it != _configChangeListeners.end(); ++it) {
-        (*it)->reload(getConfig());
+    for (auto reloadFunctionPtr : _reloadFunctionPtrs) {
+        reloadFunctionPtr(_configRootNode);
     }
 }
 
@@ -132,19 +132,5 @@ void AlicaContext::subscribe(std::function<void(const YAML::Node& config)> reloa
 {
     _reloadFunctionPtrs.push_back(reloadFunctionPtr);
 };
-
-void AlicaContext::unsubscribe(ConfigChangeListener *listener)
-{
-
-    auto it = _configChangeListeners.begin();
-    for (; it != _configChangeListeners.end(); ++it) {
-        if ((*it) == listener) {
-            break;
-        }
-    }
-    if (it != _configChangeListeners.end()) {
-        _configChangeListeners.erase(it);
-    }
-}
 
 } // namespace alica
