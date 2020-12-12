@@ -419,14 +419,14 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
     std::vector<std::string> params = configPathParser.getParams('.', path);
 
     try {
-        YAML::Node currentNode;
-        currentNode.reset(_configRootNode);
+        YAML::Node currentNode(_configRootNode);
 
         for (std::string param : params) {
             currentNode.reset(currentNode[param]);
         }
         currentNode = value;
-    } catch (const YAML::InvalidNode& e) {
+    } catch (const YAML::Exception& e) {
+        std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
         return false;
     }
 
