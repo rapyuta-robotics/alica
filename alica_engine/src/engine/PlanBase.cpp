@@ -78,7 +78,9 @@ void PlanBase::reload(const YAML::Node& config)
         }
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
-        _statusMessage = new AlicaEngineInfo();
+        if (!_statusMessage) {
+            _statusMessage = new AlicaEngineInfo();
+        }
     }
 
     ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
