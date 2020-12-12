@@ -348,7 +348,7 @@ private:
      * Initializes yaml configuration.
      * @param configPath Relative path to the yaml configuration file, defaults to /etc.
      */
-    void initConfig(std::string configPath = "./etc/Alica.yaml");
+    void initConfig(const std::string& configPath = "./etc/Alica.yaml");
 };
 
 template <class ClockType, class... Args>

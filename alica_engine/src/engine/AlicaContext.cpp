@@ -89,7 +89,7 @@ void AlicaContext::setLocalAgentName(const std::string& name)
     _localAgentName = name;
 }
 
-void AlicaContext::initConfig(const std::string configPath)
+void AlicaContext::initConfig(const std::string& configPath)
 {
     try {
         _configRootNode = YAML::LoadFile(configPath);
