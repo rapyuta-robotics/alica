@@ -50,13 +50,13 @@ void printNode(const YAML::Node& node, int depth)
     }
 }
 
-// Declare a test
-TEST_F(AlicaTestYamlConfig, InitAlicaContextWithConfig)
+TEST_F(AlicaTestYamlConfig, CheckConfigInitialization)
 {
     SetUp();
     const YAML::Node& node = ac->getConfig();
     printNode(node, 0);
 
+    //Check if config has been initialized correctly
     EXPECT_EQ(false, node["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(9, node["Local"]["ID"].as<int>());
     EXPECT_EQ(3000.0f, node["Local"]["MaxTranslation"].as<float>());
