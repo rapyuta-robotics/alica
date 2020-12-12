@@ -111,12 +111,15 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         }
     }
 
-    std::random_device rd;
-    _localAnnouncement.token = rd();
-    _localAnnouncement.senderName = localAgentName;
-    _localAnnouncement.senderSdk = _engine->getVersion();
-    // TODO: add plan hash
-    _localAnnouncement.planHash = 0;
+    if (!_localAgent) {
+        std::random_device rd;
+        _localAnnouncement.token = rd();
+        _localAnnouncement.senderName = localAgentName;
+        _localAnnouncement.senderSdk = _engine->getVersion();
+        // TODO: add plan hash
+        _localAnnouncement.planHash = 0;
+    }
+
     const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
@@ -141,7 +144,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         _localAgent->setLocal(true);
         _agentsCache.addAgent(_localAgent);
     } else {
-        _localAgent->updateAgentValues(_engine, _teamTimeOut, myRole, _localAnnouncement);
+        _localAgent->setTimeout(_teamTimeOut);
+        _localAgent->setDefaultRole(myRole);
     }
 }
 
