@@ -37,13 +37,12 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _pb(pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
-        , _ae(ae)
 {
     std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
         RuleBook::reload(config);
     };
-    _ae->subscribe(reloadFunctionPtr);
-    reload(_ae->getConfig());
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfig());
     assert(_ps && _pb);
 }
 
