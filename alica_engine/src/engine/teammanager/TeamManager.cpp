@@ -129,6 +129,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
     }
 
     const YAML::Node localConfigNode = config["Local"];
+    _localAnnouncement.capabilities.clear(); //remove old CapabilityPairs to prevent duplicates / outdated values
+
     for (YAML::const_iterator it = localConfigNode.begin(); it != localConfigNode.end(); ++it) {
         std::string key = it->first.as<std::string>();
         YAML::Node value = it->second;
