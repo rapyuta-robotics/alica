@@ -20,10 +20,8 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     // create world model
     ALICATurtleWorldModel::init(nh, priv_nh);
     // Initialize Alica
-    alica::AlicaContext::setLocalAgentName(name);
-    alica::AlicaContext::setRootPath(path);
-    alica::AlicaContext::setConfigPath(path + "/etc");
-    ac = new alica::AlicaContext(roleset, master_plan, false);
+    ac = new alica::AlicaContext(roleset, master_plan, false, path + "/etc/" + name + ".yaml");
+    ac->setLocalAgentName(name);
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->addSolver<alica::reasoner::CGSolver>();
 }
