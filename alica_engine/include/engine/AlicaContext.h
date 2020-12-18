@@ -58,11 +58,19 @@ struct AlicaCreators
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
 };
 
-/*
- *
+/**
+ * Struct containing all necessary params for creating an AlicaContext object.
  */
 struct AlicaContextParams
 {
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPath Path to the configuration folder.
+     * @param roleSetName Name of the roleSet.
+     * @param masterPlanName Name of the masterPlan
+     * @param stepEngine Signify engine is trigger based. Defaults to true.
+     * @param agentID Identifier of the local Agent. By default a new identifier is created.
+     */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
                        const std::string& roleSetName,
@@ -77,6 +85,13 @@ struct AlicaContextParams
                        , agentID(agentID)
     {}
 
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPath Path to the configuration folder.
+     * @param agentID Identifier of the local Agent. By default a new identifier is created.
+     *
+     * @note The configPath is the path containing the plans, roles and tasks folder.
+     */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
                        const essentials::Identifier& agentID = essentials::Identifier())
@@ -135,7 +150,13 @@ public:
      */
     static int getVersion();
 
-
+    /**
+     * Creates AlicaContext object.
+     *
+     * @param alicaContextParams Struct containing all necessary params to create the Context.
+     *
+     * @note this is the main alica api class
+     */
     AlicaContext(const AlicaContextParams& alicaContextParams);
 
     /**
