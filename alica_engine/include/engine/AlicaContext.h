@@ -135,6 +135,9 @@ public:
      */
     static int getVersion();
 
+
+    AlicaContext(const AlicaContextParams& alicaContextParams);
+
     /**
      * Creates AlicaContext object.
      *
