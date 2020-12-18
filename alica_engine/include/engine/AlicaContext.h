@@ -59,6 +59,44 @@ struct AlicaCreators
 };
 
 /*
+ *
+ */
+struct AlicaContextParams
+{
+    AlicaContextParams(const std::string& agentName,
+                       const std::string& configPath,
+                       const std::string& roleSetName,
+                       const std::string& masterPlanName,
+                       bool stepEngine = true,
+                       const essentials::Identifier& agentID = essentials::Identifier())
+                       : agentName(agentName)
+                       , configPath(configPath)
+                       , roleSetName(roleSetName)
+                       , masterPlanName(masterPlanName)
+                       , stepEngine(stepEngine)
+                       , agentID(agentID)
+    {}
+
+    AlicaContextParams(const std::string& agentName,
+                       const std::string& configPath,
+                       const essentials::Identifier& agentID = essentials::Identifier())
+                       : agentName(agentName)
+                       , configPath(configPath)
+                       , roleSetName("RoleSet")
+                       , masterPlanName("MasterPlan")
+                       , stepEngine(true)
+                       , agentID(agentID)
+    {}
+
+    std::string agentName;
+    std::string configPath;
+    std::string masterPlanName;
+    std::string roleSetName;
+    bool stepEngine;
+    essentials::Identifier agentID;
+};
+
+/*
  * @class AlicaContext
  *
  * @brief AlicaContext class is an interface class to alica. AlicaContext object encapsulates all the global state
