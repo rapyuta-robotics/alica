@@ -391,6 +391,9 @@ private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
 
+    std::string _localAgentName;
+    YAML::Node _configRootNode;
+
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
@@ -400,9 +403,7 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
 
-    YAML::Node _configRootNode;
     std::string _configPath;
-    std::string _localAgentName;
     std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
     bool _initialized = false;
 
@@ -411,6 +412,15 @@ private:
      * @param configPath Relative path to the yaml configuration file, defaults to /etc.
      */
     void initConfig(const std::string& configPath = "./etc/Alica.yaml");
+
+    /**
+     * Initializes yaml configuration.
+     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
+     * @param agentName Name of the local agent.
+     *
+     * @return The agents config.
+     */
+    YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
 };
 
 template <class ClockType, class... Args>
