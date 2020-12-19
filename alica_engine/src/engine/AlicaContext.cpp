@@ -104,6 +104,18 @@ void AlicaContext::initConfig(const std::string& configPath)
     }
 }
 
+YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
+{
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(configPath + "/" + agentName + "/Alica.yaml");
+        _configPath = configPath;
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
+    }
+    return node;
+}
+
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
 {
     major = ALICA_VERSION_MAJOR;
