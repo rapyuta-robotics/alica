@@ -411,12 +411,6 @@ private:
     /**
      * Initializes yaml configuration.
      * @param configPath Relative path to the yaml configuration file, defaults to /etc.
-     */
-    void initConfig(const std::string& configPath = "./etc/Alica.yaml");
-
-    /**
-     * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
      * @param agentName Name of the local agent.
      *
      * @return The agents config.

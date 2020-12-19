@@ -86,21 +86,6 @@ void AlicaContext::setLocalAgentName(const std::string& name)
     _localAgentName = name;
 }
 
-void AlicaContext::initConfig(const std::string& configPath)
-{
-    try {
-        _configRootNode = YAML::LoadFile(configPath);
-        size_t index = configPath.find_last_of("/");
-        if (index == std::string::npos) {
-            std::cerr << "AC: Error setting configPath for: " << configPath << std::endl;
-            return;
-        }
-        _configPath = configPath.substr(0, index + 1);
-    } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
-    }
-}
-
 YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
 {
     YAML::Node node;
