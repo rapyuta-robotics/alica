@@ -37,10 +37,6 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
         return -1;
     }
 
-    if (!_configRootNode) {
-        initConfig();
-    }
-
     if (_communicator) {
         _communicator->startCommunication();
     }
