@@ -30,7 +30,9 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& agentName, const std::string& configPath,
+                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+                         const essentials::Identifier& agentID)
         : _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
