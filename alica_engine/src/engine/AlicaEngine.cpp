@@ -120,6 +120,17 @@ void AlicaEngine::terminate()
     _log.close();
 }
 
+YAML::Node AlicaEngine::initConfig(const std::string& configPath, const std::string& agentName)
+{
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(configPath + agentName + "/Alica.yaml");
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
+    }
+    return node;
+}
+
 const IAlicaCommunication& AlicaEngine::getCommunicator() const
 {
     return _ctx.getCommunicator();

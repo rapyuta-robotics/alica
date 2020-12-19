@@ -147,6 +147,15 @@ private:
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
     bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
     bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
+
+    /**
+     * Initializes yaml configuration.
+     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
+     * @param agentName Name of the local agent.
+     *
+     * @return The agents config.
+     */
+    YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
 };
 
 /**
