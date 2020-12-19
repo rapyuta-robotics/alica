@@ -119,6 +119,7 @@ private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    YAML::Node _configRootNode;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
