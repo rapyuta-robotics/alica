@@ -14,8 +14,7 @@ namespace alica
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    AlicaContext *ac = new alica::AlicaContext("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
-    ac->setLocalAgentName("nase");
+    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -54,8 +53,7 @@ namespace alica
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    AlicaContext *ac = new alica::AlicaContext("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
-    ac->setLocalAgentName("nase");
+    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -83,8 +81,7 @@ namespace alica
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    AlicaContext *ac = new alica::AlicaContext("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
-    ac->setLocalAgentName("nase");
+    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -124,8 +121,7 @@ namespace alica
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    AlicaContext *ac = new alica::AlicaContext("RoleSet", "MasterPlan", true, path + "/etc/Alica_nase.yaml");
-    ac->setLocalAgentName("nase");
+    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
