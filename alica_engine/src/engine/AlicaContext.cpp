@@ -19,7 +19,7 @@ AlicaContext::AlicaContext(const std::string& agentName, const std::string& conf
                            const essentials::Identifier& agentID)
         : _validTag(ALICA_CTX_GOOD)
 {
-    initConfig(configPath);
+    _configRootNode = initConfig(configPath, agentName);
     _clock = std::make_unique<AlicaClock>();
     _communicator = nullptr;
     _idManager = std::make_unique<essentials::IDManager>();
