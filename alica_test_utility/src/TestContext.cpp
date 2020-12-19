@@ -12,9 +12,10 @@
 namespace alica::test
 {
 
-TestContext::TestContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const std::string& fullConfigPath, const essentials::Identifier& agentID)
-        : AlicaContext(roleSetName, masterPlanName, stepEngine, fullConfigPath, agentID)
+TestContext::TestContext(const std::string& agentName, const std::string& configPath,
+                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+                         const essentials::Identifier& agentID)
+        : AlicaContext(agentName, configPath, roleSetName, masterPlanName, stepEngine, agentID)
         , _initCalled(false)
 {
 }
