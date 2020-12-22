@@ -27,6 +27,7 @@ namespace alica
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& basePath)
         : _planRepository(planRepository)
         , _ae(ae)
+        , domainConfigFolder(basePath)
 {
     std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
         ModelManager::reload(config);
@@ -38,7 +39,6 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
 
 void ModelManager::reload(const YAML::Node& config)
 {
-    domainConfigFolder = _ae->getConfigPath();
     basePlanPath = getBasePath("PlanDir");
     baseRolePath = getBasePath("RoleDir");
     baseTaskPath = getBasePath("TaskDir");
