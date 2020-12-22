@@ -115,9 +115,4 @@ int AlicaContext::getVersion()
     return ALICA_VERSION;
 }
 
-void AlicaContext::setInitialized(bool initialized)
-{
-    _initialized = initialized;
-}
-
 } // namespace alica

@@ -369,13 +369,6 @@ public:
     template<class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 
-    /**
-     * Set initialized status of AlicaContext.
-     *
-     * @param initialized Status of initialization of AlicaContext.
-     */
-    void setInitialized(bool initialized);
-
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
