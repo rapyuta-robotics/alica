@@ -105,7 +105,7 @@ namespace alica
     keyValuePairs.push_back(firstValue);
     keyValuePairs.push_back(secondValue);
 
-    EXPECT_TRUE(ac->setOption<std::string>(keyValuePairs));
+    EXPECT_TRUE(ac->setOptions<std::string>(keyValuePairs));
 
     EXPECT_TRUE(ac->getConfig()["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(1000.0f, ac->getConfig()["Local"]["AverageTranslation"].as<float>());
