@@ -41,7 +41,7 @@ namespace alica
     EXPECT_TRUE(ac->setOption<std::string>("Local.DefaultRole", "Attacker"));
     EXPECT_EQ("Attacker", ae->getTeamManager().getLocalAgent()->getProperties().getDefaultRole());
 
-    EXPECT_TRUE(ae->init(creators));
+    EXPECT_TRUE(!ac->init(creators));
 
     ac->terminate();
     delete ac;
@@ -65,7 +65,7 @@ namespace alica
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
     EXPECT_EQ(1000, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
 
-    EXPECT_TRUE(ae->init(creators));
+    EXPECT_TRUE(!ac->init(creators));
 
     //changes to config not allowed after initialization of AlicaContext
     ASSERT_FALSE(ac->setOption<int>("Alica.TeamTimeOut", 2000));
@@ -136,7 +136,7 @@ namespace alica
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
     EXPECT_EQ(1000, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
 
-    EXPECT_TRUE(ae->init(creators));
+    EXPECT_TRUE(!ac->init(creators));
 
     //changes to config not allowed after initialization of AlicaContext
     ac->setOption<int>("Alica.TeamTimeOut", 2000);
