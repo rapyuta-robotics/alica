@@ -188,9 +188,9 @@ const YAML::Node& AlicaEngine::getConfig() const
     return _ctx.getConfig();
 }
 
-void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
+void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
 {
-    _ctx.subscribe(reloadFunctionPtr);
+    _reloadFunctions.push_back(reloadFunction);
 };
 
 std::string AlicaEngine::getConfigPath() const

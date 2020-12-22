@@ -115,7 +115,7 @@ public:
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
     std::string getConfigPath() const;
-    void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
+    void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
