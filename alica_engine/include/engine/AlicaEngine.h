@@ -117,6 +117,12 @@ public:
     std::string getConfigPath() const;
     void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
 
+    /**
+     * Call reload() of all subscribed components. Each component does reload using the
+     * updated config.
+     */
+    void reloadConfig();
+
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
@@ -191,12 +197,6 @@ private:
      */
     template<class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
-
-    /**
-     * Call reload() of all subscribed component. Each component does reload using the
-     * updated config.
-     */
-    void reloadConfig();
 };
 
 /**
