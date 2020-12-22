@@ -123,6 +123,7 @@ private:
     // Please do not change the declaration order of members.
     YAML::Node _configRootNode;
     std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctions;
+    bool _initialized;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
