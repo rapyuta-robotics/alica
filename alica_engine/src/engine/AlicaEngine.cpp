@@ -54,7 +54,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& agentName, const 
     std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
         AlicaEngine::reload(config);
     };
-    _ctx.subscribe(reloadFunctionPtr);
+    subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
