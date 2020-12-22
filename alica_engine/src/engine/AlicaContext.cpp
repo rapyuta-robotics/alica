@@ -35,6 +35,7 @@ AlicaContext::~AlicaContext()
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
     if (_initialized) {
+        std::cerr << "AC: Context already initialized." << std::endl;
         return -1;
     }
 
