@@ -395,6 +395,7 @@ private:
     std::string _localAgentName;
     YAML::Node _configRootNode;
     std::string _configPath;
+    std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
 
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
@@ -405,7 +406,6 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
 
-    std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
     bool _initialized = false;
 
     /**
