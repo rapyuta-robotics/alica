@@ -128,7 +128,6 @@ private:
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctions;
-    bool _initialized;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
