@@ -166,37 +166,6 @@ private:
      * @return The agents config.
      */
     YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
-
-    /**
-     * Set config values for the agent.
-     *
-     * @param path Path of the config value.
-     * @param value Value to set in the config.
-     * @param reload Reload all subscribed components, defaults to true
-     *
-     * @note Example path: "Alica.CycleDetection.Enabled"
-     * @note Use '.' to access subsections and values of a config section.
-     *
-     * @return True if value was set correctly. False otherwise.
-     */
-    template<class T>
-    bool setOption(const std::string& path, const T& value, const bool reload = true) noexcept;
-
-    /**
-     * Set config values for the agent.
-     *
-     * @param keyValuePairs Vector of key value pairs
-     * @param path Path of the config value.
-     * @param value Value to set in the config.
-     * @param reload Reload all subscribed components, defaults to true
-     *
-     * @note Example path: "Alica.CycleDetection.Enabled"
-     * @note Use '.' to access subsections and values of a config section.
-     *
-     * @return True if value was set correctly. False otherwise.
-     */
-    template<class T>
-    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 };
 
 /**
