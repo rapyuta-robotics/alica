@@ -319,9 +319,9 @@ public:
     void stepEngine();
 
     /**
-     * Getter for YAML Node containing the agents config data.
+     * Getter for the agents configuration.
      *
-     * @return const YAML::Node& containing the agents config data.
+     * @return const YAML::Node& containing the agents configuration.
      */
     const YAML::Node& getConfig() const
     {
