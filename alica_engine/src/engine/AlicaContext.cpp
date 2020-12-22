@@ -49,6 +49,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
     if (_engine->init(creatorCtx)) {
         _engine->start();
+        _initialized = true;
         return 0;
     }
     return -1;
