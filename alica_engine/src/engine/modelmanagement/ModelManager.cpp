@@ -24,10 +24,10 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& basePath)
+ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _ae(ae)
-        , domainConfigFolder(basePath)
+        , domainConfigFolder(domainConfigFolder)
 {
     std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
         ModelManager::reload(config);
