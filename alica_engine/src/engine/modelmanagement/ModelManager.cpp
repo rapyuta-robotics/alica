@@ -24,7 +24,7 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae)
+ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& basePath)
         : _planRepository(planRepository)
         , _ae(ae)
 {

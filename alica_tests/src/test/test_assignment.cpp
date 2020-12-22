@@ -46,7 +46,7 @@ TEST(Assignment, RobotsInserted)
 
     PlanRepository repo;
     alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
-    ModelManager modelManager(repo, ae);
+    ModelManager modelManager(repo, ae, path + "/etc/");
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 
