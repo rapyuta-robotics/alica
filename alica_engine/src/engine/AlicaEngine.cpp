@@ -232,4 +232,11 @@ essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
     return _ctx.getIDManager().generateID(size);
 }
 
+void AlicaEngine::reloadConfig()
+{
+    for (auto reloadFunction : _reloadFunctions) {
+        reloadFunction(_configRootNode);
+    }
+}
+
 } // namespace alica

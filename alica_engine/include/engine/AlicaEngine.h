@@ -191,6 +191,12 @@ private:
      */
     template<class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
+
+    /**
+     * Call reload() of all subscribed component. Each component does reload using the
+     * updated config.
+     */
+    void reloadConfig();
 };
 
 /**
@@ -248,7 +254,7 @@ bool AlicaEngine::setOption(const std::string& path, const T& value, const bool 
     }
 
     if (reload) {
-        reloadAll();
+        reloadConfig();
     }
     return true;
 }
@@ -268,7 +274,7 @@ bool AlicaEngine::setOptions(const std::vector<std::pair<std::string, T>>& keyVa
     }
 
     if (reload) {
-        reloadAll();
+        reloadConfig();
     }
 
     return success;
