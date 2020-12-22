@@ -120,9 +120,4 @@ void AlicaContext::setInitialized(bool initialized)
     _initialized = initialized;
 }
 
-void AlicaContext::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
-{
-    _reloadFunctionPtrs.push_back(reloadFunctionPtr);
-};
-
 } // namespace alica

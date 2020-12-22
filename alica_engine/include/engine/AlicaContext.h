@@ -370,13 +370,6 @@ public:
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 
     /**
-     * Subscribe to config updates.
-     *
-     * @param reloadFunctionPtr Ptr to the reload function of the subscribing component
-     */
-    void subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr);
-
-    /**
      * Set initialized status of AlicaContext.
      *
      * @param initialized Status of initialization of AlicaContext.
