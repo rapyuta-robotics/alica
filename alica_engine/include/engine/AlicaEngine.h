@@ -38,7 +38,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& agentName, const std::string& configPath,
+    AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                 const essentials::Identifier& agentID = essentials::Identifier());
     ~AlicaEngine();

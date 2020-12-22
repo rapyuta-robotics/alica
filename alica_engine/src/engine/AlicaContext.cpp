@@ -20,7 +20,7 @@ AlicaContext::AlicaContext(const std::string& agentName, const std::string& conf
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(configPath, agentName))
         , _configPath(configPath)
-        , _engine(std::make_unique<AlicaEngine>(*this, agentName, configPath, roleSetName, masterPlanName, stepEngine, agentID))
+        , _engine(std::make_unique<AlicaEngine>(*this, configPath, roleSetName, masterPlanName, stepEngine, agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
         , _idManager(std::make_unique<essentials::IDManager>())
