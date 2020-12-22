@@ -120,13 +120,6 @@ void AlicaContext::setInitialized(bool initialized)
     _initialized = initialized;
 }
 
-void AlicaContext::reloadAll()
-{
-    for (auto reloadFunctionPtr : _reloadFunctionPtrs) {
-        reloadFunctionPtr(_configRootNode);
-    }
-}
-
 void AlicaContext::subscribe(std::function<void(const YAML::Node& config)> reloadFunctionPtr)
 {
     _reloadFunctionPtrs.push_back(reloadFunctionPtr);

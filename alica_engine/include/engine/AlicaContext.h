@@ -370,11 +370,6 @@ public:
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 
     /**
-     * Reload all subscribed components
-     */
-    void reloadAll();
-
-    /**
      * Subscribe to config updates.
      *
      * @param reloadFunctionPtr Ptr to the reload function of the subscribing component
