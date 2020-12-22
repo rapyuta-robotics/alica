@@ -367,7 +367,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    bool setOption(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
+    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 
     /**
      * Reload all subscribed components
@@ -504,7 +504,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
 }
 
 template <class T>
-bool AlicaContext::setOption(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload) noexcept
+bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload) noexcept
 {
     bool success = true;
     if (_initialized) {
