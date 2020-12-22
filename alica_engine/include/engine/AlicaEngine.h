@@ -121,7 +121,7 @@ public:
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig();
+    void reloadConfig(const YAML::Node& config);
 
 private:
     void setStepEngine(bool stepEngine);
@@ -254,7 +254,7 @@ bool AlicaEngine::setOption(const std::string& path, const T& value, const bool 
     }
 
     if (reload) {
-        reloadConfig();
+        reloadConfig(_ctx.getConfig());
     }
     return true;
 }
@@ -274,7 +274,7 @@ bool AlicaEngine::setOptions(const std::vector<std::pair<std::string, T>>& keyVa
     }
 
     if (reload) {
-        reloadConfig();
+        reloadConfig(_ctx.getConfig());
     }
 
     return success;

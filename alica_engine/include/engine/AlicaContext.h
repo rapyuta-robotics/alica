@@ -479,7 +479,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
     }
 
     if (reload) {
-        _engine->reloadConfig();
+        _engine->reloadConfig(_configRootNode);
     }
     return true;
 }
@@ -499,7 +499,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
     }
 
     if (reload) {
-        _engine->reloadConfig();
+        _engine->reloadConfig(_configRootNode);
     }
 
     return success;

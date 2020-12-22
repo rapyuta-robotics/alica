@@ -232,10 +232,10 @@ essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
     return _ctx.getIDManager().generateID(size);
 }
 
-void AlicaEngine::reloadConfig()
+void AlicaEngine::reloadConfig(const YAML::Node& config)
 {
     for (auto reloadFunction : _reloadFunctions) {
-        reloadFunction(_configRootNode);
+        reloadFunction(config);
     }
 }
 
