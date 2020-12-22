@@ -459,7 +459,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
     try {
         YAML::Node currentNode(_configRootNode);
 
-        for (std::string param : params) {
+        for (const std::string& param : params) {
             currentNode.reset(currentNode[param]);
         }
         currentNode = value;
