@@ -159,6 +159,37 @@ private:
      * @return The agents config.
      */
     YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
+
+    /**
+     * Set config values for the agent.
+     *
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
+    template<class T>
+    bool setOption(const std::string& path, const T& value, const bool reload = true) noexcept;
+
+    /**
+     * Set config values for the agent.
+     *
+     * @param keyValuePairs Vector of key value pairs
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
+    template<class T>
+    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
 };
 
 /**
@@ -192,6 +223,54 @@ template <class SolverType>
 bool AlicaEngine::existSolver() const
 {
     return _ctx.existSolver<SolverType>();
+}
+
+template <class T>
+bool AlicaEngine::setOption(const std::string& path, const T& value, const bool reload) noexcept
+{
+    if (_initialized) {
+        return false;
+    }
+    ConfigPathParser configPathParser;
+    std::vector<std::string> params = configPathParser.getParams('.', path);
+
+    try {
+        YAML::Node currentNode(_configRootNode);
+
+        for (std::string param : params) {
+            currentNode.reset(currentNode[param]);
+        }
+        currentNode = value;
+    } catch (const YAML::Exception& e) {
+        std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
+        return false;
+    }
+
+    if (reload) {
+        reloadAll();
+    }
+    return true;
+}
+
+template <class T>
+bool AlicaEngine::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload) noexcept
+{
+    bool success = true;
+    if (_initialized) {
+        return false;
+    }
+
+    for (const auto& keyValuePair : keyValuePairs) {
+        if (!setOption<T>(keyValuePair.first, keyValuePair.second, false)) {
+            success = false;
+        }
+    }
+
+    if (reload) {
+        reloadAll();
+    }
+
+    return success;
 }
 
 } // namespace alica
