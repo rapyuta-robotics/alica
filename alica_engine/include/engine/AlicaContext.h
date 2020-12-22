@@ -329,16 +329,6 @@ public:
     };
 
     /**
-     * Getter for the config path.
-     *
-     * @return Path to the agent's config file.
-     */
-    const std::string getConfigPath() const
-    {
-        return _configPath;
-    };
-
-    /**
      * Set config values for the agent.
      *
      * @param path Path of the config value.

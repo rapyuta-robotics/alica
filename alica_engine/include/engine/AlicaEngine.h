@@ -114,7 +114,6 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
-    std::string getConfigPath() const;
     void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
 
     /**

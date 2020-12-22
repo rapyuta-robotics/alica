@@ -190,11 +190,6 @@ void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reload
     _reloadFunctions.push_back(reloadFunction);
 };
 
-std::string AlicaEngine::getConfigPath() const
-{
-    return _ctx.getConfigPath();
-}
-
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
