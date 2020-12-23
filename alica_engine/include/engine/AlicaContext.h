@@ -376,6 +376,11 @@ private:
      */
     YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
 
+    /**
+     * Reload alica components with updated configuration.
+     *
+     * @note Is called when setOption or setOptions is successfully called.
+     */
     void reloadConfig();
 };
 
