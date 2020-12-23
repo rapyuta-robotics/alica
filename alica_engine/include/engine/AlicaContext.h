@@ -155,7 +155,7 @@ public:
      *
      * @param alicaContextParams Struct containing all necessary params to create the Context.
      *
-     * @note this is the main alica api class
+     * @note This is the main alica api class
      */
     AlicaContext(const AlicaContextParams& alicaContextParams);
 
