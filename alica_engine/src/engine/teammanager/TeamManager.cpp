@@ -92,6 +92,9 @@ void TeamManager::setTeamTimeout(AlicaTime t)
 
 void TeamManager::readSelfFromConfig(const YAML::Node& config)
 {
+    if (_localAgent) {
+        return;
+    }
     const std::string localAgentName = _engine->getLocalAgentName();
 
     if (_localAgentID == nullptr) {
@@ -104,19 +107,15 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
         }
     } else {
-        if (!_localAgent) {
-            _localAnnouncement.senderID = _localAgentID;
-        }
+        _localAnnouncement.senderID = _localAgentID;
     }
 
-    if (!_localAgent) {
-        std::random_device rd;
-        _localAnnouncement.token = rd();
-        _localAnnouncement.senderName = localAgentName;
-        _localAnnouncement.senderSdk = _engine->getVersion();
-        // TODO: add plan hash
-        _localAnnouncement.planHash = 0;
-    }
+    std::random_device rd;
+    _localAnnouncement.token = rd();
+    _localAnnouncement.senderName = localAgentName;
+    _localAnnouncement.senderSdk = _engine->getVersion();
+    // TODO: add plan hash
+    _localAnnouncement.planHash = 0;
 
     const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
@@ -139,14 +138,9 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
         _localAnnouncement.capabilities.emplace_back(key, svalue);
     }
 
-    if (!_localAgent) {
-        _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);
-        _localAgent->setLocal(true);
-        _agentsCache.addAgent(_localAgent);
-    } else {
-        _localAgent->setTimeout(_teamTimeOut);
-        _localAgent->setDefaultRole(myRole);
-    }
+    _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);
+    _localAgent->setLocal(true);
+    _agentsCache.addAgent(_localAgent);
 }
 
 ActiveAgentIdView TeamManager::getActiveAgentIds() const
