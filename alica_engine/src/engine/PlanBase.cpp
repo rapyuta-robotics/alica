@@ -19,6 +19,7 @@
 
 #include <alica_common_config/debug_output.h>
 #include <math.h>
+#include <functional>
 
 namespace alica
 {
@@ -39,9 +40,7 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        PlanBase::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&PlanBase::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
 }

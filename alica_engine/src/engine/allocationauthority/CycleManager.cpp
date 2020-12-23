@@ -12,6 +12,7 @@
 #include "engine/model/PlanType.h"
 
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -31,9 +32,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        CycleManager::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
 }

@@ -21,6 +21,7 @@
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -38,9 +39,7 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        RuleBook::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
     assert(_ps && _pb);

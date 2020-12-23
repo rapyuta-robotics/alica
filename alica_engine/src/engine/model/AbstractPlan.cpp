@@ -4,6 +4,7 @@
 
 #include <yaml-cpp/yaml.h>
 #include <sstream>
+#include <functional>
 
 namespace alica
 {
@@ -12,9 +13,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        AbstractPlan::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }
@@ -22,9 +21,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        AbstractPlan::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }

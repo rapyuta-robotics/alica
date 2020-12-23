@@ -14,6 +14,7 @@
 #include <essentials/IDManager.h>
 
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -49,9 +50,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = [this](const YAML::Node& config) {
-        AlicaEngine::reload(config);
-    };
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
