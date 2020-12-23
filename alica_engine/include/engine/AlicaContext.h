@@ -344,7 +344,7 @@ public:
     bool setOption(const std::string& path, const T& value, const bool reload = true) noexcept;
 
     /**
-     * Set config values for the agent.
+     * Set config values for the agent. On error no config values are updated.
      *
      * @param keyValuePairs Vector of key value pairs
      * @param path Path of the config value.
@@ -354,7 +354,7 @@ public:
      * @note Example path: "Alica.CycleDetection.Enabled"
      * @note Use '.' to access subsections and values of a config section.
      *
-     * @return True if value was set correctly. False otherwise.
+     * @return True if values were set correctly. False otherwise.
      */
     template<class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
