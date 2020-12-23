@@ -80,7 +80,7 @@ public:
     void tick();
 
 private:
-    void readSelfFromConfig(essentials::IdentifierConstPtr agentId);
+    void readSelfFromConfig(const YAML::Node& config);
     void announcePresence() const;
     void queryPresence() const;
     Agent* getAgent(essentials::IdentifierConstPtr agentId) const;

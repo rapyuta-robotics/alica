@@ -77,7 +77,7 @@ void TeamManager::reload(const YAML::Node& config)
         _agentAnnouncementTimeInterval = AlicaTime::seconds(config["Alica"]["AgentAnnouncementTimeInterval"].as<unsigned long>());
         _announcementRetries = config["Alica"]["AnnouncementRetries"].as<int>();
     }
-    readSelfFromConfig(_localAgentID);
+    readSelfFromConfig(config);
 }
 
 void TeamManager::setTeamTimeout(AlicaTime t)
@@ -90,12 +90,11 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
+void TeamManager::readSelfFromConfig(const YAML::Node& config)
 {
-    YAML::Node config = _engine->getConfig();
     const std::string localAgentName = _engine->getLocalAgentName();
 
-    if (agentID == nullptr) {
+    if (_localAgentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
         uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
@@ -106,7 +105,7 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         }
     } else {
         if (!_localAgent) {
-            _localAnnouncement.senderID = agentID;
+            _localAnnouncement.senderID = _localAgentID;
         }
     }
 
