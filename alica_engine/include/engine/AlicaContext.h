@@ -353,8 +353,6 @@ private:
 
     std::string _localAgentName;
     YAML::Node _configRootNode;
-    std::string _configPath;
-    std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctionPtrs;
 
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!

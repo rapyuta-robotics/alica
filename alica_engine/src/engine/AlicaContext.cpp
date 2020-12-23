@@ -17,7 +17,6 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _configPath(alicaContextParams.configPath)
         , _engine(std::make_unique<AlicaEngine>(*this,
                                                 alicaContextParams.configPath,
                                                 alicaContextParams.roleSetName,
