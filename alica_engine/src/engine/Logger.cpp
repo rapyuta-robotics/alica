@@ -28,7 +28,7 @@ namespace alica
 {
 using std::to_string;
 
-Logger::Logger(const AlicaEngine* ae)
+Logger::Logger(AlicaEngine* ae)
         : _ae(ae)
         , _itCount(0)
         , _inIteration(false)

@@ -54,7 +54,7 @@ struct StringBuilder<First>
 class Logger
 {
 public:
-    Logger(const AlicaEngine* ae);
+    Logger(AlicaEngine* ae);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -80,7 +80,7 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    const AlicaEngine* _ae;
+    AlicaEngine* _ae;
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;
