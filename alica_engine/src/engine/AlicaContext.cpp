@@ -14,6 +14,21 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
+AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
+        : _validTag(ALICA_CTX_GOOD)
+        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
+        , _configPath(alicaContextParams.configPath)
+        , _engine(std::make_unique<AlicaEngine>(*this,
+                                                alicaContextParams.configPath,
+                                                alicaContextParams.roleSetName,
+                                                alicaContextParams.masterPlanName,
+                                                alicaContextParams.stepEngine,
+                                                alicaContextParams.agentID))
+        , _clock(std::make_unique<AlicaClock>())
+        , _communicator(nullptr)
+        , _idManager(std::make_unique<essentials::IDManager>())
+{}
+
 AlicaContext::AlicaContext(const std::string& agentName, const std::string& configPath,
                            const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                            const essentials::Identifier& agentID)
