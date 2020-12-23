@@ -479,22 +479,41 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
 template <class T>
 bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload) noexcept
 {
-    bool success = true;
     if (_initialized) {
         return false;
     }
+    ConfigPathParser configPathParser;
+    std::vector <std::pair<std::string, T>> oldKeyValuePairs;
 
-    for (const auto& keyValuePair : keyValuePairs) {
-        if (!setOption<T>(keyValuePair.first, keyValuePair.second, false)) {
-            success = false;
+    try {
+        for (const auto &keyValuePair : keyValuePairs) {
+            std::vector <std::string> params = configPathParser.getParams('.', keyValuePair.first);
+            YAML::Node currentNode(_configRootNode);
+
+            for (const std::string &param : params) {
+                currentNode.reset(currentNode[param]);
+            }
+
+            T oldValue = currentNode.as<T>();
+            currentNode = keyValuePair.second;
+
+            std::pair<std::string, T> oldKeyValuePair = std::make_pair(keyValuePair.first, oldValue);
+            oldKeyValuePairs.push_back(oldKeyValuePair);
         }
+    } catch (const YAML::Exception& e) {
+        std::cerr << "AC: Could not set config values: " << e.msg << std::endl;
+        //revert changes
+        for (const auto &keyValuePair : oldKeyValuePairs) {
+            setOption<T>(keyValuePair.first, keyValuePair.second, false);
+        }
+        return false;
     }
 
     if (reload) {
         reloadConfig();
     }
 
-    return success;
+    return true;
 }
 
 } // namespace alica
