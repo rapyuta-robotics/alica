@@ -160,19 +160,6 @@ public:
     AlicaContext(const AlicaContextParams& alicaContextParams);
 
     /**
-     * Creates AlicaContext object.
-     *
-     * @param roleSetName Name for roleset
-     * @param masterPlanName Name for the main plan
-     * @param stepEngine Signify engine is trigger based.
-     *
-     * @note This is the main alica api class
-     */
-    AlicaContext(const std::string& agentName, const std::string& configPath,
-                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                 const essentials::Identifier& agentID = essentials::Identifier());
-
-    /**
      * Destroys AlicaContext object.
      */
     ~AlicaContext();
