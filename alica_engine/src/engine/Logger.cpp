@@ -35,7 +35,9 @@ Logger::Logger(const AlicaEngine* ae)
         , _receivedEvent(false)
         , _fileWriter()
 {
-    reloadConfig(_ae->getConfig());
+    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
 }
 
 Logger::~Logger() {}
