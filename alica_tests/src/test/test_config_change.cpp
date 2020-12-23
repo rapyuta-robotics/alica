@@ -80,7 +80,6 @@ TEST(ConfigUpdates, TestConfigUpdatesWithVector)
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                                   std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
     AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-    const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
     //Set values to change later
     EXPECT_TRUE(ac->setOption<bool>("Local.IsGoalie", false));
@@ -102,7 +101,6 @@ TEST(ConfigUpdates, TestConfigUpdatesWithVector)
     EXPECT_TRUE(ac->getConfig()["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(1000.0f, ac->getConfig()["Local"]["AverageTranslation"].as<float>());
 
-    ac->terminate();
     delete ac;
 }
 
