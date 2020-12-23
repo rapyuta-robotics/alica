@@ -92,6 +92,7 @@ private:
     bool _active;
     bool _receivedEvent;
     bool _inIteration;
+    bool _logging;
 };
 
 } /* namespace alica */

@@ -42,6 +42,9 @@ Logger::~Logger() {}
 
 void Logger::reloadConfig(const YAML::Node& config)
 {
+    if (_logging) {
+        return;
+    }
     _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
         std::string agentName = _ae->getLocalAgentName();
@@ -57,6 +60,7 @@ void Logger::reloadConfig(const YAML::Node& config)
 
         sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << agentName << ".txt";
         _fileWriter.open(sb.str().c_str());
+        _logging = true;
     }
 }
 
