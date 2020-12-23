@@ -40,7 +40,7 @@ Logger::Logger(const AlicaEngine* ae)
 
 Logger::~Logger() {}
 
-void Logger::reloadConfig(const YAML::Node& config)
+void Logger::reload(const YAML::Node& config)
 {
     if (_logging) {
         return;

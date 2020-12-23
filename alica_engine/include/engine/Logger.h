@@ -70,7 +70,7 @@ public:
     void iterationEnds(const RunningPlan* p);
     void close();
     void logToConsole(const std::string& logString);
-    void reloadConfig(const YAML::Node& config);
+    void reload(const YAML::Node& config);
 
 private:
     void processString(const std::string& str);
