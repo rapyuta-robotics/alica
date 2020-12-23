@@ -136,6 +136,35 @@ protected:
         }
     }
 };
+
+class AlicaTestNotInitializedFixture: public AlicaTestFixtureBase
+{
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual bool stepEngine() const { return true; }
+    void SetUp() override
+    {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        ac = new alica::AlicaContext("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine());
+
+        ASSERT_TRUE(ac->isValid());
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+    }
+
+    void TearDown() override
+    {
+        ac->terminate();
+        delete ac;
+    }
+};
 } // namespace alica
 
 extern std::jmp_buf restore_point;
