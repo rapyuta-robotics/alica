@@ -5,23 +5,18 @@
 #include "engine/planselector/PartialAssignment.h"
 namespace alica
 {
-    class AlicaEngine;
-    class AlicaContext;
-
-TEST(ConfigUpdates, TestUpdatingComponents)
+namespace
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+    class AlicaNotInitialized : public AlicaTestNotInitializedFixture
+    {
+    protected:
+        const char* getMasterPlanName() const override { return "MasterPlan"; }
+    };
 
-    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
-
-    ASSERT_TRUE(ac->isValid());
-    ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+TEST_F(AlicaNotInitialized, TestUpdatingComponents)
+{
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                                   std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-    AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-    const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
     EXPECT_TRUE(ae->maySendMessages());
@@ -36,25 +31,12 @@ TEST(ConfigUpdates, TestUpdatingComponents)
     EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
     EXPECT_TRUE(!ac->init(creators));
-
-    ac->terminate();
-    delete ac;
 }
 
-TEST(ConfigUpdates, TestBlockConfigUpdatesAfterInitialization)
+TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
-
-    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
-
-    ASSERT_TRUE(ac->isValid());
-    ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                                   std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-    AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-    const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
     EXPECT_TRUE(!ac->init(creators));
@@ -62,25 +44,10 @@ TEST(ConfigUpdates, TestBlockConfigUpdatesAfterInitialization)
     //changes to config not allowed after initialization of AlicaContext
     ASSERT_FALSE(ac->setOption<int>("Alica.TeamTimeOut", 2000));
     EXPECT_EQ(1000, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
-
-    ac->terminate();
-    delete ac;
 }
 
-TEST(ConfigUpdates, TestConfigUpdatesWithVector)
+TEST_F(AlicaNotInitialized, TestConfigUpdatesWithVector)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
-
-    AlicaContext *ac = new alica::AlicaContext("nase", path + "/etc/", "RoleSet", "MasterPlan", true);
-
-    ASSERT_TRUE(ac->isValid());
-    ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                                  std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
-    AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-
     //Set values to change later
     EXPECT_TRUE(ac->setOption<bool>("Local.IsGoalie", false));
     EXPECT_FALSE(ac->getConfig()["Local"]["IsGoalie"].as<bool>());
@@ -100,8 +67,7 @@ TEST(ConfigUpdates, TestConfigUpdatesWithVector)
 
     EXPECT_TRUE(ac->getConfig()["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(1000.0f, ac->getConfig()["Local"]["AverageTranslation"].as<float>());
-
-    delete ac;
+}
 }
 }
 
