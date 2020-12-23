@@ -31,11 +31,6 @@ Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& de
 
 Agent::~Agent() {}
 
-void Agent::setDefaultRole(const std::string& defaultRole)
-{
-    _properties.setDefaultRole(defaultRole);
-}
-
 void Agent::setLocal(bool local)
 {
     if (local) {

@@ -40,7 +40,6 @@ public:
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
     void setTimeout(AlicaTime t);
-    void setDefaultRole(const std::string& defaultRole);
 
 private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
