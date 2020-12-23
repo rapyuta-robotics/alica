@@ -35,12 +35,6 @@ namespace alica
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
     EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
-    EXPECT_TRUE(ac->setOption<std::string>("Local.DefaultRole", "ExampleRole"));
-    EXPECT_EQ("ExampleRole", ae->getTeamManager().getLocalAgent()->getProperties().getDefaultRole());
-
-    EXPECT_TRUE(ac->setOption<std::string>("Local.DefaultRole", "Attacker"));
-    EXPECT_EQ("Attacker", ae->getTeamManager().getLocalAgent()->getProperties().getDefaultRole());
-
     EXPECT_TRUE(!ac->init(creators));
 
     ac->terminate();
