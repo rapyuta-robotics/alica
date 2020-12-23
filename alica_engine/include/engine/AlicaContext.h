@@ -156,6 +156,7 @@ public:
      * @param alicaContextParams Struct containing all necessary params to create the Context.
      *
      * @note This is the main alica api class
+     * @note Can throw an exception if some necessary configurations dont exist in the config file.
      */
     AlicaContext(const AlicaContextParams& alicaContextParams);
 
