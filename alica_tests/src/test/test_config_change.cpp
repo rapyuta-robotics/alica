@@ -8,7 +8,7 @@ namespace alica
     class AlicaEngine;
     class AlicaContext;
 
-    TEST(ConfigUpdates, TestUpdatingComponents)
+TEST(ConfigUpdates, TestUpdatingComponents)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -41,7 +41,7 @@ namespace alica
     delete ac;
 }
 
-    TEST(ConfigUpdates, TestBlockConfigUpdatesAfterInitialization)
+TEST(ConfigUpdates, TestBlockConfigUpdatesAfterInitialization)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -69,7 +69,7 @@ namespace alica
     delete ac;
 }
 
-    TEST(ConfigUpdates, TestConfigUpdatesWithVector)
+TEST(ConfigUpdates, TestConfigUpdatesWithVector)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -108,7 +108,7 @@ namespace alica
     delete ac;
 }
 
-    TEST(ConfigChangeListener, TestConfigUpdates)
+TEST(ConfigChangeListener, TestConfigUpdates)
 {
     // determine the path to the test config
     ros::NodeHandle nh;
