@@ -387,6 +387,8 @@ private:
      * @return The agents config.
      */
     YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
+
+    void reloadConfig();
 };
 
 template <class ClockType, class... Args>
@@ -469,7 +471,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
     }
 
     if (reload) {
-        _engine->reloadConfig(_configRootNode);
+        reloadConfig();
     }
     return true;
 }
@@ -489,7 +491,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
     }
 
     if (reload) {
-        _engine->reloadConfig(_configRootNode);
+        reloadConfig();
     }
 
     return success;

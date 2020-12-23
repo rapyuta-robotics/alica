@@ -112,4 +112,9 @@ int AlicaContext::getVersion()
     return ALICA_VERSION;
 }
 
+void AlicaContext::reloadConfig()
+{
+    _engine->reloadConfig(_configRootNode);
+}
+
 } // namespace alica
