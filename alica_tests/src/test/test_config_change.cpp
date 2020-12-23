@@ -57,8 +57,6 @@ TEST(ConfigUpdates, TestBlockConfigUpdatesAfterInitialization)
     const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
-    EXPECT_EQ(1000, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
-
     EXPECT_TRUE(!ac->init(creators));
 
     //changes to config not allowed after initialization of AlicaContext
