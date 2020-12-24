@@ -70,6 +70,8 @@ struct AlicaContextParams
      * @param masterPlanName Name of the masterPlan
      * @param stepEngine Signify engine is trigger based. Defaults to true.
      * @param agentID Identifier of the local Agent. By default a new identifier is created.
+     *
+     * @note The configPath is the path containing the plans, roles and tasks folder.
      */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
@@ -367,7 +369,7 @@ private:
 
     /**
      * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file, defaults to /etc.
+     * @param configPath Relative path to the yaml configuration file.
      * @param agentName Name of the local agent.
      *
      * @return The agents config.
