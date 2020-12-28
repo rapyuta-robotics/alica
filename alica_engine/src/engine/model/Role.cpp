@@ -11,6 +11,7 @@ namespace alica
 {
 
 Role::Role()
+        : _roleSet(nullptr)
 {
 }
 
