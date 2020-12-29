@@ -7,11 +7,11 @@
 #include "engine/containers/AgentQuery.h"
 
 #include <alica_common_config/debug_output.h>
-#include <essentials/SystemConfig.h>
 
 #include <limits>
 #include <random>
 #include <utility>
+#include <functional>
 
 namespace alica
 {
@@ -55,23 +55,30 @@ bool AgentsCache::addAgent(Agent* agent)
 
 TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
         : _localAgent(nullptr)
+        , _localAgentID(agentID)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _teamTimeOut = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica.TeamTimeOut", NULL));
-    _useAutoDiscovery = sc["Alica"]->get<bool>("Alica.AutoDiscovery", NULL);
-    if (_useAutoDiscovery) {
-        _agentAnnouncementTimeInterval = AlicaTime::seconds(sc["Alica"]->get<unsigned long>("Alica.AgentAnnouncementTimeInterval", NULL));
-        _announcementRetries = sc["Alica"]->get<int>("Alica.AnnouncementRetries", NULL);
-    }
-    readSelfFromConfig(agentID);
+    auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
+    _engine->subscribe(reloadFunctionPtr);
+    reload(_engine->getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
 TeamManager::~TeamManager() {}
+
+void TeamManager::reload(const YAML::Node& config)
+{
+    _teamTimeOut = AlicaTime::milliseconds(config["Alica"]["TeamTimeOut"].as<unsigned long>());
+    _useAutoDiscovery = config["Alica"]["AutoDiscovery"].as<bool>();
+    if (_useAutoDiscovery) {
+        _agentAnnouncementTimeInterval = AlicaTime::seconds(config["Alica"]["AgentAnnouncementTimeInterval"].as<unsigned long>());
+        _announcementRetries = config["Alica"]["AnnouncementRetries"].as<int>();
+    }
+    readSelfFromConfig(config);
+}
 
 void TeamManager::setTeamTimeout(AlicaTime t)
 {
@@ -83,32 +90,24 @@ void TeamManager::setTeamTimeout(AlicaTime t)
     }
 }
 
-void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
+void TeamManager::readSelfFromConfig(const YAML::Node& config)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    if (_localAgent) {
+        return;
+    }
     const std::string localAgentName = _engine->getLocalAgentName();
 
-    if (agentID == nullptr) {
+    if (_localAgentID == nullptr) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-        uint64_t id = sc["Local"]->tryGet<uint64_t>(notAValidID, "Local", "ID", NULL);
+        uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
             _localAnnouncement.senderID = _engine->getID(id);
         } else {
             _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
-            bool persistId = sc["Alica"]->tryGet<bool>(false, "Alica", "PersistID", NULL);
-            if (persistId) {
-                try{
-                    auto* configLocal = sc["Local"];
-                    configLocal->setCreateIfNotExistent(static_cast<uint64_t>(*_localAnnouncement.senderID), "Local", "ID", NULL);
-                    configLocal->store();
-                } catch(...) {
-                    ALICA_ERROR_MSG("TM: impossible to store ID " << _localAnnouncement.senderID);
-                }
-            }
         }
     } else {
-        _localAnnouncement.senderID = agentID;
+        _localAnnouncement.senderID = _localAgentID;
     }
 
     std::random_device rd;
@@ -117,7 +116,8 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
     _localAnnouncement.senderSdk = _engine->getVersion();
     // TODO: add plan hash
     _localAnnouncement.planHash = 0;
-    const std::string myRole = sc["Local"]->get<std::string>("Local", "DefaultRole", NULL);
+
+    const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
     for (const Role* role : roles) {
         if (role->getName() == myRole) {
@@ -125,14 +125,15 @@ void TeamManager::readSelfFromConfig(essentials::IdentifierConstPtr agentID)
         }
     }
 
-    std::shared_ptr<std::vector<std::string>> properties = sc["Local"]->getNames("Local", NULL);
-    for (const std::string& s : *properties) {
-        if (s == "ID" || s == "DefaultRole") {
+    const YAML::Node localConfigNode = config["Local"];
+    for (YAML::const_iterator it = localConfigNode.begin(); it != localConfigNode.end(); ++it) {
+        std::string key = it->first.as<std::string>();
+        YAML::Node value = it->second;
+        if (key == "ID" || key == "DefaultRole") {
             continue;
         }
-
-        std::string svalue = sc["Local"]->get<std::string>("Local", s.c_str(), NULL);
-        _localAnnouncement.capabilities.emplace_back(s, svalue);
+        std::string svalue = localConfigNode[key].as<std::string>();
+        _localAnnouncement.capabilities.emplace_back(key, svalue);
     }
 
     _localAgent = new Agent(_engine, _teamTimeOut, myRole, _localAnnouncement);

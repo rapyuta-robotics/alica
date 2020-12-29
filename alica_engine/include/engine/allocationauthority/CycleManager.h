@@ -8,6 +8,7 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -35,6 +36,7 @@ public:
     bool needsSending() const;
     void sent();
     bool haveAuthority() const { return _state == CycleState::overriding; }
+    void reload(const YAML::Node& config);
 
 private:
     enum CycleState

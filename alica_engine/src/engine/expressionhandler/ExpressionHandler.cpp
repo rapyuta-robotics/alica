@@ -15,7 +15,6 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/Transition.h"
-#include <essentials/SystemConfig.h>
 
 namespace alica
 {
