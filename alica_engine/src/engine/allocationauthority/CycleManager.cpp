@@ -11,8 +11,8 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 
-#include <essentials/SystemConfig.h>
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -30,25 +30,30 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _maxAllocationCycles = sc["Alica"]->get<int>("Alica", "CycleDetection", "CycleCount", NULL);
-    _enabled = sc["Alica"]->get<bool>("Alica", "CycleDetection", "Enabled", NULL);
-    _minimalOverrideTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
-    _maximalOverrideTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MaximalAuthorityTimeInterval", NULL));
-    _overrideShoutInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageTimeInterval", NULL));
-    _overrideWaitInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MessageWaitTimeInterval", NULL));
-    int historySize = sc["Alica"]->get<int>("Alica", "CycleDetection", "HistorySize", NULL);
-
-    _intervalIncFactor = sc["Alica"]->get<double>("Alica", "CycleDetection", "IntervalIncreaseFactor", NULL);
-    _intervalDecFactor = sc["Alica"]->get<double>("Alica", "CycleDetection", "IntervalDecreaseFactor", NULL);
-
-    _allocationHistory.resize(historySize);
-
     _rp = p;
-    _myID = ae->getTeamManager().getLocalAgentID();
+    _myID = _ae->getTeamManager().getLocalAgentID();
+    auto reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
 }
 
 CycleManager::~CycleManager() {}
+
+void CycleManager::reload(const YAML::Node& config)
+{
+    _maxAllocationCycles = config["Alica"]["CycleDetection"]["CycleCount"].as<int>();
+    _enabled = config["Alica"]["CycleDetection"]["Enabled"].as<bool>();
+    _minimalOverrideTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
+    _maximalOverrideTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MaximalAuthorityTimeInterval"].as<unsigned long>());
+    _overrideShoutInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MessageTimeInterval"].as<unsigned long>());
+    _overrideWaitInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MessageWaitTimeInterval"].as<unsigned long>());
+    int historySize = config["Alica"]["CycleDetection"]["HistorySize"].as<int>();
+
+    _intervalIncFactor = config["Alica"]["CycleDetection"]["IntervalIncreaseFactor"].as<double>();
+    _intervalDecFactor = config["Alica"]["CycleDetection"]["IntervalDecreaseFactor"].as<double>();
+
+    _allocationHistory.resize(historySize);
+}
 
 /**
  * Called once per engine iteration by the corresponding RunningPlan.

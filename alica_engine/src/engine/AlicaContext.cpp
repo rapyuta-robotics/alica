@@ -2,6 +2,7 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/IdentifierConstPtr.h>
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -14,14 +15,19 @@ constexpr uint32_t ALICA_CTX_GOOD = 0xaac0ffee;
 constexpr uint32_t ALICA_CTX_BAD = 0xdeaddead;
 constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
-AlicaContext::AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
+AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
-        , _engine(std::make_unique<AlicaEngine>(*this, roleSetName, masterPlanName, stepEngine, agentID))
+        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
+        , _engine(std::make_unique<AlicaEngine>(*this,
+                                                alicaContextParams.configPath,
+                                                alicaContextParams.roleSetName,
+                                                alicaContextParams.masterPlanName,
+                                                alicaContextParams.stepEngine,
+                                                alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
         , _idManager(std::make_unique<essentials::IDManager>())
-{
-}
+{}
 
 AlicaContext::~AlicaContext()
 {
@@ -30,12 +36,18 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized.");
+        return -1;
+    }
+
     if (_communicator) {
         _communicator->startCommunication();
     }
 
     if (_engine->init(creatorCtx)) {
         _engine->start();
+        _initialized = true;
         return 0;
     }
     return -1;
@@ -47,7 +59,7 @@ int AlicaContext::terminate()
         _communicator->stopCommunication();
     }
     _engine->terminate();
-    essentials::SystemConfig::getInstance().shutdown();
+    _initialized = false;
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
@@ -70,34 +82,28 @@ essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
-/**
- * Method is deprecated and will be removed soon. Use
- * getLocalAgentName() instead.
- * @return
- */
-std::string AlicaContext::getRobotName()
+std::string AlicaContext::getLocalAgentName() const
 {
-    return getLocalAgentName();
+    return _localAgentName;
 }
 
-std::string AlicaContext::getLocalAgentName()
+YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
 {
-    return essentials::SystemConfig::getInstance().getHostname();
-}
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(configPath + agentName + "/Alica.yaml");
+        return node;
+    } catch (YAML::BadFile& badFile) {
+        ALICA_WARNING_MSG("AC: Could not parse file: " << badFile.msg);
+    }
 
-void AlicaContext::setLocalAgentName(const std::string& name)
-{
-    essentials::SystemConfig::getInstance().setHostname(name);
-}
+    try {
+        node = YAML::LoadFile(configPath + "Alica.yaml");
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
+    }
 
-void AlicaContext::setRootPath(const std::string& path)
-{
-    essentials::SystemConfig::getInstance().setRootPath(path);
-}
-
-void AlicaContext::setConfigPath(const std::string& path)
-{
-    essentials::SystemConfig::getInstance().setConfigPath(path);
+    return node;
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)
@@ -110,6 +116,11 @@ void AlicaContext::getVersion(int& major, int& minor, int& patch)
 int AlicaContext::getVersion()
 {
     return ALICA_VERSION;
+}
+
+void AlicaContext::reloadConfig()
+{
+    _engine->reloadConfig(_configRootNode);
 }
 
 } // namespace alica

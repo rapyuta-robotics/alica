@@ -5,7 +5,9 @@
 namespace alica
 {
 
-PlanType::PlanType() {}
+PlanType::PlanType(AlicaEngine* ae) : AbstractPlan(ae)
+{
+}
 
 PlanType::~PlanType() {}
 

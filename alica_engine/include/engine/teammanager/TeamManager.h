@@ -11,6 +11,8 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <mutex>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -50,6 +52,8 @@ public:
     TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
     virtual ~TeamManager();
 
+    void reload(const YAML::Node& config);
+
     essentials::IdentifierConstPtr getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
     Agent* editLocalAgent() { return _localAgent; }
@@ -76,7 +80,7 @@ public:
     void tick();
 
 private:
-    void readSelfFromConfig(essentials::IdentifierConstPtr agentId);
+    void readSelfFromConfig(const YAML::Node& config);
     void announcePresence() const;
     void queryPresence() const;
     Agent* getAgent(essentials::IdentifierConstPtr agentId) const;
@@ -91,6 +95,7 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
+    essentials::IdentifierConstPtr& _localAgentID;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>

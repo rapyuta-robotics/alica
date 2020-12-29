@@ -6,6 +6,7 @@ namespace alica
 {
 IRoleAssignment::IRoleAssignment()
         : _ownRole(nullptr)
+        , communication(nullptr)
 {
 }
 

@@ -1,28 +1,37 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Variable.h"
+#include "engine/AlicaEngine.h"
 
-#include <essentials/SystemConfig.h>
+#include <yaml-cpp/yaml.h>
 #include <sstream>
+#include <functional>
 
 namespace alica
 {
 
-AbstractPlan::AbstractPlan()
+AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfig());
 }
 
-AbstractPlan::AbstractPlan(int64_t id)
+AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _authorityTimeInterval = AlicaTime::milliseconds(sc["Alica"]->get<unsigned long>("Alica", "CycleDetection", "MinimalAuthorityTimeInterval", NULL));
+    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfig());
 }
 
 AbstractPlan::~AbstractPlan() {}
+
+void AbstractPlan::reload(const YAML::Node& config)
+{
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
+}
 
 std::string AbstractPlan::toString(std::string indent) const
 {

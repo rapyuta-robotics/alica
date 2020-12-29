@@ -8,13 +8,12 @@
 #include <algorithm>
 #include <cmath>
 
-#include <essentials/SystemConfig.h>
-
 #include <assert.h>
+#include <functional>
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(const AlicaEngine* ae)
+VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
         : _ae(ae)
         , _running(false)
         , _timer(nullptr)
@@ -36,12 +35,21 @@ void VariableSyncModule::init()
     if (_running) {
         return;
     }
+    auto reloadFunctionPtr = std::bind(&VariableSyncModule::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
     _running = true;
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    bool communicationEnabled = sc["Alica"]->get<bool>("Alica", "CSPSolving", "EnableCommunication", NULL);
-    _ttl4Communication = AlicaTime::milliseconds(sc["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Communication", NULL));
-    _ttl4Usage = AlicaTime::milliseconds(sc["Alica"]->get<long>("Alica", "CSPSolving", "SeedTTL4Usage", NULL));
-    _distThreshold = sc["Alica"]->get<double>("Alica", "CSPSolving", "SeedMergingThreshold", NULL);
+}
+
+void VariableSyncModule::reload(const YAML::Node& config)
+{
+    if (_running) {
+        return;
+    }
+    bool communicationEnabled = config["Alica"]["CSPSolving"]["EnableCommunication"].as<bool>();
+    _ttl4Communication = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Communication"].as<long>());
+    _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
+    _distThreshold = config["Alica"]["CSPSolving"]["SeedMergingThreshold"].as<double>();
 
     essentials::IdentifierConstPtr ownId = _ae->getTeamManager().getLocalAgentID();
     {
@@ -53,7 +61,7 @@ void VariableSyncModule::init()
     _publishData.senderID = ownId;
 
     if (communicationEnabled) {
-        double communicationFrequency = sc["Alica"]->get<double>("Alica", "CSPSolving", "CommunicationFrequency", NULL);
+        double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
             _timer = new essentials::NotifyTimer<VariableSyncModule>(std::chrono::milliseconds(interval.inMilliseconds()), std::chrono::milliseconds (0), &VariableSyncModule::publishContent, this);

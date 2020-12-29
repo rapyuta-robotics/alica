@@ -59,6 +59,7 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
 {
     if (!conditionHolds) {
         // my condition does not hold => not ready for syncing
+        std::lock_guard<mutex> lock(_syncMutex);
         _readyForSync = false;
     }
 

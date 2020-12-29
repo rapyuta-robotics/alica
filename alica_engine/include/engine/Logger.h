@@ -3,7 +3,6 @@
 #include "engine/AlicaClock.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
-#include <essentials/SystemConfig.h>
 
 #include <ctime>
 #include <fstream>
@@ -12,6 +11,7 @@
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -54,7 +54,7 @@ struct StringBuilder<First>
 class Logger
 {
 public:
-    Logger(const AlicaEngine* ae);
+    Logger(AlicaEngine* ae);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -70,6 +70,7 @@ public:
     void iterationEnds(const RunningPlan* p);
     void close();
     void logToConsole(const std::string& logString);
+    void reload(const YAML::Node& config);
 
 private:
     void processString(const std::string& str);
@@ -79,7 +80,7 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    const AlicaEngine* _ae;
+    AlicaEngine* _ae;
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;
@@ -91,6 +92,7 @@ private:
     bool _active;
     bool _receivedEvent;
     bool _inIteration;
+    bool _logging;
 };
 
 } /* namespace alica */

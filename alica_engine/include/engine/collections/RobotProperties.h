@@ -2,7 +2,6 @@
 
 #include "engine/Types.h"
 
-#include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
 
 #include <algorithm>
