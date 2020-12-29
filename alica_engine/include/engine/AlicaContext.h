@@ -324,7 +324,7 @@ public:
      * @return True if value was set correctly. False otherwise.
      */
     template<class T>
-    bool setOption(const std::string& path, const T& value, const bool reload = true) noexcept;
+    bool setOption(const std::string& path, const T& value, bool reload = true) noexcept;
 
     /**
      * Set config values for the agent. On error no config values are updated.
@@ -340,7 +340,7 @@ public:
      * @return True if values were set correctly. False otherwise.
      */
     template<class T>
-    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload = true) noexcept;
+    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
@@ -436,7 +436,7 @@ bool AlicaContext::existSolver() const
 }
 
 template <class T>
-bool AlicaContext::setOption(const std::string& path, const T& value, const bool reload) noexcept
+bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
 {
     if (_initialized) {
         return false;
@@ -463,7 +463,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, const bool
 }
 
 template <class T>
-bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, const bool reload) noexcept
+bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload) noexcept
 {
     if (_initialized) {
         return false;
