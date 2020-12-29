@@ -85,11 +85,6 @@ std::string AlicaContext::getLocalAgentName() const
     return _localAgentName;
 }
 
-void AlicaContext::setLocalAgentName(const std::string& name)
-{
-    _localAgentName = name;
-}
-
 YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
 {
     YAML::Node node;

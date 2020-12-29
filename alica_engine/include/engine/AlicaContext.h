@@ -130,13 +130,6 @@ public:
     std::string getLocalAgentName() const;
 
     /**
-     * Set host (or agent) name for this process.
-     *
-     * @param name Host name
-     */
-    void setLocalAgentName(const std::string& name);
-
-    /**
      * Get version of Alica engine.
      *
      * @param[out] major Version major
