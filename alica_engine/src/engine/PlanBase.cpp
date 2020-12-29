@@ -40,7 +40,7 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&PlanBase::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&PlanBase::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
 }

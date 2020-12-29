@@ -61,7 +61,7 @@ TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr age
         , _timeLastAnnouncement(AlicaTime::zero())
         , _announcementRetries(0)
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
     _engine->subscribe(reloadFunctionPtr);
     reload(_engine->getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;

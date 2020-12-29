@@ -32,7 +32,7 @@ CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
 }

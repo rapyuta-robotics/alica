@@ -30,7 +30,7 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
         , _ae(ae)
         , domainConfigFolder(domainConfigFolder)
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
     Factory::setModelManager(this);

@@ -13,7 +13,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
         : AlicaElement()
 
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }
@@ -21,7 +21,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
 AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
         : AlicaElement(id)
 {
-    std::function<void(const YAML::Node& config)> reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
+    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
     reload(ae->getConfig());
 }
