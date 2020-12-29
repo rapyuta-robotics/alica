@@ -68,7 +68,7 @@ struct AlicaContextParams
      * @param configPath Path to the configuration folder.
      * @param roleSetName Name of the roleSet.
      * @param masterPlanName Name of the masterPlan
-     * @param stepEngine Signify engine is trigger based. Defaults to true.
+     * @param stepEngine Signify engine is trigger based. Defaults to false.
      * @param agentID Identifier of the local Agent. By default a new identifier is created.
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
@@ -77,7 +77,7 @@ struct AlicaContextParams
                        const std::string& configPath,
                        const std::string& roleSetName,
                        const std::string& masterPlanName,
-                       bool stepEngine = true,
+                       bool stepEngine = false,
                        const essentials::Identifier& agentID = essentials::Identifier())
                        : agentName(agentName)
                        , configPath(configPath)
@@ -101,7 +101,7 @@ struct AlicaContextParams
                        , configPath(configPath)
                        , roleSetName("RoleSet")
                        , masterPlanName("MasterPlan")
-                       , stepEngine(true)
+                       , stepEngine(false)
                        , agentID(agentID)
     {}
 
