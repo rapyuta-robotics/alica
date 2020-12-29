@@ -2,6 +2,7 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/IdentifierConstPtr.h>
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -36,7 +37,7 @@ AlicaContext::~AlicaContext()
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
     if (_initialized) {
-        std::cerr << "AC: Context already initialized." << std::endl;
+        ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
     }
 
@@ -92,7 +93,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configPath + agentName + "/Alica.yaml");
         return node;
     } catch (YAML::BadFile& badFile) {
-        std::cerr << "AC: Could not parse file: " << badFile.msg << std::endl;
+        ALICA_WARNING_MSG("AC: Could not parse file: " + badFile.msg);
     }
 
     try {
