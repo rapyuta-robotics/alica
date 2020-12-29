@@ -93,7 +93,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configPath + agentName + "/Alica.yaml");
         return node;
     } catch (YAML::BadFile& badFile) {
-        ALICA_WARNING_MSG("AC: Could not parse file: " + badFile.msg);
+        ALICA_WARNING_MSG("AC: Could not parse file: " << badFile.msg);
     }
 
     try {
