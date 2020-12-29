@@ -59,6 +59,7 @@ int AlicaContext::terminate()
         _communicator->stopCommunication();
     }
     _engine->terminate();
+    _initialized = false;
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
