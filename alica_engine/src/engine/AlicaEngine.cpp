@@ -175,7 +175,7 @@ const YAML::Node& AlicaEngine::getConfig() const
 
 void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
 {
-    _reloadFunctions.push_back(reloadFunction);
+    _configChangeListenerCBs.push_back(reloadFunction);
 };
 
 /**
@@ -214,7 +214,7 @@ essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)
 {
-    for (auto reloadFunction : _reloadFunctions) {
+    for (auto reloadFunction : _configChangeListenerCBs) {
         reloadFunction(config);
     }
 }

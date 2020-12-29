@@ -126,7 +126,7 @@ private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    std::vector<std::function<void(const YAML::Node& config)>> _reloadFunctions;
+    std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
