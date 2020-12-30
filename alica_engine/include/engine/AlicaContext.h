@@ -13,6 +13,7 @@
 #include "engine/util/ConfigPathParser.h"
 
 #include <essentials/IDManager.h>
+#include <alica_common_config/debug_output.h>
 
 #include <cassert>
 #include <memory>
@@ -452,7 +453,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         }
         currentNode = value;
     } catch (const YAML::Exception& e) {
-        std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
+        ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
         return false;
     }
 
@@ -487,7 +488,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
             oldKeyValuePairs.push_back(oldKeyValuePair);
         }
     } catch (const YAML::Exception& e) {
-        std::cerr << "AC: Could not set config values: " << e.msg << std::endl;
+        ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
         //revert changes
         for (const auto &keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);
