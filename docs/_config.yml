@@ -4,6 +4,9 @@ url: https://www.rapyuta-robotics.com
 title: The ALICA Framework
 description: A Language for Interactive Cooperative Agents
 show_downloads: false
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
 plugins:
   - jekyll-relative-links
   - jekyll-katex
