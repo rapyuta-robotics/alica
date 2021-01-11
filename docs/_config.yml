@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+theme: jekyll-theme-slate
 gem "github-pages", group: :jekyll_plugins
 url: https://www.rapyuta-robotics.com
 title: The ALICA Framework
