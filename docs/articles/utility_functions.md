@@ -1,5 +1,3 @@
-use_math: true
----
 # Utility Functions (WIP)
 A utility function represents criteria according to which a plan is more or less suitable for a certain situation. $U_p(B)$ is the utility function of plan $p$ parametrised with the believe base $B$. A believe base of an agent can include everything that it believes about its domain and current situation, as well as everything that it believes about the current execution state of the running ALICA program. However, a utility function may only refer to parts of the ALICA program that belong to the plan $p$, in order to fulfil the locality principle which guarantees the scaleability of ALICA programs at runtime. 
 
