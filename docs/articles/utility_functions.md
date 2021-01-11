@@ -4,9 +4,9 @@ A utility function represents criteria according to which a plan is more or less
 Utility functions are evaluated at runtime, in order to choose the best plan from a plantype and choose the best assignment of tasks to agents. Therefore, the believe base $B$ always includes the current or a potential task assignment for the plan $p$.
 
 The form of a utility function has always the following form:
-$$
+\\[
 U_p(B) = w_0*pri(B) + w_1*sim(B) + w_2*f_2(B)+...+w_n*f_n(B)
-$$
+\\]
 A utility function, as given in Equation (1), is a weighted sum of functions. The weights are constants between 0 and 1 that sum up to 1. 
 
 The functions represent independent criteria according to which the plan is suitable for the current situation or not. A utility function includes the priority function $pri(B)$ and the similarity function $sim(B)$ by default, but their weights can be set to 0 as well.
