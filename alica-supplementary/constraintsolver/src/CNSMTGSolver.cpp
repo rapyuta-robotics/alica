@@ -3,8 +3,8 @@
 //#define DO_PREPROPAGATION
 //#define CNSMTGSolver_DEBUG
 
-#include "essentials/Configuration.h"
-#include "essentials/SystemConfig.h"
+//#include "essentials/Configuration.h"
+//#include "essentials/SystemConfig.h"
 
 #include "constraintsolver/CNSat.h"
 #include "constraintsolver/FormulaTransform.h"
@@ -43,7 +43,7 @@ using std::vector;
 
 int CNSMTGSolver::fcounter = 0;
 
-CNSMTGSolver::CNSMTGSolver()
+CNSMTGSolver::CNSMTGSolver(YAML::Node config)
         : dim(0)
         , utilityThreshold(1.0)
         , begin()
@@ -58,9 +58,11 @@ CNSMTGSolver::CNSMTGSolver()
 
     ip = make_shared<intervalpropagation::IntervalPropagator>();
 
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
+//    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int>();
+//    maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
+    maxSolveTime = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["MaxSolveTime"].as<int>());
+//    maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     rPropConvergenceStepSize = 0;
     useIntervalProp = true;
     optimize = false;

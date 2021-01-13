@@ -4,8 +4,8 @@
 //#define ALWAYS_CHECK_THRESHOLD
 #define AGGREGATE_CONSTANTS
 
-#include "essentials/Configuration.h"
-#include "essentials/SystemConfig.h"
+//#include "essentials/Configuration.h"
+//#include "essentials/SystemConfig.h"
 
 #include <engine/AlicaClock.h>
 
@@ -14,6 +14,7 @@
 #include <autodiff/Tape.h>
 #include <autodiff/Term.h>
 #include <autodiff/TermPtr.h>
+#include <yaml-cpp/yaml.h>
 
 #include <cmath>
 #include <cstring>
@@ -35,7 +36,7 @@ using autodiff::Tape;
 int GSolver::_fcounter = 0;
 #endif
 
-GSolver::GSolver()
+GSolver::GSolver(YAML::Node config)
         : _seedWithUtilOptimum(true)
         , _rPropConvergenceStepSize(1E-2)
         , _utilitySignificanceThreshold(1E-22)
@@ -47,9 +48,11 @@ GSolver::GSolver()
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
 
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    _maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
+//    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    _maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int>();
+//    _maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
+    _maxSolveTime = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["MaxSolveTime"].as<int>());
+//    _maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
 }
 
 GSolver::~GSolver() {}

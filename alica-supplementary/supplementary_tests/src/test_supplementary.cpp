@@ -1,6 +1,3 @@
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/PlanBase.h>
 #include <test_supplementary.h>
 
 std::jmp_buf restore_point;

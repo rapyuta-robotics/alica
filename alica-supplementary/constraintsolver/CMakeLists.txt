@@ -3,10 +3,12 @@ project(constraintsolver)
 
 add_compile_options(-std=c++14)
 
+##Yaml
+find_package(yaml-cpp REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   fsystem
   autodiff
-  system_config
   alica_engine
   alica_ros_proxy
   alica_solver_interface
@@ -23,6 +25,7 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${YAML_CPP_INCLUDE_DIR}
 )
 
 add_library(constraintsolver
@@ -46,7 +49,7 @@ add_library(constraintsolver
   src/GSolver.cpp
 )
 
-target_link_libraries(constraintsolver ${catkin_LIBRARIES})
+target_link_libraries(constraintsolver ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 catkin_add_gtest(${PROJECT_NAME}-test
  test/test_constraintsolver.cpp

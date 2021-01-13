@@ -5,7 +5,7 @@
 #include "autodiff/AutoDiff.h"
 
 #include <autodiff/ConstraintBuilder.h>
-#include <essentials/SystemConfig.h>
+//#include <essentials/SystemConfig.h>
 #include <engine/AlicaClock.h>
 
 #include <ros/package.h>
@@ -30,11 +30,11 @@ TermPtr outsideDummyAreas(TVec<2> pos)
 
 TEST(AutoDiffTest, GSOLVER)
 {
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test";
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
+//    std::string path = ros::package::getPath("constraintsolver");
+//    path = path + "/test";
+//    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+//    sc.setRootPath(path);
+//    sc.setConfigPath(path + "/etc");
 
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
@@ -113,11 +113,11 @@ TEST(AutoDiffTest, GSOLVER)
 
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test";
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
+//    std::string path = ros::package::getPath("constraintsolver");
+//    path = path + "/test";
+//    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+//    sc.setRootPath(path);
+//    sc.setConfigPath(path + "/etc");
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;

@@ -5,7 +5,6 @@ add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
-  system_config
   roscpp
   message_generation
   alica_msgs

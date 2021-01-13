@@ -57,8 +57,8 @@ protected:
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(AlicaContextParams("nase",path+ "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        nh.param<std::string>("rootPath", path, ".");
+        ac = new alica::AlicaContext(AlicaContextParams("nase",path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -109,7 +109,7 @@ protected:
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
+        nh.param<std::string>("rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 

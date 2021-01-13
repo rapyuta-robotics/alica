@@ -1,0 +1,63 @@
+Local:
+  DefaultRole: Defender
+
+Alica:
+  #ms
+  TeamTimeOut: 10000
+  AssignmentProtectionTime: 500
+
+  #Hz
+  MinBroadcastFrequency: 10
+  MaxBroadcastFrequency: 15
+  EngineFrequency: 30 # per plan, per iteration:
+
+  MaxRuleApplications: 20
+
+  #Allow alica agents to auto discover each other
+  AutoDiscovery: true
+  #Maximum discovery latency in seconds
+  AgentAnnouncementTimeInterval: 30
+  #Number of times engine retries presence announcement
+  AnnouncementRetries: 3
+
+  #if true, do not send out messages (except debug status) till MaySendMessages is set to true
+  SilentStart: false
+  AllowIdling: false
+  UseStaticRoles: true
+
+  #relative to ES_ROOT env variable or absolute:
+  PlanDir: plans
+  RoleDir: roles
+  TaskDir: tasks
+
+  TeamBlackList:
+    InitiallyFull: false
+
+  StatusMessages:
+    Enabled: true
+    Frequency: 10
+
+  EventLogging:
+    Enabled: true
+    LogFolder: /tmp/log
+
+  CycleDetection:
+    Enabled: true
+    CycleCount: 5
+    MinimalAuthorityTimeInterval: 800
+    MaximalAuthorityTimeInterval: 5000
+    IntervalIncreaseFactor: 1.5
+    IntervalDecreaseFactor: 0.999 #about 1min cool down
+    MessageTimeInterval: 60
+    MessageWaitTimeInterval: 200
+    HistorySize: 45
+
+  CSPSolving:
+    EnableCommunication: true
+    CommunicationFrequency: 10
+    SeedMergingThreshold: 0.0015
+    ConflictThreshold: 1000
+    SeedTTL4Communication: 250
+    SeedTTL4Usage: 5000
+    MaxSolveTime: 10
+    MaxFunctionEvaluations: 100000000

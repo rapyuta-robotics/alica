@@ -1,23 +1,25 @@
-#include "GSolver/SolverTestBehaviour.h"
-#include "engine/Assignment.h"
-#include "engine/BasicBehaviour.h"
-#include "engine/BehaviourPool.h"
-#include "engine/DefaultUtilityFunction.h"
-#include "engine/IAlicaCommunication.h"
-#include "engine/PlanBase.h"
-#include "engine/PlanRepository.h"
-#include "engine/TeamObserver.h"
-#include "engine/model/Behaviour.h"
-#include "engine/model/Plan.h"
-#include "engine/model/RuntimeCondition.h"
-#include "engine/model/State.h"
+#include <GSolver/SolverTestBehaviour.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
+#include <engine/Assignment.h>
+#include <engine/BasicBehaviour.h>
+#include <engine/BehaviourPool.h>
+#include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaCommunication.h>
+#include <engine/PlanBase.h>
+#include <engine/PlanRepository.h>
+#include <engine/TeamObserver.h>
 #include <engine/constraintmodul/Query.h>
-#include <gtest/gtest.h>
-#include <iostream>
+#include <engine/model/Behaviour.h>
+#include <engine/model/Plan.h>
+#include <engine/model/RuntimeCondition.h>
+#include <engine/model/State.h>
 #include <test_supplementary.h>
+
+#include <gtest/gtest.h>
+
+#include <iostream>
 #include <thread>
 
 namespace supplementary
@@ -49,5 +51,5 @@ TEST_F(AlicaGSolverPlan, solverTest)
     EXPECT_GT(alica::SolverTestBehaviour::result[1], 7000);
     EXPECT_LT(alica::SolverTestBehaviour::result[1], 8000);
 }
-}
-}
+} // namespace
+} // namespace supplementary

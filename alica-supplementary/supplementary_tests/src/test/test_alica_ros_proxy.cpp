@@ -1,10 +1,12 @@
-#include "engine/IAlicaCommunication.h"
-#include "engine/PlanRepository.h"
-#include "engine/model/Plan.h"
 #include <communication/AlicaRosCommunication.h>
-#include <gtest/gtest.h>
-#include <iostream>
+#include <engine/IAlicaCommunication.h>
+#include <engine/PlanRepository.h>
+#include <engine/model/Plan.h>
 #include <test_supplementary.h>
+
+#include <gtest/gtest.h>
+
+#include <iostream>
 #include <typeinfo>
 
 namespace supplementary
@@ -25,5 +27,5 @@ TEST_F(PlanBaseTest, planBaseTest)
     ae->start();
     sleep(1);
 }
-}
-}
+} // namespace
+} // namespace supplementary
