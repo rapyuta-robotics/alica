@@ -1,6 +1,7 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 
+#include <essentials/FileSystem.h>
 #include <essentials/IdentifierConstPtr.h>
 
 namespace alica
@@ -89,17 +90,22 @@ std::string AlicaContext::getLocalAgentName() const
 YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
 {
     YAML::Node node;
+    std::string configFile;
+    std::cerr << "AC: configPath " << configPath << " agentName " << agentName << std::endl;
     try {
-        node = YAML::LoadFile(configPath + agentName + "/Alica.yaml");
+        configFile = essentials::FileSystem::combinePaths(configPath, agentName);
+        configFile = essentials::FileSystem::combinePaths(configFile, "Alica.yaml");
+        node = YAML::LoadFile(configFile);
         return node;
     } catch (YAML::BadFile& badFile) {
-        ALICA_WARNING_MSG("AC: Could not parse file: " << badFile.msg);
+        ALICA_WARNING_MSG("AC: Could not parse file: " << configFile << " - " << badFile.msg);
     }
 
     try {
-        node = YAML::LoadFile(configPath + "Alica.yaml");
+        configFile = essentials::FileSystem::combinePaths(configPath, "Alica.yaml");
+        node = YAML::LoadFile(configFile);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("AC: Could not parse file: ", badFile.msg);
+        AlicaEngine::abort("AC: Could not parse file: ", configFile + " - " + badFile.msg);
     }
 
     return node;

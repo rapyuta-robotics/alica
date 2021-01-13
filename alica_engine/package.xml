@@ -2,10 +2,10 @@
 
 <package format="2">
   <name>alica_engine</name>
-  <version>0.0.1</version>
+  <version>0.9.1</version>
   <description>The alica_engine package</description>
-  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
-  <maintainer email="hendrik@rapyuta-robotics.com">hendrik</maintainer>
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+  <maintainer email="abhishek.sharma@rapyuta-robotics.com">Abhishek Sharma</maintainer>
 
   <license>MIT</license>
 
