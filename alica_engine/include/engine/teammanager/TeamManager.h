@@ -95,7 +95,7 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
-    essentials::IdentifierConstPtr& _localAgentID;
+    essentials::IdentifierConstPtr _localAgentID;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
