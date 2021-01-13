@@ -91,7 +91,6 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
 {
     YAML::Node node;
     std::string configFile;
-    std::cerr << "AC: configPath " << configPath << " agentName " << agentName << std::endl;
     try {
         configFile = essentials::FileSystem::combinePaths(configPath, agentName);
         configFile = essentials::FileSystem::combinePaths(configFile, "Alica.yaml");
