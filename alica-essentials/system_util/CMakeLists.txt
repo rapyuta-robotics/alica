@@ -6,17 +6,16 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(catkin QUIET)
 if(catkin_FOUND)
-	find_package(catkin REQUIRED COMPONENTS system_config fsystem)
+	find_package(catkin REQUIRED COMPONENTS fsystem)
 else(catkin_FOUND)
-	set (catkin_INCLUDE_DIRS "${system_config_INCLUDE_DIRS}")
-	set (catkin_LIBRARIES "system_config fsystem")
+	set (catkin_LIBRARIES "fsystem")
 endif(catkin_FOUND)
 
 if (catkin_FOUND)
   catkin_package(
    INCLUDE_DIRS include
    LIBRARIES system_util
-   CATKIN_DEPENDS system_config fsystem
+   CATKIN_DEPENDS fsystem
   )
 endif(catkin_FOUND)
 
@@ -26,7 +25,6 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-   src/Logging.cpp
    src/ConsoleCommandHelper.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
