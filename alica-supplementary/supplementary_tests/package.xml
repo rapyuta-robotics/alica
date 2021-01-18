@@ -4,14 +4,12 @@
   <version>0.0.1</version>
   <description>The supplementary_tests package</description>
 
-  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
-  <maintainer email="witsch@vs.uni-kassel.de">Andreas Witsch</maintainer>
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
 
   <license>MIT</license>
 
   <depend>alica_engine</depend>
   <depend>alica_common_config</depend>
-  <depend>system_config</depend>
   <depend>roscpp</depend>
   <depend>alica_dummy_proxy</depend>
   <depend>alica_simple_solver</depend>

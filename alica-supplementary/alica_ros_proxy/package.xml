@@ -13,7 +13,6 @@
   <depend>alica_engine</depend>
   <depend>alica_common_config</depend>
   <depend>alica_msgs</depend>
-  <depend>system_config</depend>
   <depend>roscpp</depend>
   <depend>id_ros</depend>
   <build_depend>message_generation</build_depend>

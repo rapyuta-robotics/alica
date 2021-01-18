@@ -1,6 +1,5 @@
 #include "communication/AlicaRosCommunication.h"
 
-#include <essentials/Configuration.h>
 #include <engine/AlicaEngine.h>
 #include <engine/containers/AlicaEngineInfo.h>
 #include <engine/containers/PlanTreeInfo.h>

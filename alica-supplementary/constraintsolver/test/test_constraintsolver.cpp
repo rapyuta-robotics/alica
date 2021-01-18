@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 
-#include "constraintsolver/GSolver.h"
-#include "constraintsolver/CNSMTGSolver.h"
 #include "autodiff/AutoDiff.h"
+#include "constraintsolver/CNSMTGSolver.h"
+#include "constraintsolver/GSolver.h"
 
 #include <autodiff/ConstraintBuilder.h>
-#include <essentials/SystemConfig.h>
+//#include <essentials/SystemConfig.h>
 #include <engine/AlicaClock.h>
+#include <yaml-cpp/yaml.h>
 
 #include <ros/package.h>
 #include <ros/ros.h>
@@ -30,17 +31,14 @@ TermPtr outsideDummyAreas(TVec<2> pos)
 
 TEST(AutoDiffTest, GSOLVER)
 {
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test";
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
-
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;
 
-    GSolver g;
+    std::string path = ros::package::getPath("constraintsolver");
+    path = path + "/test/etc/Alica.yaml";
+    YAML::Node config = YAML::LoadFile(path);
+    GSolver g(config);
 
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);
@@ -113,16 +111,14 @@ TEST(AutoDiffTest, GSOLVER)
 
 TEST(AutoDiffTest, GSOLVER_UTIL)
 {
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test";
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
     // 12000 * 18000
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;
 
-    GSolver g;
+    std::string path = ros::package::getPath("constraintsolver");
+    path = path + "/test/etc/Alica.yaml";
+    YAML::Node config = YAML::LoadFile(path);
+    GSolver g(config);
     TermHolder h;
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);

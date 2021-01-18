@@ -5,6 +5,7 @@
 
 #include <autodiff/TermHolder.h>
 #include <autodiff/TermPtr.h>
+#include <yaml-cpp/yaml.h>
 
 #include <memory>
 #include <vector>
@@ -25,7 +26,7 @@ class GSolver
     class RpropResult;
 
   public:
-    GSolver();
+    GSolver(YAML::Node config);
     ~GSolver();
     bool solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, double& out_util,
                std::vector<double>& o_solution);

@@ -28,6 +28,8 @@ CGSolver::CGSolver(AlicaEngine* ae)
         , _lastUtil(0.0)
         , _lastFEvals(0.0)
         , _lastRuns(0.0)
+        , _gs(ae->getConfig())
+        , _sgs(ae->getConfig())
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);

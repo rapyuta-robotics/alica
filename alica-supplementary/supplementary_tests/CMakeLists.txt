@@ -5,7 +5,6 @@ add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS 
     roscpp
-    system_config
     fsystem
     event_handling
     alica_engine

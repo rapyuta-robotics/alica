@@ -57,11 +57,8 @@ protected:
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setLocalAgentName("nase");
-        alica::AlicaContext::setRootPath(path);
-        alica::AlicaContext::setConfigPath(path + "/etc");
-        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        nh.param<std::string>("rootPath", path, ".");
+        ac = new alica::AlicaContext(AlicaContextParams("nase",path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -112,15 +109,12 @@ protected:
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setRootPath(path);
-        alica::AlicaContext::setConfigPath(path + "/etc");
+        nh.param<std::string>("rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext::setLocalAgentName(getHostName(i));
-            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+            alica::AlicaContext* ac = new alica::AlicaContext(AlicaContextParams(getHostName(i),path+ "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);

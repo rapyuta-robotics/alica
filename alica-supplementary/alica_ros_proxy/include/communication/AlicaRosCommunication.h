@@ -11,7 +11,6 @@
 
 #include <engine/IAlicaCommunication.h>
 #include <essentials/Identifier.h>
-#include <essentials/SystemConfig.h>
 
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
