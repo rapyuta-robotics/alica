@@ -49,7 +49,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     try {
         basePath = _ae->getConfig()["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
-        AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
+        AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
     }
 
     if (!essentials::FileSystem::endsWith(basePath, essentials::FileSystem::PATH_SEPARATOR)) {
@@ -57,14 +57,14 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     }
 
     if (!essentials::FileSystem::isPathRooted(basePath)) {
-        basePath = domainConfigFolder + basePath;
+        basePath = essentials::FileSystem::combinePaths(domainConfigFolder, basePath);
     }
-
-    ALICA_INFO_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
 
     if (!essentials::FileSystem::pathExists(basePath)) {
-        AlicaEngine::abort("MM: base path does not exist: " + basePath);
+        AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
     }
+
+    ALICA_INFO_MSG("MM: Config key '" + configKey + "' maps to '" + basePath + "'");
     return basePath;
 }
 
