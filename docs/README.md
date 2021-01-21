@@ -10,7 +10,7 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 #### Core Concepts
 
-[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Plantypes](./articles/plantypes.md), [Utility Function](./articles/utility_functions.md)s, Roles
+[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Plantypes](./articles/plantypes.md), [Utility Functions](./articles/utility_functions.md), Roles
 
 #### Algorithms
 
