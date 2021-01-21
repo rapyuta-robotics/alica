@@ -1,7 +1,7 @@
 theme: jekyll-theme-minimal
 gem "github-pages", group: :jekyll_plugins
 url: https://www.rapyuta-robotics.com
-title: The ALICA Framework
+
 logo: images/alica.png
 description: A Language for Interactive Cooperative Agents
 show_downloads: false
