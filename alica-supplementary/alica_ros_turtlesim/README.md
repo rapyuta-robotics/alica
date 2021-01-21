@@ -216,7 +216,7 @@ In this file, you need to implement the teleportation of the  turtles:
 follow the standard ros build step.
 ```
 cd catkin_ws
-source /opt/ros/<enter-your-ros-version-name-here>/setup.bash
+source /opt/ros/$ROS_DISTRO/setup.bash
 catkin build alica_ros_turtlesim
 ```
 ### 8.2 Run
