@@ -33,5 +33,5 @@ Like the priority function and the similarity function, custom functions have to
 
 Details about the task assignment algorithm will be given in the [Task Allocation](./articles/task_allocation.md) article.
 
-**NAV** *prev: [Plantypes](plantypes.md)*  *top: [Overview](README.md)* *next: [Roles](roles.md)*
+**NAV** *prev: [Plantypes](plantypes.md)*  *top: [Overview](../README.md)* *next: [Roles](roles.md)*
 
