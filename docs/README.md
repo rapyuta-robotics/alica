@@ -14,7 +14,7 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 #### Algorithms
 
-Task Allocation, Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
+[Task Allocation](./articles/task_allocation.md), Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
 
 ### General ALICA
 
