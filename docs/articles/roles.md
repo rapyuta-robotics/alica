@@ -2,7 +2,7 @@
 
 The purpose of Roles is to abstract agents from [tasks](./tasks.md).
 
-![agents_roles_tasks_abstraction](/home/emmeda/Work/hitachiws/src/io_amr/rr_amr_lbc/alica/docs/images/agents_roles_tasks_abstraction.png)
+![agents_roles_tasks_abstraction](../images/agents_roles_tasks_abstraction.png)
 
 **Figure 1: Abstraction of Agents from Tasks via Roles.**
 
