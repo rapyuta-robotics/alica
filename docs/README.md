@@ -10,17 +10,17 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 #### Core Concepts
 
-[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Plantypes](./articles/plantypes.md), [Utility Functions](./articles/utility_functions.md), [Roles](./articles/roles.md)
+[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Plantypes](./articles/plantypes.md), [Utility Functions](./articles/utility_functions.md), [Roles](./articles/roles.md), [Plan Trees](./articles/plan_trees.md)
 
 #### Algorithms
 
-[Task Allocation](./articles/task_allocation.md), Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
+Task Allocation, Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
 
 ### General ALICA
 
 #### Core Concepts
 
-Configurations, Variables, Constraints, Solvers
+[Configurations](./articles/configurations.md), [Variables](./articles/variables.md), [Constraints](./articles/constraints.md), [Solvers](./articles/solvers.md)
 
 #### Algorithms
 
