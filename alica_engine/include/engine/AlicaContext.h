@@ -70,7 +70,10 @@ struct AlicaContextParams
      * @param roleSetName Name of the roleSet.
      * @param masterPlanName Name of the masterPlan
      * @param stepEngine Signify engine is trigger based. Defaults to false.
-     * @param agentID Identifier of the local Agent. By default a new identifier is created.
+     * @param agentID Identifier of the local Agent. If no identifier is given, an
+     * invalid/temporary identifier is created and therefore, the engine will try to read the local
+     * agent's identifier from the Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a valid random identifier.
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
@@ -91,7 +94,10 @@ struct AlicaContextParams
     /**
      * @param agentName Name of the local agent.
      * @param configPath Path to the configuration folder.
-     * @param agentID Identifier of the local Agent. By default a new identifier is created.
+     * @param agentID Identifier of the local Agent. If no identifier is given, an
+     * invalid/temporary identifier is created and therefore, the engine will try to read the local
+     * agent's identifier from the Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a valid random identifier.
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
