@@ -6,7 +6,7 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::add(Job)
+void Scheduler::add(Job job)
 {
     std::cerr << adding a job... << std::endl;
 }
