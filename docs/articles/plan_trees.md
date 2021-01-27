@@ -10,17 +10,17 @@ In Figure 1 you can see all these core concepts as you should already know them 
 
 ## Tree Structure
 
-Now imagine this whole Clean Up plan is just one node in a [tree](https://en.wikipedia.org/wiki/Tree_(data_structure)). This article answers the following questions: 
+Now imagine this whole Clean Up plan is just one node in a [tree](https://en.wikipedia.org/wiki/Tree_(data_structure)), which is denoted as plan tree ALICA. This article answers the following questions: 
 
-* How are parent-child relations defined in the tree?
-* What are leaves in the tree?
-* What is the whole tree?
+* What are parent-child relations in a plan tree?
+* What are leaves in a plan tree?
+* What does a complete plan tree look like?
 
 ### Parent-Child Relationships
 
-Actually, you already know one example for a parent-child relationship in ALICA programs. All behaviours in the states of the finite-state machines (FSM) are children of the plan that owns the FSM. The Clean Up plan has 6 child behaviours: Drive, Pick Up, Transport, Place Back, Search, and Identify. 
+Actually, you already know one example for a parent-child relationship in ALICA programs. All behaviours in the states of the finite-state machines (FSM) are children of the plan that owns the FSM. The Clean Up plan, for example, has 6 children which are all behaviours: Drive, Pick Up, Transport, Place Back, Search, and Identify. 
 
-The other two parent-child relationships are plans or plantypes in states. Additional to behaviours, states can also include plans and plantypes. Since these included plans can include states on their own, they can again include plans, plantypes, or behaviours in their states.
+The other two parent-child relationships are plans or plantypes located in states, because additionally to behaviours, states can also include plans and plantypes. Since these included plans can include states on their own, they can again include plans, plantypes, or behaviours in their states.
 
 Lets consider the following example of a small plan tree:
 
