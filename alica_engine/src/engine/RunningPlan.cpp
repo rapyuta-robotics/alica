@@ -274,7 +274,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
+        std::cerr << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
     }
 }
 
@@ -471,8 +471,13 @@ void RunningPlan::deactivate()
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
     }
+
     revokeAllConstraints();
     deactivateChildren();
+
+    auto deactivatedSiblings = getDeactivatedSiblings();
+    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
+    _parent->printRecursive();
 }
 
 /**
@@ -813,6 +818,21 @@ bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) co
 
 const Configuration* RunningPlan::getConfiguration() const {
     return _configuration;
+}
+
+std::vector<RunningPlan*> RunningPlan::getDeactivatedSiblings() const {
+    std::vector<RunningPlan*> deactivatedSiblings;
+    if (!_parent) {
+        return deactivatedSiblings;
+    }
+
+    for(RunningPlan* sibling : _parent->_children) {
+        if (sibling->_status.active == PlanActivity::Retired) {
+            deactivatedSiblings.push_back(sibling);
+        }
+    }
+
+    return deactivatedSiblings;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

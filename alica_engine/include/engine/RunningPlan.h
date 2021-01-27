@@ -210,6 +210,8 @@ public:
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
+    std::vector<RunningPlan*> getDeactivatedSiblings() const;
+
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
