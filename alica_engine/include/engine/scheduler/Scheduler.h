@@ -9,7 +9,7 @@ namespace scheduler
     class Scheduler
     {
     public:
-        virtual void add(Job) = 0;
+        void add(Job job){};
     };
 }
 }
