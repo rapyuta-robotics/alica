@@ -28,6 +28,7 @@
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
 #include "engine/scheduler/Job.h"
+#include "engine/scheduler/Scheduler.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -479,6 +480,13 @@ void RunningPlan::deactivate()
     auto deactivatedSiblings = getDeactivatedSiblings();
     std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
     _parent->printRecursive();
+
+    /*
+     * Create instance of scheduler, later use shared instance for actual scheduling.
+     */
+    scheduler::Scheduler scheduler;
+    scheduler::Job job;
+    scheduler.add(job);
 }
 
 /**
