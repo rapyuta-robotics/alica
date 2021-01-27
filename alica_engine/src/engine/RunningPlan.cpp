@@ -27,6 +27,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
+#include "engine/scheduling/Job.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
