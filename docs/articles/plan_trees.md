@@ -24,9 +24,9 @@ The annotations on the edges in Figure 3 state over which task, state, and plant
 
 Adding plans and plantypes into states allows to create multiple levels in the hierarchy of ALICA programs. In total, there are three different types of child-relationships in ALICA programs:
 
-* **Behaviours:** (Plan)->(Task)->(State)->(Behaviour)
-* **Plans:** (Plan)->(Task)->(State)->(Plan)
-* **Plantypes:** (Plan)->(Task)->(State)->(Plantype)->(Plan)
+* **Behaviours:** Plan -- (Task, State) --> Behaviour
+* **Plans:** Plan -- (Task, State) --> Plan
+* **Plantypes:** Plan -- (Task, State, Plantype) --> Plan
 
 At design time an ALICA program is considered a DAG, because behaviours, plans, and plantypes can be reused multiple times in different locations. At runtime this DAG is interpreted as tree.
 
