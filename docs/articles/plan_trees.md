@@ -14,7 +14,7 @@ However, the *Clean Up* plan itself again includes the *Transport* and *Find Ite
 
 ![dag_plan_hierarchy_example](../images/dag_plan_hierarchy_example.svg)
 
-Figure 3: Visualisation of the Serve Plan Hierarchy as Directed-Acyclic Graph
+*Figure 3: Visualisation of the Serve Plan Hierarchy as Directed-Acyclic Graph*
 
 The DAG in Figure 3 is the representation of an ALICA program at design time. Here, any change you make to, for example, the *Find Item* plan will be affect all its occurrences in the DAG. At runtime, however, the DAG will be interpreted as a tree and each occurrence of *Find Item* will be a different instance. This means, for example, that agents in different instances don't cooperate by sharing their progress in the FSMs and cannot contribute to the success of their instances together (see [Success Semantics of Plans](./plans.md)).
 

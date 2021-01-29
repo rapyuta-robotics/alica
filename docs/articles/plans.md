@@ -16,7 +16,7 @@ Let's consider the following example:
 
 ![Plan Example: Cleaning Up](../images/clean_up_plan_example.svg)
 
-**Figure 1: Plan for Cleaning up Items in a Household**
+*Figure 1: Plan for Cleaning up Items in a Household*
 
 Figure 1 shows a plan for cleaning up your household. The plan is made up of two FSMs. The upper FSM lets agents bring back items where they belong until no item is left. The lower FSM makes agents search for items that need to be cleaned. Both FSMs are annotated with an entrypoint (blue dot) that provides the cardinalities and task of that FSM. Further, the upper entrypoint states that its FSM is required to be successful, for the whole plan to be successful (see [Success Semantics](#Success-Semantics)). Finally, according to the precondition, the plan is only started when it is messy.
 
