@@ -24,5 +24,5 @@ An important notion in the context of assigning roles to agents is that of capab
 
 Now that we know what capabilities are, things become easy. In ALICA an agent is associated with a set of capabilities that it is able to execute or just posses. The same holds for a role, but the difference in semantics is that a role requires those capabilities to be fulfilled for an agent to take on that role and the agent just occupies its capabilities as long as its self-monitoring does not state otherwise. So for example, a mobile robot that has an arm can transport things. Therefore, it can take up the Transporter role as long as its self-monitoring does not recognise that its arm is broken. If it breaks the [role assignment](./role_assignment.md) algorithm will assign it another role.
 
-**NAV** *prev: [Utility Functions](utility_functions.md)*  *top: [Overview](../README.md)* 
+**NAV** *prev: [Utility Functions](utility_functions.md)*  *top: [Overview](../README.md)* *next: [Plan Trees](./plan_trees.md)*
 
