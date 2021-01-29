@@ -6,7 +6,7 @@ The same can be done for plans or plantypes. A whole Navigation plan, for exampl
 
 The keys and values of configurations are simple strings and are expected to be interpreted correctly by the behaviours, plans, and plantypes themselves.
 
-Since it is possible to configure behaviours, plans, and plantypes in the context of states, it is also possible to insert the same behaviour, plan, or plantype twice into the same state, if it is configured differently. Consider the example of a humanoid robot. Equipped with two arms is is very likely, that it has to move its arms concurrently in the same state of a plan. In such a case, it is possible to reuse the same *Move Arm* plan twice, just configured with the right or left arm, respectively. Compared to the [Plan Trees](./plan_trees.md) article, this adds another parameter to the edges in the plan tree:
+Since it is possible to configure behaviours, plans, and plantypes in the context of states, it is also possible to insert the same behaviour, plan, or plantype twice into the same state, if it is configured differently. Consider the example of a humanoid robot. Equipped with two arms is is very likely, that it has to move its arms concurrently in the same state of a plan. In such a case, it is possible to reuse the same *Move Arm* plan twice, just configured with the right or left arm, respectively. Compared to the [Plan Trees](./plan_trees.md) article, this adds the configuration parameter to the edges in the plan tree:
 
 * **Behaviours:** Plan -- (Task, State, Configuration) --> Behaviour
 * **Plans:** Plan -- (Task, State, Configuration) --> Plan
