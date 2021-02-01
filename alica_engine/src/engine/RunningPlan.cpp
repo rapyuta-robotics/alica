@@ -27,7 +27,6 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
-#include "engine/scheduler/Job.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include <alica_common_config/common_defines.h>
@@ -485,8 +484,12 @@ void RunningPlan::deactivate()
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
     scheduler::Scheduler scheduler;
-    scheduler::Job job;
-    scheduler.add(job);
+    _job = make_shared<scheduler::Job>();
+    _job->isRepeated = isBehaviour() ? true : false;
+    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
+    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
+    _job->prerequisites.push_back(weakPtrJob);
+    scheduler.add(_job);
 }
 
 /**
@@ -842,6 +845,11 @@ std::vector<RunningPlan*> RunningPlan::getDeactivatedSiblings() const {
     }
 
     return deactivatedSiblings;
+}
+
+std::shared_ptr<scheduler::Job> RunningPlan::getJob() const
+{
+    return _job;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
