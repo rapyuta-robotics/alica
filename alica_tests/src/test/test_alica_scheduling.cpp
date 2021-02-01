@@ -5,7 +5,7 @@ TEST(SchedulingTest, scheduling)
 {
     /*
      * Test if moodycamel ConcurrentQueue can be used as intended.
-     * TODO: Replace with an actual test of the new scheduling.
+     * TODO: Replace with an actual test of the new scheduler.
      */
     moodycamel::ConcurrentQueue<int> queue;
     queue.enqueue(25);
