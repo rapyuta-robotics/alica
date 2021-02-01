@@ -8,6 +8,7 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/scheduler/Job.h"
 
 #include <algorithm>
 #include <iostream>
@@ -212,6 +213,8 @@ public:
 
     std::vector<RunningPlan*> getDeactivatedSiblings() const;
 
+    std::shared_ptr<scheduler::Job> getJob() const;
+
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
@@ -240,6 +243,8 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
+
+    std::shared_ptr<scheduler::Job> _job;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
