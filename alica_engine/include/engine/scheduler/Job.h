@@ -12,11 +12,22 @@ namespace scheduler
 struct Job
 {
     std::function<void()> cb;
-    std::time_t scheduledTime;
+    AlicaTime scheduledTime;
     bool cancelled;
     bool isRepeated;
-    std::chrono::duration<int> repeatInterval;
-    std::vector<std::weak_ptr<std::shared_ptr<Job>>> prerequisites;
+    AlicaTime repeatInterval;
+    std::vector<std::weak_ptr<Job>> prerequisites;
+
+//    bool operator==(const Job& r)
+//    {
+//        return scheduledTime == r.scheduledTime;
+//    }
+//
+//    bool operator<(const Job& r)
+//    {
+//        return std::find(prerequisites.begin(), prerequisites.end(), r) != prerequisites.end();
+//    }
+
 };
 } //namespace scheduler
 } //namespace alica
