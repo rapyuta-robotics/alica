@@ -14,7 +14,7 @@ A quantifier is a core concept of the ALICA language that is owned by conditions
 
 So the semantics of a quantifier can be read as "For all agents (universal agent quantifier) in that scope (plan, FSM, or state), there exist these variables (list of variable names)." At runtime of the ALICA engine, all quantifiers are parsed and the corresponding variables are created, based on the composition of the team of agents. This creation is fundamentally different from free variables, which are directly attached to plans, planytpes, or behaviours. Free variables always exist independent from the composition of the team.
 
-## Variable Bindings
+## Variable Bindings (WIP)
 
 The variables of plans and plantypes in ALICA programs can be bound to variables of other plans, plantypes, and behaviours via a variable binding. The purpose of variable bindings in the ALICA language is to combine different constraints for the same variable in the plan hierarchy of an ALICA program. 
 There are two objects that can include variable bindings in the ALICA language. States, on the one hand, use bindings to bind the variables of the plan they are part of to variables of plans, plantypes, or behaviours inside themselves. Plantypes, on the other hand, bind their own variables to variables of plans inside themselves. The variable bindings are transitive, i. e. a variable of the top-level plan can be bound to variables of plans several levels below in the plan tree structure.
