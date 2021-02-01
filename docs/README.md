@@ -8,15 +8,19 @@ The ALICA Framework is further divided into three parts, the language, the engin
 
 ### Propositional ALICA
 
+The propositional part of the ALICA language is expressive enough to describe complex strategies for teams of autonomous robots. Its core concepts are explained in the following articles, followed by the algorithms that make up the runtime behaviour of the ALICA engine with regard to the propositional core concepts.
+
 #### Core Concepts
 
-[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Plantypes](./articles/plantypes.md), [Utility Functions](./articles/utility_functions.md), [Roles](./articles/roles.md), [Plan Trees](./articles/plan_trees.md)
+[Domain-Independence](./articles/domain-independence.md), [Behaviours](./articles/behaviours.md), [Finite-State Machines](./articles/finite-state_machines.md), [Conditions](./articles/conditions.md), [Entrypoints](./articles/entrypoints.md), [Tasks](./articles/tasks.md), [Plans](./articles/plans.md), [Synchronisations](./articles/synchronisations.md), [Plantypes](./articles/plantypes.md), [Utility Functions](./articles/utility_functions.md), [Roles](./articles/roles.md), [Plan Trees](./articles/plan_trees.md)
 
 #### Algorithms
 
 Task Allocation, Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
 
 ### General ALICA
+
+General ALICA adds several core concepts to the propositional part of the ALICA language in order to increase the generality and reusability of ALICA programs. Before you dive into the core concepts of General ALICA, a short [article motivates](./articles/motivation_general_alica.md) it with a practical example.
 
 #### Core Concepts
 
