@@ -45,4 +45,4 @@ Figure 2 and Table 1 together explain some cave eats of the plan success semanti
 
 The failure semantics of a plan is much easier: A plan failed, if an agent reached any failure state in the plan.
 
-**NAV** *prev: [Tasks](tasks.md)*  *top: [Overview](../README.md)* *next: [Plantypes](plantypes.md)*
+**NAV** *prev: [Tasks](tasks.md)*  *top: [Overview](../README.md)* *next: [Synchronisations](synchronisations.md)*

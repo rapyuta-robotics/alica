@@ -5,4 +5,4 @@ In fact a plantype is just a set of plans. At runtime, the ALICA Engine executes
 
 Further, as a convenience function, it is possible to deactivate plans for individual plantypes without removing them.  This is very handy, when you swiftly want to change the options your robots can choose from during development.
 
-**NAV** *prev: [Plans](plans.md)*  *top: [Overview](../README.md)* *next: [Utility Functions](utility_functions.md)*
+**NAV** *prev: [Synchronisations](synchronisations.md)*  *top: [Overview](../README.md)* *next: [Utility Functions](utility_functions.md)*
