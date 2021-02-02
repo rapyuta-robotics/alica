@@ -73,7 +73,7 @@ namespace alica {
         static const std::string annotatedPlans = "annotatedPlans";
         static const std::string activated = "activated";
         static const std::string quantifierType = "quantifierType";
-        static const std::string forAllAgents = "ALL";
+        static const std::string forAllAgents = "all";
         static const std::string scope = "scope";
         static const std::string sorts = "sorts";
         static const std::string inSync = "syncedTransitions";
