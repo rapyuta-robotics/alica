@@ -6,8 +6,8 @@ This tutorial is extension of the [turtlesim ROS package](http://wiki.ros.org/tu
 
 In this tutorial, you will create an application as shown in the picture below. The ALICA engine will assign the “Leader” task to one turtle and the “Follower” task to the other turtles. Further, the ALICA engine will move the turtles to their goal positions based on distance constraints.
 
-![overview](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/overview.png)
-![alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/raw/rr-devel/alica_ros_turtlesim/doc/alica_ros_turtlesim.gif)
+![overview](./doc/overview.png)
+![alica_ros_turtlesim](./doc/alica_ros_turtlesim.gif)
 
 ## 2. Prerequisite
 You need to be familiar with following topics and tools:
@@ -60,10 +60,9 @@ rm -r alica_ros_turtlesim/Expr
 rm -r alica_ros_turtlesim/alica
 ```
 
-3. Create the alica_ros_turtlesim package with additional subfolders:
+3. Create subfolders in the alica_ros_turtlesim package:
 
 ```
-catkin_create_pkg alica_ros_turtlesim roscpp turtlesim geometry_msgs alica_engine agent_id alica_ros_proxy constraintsolver
 mkdir -p alica_ros_turtlesim/alica/etc/plans/behaviours
 mkdir -p alica_ros_turtlesim/alica/etc/roles
 mkdir -p alica_ros_turtlesim/alica/etc/Misc
@@ -112,32 +111,39 @@ In this section, you will create plans using the ALICA plan designer. In this tu
 
 ![plan](doc/plan.png)
 
+### 6.1 Create the Taskrepository
 
-## 6.1 Create the Master Plan	
+1. Right click on the Misc folder of the FileTreeView -> New -> Taskrepository
+2. Input name `Taskrepository` then click create.
+3. Open the created taskrepository and add a `DefaultTask`
+
+### 6.2 Create the Master Plan
+
 ![master_plan](doc/master_plan.png)
 1. Right click on the plans folder of the FileTreeView -> New -> Plan
-2. Input Filename with `Master` then the plan will be opened.
+2. Input Filename `Master` then open the created plan.
 3. Check the masterPlan checkbox in the properties (Icon should turn red).
 4. Add states named `Init` and `Move`
 5. Add transition from `Init` to `Move` and from `Move` to `Init` (Bendpoints can be created by clicking with the active transition tool onto a transition).
 6. Create an entrypoint (choose default task) and connect it with the `Init` state. 
-7. Create the behaviour subfolder in the plans folder of the FileTreeView.
 8. Create the `Go2RandomPosition` behaviour in the behaviour subfolder .
 9. Drag'n'Drop the `Go2RandomPosition` behaviour from the RepositoryView to the `Init` state.
 10. Create the `Move` plan in the plans folder and drag'n'drop it into the `Move` state.
 
-### 6.2 Move plan
+### 6.3 Move plan
 ![move_plan](doc/move_plan.png)
 1. Open the `Move` plan and add two states:  `Move2Center` and `AlignCircle` 
 2. Add two entrypoints with new tasks: `Leader` and `Follower`
-3. Connect the `Leader` Task-Entrypoint to `Move2Center` and the `Follower` Task-EntryPoint to AlignCircle.
-4. Create the `GoTo` behaivour under /plans/behaviours and add it to the  `Move2Center` state and the `AlignCircle` state 
-5. Add a “Runtime Condition” to the `Move` plan by choosing the default plugin for it.
-6. Add “x y” “Quantifiers” in Runtime condition properties
+3. Change the cardinality of the `Leader`-Entrypoint to min 1 and max 1 agent.
+4. Connect the `Leader` Task-Entrypoint to `Move2Center` and the `Follower` Task-EntryPoint to AlignCircle.
+5. Create the `GoTo` behaviour under /plans/behaviours and add it to the  `Move2Center` state and the `AlignCircle` state 
+6. Change the frequency of the `GoTo` behaviour to 30 Hz in its properties
+7. Add a “Runtime Condition” to the `Move` plan by choosing the default plugin and enable it (checkbox).
+8. Add “x y” “Quantifiers” in Runtime condition properties
       * these quantifiers will be used in writing constraints.
       ![runtime_condition](doc/runtime_condition.png)
 
-### 6.3 Create the RoleSet
+### 6.4 Create the RoleSet
 
 1. Create a the Roleset in the roles folder
 2. Define Role “Turtle”
@@ -145,7 +151,7 @@ In this section, you will create plans using the ALICA plan designer. In this tu
 4. Set Priority of FollowerTask to 0.1
 5. ![roleset](doc/roleset.png)
 
-### 6.4 Generate Method Stubs
+### 6.5 Generate Method Stubs
 
 Start the code generation by opening the  "Codegeneration" menu and choose "Generate Code". Everything will be generated into the Expr folder of the alica_ros_turtlesim package.
 
@@ -158,12 +164,12 @@ We will explain only `base.cpp` which is related to ALICA.
 ![base](doc/base.png)
 
 - L21: initialize World model. Since one agent has one world model, this method is class static method
-- L23~28: Setting up AlicaContext. AlicaContext is the interface class of the ALICA engine.
-- L31~36: Starting the AlicaContext.
+- L23~25: Setting up AlicaContext. AlicaContext is the interface class of the ALICA engine.
+- L30~32: Starting the AlicaContext.
 
 ### 7.2 Plans
 
-The ALICA plan designer generated everything plan related into the Expr folder, split into src and include. The Expr/src/<plan_name><plan_id>.cpp files include "evaluate" functions that control the transition between states of that plan. The Expr/src/constraints/<plan_name><plan_id>Constraints.cpp files include the "getConstraints" functions which provide the constraints. The frequency for calling these functions can be configured in the Alica.conf file under alica/etc. The IDs in the file names are generated by the ALICA plan designer.
+The ALICA plan designer generated everything plan related into the Expr folder, split into src and include. The Expr/src/<plan_name><plan_id>.cpp files include "evaluate" functions that control the transition between states of that plan. The Expr/src/constraints/<plan_name><plan_id>Constraints.cpp files include the "getConstraints" functions which provide the constraints. The frequency for calling these functions can be configured in the Alica.yaml file under alica/etc. The IDs in the file names are generated by the ALICA plan designer.
 
 #### Expr/src/Plans/Master<id>.cpp
 
@@ -171,9 +177,16 @@ In this file, you need to implement state transition logic.
 ![master](doc/master.png)
 
 - L4 : include world model since state transitions depend on the world model
-
 - L41:  This is state transition condition from ‘Init’ to ‘Move’. This success condition is met by setSuccess in behaviour logic which is explained later in behaviour.
 - L64: This is state transition condition from ‘Move’ to ‘Init’. This condition is met by publishing rostopic ‘/init’.
+
+#### Expr/src/Plans/constraints/Move<id>.cpp
+
+In this file, you need to set the runtime condition to always return true.
+
+![constraints](doc/move_condition.png)
+
+* Line 17: Always returns true. Only the attached constraint is important (see next file).
 
 #### Expr/src/Plans/constraints/Move<id>Constraints.cpp
 
@@ -195,7 +208,7 @@ In this file, you need to implement the teleportation of the  turtles:
 
 - L6: include world model
 - L34-41: generate random value and teleport turtle via world model.
-- L41: After execute `setSuccess()` function, "isAnyChildStatus(PlanStatus::Success)"" at Expr/src/Plans/Master***.cpp return true. Then state transition from `Init` to `Move` happen.
+- L41: After execute `setSuccess()` function, "isAnyChildStatus(PlanStatus::Success)" at Expr/src/Plans/Master***.cpp return true. Then state transition from `Init` to `Move` happen.
 
 #### Expr/src/Behaviours/GoTo.h
 
