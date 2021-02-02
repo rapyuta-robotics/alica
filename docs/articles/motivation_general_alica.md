@@ -10,4 +10,4 @@ So far in Propositional ALICA, two options exist that are explained in the follo
 
 General ALICA extends Propositional ALICA in a way that allows to reference the same objects from different states and implements several further mechanism that improve the expressiveness of ALICA programs by combining knowledge about the ALICA program structure and about the current situation. The modelling elements and modules necessary for this, are explained in the following articles.
 
-**NAV** *top: [Overview](../README.md)*
+**NAV** *top: [Overview](../README.md) next: [Configurations](./configurations.md)*
