@@ -24,7 +24,7 @@ General ALICA adds several core concepts to the propositional part of the ALICA 
 
 #### Core Concepts
 
-[Configurations](./articles/configurations.md), [Variables](./articles/variables.md), [Constraints](./articles/constraints.md), [Solvers](./articles/solvers.md)
+[Configurations](./articles/configurations.md), [Variables](./articles/variables.md), [Constraints](./articles/constraints.md)
 
 #### Algorithms
 
