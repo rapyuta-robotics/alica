@@ -245,6 +245,8 @@ private:
     mutable std::mutex _accessMutex;
 
     std::shared_ptr<scheduler::Job> _job;
+    std::shared_ptr<scheduler::Job> _terminateJob;
+    std::shared_ptr<scheduler::Job> _initJob;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
