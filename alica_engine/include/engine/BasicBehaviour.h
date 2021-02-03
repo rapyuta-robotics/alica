@@ -75,6 +75,12 @@ public:
      */
     virtual void init() {}
 
+    /**
+     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
+     */
+    virtual void onTermination() {}
+
     AlicaTime getInterval() { return _msInterval;}
 
 protected:
@@ -86,11 +92,6 @@ protected:
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
      */
     virtual void initialiseParameters() {}
-    /**
-     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
-     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
-     */
-    virtual void onTermination() {}
 
 private:
     friend alica::test::TestContext;
