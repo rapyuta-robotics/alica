@@ -592,6 +592,7 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _job->cb = std::bind(&BasicBehaviour::run, _basicBehaviour, nullptr);
     }
+    //replace with actual value for interval
     _job->repeatInterval = isBehaviour() ? AlicaTime::microseconds(10) : AlicaTime::microseconds(0);
 //    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
 //    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
