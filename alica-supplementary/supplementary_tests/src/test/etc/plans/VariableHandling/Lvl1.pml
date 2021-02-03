@@ -104,7 +104,7 @@
         "id" : 1524453546255,
         "name" : "MISSING_NAME",
         "comment" : "",
-        "quantifierType" : "ALL",
+        "quantifierType" : "all",
         "scope" : 1524452759601,
         "sorts" : [ "X", "Y" ]
       } ]
