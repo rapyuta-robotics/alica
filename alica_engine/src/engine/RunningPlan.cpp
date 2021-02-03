@@ -476,20 +476,23 @@ void RunningPlan::deactivate()
     revokeAllConstraints();
     deactivateChildren();
 
-    auto deactivatedSiblings = getDeactivatedSiblings();
-    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
-    _parent->printRecursive();
-
     /*
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
     scheduler::Scheduler scheduler;
-    _job = make_shared<scheduler::Job>();
-    _job->isRepeated = isBehaviour() ? true : false;
-    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
-    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
-    _job->prerequisites.push_back(weakPtrJob);
-    scheduler.add(_job);
+    _terminateJob = make_shared<scheduler::Job>();
+    if(isBehaviour()) {
+        _terminateJob->cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
+    }
+
+    _terminateJob->isRepeated = false;
+    _terminateJob->repeatInterval = AlicaTime::microseconds(0);
+    std::weak_ptr<scheduler::Job> weakTerminateJob = _terminateJob;
+    scheduler.add(weakTerminateJob);
+
+    auto deactivatedSiblings = getDeactivatedSiblings();
+    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
+    _parent->printRecursive();
 }
 
 /**
@@ -570,6 +573,30 @@ bool RunningPlan::amISuccessfulInAnyChild() const
  */
 void RunningPlan::activate()
 {
+    /*
+     * Create instance of scheduler, later use shared instance for actual scheduling.
+     */
+    scheduler::Scheduler scheduler;
+    _initJob = make_shared<scheduler::Job>();
+    if(isBehaviour()) {
+        _initJob->cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
+    }
+
+    _initJob->isRepeated = false;
+    _initJob->repeatInterval = AlicaTime::microseconds(0);
+    std::weak_ptr<scheduler::Job> weakInitJob = _initJob;
+    scheduler.add(weakInitJob);
+//    /*
+//     * Create instance of scheduler, later use shared instance for actual scheduling.
+//     */
+//    scheduler::Scheduler scheduler;
+//    _job = make_shared<scheduler::Job>();
+//    _job->isRepeated = isBehaviour() ? true : false;
+//    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
+//    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
+//    _job->prerequisites.push_back(weakPtrJob);
+//    scheduler.add(_job);
+
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
