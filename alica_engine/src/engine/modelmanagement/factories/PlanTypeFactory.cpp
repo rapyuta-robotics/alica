@@ -9,9 +9,9 @@
 
 namespace alica
 {
-    PlanType* PlanTypeFactory::create(const YAML::Node& planTypeNode)
+    PlanType* PlanTypeFactory::create(AlicaEngine* ae, const YAML::Node& planTypeNode)
     {
-        PlanType* planType = new PlanType();
+        PlanType* planType = new PlanType(ae);
         Factory::setAttributes(planTypeNode, planType);
         Factory::storeElement(planType, alica::Strings::plantype);
         AbstractPlanFactory::setVariables(planTypeNode, planType);

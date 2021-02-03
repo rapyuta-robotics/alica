@@ -17,12 +17,11 @@
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
-#include <essentials/SystemConfig.h>
-
 
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -40,12 +39,18 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _maxConsecutiveChanges = sc["Alica"]->get<int>("Alica.MaxRuleApplications", NULL);
+    auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfig());
     assert(_ps && _pb);
 }
 
 RuleBook::~RuleBook() {}
+
+void RuleBook::reload(const YAML::Node& config)
+{
+    _maxConsecutiveChanges = config["Alica"]["MaxRuleApplications"].as<int>();
+}
 
 /**
  * Implementation of the Init Rule

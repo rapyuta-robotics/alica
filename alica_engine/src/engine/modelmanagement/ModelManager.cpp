@@ -18,30 +18,38 @@
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 
-#include <essentials/SystemConfig.h>
 #include <alica_common_config/debug_output.h>
+#include <essentials/FileSystem.h>
+#include <functional>
 
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository)
+ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , sc(essentials::SystemConfig::getInstance())
+        , _ae(ae)
+        , domainConfigFolder(domainConfigFolder)
 {
-    this->domainConfigFolder = this->sc.getConfigPath();
-    this->basePlanPath = getBasePath("Alica.PlanDir");
-    this->baseRolePath = getBasePath("Alica.RoleDir");
-    this->baseTaskPath = getBasePath("Alica.TaskDir");
+    auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
     Factory::setModelManager(this);
+}
+
+void ModelManager::reload(const YAML::Node& config)
+{
+    basePlanPath = getBasePath("PlanDir");
+    baseRolePath = getBasePath("RoleDir");
+    baseTaskPath = getBasePath("TaskDir");
 }
 
 std::string ModelManager::getBasePath(const std::string& configKey)
 {
     std::string basePath;
     try {
-        basePath = this->sc["Alica"]->get<std::string>(configKey.c_str(), NULL);
+        basePath = _ae->getConfig()["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
-        AlicaEngine::abort("MM: Directory for config key " + configKey + " does not exist.\n", error.what());
+        AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
     }
 
     if (!essentials::FileSystem::endsWith(basePath, essentials::FileSystem::PATH_SEPARATOR)) {
@@ -49,29 +57,29 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     }
 
     if (!essentials::FileSystem::isPathRooted(basePath)) {
-        basePath = this->domainConfigFolder + basePath;
+        basePath = essentials::FileSystem::combinePaths(domainConfigFolder, basePath);
     }
-
-    ALICA_INFO_MSG("MM: config key '" + configKey + "' maps to '" + basePath + "'");
 
     if (!essentials::FileSystem::pathExists(basePath)) {
-        AlicaEngine::abort("MM: base path does not exist: " + basePath);
+        AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
     }
+
+    ALICA_INFO_MSG("MM: Config key '" + configKey + "' maps to '" + basePath + "'");
     return basePath;
 }
 
 Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 {
     std::string masterPlanPath;
-    if (!essentials::FileSystem::findFile(this->basePlanPath, masterPlanName + alica::Strings::plan_extension, masterPlanPath)) {
+    if (!essentials::FileSystem::findFile(basePlanPath, masterPlanName + alica::Strings::plan_extension, masterPlanPath)) {
         AlicaEngine::abort("MM: Cannot find MasterPlan '" + masterPlanName + "'");
     }
 
-    this->filesParsed.push_back(masterPlanPath);
+    filesParsed.push_back(masterPlanPath);
     Plan* masterPlan = (Plan*) parseFile(masterPlanPath, alica::Strings::plan);
-    while (this->filesToParse.size() > 0) {
-        std::string fileToParse = this->filesToParse.front();
-        this->filesToParse.pop_front();
+    while (filesToParse.size() > 0) {
+        std::string fileToParse = filesToParse.front();
+        filesToParse.pop_front();
 
         ALICA_DEBUG_MSG("MM: fileToParse: " << fileToParse);
 
@@ -94,9 +102,9 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         }
     }
 
-    this->attachReferences();
-    this->generateTemplateVariables();
-    this->computeReachabilities();
+    attachReferences();
+    generateTemplateVariables();
+    computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
         ALICA_INFO_MSG("MM: " << beh->toString());
@@ -108,7 +116,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
     std::string roleSetPath;
-    if (!essentials::FileSystem::findFile(this->baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
+    if (!essentials::FileSystem::findFile(baseRolePath, roleSetName + alica::Strings::roleset_extension, roleSetPath)) {
         roleSetPath = findDefaultRoleSet(baseRolePath);
     }
 
@@ -131,7 +139,7 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
 {
     std::string rolesetDir = dir;
     if (!essentials::FileSystem::isPathRooted(rolesetDir)) {
-        rolesetDir = essentials::FileSystem::combinePaths(this->baseRolePath, rolesetDir);
+        rolesetDir = essentials::FileSystem::combinePaths(baseRolePath, rolesetDir);
     }
     if (!essentials::FileSystem::isDirectory(rolesetDir)) {
         AlicaEngine::abort("MM: RoleSet directory does not exist: " + rolesetDir);
@@ -167,11 +175,11 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(node);
+        Plan* plan = PlanFactory::create(_ae, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(node);
+        Behaviour* behaviour = BehaviourFactory::create(_ae, node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -179,7 +187,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(node);
+        PlanType* planType = PlanTypeFactory::create(_ae, node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {
@@ -198,13 +206,13 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
 
 bool ModelManager::idExists(const int64_t id) const
 {
-    return this->elements.find(id) != this->elements.end();
+    return elements.find(id) != elements.end();
 }
 
 const AlicaElement* ModelManager::getElement(const int64_t id)
 {
-    auto mapEntry = this->elements.find(id);
-    if (mapEntry != this->elements.end()) {
+    auto mapEntry = elements.find(id);
+    if (mapEntry != elements.end()) {
         return mapEntry->second;
     }
     return nullptr;

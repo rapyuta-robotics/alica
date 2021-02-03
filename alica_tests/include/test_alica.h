@@ -57,10 +57,9 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setLocalAgentName("nase");
-        alica::AlicaContext::setRootPath(path);
-        alica::AlicaContext::setConfigPath(path + "/etc");
-        ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+        ac = new alica::AlicaContext(
+                alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -113,14 +112,13 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaContext::setRootPath(path);
-        alica::AlicaContext::setConfigPath(path + "/etc");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext::setLocalAgentName(getHostName(i));
-            alica::AlicaContext* ac = new alica::AlicaContext(getRoleSetName(), getMasterPlanName(), stepEngine());
+            alica::AlicaContext* ac = new alica::AlicaContext(
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(),
+                                              getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -137,6 +135,35 @@ protected:
             ac->terminate();
             delete ac;
         }
+    }
+};
+
+class AlicaTestNotInitializedFixture: public AlicaTestFixtureBase
+{
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual bool stepEngine() const { return true; }
+    void SetUp() override
+    {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        ac = new alica::AlicaContext(
+                alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ASSERT_TRUE(ac->isValid());
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+    }
+
+    void TearDown() override
+    {
+        ac->terminate();
+        delete ac;
     }
 };
 } // namespace alica

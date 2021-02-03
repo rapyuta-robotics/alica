@@ -10,5 +10,4 @@
 * [ALICA Plan Designer](https://github.com/rapyuta-robotics/alica-plan-designer-fx)
   * [User Guide](https://github.com/rapyuta-robotics/alica-plan-designer-fx/blob/master/doc/user_guide/user_guide.md)
   * [Developer Guide](https://github.com/rapyuta-robotics/alica-plan-designer-fx/blob/master/doc/developer_guide/developer_guide.md)
-* [GitHub Pages of the ALICA Framework](https://rapyuta-robotics.github.io/alica/)
-
+* [GitHUB Pages of the ALICA Framework](https://rapyuta-robotics.github.io/alica/)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <essentials/ITrigger.hpp>
-#include <essentials/SystemConfig.h>
 
 #include <vector>
 

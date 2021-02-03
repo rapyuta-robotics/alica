@@ -13,8 +13,8 @@
 
 namespace alica
 {
-Plan::Plan(int64_t id)
-        : AbstractPlan(id)
+Plan::Plan(AlicaEngine* ae, int64_t id)
+        : AbstractPlan(ae, id)
         , _minCardinality(0)
         , _maxCardinality(0)
         , _masterPlan(false)

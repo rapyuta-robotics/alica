@@ -1,4 +1,68 @@
 {
   "plan" : "GoalPlan.pml#1402488870347",
-  "uiElementMap" : { }
+  "uiElementMap" : {
+    "1402489216617" : {
+      "id" : 1612340001803,
+      "name" : "1612340001803",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489152217" : {
+      "id" : 1612340001797,
+      "name" : "1612340001797",
+      "comment" : "",
+      "x" : 86,
+      "y" : -5,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402488881800" : {
+      "id" : 1612340001799,
+      "name" : "1612340001799",
+      "comment" : "",
+      "x" : -237,
+      "y" : -2,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489173167" : {
+      "id" : 1612340001801,
+      "name" : "1612340001801",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489205153" : {
+      "id" : 1612340001802,
+      "name" : "1612340001802",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402488881799" : {
+      "id" : 1612340001796,
+      "name" : "1612340001796",
+      "comment" : "",
+      "x" : -121,
+      "y" : -4,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1402489192198" : {
+      "id" : 1612340001798,
+      "name" : "1612340001798",
+      "comment" : "",
+      "x" : 266,
+      "y" : -3,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
 }
