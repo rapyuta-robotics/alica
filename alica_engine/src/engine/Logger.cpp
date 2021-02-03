@@ -17,6 +17,7 @@
 
 
 #include <essentials/IdentifierConstPtr.h>
+#include <essentials/FileSystem.h>
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -27,18 +28,29 @@ namespace alica
 {
 using std::to_string;
 
-Logger::Logger(const AlicaEngine* ae)
+Logger::Logger(AlicaEngine* ae)
         : _ae(ae)
         , _itCount(0)
         , _inIteration(false)
         , _receivedEvent(false)
         , _fileWriter()
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _active = sc["Alica"]->get<bool>("Alica.EventLogging.Enabled", NULL);
+    auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
+}
+
+Logger::~Logger() {}
+
+void Logger::reload(const YAML::Node& config)
+{
+    if (_logging) {
+        return;
+    }
+    _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
         std::string agentName = _ae->getLocalAgentName();
-        std::string logPath = sc["Alica"]->get<std::string>("Alica.EventLogging.LogFolder", NULL);
+        std::string logPath = config["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
         if (!essentials::FileSystem::isDirectory(logPath)) {
             if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
                 AlicaEngine::abort("Cannot create log folder: ", logPath);
@@ -50,10 +62,9 @@ Logger::Logger(const AlicaEngine* ae)
 
         sb << logPath << "/" << std::put_time(localtime_r(&time, &timestruct), "%Y-%Om-%Od_%OH-%OM-%OS") << "_alica-run--" << agentName << ".txt";
         _fileWriter.open(sb.str().c_str());
+        _logging = true;
     }
 }
-
-Logger::~Logger() {}
 
 /**
  * Notify the logger that an event occurred which changed the plan tree.

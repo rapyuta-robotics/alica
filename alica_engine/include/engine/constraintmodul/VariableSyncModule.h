@@ -19,7 +19,7 @@ class AlicaEngine;
 class VariableSyncModule
 {
 public:
-    VariableSyncModule(const AlicaEngine* ae);
+    VariableSyncModule(AlicaEngine* ae);
     ~VariableSyncModule();
 
     void init();
@@ -28,6 +28,7 @@ public:
     void onSolverResult(const SolverResult& msg);
     void publishContent();
     void postResult(int64_t vid, Variant result);
+    void reload(const YAML::Node& config);
 
     template <typename VarType>
     int getSeeds(const std::vector<VarType*>& query, const std::vector<Interval<double>>& limits, std::vector<Variant>& o_seeds) const;
@@ -59,7 +60,7 @@ private:
     SolverResult _publishData;
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
-    const AlicaEngine* _ae;
+    AlicaEngine* _ae;
     bool _running;
     double _distThreshold;
     essentials::NotifyTimer<VariableSyncModule>* _timer;

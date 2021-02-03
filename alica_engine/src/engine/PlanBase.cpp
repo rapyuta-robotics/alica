@@ -19,6 +19,7 @@
 
 #include <alica_common_config/debug_output.h>
 #include <math.h>
+#include <functional>
 
 namespace alica
 {
@@ -39,11 +40,16 @@ PlanBase::PlanBase(AlicaEngine* ae)
         , _isWaiting(false)
 
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
+    auto reloadFunctionPtr = std::bind(&PlanBase::reload, this, std::placeholders::_1);
+    _ae->subscribe(reloadFunctionPtr);
+    reload(_ae->getConfig());
+}
 
-    double freq = sc["Alica"]->get<double>("Alica.EngineFrequency", NULL);
-    double minbcfreq = sc["Alica"]->get<double>("Alica.MinBroadcastFrequency", NULL);
-    double maxbcfreq = sc["Alica"]->get<double>("Alica.MaxBroadcastFrequency", NULL);
+void PlanBase::reload(const YAML::Node& config)
+{
+    double freq = config["Alica"]["EngineFrequency"].as<double>();
+    double minbcfreq = config["Alica"]["MinBroadcastFrequency"].as<double>();
+    double maxbcfreq = config["Alica"]["MaxBroadcastFrequency"].as<double>();
 
     if (freq > 1000) {
         AlicaEngine::abort("PB: ALICA should not be used with more than 1000Hz");
@@ -63,15 +69,17 @@ PlanBase::PlanBase(AlicaEngine* ae)
 
     AlicaTime halfLoopTime = _loopTime / 2;
 
-    _sendStatusMessages = sc["Alica"]->get<bool>("Alica.StatusMessages.Enabled", NULL);
+    _sendStatusMessages = config["Alica"]["StatusMessages"]["Enabled"].as<bool>();
     if (_sendStatusMessages) {
-        double stfreq = sc["Alica"]->get<double>("Alica.StatusMessages.Frequency", NULL);
+        double stfreq = config["Alica"]["StatusMessages"]["Frequency"].as<double>();
         if (stfreq > freq) {
             AlicaEngine::abort("PB: Alica.conf: Status messages frequency must not exceed the engine frequency");
         }
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
-        _statusMessage = new AlicaEngineInfo();
+        if (!_statusMessage) {
+            _statusMessage = new AlicaEngineInfo();
+        }
     }
 
     ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "

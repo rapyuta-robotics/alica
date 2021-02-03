@@ -5,7 +5,6 @@
 // Add additional includes here
 #include "TestWorldModel.h"
 #include <essentials/ITrigger.hpp>
-#include <essentials/SystemConfig.h>
 
 /*PROTECTED REGION END*/
 

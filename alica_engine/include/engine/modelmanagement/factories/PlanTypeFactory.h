@@ -10,7 +10,7 @@ namespace alica
     class PlanTypeFactory : public Factory
     {
     public:
-        static PlanType* create(const YAML::Node& planTypeNode);
+        static PlanType* create(AlicaEngine* ae, const YAML::Node& planTypeNode);
         static void attachReferences();
     private:
         PlanTypeFactory() = delete;
