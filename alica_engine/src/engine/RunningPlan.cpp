@@ -480,11 +480,11 @@ void RunningPlan::deactivate()
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
     scheduler::Scheduler scheduler;
+
     _terminateJob = make_shared<scheduler::Job>();
     if(isBehaviour()) {
         _terminateJob->cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
     }
-
     _terminateJob->isRepeated = false;
     _terminateJob->repeatInterval = AlicaTime::microseconds(0);
     std::weak_ptr<scheduler::Job> weakTerminateJob = _terminateJob;
@@ -577,25 +577,26 @@ void RunningPlan::activate()
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
     scheduler::Scheduler scheduler;
+
     _initJob = make_shared<scheduler::Job>();
     if(isBehaviour()) {
         _initJob->cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
     }
-
     _initJob->isRepeated = false;
     _initJob->repeatInterval = AlicaTime::microseconds(0);
     std::weak_ptr<scheduler::Job> weakInitJob = _initJob;
     scheduler.add(weakInitJob);
-//    /*
-//     * Create instance of scheduler, later use shared instance for actual scheduling.
-//     */
-//    scheduler::Scheduler scheduler;
-//    _job = make_shared<scheduler::Job>();
-//    _job->isRepeated = isBehaviour() ? true : false;
+
+    _job = make_shared<scheduler::Job>();
+    _job->isRepeated = isBehaviour() ? true : false;
+    if (isBehaviour()) {
+        _job->cb = std::bind(&BasicBehaviour::run, _basicBehaviour, nullptr);
+    }
+    _job->repeatInterval = isBehaviour() ? AlicaTime::microseconds(10) : AlicaTime::microseconds(0);
 //    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
 //    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
 //    _job->prerequisites.push_back(weakPtrJob);
-//    scheduler.add(_job);
+    scheduler.add(_job);
 
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
