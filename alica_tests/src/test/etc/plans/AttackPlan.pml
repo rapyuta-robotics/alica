@@ -98,28 +98,28 @@
         "id" : 1403773214317,
         "name" : "MISSING_NAME",
         "comment" : "",
-        "quantifierType" : "ALL",
+        "quantifierType" : "all",
         "scope" : 1402488634525,
         "sorts" : [ "X", "Y" ]
       }, {
         "id" : 1403773224776,
         "name" : "MISSING_NAME",
         "comment" : "",
-        "quantifierType" : "ALL",
+        "quantifierType" : "all",
         "scope" : 1402488646220,
         "sorts" : [ "A", "B" ]
       }, {
         "id" : 1403773234841,
         "name" : "MISSING_NAME",
         "comment" : "",
-        "quantifierType" : "ALL",
+        "quantifierType" : "all",
         "scope" : 1402489396914,
         "sorts" : [ "another one" ]
       }, {
         "id" : 1403773248357,
         "name" : "MISSING_NAME",
         "comment" : "",
-        "quantifierType" : "ALL",
+        "quantifierType" : "all",
         "scope" : 1402488646221,
         "sorts" : [ "TaskQuantifier" ]
       } ]
