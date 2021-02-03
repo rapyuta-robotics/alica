@@ -29,7 +29,7 @@
       "id" : 1524453019900,
       "name" : "MISSING_NAME",
       "comment" : "",
-      "quantifierType" : "ALL",
+      "quantifierType" : "all",
       "scope" : 1524452836022,
       "sorts" : [ "X", "Y" ]
     } ]
