@@ -57,7 +57,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
  *   - TestState1 (1412252439926)
  *   - TestState2 (1412761855746)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp)
 {

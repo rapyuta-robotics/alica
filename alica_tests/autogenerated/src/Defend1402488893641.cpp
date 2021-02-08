@@ -35,7 +35,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -58,7 +58,7 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -81,7 +81,7 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -105,7 +105,7 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp)
 {

@@ -31,7 +31,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
  *   - Start (1418042656595)
  *   - Plantype (1418042674811)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp)
 {

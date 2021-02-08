@@ -35,7 +35,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunctio
  *   - D (1532424087894)
  *   - E (1532424097662)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -60,7 +60,7 @@ bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - D (1532424087894)
  *   - E (1532424097662)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -84,7 +84,7 @@ bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - D (1532424087894)
  *   - E (1532424097662)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -109,7 +109,7 @@ bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - D (1532424087894)
  *   - E (1532424097662)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp)
 {

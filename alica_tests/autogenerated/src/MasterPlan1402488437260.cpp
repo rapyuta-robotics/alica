@@ -35,7 +35,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488437260::getUtilityFunctio
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -60,7 +60,7 @@ bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -85,7 +85,7 @@ bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -112,7 +112,7 @@ bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp)
 {

@@ -70,7 +70,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -92,7 +92,7 @@ bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -114,7 +114,7 @@ bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp)
 {

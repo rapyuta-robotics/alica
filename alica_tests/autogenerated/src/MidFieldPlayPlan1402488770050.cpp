@@ -47,7 +47,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -72,7 +72,7 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -96,7 +96,7 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
 {

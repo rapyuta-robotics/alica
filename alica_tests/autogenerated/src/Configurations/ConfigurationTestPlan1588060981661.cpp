@@ -33,7 +33,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
  *   - Default Name (1588060991102)
  *   - Default Name (1588253341545)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp)
 {

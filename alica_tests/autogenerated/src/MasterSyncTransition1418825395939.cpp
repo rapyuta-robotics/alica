@@ -37,7 +37,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
  *   - FirstTaskSecondState (1418825409988)
  *   - SecondTaskSecondState (1418825411686)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -68,7 +68,7 @@ bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - FirstTaskSecondState (1418825409988)
  *   - SecondTaskSecondState (1418825411686)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp)
 {
