@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:MidFieldPlayPlan
+// Plan:MidFieldPlayPlan1402488770050
+MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
+        : DomainPlan("MidFieldPlayPlan1402488770050")
+{
+    /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
+{
+    /*PROTECTED REGION ID(dcon1402488770050) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

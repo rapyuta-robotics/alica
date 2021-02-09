@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:MasterPlanTestConditionPlanType
+// Plan:MasterPlanTestConditionPlanType1418042656594
+MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594()
+        : DomainPlan("MasterPlanTestConditionPlanType1418042656594")
+{
+    /*PROTECTED REGION ID(con1418042656594) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MasterPlanTestConditionPlanType1418042656594::~MasterPlanTestConditionPlanType1418042656594()
+{
+    /*PROTECTED REGION ID(dcon1418042656594) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418042656596
  */

@@ -6,7 +6,20 @@
 
 namespace alica
 {
-// Plan:BackForth
+// Plan:BackForth1529456584982
+BackForth1529456584982::BackForth1529456584982()
+        : DomainPlan("BackForth1529456584982")
+{
+    /*PROTECTED REGION ID(con1529456584982) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+BackForth1529456584982::~BackForth1529456584982()
+{
+    /*PROTECTED REGION ID(dcon1529456584982) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1529456584984
  */

@@ -6,7 +6,20 @@
 
 namespace alica
 {
-// Plan:HandleFailExplicit
+// Plan:HandleFailExplicit1530004915640
+HandleFailExplicit1530004915640::HandleFailExplicit1530004915640()
+        : DomainPlan("HandleFailExplicit1530004915640")
+{
+    /*PROTECTED REGION ID(con1530004915640) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+HandleFailExplicit1530004915640::~HandleFailExplicit1530004915640()
+{
+    /*PROTECTED REGION ID(dcon1530004915640) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1530004915642
  */

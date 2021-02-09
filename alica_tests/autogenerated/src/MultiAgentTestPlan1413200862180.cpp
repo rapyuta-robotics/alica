@@ -8,7 +8,20 @@
 
 namespace alica
 {
-// Plan:MultiAgentTestPlan
+// Plan:MultiAgentTestPlan1413200862180
+MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180()
+        : DomainPlan("MultiAgentTestPlan1413200862180")
+{
+    /*PROTECTED REGION ID(con1413200862180) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MultiAgentTestPlan1413200862180::~MultiAgentTestPlan1413200862180()
+{
+    /*PROTECTED REGION ID(dcon1413200862180) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: AttackTask  -> EntryPoint-ID: 1413200877337
  * Task: DefaultTask  -> EntryPoint-ID: 1413200890537

@@ -8,7 +8,20 @@
 
 namespace alica
 {
-// Plan:MasterSyncTransition
+// Plan:MasterSyncTransition1418825395939
+MasterSyncTransition1418825395939::MasterSyncTransition1418825395939()
+        : DomainPlan("MasterSyncTransition1418825395939")
+{
+    /*PROTECTED REGION ID(con1418825395939) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MasterSyncTransition1418825395939::~MasterSyncTransition1418825395939()
+{
+    /*PROTECTED REGION ID(dcon1418825395939) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: AttackTask  -> EntryPoint-ID: 1418825395941
  * Task: DefaultTask  -> EntryPoint-ID: 1418825402617

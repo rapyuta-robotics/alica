@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1402488870347) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class GoalPlan : public DomainPlan
+class GoalPlan1402488870347 : public DomainPlan
 {
 public:
-    GoalPlan();
-    virtual ~GoalPlan();
+    GoalPlan1402488870347();
+    virtual ~GoalPlan1402488870347();
     /*PROTECTED REGION ID(pub1402488870347) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

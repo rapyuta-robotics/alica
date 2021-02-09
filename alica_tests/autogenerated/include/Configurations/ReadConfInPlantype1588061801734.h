@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1588061801734) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class ReadConfInPlantype : public DomainPlan
+class ReadConfInPlantype1588061801734 : public DomainPlan
 {
 public:
-    ReadConfInPlantype();
-    virtual ~ReadConfInPlantype();
+    ReadConfInPlantype1588061801734();
+    virtual ~ReadConfInPlantype1588061801734();
     /*PROTECTED REGION ID(pub1588061801734) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

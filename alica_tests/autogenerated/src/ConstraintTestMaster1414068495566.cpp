@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:ConstraintTestMaster
+// Plan:ConstraintTestMaster1414068495566
+ConstraintTestMaster1414068495566::ConstraintTestMaster1414068495566()
+        : DomainPlan("ConstraintTestMaster1414068495566")
+{
+    /*PROTECTED REGION ID(con1414068495566) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ConstraintTestMaster1414068495566::~ConstraintTestMaster1414068495566()
+{
+    /*PROTECTED REGION ID(dcon1414068495566) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414068495568
  */

@@ -6,7 +6,20 @@
 
 namespace alica
 {
-// Plan:FailsOnOne
+// Plan:FailsOnOne1530069246103
+FailsOnOne1530069246103::FailsOnOne1530069246103()
+        : DomainPlan("FailsOnOne1530069246103")
+{
+    /*PROTECTED REGION ID(con1530069246103) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+FailsOnOne1530069246103::~FailsOnOne1530069246103()
+{
+    /*PROTECTED REGION ID(dcon1530069246103) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) : Is not set 1
 
 /**

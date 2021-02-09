@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:BehaviourTriggerTestPlan
+// Plan:BehaviourTriggerTestPlan1428508768572
+BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572()
+        : DomainPlan("BehaviourTriggerTestPlan1428508768572")
+{
+    /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
+{
+    /*PROTECTED REGION ID(dcon1428508768572) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1428508768574
  */

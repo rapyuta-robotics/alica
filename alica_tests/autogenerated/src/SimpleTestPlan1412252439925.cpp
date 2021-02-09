@@ -6,7 +6,20 @@
 
 namespace alica
 {
-// Plan:SimpleTestPlan
+// Plan:SimpleTestPlan1412252439925
+SimpleTestPlan1412252439925::SimpleTestPlan1412252439925()
+        : DomainPlan("SimpleTestPlan1412252439925")
+{
+    /*PROTECTED REGION ID(con1412252439925) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+SimpleTestPlan1412252439925::~SimpleTestPlan1412252439925()
+{
+    /*PROTECTED REGION ID(dcon1412252439925) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of PreCondition - (Name): NewPreCondition, (ConditionString):  , (Comment) :
 
 /**

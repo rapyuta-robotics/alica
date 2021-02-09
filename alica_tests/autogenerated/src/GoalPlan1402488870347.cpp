@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:GoalPlan
+// Plan:GoalPlan1402488870347
+GoalPlan1402488870347::GoalPlan1402488870347()
+        : DomainPlan("GoalPlan1402488870347")
+{
+    /*PROTECTED REGION ID(con1402488870347) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+GoalPlan1402488870347::~GoalPlan1402488870347()
+{
+    /*PROTECTED REGION ID(dcon1402488870347) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of PreCondition - (Name): PreCondition, (ConditionString):  , (Comment) :
 
 /**

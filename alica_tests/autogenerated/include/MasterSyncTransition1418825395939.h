@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1418825395939) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class MasterSyncTransition : public DomainPlan
+class MasterSyncTransition1418825395939 : public DomainPlan
 {
 public:
-    MasterSyncTransition();
-    virtual ~MasterSyncTransition();
+    MasterSyncTransition1418825395939();
+    virtual ~MasterSyncTransition1418825395939();
     /*PROTECTED REGION ID(pub1418825395939) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

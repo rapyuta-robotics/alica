@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1530004915640) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class HandleFailExplicit : public DomainPlan
+class HandleFailExplicit1530004915640 : public DomainPlan
 {
 public:
-    HandleFailExplicit();
-    virtual ~HandleFailExplicit();
+    HandleFailExplicit1530004915640();
+    virtual ~HandleFailExplicit1530004915640();
     /*PROTECTED REGION ID(pub1530004915640) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

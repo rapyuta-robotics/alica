@@ -9,7 +9,20 @@
 
 namespace alica
 {
-// Plan:RuntimeConditionPlan
+// Plan:RuntimeConditionPlan1418042806575
+RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575()
+        : DomainPlan("RuntimeConditionPlan1418042806575")
+{
+    /*PROTECTED REGION ID(con1418042806575) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
+{
+    /*PROTECTED REGION ID(dcon1418042806575) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

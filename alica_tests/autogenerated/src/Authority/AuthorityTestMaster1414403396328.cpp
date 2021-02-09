@@ -7,7 +7,20 @@ using namespace std;
 
 namespace alica
 {
-// Plan:AuthorityTestMaster
+// Plan:AuthorityTestMaster1414403396328
+AuthorityTestMaster1414403396328::AuthorityTestMaster1414403396328()
+        : DomainPlan("AuthorityTestMaster1414403396328")
+{
+    /*PROTECTED REGION ID(con1414403396328) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+AuthorityTestMaster1414403396328::~AuthorityTestMaster1414403396328()
+{
+    /*PROTECTED REGION ID(dcon1414403396328) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414403396331
  */

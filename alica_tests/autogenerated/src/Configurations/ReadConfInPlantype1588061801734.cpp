@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:ReadConfInPlantype
+// Plan:ReadConfInPlantype1588061801734
+ReadConfInPlantype1588061801734::ReadConfInPlantype1588061801734()
+        : DomainPlan("ReadConfInPlantype1588061801734")
+{
+    /*PROTECTED REGION ID(con1588061801734) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ReadConfInPlantype1588061801734::~ReadConfInPlantype1588061801734()
+{
+    /*PROTECTED REGION ID(dcon1588061801734) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588103719479
  */

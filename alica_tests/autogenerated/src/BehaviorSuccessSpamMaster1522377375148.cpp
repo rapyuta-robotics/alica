@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:BehaviorSuccessSpamMaster
+// Plan:BehaviorSuccessSpamMaster1522377375148
+BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
+        : DomainPlan("BehaviorSuccessSpamMaster1522377375148")
+{
+    /*PROTECTED REGION ID(con1522377375148) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148()
+{
+    /*PROTECTED REGION ID(dcon1522377375148) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1522377375150
  */

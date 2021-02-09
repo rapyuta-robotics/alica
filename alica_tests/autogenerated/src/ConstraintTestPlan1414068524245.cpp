@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:ConstraintTestPlan
+// Plan:ConstraintTestPlan1414068524245
+ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245()
+        : DomainPlan("ConstraintTestPlan1414068524245")
+{
+    /*PROTECTED REGION ID(con1414068524245) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
+{
+    /*PROTECTED REGION ID(dcon1414068524245) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

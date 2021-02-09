@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:PlanOne
+// Plan:PlanOne1407153611768
+PlanOne1407153611768::PlanOne1407153611768()
+        : DomainPlan("PlanOne1407153611768")
+{
+    /*PROTECTED REGION ID(con1407153611768) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+PlanOne1407153611768::~PlanOne1407153611768()
+{
+    /*PROTECTED REGION ID(dcon1407153611768) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153636262
  * Task: AttackTask  -> EntryPoint-ID: 1407153791141

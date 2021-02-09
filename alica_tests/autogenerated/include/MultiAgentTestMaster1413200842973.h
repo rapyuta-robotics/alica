@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1413200842973) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class MultiAgentTestMaster : public DomainPlan
+class MultiAgentTestMaster1413200842973 : public DomainPlan
 {
 public:
-    MultiAgentTestMaster();
-    virtual ~MultiAgentTestMaster();
+    MultiAgentTestMaster1413200842973();
+    virtual ~MultiAgentTestMaster1413200842973();
     /*PROTECTED REGION ID(pub1413200842973) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

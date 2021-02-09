@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1588060981661) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class ConfigurationTestPlan : public DomainPlan
+class ConfigurationTestPlan1588060981661 : public DomainPlan
 {
 public:
-    ConfigurationTestPlan();
-    virtual ~ConfigurationTestPlan();
+    ConfigurationTestPlan1588060981661();
+    virtual ~ConfigurationTestPlan1588060981661();
     /*PROTECTED REGION ID(pub1588060981661) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

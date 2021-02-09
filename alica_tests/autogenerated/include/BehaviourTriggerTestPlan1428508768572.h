@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1428508768572) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class BehaviourTriggerTestPlan : public DomainPlan
+class BehaviourTriggerTestPlan1428508768572 : public DomainPlan
 {
 public:
-    BehaviourTriggerTestPlan();
-    virtual ~BehaviourTriggerTestPlan();
+    BehaviourTriggerTestPlan1428508768572();
+    virtual ~BehaviourTriggerTestPlan1428508768572();
     /*PROTECTED REGION ID(pub1428508768572) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

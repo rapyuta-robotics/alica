@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:MasterPlan
+// Plan:MasterPlan1402488437260
+MasterPlan1402488437260::MasterPlan1402488437260()
+        : DomainPlan("MasterPlan1402488437260")
+{
+    /*PROTECTED REGION ID(con1402488437260) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MasterPlan1402488437260::~MasterPlan1402488437260()
+{
+    /*PROTECTED REGION ID(dcon1402488437260) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488437263
  */

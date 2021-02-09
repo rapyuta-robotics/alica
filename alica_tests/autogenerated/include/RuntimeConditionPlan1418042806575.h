@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1418042806575) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class RuntimeConditionPlan : public DomainPlan
+class RuntimeConditionPlan1418042806575 : public DomainPlan
 {
 public:
-    RuntimeConditionPlan();
-    virtual ~RuntimeConditionPlan();
+    RuntimeConditionPlan1418042806575();
+    virtual ~RuntimeConditionPlan1418042806575();
     /*PROTECTED REGION ID(pub1418042806575) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/
