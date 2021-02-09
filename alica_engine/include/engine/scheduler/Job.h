@@ -1,10 +1,13 @@
 #pragma once
 
+#include "engine/AlicaClock.h"
+
 #include <iostream>
 #include <chrono>
 #include <ctime>
 #include <vector>
 #include <memory>
+#include <functional>
 
 namespace alica {
 namespace scheduler
