@@ -218,6 +218,8 @@ public:
     std::vector<RunningPlan*> getDeactivatedSiblings() const;
 
     std::weak_ptr<scheduler::Job> getJob() const;
+    std::weak_ptr<scheduler::Job> getInitJob() const;
+    std::weak_ptr<scheduler::Job> getTerminateJob() const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
