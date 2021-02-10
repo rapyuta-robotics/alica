@@ -485,12 +485,19 @@ void RunningPlan::deactivate()
      */
     scheduler::Scheduler scheduler(4);
 
-    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>();
+    std::function<void()> cb;
     if(isBehaviour()) {
-        terminateJob->cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
+        cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
+    } else {
+        cb = std::bind(&BasicPlan::onTermination, _basicPlan);
     }
-    terminateJob->isRepeated = false;
-    terminateJob->repeatInterval = AlicaTime::microseconds(0);
+
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
+    for (RunningPlan* rp : _children) {
+        prerequisites.push_back(rp->getTerminateJob());
+    }
+
+    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>(cb, prerequisites);
     scheduler.add(terminateJob);
     _terminateJob = terminateJob; // store terminateJob as weak_ptr
 
@@ -589,30 +596,22 @@ void RunningPlan::activate()
     * Create instance of scheduler, later use shared instance for actual scheduling.
     */
     scheduler::Scheduler scheduler(4);
-    std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>();
+    std::function<void()> cb;
 
     if(isBehaviour()) {
-        initJob->cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
+        cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
     } else {
-        initJob->cb = std::bind(&BasicPlan::init, _basicPlan);
+        cb = std::bind(&BasicPlan::init, _basicPlan);
     }
-    initJob->isRepeated = false;
-    initJob->repeatInterval = AlicaTime::microseconds(0);
+
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
+    if (_parent) {
+        prerequisites.emplace_back(_parent->getInitJob());
+    }
+
+    std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>(cb, prerequisites);
     scheduler.add(initJob);
     _initJob = initJob; //store initJob as weak_ptr
-
-    std::shared_ptr<scheduler::Job> job = make_shared<scheduler::Job>();
-    job->isRepeated = isBehaviour() ? true : false;
-    if (isBehaviour()) {
-        job->cb = std::bind(&BasicBehaviour::run, _basicBehaviour, nullptr);
-    }
-    //replace with actual value for interval
-    job->repeatInterval = isBehaviour() ? AlicaTime::microseconds(10) : AlicaTime::microseconds(0);
-//    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
-//    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
-//    _job->prerequisites.push_back(weakPtrJob);
-    scheduler.add(job);
-    _job = job; //store job as weak_ptr
 
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
@@ -889,6 +888,16 @@ std::vector<RunningPlan*> RunningPlan::getDeactivatedSiblings() const {
 std::weak_ptr<scheduler::Job> RunningPlan::getJob() const
 {
     return _job;
+}
+
+std::weak_ptr<scheduler::Job> RunningPlan::getInitJob() const
+{
+    return _initJob;
+}
+
+std::weak_ptr<scheduler::Job> RunningPlan::getTerminateJob() const
+{
+    return _terminateJob;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
