@@ -35,6 +35,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                          const essentials::Identifier& agentID)
         : _ctx(ctx)
+        , _scheduler(std::thread::hardware_concurrency())
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)

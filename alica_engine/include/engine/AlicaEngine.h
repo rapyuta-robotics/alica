@@ -14,6 +14,7 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/scheduler/Scheduler.h"
 
 #include <essentials/IdentifierConstPtr.h>
 #include <essentials/IDManager.h>
@@ -95,6 +96,8 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
+    scheduler::Scheduler getScheduler() { return _scheduler; }
+
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
 
@@ -131,6 +134,7 @@ private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    scheduler::Scheduler _scheduler;
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
