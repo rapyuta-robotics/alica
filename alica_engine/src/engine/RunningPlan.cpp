@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/BasicPlan.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IPlanTreeVisitor.h"
@@ -84,6 +85,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
         , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
+    std::cerr << "PlanID: " << plan->getId() << std::endl;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
@@ -467,6 +469,8 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
 void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
+    std::cerr << "RunningPlanBasicBehaviour: " << _basicBehaviour << " Is behaviour: " << isBehaviour() << std::endl;
+    std::cerr << "RunningPlanBasicPlan: " << _basicPlan << " Is plan: " << !isBehaviour() << std::endl;
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
@@ -573,14 +577,24 @@ bool RunningPlan::amISuccessfulInAnyChild() const
  */
 void RunningPlan::activate()
 {
+    assert(_status.active != PlanActivity::Retired);
+    _status.active = PlanActivity::Active;
+    if (isBehaviour()) {
+        _ae->editBehaviourPool().startBehaviour(*this);
+    } else {
+        _ae->editPlanPool().setPlan(*this);
+    }
+
     /*
-     * Create instance of scheduler, later use shared instance for actual scheduling.
-     */
+    * Create instance of scheduler, later use shared instance for actual scheduling.
+    */
     scheduler::Scheduler scheduler;
 
     _initJob = make_shared<scheduler::Job>();
     if(isBehaviour()) {
         _initJob->cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
+    } else {
+        _initJob->cb = std::bind(&BasicPlan::init, _basicPlan);
     }
     _initJob->isRepeated = false;
     _initJob->repeatInterval = AlicaTime::microseconds(0);
@@ -597,13 +611,8 @@ void RunningPlan::activate()
 //    _job->repeatInterval = isBehaviour() ? _basicBehaviour->getInterval() : AlicaTime::microseconds(0);
 //    std::weak_ptr<scheduler::Job> weakPtrJob = _parent->getJob();
 //    _job->prerequisites.push_back(weakPtrJob);
-    scheduler.add(_job);
+        scheduler.add(_job);
 
-    assert(_status.active != PlanActivity::Retired);
-    _status.active = PlanActivity::Active;
-    if (isBehaviour()) {
-        _ae->editBehaviourPool().startBehaviour(*this);
-    }
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
         r->activate();
