@@ -217,7 +217,7 @@ public:
 
     std::vector<RunningPlan*> getDeactivatedSiblings() const;
 
-    std::shared_ptr<scheduler::Job> getJob() const;
+    std::weak_ptr<scheduler::Job> getJob() const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -249,9 +249,9 @@ private:
 
     mutable std::mutex _accessMutex;
 
-    std::shared_ptr<scheduler::Job> _job;
-    std::shared_ptr<scheduler::Job> _terminateJob;
-    std::shared_ptr<scheduler::Job> _initJob;
+    std::weak_ptr<scheduler::Job> _job;
+    std::weak_ptr<scheduler::Job> _terminateJob;
+    std::weak_ptr<scheduler::Job> _initJob;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
