@@ -6,6 +6,10 @@ namespace alica
 namespace scheduler
 {
 
+Scheduler::Scheduler(int numberOfThreads) {
+
+}
+
 void Scheduler::add(std::shared_ptr<Job> job)
 {
     std::cerr << "adding a job..." << std::endl;

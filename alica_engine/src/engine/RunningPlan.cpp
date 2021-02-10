@@ -483,7 +483,7 @@ void RunningPlan::deactivate()
     /*
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
-    scheduler::Scheduler scheduler;
+    scheduler::Scheduler scheduler(4);
 
     std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>();
     if(isBehaviour()) {
@@ -588,7 +588,7 @@ void RunningPlan::activate()
     /*
     * Create instance of scheduler, later use shared instance for actual scheduling.
     */
-    scheduler::Scheduler scheduler;
+    scheduler::Scheduler scheduler(4);
     std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>();
 
     if(isBehaviour()) {
