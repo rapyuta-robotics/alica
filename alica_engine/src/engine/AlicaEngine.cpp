@@ -44,6 +44,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
         , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID.toByteVector().data(), agentID.toByteVector().size()) : nullptr))
         , _syncModul(this)
         , _behaviourPool(this)
+        , _planPool(this)
         , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
@@ -86,6 +87,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _stepCalled = false;
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
+    everythingWorked &= _planPool.init(*creatorCtx.planCreator);
     _roleAssignment->init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
