@@ -1,9 +1,16 @@
+#include "engine/AlicaEngine.h"
+#include "engine/IPlanCreator.h"
 #include "engine/PlanPool.h"
+#include "engine/RunningPlan.h"
+#include "engine/BasicPlan.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Plan.h"
 
 namespace alica
 {
+
 PlanPool::PlanPool(AlicaEngine* ae)
         : _ae(ae)
 {
@@ -31,6 +38,7 @@ bool PlanPool::init(IPlanCreator& planCreator)
             _availablePlans.insert(std::make_pair(wrapper, basicPlan));
         }
     }
+    return true;
 }
 
 void PlanPool::setPlan(RunningPlan& rp)
@@ -43,10 +51,10 @@ void PlanPool::setPlan(RunningPlan& rp)
         }
     }
 
-    ALICA_ERROR_MSG("PlanPool::setPlan(): Cannot set Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
+    ALICA_ERROR_MSG("PlanPool::setPlan(): Cannot set Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName());
 }
 
-const std::shared_ptr<BasicBehaviour> BehaviourPool::getBasicPlan(const Plan* plan, const Configuration* configuration) const
+const std::shared_ptr<BasicPlan> PlanPool::getBasicPlan(const Plan* plan, const Configuration* configuration) const
 {
     for (const auto& poolEntry : _availablePlans) {
         if (poolEntry.first->getAbstractPlan() == plan && poolEntry.first->getConfiguration() == configuration) {
