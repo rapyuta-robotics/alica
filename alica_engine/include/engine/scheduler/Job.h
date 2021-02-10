@@ -14,6 +14,14 @@ namespace scheduler
 {
 struct Job
 {
+    Job(std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
+    {
+        cancelled = false;
+        isRepeated = false;
+        AlicaClock clock;
+        scheduledTime = clock.now();
+    }
+
     std::function<void()> cb;
     AlicaTime scheduledTime;
     bool cancelled;
