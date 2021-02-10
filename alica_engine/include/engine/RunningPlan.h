@@ -217,7 +217,6 @@ public:
 
     std::vector<RunningPlan*> getDeactivatedSiblings() const;
 
-    std::weak_ptr<scheduler::Job> getJob() const;
     std::weak_ptr<scheduler::Job> getInitJob() const;
     std::weak_ptr<scheduler::Job> getTerminateJob() const;
 
@@ -251,7 +250,6 @@ private:
 
     mutable std::mutex _accessMutex;
 
-    std::weak_ptr<scheduler::Job> _job;
     std::weak_ptr<scheduler::Job> _terminateJob;
     std::weak_ptr<scheduler::Job> _initJob;
 };
