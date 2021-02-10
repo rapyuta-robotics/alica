@@ -6,7 +6,7 @@ namespace alica
 namespace scheduler
 {
 
-void Scheduler::add(std::weak_ptr<Job> job)
+void Scheduler::add(std::shared_ptr<Job> job)
 {
     std::cerr << "adding a job..." << std::endl;
 //    AlicaClock clock;

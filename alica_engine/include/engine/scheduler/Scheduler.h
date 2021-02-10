@@ -10,9 +10,9 @@ namespace scheduler
     class Scheduler
     {
     public:
-        void add(std::weak_ptr<Job> job);
+        void add(std::shared_ptr<Job> job);
     private:
-        std::vector<std::weak_ptr<Job>> queue;
+        std::vector<std::shared_ptr<Job>> queue;
     };
 }
 }
