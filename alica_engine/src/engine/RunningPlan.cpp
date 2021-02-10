@@ -483,7 +483,7 @@ void RunningPlan::deactivate()
     /*
      * Create instance of scheduler, later use shared instance for actual scheduling.
      */
-    scheduler::Scheduler scheduler(4);
+    auto scheduler = _ae->getScheduler();
 
     std::function<void()> cb;
     if(isBehaviour()) {
@@ -595,7 +595,7 @@ void RunningPlan::activate()
     /*
     * Create instance of scheduler, later use shared instance for actual scheduling.
     */
-    scheduler::Scheduler scheduler(4);
+    auto scheduler = _ae->getScheduler();
     std::function<void()> cb;
 
     if(isBehaviour()) {
@@ -883,11 +883,6 @@ std::vector<RunningPlan*> RunningPlan::getDeactivatedSiblings() const {
     }
 
     return deactivatedSiblings;
-}
-
-std::weak_ptr<scheduler::Job> RunningPlan::getJob() const
-{
-    return _job;
 }
 
 std::weak_ptr<scheduler::Job> RunningPlan::getInitJob() const
