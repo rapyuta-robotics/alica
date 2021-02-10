@@ -29,10 +29,10 @@ struct Job
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
 
-//    bool operator==(const Job& r)
-//    {
-//        return scheduledTime == r.scheduledTime;
-//    }
+    bool operator==(const Job& r)
+    {
+        return scheduledTime == r.scheduledTime;
+    }
 //
 //    bool operator<(const Job& r)
 //    {
