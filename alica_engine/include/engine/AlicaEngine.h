@@ -96,7 +96,7 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
-    scheduler::Scheduler getScheduler() { return _scheduler; }
+    scheduler::Scheduler& getScheduler() { return _scheduler; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
