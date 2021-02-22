@@ -85,7 +85,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
         , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
-    std::cerr << "PlanID: " << plan->getId() << std::endl;
 }
 
 RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
@@ -469,8 +468,6 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
 void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
-    std::cerr << "RunningPlanBasicBehaviour: " << _basicBehaviour << " Is behaviour: " << isBehaviour() << std::endl;
-    std::cerr << "RunningPlanBasicPlan: " << _basicPlan << " Is plan: " << !isBehaviour() << std::endl;
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
@@ -480,10 +477,7 @@ void RunningPlan::deactivate()
     revokeAllConstraints();
     deactivateChildren();
 
-    /*
-     * Create instance of scheduler, later use shared instance for actual scheduling.
-     */
-    auto scheduler = _ae->getScheduler();
+    auto& scheduler = _ae->getScheduler();
 
     std::function<void()> cb;
     if(isBehaviour()) {
@@ -497,13 +491,13 @@ void RunningPlan::deactivate()
         prerequisites.push_back(rp->getTerminateJob());
     }
 
-    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>(cb, prerequisites);
-    scheduler.add(terminateJob);
-    _terminateJob = terminateJob; // store terminateJob as weak_ptr
+//    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>(cb, prerequisites);
+//    scheduler.add(terminateJob);
+//    _terminateJob = terminateJob; // store terminateJob as weak_ptr
 
-    auto deactivatedSiblings = getDeactivatedSiblings();
-    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
-    _parent->printRecursive();
+//    auto deactivatedSiblings = getDeactivatedSiblings();
+//    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
+//    _parent->printRecursive();
 }
 
 /**
@@ -589,19 +583,21 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
     } else {
-        _ae->editPlanPool().setPlan(*this);
+        if (_activeTriple.abstractPlan) {
+            _ae->editPlanPool().setPlan(*this);
+        }
+
     }
 
-    /*
-    * Create instance of scheduler, later use shared instance for actual scheduling.
-    */
-    auto scheduler = _ae->getScheduler();
+    auto& scheduler = _ae->getScheduler();
     std::function<void()> cb;
 
     if(isBehaviour()) {
         cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
     } else {
-        cb = std::bind(&BasicPlan::init, _basicPlan);
+        if (_basicPlan) {
+            cb = std::bind(&BasicPlan::init, _basicPlan);
+        }
     }
 
     std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
@@ -610,8 +606,10 @@ void RunningPlan::activate()
     }
 
     std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>(cb, prerequisites);
-    scheduler.add(initJob);
-    _initJob = initJob; //store initJob as weak_ptr
+    if (_basicPlan || _basicBehaviour) {
+        scheduler.add(initJob);
+        _initJob = initJob; //store initJob as weak_ptr
+    }
 
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
