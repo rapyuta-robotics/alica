@@ -46,7 +46,7 @@ void PlanPool::setPlan(RunningPlan& rp)
     if (const auto* plan = dynamic_cast<const Plan*>(rp.getActivePlan())) {
         if (auto& basicPlan = getBasicPlan(plan, rp.getConfiguration())) {
             // set rp -> basicPlan
-            rp.setBasicPlan(basicPlan.get());
+            rp.setBasicPlan(basicPlan);
             return;
         }
     }
