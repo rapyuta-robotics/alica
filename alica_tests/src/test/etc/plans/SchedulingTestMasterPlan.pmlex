@@ -1,0 +1,41 @@
+{
+  "plan" : "SchedulingTestMasterPlan.pml#1613378382024",
+  "uiElementMap" : {
+    "1613378474109" : {
+      "id" : 1613378474110,
+      "name" : "1613378474110",
+      "comment" : "",
+      "x" : -233,
+      "y" : -50,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1613530614559" : {
+      "id" : 1613530614560,
+      "name" : "1613530614560",
+      "comment" : "",
+      "x" : -529,
+      "y" : -54,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1613530643879" : {
+      "id" : 1613530643883,
+      "name" : "1613530643883",
+      "comment" : "",
+      "x" : 0,
+      "y" : 0,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1613378485232" : {
+      "id" : 1613378485233,
+      "name" : "1613378485233",
+      "comment" : "",
+      "x" : 5,
+      "y" : -18,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

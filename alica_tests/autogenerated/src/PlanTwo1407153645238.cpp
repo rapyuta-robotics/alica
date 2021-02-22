@@ -33,4 +33,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1407153645238::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1407153645238) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

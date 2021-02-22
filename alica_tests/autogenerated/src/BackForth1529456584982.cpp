@@ -76,4 +76,8 @@ bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp)
     return SimpleSwitches::isSet(1);
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1529456584982) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

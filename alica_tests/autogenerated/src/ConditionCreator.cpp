@@ -45,6 +45,10 @@
 #include "PreConditionPlan1418042796751.h"
 #include "RealMasterPlanForSyncTest1418902217839.h"
 #include "RuntimeConditionPlan1418042806575.h"
+#include "SchedulingTestMasterPlan1613378382024.h"
+#include "SchedulingTestPlan11613378406860.h"
+#include "SchedulingTestPlan21613378423610.h"
+#include "SchedulingTestPlan31613378433623.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 
@@ -206,6 +210,12 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1588253347213:
         return std::make_shared<PreCondition1588253347213>();
+        break;
+    case 1613530643882:
+        return std::make_shared<PreCondition1613530643882>();
+        break;
+    case 1613977426634:
+        return std::make_shared<PreCondition1613977426634>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

@@ -46,6 +46,10 @@
 #include "constraints/PreConditionPlan1418042796751Constraints.h"
 #include "constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
 #include "constraints/RuntimeConditionPlan1418042806575Constraints.h"
+#include "constraints/SchedulingTestMasterPlan1613378382024Constraints.h"
+#include "constraints/SchedulingTestPlan11613378406860Constraints.h"
+#include "constraints/SchedulingTestPlan21613378423610Constraints.h"
+#include "constraints/SchedulingTestPlan31613378433623Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
 

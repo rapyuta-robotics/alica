@@ -31,6 +31,10 @@
 #include "PreConditionPlan1418042796751.h"
 #include "RealMasterPlanForSyncTest1418902217839.h"
 #include "RuntimeConditionPlan1418042806575.h"
+#include "SchedulingTestMasterPlan1613378382024.h"
+#include "SchedulingTestPlan11613378406860.h"
+#include "SchedulingTestPlan21613378423610.h"
+#include "SchedulingTestPlan31613378433623.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include <iostream>
@@ -146,6 +150,18 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 1588061801734:
         return std::make_shared<UtilityFunction1588061801734>();
+        break;
+    case 1613378382024:
+        return std::make_shared<UtilityFunction1613378382024>();
+        break;
+    case 1613378406860:
+        return std::make_shared<UtilityFunction1613378406860>();
+        break;
+    case 1613378423610:
+        return std::make_shared<UtilityFunction1613378423610>();
+        break;
+    case 1613378433623:
+        return std::make_shared<UtilityFunction1613378433623>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

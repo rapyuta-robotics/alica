@@ -82,4 +82,8 @@ bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1402488634525) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica
