@@ -483,7 +483,9 @@ void RunningPlan::deactivate()
     if(isBehaviour()) {
         cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
     } else {
-        cb = std::bind(&BasicPlan::onTermination, _basicPlan);
+        if (_activeTriple.abstractPlan) {
+            cb = std::bind(&BasicPlan::onTermination, _basicPlan);
+        }
     }
 
     std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
@@ -492,8 +494,10 @@ void RunningPlan::deactivate()
     }
 
 //    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>(cb, prerequisites);
-//    scheduler.add(terminateJob);
-//    _terminateJob = terminateJob; // store terminateJob as weak_ptr
+//    if (_basicPlan) {
+//        scheduler.add(terminateJob);
+//        _terminateJob = terminateJob; //store terminateJob as weak_ptr
+//    }
 
 //    auto deactivatedSiblings = getDeactivatedSiblings();
 //    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
