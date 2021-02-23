@@ -35,7 +35,7 @@ void Scheduler::add(std::shared_ptr<Job> job)
        return *queuedJob == *(job.get());
     });
 
-    if (it == queue.end()) {
+    if (it != queue.end()) {
         // do not add job to queue if already queued
         std::cerr << "Scheduler: job already in queue" << std::endl;
         return;
