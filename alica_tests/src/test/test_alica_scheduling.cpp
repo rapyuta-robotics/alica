@@ -1,4 +1,5 @@
 #include "test_alica.h"
+#include "CounterClass.h"
 
 #include <alica/test/Util.h>
 #include <gtest/gtest.h>
@@ -20,17 +21,12 @@ TEST_F(AlicaSchedulingPlan, scheduling)
 {
     std::cerr << "RUN SCHEDULING TEST" << std::endl;
     ae->start();
-    ac->stepEngine();
 
+    // asserts are within the plan inits and onTerminate methods to prevent skipping steps
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
-    ae->getAlicaClock().sleep(sleepTime);
-
-//    do {
-//        ae->getAlicaClock().sleep(sleepTime);
-//    } while (!alica::test::Util::isPlanActive(ae, 1613378406860));
-//    do {
-//    ae->getAlicaClock().sleep(sleepTime);
-//    } while (!alica::test::Util::isPlanActive(ae, 1412252439925));
+    while (CounterClass::called != 6) {
+        ae->getAlicaClock().sleep(sleepTime);
+    }
 }
 
 } //namespace

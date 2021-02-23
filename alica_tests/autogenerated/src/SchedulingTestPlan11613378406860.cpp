@@ -51,8 +51,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
 bool PreCondition1613977426634::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1613977426633) ENABLED START*/
-    std::cerr << "The PreCondition 1613977426634 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
-    return true;
+    return CounterClass::called == 3;
     /*PROTECTED REGION END*/
 }
 
@@ -66,8 +65,8 @@ void SchedulingTestPlan11613378406860::init()
 
 void SchedulingTestPlan11613378406860::onTermination()
 {
-    assert(CounterClass::called == 2);
-    CounterClass::called = 0;
+    assert(CounterClass::called == 5);
+    CounterClass::called += 1;
     std::cerr << "onTermination of SchedulingTestPlan1" << std::endl;
 }
 /*PROTECTED REGION END*/

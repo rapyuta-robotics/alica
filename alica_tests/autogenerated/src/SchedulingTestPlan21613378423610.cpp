@@ -44,8 +44,8 @@ void SchedulingTestPlan21613378423610::init()
 void SchedulingTestPlan21613378423610::onTermination()
 {
     std::cerr << "onTermination of SchedulingTestPlan2 - " << CounterClass::called << std::endl;
-    assert(CounterClass::called == 2 || CounterClass::called == 3);
-    CounterClass::called -= 1;
+    assert(CounterClass::called == 4 || CounterClass::called == 3);
+    CounterClass::called += 1;
 }
 /*PROTECTED REGION END*/
 } // namespace alica

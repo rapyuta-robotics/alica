@@ -49,9 +49,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
 bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1613530643879) ENABLED START*/
-    std::cerr << "Precondition Scheduling MasterPlan" << std::endl;
-    //    return CounterClass::called == 0;
-    return true;
+    return CounterClass::called == 5;
     /*PROTECTED REGION END*/
 }
 
