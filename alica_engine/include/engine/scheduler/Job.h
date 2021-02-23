@@ -21,8 +21,7 @@ struct Job
         , isRepeated(false)
         , inExecution(false)
     {
-        AlicaClock clock;
-        scheduledTime = clock.now();
+
     }
 
     std::function<void()> cb;
