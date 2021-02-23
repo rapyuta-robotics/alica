@@ -610,7 +610,7 @@ void RunningPlan::activate()
     }
 
     std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>(cb, prerequisites);
-    if (_basicPlan || _basicBehaviour) {
+    if (_basicPlan) {
         scheduler.add(initJob);
         _initJob = initJob; //store initJob as weak_ptr
     }
