@@ -31,6 +31,10 @@ Scheduler::~Scheduler()
 
 void Scheduler::add(std::shared_ptr<Job> job)
 {
+    if (job->scheduledTime.inNanoseconds() == 0) {
+        job->scheduledTime = _ae->getAlicaClock().now();
+    }
+
     if (job->inExecution) {
         return;
     }
