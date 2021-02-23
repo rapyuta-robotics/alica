@@ -30,6 +30,10 @@ Scheduler::~Scheduler()
 
 void Scheduler::add(std::shared_ptr<Job> job)
 {
+    if (job->inExecution) {
+        return;
+    }
+
     // check if job is already in queue
     auto it = std::find_if(queue.begin(), queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
        return *queuedJob == *(job.get());
