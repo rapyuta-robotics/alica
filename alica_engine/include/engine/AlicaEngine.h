@@ -134,9 +134,9 @@ private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    scheduler::Scheduler _scheduler;
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
+    scheduler::Scheduler _scheduler;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
