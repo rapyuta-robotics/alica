@@ -18,7 +18,7 @@ namespace scheduler
         void add(std::shared_ptr<Job> job);
     private:
         std::vector<std::shared_ptr<Job>> queue;
-//        std::condition_variable condition;
+        std::condition_variable condition;
         std::vector<std::thread*> _workers;
         std::mutex mtx;
         bool running = true;
