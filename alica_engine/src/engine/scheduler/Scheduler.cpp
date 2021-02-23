@@ -1,4 +1,5 @@
 #include "engine/scheduler/Scheduler.h"
+#include "engine/AlicaEngine.h"
 
 namespace alica
 {
@@ -6,7 +7,7 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(int numberOfThreads)
+Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae)
 {
     for (int i = 0; i < numberOfThreads; i++) {
         _workers.push_back(new std::thread(&Scheduler::workerFunction, this));
