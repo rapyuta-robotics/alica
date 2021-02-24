@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <thread>
+#include <atomic>
 
 namespace alica
 {
@@ -24,7 +25,7 @@ namespace scheduler
         std::condition_variable condition;
         std::vector<std::thread*> _workers;
         std::mutex mtx;
-        bool running = true;
+        std::atomic<bool> _running;
 
         void workerFunction();
     };

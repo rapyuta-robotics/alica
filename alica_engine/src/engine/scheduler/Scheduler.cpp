@@ -9,7 +9,7 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae)
+Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae), _running(true)
 {
     for (int i = 0; i < numberOfThreads; i++) {
         _workers.push_back(new std::thread(&Scheduler::workerFunction, this));
@@ -18,7 +18,7 @@ Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae
 
 Scheduler::~Scheduler()
 {
-    running = false;
+    _running = false;
     {
         std::unique_lock<std::mutex> lock(mtx);
         queue.clear();
@@ -73,7 +73,7 @@ void Scheduler::add(std::shared_ptr<Job> job)
 
 void Scheduler::workerFunction()
 {
-    while(running) {
+    while(_running.load()) {
         Job *job;
         std::shared_ptr<Job> jobSharedPtr;
         bool executeJob = true;
@@ -81,9 +81,9 @@ void Scheduler::workerFunction()
         {
             std::unique_lock<std::mutex> lock(mtx);
             // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            condition.wait(lock, [this]{return !queue.empty() || !running;});
+            condition.wait(lock, [this]{return !queue.empty() || !_running.load();});
 
-            if (queue.empty() || !running) {
+            if (queue.empty() || !_running.load()) {
                 continue;
             }
 
