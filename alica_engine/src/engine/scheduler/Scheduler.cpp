@@ -39,15 +39,19 @@ void Scheduler::add(std::shared_ptr<Job> job)
         return;
     }
 
-    // check if job is already in queue
-    auto it = std::find_if(queue.begin(), queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
-       return *queuedJob == *(job.get());
-    });
+    {
+        std::unique_lock<std::mutex> lock(mtx);
 
-    if (it != queue.end()) {
-        // do not add job to queue if already queued
-        std::cerr << "Scheduler: job already in queue" << std::endl;
-        return;
+        // check if job is already in queue
+        auto it = std::find_if(queue.begin(), queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
+            return *queuedJob == *(job.get());
+        });
+
+        if (it != queue.end()) {
+            // do not add job to queue if already queued
+            std::cerr << "Scheduler: job already in queue" << std::endl;
+            return;
+        }
     }
 
     for (auto job : job.get()->prerequisites) {
@@ -55,6 +59,7 @@ void Scheduler::add(std::shared_ptr<Job> job)
             add(jobSharedPtr);
         }
     }
+
     {
         std::unique_lock<std::mutex> lock(mtx);
         queue.push_back(job);
