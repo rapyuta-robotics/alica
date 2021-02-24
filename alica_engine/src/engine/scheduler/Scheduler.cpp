@@ -101,6 +101,9 @@ void Scheduler::workerFunction()
         if (executeJob) {
             try {
                 job->cb();
+                if (job->isRepeated) {
+                    add(jobSharedPtr);
+                }
             } catch (std::bad_function_call& e) {
                 std::cerr << "ERROR: Bad function call\n";
             }
