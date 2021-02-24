@@ -493,15 +493,16 @@ void RunningPlan::deactivate()
         prerequisites.push_back(rp->getTerminateJob());
     }
 
+    std::vector<RunningPlan*> deactivatedSiblings = getDeactivatedSiblings();
+    for (auto& sibling : deactivatedSiblings) {
+        prerequisites.push_back(sibling->getTerminateJob());
+    }
+
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb, prerequisites);
     if (_basicPlan) {
         scheduler.add(terminateJob);
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
     }
-
-//    auto deactivatedSiblings = getDeactivatedSiblings();
-//    std::cerr << "RUNNING PLAN DEACTIVATE: #siblings " << deactivatedSiblings.size() << std::endl;
-//    _parent->printRecursive();
 }
 
 /**
