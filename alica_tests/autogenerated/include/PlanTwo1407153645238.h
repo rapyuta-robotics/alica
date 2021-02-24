@@ -20,7 +20,7 @@ public:
     PlanTwo1407153645238();
     virtual ~PlanTwo1407153645238();
     /*PROTECTED REGION ID(pub1407153645238) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1407153645238) ENABLED START*/

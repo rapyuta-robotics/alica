@@ -20,7 +20,7 @@ public:
     MultiAgentTestMaster1413200842973();
     virtual ~MultiAgentTestMaster1413200842973();
     /*PROTECTED REGION ID(pub1413200842973) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1413200842973) ENABLED START*/

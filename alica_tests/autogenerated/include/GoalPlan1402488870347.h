@@ -20,7 +20,7 @@ public:
     GoalPlan1402488870347();
     virtual ~GoalPlan1402488870347();
     /*PROTECTED REGION ID(pub1402488870347) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1402488870347) ENABLED START*/

@@ -20,7 +20,7 @@ public:
     SimpleTestPlan1412252439925();
     virtual ~SimpleTestPlan1412252439925();
     /*PROTECTED REGION ID(pub1412252439925) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1412252439925) ENABLED START*/

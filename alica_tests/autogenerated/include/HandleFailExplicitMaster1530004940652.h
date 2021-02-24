@@ -20,7 +20,7 @@ public:
     HandleFailExplicitMaster1530004940652();
     virtual ~HandleFailExplicitMaster1530004940652();
     /*PROTECTED REGION ID(pub1530004940652) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1530004940652) ENABLED START*/

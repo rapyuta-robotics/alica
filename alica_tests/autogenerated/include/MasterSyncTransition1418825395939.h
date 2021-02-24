@@ -20,7 +20,7 @@ public:
     MasterSyncTransition1418825395939();
     virtual ~MasterSyncTransition1418825395939();
     /*PROTECTED REGION ID(pub1418825395939) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418825395939) ENABLED START*/

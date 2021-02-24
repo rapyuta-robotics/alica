@@ -20,7 +20,7 @@ public:
     OtherPlan1418042819203();
     virtual ~OtherPlan1418042819203();
     /*PROTECTED REGION ID(pub1418042819203) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418042819203) ENABLED START*/

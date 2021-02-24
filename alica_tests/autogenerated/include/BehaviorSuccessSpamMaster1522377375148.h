@@ -20,7 +20,7 @@ public:
     BehaviorSuccessSpamMaster1522377375148();
     virtual ~BehaviorSuccessSpamMaster1522377375148();
     /*PROTECTED REGION ID(pub1522377375148) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1522377375148) ENABLED START*/

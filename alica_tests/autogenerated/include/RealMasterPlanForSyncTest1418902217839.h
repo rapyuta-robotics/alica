@@ -20,7 +20,7 @@ public:
     RealMasterPlanForSyncTest1418902217839();
     virtual ~RealMasterPlanForSyncTest1418902217839();
     /*PROTECTED REGION ID(pub1418902217839) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418902217839) ENABLED START*/

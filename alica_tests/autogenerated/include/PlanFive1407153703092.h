@@ -20,7 +20,7 @@ public:
     PlanFive1407153703092();
     virtual ~PlanFive1407153703092();
     /*PROTECTED REGION ID(pub1407153703092) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1407153703092) ENABLED START*/

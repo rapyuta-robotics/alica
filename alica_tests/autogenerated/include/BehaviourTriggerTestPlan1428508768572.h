@@ -20,7 +20,7 @@ public:
     BehaviourTriggerTestPlan1428508768572();
     virtual ~BehaviourTriggerTestPlan1428508768572();
     /*PROTECTED REGION ID(pub1428508768572) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1428508768572) ENABLED START*/

@@ -20,7 +20,7 @@ public:
     SchedulingTestMasterPlan1613378382024();
     virtual ~SchedulingTestMasterPlan1613378382024();
     /*PROTECTED REGION ID(pub1613378382024) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1613378382024) ENABLED START*/

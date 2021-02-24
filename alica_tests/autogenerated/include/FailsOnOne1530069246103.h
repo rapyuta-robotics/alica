@@ -20,7 +20,7 @@ public:
     FailsOnOne1530069246103();
     virtual ~FailsOnOne1530069246103();
     /*PROTECTED REGION ID(pub1530069246103) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1530069246103) ENABLED START*/

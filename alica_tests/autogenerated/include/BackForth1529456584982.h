@@ -20,7 +20,7 @@ public:
     BackForth1529456584982();
     virtual ~BackForth1529456584982();
     /*PROTECTED REGION ID(pub1529456584982) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1529456584982) ENABLED START*/

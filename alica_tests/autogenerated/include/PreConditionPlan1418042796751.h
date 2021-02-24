@@ -20,7 +20,7 @@ public:
     PreConditionPlan1418042796751();
     virtual ~PreConditionPlan1418042796751();
     /*PROTECTED REGION ID(pub1418042796751) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418042796751) ENABLED START*/

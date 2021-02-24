@@ -20,7 +20,7 @@ public:
     PlanOne1407153611768();
     virtual ~PlanOne1407153611768();
     /*PROTECTED REGION ID(pub1407153611768) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1407153611768) ENABLED START*/

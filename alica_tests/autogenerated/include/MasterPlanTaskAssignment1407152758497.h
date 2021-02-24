@@ -20,7 +20,7 @@ public:
     MasterPlanTaskAssignment1407152758497();
     virtual ~MasterPlanTaskAssignment1407152758497();
     /*PROTECTED REGION ID(pub1407152758497) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1407152758497) ENABLED START*/

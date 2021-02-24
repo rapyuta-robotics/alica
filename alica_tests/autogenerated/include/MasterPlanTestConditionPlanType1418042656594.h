@@ -20,7 +20,7 @@ public:
     MasterPlanTestConditionPlanType1418042656594();
     virtual ~MasterPlanTestConditionPlanType1418042656594();
     /*PROTECTED REGION ID(pub1418042656594) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418042656594) ENABLED START*/

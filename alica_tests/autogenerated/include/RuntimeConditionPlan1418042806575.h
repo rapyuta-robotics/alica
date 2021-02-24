@@ -20,7 +20,7 @@ public:
     RuntimeConditionPlan1418042806575();
     virtual ~RuntimeConditionPlan1418042806575();
     /*PROTECTED REGION ID(pub1418042806575) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1418042806575) ENABLED START*/

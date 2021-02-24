@@ -20,7 +20,7 @@ public:
     ConstraintTestMaster1414068495566();
     virtual ~ConstraintTestMaster1414068495566();
     /*PROTECTED REGION ID(pub1414068495566) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1414068495566) ENABLED START*/

@@ -20,7 +20,7 @@ public:
     Tackle1402489318663();
     virtual ~Tackle1402489318663();
     /*PROTECTED REGION ID(pub1402489318663) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1402489318663) ENABLED START*/

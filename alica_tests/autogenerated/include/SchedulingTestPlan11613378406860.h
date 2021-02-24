@@ -20,7 +20,7 @@ public:
     SchedulingTestPlan11613378406860();
     virtual ~SchedulingTestPlan11613378406860();
     /*PROTECTED REGION ID(pub1613378406860) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     virtual void init();
     virtual void onTermination();
     /*PROTECTED REGION END*/
