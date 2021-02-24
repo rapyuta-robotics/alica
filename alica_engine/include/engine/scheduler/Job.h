@@ -40,7 +40,8 @@ struct Job
     bool isPrerequisite(const Job& other) const
     {
         for (std::weak_ptr<Job> jobWeakPtr : prerequisites) {
-            if (jobWeakPtr.lock() && *(jobWeakPtr.lock().get()) == other) {
+            std::shared_ptr<Job> job = jobWeakPtr.lock();
+            if (job && *(job.get()) == other) {
                 return true;
             }
         }
