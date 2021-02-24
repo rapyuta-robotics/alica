@@ -20,12 +20,12 @@ Scheduler::~Scheduler()
 {
     _running = false;
     {
-        std::unique_lock<std::mutex> lock(mtx);
-        queue.clear();
+        std::unique_lock<std::mutex> lock(_mtx);
+        _queue.clear();
     }
 
     for (auto worker : _workers) {
-        condition.notify_all();
+        _condition.notify_all();
         worker->join();
         delete worker;
     }
@@ -42,14 +42,14 @@ void Scheduler::add(std::shared_ptr<Job> job)
     }
 
     {
-        std::unique_lock<std::mutex> lock(mtx);
+        std::unique_lock<std::mutex> lock(_mtx);
 
         // check if job is already in queue
-        auto it = std::find_if(queue.begin(), queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
+        auto it = std::find_if(_queue.begin(), _queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
             return *queuedJob == *(job.get());
         });
 
-        if (it != queue.end()) {
+        if (it != _queue.end()) {
             // do not add job to queue if already queued
             std::cerr << "Scheduler: job already in queue" << std::endl;
             return;
@@ -63,12 +63,12 @@ void Scheduler::add(std::shared_ptr<Job> job)
     }
 
     {
-        std::unique_lock<std::mutex> lock(mtx);
-        queue.push_back(job);
-        std::sort(queue.begin(), queue.end());
+        std::unique_lock<std::mutex> lock(_mtx);
+        _queue.push_back(job);
+        std::sort(_queue.begin(), _queue.end());
     }
 
-    condition.notify_one();
+    _condition.notify_one();
 }
 
 void Scheduler::workerFunction()
@@ -79,18 +79,18 @@ void Scheduler::workerFunction()
         bool executeJob = true;
 
         {
-            std::unique_lock<std::mutex> lock(mtx);
+            std::unique_lock<std::mutex> lock(_mtx);
             // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            condition.wait(lock, [this]{return !queue.empty() || !_running.load();});
+            _condition.wait(lock, [this]{return !_queue.empty() || !_running.load();});
 
-            if (queue.empty() || !_running.load()) {
+            if (_queue.empty() || !_running.load()) {
                 continue;
             }
 
-            jobSharedPtr = queue.front();
+            jobSharedPtr = _queue.front();
             jobSharedPtr->inExecution = true;
             job = jobSharedPtr.get();
-            queue.erase(queue.begin());
+            _queue.erase(_queue.begin());
 
             for (std::weak_ptr<Job> j : job->prerequisites) {
                 if (j.lock()) {
