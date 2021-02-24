@@ -493,7 +493,7 @@ void RunningPlan::deactivate()
         prerequisites.push_back(rp->getTerminateJob());
     }
 
-    std::shared_ptr<scheduler::Job> terminateJob = make_shared<scheduler::Job>(cb, prerequisites);
+    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb, prerequisites);
     if (_basicPlan) {
         scheduler.add(terminateJob);
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
@@ -609,7 +609,7 @@ void RunningPlan::activate()
         prerequisites.emplace_back(_parent->getInitJob());
     }
 
-    std::shared_ptr<scheduler::Job> initJob = make_shared<scheduler::Job>(cb, prerequisites);
+    std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cb, prerequisites);
     if (_basicPlan) {
         scheduler.add(initJob);
         _initJob = initJob; //store initJob as weak_ptr
