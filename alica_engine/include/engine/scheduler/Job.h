@@ -36,11 +36,22 @@ struct Job
     {
         return scheduledTime == r.scheduledTime;
     }
-//
-//    bool operator<(const Job& r)
-//    {
-//        return std::find(prerequisites.begin(), prerequisites.end(), r) != prerequisites.end();
-//    }
+
+    bool isPrerequisite(const Job& other) const
+    {
+        for (std::weak_ptr<Job> jobWeakPtr : prerequisites) {
+            if (jobWeakPtr.lock() && *(jobWeakPtr.lock().get()) == other) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool operator<(const Job& other)
+    {
+        return isPrerequisite(other)
+                || (!isPrerequisite(other) && !other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
+    }
 
 };
 } //namespace scheduler

@@ -1,6 +1,8 @@
 #include "engine/scheduler/Scheduler.h"
 #include "engine/AlicaEngine.h"
 
+#include <algorithm>
+
 namespace alica
 {
 
@@ -63,6 +65,7 @@ void Scheduler::add(std::shared_ptr<Job> job)
     {
         std::unique_lock<std::mutex> lock(mtx);
         queue.push_back(job);
+        std::sort(queue.begin(), queue.end());
     }
 
     condition.notify_one();
