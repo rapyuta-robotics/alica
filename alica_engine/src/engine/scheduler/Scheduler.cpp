@@ -52,8 +52,7 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
 void Scheduler::workerFunction()
 {
     while(_running.load()) {
-        Job *job;
-        std::shared_ptr<Job> jobSharedPtr;
+        std::shared_ptr<Job> job;
         bool executeJob = true;
 
         {
@@ -65,9 +64,8 @@ void Scheduler::workerFunction()
                 continue;
             }
 
-            jobSharedPtr = _jobQueue.popNext();
-            jobSharedPtr->inExecution = true;
-            job = jobSharedPtr.get();
+            job = _jobQueue.popNext();
+            job->inExecution = true;
 
             for (std::weak_ptr<Job> j : job->prerequisites) {
                 if (j.lock()) {
@@ -82,7 +80,7 @@ void Scheduler::workerFunction()
             try {
                 job->cb();
                 if (job->isRepeated) {
-                    schedule(jobSharedPtr);
+                    schedule(job);
                 }
             } catch (std::bad_function_call& e) {
                 std::cerr << "ERROR: Bad function call\n";
@@ -90,8 +88,8 @@ void Scheduler::workerFunction()
         } else if (job->cancelled) {
             std::cerr << "job cancelled" << std::endl;
         } else {
-            jobSharedPtr->inExecution = false;
-            schedule(jobSharedPtr);
+            job->inExecution = false;
+            schedule(job);
         }
 
     }
