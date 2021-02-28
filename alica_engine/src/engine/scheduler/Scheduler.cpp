@@ -25,7 +25,7 @@ Scheduler::~Scheduler()
     }
 
     for (auto worker : _workers) {
-        _condition.notify_all();
+        _workerCV.notify_all();
         worker->join();
         delete worker;
     }
@@ -68,7 +68,7 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
         std::sort(_queue.begin(), _queue.end());
     }
 
-    _condition.notify_one();
+    _workerCV.notify_one();
 }
 
 void Scheduler::workerFunction()
@@ -81,7 +81,7 @@ void Scheduler::workerFunction()
         {
             std::unique_lock<std::mutex> lock(_mtx);
             // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            _condition.wait(lock, [this]{return !_queue.empty() || !_running.load();});
+            _workerCV.wait(lock, [this]{return !_queue.empty() || !_running.load();});
 
             if (_queue.empty() || !_running.load()) {
                 continue;

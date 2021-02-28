@@ -22,7 +22,7 @@ namespace scheduler
     private:
         const alica::AlicaEngine* _ae;
         std::vector<std::shared_ptr<Job>> _queue;
-        std::condition_variable _condition;
+        std::condition_variable _workerCV;
         std::vector<std::thread*> _workers;
         std::mutex _mtx;
         std::atomic<bool> _running;
