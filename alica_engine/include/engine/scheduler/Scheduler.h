@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/scheduler/Job.h"
+#include "engine/scheduler/JobQueue.h"
 #include <vector>
 #include <condition_variable>
 #include <mutex>
@@ -21,10 +22,10 @@ namespace scheduler
         void schedule(std::shared_ptr<Job> job);
     private:
         const alica::AlicaEngine* _ae;
-        std::vector<std::shared_ptr<Job>> _queue;
+        JobQueue _jobQueue;
+        std::mutex _workerMtx;
         std::condition_variable _workerCV;
         std::vector<std::thread*> _workers;
-        std::mutex _mtx;
         std::atomic<bool> _running;
 
         void workerFunction();

@@ -19,10 +19,7 @@ Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae
 Scheduler::~Scheduler()
 {
     _running = false;
-    {
-        std::unique_lock<std::mutex> lock(_mtx);
-        _queue.clear();
-    }
+    _jobQueue.clear();
 
     for (auto worker : _workers) {
         _workerCV.notify_all();
@@ -37,37 +34,18 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
         job->scheduledTime = _ae->getAlicaClock().now();
     }
 
-    if (job->inExecution) {
+    if (job->inExecution || _jobQueue.isScheduled(job)) {
         return;
     }
 
-    {
-        std::unique_lock<std::mutex> lock(_mtx);
-
-        // check if job is already in queue
-        auto it = std::find_if(_queue.begin(), _queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
-            return *queuedJob == *job;
-        });
-
-        if (it != _queue.end()) {
-            // do not add job to queue if already queued
-            std::cerr << "Scheduler: job already in queue" << std::endl;
-            return;
-        }
-    }
-
+    // schedule missing prerequisites
     for (auto prerequisite : job->prerequisites) {
         if (auto prerequisiteSharedPtr = prerequisite.lock())  {
             schedule(prerequisiteSharedPtr);
         }
     }
 
-    {
-        std::unique_lock<std::mutex> lock(_mtx);
-        _queue.push_back(job);
-        std::sort(_queue.begin(), _queue.end());
-    }
-
+    _jobQueue.insert(job);
     _workerCV.notify_one();
 }
 
@@ -79,18 +57,17 @@ void Scheduler::workerFunction()
         bool executeJob = true;
 
         {
-            std::unique_lock<std::mutex> lock(_mtx);
+            std::unique_lock<std::mutex>lock(_workerMtx);
             // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            _workerCV.wait(lock, [this]{return !_queue.empty() || !_running.load();});
+            _workerCV.wait(lock, [this]{return !_jobQueue.isEmpty() || !_running.load();});
 
-            if (_queue.empty() || !_running.load()) {
+            if (_jobQueue.isEmpty() || !_running.load()) {
                 continue;
             }
 
-            jobSharedPtr = _queue.front();
+            jobSharedPtr = _jobQueue.popNext();
             jobSharedPtr->inExecution = true;
             job = jobSharedPtr.get();
-            _queue.erase(_queue.begin());
 
             for (std::weak_ptr<Job> j : job->prerequisites) {
                 if (j.lock()) {
