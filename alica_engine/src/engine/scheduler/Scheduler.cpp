@@ -46,7 +46,7 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
 
         // check if job is already in queue
         auto it = std::find_if(_queue.begin(), _queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
-            return *queuedJob == *(job.get());
+            return *queuedJob == *job;
         });
 
         if (it != _queue.end()) {
@@ -56,9 +56,9 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
         }
     }
 
-    for (auto job : job.get()->prerequisites) {
-        if (auto jobSharedPtr = job.lock())  {
-            schedule(jobSharedPtr);
+    for (auto prerequisite : job->prerequisites) {
+        if (auto prerequisiteSharedPtr = prerequisite.lock())  {
+            schedule(prerequisiteSharedPtr);
         }
     }
 
