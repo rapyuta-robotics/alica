@@ -18,7 +18,7 @@ namespace scheduler
     public:
         Scheduler(int numberOfThreads, const alica::AlicaEngine* ae);
         ~Scheduler();
-        void add(std::shared_ptr<Job> job);
+        void schedule(std::shared_ptr<Job> job);
     private:
         const alica::AlicaEngine* _ae;
         std::vector<std::shared_ptr<Job>> _queue;

@@ -31,7 +31,7 @@ Scheduler::~Scheduler()
     }
 }
 
-void Scheduler::add(std::shared_ptr<Job> job)
+void Scheduler::schedule(std::shared_ptr<Job> job)
 {
     if (job->scheduledTime.inNanoseconds() == 0) {
         job->scheduledTime = _ae->getAlicaClock().now();
@@ -58,7 +58,7 @@ void Scheduler::add(std::shared_ptr<Job> job)
 
     for (auto job : job.get()->prerequisites) {
         if (auto jobSharedPtr = job.lock())  {
-            add(jobSharedPtr);
+            schedule(jobSharedPtr);
         }
     }
 
@@ -105,7 +105,7 @@ void Scheduler::workerFunction()
             try {
                 job->cb();
                 if (job->isRepeated) {
-                    add(jobSharedPtr);
+                    schedule(jobSharedPtr);
                 }
             } catch (std::bad_function_call& e) {
                 std::cerr << "ERROR: Bad function call\n";
@@ -114,7 +114,7 @@ void Scheduler::workerFunction()
             std::cerr << "job cancelled" << std::endl;
         } else {
             jobSharedPtr->inExecution = false;
-            add(jobSharedPtr);
+            schedule(jobSharedPtr);
         }
 
     }
