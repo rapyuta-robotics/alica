@@ -65,6 +65,16 @@ void Scheduler::workerFunction()
             }
 
             job = _jobQueue.popNext();
+
+            if (job->cancelled) {
+                /*
+                 * If job is cancelled:
+                 *  - Dont execute job.
+                 *  - Dont schedule job.
+                 */
+                continue;
+            }
+
             job->inExecution = true;
 
             for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
@@ -80,13 +90,12 @@ void Scheduler::workerFunction()
             try {
                 job->cb();
                 if (job->isRepeated) {
+                    job->inExecution = false;
                     schedule(job);
                 }
             } catch (std::bad_function_call& e) {
                 std::cerr << "ERROR: Bad function call\n";
             }
-        } else if (job->cancelled) {
-            std::cerr << "job cancelled" << std::endl;
         } else {
             job->inExecution = false;
             schedule(job);
