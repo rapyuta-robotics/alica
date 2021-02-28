@@ -276,7 +276,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cerr << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
+        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
     }
 }
 
