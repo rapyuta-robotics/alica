@@ -67,8 +67,8 @@ void Scheduler::workerFunction()
             job = _jobQueue.popNext();
             job->inExecution = true;
 
-            for (std::weak_ptr<Job> j : job->prerequisites) {
-                if (j.lock()) {
+            for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
+                if (prerequisite.lock()) {
                     // Prerequisite jobs not finished, do not execute job
                     executeJob = false;
                     break;
