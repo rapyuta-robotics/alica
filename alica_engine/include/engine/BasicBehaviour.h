@@ -81,8 +81,6 @@ public:
      */
     virtual void onTermination() {}
 
-    AlicaTime getInterval() { return _msInterval;}
-
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
