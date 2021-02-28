@@ -15,6 +15,7 @@
 
 #include <alica_common_config/debug_output.h>
 #include <functional>
+#include <algorithm>
 
 namespace alica
 {
@@ -35,7 +36,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                          const essentials::Identifier& agentID)
         : _ctx(ctx)
-        , _scheduler(std::thread::hardware_concurrency(), this)
+        , _scheduler(std::max(1u, std::thread::hardware_concurrency()), this)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
