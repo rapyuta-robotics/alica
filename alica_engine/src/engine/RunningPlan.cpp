@@ -260,7 +260,7 @@ void RunningPlan::removeChild(RunningPlan* rp)
  */
 void RunningPlan::moveState(const State* nextState)
 {
-    deactivateChildren();
+    _deactivatedChildrenTerminateJobs = deactivateChildren();
     clearChildren();
     _assignment.moveAllFromTo(_activeTriple.entryPoint, _activeTriple.state, nextState);
     useState(nextState);
@@ -368,11 +368,13 @@ int RunningPlan::getFailureCount() const
     return _status.failCount;
 }
 
-void RunningPlan::deactivateChildren()
+std::vector<std::weak_ptr<scheduler::Job>> RunningPlan::deactivateChildren()
 {
+    std::vector<std::weak_ptr<scheduler::Job>> terminateJobs;
     for (RunningPlan* r : _children) {
-        r->deactivate();
+        terminateJobs.push_back(r->deactivate());
     }
+    return terminateJobs;
 }
 
 /**
@@ -465,7 +467,7 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
  *  Deactivate this plan, to be called before the plan is removed from the graph.
  * Ensures that all sub-behaviours are stopped and all constraints are revoked.
  */
-void RunningPlan::deactivate()
+std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
     if (isBehaviour()) {
@@ -475,7 +477,8 @@ void RunningPlan::deactivate()
     }
 
     revokeAllConstraints();
-    deactivateChildren();
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites = deactivateChildren();
+    prerequisites.push_back(_initJob);
 
     auto& scheduler = _ae->getScheduler();
 
@@ -488,21 +491,12 @@ void RunningPlan::deactivate()
         }
     }
 
-    std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
-    for (RunningPlan* rp : _children) {
-        prerequisites.push_back(rp->getTerminateJob());
-    }
-
-    std::vector<RunningPlan*> deactivatedSiblings = getDeactivatedSiblings();
-    for (auto& sibling : deactivatedSiblings) {
-        prerequisites.push_back(sibling->getTerminateJob());
-    }
-
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb, prerequisites);
     if (_basicPlan) {
         scheduler.schedule(terminateJob);
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
     }
+    return _terminateJob;
 }
 
 /**
@@ -605,7 +599,7 @@ void RunningPlan::activate()
         }
     }
 
-    std::vector<std::weak_ptr<scheduler::Job>> prerequisites;
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites = getDeactivatedSiblingsTerminateJobs();
     if (_parent) {
         prerequisites.emplace_back(_parent->getInitJob());
     }
@@ -873,19 +867,11 @@ const Configuration* RunningPlan::getConfiguration() const {
     return _configuration;
 }
 
-std::vector<RunningPlan*> RunningPlan::getDeactivatedSiblings() const {
-    std::vector<RunningPlan*> deactivatedSiblings;
+std::vector<std::weak_ptr<scheduler::Job>> RunningPlan::getDeactivatedSiblingsTerminateJobs() const {
     if (!_parent) {
-        return deactivatedSiblings;
+        return std::vector<std::weak_ptr<scheduler::Job>>();
     }
-
-    for(RunningPlan* sibling : _parent->_children) {
-        if (sibling->_status.active == PlanActivity::Retired) {
-            deactivatedSiblings.push_back(sibling);
-        }
-    }
-
-    return deactivatedSiblings;
+    return _parent->_deactivatedChildrenTerminateJobs;
 }
 
 std::weak_ptr<scheduler::Job> RunningPlan::getInitJob() const
