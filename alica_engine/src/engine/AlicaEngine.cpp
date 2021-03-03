@@ -12,9 +12,9 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <essentials/IDManager.h>
-#include <essentials/SystemConfig.h>
 
 #include <alica_common_config/debug_output.h>
+#include <functional>
 
 namespace alica
 {
@@ -31,12 +31,14 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
+                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+                         const essentials::Identifier& agentID)
         : _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
-        , _modelManager(_planRepository)
+        , _modelManager(_planRepository, this, configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID.toByteVector().data(), agentID.toByteVector().size()) : nullptr))
@@ -48,13 +50,9 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, cons
         , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
 {
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    PartialAssignment::allowIdling(sc["Alica"]->get<bool>("Alica.AllowIdling", NULL));
-    _maySendMessages = !sc["Alica"]->get<bool>("Alica.SilentStart", NULL);
-    _useStaticRoles = sc["Alica"]->get<bool>("Alica.UseStaticRoles", NULL);
-    if (!_useStaticRoles) {
-        AlicaEngine::abort("Unknown RoleAssignment Type!");
-    }
+    auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
+    subscribe(reloadFunctionPtr);
+    reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
         AlicaEngine::abort("Error in parsed plans.");
@@ -67,6 +65,16 @@ AlicaEngine::~AlicaEngine()
 {
     _roleSet = nullptr;
     _masterPlan = nullptr;
+}
+
+void AlicaEngine::reload(const YAML::Node& config)
+{
+    PartialAssignment::allowIdling(config["Alica"]["AllowIdling"].as<bool>());
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+    _useStaticRoles = config["Alica"]["UseStaticRoles"].as<bool>();
+    if (!_useStaticRoles) {
+        AlicaEngine::abort("Unknown RoleAssignment Type!");
+    }
 }
 
 /**
@@ -83,7 +91,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
-    RunningPlan::init();
+    RunningPlan::init(_ctx.getConfig());
     _teamManager.init();
     _syncModul.init();
     _variableSyncModule->init();
@@ -160,6 +168,16 @@ void AlicaEngine::setStepEngine(bool stepEngine)
     _stepEngine = stepEngine;
 }
 
+const YAML::Node& AlicaEngine::getConfig() const
+{
+    return _ctx.getConfig();
+}
+
+void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
+{
+    _configChangeListenerCBs.push_back(reloadFunction);
+};
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
@@ -194,4 +212,10 @@ essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
     return _ctx.getIDManager().generateID(size);
 }
 
+void AlicaEngine::reloadConfig(const YAML::Node& config)
+{
+    for (auto reloadFunction : _configChangeListenerCBs) {
+        reloadFunction(config);
+    }
+}
 } // namespace alica

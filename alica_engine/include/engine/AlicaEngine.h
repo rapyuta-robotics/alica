@@ -14,7 +14,6 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/SystemConfig.h>
 #include <essentials/IdentifierConstPtr.h>
 #include <essentials/IDManager.h>
 
@@ -39,7 +38,9 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID = essentials::Identifier());
+    AlicaEngine(AlicaContext& ctx, const std::string& configPath,
+                const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+                const essentials::Identifier& agentID = essentials::Identifier());
     ~AlicaEngine();
 
     // State modifiers:
@@ -111,10 +112,21 @@ public:
     essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
     essentials::IdentifierConstPtr generateID(std::size_t size);
 
+    void reload(const YAML::Node& config);
+    const YAML::Node& getConfig() const;
+    void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
+
+    /**
+     * Call reload() of all subscribed components. Each component does reload using the
+     * updated config.
+     */
+    void reloadConfig(const YAML::Node& config);
+
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
+    std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
@@ -176,4 +188,5 @@ bool AlicaEngine::existSolver() const
 {
     return _ctx.existSolver<SolverType>();
 }
+
 } // namespace alica

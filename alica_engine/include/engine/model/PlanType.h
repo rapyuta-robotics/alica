@@ -13,11 +13,12 @@ class Plan;
 class VariableBinding;
 class ModelFactory;
 class PlanTypeFactory;
+class AlicaEngine;
 
 class PlanType : public AbstractPlan
 {
 public:
-    PlanType();
+    PlanType(AlicaEngine* ae);
     virtual ~PlanType();
 
     std::string toString(std::string indent = "") const override;

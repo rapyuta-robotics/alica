@@ -23,9 +23,9 @@
 
 namespace alica
 {
-Plan* PlanFactory::create(const YAML::Node& node)
+Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
 {
-    Plan* plan = new Plan(Factory::getValue<int64_t>(node, alica::Strings::id));
+    Plan* plan = new Plan(ae, Factory::getValue<int64_t>(node, alica::Strings::id));
     Factory::setAttributes(node, plan);
     Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);
