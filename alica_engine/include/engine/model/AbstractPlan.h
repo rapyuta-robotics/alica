@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -16,6 +17,7 @@ class ModelFactory;
 class ExpressionHandler;
 class ModelManager;
 class AbstractPlanFactory;
+class AlicaEngine;
 
 /**
  * Super class of plans, plantypes and behaviours.
@@ -23,8 +25,8 @@ class AbstractPlanFactory;
 class AbstractPlan : public AlicaElement
 {
 public:
-    AbstractPlan();
-    AbstractPlan(int64_t id);
+    AbstractPlan(AlicaEngine *ae);
+    AbstractPlan(AlicaEngine *ae, int64_t id);
 
     virtual ~AbstractPlan();
 
@@ -38,6 +40,8 @@ public:
 
     std::string toString(std::string indent = "") const override;
     const std::string& getFileName() const { return _fileName; }
+
+    void reload(const YAML::Node& config);
 
 private:
     friend ModelFactory;

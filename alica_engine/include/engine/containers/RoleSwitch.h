@@ -7,6 +7,7 @@ struct RoleSwitch
 {
     RoleSwitch()
             : senderID(nullptr)
+            , roleID(0)
     {
     }
 

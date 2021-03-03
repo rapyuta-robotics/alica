@@ -7,18 +7,17 @@ find_package(catkin QUIET)
 if (catkin_FOUND)
     find_package(catkin REQUIRED COMPONENTS
       alica_engine
-      system_config
       alica_common_config
     )
 else (catkin_FOUND)
-   	set(catkin_LIBRARIES "system_config" "alica_engine" alica_common_config)
+   	set(catkin_LIBRARIES "alica_engine" alica_common_config)
 endif(catkin_FOUND)
 
 if(catkin_FOUND)
  catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_dummy_proxy
-  CATKIN_DEPENDS alica_engine system_config
+  CATKIN_DEPENDS alica_engine
   #DEPENDS
  )
 endif(catkin_FOUND)

@@ -9,8 +9,6 @@
 
 #include <engine/PlanBase.h>
 
-#include <essentials/SystemConfig.h>
-
 #include <gtest/gtest.h>
 #include <string.h>
 

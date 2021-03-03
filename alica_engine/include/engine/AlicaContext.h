@@ -10,14 +10,17 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/util/ConfigPathParser.h"
 
 #include <essentials/IDManager.h>
+#include <alica_common_config/debug_output.h>
 
 #include <cassert>
 #include <memory>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <yaml-cpp/yaml.h>
 
 namespace essentials
 {
@@ -30,24 +33,10 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
+
 namespace test {
     class TestContext;
 }
-
-/**
- * Alica options that can be set at runtime.
- * They are either not part of conf files or app might want to override them at runtime.
- */
-enum class AlicaOption : int
-{
-    ALICA_THREADPOOL_SIZE,
-    ALICA_ENGINE_FREQUENCY,
-    ALICA_MIN_BROADCAST_FREQUENCY,
-    ALICA_MAX_BROADCAST_FREQUENCY,
-    ALICA_TEAM_TIMEOUT,
-    ALICA_ASSIGNMENT_PROTECTION_TIME
-    // More to come
-};
 
 /**
  * Alica creators that framework uses to instantiate various behaviours, utilities, conditions or constraints.
@@ -70,6 +59,67 @@ struct AlicaCreators
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
 };
 
+/**
+ * Struct containing all necessary params for creating an AlicaContext object.
+ */
+struct AlicaContextParams
+{
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPath Path to the configuration folder.
+     * @param roleSetName Name of the roleSet.
+     * @param masterPlanName Name of the masterPlan
+     * @param stepEngine Signify engine is trigger based. Defaults to false.
+     * @param agentID Identifier of the local Agent. If no identifier is given,
+     * the engine will try to read the local agent's identifier from the 
+     * Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a random identifier.
+     *
+     * @note The configPath is the path containing the plans, roles and tasks folder.
+     */
+    AlicaContextParams(const std::string& agentName,
+                       const std::string& configPath,
+                       const std::string& roleSetName,
+                       const std::string& masterPlanName,
+                       bool stepEngine = false,
+                       const essentials::Identifier& agentID = essentials::Identifier())
+                       : agentName(agentName)
+                       , configPath(configPath)
+                       , roleSetName(roleSetName)
+                       , masterPlanName(masterPlanName)
+                       , stepEngine(stepEngine)
+                       , agentID(agentID)
+    {}
+
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPath Path to the configuration folder.
+     * @param agentID Identifier of the local Agent. If no identifier is given, 
+     * the engine will try to read the local agent's identifier from the 
+     * Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a random identifier.
+     *
+     * @note The configPath is the path containing the plans, roles and tasks folder.
+     */
+    AlicaContextParams(const std::string& agentName,
+                       const std::string& configPath,
+                       const essentials::Identifier& agentID = essentials::Identifier())
+                       : agentName(agentName)
+                       , configPath(configPath)
+                       , roleSetName("RoleSet")
+                       , masterPlanName("MasterPlan")
+                       , stepEngine(false)
+                       , agentID(agentID)
+    {}
+
+    std::string agentName;
+    std::string configPath;
+    std::string masterPlanName;
+    std::string roleSetName;
+    bool stepEngine;
+    essentials::Identifier agentID;
+};
+
 /*
  * @class AlicaContext
  *
@@ -84,37 +134,7 @@ public:
      *
      * @return The agent name under which the engine operates, a string
      */
-    static std::string getLocalAgentName();
-
-    /**
-     * Method is deprecated and will be removed soon. Use
-     * getLocalAgentName() instead.
-     * @return
-     */
-    [[deprecated("use getLocalAgentName(...) instead")]]
-    static std::string getRobotName();
-
-    /**
-     * Set host (or agent) name for this process.
-     *
-     * @param name Host name
-     */
-    static void setLocalAgentName(const std::string& name);
-
-    // TODO: better descriptive name for paths
-    /**
-     * Set root path for this process.
-     *
-     * @param path Root path
-     */
-    static void setRootPath(const std::string& path);
-
-    /**
-     * Set config path for this process.
-     *
-     * @param path Config path
-     */
-    static void setConfigPath(const std::string& path);
+    std::string getLocalAgentName() const;
 
     /**
      * Get version of Alica engine.
@@ -135,13 +155,12 @@ public:
     /**
      * Creates AlicaContext object.
      *
-     * @param roleSetName Name for roleset
-     * @param masterPlanName Name for the main plan
-     * @param stepEngine Signify engine is trigger based.
+     * @param alicaContextParams Struct containing all necessary params to create the Context.
      *
      * @note This is the main alica api class
+     * @note Can throw an exception if some necessary configurations dont exist in the config file.
      */
-    AlicaContext(const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine, const essentials::Identifier& agentID = essentials::Identifier());
+    AlicaContext(const AlicaContextParams& alicaContextParams);
 
     /**
      * Destroys AlicaContext object.
@@ -289,15 +308,53 @@ public:
      */
     void stepEngine();
 
-    // TODO: Implement
-    template <class T>
-    int set(AlicaOption option, T optval);
-    template <class T>
-    T get(AlicaOption option) const;
+    /**
+     * Getter for the agents configuration.
+     *
+     * @return const YAML::Node& containing the agents configuration.
+     */
+    const YAML::Node& getConfig() const
+    {
+        return _configRootNode;
+    };
+
+    /**
+     * Set config values for the agent.
+     *
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if value was set correctly. False otherwise.
+     */
+    template<class T>
+    bool setOption(const std::string& path, const T& value, bool reload = true) noexcept;
+
+    /**
+     * Set config values for the agent. On error no config values are updated.
+     *
+     * @param keyValuePairs Vector of key value pairs
+     * @param path Path of the config value.
+     * @param value Value to set in the config.
+     * @param reload Reload all subscribed components, defaults to true
+     *
+     * @note Example path: "Alica.CycleDetection.Enabled"
+     * @note Use '.' to access subsections and values of a config section.
+     *
+     * @return True if values were set correctly. False otherwise.
+     */
+    template<class T>
+    bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
+
+    std::string _localAgentName;
+    YAML::Node _configRootNode;
 
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
@@ -307,6 +364,24 @@ private:
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+
+    bool _initialized = false;
+
+    /**
+     * Initializes yaml configuration.
+     * @param configPath Relative path to the yaml configuration file.
+     * @param agentName Name of the local agent.
+     *
+     * @return The agents config.
+     */
+    YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
+
+    /**
+     * Reload alica components with updated configuration.
+     *
+     * @note Is called when setOption or setOptions is successfully called.
+     */
+    void reloadConfig();
 };
 
 template <class ClockType, class... Args>
@@ -365,6 +440,73 @@ bool AlicaContext::existSolver() const
 {
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
+}
+
+template <class T>
+bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
+{
+    if (_initialized) {
+        return false;
+    }
+    ConfigPathParser configPathParser;
+    std::vector<std::string> params = configPathParser.getParams('.', path);
+
+    try {
+        YAML::Node currentNode(_configRootNode);
+
+        for (const std::string& param : params) {
+            currentNode.reset(currentNode[param]);
+        }
+        currentNode = value;
+    } catch (const YAML::Exception& e) {
+        ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
+        return false;
+    }
+
+    if (reload) {
+        reloadConfig();
+    }
+    return true;
+}
+
+template <class T>
+bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload) noexcept
+{
+    if (_initialized) {
+        return false;
+    }
+    ConfigPathParser configPathParser;
+    std::vector <std::pair<std::string, T>> oldKeyValuePairs;
+
+    try {
+        for (const auto &keyValuePair : keyValuePairs) {
+            std::vector <std::string> params = configPathParser.getParams('.', keyValuePair.first);
+            YAML::Node currentNode(_configRootNode);
+
+            for (const std::string &param : params) {
+                currentNode.reset(currentNode[param]);
+            }
+
+            T oldValue = currentNode.as<T>();
+            currentNode = keyValuePair.second;
+
+            std::pair<std::string, T> oldKeyValuePair = std::make_pair(keyValuePair.first, oldValue);
+            oldKeyValuePairs.push_back(oldKeyValuePair);
+        }
+    } catch (const YAML::Exception& e) {
+        ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
+        //revert changes
+        for (const auto &keyValuePair : oldKeyValuePairs) {
+            setOption<T>(keyValuePair.first, keyValuePair.second, false);
+        }
+        return false;
+    }
+
+    if (reload) {
+        reloadConfig();
+    }
+
+    return true;
 }
 
 } // namespace alica

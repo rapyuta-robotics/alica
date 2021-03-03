@@ -60,6 +60,8 @@ public:
     RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
     RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
 
+    void reload(const YAML::Node& config);
+
 private:
     void run(const Plan* masterPlan);
 

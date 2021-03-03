@@ -3,13 +3,15 @@
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
+#include <engine/AlicaContext.h>
 
 #include <essentials/IDManager.h>
-#include <essentials/SystemConfig.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <vector>
+
+#include "test_alica.h"
 
 using alica::Assignment;
 using alica::EntryPoint;
@@ -25,12 +27,6 @@ TEST(Assignment, RobotsInserted)
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    // bring up the SystemConfig with the corresponding path
-    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    sc.setRootPath(path);
-    sc.setConfigPath(path + "/etc");
-    sc.setHostname("nase");
-
     essentials::IDManager idManager;
     int b1 = 2;
     int b2 = 1;
@@ -45,8 +41,12 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(*robot1 > *robot2);
     ASSERT_TRUE(*robot1 < *robot3);
 
+    alica::AlicaContext *ac = new alica::AlicaContext(
+            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+
     PlanRepository repo;
-    ModelManager modelManager(repo);
+    alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
+    ModelManager modelManager(repo, ae, path + "/etc/");
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 

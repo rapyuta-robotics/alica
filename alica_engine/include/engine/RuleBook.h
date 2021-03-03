@@ -3,6 +3,7 @@
 #include "engine/PlanChange.h"
 
 #include <memory>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -37,6 +38,7 @@ public:
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
+    void reload(const YAML::Node& config);
 
 private:
     const TeamManager& _tm;
