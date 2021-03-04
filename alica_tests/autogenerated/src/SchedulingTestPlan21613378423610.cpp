@@ -36,15 +36,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378423610::getUtilityFunctio
 // Add additional options here
 void SchedulingTestPlan21613378423610::init()
 {
-    std::cerr << "init of SchedulingTestPlan2 - " << CounterClass::called << std::endl;
-    assert(CounterClass::called == 1 || CounterClass::called == 2);
     CounterClass::called += 1;
 }
 
 void SchedulingTestPlan21613378423610::onTermination()
 {
-    std::cerr << "onTermination of SchedulingTestPlan2 - " << CounterClass::called << std::endl;
-    assert(CounterClass::called == 4 || CounterClass::called == 3);
     CounterClass::called += 1;
 }
 /*PROTECTED REGION END*/

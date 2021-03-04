@@ -59,15 +59,12 @@ bool PreCondition1613977426634::evaluate(std::shared_ptr<RunningPlan> rp)
 // Add additional options here
 void SchedulingTestPlan11613378406860::init()
 {
-    std::cerr << "init of SchedulingTestPlan1" << std::endl;
     CounterClass::called = 1;
 }
 
 void SchedulingTestPlan11613378406860::onTermination()
 {
-    assert(CounterClass::called == 5);
     CounterClass::called += 1;
-    std::cerr << "onTermination of SchedulingTestPlan1" << std::endl;
 }
 /*PROTECTED REGION END*/
 } // namespace alica
