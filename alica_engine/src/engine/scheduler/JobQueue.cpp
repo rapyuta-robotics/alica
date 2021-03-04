@@ -23,7 +23,6 @@ namespace scheduler {
 
             if (it != _queue.end()) {
                 // do not add job to queue if already queued
-                std::cerr << "Scheduler: job already in queue" << std::endl;
                 return true;
             }
 
