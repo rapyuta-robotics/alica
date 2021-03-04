@@ -14,19 +14,22 @@ class AlicaSchedulingPlan : public AlicaTestFixture
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
-    bool stepEngine() const override { return false; }
+    bool stepEngine() const override { return true; }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)
 {
-    std::cerr << "RUN SCHEDULING TEST" << std::endl;
     ae->start();
-
-    // asserts are within the plan inits and onTerminate methods to prevent skipping steps
-    alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
-    while (CounterClass::called != 6) {
-        ae->getAlicaClock().sleep(sleepTime);
-    }
+    ASSERT_EQ(0, CounterClass::called);
+    ac->stepEngine();
+    // init of scheduling plan 1, 2 and 3 called
+    ASSERT_EQ(3, CounterClass::called);
+    ac->stepEngine();
+    // onTermination of scheduling plan 2 and 3 called
+    ASSERT_EQ(5, CounterClass::called);
+    ac->stepEngine();
+    // onTermination of scheduling plan 1 called
+    ASSERT_EQ(6, CounterClass::called);
 }
 
 } //namespace
