@@ -583,7 +583,7 @@ void RunningPlan::activate()
         _ae->editBehaviourPool().startBehaviour(*this);
     } else {
         if (_activeTriple.abstractPlan) {
-            _ae->editPlanPool().setPlan(*this);
+            setBasicPlan(_ae->getPlanPool().getBasicPlan(*this));
         }
 
     }

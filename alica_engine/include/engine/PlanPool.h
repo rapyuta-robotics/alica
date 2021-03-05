@@ -18,8 +18,8 @@ public:
     PlanPool(AlicaEngine* ae);
     ~PlanPool();
     bool init(IPlanCreator& planCreator);
-    void setPlan(RunningPlan& rp);
     const std::shared_ptr<BasicPlan> getBasicPlan(const Plan* plan, const Configuration* configuration) const;
+    const std::shared_ptr<BasicPlan> getBasicPlan(RunningPlan& rp) const;
 
 private:
     std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicPlan>> _availablePlans;

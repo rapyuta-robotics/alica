@@ -41,17 +41,16 @@ bool PlanPool::init(IPlanCreator& planCreator)
     return true;
 }
 
-void PlanPool::setPlan(RunningPlan& rp)
+const std::shared_ptr<BasicPlan> PlanPool::getBasicPlan(RunningPlan& rp) const
 {
     if (const auto* plan = dynamic_cast<const Plan*>(rp.getActivePlan())) {
         if (auto& basicPlan = getBasicPlan(plan, rp.getConfiguration())) {
-            // set rp -> basicPlan
-            rp.setBasicPlan(basicPlan);
-            return;
+            return basicPlan;
         }
     }
 
-    ALICA_ERROR_MSG("PlanPool::setPlan(): Cannot set Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName());
+    ALICA_ERROR_MSG("PlanPool::getBasicPlan(): Cannot get BasicPlan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName());
+    return nullptr;
 }
 
 const std::shared_ptr<BasicPlan> PlanPool::getBasicPlan(const Plan* plan, const Configuration* configuration) const
