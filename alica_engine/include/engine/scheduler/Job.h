@@ -41,7 +41,7 @@ struct Job
     {
         for (std::weak_ptr<Job> jobWeakPtr : prerequisites) {
             std::shared_ptr<Job> job = jobWeakPtr.lock();
-            if (job && *(job.get()) == other) {
+            if (job && *(job) == other) {
                 return true;
             }
         }
@@ -51,7 +51,7 @@ struct Job
     bool operator<(const Job& other)
     {
         return isPrerequisite(other)
-                || (!isPrerequisite(other) && !other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
+                || (!other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
     }
 
 };
