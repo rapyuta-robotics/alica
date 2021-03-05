@@ -483,12 +483,8 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     auto& scheduler = _ae->getScheduler();
 
     std::function<void()> cb;
-    if(isBehaviour()) {
-        cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
-    } else {
-        if (_activeTriple.abstractPlan) {
-            cb = std::bind(&BasicPlan::onTermination, _basicPlan);
-        }
+    if (_basicPlan) {
+        cb = std::bind(&BasicPlan::onTermination, _basicPlan);
     }
 
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb, prerequisites);
@@ -581,22 +577,15 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
-    } else {
-        if (_activeTriple.abstractPlan) {
-            setBasicPlan(_ae->getPlanPool().getBasicPlan(*this));
-        }
-
+    } else if (_activeTriple.abstractPlan) {
+        setBasicPlan(_ae->getPlanPool().getBasicPlan(*this));
     }
 
     auto& scheduler = _ae->getScheduler();
     std::function<void()> cb;
 
-    if(isBehaviour()) {
-        cb = std::bind(&BasicBehaviour::init, _basicBehaviour);
-    } else {
-        if (_basicPlan) {
-            cb = std::bind(&BasicPlan::init, _basicPlan);
-        }
+    if (_basicPlan) {
+        cb = std::bind(&BasicPlan::init, _basicPlan);
     }
 
     std::vector<std::weak_ptr<scheduler::Job>> prerequisites = getDeactivatedSiblingsTerminateJobs();
