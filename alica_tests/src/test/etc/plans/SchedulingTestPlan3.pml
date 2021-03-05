@@ -22,7 +22,7 @@
   "states" : [ {
     "type" : "State",
     "id" : 1613378580338,
-    "name" : "Default Name",
+    "name" : "InitPlan3",
     "comment" : "",
     "entryPoint" : 1613378578364,
     "parentPlan" : 1613378433623,

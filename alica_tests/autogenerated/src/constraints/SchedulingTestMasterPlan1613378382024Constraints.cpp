@@ -11,11 +11,11 @@ namespace alica
  * - EP:1613378485232 : SchedulerTestEntrypoint (1613371619454)
  *
  * States:
- * - Default Name (1613378474109)
+ * - InitTest (1613378474109)
  * - EndTest (1613530614559)
  *
  * Vars:
  */
-// State: Default Name
+// State: InitTest
 // State: EndTest
 } // namespace alica

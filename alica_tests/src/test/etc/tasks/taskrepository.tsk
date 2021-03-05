@@ -305,7 +305,7 @@
     "taskRepository" : 1226672409680
   }, {
     "id" : 1613372009777,
-    "name" : "SchedulerTestSublanEntrypoint",
+    "name" : "SchedulerTestSubPlanEntrypoint",
     "comment" : "",
     "taskRepository" : 1226672409680
   } ]

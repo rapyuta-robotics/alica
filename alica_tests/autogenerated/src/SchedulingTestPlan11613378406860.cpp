@@ -22,7 +22,7 @@ SchedulingTestPlan11613378406860::~SchedulingTestPlan11613378406860()
     /*PROTECTED REGION END*/
 }
 /**
- * Task: SchedulerTestSublanEntrypoint  -> EntryPoint-ID: 1613378541158
+ * Task: SchedulerTestSubPlanEntrypoint  -> EntryPoint-ID: 1613378541158
  */
 std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunction(Plan* plan)
 {
@@ -33,25 +33,48 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
 }
 /**
  * Outgoing transition:
- *   - Name: 1613977426634, ConditionString: , Comment: MISSING_COMMENT
+ *   - Name: 1614960055821, ConditionString: , Comment: MISSING_COMMENT
  *
  * Abstract plans in current state:
- *   - SchedulingTestPlan3 (1613378433623)
- *   - SchedulingTestPlan2 (1613378423610)
  *
  * Tasks in plan:
- *   - SchedulerTestSublanEntrypoint (1613372009777) (Entrypoint: 1613378541158)
+ *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1613378541158)
  *
  * States in plan:
- *   - Default Name (1613378543512)
- *   - Default Name (1613977406218)
+ *   - InitPlan1 (1613378543512)
+ *   - TerminateSubPlans (1613977406218)
+ *   - InitSubPlans (1614960038398)
  *
  * Variables of precondition:
  */
-bool PreCondition1613977426634::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp)
 {
-    /*PROTECTED REGION ID(1613977426633) ENABLED START*/
-    return CounterClass::called == 3;
+    /*PROTECTED REGION ID(1614960055819) ENABLED START*/
+    return CounterClass::called == 2;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Outgoing transition:
+ *   - Name: 1614960063843, ConditionString: , Comment: MISSING_COMMENT
+ *
+ * Abstract plans in current state:
+ *   - SchedulingTestPlan2 (1613378423610)
+ *   - SchedulingTestPlan3 (1613378433623)
+ *
+ * Tasks in plan:
+ *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1613378541158)
+ *
+ * States in plan:
+ *   - InitPlan1 (1613378543512)
+ *   - TerminateSubPlans (1613977406218)
+ *   - InitSubPlans (1614960038398)
+ *
+ * Variables of precondition:
+ */
+bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1614960063842) ENABLED START*/
+    return CounterClass::called == 5;
     /*PROTECTED REGION END*/
 }
 

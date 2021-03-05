@@ -8,12 +8,12 @@ namespace alica
 // Plan:SchedulingTestPlan2
 /*
  * Tasks:
- * - EP:1613378624077 : SchedulerTestSublanEntrypoint (1613372009777)
+ * - EP:1613378624077 : SchedulerTestSubPlanEntrypoint (1613372009777)
  *
  * States:
- * - Default Name (1613378625757)
+ * - InitPlan2 (1613378625757)
  *
  * Vars:
  */
-// State: Default Name
+// State: InitPlan2
 } // namespace alica

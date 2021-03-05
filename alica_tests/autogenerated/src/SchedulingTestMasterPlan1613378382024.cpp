@@ -41,7 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
  *   - SchedulerTestEntrypoint (1613371619454) (Entrypoint: 1613378485232)
  *
  * States in plan:
- *   - Default Name (1613378474109)
+ *   - InitTest (1613378474109)
  *   - EndTest (1613530614559)
  *
  * Variables of precondition:
@@ -49,7 +49,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
 bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1613530643879) ENABLED START*/
-    return CounterClass::called == 5;
+    return CounterClass::called == 8;
     /*PROTECTED REGION END*/
 }
 

@@ -22,7 +22,7 @@ SchedulingTestPlan21613378423610::~SchedulingTestPlan21613378423610()
     /*PROTECTED REGION END*/
 }
 /**
- * Task: SchedulerTestSublanEntrypoint  -> EntryPoint-ID: 1613378624077
+ * Task: SchedulerTestSubPlanEntrypoint  -> EntryPoint-ID: 1613378624077
  */
 std::shared_ptr<UtilityFunction> UtilityFunction1613378423610::getUtilityFunction(Plan* plan)
 {
