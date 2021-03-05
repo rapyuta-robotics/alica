@@ -20,16 +20,22 @@ protected:
 TEST_F(AlicaSchedulingPlan, scheduling)
 {
     ae->start();
-    ASSERT_EQ(0, CounterClass::called);
+    ASSERT_EQ(CounterClass::called, 0);
+
     ac->stepEngine();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
     // init of scheduling plan 1, 2 and 3 called
-    ASSERT_EQ(3, CounterClass::called);
+    ASSERT_EQ(CounterClass::called, 3);
+
     ac->stepEngine();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
     // onTermination of scheduling plan 2 and 3 called
-    ASSERT_EQ(5, CounterClass::called);
+    ASSERT_EQ(CounterClass::called, 5);
+
     ac->stepEngine();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
     // onTermination of scheduling plan 1 called
-    ASSERT_EQ(6, CounterClass::called);
+    ASSERT_EQ(CounterClass::called, 6);
 }
 
 } //namespace
