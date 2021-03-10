@@ -39,7 +39,7 @@ struct Job
 
     bool operator==(const Job& r) const
     {
-        return scheduledTime == r.scheduledTime;
+        return id == r.id;
     }
 
     bool isPrerequisite(const Job& other) const
