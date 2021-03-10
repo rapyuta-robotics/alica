@@ -95,6 +95,9 @@ void Scheduler::workerFunction()
                 if (job->isRepeated) {
                     job->inExecution = false;
                     schedule(job);
+                } else {
+                    job.reset();
+                    _workerCV.notify_one();
                 }
             } catch (std::bad_function_call& e) {
                 std::cerr << "ERROR: Bad function call\n";
