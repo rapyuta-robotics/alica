@@ -578,7 +578,7 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
-        setBasicPlan(_ae->getPlanPool().getBasicPlan(*this));
+        _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
     }
 
     auto& scheduler = _ae->getScheduler();
