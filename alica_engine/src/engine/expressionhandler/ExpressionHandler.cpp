@@ -33,6 +33,7 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 {
     for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
+        p->setBasicPlan(creatorCtx.planCreator->createPlan(p->getId()));
 
         auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);
