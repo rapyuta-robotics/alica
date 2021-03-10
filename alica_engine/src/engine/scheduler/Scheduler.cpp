@@ -75,6 +75,8 @@ void Scheduler::workerFunction()
                  *  - Dont execute job.
                  *  - Dont schedule job.
                  */
+                job.reset();
+                _workerCV.notify_one();
                 continue;
             }
 
