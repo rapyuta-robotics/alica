@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <atomic>
 
 namespace alica {
 namespace scheduler
@@ -20,8 +21,12 @@ struct Job
         , cancelled(false)
         , isRepeated(false)
         , inExecution(false)
-    { }
+    {
+        static std::atomic<int> sId{0};
+        id = ++sId;
+    }
 
+    int id;
     std::function<void()> cb;
     AlicaTime scheduledTime;
     bool cancelled;
@@ -29,6 +34,8 @@ struct Job
     bool inExecution;
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
+
+
 
     bool operator==(const Job& r) const
     {
