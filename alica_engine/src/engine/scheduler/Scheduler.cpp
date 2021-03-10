@@ -101,7 +101,7 @@ void Scheduler::workerFunction()
             }
         } else {
             job->inExecution = false;
-            schedule(job);
+            schedule(job, false);
         }
 
     }
