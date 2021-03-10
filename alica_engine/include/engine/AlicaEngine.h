@@ -2,7 +2,6 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/BehaviourPool.h"
-#include "engine/PlanPool.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -28,7 +27,6 @@ namespace alica
 struct AlicaCreators;
 class Plan;
 class BehaviourPool;
-class PlanPool;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
@@ -62,9 +60,6 @@ public:
 
     const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
     BehaviourPool& editBehaviourPool() { return _behaviourPool; }
-
-    const PlanPool& getPlanPool() const { return _planPool; }
-    PlanPool& editPlanPool() { return _planPool; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
@@ -143,7 +138,6 @@ private:
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     BehaviourPool _behaviourPool;
-    PlanPool _planPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;

@@ -26,7 +26,6 @@ class AbstractPlan;
 class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
-class PlanPool;
 class BasicPlan;
 class Configuration;
 class State;
