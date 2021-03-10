@@ -18,7 +18,9 @@ Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae
 
 Scheduler::~Scheduler()
 {
-    terminate();
+    if (_running.load()) {
+        terminate();
+    }
 }
 
 void Scheduler::terminate()
