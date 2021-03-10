@@ -20,9 +20,7 @@ struct Job
         , cancelled(false)
         , isRepeated(false)
         , inExecution(false)
-    {
-
-    }
+    { }
 
     std::function<void()> cb;
     AlicaTime scheduledTime;
