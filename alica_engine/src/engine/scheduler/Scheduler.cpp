@@ -18,6 +18,11 @@ Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae
 
 Scheduler::~Scheduler()
 {
+    terminate();
+}
+
+void Scheduler::terminate()
+{
     _running = false;
     _jobQueue.clear();
 
