@@ -7,7 +7,7 @@ namespace alica
 class BasicPlan {
 public:
     BasicPlan(const std::string& name);
-    virtual ~BasicPlan(){};
+    virtual ~BasicPlan() = default;
 
     virtual void init() {};
     virtual void onTermination() {};
