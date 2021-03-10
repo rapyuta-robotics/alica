@@ -50,6 +50,7 @@ public:
     const SynchronisationGrp& getSynchronisations() const { return _synchronisations; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
+    const std::shared_ptr<BasicPlan> getBasicPlan() const { return _basicPlan; }
 
     std::string toString(std::string indent = "") const;
 
