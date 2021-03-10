@@ -15,6 +15,15 @@ namespace scheduler
 {
 struct Job
 {
+    int id;
+    std::function<void()> cb;
+    AlicaTime scheduledTime;
+    bool cancelled;
+    bool isRepeated;
+    bool inExecution;
+    AlicaTime repeatInterval;
+    std::vector<std::weak_ptr<Job>> prerequisites;
+
     Job(std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
         : cb(cb)
         , prerequisites(prerequisites)
@@ -26,22 +35,6 @@ struct Job
         id = ++sId;
     }
 
-    int id;
-    std::function<void()> cb;
-    AlicaTime scheduledTime;
-    bool cancelled;
-    bool isRepeated;
-    bool inExecution;
-    AlicaTime repeatInterval;
-    std::vector<std::weak_ptr<Job>> prerequisites;
-
-
-
-    bool operator==(const Job& r) const
-    {
-        return id == r.id;
-    }
-
     bool isPrerequisite(const Job& other) const
     {
         for (std::weak_ptr<Job> jobWeakPtr : prerequisites) {
@@ -51,6 +44,11 @@ struct Job
             }
         }
         return false;
+    }
+
+    bool operator==(const Job& r) const
+    {
+        return id == r.id;
     }
 
     bool operator<(const Job& other) const
