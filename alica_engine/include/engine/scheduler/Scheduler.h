@@ -19,7 +19,7 @@ namespace scheduler
     public:
         Scheduler(int numberOfThreads, const alica::AlicaEngine* ae);
         ~Scheduler();
-        void schedule(std::shared_ptr<Job> job);
+        void schedule(std::shared_ptr<Job> job, bool notify = true);
     private:
         const alica::AlicaEngine* _ae;
         JobQueue _jobQueue;

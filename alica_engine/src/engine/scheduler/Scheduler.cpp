@@ -28,7 +28,7 @@ Scheduler::~Scheduler()
     }
 }
 
-void Scheduler::schedule(std::shared_ptr<Job> job)
+void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
 {
     if (job->scheduledTime.inNanoseconds() == 0) {
         job->scheduledTime = _ae->getAlicaClock().now();
@@ -46,7 +46,10 @@ void Scheduler::schedule(std::shared_ptr<Job> job)
     }
 
     _jobQueue.insert(job);
-    _workerCV.notify_one();
+
+    if (notify) {
+        _workerCV.notify_one();
+    }
 }
 
 void Scheduler::workerFunction()
