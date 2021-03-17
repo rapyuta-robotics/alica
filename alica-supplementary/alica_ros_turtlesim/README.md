@@ -1,7 +1,7 @@
 # Turtlesim Tutorial
 ## 1. Overview
-This tutorial is extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn 
-- the core concepts of the ALICA language
+This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn 
+- some of the core concepts of the ALICA language
 - how to achieve multi-agent collaboration with the ALICA framework
 
 In this tutorial, you will create an application as shown in the picture below. The ALICA engine will assign the “Leader” task to one turtle and the “Follower” task to the other turtles. Further, the ALICA engine will move the turtles to their goal positions based on distance constraints.
@@ -15,9 +15,9 @@ You need to be familiar with following topics and tools:
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
 ## 3. The ALICA Language - Basics and Core Concepts
-We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the resources on the [ALICA Homepage](https://www.uni-kassel.de/eecs/fachgebiete/vs/research/alica.html) of the Distributed Systems Department of the University of Kassel for more detailed information in a series of related publications.
+We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the [documentation](https://rapyuta-robotics.github.io/alica/) of the ALICA framework for more detailed information.
 ### Plan
-A plan is a state machine in tree structure. Plans can include plans and states and each state has can include`Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
+A plan is a state machine in tree structure. Plans can include plans and states and each state has can include `Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
 The ALICA engine manages state transitions based on the developers code. The ALICA plan designer generates method stubs that a developer will fill with state transition logic. The developer can create plans using the ALICA plan designer.
 
 ### Behaviour
@@ -57,7 +57,7 @@ git clone https://github.com/rapyuta-robotics/alica-supplementary.git
 ```
 cd src/alica-supplementary
 rm -r alica_ros_turtlesim/Expr 
-rm -r alica_ros_turtlesim/alica
+rm -r alica_ros_turtlesim/alica/etc
 ```
 
 3. Create subfolders in the alica_ros_turtlesim package:
@@ -65,7 +65,7 @@ rm -r alica_ros_turtlesim/alica
 ```
 mkdir -p alica_ros_turtlesim/alica/etc/plans/behaviours
 mkdir -p alica_ros_turtlesim/alica/etc/roles
-mkdir -p alica_ros_turtlesim/alica/etc/Misc
+mkdir -p alica_ros_turtlesim/alica/etc/tasks
 mkdir -p alica_ros_turtlesim/Expr
 ```
 
@@ -113,7 +113,9 @@ In this section, you will create plans using the ALICA plan designer. In this tu
 
 ### 6.1 Create the Taskrepository
 
-1. Right click on the Misc folder of the FileTreeView -> New -> Taskrepository
+Usually the plan designer asks you to create a task repository, when you start it the first time. Therefore, creating a task repository might be optional, but please make sure that the DefaultTask is created.
+
+1. Right click on the *tasks* folder of the FileTreeView -> New -> Taskrepository
 2. Input name `Taskrepository` then click create.
 3. Open the created taskrepository and add a `DefaultTask`
 
@@ -124,9 +126,12 @@ In this section, you will create plans using the ALICA plan designer. In this tu
 2. Input Filename `Master` then open the created plan.
 3. Check the masterPlan checkbox in the properties (Icon should turn red).
 4. Add states named `Init` and `Move`
-5. Add transition from `Init` to `Move` and from `Move` to `Init` (Bendpoints can be created by clicking with the active transition tool onto a transition).
+5. Add transition from `Init` to `Move` and from `Move` to `Init` 
+   1. Activate the transition tool, then click on the first state, afterwards on the second state.
+   2. Bendpoints can be created by clicking with the active transition tool onto a transition.
 6. Create an entrypoint (choose default task) and connect it with the `Init` state. 
-8. Create the `Go2RandomPosition` behaviour in the behaviour subfolder .
+7. Create the `Go2RandomPosition` behaviour in the /plans/behaviours folder.
+8. Change the frequency of the ``Go2RandomPosition`` behaviour to 30 Hz in its properties.
 9. Drag'n'Drop the `Go2RandomPosition` behaviour from the RepositoryView to the `Init` state.
 10. Create the `Move` plan in the plans folder and drag'n'drop it into the `Move` state.
 
@@ -136,8 +141,8 @@ In this section, you will create plans using the ALICA plan designer. In this tu
 2. Add two entrypoints with new tasks: `Leader` and `Follower`
 3. Change the cardinality of the `Leader`-Entrypoint to min 1 and max 1 agent.
 4. Connect the `Leader` Task-Entrypoint to `Move2Center` and the `Follower` Task-EntryPoint to AlignCircle.
-5. Create the `GoTo` behaviour under /plans/behaviours and add it to the  `Move2Center` state and the `AlignCircle` state 
-6. Change the frequency of the `GoTo` behaviour to 30 Hz in its properties
+5. Create the `GoTo` behaviour under /plans/behaviours and add it to the  `Move2Center` state and the `AlignCircle` state.
+6. Change the frequency of the `GoTo` behaviour to 30 Hz in its properties.
 7. Add a “Runtime Condition” to the `Move` plan by choosing the default plugin and enable it (checkbox).
 8. Add “x y” “Quantifiers” in Runtime condition properties
       * these quantifiers will be used in writing constraints.
@@ -171,7 +176,7 @@ We will explain only `base.cpp` which is related to ALICA.
 
 The ALICA plan designer generated everything plan related into the Expr folder, split into src and include. The Expr/src/<plan_name><plan_id>.cpp files include "evaluate" functions that control the transition between states of that plan. The Expr/src/constraints/<plan_name><plan_id>Constraints.cpp files include the "getConstraints" functions which provide the constraints. The frequency for calling these functions can be configured in the Alica.yaml file under alica/etc. The IDs in the file names are generated by the ALICA plan designer.
 
-#### Expr/src/Plans/Master<id>.cpp
+#### Expr/src/Master<id>.cpp
 
 In this file, you need to implement state transition logic.
 ![master](doc/master.png)
@@ -180,7 +185,7 @@ In this file, you need to implement state transition logic.
 - L41:  This is state transition condition from ‘Init’ to ‘Move’. This success condition is met by setSuccess in behaviour logic which is explained later in behaviour.
 - L64: This is state transition condition from ‘Move’ to ‘Init’. This condition is met by publishing rostopic ‘/init’.
 
-#### Expr/src/Plans/constraints/Move<id>.cpp
+#### Expr/src/constraints/Move<id>.cpp
 
 In this file, you need to set the runtime condition to always return true.
 
@@ -188,7 +193,7 @@ In this file, you need to set the runtime condition to always return true.
 
 * Line 17: Always returns true. Only the attached constraint is important (see next file).
 
-#### Expr/src/Plans/constraints/Move<id>Constraints.cpp
+#### Expr/src/constraints/Move<id>Constraints.cpp
 
 In this file, you need to implement constraints logic.
   ![constraints](doc/constraints.png)
@@ -197,11 +202,11 @@ In this file, you need to implement constraints logic.
   - L46~110: Iterate over all agents and add constraints for each
   - L47~73: Preparing/getting variables and add range constraints
   - L77: add constraints for `Leader` agent. Leader agent moves to center of circle within tolearence
-  - L81~L108: Iterate other agent to add constraints to keep distance among `Follower` agents.
+  - L81~L108: Iterate other agent to add constraints to keep distance among `Follower` agents. (Please note that copy-paste won't work, because you generated an entrypoint ID that is different from the one given in the repository.)
 
 ### 7.3  Behaviours
-The auto-generated <behaviour_name>.cpp files under Expr/src/Behaviours  have a "run" function which keeps running at a specific frequency which is set in Alica.conf.
-#### Expr/src/Behaviours/Go2RandomPosition.cpp
+The auto-generated <behaviour_name>.cpp files under Expr/src/Behaviours  have a "run" function which keeps running at the frequency specified when you created the behaviours in the plan designer.
+#### Expr/src/behaviours/Go2RandomPosition.cpp
 
 In this file, you need to implement the teleportation of the  turtles:
 ![go2randomposition](doc/go2randomposition.png)
@@ -210,13 +215,13 @@ In this file, you need to implement the teleportation of the  turtles:
 - L34-41: generate random value and teleport turtle via world model.
 - L41: After execute `setSuccess()` function, "isAnyChildStatus(PlanStatus::Success)" at Expr/src/Plans/Master***.cpp return true. Then state transition from `Init` to `Move` happen.
 
-#### Expr/src/Behaviours/GoTo.h
+#### Expr/src/behaviours/GoTo.h
 
 ![gotohpp](doc/gotohpp.png)
 - L6: include Query
 - L28-29: add query and result which are used to get solver result.
 
-#### Expr/src/Behaviours/GoTo.cpp
+#### Expr/src/behaviours/GoTo.cpp
 
 ![gotocpp](doc/gotocpp.png)
 - L6: include world model
