@@ -9,7 +9,10 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae), _running(true)
+Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae)
+        : _ae(ae)
+        , _running(true)
+        , _jobID(0)
 {
     for (int i = 0; i < numberOfThreads; i++) {
         _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
@@ -47,7 +50,7 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
 
     // schedule missing prerequisites
     for (auto prerequisite : job->prerequisites) {
-        if (auto prerequisiteSharedPtr = prerequisite.lock())  {
+        if (auto prerequisiteSharedPtr = prerequisite.lock()) {
             schedule(prerequisiteSharedPtr);
         }
     }
@@ -71,14 +74,14 @@ std::shared_ptr<Job> Scheduler::popNext()
 
 void Scheduler::workerFunction()
 {
-    while(_running.load()) {
+    while (_running.load()) {
         std::shared_ptr<Job> job;
         bool executeJob = true;
 
         {
-            std::unique_lock<std::mutex>lock(_workerMtx);
+            std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            _workerCV.wait(lock, [this]{return !_jobQueue.isEmpty() || !_running.load();});
+            _workerCV.wait(lock, [this] { return !_jobQueue.isEmpty() || !_running.load(); });
 
             if (_jobQueue.isEmpty() || !_running.load()) {
                 continue;
@@ -125,8 +128,7 @@ void Scheduler::workerFunction()
             job->inExecution = false;
             schedule(job, false);
         }
-
     }
 }
-} //namespace scheduler
-} //namespace alica
+} // namespace scheduler
+} // namespace alica
