@@ -21,6 +21,7 @@ namespace scheduler
         ~Scheduler();
         void schedule(std::shared_ptr<Job> job, bool notify = true);
         void terminate();
+        int getNextJobID();
     private:
         const alica::AlicaEngine* _ae;
         JobQueue _jobQueue;
@@ -28,6 +29,7 @@ namespace scheduler
         std::condition_variable _workerCV;
         std::vector<std::thread*> _workers;
         std::atomic<bool> _running;
+        std::atomic<int> _jobID;
 
         void workerFunction();
     };

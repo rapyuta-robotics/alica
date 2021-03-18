@@ -59,6 +59,11 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
     }
 }
 
+int Scheduler::getNextJobID()
+{
+    return ++_jobID;
+}
+
 void Scheduler::workerFunction()
 {
     while(_running.load()) {
