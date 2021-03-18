@@ -33,6 +33,7 @@ void Scheduler::terminate()
         worker->join();
         delete worker;
     }
+    _workers.clear();
 }
 
 void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
