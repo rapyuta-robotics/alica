@@ -12,7 +12,7 @@ namespace scheduler
 Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae) : _ae(ae), _running(true)
 {
     for (int i = 0; i < numberOfThreads; i++) {
-        _workers.push_back(new std::thread(&Scheduler::workerFunction, this));
+        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
     }
 }
 
@@ -28,10 +28,9 @@ void Scheduler::terminate()
     _running = false;
     _jobQueue.clear();
 
-    for (auto worker : _workers) {
+    for (std::thread& worker : _workers) {
         _workerCV.notify_all();
-        worker->join();
-        delete worker;
+        worker.join();
     }
     _workers.clear();
 }

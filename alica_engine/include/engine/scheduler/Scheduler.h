@@ -28,7 +28,7 @@ namespace scheduler
         JobQueue _jobQueue;
         std::mutex _workerMtx;
         std::condition_variable _workerCV;
-        std::vector<std::thread*> _workers;
+        std::vector<std::thread> _workers;
         std::atomic<bool> _running;
         std::atomic<int> _jobID;
 
