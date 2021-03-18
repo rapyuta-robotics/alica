@@ -64,6 +64,11 @@ int Scheduler::getNextJobID()
     return ++_jobID;
 }
 
+std::shared_ptr<Job> Scheduler::popNext()
+{
+    return _jobQueue.popNext();
+}
+
 void Scheduler::workerFunction()
 {
     while(_running.load()) {

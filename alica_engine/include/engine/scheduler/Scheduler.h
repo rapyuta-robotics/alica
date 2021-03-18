@@ -22,6 +22,7 @@ namespace scheduler
         void schedule(std::shared_ptr<Job> job, bool notify = true);
         void terminate();
         int getNextJobID();
+        std::shared_ptr<Job> popNext();
     private:
         const alica::AlicaEngine* _ae;
         JobQueue _jobQueue;
