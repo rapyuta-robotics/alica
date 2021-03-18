@@ -2,15 +2,12 @@
 
 #include "engine/AlicaClock.h"
 
-#include <iostream>
-#include <chrono>
-#include <ctime>
-#include <vector>
-#include <memory>
 #include <functional>
-#include <atomic>
+#include <memory>
+#include <vector>
 
-namespace alica {
+namespace alica
+{
 namespace scheduler
 {
 struct Job
@@ -24,16 +21,14 @@ struct Job
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
 
-    Job(std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
-        : cb(cb)
-        , prerequisites(prerequisites)
-        , cancelled(false)
-        , isRepeated(false)
-        , inExecution(false)
-    {
-        static std::atomic<int> sId{0};
-        id = ++sId;
-    }
+    Job(int id, std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
+            : cb(cb)
+            , id(id)
+            , prerequisites(prerequisites)
+            , cancelled(false)
+            , isRepeated(false)
+            , inExecution(false)
+    {}
 
     bool isPrerequisite(const Job& other) const
     {
@@ -46,17 +41,11 @@ struct Job
         return false;
     }
 
-    bool operator==(const Job& r) const
-    {
-        return id == r.id;
-    }
+    bool operator==(const Job& r) const { return id == r.id; }
 
-    bool operator<(const Job& other) const
-    {
-        return isPrerequisite(other)
-                || (!other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
+    bool operator<(const Job& other) const {
+        return isPrerequisite(other) || (!other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
     }
-
 };
-} //namespace scheduler
-} //namespace alica
+} // namespace scheduler
+} // namespace alica
