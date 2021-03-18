@@ -40,6 +40,10 @@ namespace scheduler {
 
     std::shared_ptr<Job> JobQueue::popNext()
     {
+        if (isEmpty()) {
+            return nullptr;
+        }
+
         {
             std::unique_lock<std::mutex> lock(_mtx);
             std::shared_ptr<Job> job = _queue.front();
