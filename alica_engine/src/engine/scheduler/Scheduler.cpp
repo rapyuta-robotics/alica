@@ -48,13 +48,6 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
         return;
     }
 
-    // schedule missing prerequisites
-    for (auto prerequisite : job->prerequisites) {
-        if (auto prerequisiteSharedPtr = prerequisite.lock()) {
-            schedule(prerequisiteSharedPtr);
-        }
-    }
-
     _jobQueue.insert(job);
 
     if (notify) {
