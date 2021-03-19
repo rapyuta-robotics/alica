@@ -480,7 +480,7 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     std::vector<std::weak_ptr<scheduler::Job>> prerequisites = deactivateChildren();
     prerequisites.push_back(_initJob);
 
-    auto& scheduler = _ae->getScheduler();
+    auto& scheduler = _ae->editScheduler();
     int jobID = scheduler.getNextJobID();
 
     std::function<void()> cb;
@@ -582,7 +582,7 @@ void RunningPlan::activate()
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
     }
 
-    auto& scheduler = _ae->getScheduler();
+    auto& scheduler = _ae->editScheduler();
     int jobID = scheduler.getNextJobID();
     std::function<void()> cb;
 
