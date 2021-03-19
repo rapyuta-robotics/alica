@@ -44,10 +44,6 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
         job->scheduledTime = _ae->getAlicaClock().now();
     }
 
-    if (job->inExecution || _jobQueue.isScheduled(job)) {
-        return;
-    }
-
     _jobQueue.insert(job);
 
     if (notify) {
