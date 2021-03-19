@@ -490,7 +490,7 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
 
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
     if (_basicPlan) {
-        scheduler.schedule(terminateJob);
+        scheduler.schedule(std::move(terminateJob));
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
     }
     return _terminateJob;
@@ -578,6 +578,7 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
+        _basicPlan = nullptr;
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
     }
@@ -597,7 +598,7 @@ void RunningPlan::activate()
 
     std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
     if (_basicPlan) {
-        scheduler.schedule(initJob);
+        scheduler.schedule(std::move(initJob));
         _initJob = initJob; //store initJob as weak_ptr
     }
 
