@@ -11,25 +11,6 @@ namespace scheduler {
         }
     }
 
-    bool JobQueue::isScheduled(std::shared_ptr<Job> job)
-    {
-        {
-            std::unique_lock<std::mutex> lock(_mtx);
-
-            // check if job is already in queue
-            auto it = std::find_if(_queue.begin(), _queue.end(), [&](std::shared_ptr<Job> const& queuedJob) {
-                return *queuedJob == *job;
-            });
-
-            if (it != _queue.end()) {
-                // do not add job to queue if already queued
-                return true;
-            }
-
-            return false;
-        }
-    }
-
     bool JobQueue::isEmpty()
     {
         {
