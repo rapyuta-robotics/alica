@@ -2,7 +2,7 @@
 
 namespace alica {
 namespace scheduler {
-    void JobQueue::insert(std::shared_ptr<Job> job)
+    void JobQueue::insert(std::shared_ptr<Job>&& job)
     {
         {
             std::unique_lock<std::mutex> lock(_mtx);

@@ -9,7 +9,7 @@ namespace scheduler {
     class JobQueue
     {
     public:
-        void insert(std::shared_ptr<Job> job);
+        void insert(std::shared_ptr<Job>&& job);
         bool isEmpty();
         std::shared_ptr<Job> popNext();
         void clear();

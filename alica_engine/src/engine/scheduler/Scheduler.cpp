@@ -44,7 +44,7 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
         job->scheduledTime = _ae->getAlicaClock().now();
     }
 
-    _jobQueue.insert(job);
+    _jobQueue.insert(std::move(job));
 
     if (notify) {
         _workerCV.notify_one();
@@ -105,7 +105,7 @@ void Scheduler::workerFunction()
                 job->cb();
                 if (job->isRepeated) {
                     job->inExecution = false;
-                    schedule(job);
+                    schedule(std::move(job));
                 } else {
                     job.reset();
                     _workerCV.notify_one();
@@ -115,7 +115,7 @@ void Scheduler::workerFunction()
             }
         } else {
             job->inExecution = false;
-            schedule(job, false);
+            schedule(std::move(job), false);
         }
     }
 }
