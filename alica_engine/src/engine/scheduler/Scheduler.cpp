@@ -89,7 +89,6 @@ void Scheduler::workerFunction()
                 continue;
             }
 
-            job->inExecution = true;
 
             for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
                 if (prerequisite.lock()) {
@@ -104,7 +103,6 @@ void Scheduler::workerFunction()
             try {
                 job->cb();
                 if (job->isRepeated) {
-                    job->inExecution = false;
                     schedule(std::move(job));
                 } else {
                     job.reset();
@@ -114,7 +112,6 @@ void Scheduler::workerFunction()
                 ALICA_ERROR_MSG("Bad function call");
             }
         } else {
-            job->inExecution = false;
             schedule(std::move(job), false);
         }
     }

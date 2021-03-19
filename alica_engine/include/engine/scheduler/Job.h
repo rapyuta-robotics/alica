@@ -17,7 +17,6 @@ struct Job
     AlicaTime scheduledTime;
     bool cancelled;
     bool isRepeated;
-    bool inExecution;
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
 
@@ -27,7 +26,6 @@ struct Job
             , prerequisites(prerequisites)
             , cancelled(false)
             , isRepeated(false)
-            , inExecution(false)
     {}
 
     bool isPrerequisite(const Job& other) const
