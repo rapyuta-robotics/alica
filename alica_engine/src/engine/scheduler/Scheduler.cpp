@@ -110,8 +110,8 @@ void Scheduler::workerFunction()
                     job.reset();
                     _workerCV.notify_one();
                 }
-            } catch (std::bad_function_call& e) {
-                std::cerr << "ERROR: Bad function call\n";
+            } catch (const std::bad_function_call& e) {
+                ALICA_ERROR_MSG("Bad function call");
             }
         } else {
             job->inExecution = false;
