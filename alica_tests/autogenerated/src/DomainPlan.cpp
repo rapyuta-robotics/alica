@@ -5,8 +5,8 @@
 
 namespace alica
 {
-DomainPlan::DomainPlan(std::string name)
-        : BasicPlan(name)
+DomainPlan::DomainPlan()
+        : BasicPlan()
 {
     /*PROTECTED REGION ID(domainPlanConstructor) ENABLED START*/
     // Add additional options here

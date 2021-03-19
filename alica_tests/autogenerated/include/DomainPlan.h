@@ -11,7 +11,7 @@ namespace alica
 class DomainPlan : public BasicPlan
 {
 public:
-    DomainPlan(std::string name);
+    DomainPlan();
     virtual ~DomainPlan();
 
     /*PROTECTED REGION ID(domainPlanClassDecl) ENABLED START*/

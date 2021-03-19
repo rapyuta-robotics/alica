@@ -4,19 +4,13 @@
 
 namespace alica
 {
-class BasicPlan {
+class BasicPlan
+{
 public:
-    BasicPlan(const std::string& name);
+    BasicPlan();
     virtual ~BasicPlan() = default;
 
-    virtual void init() {};
-    virtual void onTermination() {};
-
-    const std::string& getName() const { return _name; }
-private:
-    std::string _name;
+    virtual void init(){};
+    virtual void onTermination(){};
 };
-}
-
-
-
+} // namespace alica
