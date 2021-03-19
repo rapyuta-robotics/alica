@@ -6,7 +6,7 @@ namespace scheduler {
     {
         {
             std::unique_lock<std::mutex> lock(_mtx);
-            _queue.push_back(job);
+            _queue.push_back(std::move(job));
             std::sort(_queue.begin(), _queue.end());
         }
     }
