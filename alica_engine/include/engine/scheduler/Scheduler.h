@@ -26,6 +26,7 @@ namespace scheduler
     private:
         const alica::AlicaEngine* _ae;
         JobQueue _jobQueue;
+        JobQueue _repeatedJobQueue;
         std::mutex _workerMtx;
         std::condition_variable _workerCV;
         std::vector<std::thread> _workers;

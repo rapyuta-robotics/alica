@@ -44,7 +44,11 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
         job->scheduledTime = _ae->getAlicaClock().now();
     }
 
-    _jobQueue.insert(std::move(job));
+    if (job->isRepeated) {
+        _repeatedJobQueue.insert(std::move(job));
+    } else {
+        _jobQueue.insert(std::move(job));
+    }
 
     if (notify) {
         _workerCV.notify_one();
