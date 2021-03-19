@@ -105,9 +105,9 @@ void Plan::setTransitions(const TransitionGrp& transitions)
     _transitions = transitions;
 }
 
-void Plan::setBasicPlan(std::shared_ptr<BasicPlan> basicPlan)
+void Plan::setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan)
 {
-    _basicPlan = basicPlan;
+    _basicPlan = std::move(basicPlan);
 }
 
 std::string Plan::toString(std::string indent) const

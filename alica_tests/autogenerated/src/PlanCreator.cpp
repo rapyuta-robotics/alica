@@ -35,6 +35,10 @@
 #include "SchedulingTestPlan11613378406860.h"
 #include "SchedulingTestPlan21613378423610.h"
 #include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "engine/BasicPlan.h"
@@ -46,122 +50,134 @@ PlanCreator::PlanCreator() {}
 
 PlanCreator::~PlanCreator() {}
 
-std::shared_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
+std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
 {
     switch (planId) {
     case 1402488437260:
-        return std::make_shared<MasterPlan1402488437260>();
+        return std::make_unique<MasterPlan1402488437260>();
         break;
     case 1402488634525:
-        return std::make_shared<AttackPlan1402488634525>();
+        return std::make_unique<AttackPlan1402488634525>();
         break;
     case 1402488770050:
-        return std::make_shared<MidFieldPlayPlan1402488770050>();
+        return std::make_unique<MidFieldPlayPlan1402488770050>();
         break;
     case 1402488870347:
-        return std::make_shared<GoalPlan1402488870347>();
+        return std::make_unique<GoalPlan1402488870347>();
         break;
     case 1402488893641:
-        return std::make_shared<Defend1402488893641>();
+        return std::make_unique<Defend1402488893641>();
         break;
     case 1402489318663:
-        return std::make_shared<Tackle1402489318663>();
+        return std::make_unique<Tackle1402489318663>();
         break;
     case 1407152758497:
-        return std::make_shared<MasterPlanTaskAssignment1407152758497>();
+        return std::make_unique<MasterPlanTaskAssignment1407152758497>();
         break;
     case 1407153611768:
-        return std::make_shared<PlanOne1407153611768>();
+        return std::make_unique<PlanOne1407153611768>();
         break;
     case 1407153645238:
-        return std::make_shared<PlanTwo1407153645238>();
+        return std::make_unique<PlanTwo1407153645238>();
         break;
     case 1407153663917:
-        return std::make_shared<PlanThree1407153663917>();
+        return std::make_unique<PlanThree1407153663917>();
         break;
     case 1407153683051:
-        return std::make_shared<PlanFour1407153683051>();
+        return std::make_unique<PlanFour1407153683051>();
         break;
     case 1407153703092:
-        return std::make_shared<PlanFive1407153703092>();
+        return std::make_unique<PlanFive1407153703092>();
         break;
     case 1412252439925:
-        return std::make_shared<SimpleTestPlan1412252439925>();
+        return std::make_unique<SimpleTestPlan1412252439925>();
         break;
     case 1413200842973:
-        return std::make_shared<MultiAgentTestMaster1413200842973>();
+        return std::make_unique<MultiAgentTestMaster1413200842973>();
         break;
     case 1413200862180:
-        return std::make_shared<MultiAgentTestPlan1413200862180>();
+        return std::make_unique<MultiAgentTestPlan1413200862180>();
         break;
     case 1414068495566:
-        return std::make_shared<ConstraintTestMaster1414068495566>();
+        return std::make_unique<ConstraintTestMaster1414068495566>();
         break;
     case 1414068524245:
-        return std::make_shared<ConstraintTestPlan1414068524245>();
+        return std::make_unique<ConstraintTestPlan1414068524245>();
         break;
     case 1414403396328:
-        return std::make_shared<AuthorityTestMaster1414403396328>();
+        return std::make_unique<AuthorityTestMaster1414403396328>();
         break;
     case 1414403413451:
-        return std::make_shared<AuthorityTest1414403413451>();
+        return std::make_unique<AuthorityTest1414403413451>();
         break;
     case 1418042656594:
-        return std::make_shared<MasterPlanTestConditionPlanType1418042656594>();
+        return std::make_unique<MasterPlanTestConditionPlanType1418042656594>();
         break;
     case 1418042796751:
-        return std::make_shared<PreConditionPlan1418042796751>();
+        return std::make_unique<PreConditionPlan1418042796751>();
         break;
     case 1418042806575:
-        return std::make_shared<RuntimeConditionPlan1418042806575>();
+        return std::make_unique<RuntimeConditionPlan1418042806575>();
         break;
     case 1418042819203:
-        return std::make_shared<OtherPlan1418042819203>();
+        return std::make_unique<OtherPlan1418042819203>();
         break;
     case 1418825395939:
-        return std::make_shared<MasterSyncTransition1418825395939>();
+        return std::make_unique<MasterSyncTransition1418825395939>();
         break;
     case 1418902217839:
-        return std::make_shared<RealMasterPlanForSyncTest1418902217839>();
+        return std::make_unique<RealMasterPlanForSyncTest1418902217839>();
         break;
     case 1428508768572:
-        return std::make_shared<BehaviourTriggerTestPlan1428508768572>();
+        return std::make_unique<BehaviourTriggerTestPlan1428508768572>();
         break;
     case 1522377375148:
-        return std::make_shared<BehaviorSuccessSpamMaster1522377375148>();
+        return std::make_unique<BehaviorSuccessSpamMaster1522377375148>();
         break;
     case 1529456584982:
-        return std::make_shared<BackForth1529456584982>();
+        return std::make_unique<BackForth1529456584982>();
         break;
     case 1530004915640:
-        return std::make_shared<HandleFailExplicit1530004915640>();
+        return std::make_unique<HandleFailExplicit1530004915640>();
         break;
     case 1530004940652:
-        return std::make_shared<HandleFailExplicitMaster1530004940652>();
+        return std::make_unique<HandleFailExplicitMaster1530004940652>();
         break;
     case 1530069246103:
-        return std::make_shared<FailsOnOne1530069246103>();
+        return std::make_unique<FailsOnOne1530069246103>();
         break;
     case 1588060981661:
-        return std::make_shared<ConfigurationTestPlan1588060981661>();
+        return std::make_unique<ConfigurationTestPlan1588060981661>();
         break;
     case 1588061334567:
-        return std::make_shared<ReadConfigurationPlan1588061334567>();
+        return std::make_unique<ReadConfigurationPlan1588061334567>();
         break;
     case 1588061801734:
-        return std::make_shared<ReadConfInPlantype1588061801734>();
+        return std::make_unique<ReadConfInPlantype1588061801734>();
         break;
     case 1613378382024:
-        return std::make_shared<SchedulingTestMasterPlan1613378382024>();
+        return std::make_unique<SchedulingTestMasterPlan1613378382024>();
         break;
     case 1613378406860:
-        return std::make_shared<SchedulingTestPlan11613378406860>();
+        return std::make_unique<SchedulingTestPlan11613378406860>();
         break;
     case 1613378423610:
-        return std::make_shared<SchedulingTestPlan21613378423610>();
+        return std::make_unique<SchedulingTestPlan21613378423610>();
         break;
     case 1613378433623:
-        return std::make_shared<SchedulingTestPlan31613378433623>();
+        return std::make_unique<SchedulingTestPlan31613378433623>();
+        break;
+    case 1614963946725:
+        return std::make_unique<SchedulingTestSequencePlan11614963946725>();
+        break;
+    case 1614964379654:
+        return std::make_unique<SchedulingTestSequenceSubPlan11614964379654>();
+        break;
+    case 1614964444419:
+        return std::make_unique<SchedulingTestSequenceSubPlan21614964444419>();
+        break;
+    case 1614964478264:
+        return std::make_unique<SchedulingTestSequenceSubPlan31614964478264>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

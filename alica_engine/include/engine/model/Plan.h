@@ -70,7 +70,7 @@ private:
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
-    void setBasicPlan(std::shared_ptr<BasicPlan> basicPlan);
+    void setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan);
 
     int _minCardinality;
     int _maxCardinality;
@@ -80,7 +80,7 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    std::shared_ptr<BasicPlan> _basicPlan;
+    std::unique_ptr<BasicPlan> _basicPlan;
 
     /**
      * This plan's Utility function
