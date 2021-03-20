@@ -93,7 +93,10 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
-    _scheduler.init(std::max(1u, std::thread::hardware_concurrency()));
+    int threadPoolSize = _ctx.getConfig()["Alica"]["ThreadPoolSize"].as<int, int>(-1);
+    threadPoolSize = threadPoolSize > 0 ? threadPoolSize : std::max(1u, std::thread::hardware_concurrency());
+    _scheduler.init(threadPoolSize);
+
     RunningPlan::init(_ctx.getConfig());
     _teamManager.init();
     _syncModul.init();
