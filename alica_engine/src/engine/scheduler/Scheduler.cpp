@@ -9,20 +9,23 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(int numberOfThreads, const alica::AlicaEngine* ae)
+Scheduler::Scheduler(const alica::AlicaEngine* ae)
         : _ae(ae)
-        , _running(true)
         , _jobID(0)
-{
-    for (int i = 0; i < numberOfThreads; i++) {
-        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
-    }
-}
+{}
 
 Scheduler::~Scheduler()
 {
     if (_running.load()) {
         terminate();
+    }
+}
+
+void Scheduler::init(int numberOfThreads)
+{
+    _running = true;
+    for (int i = 0; i < numberOfThreads; i++) {
+        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
     }
 }
 
@@ -92,7 +95,6 @@ void Scheduler::workerFunction()
                 _workerCV.notify_one();
                 continue;
             }
-
 
             for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
                 if (prerequisite.lock()) {

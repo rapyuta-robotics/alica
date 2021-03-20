@@ -36,7 +36,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                          const essentials::Identifier& agentID)
         : _ctx(ctx)
-        , _scheduler(std::max(1u, std::thread::hardware_concurrency()), this)
+        , _scheduler(this)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
@@ -93,6 +93,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
+    _scheduler.init(std::max(1u, std::thread::hardware_concurrency()));
     RunningPlan::init(_ctx.getConfig());
     _teamManager.init();
     _syncModul.init();

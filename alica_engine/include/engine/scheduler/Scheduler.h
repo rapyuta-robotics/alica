@@ -17,8 +17,9 @@ namespace scheduler
     class Scheduler
     {
     public:
-        Scheduler(int numberOfThreads, const alica::AlicaEngine* ae);
+        Scheduler(const alica::AlicaEngine* ae);
         ~Scheduler();
+        void init(int numberOfThreads);
         void schedule(std::shared_ptr<Job> job, bool notify = true);
         void terminate();
         int getNextJobID();
