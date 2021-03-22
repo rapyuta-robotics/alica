@@ -32,7 +32,10 @@ void Scheduler::init(int numberOfThreads)
 void Scheduler::terminate()
 {
     _running = false;
-    _jobQueue.clear();
+    {
+        std::unique_lock<std::mutex> lock(_workerMtx);
+        _jobQueue.clear();
+    }
 
     for (std::thread& worker : _workers) {
         _workerCV.notify_all();
@@ -47,10 +50,13 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
         job->scheduledTime = _ae->getAlicaClock().now();
     }
 
-    if (job->isRepeated) {
-        _repeatedJobQueue.insert(std::move(job));
-    } else {
-        _jobQueue.insert(std::move(job));
+    {
+        std::unique_lock<std::mutex> lock(_workerMtx);
+        if (job->isRepeated) {
+            _repeatedJobQueue.insert(std::move(job));
+        } else {
+            _jobQueue.insert(std::move(job));
+        }
     }
 
     if (notify) {
