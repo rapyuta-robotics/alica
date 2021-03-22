@@ -11,7 +11,7 @@ namespace alica
 {
 // Plan:RuntimeConditionPlan1418042806575
 RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575()
-        : DomainPlan("RuntimeConditionPlan1418042806575")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418042806575) ENABLED START*/
     // Add additional options here

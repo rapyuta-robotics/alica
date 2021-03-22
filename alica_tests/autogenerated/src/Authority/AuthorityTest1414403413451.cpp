@@ -10,7 +10,7 @@ namespace alica
 {
 // Plan:AuthorityTest1414403413451
 AuthorityTest1414403413451::AuthorityTest1414403413451()
-        : DomainPlan("AuthorityTest1414403413451")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414403413451) ENABLED START*/
     // Add additional options here

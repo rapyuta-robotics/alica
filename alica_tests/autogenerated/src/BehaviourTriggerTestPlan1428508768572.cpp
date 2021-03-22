@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:BehaviourTriggerTestPlan1428508768572
 BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572()
-        : DomainPlan("BehaviourTriggerTestPlan1428508768572")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
     // Add additional options here

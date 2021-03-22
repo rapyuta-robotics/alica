@@ -49,6 +49,10 @@
 #include "SchedulingTestPlan11613378406860.h"
 #include "SchedulingTestPlan21613378423610.h"
 #include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 
@@ -219,6 +223,27 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1614960063843:
         return std::make_shared<PreCondition1614960063843>();
+        break;
+    case 1614964566531:
+        return std::make_shared<PreCondition1614964566531>();
+        break;
+    case 1614964572495:
+        return std::make_shared<PreCondition1614964572495>();
+        break;
+    case 1614964575553:
+        return std::make_shared<PreCondition1614964575553>();
+        break;
+    case 1614964578016:
+        return std::make_shared<PreCondition1614964578016>();
+        break;
+    case 1615797316171:
+        return std::make_shared<PreCondition1615797316171>();
+        break;
+    case 1615797327077:
+        return std::make_shared<PreCondition1615797327077>();
+        break;
+    case 1615797365364:
+        return std::make_shared<PreCondition1615797365364>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

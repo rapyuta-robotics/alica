@@ -10,7 +10,7 @@ namespace alica
 {
 // Plan:MasterSyncTransition1418825395939
 MasterSyncTransition1418825395939::MasterSyncTransition1418825395939()
-        : DomainPlan("MasterSyncTransition1418825395939")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418825395939) ENABLED START*/
     // Add additional options here

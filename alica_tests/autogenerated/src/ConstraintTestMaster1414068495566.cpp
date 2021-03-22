@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:ConstraintTestMaster1414068495566
 ConstraintTestMaster1414068495566::ConstraintTestMaster1414068495566()
-        : DomainPlan("ConstraintTestMaster1414068495566")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414068495566) ENABLED START*/
     // Add additional options here

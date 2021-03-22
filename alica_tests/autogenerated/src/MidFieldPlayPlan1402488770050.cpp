@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:MidFieldPlayPlan1402488770050
 MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
-        : DomainPlan("MidFieldPlayPlan1402488770050")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
     // Add additional options here

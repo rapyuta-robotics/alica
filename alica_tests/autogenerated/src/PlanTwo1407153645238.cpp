@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:PlanTwo1407153645238
 PlanTwo1407153645238::PlanTwo1407153645238()
-        : DomainPlan("PlanTwo1407153645238")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1407153645238) ENABLED START*/
     // Add additional options here

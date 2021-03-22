@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:ReadConfInPlantype1588061801734
 ReadConfInPlantype1588061801734::ReadConfInPlantype1588061801734()
-        : DomainPlan("ReadConfInPlantype1588061801734")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1588061801734) ENABLED START*/
     // Add additional options here

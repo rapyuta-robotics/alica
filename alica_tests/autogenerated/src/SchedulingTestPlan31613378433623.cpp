@@ -9,7 +9,7 @@ namespace alica
 {
 // Plan:SchedulingTestPlan31613378433623
 SchedulingTestPlan31613378433623::SchedulingTestPlan31613378433623()
-        : DomainPlan("SchedulingTestPlan31613378433623")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1613378433623) ENABLED START*/
     // Add additional options here

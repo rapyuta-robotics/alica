@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:Tackle1402489318663
 Tackle1402489318663::Tackle1402489318663()
-        : DomainPlan("Tackle1402489318663")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402489318663) ENABLED START*/
     // Add additional options here

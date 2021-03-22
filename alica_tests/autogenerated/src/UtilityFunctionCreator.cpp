@@ -35,6 +35,10 @@
 #include "SchedulingTestPlan11613378406860.h"
 #include "SchedulingTestPlan21613378423610.h"
 #include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include <iostream>
@@ -162,6 +166,18 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 1613378433623:
         return std::make_shared<UtilityFunction1613378433623>();
+        break;
+    case 1614963946725:
+        return std::make_shared<UtilityFunction1614963946725>();
+        break;
+    case 1614964379654:
+        return std::make_shared<UtilityFunction1614964379654>();
+        break;
+    case 1614964444419:
+        return std::make_shared<UtilityFunction1614964444419>();
+        break;
+    case 1614964478264:
+        return std::make_shared<UtilityFunction1614964478264>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:MasterPlanTaskAssignment1407152758497
 MasterPlanTaskAssignment1407152758497::MasterPlanTaskAssignment1407152758497()
-        : DomainPlan("MasterPlanTaskAssignment1407152758497")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1407152758497) ENABLED START*/
     // Add additional options here

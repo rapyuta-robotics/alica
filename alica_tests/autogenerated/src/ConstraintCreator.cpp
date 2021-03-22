@@ -50,6 +50,10 @@
 #include "constraints/SchedulingTestPlan11613378406860Constraints.h"
 #include "constraints/SchedulingTestPlan21613378423610Constraints.h"
 #include "constraints/SchedulingTestPlan31613378433623Constraints.h"
+#include "constraints/SchedulingTestSequencePlan11614963946725Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan11614964379654Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan21614964444419Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan31614964478264Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
 

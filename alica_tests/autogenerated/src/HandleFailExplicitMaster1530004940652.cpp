@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:HandleFailExplicitMaster1530004940652
 HandleFailExplicitMaster1530004940652::HandleFailExplicitMaster1530004940652()
-        : DomainPlan("HandleFailExplicitMaster1530004940652")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1530004940652) ENABLED START*/
     // Add additional options here

@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:RealMasterPlanForSyncTest1418902217839
 RealMasterPlanForSyncTest1418902217839::RealMasterPlanForSyncTest1418902217839()
-        : DomainPlan("RealMasterPlanForSyncTest1418902217839")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418902217839) ENABLED START*/
     // Add additional options here

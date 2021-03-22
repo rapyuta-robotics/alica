@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:BehaviorSuccessSpamMaster1522377375148
 BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
-        : DomainPlan("BehaviorSuccessSpamMaster1522377375148")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1522377375148) ENABLED START*/
     // Add additional options here

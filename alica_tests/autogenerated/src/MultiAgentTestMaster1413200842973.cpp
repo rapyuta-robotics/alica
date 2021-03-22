@@ -10,7 +10,7 @@ namespace alica
 {
 // Plan:MultiAgentTestMaster1413200842973
 MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973()
-        : DomainPlan("MultiAgentTestMaster1413200842973")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1413200842973) ENABLED START*/
     // Add additional options here

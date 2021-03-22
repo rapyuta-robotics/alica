@@ -7,7 +7,7 @@ namespace alica
 {
 // Plan:MasterPlanTestConditionPlanType1418042656594
 MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594()
-        : DomainPlan("MasterPlanTestConditionPlanType1418042656594")
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418042656594) ENABLED START*/
     // Add additional options here
