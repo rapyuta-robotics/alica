@@ -1,5 +1,5 @@
-#include "test_alica.h"
 #include "CounterClass.h"
+#include "test_alica.h"
 
 #include <alica/test/Util.h>
 #include <gtest/gtest.h>
@@ -20,7 +20,7 @@ protected:
 TEST_F(AlicaSchedulingPlan, scheduling)
 {
     ae->start();
-    ASSERT_EQ(0, CounterClass::called);
+    CounterClass::called = 0;
 
     ac->stepEngine();
     // init of scheduling plan 1
@@ -42,9 +42,40 @@ TEST_F(AlicaSchedulingPlan, scheduling)
     ASSERT_EQ(9, CounterClass::called);
 }
 
-} //namespace
-} //namespace alica
+TEST_F(AlicaSchedulingPlan, schedulingSkipState)
+{
+    ae->start();
+    alica::scheduler::Scheduler& scheduler = ae->editScheduler();
+    scheduler.terminate();
 
+    CounterClass::called = 1;
+    ac->stepEngine();
 
+    CounterClass::called = 2;
+    ac->stepEngine();
 
+    CounterClass::called = 3;
+    ac->stepEngine();
 
+    std::shared_ptr<alica::scheduler::Job> firstStateTerminateJob;
+    std::shared_ptr<alica::scheduler::Job> thirdStateInitJob;
+
+    std::shared_ptr<alica::scheduler::Job> job = scheduler.popNext();
+    std::vector<std::shared_ptr<alica::scheduler::Job>> jobs;
+    while (job) {
+        if (job->id == 5) {
+            thirdStateInitJob = job;
+        }
+        if (job->id == 4) {
+            firstStateTerminateJob = job;
+        }
+        jobs.push_back(std::move(job));
+        job = scheduler.popNext();
+    }
+    ASSERT_TRUE(thirdStateInitJob->isPrerequisite(*firstStateTerminateJob));
+    CounterClass::called = 4;
+    ac->stepEngine();
+}
+
+} // namespace
+} // namespace alica
