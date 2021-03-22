@@ -260,7 +260,8 @@ void RunningPlan::removeChild(RunningPlan* rp)
  */
 void RunningPlan::moveState(const State* nextState)
 {
-    _deactivatedChildrenTerminateJobs = deactivateChildren();
+    std::vector<std::weak_ptr<scheduler::Job>> terminateJobs = deactivateChildren();
+    _deactivatedChildrenTerminateJobs.insert(_deactivatedChildrenTerminateJobs.end(), terminateJobs.begin(), terminateJobs.end());
     clearChildren();
     _assignment.moveAllFromTo(_activeTriple.entryPoint, _activeTriple.state, nextState);
     useState(nextState);
@@ -490,8 +491,8 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
 
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
     if (_basicPlan) {
-        scheduler.schedule(std::move(terminateJob));
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
+        scheduler.schedule(std::move(terminateJob));
     }
     return _terminateJob;
 }
@@ -598,8 +599,8 @@ void RunningPlan::activate()
 
     std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
     if (_basicPlan) {
-        scheduler.schedule(std::move(initJob));
         _initJob = initJob; //store initJob as weak_ptr
+        scheduler.schedule(std::move(initJob));
     }
 
     attachPlanConstraints();
