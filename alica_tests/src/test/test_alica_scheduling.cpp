@@ -198,8 +198,6 @@ TEST(AlicaScheduling, jobQueue)
     ASSERT_TRUE(jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1)) == nullptr);
     ASSERT_EQ(0, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(2))->id);
     ASSERT_EQ(1, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1))->id);
-
-
 }
 
 } // namespace
