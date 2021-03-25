@@ -82,38 +82,20 @@ void Scheduler::workerFunction()
 
         {
             std::unique_lock<std::mutex> lock(_workerMtx);
-            // wait when queue is empty. Do no wait when queue has jobs or the schedulers destructor is called.
-            _workerCV.wait(lock, [this] { return !_jobQueue.isEmpty() || !_running.load(); });
+            // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
+            _workerCV.wait(lock, [this, &job] { return (job = std::move(_jobQueue.getAvailableJob(_ae->getAlicaClock().now()))) || !_running.load(); });
+            std::cerr << "returned shared ptr: " << job << std::endl;
 
-            if (_jobQueue.isEmpty() || !_running.load()) {
+            if (!_running.load()) {
                 continue;
-            }
-
-            job = _jobQueue.popNext();
-
-            if (job->cancelled) {
-                /*
-                 * If job is cancelled:
-                 *  - Dont execute job.
-                 *  - Dont schedule job.
-                 */
-                job.reset();
-                _workerCV.notify_one();
-                continue;
-            }
-
-            for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
-                if (prerequisite.lock()) {
-                    // Prerequisite jobs not finished, do not execute job
-                    executeJob = false;
-                    break;
-                }
             }
         }
 
         if (executeJob) {
             try {
+                std::cerr << "executing job with id " << job->id << std::endl;
                 job->cb();
+                std::cerr << "finished execution of job with id " << job->id << std::endl;
                 if (job->isRepeated) {
                     schedule(std::move(job));
                 } else {
