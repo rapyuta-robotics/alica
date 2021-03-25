@@ -36,7 +36,7 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
             continue;
         }
 
-        if (allPrerequisitesFinished(*it) && (*it)->scheduledTime <= time) {
+        if ((*it)->isPrerequisiteFree() && (*it)->scheduledTime <= time) {
             std::shared_ptr<Job> job = std::move(*it);
             _queue.erase(it);
             return job;
