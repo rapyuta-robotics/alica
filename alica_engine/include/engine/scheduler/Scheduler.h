@@ -7,6 +7,7 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -17,9 +18,8 @@ namespace scheduler
     class Scheduler
     {
     public:
-        Scheduler(const alica::AlicaEngine* ae);
+        Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config);
         ~Scheduler();
-        void init(int numberOfThreads);
         void schedule(std::shared_ptr<Job> job, bool notify = true);
         void terminate();
         int getNextJobID();

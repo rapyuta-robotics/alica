@@ -9,23 +9,22 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(const alica::AlicaEngine* ae)
+Scheduler::Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config)
         : _ae(ae)
         , _jobID(0)
-{}
+{
+    _running = true;
+    int threadPoolSize = config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency()));
+
+    for (int i = 0; i < threadPoolSize; i++) {
+        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
+    }
+}
 
 Scheduler::~Scheduler()
 {
     if (_running.load()) {
         terminate();
-    }
-}
-
-void Scheduler::init(int numberOfThreads)
-{
-    _running = true;
-    for (int i = 0; i < numberOfThreads; i++) {
-        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
     }
 }
 
