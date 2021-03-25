@@ -27,6 +27,7 @@ struct Job
             , prerequisites(prerequisites)
             , cancelled(false)
             , isRepeated(false)
+            , prerequisiteIndex(0)
     {}
 
     bool isPrerequisiteFree()
