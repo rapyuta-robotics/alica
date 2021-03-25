@@ -13,10 +13,12 @@ namespace scheduler {
         bool isEmpty();
         std::shared_ptr<Job> popNext();
         void clear();
+        std::shared_ptr<Job> getAvailableJob(alica::AlicaTime time);
 
     private:
         std::vector<std::shared_ptr<Job>> _queue;
         std::mutex _mtx;
+        bool allPrerequisitesFinished(std::shared_ptr<Job> job);
     };
 }
 }
