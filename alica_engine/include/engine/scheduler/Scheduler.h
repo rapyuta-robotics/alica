@@ -24,6 +24,7 @@ namespace scheduler
         void terminate();
         int getNextJobID();
         std::shared_ptr<Job> popNext();
+        std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
     private:
         const alica::AlicaEngine* _ae;
         JobQueue _jobQueue;

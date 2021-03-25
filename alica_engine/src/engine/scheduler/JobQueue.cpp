@@ -20,6 +20,15 @@ std::shared_ptr<Job> JobQueue::popNext()
     return job;
 }
 
+std::vector<std::weak_ptr<Job>> JobQueue::getPrerequisites(int id) {
+    for (std::shared_ptr job : _queue) {
+        if (job->id == id) {
+            return job->prerequisites;
+        }
+    }
+    return std::vector<std::weak_ptr<Job>>();
+}
+
 std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
 {
     if (_queue.empty()) {
