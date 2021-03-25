@@ -19,6 +19,7 @@ protected:
 
 TEST_F(AlicaSchedulingPlan, scheduling)
 {
+    std::cerr << "scheduling test 1 ------------------------------" << std::endl;
     ae->start();
     CounterClass::called = 0;
 
@@ -44,6 +45,7 @@ TEST_F(AlicaSchedulingPlan, scheduling)
 
 TEST_F(AlicaSchedulingPlan, schedulingSkipState)
 {
+    std::cerr << "scheduling test 2 ------------------------------" << std::endl;
     ae->start();
     alica::scheduler::Scheduler& scheduler = ae->editScheduler();
     scheduler.terminate();
