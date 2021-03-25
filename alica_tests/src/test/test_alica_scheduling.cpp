@@ -70,5 +70,34 @@ TEST_F(AlicaSchedulingPlan, schedulingSkipState)
     ac->stepEngine();
 }
 
+TEST(AlicaScheduling, jobOrderingTest)
+{
+    alica::AlicaTime::seconds(1);
+    std::vector<alica::scheduler::Job> jobs;
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites;
+
+    alica::scheduler::Job job1(0, nullptr, prerequisites);
+    job1.scheduledTime = alica::AlicaTime::seconds(1);
+
+    alica::scheduler::Job job2(1, nullptr, prerequisites);
+    job2.scheduledTime = alica::AlicaTime::seconds(2);
+
+    alica::scheduler::Job job3(2, nullptr, prerequisites);
+    job3.scheduledTime = alica::AlicaTime::seconds(3);
+
+    jobs.insert(std::upper_bound(jobs.begin(), jobs.end(), job1), job1);
+    jobs.insert(std::upper_bound(jobs.begin(), jobs.end(), job3), job3);
+    jobs.insert(std::upper_bound(jobs.begin(), jobs.end(), job2), job2);
+
+    ASSERT_EQ(0, jobs.at(0).id);
+    ASSERT_EQ(1, jobs.at(1).id);
+    ASSERT_EQ(2, jobs.at(2).id);
+
+    alica::scheduler::Job job4(2, nullptr, prerequisites);
+    job3.scheduledTime = alica::AlicaTime::seconds(4);
+
+    ASSERT_EQ(job3, job4);
+}
+
 } // namespace
 } // namespace alica
