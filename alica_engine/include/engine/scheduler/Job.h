@@ -42,7 +42,7 @@ struct Job
     bool operator==(const Job& r) const { return id == r.id; }
 
     bool operator<(const Job& other) const {
-        return isPrerequisite(other) || (!other.isPrerequisite(*this) && scheduledTime < other.scheduledTime);
+        return scheduledTime < other.scheduledTime;
     }
 };
 } // namespace scheduler
