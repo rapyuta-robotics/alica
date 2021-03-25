@@ -100,5 +100,26 @@ TEST(AlicaScheduling, jobOrderingTest)
     ASSERT_EQ(job3, job4);
 }
 
+TEST(AlicaScheduling, jobIsPrerequisiteFree)
+{
+    std::function<void()> cb;
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
+    std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
+
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites2;
+    std::weak_ptr<alica::scheduler::Job> job1WeakPtr = job1;
+    prerequisites2.push_back(job1WeakPtr);
+    std::shared_ptr<alica::scheduler::Job> job2 = std::make_shared<alica::scheduler::Job>(1, cb, prerequisites2);
+
+    ASSERT_TRUE(job1->isPrerequisiteFree());
+    ASSERT_FALSE(job2->isPrerequisiteFree());
+
+    job1.reset();
+
+    ASSERT_TRUE(job1 == nullptr);
+    ASSERT_TRUE(job1WeakPtr.lock() == nullptr);
+    ASSERT_TRUE(job2->isPrerequisiteFree());
+}
+
 } // namespace
 } // namespace alica
