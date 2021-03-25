@@ -38,20 +38,6 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
     }
 
     return nullptr;
-//    auto it = _queue.begin();
-//    while (it != _queue.end()) {
-//        if ((*it)->cancelled) {
-//            it = _queue.erase(it);
-//            continue;
-//        }
-//
-//        if ((*it)->isPrerequisiteFree() && (*it)->scheduledTime <= time) {
-//            std::shared_ptr<Job> job = std::move(*it);
-//            _queue.erase(it);
-//            return job;
-//        }
-//    }
-//    return nullptr;
 }
 
 void JobQueue::clear()
