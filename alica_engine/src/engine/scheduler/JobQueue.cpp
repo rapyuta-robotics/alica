@@ -29,7 +29,7 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
     auto it = _queue.begin();
     while (it != _queue.end()) {
         std::cerr << "jobid: " << (*it)->id << " pr: ";
-        std::cerr << (*it)->prerequisites.size() << " finished: " << allPrerequisitesFinished(*it);
+        std::cerr << (*it)->prerequisites.size() << " finished: " << (*it)->isPrerequisiteFree();
         std::cerr << " scheduledTime: " << (*it)->scheduledTime << " target: " << time << std::endl;
         if ((*it)->cancelled) {
             it = _queue.erase(it);
@@ -43,16 +43,6 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
         }
     }
     return nullptr;
-}
-
-bool JobQueue::allPrerequisitesFinished(std::shared_ptr<Job> job)
-{
-    for (std::weak_ptr<Job> prerequisite : job->prerequisites) {
-        if (prerequisite.lock()) {
-            return false;
-        }
-    }
-    return true;
 }
 
 void JobQueue::clear()
