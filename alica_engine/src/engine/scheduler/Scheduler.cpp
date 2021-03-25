@@ -68,11 +68,6 @@ int Scheduler::getNextJobID()
     return ++_jobID;
 }
 
-std::shared_ptr<Job> Scheduler::popNext()
-{
-    return _jobQueue.popNext();
-}
-
 std::vector<std::weak_ptr<Job>> Scheduler::getPrerequisites(int id)
 {
     return _jobQueue.getPrerequisites(id);

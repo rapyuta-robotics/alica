@@ -9,17 +9,6 @@ void JobQueue::insert(std::shared_ptr<Job>&& job)
     _queue.insert(std::upper_bound(_queue.begin(), _queue.end(), job), std::move(job));
 }
 
-std::shared_ptr<Job> JobQueue::popNext()
-{
-    if (_queue.empty()) {
-        return nullptr;
-    }
-
-    std::shared_ptr<Job> job = _queue.front();
-    _queue.erase(_queue.begin());
-    return job;
-}
-
 std::vector<std::weak_ptr<Job>> JobQueue::getPrerequisites(int id) {
     for (std::shared_ptr job : _queue) {
         if (job->id == id) {
