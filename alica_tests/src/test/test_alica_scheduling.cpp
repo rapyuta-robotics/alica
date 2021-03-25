@@ -195,8 +195,11 @@ TEST(AlicaScheduling, jobQueue)
     jobQueue.insert(std::move(job1));
     jobQueue.insert(std::move(job2));
 
+    // can not execute job2 because of prerequisites
     ASSERT_TRUE(jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1)) == nullptr);
+    // can execute job1 because of scheduledTime and no prerequisites
     ASSERT_EQ(0, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(2))->id);
+    // can execute job2 because of scheduledTime and no open prerequisites
     ASSERT_EQ(1, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1))->id);
 }
 
