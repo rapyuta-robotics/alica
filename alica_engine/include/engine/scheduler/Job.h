@@ -29,17 +29,6 @@ struct Job
             , isRepeated(false)
     {}
 
-    bool isPrerequisite(const Job& other) const
-    {
-        for (std::weak_ptr<Job> jobWeakPtr : prerequisites) {
-            std::shared_ptr<Job> job = jobWeakPtr.lock();
-            if (job && *(job) == other) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     bool isPrerequisiteFree()
     {
         for (uint i = prerequisiteIndex; i < prerequisites.size(); i++) {

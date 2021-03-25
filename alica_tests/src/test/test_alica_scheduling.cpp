@@ -57,22 +57,15 @@ TEST_F(AlicaSchedulingPlan, schedulingSkipState)
     CounterClass::called = 3;
     ac->stepEngine();
 
-    std::shared_ptr<alica::scheduler::Job> firstStateTerminateJob;
-    std::shared_ptr<alica::scheduler::Job> thirdStateInitJob;
-
-    std::shared_ptr<alica::scheduler::Job> job = scheduler.popNext();
-    std::vector<std::shared_ptr<alica::scheduler::Job>> jobs;
-    while (job) {
-        if (job->id == 5) {
-            thirdStateInitJob = job;
+    bool isPrerequisite = false;
+    for (std::weak_ptr<alica::scheduler::Job> weakJob : scheduler.getPrerequisites(5)) {
+        std::shared_ptr<alica::scheduler::Job> sharedJob = weakJob.lock();
+        if (sharedJob && sharedJob->id == 4) {
+            isPrerequisite = true;
         }
-        if (job->id == 4) {
-            firstStateTerminateJob = job;
-        }
-        jobs.push_back(std::move(job));
-        job = scheduler.popNext();
     }
-    ASSERT_TRUE(thirdStateInitJob->isPrerequisite(*firstStateTerminateJob));
+    ASSERT_TRUE(isPrerequisite);
+
     CounterClass::called = 4;
     ac->stepEngine();
 }
