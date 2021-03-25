@@ -14,7 +14,6 @@ env:
     - COVERITY_PROJECT=alica
     - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
     - COVERITY_EMAIL=alexander.bolinsky@rapyuta-robotics.com
-    - PYTHONPATH=$PYTHONPATH:/usr/lib/python2.7/dist-packages:/usr/local/lib/python2.7/dist-packages
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
     - BASE_BRANCH=$TRAVIS_BRANCH
 
@@ -22,7 +21,7 @@ env:
 ################################################################################
 
 before_install:
-  - docker run -e BASE_BRANCH -e BRANCH -e PYTHONPATH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-bionic tail -f /dev/null
+  - docker run -e BASE_BRANCH -e BRANCH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-bionic tail -f /dev/null
 
 install:
   - docker exec -t alica-test bash -c "
