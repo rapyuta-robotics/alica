@@ -84,7 +84,6 @@ void Scheduler::workerFunction()
             std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
             _workerCV.wait(lock, [this, &job] { return !_running.load() || (job = std::move(_jobQueue.getAvailableJob(_ae->getAlicaClock().now()))); });
-            std::cerr << "returned shared ptr: " << job << std::endl;
 
             if (!_running.load()) {
                 continue;
@@ -93,9 +92,7 @@ void Scheduler::workerFunction()
 
         if (executeJob) {
             try {
-                std::cerr << "executing job with id " << job->id << std::endl;
                 job->cb();
-                std::cerr << "finished execution of job with id " << job->id << std::endl;
                 if (job->isRepeated) {
                     schedule(std::move(job));
                 } else {
