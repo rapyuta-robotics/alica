@@ -149,9 +149,9 @@ TEST_F(AlicaSchedulingPlan, schedulerGetPrerequisites)
     scheduler.schedule(job1);
     scheduler.schedule(job2);
 
-    ASSERT_EQ(0, scheduler.getPrerequisites(0).size());
-    ASSERT_EQ(1, scheduler.getPrerequisites(1).size());
-    ASSERT_EQ(0, scheduler.getPrerequisites(2).size());
+    ASSERT_EQ(0u, scheduler.getPrerequisites(0).size());
+    ASSERT_EQ(1u, scheduler.getPrerequisites(1).size());
+    ASSERT_EQ(0u, scheduler.getPrerequisites(2).size());
 
     ASSERT_EQ(job1, scheduler.getPrerequisites(1).front().lock());
 }
