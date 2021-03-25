@@ -121,5 +121,15 @@ TEST(AlicaScheduling, jobIsPrerequisiteFree)
     ASSERT_TRUE(job2->isPrerequisiteFree());
 }
 
+TEST_F(AlicaSchedulingPlan, schedulerGetNextJobID)
+{
+    ae->start();
+    alica::scheduler::Scheduler& scheduler = ae->editScheduler();
+
+    for(int i = 1; i <= 10; i++) {
+        ASSERT_EQ(i, scheduler.getNextJobID());
+    }
+}
+
 } // namespace
 } // namespace alica
