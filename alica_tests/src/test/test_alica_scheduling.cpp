@@ -176,5 +176,31 @@ TEST_F(AlicaSchedulingPlan, schedulerSchedule)
     ASSERT_TRUE(job1->scheduledTime <= job2->scheduledTime);
 }
 
+TEST(AlicaScheduling, jobQueue)
+{
+    alica::AlicaClock clock;
+
+    std::function<void()> cb;
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
+    std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
+    job1->scheduledTime = clock.now() + alica::AlicaTime::minutes(2);
+
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites2;
+    std::weak_ptr<alica::scheduler::Job> job1WeakPtr = job1;
+    prerequisites2.push_back(job1WeakPtr);
+    std::shared_ptr<alica::scheduler::Job> job2 = std::make_shared<alica::scheduler::Job>(1, cb, prerequisites2);
+    job2->scheduledTime = clock.now() + alica::AlicaTime::minutes(1);
+
+    alica::scheduler::JobQueue jobQueue;
+    jobQueue.insert(std::move(job1));
+    jobQueue.insert(std::move(job2));
+
+    ASSERT_TRUE(jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1)) == nullptr);
+    ASSERT_EQ(0, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(2))->id);
+    ASSERT_EQ(1, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1))->id);
+
+
+}
+
 } // namespace
 } // namespace alica
