@@ -131,5 +131,30 @@ TEST_F(AlicaSchedulingPlan, schedulerGetNextJobID)
     }
 }
 
+TEST_F(AlicaSchedulingPlan, schedulerGetPrerequisites)
+{
+    ae->start();
+    alica::scheduler::Scheduler& scheduler = ae->editScheduler();
+    scheduler.terminate();
+
+    std::function<void()> cb;
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
+    std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
+
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites2;
+    std::weak_ptr<alica::scheduler::Job> job1WeakPtr = job1;
+    prerequisites2.push_back(job1WeakPtr);
+    std::shared_ptr<alica::scheduler::Job> job2 = std::make_shared<alica::scheduler::Job>(1, cb, prerequisites2);
+
+    scheduler.schedule(job1);
+    scheduler.schedule(job2);
+
+    ASSERT_EQ(0, scheduler.getPrerequisites(0).size());
+    ASSERT_EQ(1, scheduler.getPrerequisites(1).size());
+    ASSERT_EQ(0, scheduler.getPrerequisites(2).size());
+
+    ASSERT_EQ(job1, scheduler.getPrerequisites(1).front().lock());
+}
+
 } // namespace
 } // namespace alica
