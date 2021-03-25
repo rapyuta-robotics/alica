@@ -42,7 +42,7 @@ struct Job
 
     bool isPrerequisiteFree()
     {
-        for (int i = prerequisiteIndex; i < prerequisites.size(); i++) {
+        for (uint i = prerequisiteIndex; i < prerequisites.size(); i++) {
             if (prerequisites.at(i).lock()) {
                 return false;
             }
