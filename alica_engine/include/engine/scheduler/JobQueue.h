@@ -10,7 +10,6 @@ namespace scheduler {
     {
     public:
         void insert(std::shared_ptr<Job>&& job);
-        bool isEmpty();
         std::shared_ptr<Job> popNext();
         void clear();
         std::shared_ptr<Job> getAvailableJob(alica::AlicaTime time);

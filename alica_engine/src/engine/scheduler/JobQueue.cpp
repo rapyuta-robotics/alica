@@ -9,14 +9,9 @@ void JobQueue::insert(std::shared_ptr<Job>&& job)
     _queue.insert(std::upper_bound(_queue.begin(), _queue.end(), job), std::move(job));
 }
 
-bool JobQueue::isEmpty()
-{
-    return _queue.empty();
-}
-
 std::shared_ptr<Job> JobQueue::popNext()
 {
-    if (isEmpty()) {
+    if (_queue.empty()) {
         return nullptr;
     }
 
@@ -27,7 +22,7 @@ std::shared_ptr<Job> JobQueue::popNext()
 
 std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
 {
-    if (isEmpty()) {
+    if (_queue.empty()) {
         return nullptr;
     }
 
