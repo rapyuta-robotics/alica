@@ -19,6 +19,7 @@ struct Job
     bool isRepeated;
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
+    int prerequisiteIndex;
 
     Job(int id, std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
             : cb(cb)
@@ -37,6 +38,17 @@ struct Job
             }
         }
         return false;
+    }
+
+    bool isPrerequisiteFree()
+    {
+        for (int i = prerequisiteIndex; i < prerequisites.size(); i++) {
+            if (prerequisites.at(i).lock()) {
+                return false;
+            }
+            prerequisiteIndex++;
+        }
+        return true;
     }
 
     bool operator==(const Job& r) const { return id == r.id; }
