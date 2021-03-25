@@ -62,6 +62,7 @@ TEST_F(AlicaSchedulingPlan, schedulingSkipState)
         std::shared_ptr<alica::scheduler::Job> sharedJob = weakJob.lock();
         if (sharedJob && sharedJob->id == 4) {
             isPrerequisite = true;
+            break;
         }
     }
     ASSERT_TRUE(isPrerequisite);
