@@ -126,7 +126,7 @@ void Scheduler::workerNotifier()
             if (!_running.load()) {
                 break;
             }
-            _ae->getAlicaClock().sleep(_jobQueue._lowestScheduledTime - _ae->getAlicaClock().now());
+            _ae->getAlicaClock().sleep(_jobQueue.getLowestScheduledTime() - _ae->getAlicaClock().now());
             _notifierIsActive = false;
             _workerCV.notify_all();
         }
