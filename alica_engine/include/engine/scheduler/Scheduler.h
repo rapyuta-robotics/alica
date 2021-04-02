@@ -29,12 +29,16 @@ namespace scheduler
         JobQueue _jobQueue;
         JobQueue _repeatedJobQueue;
         std::mutex _workerMtx;
+        std::mutex _workerNotifierMtx;
         std::condition_variable _workerCV;
+        std::condition_variable _workerNotifierCV;
         std::vector<std::thread> _workers;
         std::atomic<bool> _running;
         std::atomic<int> _jobID;
+        bool _notifierIsActive;
 
         void workerFunction();
+        void workerNotifier();
     };
 }
 }
