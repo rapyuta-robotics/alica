@@ -102,7 +102,7 @@ TEST(AlicaScheduling, jobOrderingTest)
 
 TEST(AlicaScheduling, jobIsPrerequisiteFree)
 {
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
     std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
 
@@ -137,7 +137,7 @@ TEST_F(AlicaSchedulingPlan, schedulerGetPrerequisites)
     alica::scheduler::Scheduler& scheduler = ae->editScheduler();
     scheduler.terminate();
 
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
     std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
 
@@ -162,7 +162,7 @@ TEST_F(AlicaSchedulingPlan, schedulerSchedule)
     alica::scheduler::Scheduler& scheduler = ae->editScheduler();
     scheduler.terminate();
 
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
     std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
 
@@ -180,7 +180,7 @@ TEST(AlicaScheduling, jobQueue)
 {
     alica::AlicaClock clock;
 
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
     std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
     job1->scheduledTime = clock.now() + alica::AlicaTime::minutes(2);
@@ -201,6 +201,32 @@ TEST(AlicaScheduling, jobQueue)
     ASSERT_EQ(0, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(2))->id);
     // can execute job2 because of scheduledTime and no open prerequisites
     ASSERT_EQ(1, jobQueue.getAvailableJob(clock.now() + alica::AlicaTime::minutes(1))->id);
+}
+
+static int count = 0;
+
+void callback(void* msg)
+{
+    std::cerr << "test repeated " << count << std::endl;
+    count++;
+}
+
+TEST_F(AlicaSchedulingPlan, repeatedJobExecution)
+{
+    ae->start();
+    alica::scheduler::Scheduler& scheduler = ae->editScheduler();
+    std::function<void(void*)> cb = &callback;
+    std::vector<std::weak_ptr<alica::scheduler::Job>> prerequisites1;
+    std::shared_ptr<alica::scheduler::Job> job1 = std::make_shared<alica::scheduler::Job>(0, cb, prerequisites1);
+    job1->repeatInterval = alica::AlicaTime::seconds(1);
+    job1->isRepeated = true;
+
+    scheduler.schedule(job1);
+
+    alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
+    while (count < 10) {
+        ae->getAlicaClock().sleep(sleepTime);
+    }
 }
 
 } // namespace
