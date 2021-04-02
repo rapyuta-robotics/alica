@@ -29,7 +29,7 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
     }
 
     for (auto it = _queue.begin(); it != _queue.end(); it++) {
-        if ((*it)->cancelled) {
+        if ((*it)->cancelled && !((*it)->inProgress)) {
             it = _queue.erase(it);
             continue;
         }
