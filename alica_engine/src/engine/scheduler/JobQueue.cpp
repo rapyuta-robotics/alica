@@ -1,5 +1,7 @@
 #include "engine/scheduler/JobQueue.h"
 
+#include <alica_common_config/debug_output.h>
+
 namespace alica
 {
 namespace scheduler
@@ -52,6 +54,15 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
 void JobQueue::clear()
 {
     _queue.clear();
+}
+
+void JobQueue::detectDelayedJobs(alica::AlicaTime time)
+{
+    for (std::shared_ptr job : _queue) {
+        if (job->isRepeated && job->scheduledTime + job->repeatInterval < time) {
+            ALICA_ERROR_MSG("Repeating job with id " << job->id << " is delayed");
+        }
+    }
 }
 } // namespace scheduler
 } // namespace alica

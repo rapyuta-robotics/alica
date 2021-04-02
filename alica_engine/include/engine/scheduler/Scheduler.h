@@ -39,6 +39,7 @@ namespace scheduler
 
         void workerFunction();
         void workerNotifier();
+        void monitorJobs();
     };
 }
 }

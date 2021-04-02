@@ -13,6 +13,7 @@ namespace scheduler {
         void clear();
         std::shared_ptr<Job> getAvailableJob(alica::AlicaTime time);
         std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
+        void detectDelayedJobs(alica::AlicaTime time);
     private:
         AlicaTime _lowestScheduledTime;
         std::vector<std::shared_ptr<Job>> _queue;

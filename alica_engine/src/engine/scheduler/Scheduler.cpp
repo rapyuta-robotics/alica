@@ -22,6 +22,7 @@ Scheduler::Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config)
     }
 
     _workers.emplace_back(std::thread(&Scheduler::workerNotifier, this));
+    _workers.emplace_back(std::thread(&Scheduler::monitorJobs, this));
 }
 
 Scheduler::~Scheduler()
@@ -129,6 +130,14 @@ void Scheduler::workerNotifier()
             _notifierIsActive = false;
             _workerCV.notify_all();
         }
+    }
+}
+
+void Scheduler::monitorJobs()
+{
+    while (_running.load()) {
+        _ae->getAlicaClock().sleep(alica::AlicaTime::seconds(5));
+        _jobQueue.detectDelayedJobs(_ae->getAlicaClock().now());
     }
 }
 } // namespace scheduler
