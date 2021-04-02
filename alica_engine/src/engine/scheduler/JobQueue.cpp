@@ -64,5 +64,11 @@ void JobQueue::detectDelayedJobs(alica::AlicaTime time)
         }
     }
 }
+
+bool JobQueue::isEmpty() const
+{
+    return _queue.empty();
+}
+
 } // namespace scheduler
 } // namespace alica
