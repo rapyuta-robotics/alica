@@ -31,9 +31,12 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
         }
 
         if ((*it)->isPrerequisiteFree() && (*it)->scheduledTime <= time) {
+            if ((*it)->isRepeated) {
+                return (*it);
+            }
             std::shared_ptr<Job> job = std::move(*it);
             _queue.erase(it);
-            return job;
+            return std::move(job);
         }
     }
 
