@@ -20,6 +20,8 @@ std::vector<std::weak_ptr<Job>> JobQueue::getPrerequisites(int id) {
 
 std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
 {
+    _lowestScheduledTime = time;
+
     if (_queue.empty()) {
         return nullptr;
     }
@@ -37,6 +39,10 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
             std::shared_ptr<Job> job = std::move(*it);
             _queue.erase(it);
             return std::move(job);
+        }
+
+        if ((*it)->isPrerequisiteFree() && !(*it)->inProgress) {
+            _lowestScheduledTime = std::min((*it)->scheduledTime, _lowestScheduledTime);
         }
     }
 
