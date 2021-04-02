@@ -484,7 +484,7 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     auto& scheduler = _ae->editScheduler();
     int jobID = scheduler.getNextJobID();
 
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     if (_basicPlan) {
         cb = std::bind(&BasicPlan::onTermination, _basicPlan);
     }
@@ -493,6 +493,13 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     if (_basicPlan) {
         _terminateJob = terminateJob; //store terminateJob as weak_ptr
         scheduler.schedule(std::move(terminateJob));
+    }
+    if (_basicBehaviour) {
+        std::shared_ptr<alica::scheduler::Job> runJob = _runJob.lock();
+        if (runJob) {
+            std::cerr << "cancel runJob with id " << runJob->id << std::endl;
+            runJob->cancelled = true;
+        }
     }
     return _terminateJob;
 }
@@ -586,7 +593,7 @@ void RunningPlan::activate()
 
     auto& scheduler = _ae->editScheduler();
     int jobID = scheduler.getNextJobID();
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
 
     if (_basicPlan) {
         cb = std::bind(&BasicPlan::init, _basicPlan);
@@ -601,6 +608,14 @@ void RunningPlan::activate()
     if (_basicPlan) {
         _initJob = initJob; //store initJob as weak_ptr
         scheduler.schedule(std::move(initJob));
+    } else if (_basicBehaviour) {
+        int runJobID = scheduler.getNextJobID();
+        std::function<void(void*)> abc = std::bind(&BasicBehaviour::run, _basicBehaviour, nullptr);
+        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(runJobID, abc, prerequisites);
+        runJob->isRepeated = true;
+        runJob->repeatInterval = _basicBehaviour->getInterval();
+        _runJob = runJob; //store runJob as weak_ptr
+        scheduler.schedule(std::move(runJob));
     }
 
     attachPlanConstraints();
