@@ -13,20 +13,22 @@ namespace scheduler
 struct Job
 {
     int id;
-    std::function<void()> cb;
+    std::function<void(void*)> cb;
     AlicaTime scheduledTime;
     bool cancelled;
     bool isRepeated;
+    bool inProgress;
     AlicaTime repeatInterval;
     std::vector<std::weak_ptr<Job>> prerequisites;
     int prerequisiteIndex;
 
-    Job(int id, std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
+    Job(int id, std::function<void(void*)> cb, std::vector<std::weak_ptr<Job>> prerequisites)
             : cb(cb)
             , id(id)
             , prerequisites(prerequisites)
             , cancelled(false)
             , isRepeated(false)
+            , inProgress(false)
             , prerequisiteIndex(0)
     {}
 
