@@ -214,7 +214,7 @@ void BasicBehaviour::doRun(bool timed)
             }
             AlicaTime start = _engine->getAlicaClock().now();
             try {
-                run(nullptr);
+//                run(nullptr);
             } catch (const std::exception& e) {
                 std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
                 sendLogMessage(4, err);
@@ -237,7 +237,7 @@ void BasicBehaviour::doRun(bool timed)
                 }
             }
             try {
-                run(static_cast<void*>(_behaviourTrigger));
+//                run(static_cast<void*>(_behaviourTrigger));
             } catch (const std::exception& e) {
                 std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
                 sendLogMessage(4, err);
