@@ -146,14 +146,14 @@ TEST_F(AlicaSchedulingPlan, schedulerGetPrerequisites)
     prerequisites2.push_back(job1WeakPtr);
     std::shared_ptr<alica::scheduler::Job> job2 = std::make_shared<alica::scheduler::Job>(1, cb, prerequisites2);
 
-    scheduler.schedule(job1);
-    scheduler.schedule(job2);
+    scheduler.schedule(std::move(job1));
+    scheduler.schedule(std::move(job2));
 
     ASSERT_EQ(0u, scheduler.getPrerequisites(0).size());
     ASSERT_EQ(1u, scheduler.getPrerequisites(1).size());
     ASSERT_EQ(0u, scheduler.getPrerequisites(2).size());
 
-    ASSERT_EQ(job1, scheduler.getPrerequisites(1).front().lock());
+    ASSERT_EQ(job1WeakPtr.lock(), scheduler.getPrerequisites(1).front().lock());
 }
 
 TEST_F(AlicaSchedulingPlan, schedulerSchedule)
@@ -170,10 +170,11 @@ TEST_F(AlicaSchedulingPlan, schedulerSchedule)
     std::weak_ptr<alica::scheduler::Job> job1WeakPtr = job1;
     prerequisites2.push_back(job1WeakPtr);
     std::shared_ptr<alica::scheduler::Job> job2 = std::make_shared<alica::scheduler::Job>(1, cb, prerequisites2);
+    std::weak_ptr<alica::scheduler::Job> job2WeakPtr = job2;
 
-    scheduler.schedule(job1);
-    scheduler.schedule(job2);
-    ASSERT_TRUE(job1->scheduledTime <= job2->scheduledTime);
+    scheduler.schedule(std::move(job1));
+    scheduler.schedule(std::move(job2));
+    ASSERT_TRUE(job1WeakPtr.lock()->scheduledTime <= job2WeakPtr.lock()->scheduledTime);
 }
 
 TEST(AlicaScheduling, jobQueue)
