@@ -43,7 +43,7 @@ void Scheduler::terminate()
     _workers.clear();
 }
 
-void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
+void Scheduler::schedule(std::shared_ptr<Job>&& job, bool notify)
 {
     if (job->scheduledTime.inNanoseconds() == 0) {
         job->scheduledTime = _ae->getAlicaClock().now();

@@ -20,7 +20,7 @@ namespace scheduler
     public:
         Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config);
         ~Scheduler();
-        void schedule(std::shared_ptr<Job> job, bool notify = true);
+        void schedule(std::shared_ptr<Job>&& job, bool notify = true);
         void terminate();
         int getNextJobID();
         std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
