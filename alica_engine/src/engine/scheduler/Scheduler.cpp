@@ -85,7 +85,7 @@ void Scheduler::workerFunction()
             _workerCV.wait(lock, [this, &job] { return !_running.load() || (job = std::move(_jobQueue.getAvailableJob(_ae->getAlicaClock().now()))); });
 
             if (!_running.load()) {
-                continue;
+                return;
             }
         }
 
