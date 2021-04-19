@@ -103,7 +103,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
 
 void AlicaEngine::start()
 {
-    _scheduler = new scheduler::Scheduler(this, _ctx.getConfig());
+    _scheduler = new scheduler::Scheduler(_ctx.getAlicaClock(), _ctx.getConfig());
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan);
     ALICA_DEBUG_MSG("AE: Engine started!");

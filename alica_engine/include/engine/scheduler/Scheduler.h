@@ -2,6 +2,9 @@
 
 #include "engine/scheduler/Job.h"
 #include "engine/scheduler/JobQueue.h"
+#include "engine/AlicaClock.h"
+
+#include <alica_common_config/debug_output.h>
 #include <vector>
 #include <condition_variable>
 #include <mutex>
@@ -18,7 +21,7 @@ namespace scheduler
     class Scheduler
     {
     public:
-        Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config);
+        Scheduler(const alica::AlicaClock& clock, const YAML::Node& config);
         ~Scheduler();
         void schedule(std::shared_ptr<Job>&& job, bool notify = true);
         void terminate();
@@ -26,7 +29,7 @@ namespace scheduler
         //Used by unit tests only
         std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
     private:
-        const alica::AlicaEngine* _ae;
+        alica::AlicaClock _clock;
         JobQueue _jobQueue;
         JobQueue _repeatedJobQueue;
         std::mutex _workerMtx;
