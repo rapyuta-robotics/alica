@@ -36,7 +36,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                          const essentials::Identifier& agentID)
         : _ctx(ctx)
-        , _scheduler(this, _ctx.getConfig())
+        , _scheduler(nullptr)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
@@ -103,6 +103,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
 
 void AlicaEngine::start()
 {
+    _scheduler = new scheduler::Scheduler(this, _ctx.getConfig());
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan);
     ALICA_DEBUG_MSG("AE: Engine started!");
@@ -113,7 +114,10 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
-    _scheduler.terminate();
+    if (_scheduler) {
+        _scheduler->terminate();
+        delete _scheduler;
+    }
     _behaviourPool.stopAll();
     _behaviourPool.terminateAll();
     _planBase.stop();
