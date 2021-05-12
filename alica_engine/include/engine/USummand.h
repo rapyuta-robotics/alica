@@ -1,18 +1,11 @@
-/*
- * USummand.h
- *
- *  Created on: Jul 9, 2014
- *      Author: Stefan Jakob
- */
-
-#ifndef USUMMAND_H_
-#define USUMMAND_H_
+#pragma once
 
 #include <map>
 #include <sstream>
 #include <string>
 #include <vector>
 
+#include "engine/Assignment.h"
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/UtilityInterval.h"
@@ -58,7 +51,7 @@ public:
      * Evaluates the utilityfunction summand
      * @return The result of the evaluation
      */
-    virtual UtilityInterval eval(IAssignment ass) const = 0;
+    virtual UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const = 0;
     /**
      * Cache every data for the current evaluation, to
      * assure consistency over the complete current evaluation.
@@ -73,5 +66,3 @@ protected:
 };
 
 } /* namespace alica */
-
-#endif /* USUMMAND_H_ */
