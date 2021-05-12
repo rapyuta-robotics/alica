@@ -15,7 +15,7 @@ public:
     virtual ~DistXContourTest();
     void cacheEvalData() override;
     double interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) const;
-    UtilityInterval eval(IAssignment ass) const override;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
 
 protected:
     std::vector<std::pair<double, double>> contourPoints;
