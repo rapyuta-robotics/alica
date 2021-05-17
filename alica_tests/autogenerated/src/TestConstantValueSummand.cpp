@@ -21,7 +21,7 @@ TestConstantValueSummand::TestConstantValueSummand(double weight, double val)
 
 TestConstantValueSummand::~TestConstantValueSummand() {}
 
-UtilityInterval TestConstantValueSummand::eval(IAssignment) const
+UtilityInterval TestConstantValueSummand::eval(IAssignment, const Assignment* oldAss) const
 {
     return UtilityInterval(val, val);
 }

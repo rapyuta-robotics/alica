@@ -25,7 +25,7 @@ DummyTestSummand::DummyTestSummand(double weight)
 
 DummyTestSummand::~DummyTestSummand() {}
 
-UtilityInterval DummyTestSummand::eval(IAssignment ass) const
+UtilityInterval DummyTestSummand::eval(IAssignment ass, const Assignment* oldAss) const
 {
     UtilityInterval ui(0.0, 1.0);
 
