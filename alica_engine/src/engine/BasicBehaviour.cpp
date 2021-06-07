@@ -195,7 +195,7 @@ void BasicBehaviour::doStop()
 {
     // important to set stopCalled to false after setting behaviour result for correct lock-free
     // behaviour of isSuccess() & isFailure(). Should be called when _runLoopMutex is held by the thread
-    setBehaviourResult(BehaviourResult::UNKNOWN);
+//    setBehaviourResult(BehaviourResult::UNKNOWN);
     setBehaviourState(BehaviourState::TERMINATING);
     setStopCalled(false);
 }
