@@ -285,6 +285,8 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
+    } else if (_status.planStartTime == AlicaTime::zero()) {
+        _status.planStartTime = _ae->getAlicaClock().now();
     }
 }
 
