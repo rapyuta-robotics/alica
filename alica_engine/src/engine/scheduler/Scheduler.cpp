@@ -99,11 +99,14 @@ void Scheduler::workerFunction()
 
         if (executeJob) {
             try {
-                job->cb(nullptr);
+                std::cerr << "execute job: " << job->id << std::endl;
+                job->cb();
+                std::cerr << "finished job: " << job->id << std::endl;
                 if (job->isRepeated) {
                     job->scheduledTime += job->repeatInterval;
                     job->inProgress = false;
                 } else {
+                    std::cerr << "reset job with id " << job->id << std::endl;
                     job.reset();
                     _workerCV.notify_one();
                 }
@@ -128,7 +131,7 @@ void Scheduler::workerNotifier()
             }
             _ae->getAlicaClock().sleep(_jobQueue.getLowestScheduledTime() - _ae->getAlicaClock().now());
             _notifierIsActive = false;
-            _workerCV.notify_all();
+            _workerCV.notify_one();
         }
     }
 }
@@ -136,8 +139,8 @@ void Scheduler::workerNotifier()
 void Scheduler::monitorJobs()
 {
     while (_running.load()) {
-        _ae->getAlicaClock().sleep(alica::AlicaTime::seconds(5));
         _jobQueue.detectDelayedJobs(_ae->getAlicaClock().now());
+        _ae->getAlicaClock().sleep(alica::AlicaTime::seconds(5));
     }
 }
 } // namespace scheduler
