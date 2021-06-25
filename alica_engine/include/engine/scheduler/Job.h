@@ -13,7 +13,7 @@ namespace scheduler
 struct Job
 {
     int id;
-    std::function<void(void*)> cb;
+    std::function<void()> cb;
     AlicaTime scheduledTime;
     bool cancelled;
     bool isRepeated;
@@ -22,7 +22,7 @@ struct Job
     std::vector<std::weak_ptr<Job>> prerequisites;
     int prerequisiteIndex;
 
-    Job(int id, std::function<void(void*)> cb, std::vector<std::weak_ptr<Job>> prerequisites)
+    Job(int id, std::function<void()> cb, std::vector<std::weak_ptr<Job>> prerequisites)
             : cb(cb)
             , id(id)
             , prerequisites(prerequisites)
@@ -45,9 +45,7 @@ struct Job
 
     bool operator==(const Job& r) const { return id == r.id; }
 
-    bool operator<(const Job& other) const {
-        return scheduledTime < other.scheduledTime;
-    }
+    bool operator<(const Job& other) const { return scheduledTime < other.scheduledTime; }
 };
 } // namespace scheduler
 } // namespace alica
