@@ -75,12 +75,6 @@ public:
      */
     virtual void init() {}
 
-    AlicaTime getInterval() { return _msInterval; }
-
-protected:
-    essentials::IdentifierConstPtr getOwnId() const;
-    const AlicaEngine* getEngine() const { return _engine; }
-
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
@@ -92,6 +86,27 @@ protected:
      * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
      */
     virtual void onTermination() {}
+
+    bool doWait();
+    void doRun(void* msg);
+
+    AlicaTime getInterval() { return _msInterval; }
+
+protected:
+    essentials::IdentifierConstPtr getOwnId() const;
+    const AlicaEngine* getEngine() const { return _engine; }
+
+//    /**
+//     * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
+//     * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
+//     */
+//    virtual void initialiseParameters() {}
+
+//    /**
+//     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
+//     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
+//     */
+//    virtual void onTermination() {}
 
 private:
     friend alica::test::TestContext;
@@ -129,9 +144,9 @@ private:
     void runThread(bool timed);
 
     // wait, init, run & stop the behaviour
-    bool doWait();
+//    bool doWait();
     void doInit(bool timed);
-    void doRun(bool timed);
+//    void doRun(bool timed);
     void doStop();
 
     /**

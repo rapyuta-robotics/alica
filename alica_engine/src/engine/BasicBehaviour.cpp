@@ -66,9 +66,9 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     assert(_behaviour == nullptr);
     _behaviour = beh;
     if (_behaviour->isEventDriven()) {
-        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
+//        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
     } else {
-        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
+//        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
     }
 }
 
@@ -168,8 +168,8 @@ bool BasicBehaviour::isTriggeredRunFinished()
 
 bool BasicBehaviour::doWait()
 {
-    std::unique_lock<std::mutex> lck(_runLoopMutex);
-    _runCV.wait(lck, [this] { return getSignalState() == SignalState::START || isTerminated(); });
+//    std::unique_lock<std::mutex> lck(_runLoopMutex);
+//    _runCV.wait(lck, [this] { return getSignalState() == SignalState::START || isTerminated(); });
     if (isTerminated()) {
         return false;
     }
@@ -185,7 +185,7 @@ void BasicBehaviour::doInit(bool timed)
         _engine->getAlicaClock().sleep(_msDelayedStart);
     }
     try {
-        initialiseParameters();
+//        initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
@@ -200,58 +200,17 @@ void BasicBehaviour::doStop()
     setStopCalled(false);
 }
 
-void BasicBehaviour::doRun(bool timed)
+void BasicBehaviour::doRun(void* msg)
 {
     setBehaviourState(BehaviourState::RUNNING);
-    if (timed) {
-        while (true) {
-            {
-                std::unique_lock<std::mutex> lck(_runLoopMutex);
-                if (isTerminated() || isStopCalled()) {
-                    doStop();
-                    return;
-                }
-            }
-            AlicaTime start = _engine->getAlicaClock().now();
-            try {
-//                run(nullptr);
-            } catch (const std::exception& e) {
-                std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-                sendLogMessage(4, err);
-            }
-            AlicaTime duration = _engine->getAlicaClock().now() - start;
-            ALICA_WARNING_MSG_IF(duration > _msInterval + AlicaTime::microseconds(100),
-                    "[BasicBehaviour] Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
-            if (duration < _msInterval) {
-                _engine->getAlicaClock().sleep(_msInterval - duration);
-            }
-        }
-    } else {
-        while (true) {
-            {
-                std::unique_lock<std::mutex> lck(_runLoopMutex);
-                _runCV.wait(lck, [this] { return (_behaviourTrigger && _behaviourTrigger->isNotifyCalled(&_runCV)) || isStopCalled() || isTerminated(); });
-                if (isTerminated() || isStopCalled()) {
-                    doStop();
-                    return;
-                }
-            }
-            try {
-//                run(static_cast<void*>(_behaviourTrigger));
-            } catch (const std::exception& e) {
-                std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-                sendLogMessage(4, err);
-            }
-            _behaviourTrigger->setNotifyCalled(&_runCV, false);
-        }
-    }
+    run(msg);
 }
 
 void BasicBehaviour::runThread(bool timed)
 {
     while (doWait()) {
         doInit(timed);
-        doRun(timed);
+//        doRun(timed);
         onTermination();
         setBehaviourState(BehaviourState::UNINITIALIZED);
     }
