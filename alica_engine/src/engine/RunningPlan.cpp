@@ -488,8 +488,12 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     if (_basicPlan) {
         cb = std::bind(&BasicPlan::onTermination, _basicPlan);
     } else if (_basicBehaviour) {
-        cb = std::bind(&BasicBehaviour::onTermination, _basicBehaviour);
-        prerequisites.push_back(_runJob);
+        cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
+        if (_basicBehaviour->isEventDriven()) {
+            prerequisites.push_back(_basicBehaviour->getLatestTriggeredJob());
+        } else {
+            prerequisites.push_back(_runJob);
+        }
     }
 
     std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
@@ -618,39 +622,31 @@ void RunningPlan::activate()
     if (_basicBehaviour) {
         auto& scheduler = _ae->editScheduler();
 
-        std::function<void()> cbWait = std::bind(&BasicBehaviour::doWait, _basicBehaviour);
-        std::function<void()> cbInit = std::bind(&BasicBehaviour::initialiseParameters, _basicBehaviour);
-
-        std::vector<std::weak_ptr<scheduler::Job>> prerequisitesWait = getDeactivatedSiblingsTerminateJobs();
-        if (_parent) {
-            prerequisitesWait.emplace_back(_parent->getInitJob());
-        }
-
-        std::shared_ptr<scheduler::Job> waitJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), cbWait, prerequisitesWait);
-        _waitJob = waitJob;
+        std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, _basicBehaviour);
 
         std::vector<std::weak_ptr<scheduler::Job>> prerequisitesInit;
-        prerequisitesInit.push_back(_waitJob);
+        prerequisitesInit.push_back(_parent->getInitJob());
 
         std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), cbInit, prerequisitesInit);
         _initJob = initJob;
 
-        std::cerr << "schedule wait job with id " << waitJob->id << std::endl;
-        scheduler.schedule(std::move(waitJob));
         std::cerr << "schedule initJob with id " << initJob->id << std::endl;
         scheduler.schedule(std::move(initJob));
 
-        std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
-        runJobPrerequisites.push_back(_initJob);
+        // Do not schedule repeatable run job when behaviour is event driven.
+        if (!_basicBehaviour->isEventDriven()) {
+            std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
+            runJobPrerequisites.push_back(_initJob);
 
-        std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, _basicBehaviour, nullptr);
-        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
-        runJob->isRepeated = true;
-        runJob->repeatInterval = _basicBehaviour->getInterval();
-        _runJob = runJob; //store runJob as weak_ptr
-        std::cerr << "create runJob " << runJob->id << std::endl;
-        std::cerr << "runJob is prerequisite free " << runJob->isPrerequisiteFree() << std::endl;
-        scheduler.schedule(std::move(runJob));
+            std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, _basicBehaviour, nullptr);
+            std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
+            runJob->isRepeated = true;
+            runJob->repeatInterval = _basicBehaviour->getInterval();
+            _runJob = runJob; //store runJob as weak_ptr
+            std::cerr << "create runJob " << runJob->id << std::endl;
+            std::cerr << "runJob is prerequisite free " << runJob->isPrerequisiteFree() << std::endl;
+            scheduler.schedule(std::move(runJob));
+        }
     }
 
     attachPlanConstraints();

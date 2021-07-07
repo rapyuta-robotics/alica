@@ -250,7 +250,6 @@ private:
     mutable std::mutex _accessMutex;
 
     std::weak_ptr<scheduler::Job> _terminateJob;
-    std::weak_ptr<scheduler::Job> _waitJob;
     std::weak_ptr<scheduler::Job> _initJob;
     std::weak_ptr<scheduler::Job> _runJob;
     std::vector<std::weak_ptr<scheduler::Job>> _deactivatedChildrenTerminateJobs;

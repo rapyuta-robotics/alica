@@ -12,6 +12,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/scheduler/Scheduler.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -66,9 +67,9 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
     assert(_behaviour == nullptr);
     _behaviour = beh;
     if (_behaviour->isEventDriven()) {
-//        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
+        //        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
     } else {
-//        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
+        //        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
     }
 }
 
@@ -160,32 +161,17 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 bool BasicBehaviour::isTriggeredRunFinished()
 {
     std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
-    if (!_behaviourTrigger)
-        return false;
-
-    return !_behaviourTrigger->isNotifyCalled(&_runCV);
+    return !_runJob.lock();
 }
 
-bool BasicBehaviour::doWait()
+void BasicBehaviour::doInit()
 {
-//    std::unique_lock<std::mutex> lck(_runLoopMutex);
-//    _runCV.wait(lck, [this] { return getSignalState() == SignalState::START || isTerminated(); });
-    if (isTerminated()) {
-        return false;
-    }
     setBehaviourResult(BehaviourResult::UNKNOWN);
     setStopCalled(false);
     setBehaviourState(BehaviourState::INITIALIZING);
-    return true;
-}
 
-void BasicBehaviour::doInit(bool timed)
-{
-    if (timed && _msDelayedStart > AlicaTime::milliseconds(0)) {
-        _engine->getAlicaClock().sleep(_msDelayedStart);
-    }
     try {
-//        initialiseParameters();
+        initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
@@ -206,14 +192,28 @@ void BasicBehaviour::doRun(void* msg)
     run(msg);
 }
 
-void BasicBehaviour::runThread(bool timed)
+void BasicBehaviour::doTrigger()
 {
-    while (doWait()) {
-        doInit(timed);
-//        doRun(timed);
-        onTermination();
-        setBehaviourState(BehaviourState::UNINITIALIZED);
+    if (!_behaviour->isEventDriven() && !_runJob.lock()) {
+        return;
     }
+
+    auto& scheduler = _engine->editScheduler();
+
+    std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
+    runJobPrerequisites.push_back(_context->getInitJob());
+
+    std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
+    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
+    runJob->isRepeated = false;
+    _runJob = runJob; // store runJob as weak_ptr
+    scheduler.schedule(std::move(runJob));
+}
+
+void BasicBehaviour::doTermination()
+{
+    onTermination();
+    setBehaviourState(BehaviourState::UNINITIALIZED);
 }
 
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const

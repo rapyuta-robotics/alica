@@ -4,6 +4,7 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
+#include "engine/scheduler/Job.h"
 
 #include <essentials/ITrigger.hpp>
 
@@ -75,6 +76,21 @@ public:
      */
     virtual void init() {}
 
+    void doRun(void* msg);
+    void doTrigger();
+    void doInit();
+    void doTermination();
+
+    AlicaTime getInterval() { return _msInterval; }
+
+    bool isEventDriven() const { return _behaviour->isEventDriven(); }
+
+    std::weak_ptr<scheduler::Job> getLatestTriggeredJob() const { return _runJob; }
+
+protected:
+    essentials::IdentifierConstPtr getOwnId() const;
+    const AlicaEngine* getEngine() const { return _engine; }
+
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
@@ -86,27 +102,6 @@ public:
      * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
      */
     virtual void onTermination() {}
-
-    bool doWait();
-    void doRun(void* msg);
-
-    AlicaTime getInterval() { return _msInterval; }
-
-protected:
-    essentials::IdentifierConstPtr getOwnId() const;
-    const AlicaEngine* getEngine() const { return _engine; }
-
-//    /**
-//     * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
-//     * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
-//     */
-//    virtual void initialiseParameters() {}
-
-//    /**
-//     * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
-//     * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
-//     */
-//    virtual void onTermination() {}
 
 private:
     friend alica::test::TestContext;
@@ -142,11 +137,6 @@ private:
     bool isBehaviourStarted() const { return _behaviourState.load() != BehaviourState::UNINITIALIZED; }
 
     void runThread(bool timed);
-
-    // wait, init, run & stop the behaviour
-//    bool doWait();
-    void doInit(bool timed);
-//    void doRun(bool timed);
     void doStop();
 
     /**
@@ -178,5 +168,6 @@ private:
     mutable std::mutex _runLoopMutex;
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
+    std::weak_ptr<scheduler::Job> _runJob;
 };
 } /* namespace alica */
