@@ -21,6 +21,8 @@ Local:
   HasActiveBallHandler: true
 
 Alica:
+  ThreadPoolSize: 4
+
   #ms
   TeamTimeOut: 10000
   AssignmentProtectionTime: 500

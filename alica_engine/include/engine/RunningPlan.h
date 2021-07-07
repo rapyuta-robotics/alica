@@ -8,6 +8,7 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/scheduler/Job.h"
 
 #include <algorithm>
 #include <iostream>
@@ -25,6 +26,7 @@ class AbstractPlan;
 class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
+class BasicPlan;
 class Configuration;
 class State;
 class EntryPoint;
@@ -134,6 +136,7 @@ public:
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
+    BasicPlan* getBasicPlan() const { return _basicPlan; }
 
     void printRecursive() const;
 
@@ -146,6 +149,7 @@ public:
     void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
     void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
+    void setBasicPlan(BasicPlan* basicPlan) { _basicPlan = basicPlan; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
 
@@ -183,13 +187,13 @@ public:
     void clearFailedChildren();
     void addFailure();
     int getFailureCount() const;
-    void deactivateChildren();
+    std::vector<std::weak_ptr<scheduler::Job>> deactivateChildren();
     void clearChildren();
 
     void setFailedChild(const AbstractPlan* child);
     void accept(IPlanTreeVisitor* vis);
 
-    void deactivate();
+    std::weak_ptr<scheduler::Job> deactivate();
     void activate();
 
     bool isAnyChildStatus(PlanStatus ps) const;
@@ -210,6 +214,11 @@ public:
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
+    std::vector<std::weak_ptr<scheduler::Job>> getDeactivatedSiblingsTerminateJobs() const;
+
+    std::weak_ptr<scheduler::Job> getInitJob() const;
+    std::weak_ptr<scheduler::Job> getTerminateJob() const;
+
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
@@ -222,6 +231,7 @@ private:
     RunningPlan* _parent;
 
     BasicBehaviour* _basicBehaviour;
+    BasicPlan* _basicPlan;
     // Components
     Assignment _assignment;
     CycleManager _cycleManagement;
@@ -238,6 +248,10 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
+
+    std::weak_ptr<scheduler::Job> _terminateJob;
+    std::weak_ptr<scheduler::Job> _initJob;
+    std::vector<std::weak_ptr<scheduler::Job>> _deactivatedChildrenTerminateJobs;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

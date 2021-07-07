@@ -2,6 +2,7 @@
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
+#include "engine/BasicPlan.h"
 
 namespace alica
 {
@@ -49,6 +50,7 @@ public:
     const SynchronisationGrp& getSynchronisations() const { return _synchronisations; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
+    BasicPlan* getBasicPlan() const { return _basicPlan.get(); }
 
     std::string toString(std::string indent = "") const;
 
@@ -68,6 +70,7 @@ private:
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
+    void setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan);
 
     int _minCardinality;
     int _maxCardinality;
@@ -77,6 +80,7 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
+    std::unique_ptr<BasicPlan> _basicPlan;
 
     /**
      * This plan's Utility function

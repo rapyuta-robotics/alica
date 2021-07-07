@@ -8,7 +8,20 @@
 
 namespace alica
 {
-// Plan:MasterSyncTransition
+// Plan:MasterSyncTransition1418825395939
+MasterSyncTransition1418825395939::MasterSyncTransition1418825395939()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1418825395939) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MasterSyncTransition1418825395939::~MasterSyncTransition1418825395939()
+{
+    /*PROTECTED REGION ID(dcon1418825395939) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: AttackTask  -> EntryPoint-ID: 1418825395941
  * Task: DefaultTask  -> EntryPoint-ID: 1418825402617
@@ -37,7 +50,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
  *   - FirstTaskSecondState (1418825409988)
  *   - SecondTaskSecondState (1418825411686)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -68,7 +81,7 @@ bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - FirstTaskSecondState (1418825409988)
  *   - SecondTaskSecondState (1418825411686)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -84,4 +97,8 @@ bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp)
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1418825395939) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/BasicPlan.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IPlanTreeVisitor.h"
@@ -27,6 +28,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
+#include "engine/scheduler/Scheduler.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -258,7 +260,8 @@ void RunningPlan::removeChild(RunningPlan* rp)
  */
 void RunningPlan::moveState(const State* nextState)
 {
-    deactivateChildren();
+    std::vector<std::weak_ptr<scheduler::Job>> terminateJobs = deactivateChildren();
+    _deactivatedChildrenTerminateJobs.insert(_deactivatedChildrenTerminateJobs.end(), terminateJobs.begin(), terminateJobs.end());
     clearChildren();
     _assignment.moveAllFromTo(_activeTriple.entryPoint, _activeTriple.state, nextState);
     useState(nextState);
@@ -366,11 +369,13 @@ int RunningPlan::getFailureCount() const
     return _status.failCount;
 }
 
-void RunningPlan::deactivateChildren()
+std::vector<std::weak_ptr<scheduler::Job>> RunningPlan::deactivateChildren()
 {
+    std::vector<std::weak_ptr<scheduler::Job>> terminateJobs;
     for (RunningPlan* r : _children) {
-        r->deactivate();
+        terminateJobs.push_back(r->deactivate());
     }
+    return terminateJobs;
 }
 
 /**
@@ -463,7 +468,7 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
  *  Deactivate this plan, to be called before the plan is removed from the graph.
  * Ensures that all sub-behaviours are stopped and all constraints are revoked.
  */
-void RunningPlan::deactivate()
+std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
     if (isBehaviour()) {
@@ -471,8 +476,25 @@ void RunningPlan::deactivate()
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
     }
+
     revokeAllConstraints();
-    deactivateChildren();
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites = deactivateChildren();
+    prerequisites.push_back(_initJob);
+
+    auto& scheduler = _ae->editScheduler();
+    int jobID = scheduler.getNextJobID();
+
+    std::function<void()> cb;
+    if (_basicPlan) {
+        cb = std::bind(&BasicPlan::onTermination, _basicPlan);
+    }
+
+    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
+    if (_basicPlan) {
+        _terminateJob = terminateJob; //store terminateJob as weak_ptr
+        scheduler.schedule(std::move(terminateJob));
+    }
+    return _terminateJob;
 }
 
 /**
@@ -557,7 +579,30 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
+        _basicPlan = nullptr;
+    } else if (_activeTriple.abstractPlan) {
+        _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
     }
+
+    auto& scheduler = _ae->editScheduler();
+    int jobID = scheduler.getNextJobID();
+    std::function<void()> cb;
+
+    if (_basicPlan) {
+        cb = std::bind(&BasicPlan::init, _basicPlan);
+    }
+
+    std::vector<std::weak_ptr<scheduler::Job>> prerequisites = getDeactivatedSiblingsTerminateJobs();
+    if (_parent) {
+        prerequisites.emplace_back(_parent->getInitJob());
+    }
+
+    std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(jobID, cb, prerequisites);
+    if (_basicPlan) {
+        _initJob = initJob; //store initJob as weak_ptr
+        scheduler.schedule(std::move(initJob));
+    }
+
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
         r->activate();
@@ -813,6 +858,23 @@ bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) co
 
 const Configuration* RunningPlan::getConfiguration() const {
     return _configuration;
+}
+
+std::vector<std::weak_ptr<scheduler::Job>> RunningPlan::getDeactivatedSiblingsTerminateJobs() const {
+    if (!_parent) {
+        return std::vector<std::weak_ptr<scheduler::Job>>();
+    }
+    return _parent->_deactivatedChildrenTerminateJobs;
+}
+
+std::weak_ptr<scheduler::Job> RunningPlan::getInitJob() const
+{
+    return _initJob;
+}
+
+std::weak_ptr<scheduler::Job> RunningPlan::getTerminateJob() const
+{
+    return _terminateJob;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

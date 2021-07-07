@@ -46,6 +46,14 @@
 #include "constraints/PreConditionPlan1418042796751Constraints.h"
 #include "constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
 #include "constraints/RuntimeConditionPlan1418042806575Constraints.h"
+#include "constraints/SchedulingTestMasterPlan1613378382024Constraints.h"
+#include "constraints/SchedulingTestPlan11613378406860Constraints.h"
+#include "constraints/SchedulingTestPlan21613378423610Constraints.h"
+#include "constraints/SchedulingTestPlan31613378433623Constraints.h"
+#include "constraints/SchedulingTestSequencePlan11614963946725Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan11614964379654Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan21614964444419Constraints.h"
+#include "constraints/SchedulingTestSequenceSubPlan31614964478264Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
 
@@ -58,7 +66,7 @@ ConstraintCreator::ConstraintCreator() {}
 
 ConstraintCreator::~ConstraintCreator() {}
 
-std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(long constraintConfId)
+std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t constraintConfId)
 {
     switch (constraintConfId) {
     case 1402489460549:

@@ -8,7 +8,20 @@
 
 namespace alica
 {
-// Plan:AuthorityTest
+// Plan:AuthorityTest1414403413451
+AuthorityTest1414403413451::AuthorityTest1414403413451()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1414403413451) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+AuthorityTest1414403413451::~AuthorityTest1414403413451()
+{
+    /*PROTECTED REGION ID(dcon1414403413451) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414403429951
  * Task: AttackTask  -> EntryPoint-ID: 1414403522424
@@ -26,4 +39,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403413451::getUtilityFunctio
     return function;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1414403413451) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

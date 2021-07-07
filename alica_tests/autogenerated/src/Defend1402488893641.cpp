@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:Defend
+// Plan:Defend1402488893641
+Defend1402488893641::Defend1402488893641()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1402488893641) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+Defend1402488893641::~Defend1402488893641()
+{
+    /*PROTECTED REGION ID(dcon1402488893641) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488903550
  */
@@ -35,7 +48,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -58,7 +71,7 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -81,7 +94,7 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -105,7 +118,7 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GetBall (1402488959965)
  *   - TryToDefendGoal (1402489037735)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -113,4 +126,8 @@ bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1402488893641) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

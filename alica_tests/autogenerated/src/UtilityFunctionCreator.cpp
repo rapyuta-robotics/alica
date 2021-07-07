@@ -31,6 +31,14 @@
 #include "PreConditionPlan1418042796751.h"
 #include "RealMasterPlanForSyncTest1418902217839.h"
 #include "RuntimeConditionPlan1418042806575.h"
+#include "SchedulingTestMasterPlan1613378382024.h"
+#include "SchedulingTestPlan11613378406860.h"
+#include "SchedulingTestPlan21613378423610.h"
+#include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include <iostream>
@@ -42,7 +50,7 @@ UtilityFunctionCreator::~UtilityFunctionCreator() {}
 
 UtilityFunctionCreator::UtilityFunctionCreator() {}
 
-std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long utilityfunctionConfId)
+std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
 {
     switch (utilityfunctionConfId) {
     case 1402488437260:
@@ -146,6 +154,30 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long
         break;
     case 1588061801734:
         return std::make_shared<UtilityFunction1588061801734>();
+        break;
+    case 1613378382024:
+        return std::make_shared<UtilityFunction1613378382024>();
+        break;
+    case 1613378406860:
+        return std::make_shared<UtilityFunction1613378406860>();
+        break;
+    case 1613378423610:
+        return std::make_shared<UtilityFunction1613378423610>();
+        break;
+    case 1613378433623:
+        return std::make_shared<UtilityFunction1613378433623>();
+        break;
+    case 1614963946725:
+        return std::make_shared<UtilityFunction1614963946725>();
+        break;
+    case 1614964379654:
+        return std::make_shared<UtilityFunction1614964379654>();
+        break;
+    case 1614964444419:
+        return std::make_shared<UtilityFunction1614964444419>();
+        break;
+    case 1614964478264:
+        return std::make_shared<UtilityFunction1614964478264>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
