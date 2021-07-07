@@ -24,6 +24,9 @@ public:
     bool isTransitionCondition1413201370590();
     void setTransitionCondition1413201370590(bool transitionCondition1413201370590);
 
+    bool isTransitionCondition1625610805110();
+    void setTransitionCondition1625610805110(bool transitionCondition1625610805110);
+
     // MasterPlanTestSyncTransition
     bool isTransitionCondition1418825427317();
     void setTransitionCondition1418825427317(bool transitionCondition1418825427317);
@@ -57,6 +60,9 @@ private:
     // PlanTypeTest
     bool preCondition1418042929966;
     bool runtimeCondition1418042967134;
+
+    // Engine rules scheduling test
+    bool transitionCondition1625610805110;
 };
 
 } // namespace alicaTests

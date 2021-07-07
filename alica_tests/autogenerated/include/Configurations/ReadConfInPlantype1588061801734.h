@@ -20,7 +20,7 @@ public:
     ReadConfInPlantype1588061801734();
     virtual ~ReadConfInPlantype1588061801734();
     /*PROTECTED REGION ID(pub1588061801734) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1588061801734) ENABLED START*/

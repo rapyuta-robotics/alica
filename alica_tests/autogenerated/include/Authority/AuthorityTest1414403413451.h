@@ -20,7 +20,7 @@ public:
     AuthorityTest1414403413451();
     virtual ~AuthorityTest1414403413451();
     /*PROTECTED REGION ID(pub1414403413451) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1414403413451) ENABLED START*/

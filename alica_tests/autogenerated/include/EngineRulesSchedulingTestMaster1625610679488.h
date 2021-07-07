@@ -5,34 +5,34 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
-/*PROTECTED REGION ID(incl1613378423610) ENABLED START*/
+/*PROTECTED REGION ID(incl1625610679488) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(meth1613378423610) ENABLED START*/
+/*PROTECTED REGION ID(meth1625610679488) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class SchedulingTestPlan21613378423610 : public DomainPlan
+class EngineRulesSchedulingTestMaster1625610679488 : public DomainPlan
 {
 public:
-    SchedulingTestPlan21613378423610();
-    virtual ~SchedulingTestPlan21613378423610();
-    /*PROTECTED REGION ID(pub1613378423610) ENABLED START*/
+    EngineRulesSchedulingTestMaster1625610679488();
+    virtual ~EngineRulesSchedulingTestMaster1625610679488();
+    /*PROTECTED REGION ID(pub1625610679488) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
-    /*PROTECTED REGION ID(pro1613378423610) ENABLED START*/
+    /*PROTECTED REGION ID(pro1625610679488) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
-    /*PROTECTED REGION ID(prv1613378423610) ENABLED START*/
+    /*PROTECTED REGION ID(prv1625610679488) ENABLED START*/
     // Add additional private methods here
     /*PROTECTED REGION END*/
 };
 
-class UtilityFunction1613378423610 : public BasicUtilityFunction
+class UtilityFunction1625610679488 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };

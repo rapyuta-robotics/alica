@@ -10,6 +10,7 @@
 #include "Behaviour/ConstraintUsingBehaviour1414068597716.h"
 #include "Behaviour/CountIndefinitely1529456643148.h"
 #include "Behaviour/DefendMid1402488730695.h"
+#include "Behaviour/EmptyBehaviour1625610857563.h"
 #include "Behaviour/MidFieldStandard1402488696205.h"
 #include "Behaviour/NotToTrigger1429017274116.h"
 #include "Behaviour/ReadConfigurationBehaviour1588061129360.h"
@@ -25,6 +26,8 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "EngineRulesSchedulingTestMaster1625610679488.h"
+#include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
@@ -244,6 +247,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1615797365364:
         return std::make_shared<PreCondition1615797365364>();
+        break;
+    case 1625614729981:
+        return std::make_shared<PreCondition1625614729981>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

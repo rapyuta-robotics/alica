@@ -20,7 +20,7 @@ public:
     ConfigurationTestPlan1588060981661();
     virtual ~ConfigurationTestPlan1588060981661();
     /*PROTECTED REGION ID(pub1588060981661) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1588060981661) ENABLED START*/

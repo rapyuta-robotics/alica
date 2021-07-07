@@ -20,7 +20,7 @@ public:
     ReadConfigurationPlan1588061334567();
     virtual ~ReadConfigurationPlan1588061334567();
     /*PROTECTED REGION ID(pub1588061334567) ENABLED START*/
-    // Add additional protected methods here
+    // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1588061334567) ENABLED START*/
