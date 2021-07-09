@@ -624,7 +624,7 @@ void RunningPlan::activate()
 
         std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, _basicBehaviour);
 
-        std::vector<std::weak_ptr<scheduler::Job>> prerequisitesInit;
+        std::vector<std::weak_ptr<scheduler::Job>> prerequisitesInit = getDeactivatedSiblingsTerminateJobs();
         prerequisitesInit.push_back(_parent->getInitJob());
 
         std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), cbInit, prerequisitesInit);
