@@ -30,6 +30,56 @@ std::shared_ptr<UtilityFunction> UtilityFunction1625610679488::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+/**
+ * Outgoing transition:
+ *   - Name: 1625783867495, ConditionString: , Comment: MISSING_COMMENT
+ *
+ * Abstract plans in current state:
+ *   - EmptyBehaviour (1625610857563)
+ *
+ * Tasks in plan:
+ *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
+ *
+ * States in plan:
+ *   - GoIntoSubPlan (1625614677498)
+ *   - EntryState (1625783824098)
+ *   - FailureState (1625783835198)
+ *
+ * Variables of precondition:
+ */
+bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1625783867494) ENABLED START*/
+    return alicaTests::TestWorldModel::getOne()->isTransitionCondition1625783867495();
+    /*PROTECTED REGION END*/
+}
+/**
+ * Outgoing transition:
+ *   - Name: 1625783869825, ConditionString: , Comment: MISSING_COMMENT
+ *
+ * Abstract plans in current state:
+ *   - EmptyBehaviour (1625610857563)
+ *
+ * Tasks in plan:
+ *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
+ *
+ * States in plan:
+ *   - GoIntoSubPlan (1625614677498)
+ *   - EntryState (1625783824098)
+ *   - FailureState (1625783835198)
+ *
+ * Variables of precondition:
+ */
+bool PreCondition1625783869825::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1625783869824) ENABLED START*/
+    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition1625783869825()) {
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition1625783869825(false);
+        return true;
+    }
+    return false;
+    /*PROTECTED REGION END*/
+}
 
 /*PROTECTED REGION ID(methods1625610679488) ENABLED START*/
 // Add additional options here

@@ -11,9 +11,13 @@ namespace alica
  * - EP:1625614674465 : EngineRulesTest (1625614670867)
  *
  * States:
- * - Default Name (1625614677498)
+ * - GoIntoSubPlan (1625614677498)
+ * - EntryState (1625783824098)
+ * - FailureState (1625783835198)
  *
  * Vars:
  */
-// State: Default Name
+// State: GoIntoSubPlan
+// State: EntryState
+// State: FailureState
 } // namespace alica

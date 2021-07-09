@@ -15,10 +15,12 @@ namespace alica
  * - Default Name (1625614697742)
  * - StartEngineRulesSchedulingTest (1625614714499)
  * - Default Name (1625614719367)
+ * - FailureState (1625776883489)
  *
  * Vars:
  */
 // State: Default Name
 // State: StartEngineRulesSchedulingTest
 // State: Default Name
+// State: FailureState
 } // namespace alica

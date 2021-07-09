@@ -24,8 +24,14 @@ public:
     bool isTransitionCondition1413201370590();
     void setTransitionCondition1413201370590(bool transitionCondition1413201370590);
 
-    bool isTransitionCondition1625610805110();
-    void setTransitionCondition1625610805110(bool transitionCondition1625610805110);
+    bool isTransitionCondition1625614729978();
+    void setTransitionCondition1625614729978(bool transitionCondition1625610805110);
+    bool isTransitionCondition1625776897472();
+    void setTransitionCondition1625776897472(bool transitionCondition1625776897472);
+    bool isTransitionCondition1625783869825();
+    void setTransitionCondition1625783869825(bool transitionCondition1625783869825);
+    bool isTransitionCondition1625783867495();
+    void setTransitionCondition1625783867495(bool transitionCondition1625783867495);
 
     // MasterPlanTestSyncTransition
     bool isTransitionCondition1418825427317();
@@ -62,7 +68,13 @@ private:
     bool runtimeCondition1418042967134;
 
     // Engine rules scheduling test
-    bool transitionCondition1625610805110;
+    bool transitionCondition1625614729978;
+    // Engine rules scheduling test failure transition
+    bool transitionCondition1625776897472;
+    // Top level failure
+    bool transitionCondition1625783869825;
+    // SubPlan
+    bool transitionCondition1625783867495;
 };
 
 } // namespace alicaTests

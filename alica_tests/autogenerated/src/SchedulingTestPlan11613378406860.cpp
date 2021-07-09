@@ -80,5 +80,14 @@ bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp)
 
 /*PROTECTED REGION ID(methods1613378406860) ENABLED START*/
 // Add additional options here
+void SchedulingTestPlan11613378406860::init()
+{
+    CounterClass::called = 1;
+}
+
+void SchedulingTestPlan11613378406860::onTermination()
+{
+    CounterClass::called += 1;
+}
 /*PROTECTED REGION END*/
 } // namespace alica

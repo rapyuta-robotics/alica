@@ -40,4 +40,8 @@ class PreCondition1625614729981 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
+class PreCondition1625776897472 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
+};
 } /* namespace alica */
