@@ -16,7 +16,7 @@ The propositional part of the ALICA language is expressive enough to describe co
 
 #### Algorithms
 
-Task Allocation, Conflict Resolution, Role Assignment, Transition Synchronisation, Rulebook
+[Task Allocation](./articles/task_allocation.md), [Conflict Resolution](./articles/conflict_resolution.md), [Role Assignment](./articles/role_assignment.md), [Transition Synchronisation](./articles/transition_synchronisation.md), [Rulebook](./articles/rulebook.md)
 
 ### General ALICA
 
@@ -28,7 +28,7 @@ General ALICA adds several core concepts to the propositional part of the ALICA 
 
 #### Algorithms
 
-Constraint Queries, Constraint Composition, Constraint Management, Variable Synchronisation
+[Constraint Queries](./articles/constraint_queries.md), [Constraint Composition](./articles/constraint_composition.md), [Constraint Management](./articles/constraint_management.md), [Variable Synchronisation](./articles/variable_synchronisation.md)
 
 ## The ALICA Engine
 
