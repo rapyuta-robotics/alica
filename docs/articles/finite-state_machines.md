@@ -14,7 +14,7 @@ Transitions are directed connections between states. At most two transitions bet
 
 ## Execution of Finite-State Machines
 
-An agent in one state automatically enters another state, if the [precondition](conditions.md) of the connecting transition holds. If the preconditions of multiple transitions hold at the same time, only on transition is chosen. When an agent enters a failure/success state the FSM failed/succeeded for that agent and, if present, the annotated [postcondition](conditions.md) of that terminal state is considered to hold.
+An agent in one state automatically enters another state, if the [precondition](conditions.md) of the connecting transition holds. If the preconditions of multiple transitions hold at the same time, only one transition is chosen. When an agent enters a failure/success state the FSM failed/succeeded for that agent and, if present, the annotated [postcondition](conditions.md) of that terminal state is considered to hold.
 
 A FSM can be executed by multiple agents at the same time. In that case, each agent is informing all other agents about its current state in the FSM.
 
