@@ -49,15 +49,15 @@ private:
     int _maxConsecutiveChanges;
     bool _changeOccurred;
 
-    PlanChange synchTransitionRule(RunningPlan& rp);
-    PlanChange transitionRule(RunningPlan& r);
+    PlanChange synchTransitionRule(RunningPlan& rp); //
+    PlanChange transitionRule(RunningPlan& r); //
     PlanChange topFailRule(RunningPlan& r);
-    PlanChange allocationRule(RunningPlan& r);
+    PlanChange allocationRule(RunningPlan& r); //
     PlanChange authorityOverrideRule(RunningPlan& r);
     PlanChange planAbortRule(RunningPlan& r);
     PlanChange planRedoRule(RunningPlan& r);
     PlanChange planReplaceRule(RunningPlan& r);
     PlanChange planPropagationRule(RunningPlan& r);
-    PlanChange dynamicAllocationRule(RunningPlan& r);
+    PlanChange dynamicAllocationRule(RunningPlan& r); //
 };
 } // namespace alica
