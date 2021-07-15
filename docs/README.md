@@ -28,7 +28,7 @@ General ALICA adds several core concepts to the propositional part of the ALICA 
 
 #### Algorithms
 
-[Constraint Queries](./articles/constraint_queries.md), [Constraint Composition](./articles/constraint_composition.md), [Constraint Management](./articles/constraint_management.md), [Variable Synchronisation](./articles/variable_synchronisation.md)
+[Constraint Queries](./articles/constraint_query.md), [Constraint Composition](./articles/constraint_composition.md), [Constraint Management](./articles/constraint_management.md), [Variable Synchronisation](./articles/variable_synchronisation.md)
 
 ## The ALICA Engine
 
