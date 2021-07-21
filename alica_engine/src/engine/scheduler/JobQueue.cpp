@@ -22,11 +22,11 @@ std::vector<std::weak_ptr<Job>> JobQueue::getPrerequisites(int id) {
 
 std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
 {
-    _lowestScheduledTime = time;
-
     if (_queue.empty()) {
         return nullptr;
     }
+
+    _lowestScheduledTime = _queue[0]->scheduledTime;
 
     for (auto it = _queue.begin(); it != _queue.end(); it++) {
         if ((*it)->cancelled && !((*it)->inProgress)) {
