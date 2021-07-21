@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1625610857563) ENABLED START*/
 // Add additional includes here
+#include <CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -28,13 +29,14 @@ void EmptyBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run1625610857563) ENABLED START*/
     // Add additional options here
+    ++CounterClass::called;
     /*PROTECTED REGION END*/
 }
 void EmptyBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1625610857563) ENABLED START*/
     // Add additional options here
-
+    CounterClass::called = 0;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1625610857563) ENABLED START*/
