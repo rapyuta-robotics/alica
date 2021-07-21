@@ -481,6 +481,9 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
     std::vector<std::weak_ptr<scheduler::Job>> prerequisites = deactivateChildren();
     prerequisites.push_back(_initJob);
 
+    // add children as prerequisites that were deactivated before
+    prerequisites.insert(prerequisites.end(), _deactivatedChildrenTerminateJobs.begin(), _deactivatedChildrenTerminateJobs.end());
+
     auto& scheduler = _ae->editScheduler();
     int jobID = scheduler.getNextJobID();
 
@@ -502,16 +505,13 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
         scheduler.schedule(std::move(terminateJob));
     }
     if (_basicBehaviour) {
-        std::cerr << "[RP] terminate behaviour" << std::endl;
         std::shared_ptr<alica::scheduler::Job> runJob = _runJob.lock();
         if (runJob) {
-            std::cerr << "cancel runJob with id " << runJob->id << std::endl;
             runJob->cancelled = true;
         }
 
         _terminateJob = terminateJob;
         scheduler.schedule(std::move(terminateJob));
-        std::cerr << "[RP] scheduled bh terminate" << std::endl;
     }
     return _terminateJob;
 }
@@ -630,7 +630,6 @@ void RunningPlan::activate()
         std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), cbInit, prerequisitesInit);
         _initJob = initJob;
 
-        std::cerr << "schedule initJob with id " << initJob->id << std::endl;
         scheduler.schedule(std::move(initJob));
 
         // Do not schedule repeatable run job when behaviour is event driven.
@@ -643,8 +642,6 @@ void RunningPlan::activate()
             runJob->isRepeated = true;
             runJob->repeatInterval = _basicBehaviour->getInterval();
             _runJob = runJob; //store runJob as weak_ptr
-            std::cerr << "create runJob " << runJob->id << std::endl;
-            std::cerr << "runJob is prerequisite free " << runJob->isPrerequisiteFree() << std::endl;
             scheduler.schedule(std::move(runJob));
         }
     }
@@ -911,6 +908,10 @@ std::vector<std::weak_ptr<scheduler::Job>> RunningPlan::getDeactivatedSiblingsTe
         return std::vector<std::weak_ptr<scheduler::Job>>();
     }
     return _parent->_deactivatedChildrenTerminateJobs;
+}
+
+void RunningPlan::addDeactivatedChildrenTerminateJobs(std::vector<std::weak_ptr<scheduler::Job>> terminateJobs) {
+    _deactivatedChildrenTerminateJobs.insert(_deactivatedChildrenTerminateJobs.end(), terminateJobs.begin(), terminateJobs.end());
 }
 
 std::weak_ptr<scheduler::Job> RunningPlan::getInitJob() const

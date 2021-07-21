@@ -215,6 +215,7 @@ public:
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
     std::vector<std::weak_ptr<scheduler::Job>> getDeactivatedSiblingsTerminateJobs() const;
+    void addDeactivatedChildrenTerminateJobs(std::vector<std::weak_ptr<scheduler::Job>> terminateJobs);
 
     std::weak_ptr<scheduler::Job> getInitJob() const;
     std::weak_ptr<scheduler::Job> getTerminateJob() const;
