@@ -270,7 +270,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::FailChange;
     }
     r.setFailureHandlingNeeded(false);
-    r.deactivateChildren();
+    r.addDeactivatedChildrenTerminateJobs(r.deactivateChildren());
     r.clearChildren();
     r.editAssignment().moveAllFromTo(r.getActiveEntryPoint(), r.getActiveState(), r.getActiveEntryPoint()->getState());
 
@@ -301,7 +301,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
     RunningPlan* parent = r.getParent();
     {
         RunningPlan::ScopedWriteLock lck = parent->getWriteLock();
-        parent->deactivateChildren();
+        parent->addDeactivatedChildrenTerminateJobs(parent->deactivateChildren());
         parent->setFailedChild(r.getActivePlan());
         parent->setAllocationNeeded(true);
         parent->clearChildren();
