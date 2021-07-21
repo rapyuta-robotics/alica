@@ -30,6 +30,7 @@
 #include "constraints/EngineRulesSchedulingTestMaster1625610679488Constraints.h"
 #include "constraints/EngineRulesSchedulingTestPlan1625614640417Constraints.h"
 #include "constraints/FailsOnOne1530069246103Constraints.h"
+#include "constraints/FrequencyTestPlan1626848999740Constraints.h"
 #include "constraints/GoalPlan1402488870347Constraints.h"
 #include "constraints/HandleFailExplicit1530004915640Constraints.h"
 #include "constraints/HandleFailExplicitMaster1530004940652Constraints.h"

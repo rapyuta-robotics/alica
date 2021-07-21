@@ -32,6 +32,30 @@ std::shared_ptr<UtilityFunction> UtilityFunction1625610679488::getUtilityFunctio
 }
 /**
  * Outgoing transition:
+ *   - Name: 1626848015861, ConditionString: , Comment: MISSING_COMMENT
+ *
+ * Abstract plans in current state:
+ *   - EngineRulesSchedulingTestPlan (1625614640417)
+ *
+ * Tasks in plan:
+ *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
+ *
+ * States in plan:
+ *   - GoIntoSubPlan (1625614677498)
+ *   - EntryState (1625783824098)
+ *   - FailureState (1625783835198)
+ *   - Default Name (1626848011700)
+ *
+ * Variables of precondition:
+ */
+bool PreCondition1626848015861::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1626848015857) ENABLED START*/
+    return alicaTests::TestWorldModel::getOne()->isTransitionCondition1626848015861();
+    /*PROTECTED REGION END*/
+}
+/**
+ * Outgoing transition:
  *   - Name: 1625783867495, ConditionString: , Comment: MISSING_COMMENT
  *
  * Abstract plans in current state:
@@ -44,6 +68,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1625610679488::getUtilityFunctio
  *   - GoIntoSubPlan (1625614677498)
  *   - EntryState (1625783824098)
  *   - FailureState (1625783835198)
+ *   - Default Name (1626848011700)
  *
  * Variables of precondition:
  */
@@ -67,6 +92,7 @@ bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - GoIntoSubPlan (1625614677498)
  *   - EntryState (1625783824098)
  *   - FailureState (1625783835198)
+ *   - Default Name (1626848011700)
  *
  * Variables of precondition:
  */

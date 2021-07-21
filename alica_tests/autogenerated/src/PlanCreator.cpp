@@ -14,6 +14,7 @@
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
+#include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
 #include "HandleFailExplicitMaster1530004940652.h"
@@ -186,6 +187,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
         break;
     case 1625614640417:
         return std::make_unique<EngineRulesSchedulingTestPlan1625614640417>();
+        break;
+    case 1626848999740:
+        return std::make_unique<FrequencyTestPlan1626848999740>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

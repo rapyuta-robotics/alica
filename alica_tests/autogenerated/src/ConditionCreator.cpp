@@ -29,6 +29,7 @@
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
+#include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
 #include "HandleFailExplicitMaster1530004940652.h"
@@ -259,6 +260,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1625783869825:
         return std::make_shared<PreCondition1625783869825>();
+        break;
+    case 1626848015861:
+        return std::make_shared<PreCondition1626848015861>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
