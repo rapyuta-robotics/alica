@@ -10,17 +10,35 @@
 namespace alica
 {
 
-class SyncStopTimer
+template <class CallbackQ>
+class SyncStopTimerRos
 {
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimer(const SyncStopTimer&) = delete;
-    SyncStopTimer(SyncStopTimer&&) = default;
-    SyncStopTimer& operator=(const SyncStopTimer&) = delete;
-    SyncStopTimer& operator=(SyncStopTimer&&) = default;
+    SyncStopTimerRos(CallbackQ& cbQ, TimerCb&& userCb, AlicaTime period)
+        : _userCb(std::move(userCb))
+        , _nh()
+        , _timer()
+        , _stopMutex()
+        , _stopCv()
+        , _userCbInProgress(false)
+        , _stop(false)
+    {
+        _nh.setCallbackQueue(std::addressof(cbQ));
+        auto sec = period.inSeconds();
+        auto nanosec = period.inNanoseconds();
+        nanosec -= sec * 1000000000LL;
+        _timer = _nh.createTimer(ros::Duration(sec, nanosec), timerCb, this, false, false);
+        start();
+    }
 
-    ~SyncStopTimer()
+    SyncStopTimerRos(const SyncStopTimer&) = default;
+    SyncStopTimerRos(SyncStopTimer&&) = default;
+    SyncStopTimerRos& operator=(const SyncStopTimer&) = default;
+    SyncStopTimerRos& operator=(SyncStopTimer&&) = default;
+
+    ~SyncStopTimerRos()
     {
         stop();
     }
@@ -43,17 +61,6 @@ public:
     }
 
 private:
-    SyncStopTimer(TimerCb&& userCb, ros::NodeHandle& nh, ros::Duration period)
-        : _userCb(std::move(userCb))
-        , _timer(nh.createTimer(period, timerCb, this, false, false))
-        , _stopMutex()
-        , _stopCv()
-        , _userCbInProgress(false)
-        , _stop(false)
-    {
-        start();
-    }
-
     void timerCb(const ros::TimerEvent&)
     {
         if (!_userCb) {
@@ -78,6 +85,7 @@ private:
     }
 
     TimerCb _userCb;
+    ros::NodeHandle _nh;
     ros::Timer _timer;
     mutable std::mutex _stopMutex;
     std::condition_variable _stopCv;
@@ -85,36 +93,58 @@ private:
     bool _userCbInProgress;
 };
 
-// TODO: implement a async stop timer i.e. the stop() method should take a callback as parameter which will be called when the timer is successfully stopped
+// TODO: implement a AysncStopTimerRos i.e. the stop() method should take a callback as parameter which will be called asynchronously when the timer is successfully stopped
 
-// TODO: this is a policy based design which only takes the timer policy for now. Can extend to take more policy classes like threadpool & callback queues if need be
-template <class Timer>
-class AlicaTimerManager
+template <class CallbackQ>
+class ThreadPoolRos
 {
-    friend Timer;
+public:
+    ThreadPoolRos(CallbackQ& cbQ, uint32_t numThreads)
+        : _asyncSpinner(numThreads, std::addressof(cbQ))
+    {
+    }
+
+    void start()
+    {
+        _asyncSpinner.start();
+    }
+
+    void stop()
+    {
+        _asyncSpinner.stop();
+    }
+
+private:
+    ros::AsyncSpinner _asyncSpinner;
+};
+
+template <class Timer, class CallbackQ, class ThreadPool>
+class AlicaTimerFactory
+{
     using TimerCb = typename Timer::TimerCb;
 
 public:
-    AlicaTimerManager(int numThreads);
-    AlicaTimerManager(const AlicaTimerManager&) = delete;
-    AlicaTimerManager(AlicaTimerManager&&) = delete;
-    AlicaTimerManager& operator=(const AlicaTimerManager&) = delete;
-    AlicaTimerManager&& operator=(AlicaTimerManager&&) = delete;
-    ~AlicaTimerManager() = default;
+    AlicaTimerFactory(uint32_t numThreads)
+        : _cbQ()
+        , _threadPool(_cbQ, numThreads)
+    {
+    }
+
+    AlicaTimerFactory(const AlicaTimerManager&) = delete;
+    AlicaTimerFactory(AlicaTimerManager&&) = delete;
+    AlicaTimerFactory& operator=(const AlicaTimerManager&) = delete;
+    AlicaTimerFactory&& operator=(AlicaTimerManager&&) = delete;
+    ~AlicaTimerFactory() = default;
 
     Timer createTimer(TimerCb timerCb, AlicaTime period)
     {
-        auto sec = period.inSeconds();
-        auto nanosec = period.inNanoseconds();
-        nanosec -= sec * 1000000000LL;
-        return Timer(timerCb, _nh, ros::Duration{sec, nanosec});
+        return Timer(cbQ, timerCb, period);
     }
 
-    // We may require a shared_ptr to the implementation so that this class stays alive as long as a timer is alive
-    // Is probably not required here since the ros takes care of it
-
 private:
-    ros::NodeHandle _nh;
+    // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
+    CallbackQ _cbQ;
+    ThreadPool _threadPool;
 };
 
 }
