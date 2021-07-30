@@ -17,6 +17,9 @@ Scheduler::Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config)
     _running = true;
     int threadPoolSize = config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency()));
 
+    _alicaTimerFactory = std::make_unique<typename alica::AlicaTimerFactory<typename alica::SyncStopTimerRos<ros::CallbackQueue>, ros::CallbackQueue,
+            typename alica::ThreadPoolRos<ros::CallbackQueue>>>(threadPoolSize);
+
     for (int i = 0; i < threadPoolSize; i++) {
         _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
     }
@@ -56,7 +59,13 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
 
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
-        _jobQueue.insert(std::move(job));
+        if (job->isRepeated) {
+            alica::SyncStopTimerRos<ros::CallbackQueue> *timer = _alicaTimerFactory->createTimer(job->cb, job->repeatInterval);
+            timer->start();
+            _timers[job->id] = timer;
+        } else {
+            _jobQueue.insert(std::move(job));
+        }
     }
 
     if (notify) {
