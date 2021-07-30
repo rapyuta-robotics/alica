@@ -2,9 +2,9 @@
 
 #include "engine/AlicaClock.h"
 
+#include <condition_variable>
 #include <functional>
 #include <mutex>
-#include <condition_variable>
 #include <ros/ros.h>
 
 namespace alica
@@ -17,36 +17,30 @@ public:
     using TimerCb = std::function<void()>;
 
     SyncStopTimerRos(CallbackQ& cbQ, TimerCb&& userCb, AlicaTime period)
-        : _userCb(std::move(userCb))
-        , _nh()
-        , _timer()
-        , _stopMutex()
-        , _stopCv()
-        , _userCbInProgress(false)
-        , _stop(false)
+            : _userCb(std::move(userCb))
+            , _nh()
+            , _timer()
+            , _stopMutex()
+            , _stopCv()
+            , _userCbInProgress(false)
+            , _stop(false)
     {
         _nh.setCallbackQueue(std::addressof(cbQ));
         auto sec = period.inSeconds();
         auto nanosec = period.inNanoseconds();
         nanosec -= sec * 1000000000LL;
-        _timer = _nh.createTimer(ros::Duration(sec, nanosec), timerCb, this, false, false);
+        _timer = _nh.createTimer(ros::Duration(sec, nanosec), &SyncStopTimerRos::timerCb, this, false, false);
         start();
     }
 
-    SyncStopTimerRos(const SyncStopTimer&) = default;
-    SyncStopTimerRos(SyncStopTimer&&) = default;
-    SyncStopTimerRos& operator=(const SyncStopTimer&) = default;
-    SyncStopTimerRos& operator=(SyncStopTimer&&) = default;
+    SyncStopTimerRos(const SyncStopTimerRos&) = default;
+    SyncStopTimerRos(SyncStopTimerRos&&) = default;
+    SyncStopTimerRos& operator=(const SyncStopTimerRos&) = default;
+    SyncStopTimerRos& operator=(SyncStopTimerRos&&) = default;
 
-    ~SyncStopTimerRos()
-    {
-        stop();
-    }
+    ~SyncStopTimerRos() { stop(); }
 
-    void start()
-    {
-        _timer.start();
-    }
+    void start() { _timer.start(); }
 
     void stop()
     {
@@ -57,7 +51,7 @@ public:
         if (!_userCbInProgress) {
             return;
         }
-        _stopCv.wait(lock, [this](){ return !_userCbInProgress; });
+        _stopCv.wait(lock, [this]() { return !_userCbInProgress; });
     }
 
 private:
@@ -93,26 +87,21 @@ private:
     bool _userCbInProgress;
 };
 
-// TODO: implement a AysncStopTimerRos i.e. the stop() method should take a callback as parameter which will be called asynchronously when the timer is successfully stopped
+// TODO: implement a AsyncStopTimerRos i.e. the stop() method should take a callback as parameter which will be called asynchronously when the timer is
+// successfully stopped
 
 template <class CallbackQ>
 class ThreadPoolRos
 {
 public:
     ThreadPoolRos(CallbackQ& cbQ, uint32_t numThreads)
-        : _asyncSpinner(numThreads, std::addressof(cbQ))
+            : _asyncSpinner(numThreads, std::addressof(cbQ))
     {
     }
 
-    void start()
-    {
-        _asyncSpinner.start();
-    }
+    void start() { _asyncSpinner.start(); }
 
-    void stop()
-    {
-        _asyncSpinner.stop();
-    }
+    void stop() { _asyncSpinner.stop(); }
 
 private:
     ros::AsyncSpinner _asyncSpinner;
@@ -125,21 +114,19 @@ class AlicaTimerFactory
 
 public:
     AlicaTimerFactory(uint32_t numThreads)
-        : _cbQ()
-        , _threadPool(_cbQ, numThreads)
+            : _cbQ()
+            , _threadPool(_cbQ, numThreads)
     {
+        _threadPool.start();
     }
 
-    AlicaTimerFactory(const AlicaTimerManager&) = delete;
-    AlicaTimerFactory(AlicaTimerManager&&) = delete;
-    AlicaTimerFactory& operator=(const AlicaTimerManager&) = delete;
-    AlicaTimerFactory&& operator=(AlicaTimerManager&&) = delete;
+    AlicaTimerFactory(const AlicaTimerFactory&) = delete;
+    AlicaTimerFactory(AlicaTimerFactory&&) = delete;
+    AlicaTimerFactory& operator=(const AlicaTimerFactory&) = delete;
+    AlicaTimerFactory&& operator=(AlicaTimerFactory&&) = delete;
     ~AlicaTimerFactory() = default;
 
-    Timer createTimer(TimerCb timerCb, AlicaTime period)
-    {
-        return Timer(cbQ, timerCb, period);
-    }
+    Timer* createTimer(TimerCb timerCb, AlicaTime period) { return new Timer(_cbQ, std::move(timerCb), period); }
 
 private:
     // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
@@ -147,4 +134,4 @@ private:
     ThreadPool _threadPool;
 };
 
-}
+} // namespace alica
