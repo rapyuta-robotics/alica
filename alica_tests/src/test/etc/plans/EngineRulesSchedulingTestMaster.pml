@@ -34,7 +34,7 @@
       "configuration" : null
     } ],
     "variableBindings" : [ ],
-    "outTransitions" : [ ],
+    "outTransitions" : [ 1626848015857 ],
     "inTransitions" : [ 1625783867494 ]
   }, {
     "type" : "State",
@@ -66,6 +66,17 @@
     "inTransitions" : [ 1625783869824 ],
     "success" : false,
     "postCondition" : null
+  }, {
+    "type" : "State",
+    "id" : 1626848011700,
+    "name" : "Default Name",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1625610679488,
+    "confAbstractPlanWrappers" : [ ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ ],
+    "inTransitions" : [ 1626848015857 ]
   } ],
   "transitions" : [ {
     "id" : 1625783867494,
@@ -93,6 +104,23 @@
     "preCondition" : {
       "id" : 1625783869825,
       "name" : "1625783869825",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : null,
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  }, {
+    "id" : 1626848015857,
+    "name" : "FromGoIntoSubPlanTo Default Name",
+    "comment" : "MISSING_COMMENT",
+    "inState" : 1625614677498,
+    "outState" : 1626848011700,
+    "preCondition" : {
+      "id" : 1626848015861,
+      "name" : "1626848015861",
       "comment" : "",
       "enabled" : true,
       "conditionString" : null,
