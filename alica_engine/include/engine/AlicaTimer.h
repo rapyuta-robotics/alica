@@ -7,6 +7,8 @@
 #include <mutex>
 #include <ros/ros.h>
 
+#include <memory>
+
 namespace alica
 {
 
@@ -20,8 +22,8 @@ public:
             : _userCb(std::move(userCb))
             , _nh()
             , _timer()
-            , _stopMutex()
-            , _stopCv()
+            , _stopMutex(std::make_shared<std::mutex>())
+            , _stopCv(std::make_unique<std::condition_variable>())
             , _userCbInProgress(false)
             , _stop(false)
     {
@@ -46,12 +48,12 @@ public:
     {
         // TODO: get rid of mutex lock for checking if userCb is in progress
         _timer.stop();
-        std::unique_lock<std::mutex> lock(_stopMutex);
+        std::unique_lock<std::mutex> lock(*_stopMutex);
         _stop = true;
         if (!_userCbInProgress) {
             return;
         }
-        _stopCv.wait(lock, [this]() { return !_userCbInProgress; });
+        (*_stopCv).wait(lock, [this]() { return !_userCbInProgress; });
     }
 
 private:
@@ -62,7 +64,7 @@ private:
         }
 
         {
-            std::unique_lock<std::mutex> lock(_stopMutex);
+            std::unique_lock<std::mutex> lock(*_stopMutex);
             if (_stop) {
                 return;
             }
@@ -71,18 +73,18 @@ private:
 
         _userCb();
 
-        std::unique_lock<std::mutex> lock(_stopMutex);
+        std::unique_lock<std::mutex> lock(*_stopMutex);
         _userCbInProgress = false;
         if (_stop) {
-            _stopCv.notify_one();
+            (*_stopCv).notify_one();
         }
     }
 
     TimerCb _userCb;
     ros::NodeHandle _nh;
     ros::Timer _timer;
-    mutable std::mutex _stopMutex;
-    std::condition_variable _stopCv;
+    std::shared_ptr<std::mutex> _stopMutex;
+    std::unique_ptr<std::condition_variable> _stopCv;
     bool _stop;
     bool _userCbInProgress;
 };
@@ -126,7 +128,7 @@ public:
     AlicaTimerFactory&& operator=(AlicaTimerFactory&&) = delete;
     ~AlicaTimerFactory() = default;
 
-    Timer* createTimer(TimerCb timerCb, AlicaTime period) { return new Timer(_cbQ, std::move(timerCb), period); }
+    std::unique_ptr<Timer> createTimer(TimerCb timerCb, AlicaTime period) { return std::move(std::make_unique<Timer>(_cbQ, std::move(timerCb), period)); }
 
 private:
     // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
@@ -134,4 +136,5 @@ private:
     ThreadPool _threadPool;
 };
 
+using TimerFactoryRos = AlicaTimerFactory<SyncStopTimerRos<ros::CallbackQueue>, ros::CallbackQueue, ThreadPoolRos<ros::CallbackQueue>>;
 } // namespace alica
