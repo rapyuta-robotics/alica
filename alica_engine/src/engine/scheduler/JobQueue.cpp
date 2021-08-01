@@ -26,32 +26,11 @@ std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
         return nullptr;
     }
 
-    _lowestScheduledTime = _queue[0]->scheduledTime;
+    auto it = _queue.begin();
+    std::shared_ptr<Job> job = std::move(*it);
+    _queue.erase(it);
 
-    for (auto it = _queue.begin(); it != _queue.end(); it++) {
-        if ((*it)->cancelled && !((*it)->inProgress)) {
-            it = _queue.erase(it);
-
-            if (it == _queue.end()) {
-                return nullptr;
-            }
-            continue;
-        }
-
-        if ((*it)->isPrerequisiteFree() && (*it)->scheduledTime <= time && !((*it)->inProgress)) {
-            if ((*it)->isRepeated) {
-                return (*it);
-            }
-            std::shared_ptr<Job> job = std::move(*it);
-            _queue.erase(it);
-            return std::move(job);
-        }
-
-        if ((*it)->isPrerequisiteFree() && !(*it)->inProgress) {
-            _lowestScheduledTime = std::min((*it)->scheduledTime, _lowestScheduledTime);
-        }
-    }
-    return nullptr;
+    return std::move(job);
 }
 
 void JobQueue::clear()
