@@ -495,7 +495,7 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
         if (_basicBehaviour->isEventDriven()) {
             prerequisites.push_back(_basicBehaviour->getLatestTriggeredJob());
         } else {
-            prerequisites.push_back(_runJob);
+            prerequisites.push_back(_basicBehaviour->getLatestTriggeredJob());
         }
     }
 
@@ -505,11 +505,6 @@ std::weak_ptr<scheduler::Job> RunningPlan::deactivate()
         scheduler.schedule(std::move(terminateJob));
     }
     if (_basicBehaviour) {
-        std::shared_ptr<alica::scheduler::Job> runJob = _runJob.lock();
-        if (runJob) {
-            runJob->cancelled = true;
-        }
-
         _terminateJob = terminateJob;
         scheduler.schedule(std::move(terminateJob));
     }
@@ -631,19 +626,6 @@ void RunningPlan::activate()
         _initJob = initJob;
 
         scheduler.schedule(std::move(initJob));
-
-        // Do not schedule repeatable run job when behaviour is event driven.
-        if (!_basicBehaviour->isEventDriven()) {
-            std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
-            runJobPrerequisites.push_back(_initJob);
-
-            std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, _basicBehaviour, nullptr);
-            std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
-            runJob->isRepeated = true;
-            runJob->repeatInterval = _basicBehaviour->getInterval();
-            _runJob = runJob; //store runJob as weak_ptr
-            scheduler.schedule(std::move(runJob));
-        }
     }
 
     attachPlanConstraints();
