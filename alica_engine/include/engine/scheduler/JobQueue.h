@@ -15,11 +15,8 @@ namespace scheduler {
         std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
         void detectDelayedJobs(alica::AlicaTime time);
         bool isEmpty() const;
-        AlicaTime getLowestScheduledTime() const;
     private:
-        AlicaTime _lowestScheduledTime;
         std::vector<std::shared_ptr<Job>> _queue;
-        std::mutex _mtx;
     };
 }
 }

@@ -51,10 +51,5 @@ bool JobQueue::isEmpty() const
 {
     return _queue.empty();
 }
-
-AlicaTime JobQueue::getLowestScheduledTime() const
-{
-    return _lowestScheduledTime;
-}
 } // namespace scheduler
 } // namespace alica
