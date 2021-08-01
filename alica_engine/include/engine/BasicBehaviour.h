@@ -169,5 +169,6 @@ private:
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
     std::weak_ptr<scheduler::Job> _runJob;
+    int _activeRunJobId;
 };
 } /* namespace alica */

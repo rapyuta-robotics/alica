@@ -175,6 +175,20 @@ void BasicBehaviour::doInit()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
+
+    // Do not schedule repeatable run job when behaviour is event driven.
+    if (!isEventDriven()) {
+        auto& scheduler = _engine->editScheduler();
+        std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
+
+        std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
+        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
+        _activeRunJobId = runJob->id;
+        runJob->isRepeated = true;
+        runJob->repeatInterval = getInterval();
+        _runJob = runJob; //store runJob as weak_ptr
+        scheduler.schedule(std::move(runJob));
+    }
 }
 
 void BasicBehaviour::doStop()
@@ -212,6 +226,8 @@ void BasicBehaviour::doTrigger()
 
 void BasicBehaviour::doTermination()
 {
+    auto& scheduler = _engine->editScheduler();
+    scheduler.stopJob(_activeRunJobId);
     onTermination();
     setBehaviourState(BehaviourState::UNINITIALIZED);
 }
