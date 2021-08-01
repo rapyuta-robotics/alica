@@ -73,7 +73,7 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     }
     timeoutCount = 0;
 
-    EXPECT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter, 30);
+    EXPECT_GE(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter, 30);
     EXPECT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->initCounter, 0);
 
     // Check whether we have been in state1 to execute midfield standard
