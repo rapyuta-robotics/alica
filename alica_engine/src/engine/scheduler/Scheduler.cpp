@@ -17,15 +17,8 @@ Scheduler::Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config)
     _running = true;
     int threadPoolSize = config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency()));
 
-    _alicaTimerFactory = std::make_unique<typename alica::AlicaTimerFactory<typename alica::SyncStopTimerRos<ros::CallbackQueue>, ros::CallbackQueue,
-            typename alica::ThreadPoolRos<ros::CallbackQueue>>>(threadPoolSize);
-
-    for (int i = 0; i < threadPoolSize; i++) {
-        _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
-    }
-
-    _workers.emplace_back(std::thread(&Scheduler::workerNotifier, this));
-    _workers.emplace_back(std::thread(&Scheduler::monitorJobs, this));
+    _alicaTimerFactory = std::make_unique<alica::TimerFactoryRos>(threadPoolSize);
+    _workers.emplace_back(std::thread(&Scheduler::workerFunction, this));
 }
 
 Scheduler::~Scheduler()
@@ -60,9 +53,8 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
         if (job->isRepeated) {
-            alica::SyncStopTimerRos<ros::CallbackQueue> *timer = _alicaTimerFactory->createTimer(job->cb, job->repeatInterval);
-            timer->start();
-            _timers[job->id] = timer;
+            auto timer = _alicaTimerFactory->createTimer(job->cb, job->repeatInterval);
+            _timers.emplace(job->id, std::move(timer));
         } else {
             _jobQueue.insert(std::move(job));
         }
@@ -70,6 +62,17 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
 
     if (notify) {
         _workerCV.notify_one();
+    }
+}
+
+void Scheduler::stopJob(int jobId)
+{
+    auto it = _timers.find(jobId);
+
+    if (it != _timers.end()) {
+        it->second->stop();
+        it->second.reset();
+        _timers.erase(it);
     }
 }
 
@@ -87,69 +90,28 @@ void Scheduler::workerFunction()
 {
     while (_running.load()) {
         std::shared_ptr<Job> job;
-        bool executeJob = true;
         {
             std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
             _workerCV.wait(lock, [this, &job] {
                 job = _jobQueue.getAvailableJob(_ae->getAlicaClock().now());
-                if (!job && !_jobQueue.isEmpty()) {
-                    _notifierIsActive = true;
-                    _workerNotifierCV.notify_one();
-                }
                 return !_running.load() || job;
             });
 
             if (!_running.load()) {
                 continue;
             }
-            job->inProgress = true;
         }
 
-        if (executeJob) {
-            try {
-                std::cerr << "execute job: " << job->id << std::endl;
-                job->cb();
-                std::cerr << "finished job: " << job->id << std::endl;
-                if (job->isRepeated) {
-                    job->scheduledTime += job->repeatInterval;
-                    job->inProgress = false;
-                } else {
-                    std::cerr << "reset job with id " << job->id << std::endl;
-                    job.reset();
-                    _workerCV.notify_one();
-                }
-            } catch (const std::bad_function_call& e) {
-                ALICA_ERROR_MSG("Bad function call");
-            }
-        } else {
-            schedule(std::move(job), false);
+        try {
+            std::cerr << "execute job: " << job->id << std::endl;
+            job->cb();
+            std::cerr << "finished job: " << job->id << std::endl;
+        } catch (const std::bad_function_call& e) {
+            ALICA_ERROR_MSG("Bad function call");
         }
-    }
-}
-
-void Scheduler::workerNotifier()
-{
-    while (_running.load()) {
-        {
-            std::unique_lock<std::mutex> lock(_workerNotifierMtx);
-            _workerNotifierCV.wait(lock, [this] { return _notifierIsActive || !_running.load(); });
-
-            if (!_running.load()) {
-                break;
-            }
-            _ae->getAlicaClock().sleep(_jobQueue.getLowestScheduledTime() - _ae->getAlicaClock().now());
-            _notifierIsActive = false;
-            _workerCV.notify_one();
-        }
-    }
-}
-
-void Scheduler::monitorJobs()
-{
-    while (_running.load()) {
-        _jobQueue.detectDelayedJobs(_ae->getAlicaClock().now());
-        _ae->getAlicaClock().sleep(alica::AlicaTime::seconds(5));
+        job.reset();
+        _workerCV.notify_one();
     }
 }
 } // namespace scheduler

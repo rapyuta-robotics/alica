@@ -8,6 +8,7 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
 #include <ros/callback_queue.h>
@@ -28,6 +29,7 @@ public:
     void terminate();
     int getNextJobID();
     std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
+    void stopJob(int jobId);
 
 private:
     const alica::AlicaEngine* _ae;
@@ -42,16 +44,14 @@ private:
     std::atomic<int> _jobID;
     bool _notifierIsActive;
 
-    std::unique_ptr<typename alica::AlicaTimerFactory<typename alica::SyncStopTimerRos<ros::CallbackQueue>, ros::CallbackQueue,
-            typename alica::ThreadPoolRos<ros::CallbackQueue>>>
-            _alicaTimerFactory;
+    std::unique_ptr<alica::TimerFactoryRos> _alicaTimerFactory;
 
     void workerFunction();
     void workerNotifier();
     void monitorJobs();
 
     // key: jobId, value: timer
-    std::unordered_map<int, alica::SyncStopTimerRos<ros::CallbackQueue>*> _timers;
+    std::unordered_map<int, std::unique_ptr<alica::SyncStopTimerRos<ros::CallbackQueue>>> _timers;
 };
 } // namespace scheduler
 } // namespace alica
