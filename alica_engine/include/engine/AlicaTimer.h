@@ -26,27 +26,45 @@ public:
             , _stopCv(std::make_unique<std::condition_variable>())
             , _userCbInProgress(false)
             , _stop(false)
+            , _period(period)
     {
         _nh.setCallbackQueue(std::addressof(cbQ));
-        auto sec = period.inSeconds();
-        auto nanosec = period.inNanoseconds();
-        nanosec -= sec * 1000000000LL;
-        _timer = _nh.createTimer(ros::Duration(sec, nanosec), &SyncStopTimerRos::timerCb, this, false, false);
-        start();
     }
 
-    SyncStopTimerRos(const SyncStopTimerRos&) = default;
+    SyncStopTimerRos(const SyncStopTimerRos& other)
+    {
+        _stopMutex = std::move(other._stopMutex);
+        _stopCv = std::move(other._stopCv);
+
+        _userCb = other._userCb;
+        _nh = other._nh;
+        _timer = other._timer;
+        _userCbInProgress = other._userCbInProgress;
+        _stop = other._stop;
+        _period = other._period;
+    }
     SyncStopTimerRos(SyncStopTimerRos&&) = default;
     SyncStopTimerRos& operator=(const SyncStopTimerRos&) = default;
     SyncStopTimerRos& operator=(SyncStopTimerRos&&) = default;
 
     ~SyncStopTimerRos() { stop(); }
 
-    void start() { _timer.start(); }
+    void start()
+    {
+        auto sec = _period.inSeconds();
+        auto nanosec = _period.inNanoseconds();
+        nanosec -= sec * 1000000000LL;
+
+        _timer = _nh.createTimer(ros::Duration(sec, nanosec), &SyncStopTimerRos::timerCb, this, false, false);
+        _timer.start();
+    }
 
     void stop()
     {
         // TODO: get rid of mutex lock for checking if userCb is in progress
+        if (!_stopMutex) {
+            return; // AlicaTimer object has been copied and should not stop the timer or do any clean up
+        }
         _timer.stop();
         std::unique_lock<std::mutex> lock(*_stopMutex);
         _stop = true;
@@ -87,6 +105,7 @@ private:
     std::unique_ptr<std::condition_variable> _stopCv;
     bool _stop;
     bool _userCbInProgress;
+    AlicaTime _period;
 };
 
 // TODO: implement a AsyncStopTimerRos i.e. the stop() method should take a callback as parameter which will be called asynchronously when the timer is
@@ -128,7 +147,7 @@ public:
     AlicaTimerFactory&& operator=(AlicaTimerFactory&&) = delete;
     ~AlicaTimerFactory() = default;
 
-    std::unique_ptr<Timer> createTimer(TimerCb timerCb, AlicaTime period) { return std::move(std::make_unique<Timer>(_cbQ, std::move(timerCb), period)); }
+    Timer createTimer(TimerCb timerCb, AlicaTime period) { return std::move(Timer(_cbQ, std::move(timerCb), period)); }
 
 private:
     // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool

@@ -53,8 +53,8 @@ void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
         if (job->isRepeated) {
-            auto timer = _alicaTimerFactory->createTimer(job->cb, job->repeatInterval);
-            _timers.emplace(job->id, std::move(timer));
+            _timers.emplace(job->id, _alicaTimerFactory->createTimer(job->cb, job->repeatInterval));
+            _timers.at(job->id).start();
         } else {
             _jobQueue.insert(std::move(job));
         }
@@ -70,8 +70,7 @@ void Scheduler::stopJob(int jobId)
     auto it = _timers.find(jobId);
 
     if (it != _timers.end()) {
-        it->second->stop();
-        it->second.reset();
+        it->second.stop();
         _timers.erase(it);
     }
 }
@@ -99,9 +98,7 @@ void Scheduler::workerFunction()
         }
 
         try {
-            std::cerr << "execute job: " << job->id << std::endl;
             job->cb();
-            std::cerr << "finished job: " << job->id << std::endl;
         } catch (const std::bad_function_call& e) {
             ALICA_ERROR_MSG("Bad function call");
         }

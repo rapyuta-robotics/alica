@@ -50,7 +50,7 @@ private:
     void monitorJobs();
 
     // key: jobId, value: timer
-    std::unordered_map<int, std::unique_ptr<alica::SyncStopTimerRos<ros::CallbackQueue>>> _timers;
+    std::unordered_map<int, alica::SyncStopTimerRos<ros::CallbackQueue>> _timers;
 };
 } // namespace scheduler
 } // namespace alica
