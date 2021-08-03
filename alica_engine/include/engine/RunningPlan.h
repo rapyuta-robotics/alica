@@ -187,13 +187,13 @@ public:
     void clearFailedChildren();
     void addFailure();
     int getFailureCount() const;
-    std::vector<std::weak_ptr<scheduler::Job>> deactivateChildren();
+    void deactivateChildren();
     void clearChildren();
 
     void setFailedChild(const AbstractPlan* child);
     void accept(IPlanTreeVisitor* vis);
 
-    std::weak_ptr<scheduler::Job> deactivate();
+    void deactivate();
     void activate();
 
     bool isAnyChildStatus(PlanStatus ps) const;
@@ -213,12 +213,6 @@ public:
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
-
-    std::vector<std::weak_ptr<scheduler::Job>> getDeactivatedSiblingsTerminateJobs() const;
-    void addDeactivatedChildrenTerminateJobs(std::vector<std::weak_ptr<scheduler::Job>> terminateJobs);
-
-    std::weak_ptr<scheduler::Job> getInitJob() const;
-    std::weak_ptr<scheduler::Job> getTerminateJob() const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -249,10 +243,6 @@ private:
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
-
-    std::weak_ptr<scheduler::Job> _terminateJob;
-    std::weak_ptr<scheduler::Job> _initJob;
-    std::vector<std::weak_ptr<scheduler::Job>> _deactivatedChildrenTerminateJobs;
 };
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

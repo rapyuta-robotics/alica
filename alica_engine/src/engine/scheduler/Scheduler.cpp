@@ -81,11 +81,6 @@ int Scheduler::getNextJobID()
     return ++_jobID;
 }
 
-std::vector<std::weak_ptr<Job>> Scheduler::getPrerequisites(int id)
-{
-    return _jobQueue.getPrerequisites(id);
-}
-
 void Scheduler::workerFunction()
 {
     while (_running.load()) {

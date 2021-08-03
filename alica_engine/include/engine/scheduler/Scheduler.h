@@ -28,7 +28,6 @@ public:
     void schedule(std::shared_ptr<Job> job, bool notify = true);
     void terminate();
     int getNextJobID();
-    std::vector<std::weak_ptr<Job>> getPrerequisites(int id);
     void stopJob(int jobId);
 
 private:

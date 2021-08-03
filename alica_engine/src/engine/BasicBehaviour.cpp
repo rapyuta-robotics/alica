@@ -179,14 +179,11 @@ void BasicBehaviour::doInit()
     // Do not schedule repeatable run job when behaviour is event driven.
     if (!isEventDriven()) {
         auto& scheduler = _engine->editScheduler();
-        std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
-
         std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
+        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb);
         _activeRunJobId = runJob->id;
         runJob->isRepeated = true;
         runJob->repeatInterval = getInterval();
-        _runJob = runJob; //store runJob as weak_ptr
         scheduler.schedule(std::move(runJob));
     }
 }
@@ -214,13 +211,9 @@ void BasicBehaviour::doTrigger()
 
     auto& scheduler = _engine->editScheduler();
 
-    std::vector<std::weak_ptr<scheduler::Job>> runJobPrerequisites;
-    runJobPrerequisites.push_back(_context->getInitJob());
-
     std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb, runJobPrerequisites);
-    runJob->isRepeated = false;
-    _runJob = runJob; // store runJob as weak_ptr
+    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb);
+    _runJob = runJob;
     scheduler.schedule(std::move(runJob));
 }
 

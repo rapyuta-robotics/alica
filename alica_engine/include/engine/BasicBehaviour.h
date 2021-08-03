@@ -85,8 +85,6 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
-    std::weak_ptr<scheduler::Job> getLatestTriggeredJob() const { return _runJob; }
-
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
