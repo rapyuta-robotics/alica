@@ -20,6 +20,7 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 namespace alica
 {
