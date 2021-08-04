@@ -42,6 +42,12 @@ void Scheduler::terminate()
         worker.join();
     }
     _workers.clear();
+
+    auto it = _timers.begin();
+    while (it != _timers.end()) {
+        it->second.stop();
+        it = _timers.erase(it);
+    }
 }
 
 void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
