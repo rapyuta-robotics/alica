@@ -31,7 +31,7 @@ public:
     void stopJob(int jobId);
 
 private:
-    const alica::AlicaEngine* _ae;
+    alica::AlicaClock _clock;
     JobQueue _jobQueue;
     JobQueue _repeatedJobQueue;
     std::mutex _workerMtx;

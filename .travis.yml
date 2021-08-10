@@ -17,7 +17,6 @@ env:
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
     - BASE_BRANCH=$TRAVIS_BRANCH
 
-
 ################################################################################
 
 before_install:

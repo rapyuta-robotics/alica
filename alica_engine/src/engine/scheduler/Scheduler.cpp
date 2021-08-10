@@ -9,10 +9,9 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(const alica::AlicaEngine* ae, const YAML::Node& config)
-        : _ae(ae)
+Scheduler::Scheduler(const alica::AlicaClock& clock, const YAML::Node& config)
+        : _clock(clock)
         , _jobID(0)
-        , _notifierIsActive(false)
 {
     _running = true;
     int threadPoolSize = config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency()));
@@ -38,7 +37,6 @@ void Scheduler::terminate()
 
     for (std::thread& worker : _workers) {
         _workerCV.notify_all();
-        _workerNotifierCV.notify_one();
         worker.join();
     }
     _workers.clear();
@@ -50,10 +48,10 @@ void Scheduler::terminate()
     }
 }
 
-void Scheduler::schedule(std::shared_ptr<Job> job, bool notify)
+void Scheduler::schedule(std::shared_ptr<Job>&& job, bool notify)
 {
     if (job->scheduledTime.inNanoseconds() == 0) {
-        job->scheduledTime = _ae->getAlicaClock().now();
+        job->scheduledTime = _clock.now();
     }
 
     {
@@ -86,17 +84,21 @@ int Scheduler::getNextJobID()
     return ++_jobID;
 }
 
+std::vector<std::weak_ptr<Job>> Scheduler::getPrerequisites(int id)
+{
+    return _jobQueue.getPrerequisites(id);
+}
+
 void Scheduler::workerFunction()
 {
     while (_running.load()) {
         std::shared_ptr<Job> job;
+        bool executeJob = true;
+
         {
             std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
-            _workerCV.wait(lock, [this, &job] {
-                job = _jobQueue.getAvailableJob(_ae->getAlicaClock().now());
-                return !_running.load() || job;
-            });
+            _workerCV.wait(lock, [this, &job] { return !_running.load() || (job = std::move(_jobQueue.getAvailableJob(_clock.now()))); });
 
             if (!_running.load()) {
                 continue;

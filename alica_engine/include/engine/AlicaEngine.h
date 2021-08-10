@@ -21,6 +21,7 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <functional>
 
 namespace alica
 {
@@ -91,7 +92,7 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
-    scheduler::Scheduler& editScheduler() { return _scheduler; }
+    scheduler::Scheduler& editScheduler() { return *_scheduler; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -131,7 +132,7 @@ private:
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
-    scheduler::Scheduler _scheduler;
+    scheduler::Scheduler* _scheduler;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
