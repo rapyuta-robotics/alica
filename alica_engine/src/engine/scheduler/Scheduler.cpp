@@ -57,7 +57,7 @@ void Scheduler::schedule(std::shared_ptr<Job>&& job, bool notify)
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
         if (job->isRepeated) {
-            _timers.emplace(job->id, _alicaTimerFactory->createTimer(job->cb, job->repeatInterval));
+            _timers.emplace(job->id, std::move(_alicaTimerFactory->createTimer(job->cb, job->repeatInterval)));
             _timers.at(job->id).start();
         } else {
             _jobQueue.insert(std::move(job));
