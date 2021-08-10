@@ -84,21 +84,17 @@ int Scheduler::getNextJobID()
     return ++_jobID;
 }
 
-std::vector<std::weak_ptr<Job>> Scheduler::getPrerequisites(int id)
-{
-    return _jobQueue.getPrerequisites(id);
-}
-
 void Scheduler::workerFunction()
 {
     while (_running.load()) {
         std::shared_ptr<Job> job;
-        bool executeJob = true;
-
         {
             std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
-            _workerCV.wait(lock, [this, &job] { return !_running.load() || (job = std::move(_jobQueue.getAvailableJob(_clock.now()))); });
+            _workerCV.wait(lock, [this, &job] {
+                job = std::move(_jobQueue.getAvailableJob(_clock.now()));
+                return !_running.load() || job;
+            });
 
             if (!_running.load()) {
                 continue;
