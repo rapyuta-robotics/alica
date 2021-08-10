@@ -29,35 +29,27 @@ public:
             , _period(period)
     {
         _nh.setCallbackQueue(std::addressof(cbQ));
+        initTimer();
     }
 
-    SyncStopTimerRos(const SyncStopTimerRos& other)
+    SyncStopTimerRos(const SyncStopTimerRos&) = default;
+    SyncStopTimerRos(SyncStopTimerRos&& other)
+            : _userCb(std::move(other._userCb))
+            , _nh(other._nh)
+            , _stopMutex(std::move(other._stopMutex))
+            , _stopCv(std::move(other._stopCv))
+            , _stop(other._stop)
+            , _period(other._period)
     {
-        _stopMutex = std::move(other._stopMutex);
-        _stopCv = std::move(other._stopCv);
-
-        _userCb = other._userCb;
-        _nh = other._nh;
-        _timer = other._timer;
-        _userCbInProgress = other._userCbInProgress;
-        _stop = other._stop;
-        _period = other._period;
+        other.stop();
+        initTimer();
     }
-    SyncStopTimerRos(SyncStopTimerRos&&) = default;
     SyncStopTimerRos& operator=(const SyncStopTimerRos&) = default;
     SyncStopTimerRos& operator=(SyncStopTimerRos&&) = default;
 
     ~SyncStopTimerRos() { stop(); }
 
-    void start()
-    {
-        auto sec = _period.inSeconds();
-        auto nanosec = _period.inNanoseconds();
-        nanosec -= sec * 1000000000LL;
-
-        _timer = _nh.createTimer(ros::Duration(sec, nanosec), &SyncStopTimerRos::timerCb, this, false, false);
-        _timer.start();
-    }
+    void start() { _timer.start(); }
 
     void stop()
     {
@@ -96,6 +88,14 @@ private:
         if (_stop) {
             (*_stopCv).notify_one();
         }
+    }
+
+    void initTimer()
+    {
+        auto sec = _period.inSeconds();
+        auto nanosec = _period.inNanoseconds();
+        nanosec -= sec * 1000000000LL;
+        _timer = _nh.createTimer(ros::Duration(sec, nanosec), &SyncStopTimerRos::timerCb, this, false, false);
     }
 
     TimerCb _userCb;
@@ -147,7 +147,7 @@ public:
     AlicaTimerFactory&& operator=(AlicaTimerFactory&&) = delete;
     ~AlicaTimerFactory() = default;
 
-    Timer createTimer(TimerCb timerCb, AlicaTime period) { return std::move(Timer(_cbQ, std::move(timerCb), period)); }
+    Timer createTimer(TimerCb timerCb, AlicaTime period) { return Timer(_cbQ, std::move(timerCb), period); }
 
 private:
     // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
