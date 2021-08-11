@@ -50,10 +50,6 @@ void Scheduler::terminate()
 
 void Scheduler::schedule(std::shared_ptr<Job>&& job, bool notify)
 {
-    if (job->scheduledTime.inNanoseconds() == 0) {
-        job->scheduledTime = _clock.now();
-    }
-
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
         if (job->isRepeated) {

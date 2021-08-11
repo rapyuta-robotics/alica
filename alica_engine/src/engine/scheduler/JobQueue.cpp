@@ -8,7 +8,7 @@ namespace scheduler
 {
 void JobQueue::insert(std::shared_ptr<Job>&& job)
 {
-    _queue.insert(std::upper_bound(_queue.begin(), _queue.end(), job), std::move(job));
+    _queue.push_back(std::move(job));
 }
 
 std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)

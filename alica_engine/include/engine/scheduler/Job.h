@@ -14,7 +14,6 @@ struct Job
 {
     int id;
     std::function<void()> cb;
-    AlicaTime scheduledTime;
     bool isRepeated;
     AlicaTime repeatInterval;
 
@@ -25,8 +24,6 @@ struct Job
     {}
 
     bool operator==(const Job& r) const { return id == r.id; }
-
-    bool operator<(const Job& other) const { return scheduledTime < other.scheduledTime; }
 };
 } // namespace scheduler
 } // namespace alica
