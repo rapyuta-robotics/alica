@@ -89,18 +89,14 @@ essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
  */
 bool BasicBehaviour::stop()
 {
-//    if (_activeRunJobId != -1) {
-//        _engine->editScheduler().stopJob(_activeRunJobId);
-//        _activeRunJobId = -1;
-//    }
-//    _engine->editScheduler().stopJob(_activeRunJobId);
-//    _engine->editScheduler().stopJob(_activeRunJobId);
+    if (!isStopCalled()) {
+        std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, this);
+        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
+        _engine->editScheduler().schedule(std::move(terminateJob));
+    }
+
     setSignalState(SignalState::STOP);
     setStopCalled(true);
-
-//    std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, this);
-//    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-//    _engine->editScheduler().schedule(std::move(terminateJob));
     return true;
 }
 
