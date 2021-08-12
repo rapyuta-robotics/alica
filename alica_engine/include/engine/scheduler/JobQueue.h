@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine/scheduler/Job.h"
 #include <memory>
 #include <mutex>
 
@@ -21,8 +20,7 @@ public:
         if (_queue.empty()) {
             return std::nullopt;
         }
-        T val = _queue.front();
-        _queue.pop();
+        return _queue.pop_front();
     }
     
     void clear() {
@@ -32,7 +30,7 @@ public:
 
 private:
     std::mutex _mutex;
-    std::deque<std::shared_ptr<Job>> _queue;
+    std::deque<T> _queue;
 };
 
 // TODO: use a lock free single producer/consumer queue

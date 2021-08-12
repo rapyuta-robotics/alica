@@ -4,7 +4,6 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
-#include "engine/scheduler/Job.h"
 
 #include <essentials/ITrigger.hpp>
 
@@ -166,7 +165,7 @@ private:
     mutable std::mutex _runLoopMutex;
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
-    std::weak_ptr<scheduler::Job> _runJob;
-    int _activeRunJobId;
+    int64_t _activeRunJobId;
+    std::atomic<bool> _triggeredJobRunning;
 };
 } /* namespace alica */

@@ -39,16 +39,13 @@ public:
     void stop()
     {
         // TODO: get rid of mutex lock for checking if userCb is in progress
-        if (!_stopMutex) {
-            return; // AlicaTimer object has been copied and should not stop the timer or do any clean up
-        }
         _timer.stop();
-        std::unique_lock<std::mutex> lock(*_stopMutex);
+        std::unique_lock<std::mutex> lock(_stopMutex);
         _stop = true;
         if (!_userCbInProgress) {
             return;
         }
-        (*_stopCv).wait(lock, [this]() { return !_userCbInProgress; });
+        _stopCv.wait(lock, [this]() { return !_userCbInProgress; });
     }
 
 private:
@@ -59,7 +56,7 @@ private:
         }
 
         {
-            std::unique_lock<std::mutex> lock(*_stopMutex);
+            std::unique_lock<std::mutex> lock(_stopMutex);
             if (_stop) {
                 return;
             }
@@ -68,10 +65,10 @@ private:
 
         _userCb();
 
-        std::unique_lock<std::mutex> lock(*_stopMutex);
+        std::unique_lock<std::mutex> lock(_stopMutex);
         _userCbInProgress = false;
         if (_stop) {
-            (*_stopCv).notify_one();
+            _stopCv.notify_one();
         }
     }
 
@@ -141,7 +138,7 @@ public:
 private:
     // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
     std::shared_ptr<CallbackQ> _cbQ;
-    ThreadPool _threadPool;
+    ThreadPool<CallbackQ> _threadPool;
 };
 
 using TimerFactoryRos = AlicaTimerFactory<SyncStopTimerRos, ros::CallbackQueue, ThreadPoolRos>;

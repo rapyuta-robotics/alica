@@ -42,6 +42,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _runThread(nullptr)
         , _context(nullptr)
         , _activeRunJobId(-1)
+        , _triggeredJobRunning(false)
 {
 }
 
@@ -91,8 +92,7 @@ bool BasicBehaviour::stop()
 {
     if (!isStopCalled()) {
         std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, this);
-        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-        _engine->editScheduler().schedule(std::move(terminateJob));
+        _engine->editScheduler().schedule(std::move(cb));
     }
 
     setSignalState(SignalState::STOP);
@@ -108,8 +108,7 @@ bool BasicBehaviour::start()
     setSignalState(SignalState::START);
 
     std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, this);
-    std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cbInit);
-    _engine->editScheduler().schedule(std::move(initJob));
+    _engine->editScheduler().schedule(std::move(cbInit));
     return true;
 }
 
@@ -153,8 +152,7 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 
 bool BasicBehaviour::isTriggeredRunFinished()
 {
-    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
-    return !_runJob.lock();
+    return !_triggeredJobRunning;
 }
 
 void BasicBehaviour::doInit()
@@ -173,8 +171,7 @@ void BasicBehaviour::doInit()
     if (!isEventDriven()) {
         auto& scheduler = _engine->editScheduler();
         std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(runCb);
-        _activeRunJobId = scheduler.schedule(std::move(runJob), std::make_unique<alica::AlicaTime>(getInterval()));
+        _activeRunJobId = scheduler.schedule(std::move(runCb), getInterval());
     }
 }
 
@@ -191,19 +188,18 @@ void BasicBehaviour::doRun(void* msg)
 {
     setBehaviourState(BehaviourState::RUNNING);
     run(msg);
+    _triggeredJobRunning = false;
 }
 
 void BasicBehaviour::doTrigger()
 {
-    if (!_behaviour->isEventDriven()) {
+    if (!_behaviour->isEventDriven() || isTriggeredRunFinished()) {
         return;
     }
 
-    auto& scheduler = _engine->editScheduler();
+    _triggeredJobRunning = true;
     std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(runCb);
-    _runJob = runJob;
-    scheduler.schedule(std::move(runJob));
+    _engine->editScheduler().schedule(std::move(runCb));
 }
 
 void BasicBehaviour::doTermination()
