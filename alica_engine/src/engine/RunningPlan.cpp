@@ -589,13 +589,6 @@ void RunningPlan::activate()
         scheduler.schedule(std::move(initJob));
     }
 
-    if (_basicBehaviour) {
-        auto& scheduler = _ae->editScheduler();
-        std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, _basicBehaviour);
-        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cbInit);
-        scheduler.schedule(std::move(initJob));
-    }
-
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
         r->activate();

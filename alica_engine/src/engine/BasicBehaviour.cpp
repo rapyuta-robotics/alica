@@ -110,14 +110,11 @@ bool BasicBehaviour::stop()
  */
 bool BasicBehaviour::start()
 {
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::START);
-    }
+    setSignalState(SignalState::START);
 
-    if (!_behaviour->isEventDriven()) {
-        _runCV.notify_all();
-    }
+    std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, this);
+    std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cbInit);
+    _engine->editScheduler().schedule(std::move(initJob));
     return true;
 }
 

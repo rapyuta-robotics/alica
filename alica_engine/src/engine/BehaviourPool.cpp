@@ -95,7 +95,7 @@ void BehaviourPool::startBehaviour(RunningPlan& rp)
             rp.setBasicBehaviour(bb.get());
             bb->setRunningPlan(&rp);
 
-//            bb->start();
+            bb->start();
             return;
         }
     }
