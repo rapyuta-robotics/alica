@@ -84,7 +84,7 @@ public:
         _running = false;
         _jobQueue.clear();
 
-        _workerCV.notify_all();
+        _cv.notify_all();
         _worker.join();
 
         auto it = _timers.begin();
