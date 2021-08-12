@@ -41,6 +41,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behaviourTrigger(nullptr)
         , _runThread(nullptr)
         , _context(nullptr)
+        , _activeRunJobId(-1)
 {
 }
 
@@ -180,11 +181,8 @@ void BasicBehaviour::doInit()
     if (!isEventDriven()) {
         auto& scheduler = _engine->editScheduler();
         std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb);
-        _activeRunJobId = runJob->id;
-        runJob->isRepeated = true;
-        runJob->repeatInterval = getInterval();
-        scheduler.schedule(std::move(runJob));
+        std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(runCb);
+        _activeRunJobId = scheduler.schedule(std::move(runJob), std::make_unique<alica::AlicaTime>(getInterval()));
     }
 }
 
@@ -205,14 +203,13 @@ void BasicBehaviour::doRun(void* msg)
 
 void BasicBehaviour::doTrigger()
 {
-    if (!_behaviour->isEventDriven() && !_runJob.lock()) {
+    if (!_behaviour->isEventDriven()) {
         return;
     }
 
     auto& scheduler = _engine->editScheduler();
-
     std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), runCb);
+    std::shared_ptr<scheduler::Job> runJob = std::make_shared<scheduler::Job>(runCb);
     _runJob = runJob;
     scheduler.schedule(std::move(runJob));
 }

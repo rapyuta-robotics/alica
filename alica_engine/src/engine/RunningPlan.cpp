@@ -478,7 +478,6 @@ void RunningPlan::deactivate()
     deactivateChildren();
 
     auto& scheduler = _ae->editScheduler();
-    int jobID = scheduler.getNextJobID();
 
     std::function<void()> cb;
     if (_basicPlan) {
@@ -487,7 +486,7 @@ void RunningPlan::deactivate()
         cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
     }
 
-    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(jobID, cb);
+    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
     if (_basicPlan) {
         scheduler.schedule(std::move(terminateJob));
     }
@@ -585,16 +584,15 @@ void RunningPlan::activate()
 
     if (_basicPlan) {
         auto& scheduler = _ae->editScheduler();
-        int jobID = scheduler.getNextJobID();
         std::function<void()> cb = std::bind(&BasicPlan::init, _basicPlan);
-        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(jobID, cb);
+        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cb);
         scheduler.schedule(std::move(initJob));
     }
 
     if (_basicBehaviour) {
         auto& scheduler = _ae->editScheduler();
         std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, _basicBehaviour);
-        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(scheduler.getNextJobID(), cbInit);
+        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cbInit);
         scheduler.schedule(std::move(initJob));
     }
 
