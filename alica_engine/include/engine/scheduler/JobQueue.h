@@ -6,16 +6,37 @@
 
 namespace alica {
 namespace scheduler {
-    class JobQueue
-    {
-    public:
-        void insert(std::shared_ptr<Job>&& job);
-        void clear();
-        std::shared_ptr<Job> getAvailableJob();
-        bool isEmpty() const;
-    private:
-        std::vector<std::shared_ptr<Job>> _queue;
-    };
+
+template <class T>
+class FIFOQueue
+{
+public:
+    void push(T&& value) {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _queue.push_back(std::move(value));
+    }
+    
+    std::optional<T> pop() {
+        std::lock_guard<std::mutex> lock(_mutex);
+        if (_queue.empty()) {
+            return std::nullopt;
+        }
+        T val = _queue.front();
+        _queue.pop();
+    }
+    
+    void clear() {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _queue.clear();
+    }
+
+private:
+    std::mutex _mutex;
+    std::deque<std::shared_ptr<Job>> _queue;
+};
+
+// TODO: use a lock free single producer/consumer queue
+
 }
 }
 
