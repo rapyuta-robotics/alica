@@ -11,7 +11,7 @@ void JobQueue::insert(std::shared_ptr<Job>&& job)
     _queue.push_back(std::move(job));
 }
 
-std::shared_ptr<Job> JobQueue::getAvailableJob(alica::AlicaTime time)
+std::shared_ptr<Job> JobQueue::getAvailableJob()
 {
     if (_queue.empty()) {
         return nullptr;

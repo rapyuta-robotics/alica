@@ -1,7 +1,7 @@
 #include "engine/scheduler/Scheduler.h"
-#include "engine/AlicaEngine.h"
 
 #include <algorithm>
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -9,9 +9,8 @@ namespace alica
 namespace scheduler
 {
 
-Scheduler::Scheduler(const alica::AlicaClock& clock, const YAML::Node& config)
-        : _clock(clock)
-        , _jobID(0)
+Scheduler::Scheduler(const YAML::Node& config)
+        : _jobId(0)
 {
     _running = true;
     int threadPoolSize = config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency()));
@@ -48,21 +47,22 @@ void Scheduler::terminate()
     }
 }
 
-void Scheduler::schedule(std::shared_ptr<Job>&& job, bool notify)
+int Scheduler::schedule(std::shared_ptr<Job>&& job, std::unique_ptr<alica::AlicaTime> repeatInterval)
 {
+    int jobId = -1;
     {
         std::unique_lock<std::mutex> lock(_workerMtx);
-        if (job->isRepeated) {
-            _timers.emplace(job->id, std::move(_alicaTimerFactory->createTimer(job->cb, job->repeatInterval)));
-            _timers.at(job->id).start();
+        if (repeatInterval) {
+            jobId = getNextJobId();
+            _timers.emplace(jobId, std::move(_alicaTimerFactory->createTimer(job->cb, *repeatInterval)));
+            _timers.at(jobId).start();
         } else {
             _jobQueue.insert(std::move(job));
         }
     }
 
-    if (notify) {
-        _workerCV.notify_one();
-    }
+    _workerCV.notify_one();
+    return jobId;
 }
 
 void Scheduler::stopJob(int jobId)
@@ -75,9 +75,9 @@ void Scheduler::stopJob(int jobId)
     }
 }
 
-int Scheduler::getNextJobID()
+int Scheduler::getNextJobId()
 {
-    return ++_jobID;
+    return ++_jobId;
 }
 
 void Scheduler::workerFunction()
@@ -88,7 +88,7 @@ void Scheduler::workerFunction()
             std::unique_lock<std::mutex> lock(_workerMtx);
             // wait when no executable job is available. Do no wait when queue has executable jobs or the scheduler has been terminated.
             _workerCV.wait(lock, [this, &job] {
-                job = std::move(_jobQueue.getAvailableJob(_clock.now()));
+                job = std::move(_jobQueue.getAvailableJob());
                 return !_running.load() || job;
             });
 

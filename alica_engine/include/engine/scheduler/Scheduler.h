@@ -23,21 +23,19 @@ namespace scheduler
 class Scheduler
 {
 public:
-    Scheduler(const alica::AlicaClock& clock, const YAML::Node& config);
+    Scheduler(const YAML::Node& config);
     ~Scheduler();
-    void schedule(std::shared_ptr<Job>&& job, bool notify = true);
+    int schedule(std::shared_ptr<Job>&& job, std::unique_ptr<alica::AlicaTime> value = nullptr);
     void terminate();
-    int getNextJobID();
     void stopJob(int jobId);
 
 private:
-    alica::AlicaClock _clock;
     JobQueue _jobQueue;
     std::mutex _workerMtx;
     std::condition_variable _workerCV;
     std::vector<std::thread> _workers;
     std::atomic<bool> _running;
-    std::atomic<int> _jobID;
+    std::atomic<int> _jobId;
     bool _notifierIsActive;
 
     std::unique_ptr<alica::TimerFactoryRos> _alicaTimerFactory;
@@ -46,6 +44,7 @@ private:
     std::unordered_map<int, alica::SyncStopTimerRos<ros::CallbackQueue>> _timers;
 
     void workerFunction();
+    int getNextJobId();
 };
 } // namespace scheduler
 } // namespace alica
