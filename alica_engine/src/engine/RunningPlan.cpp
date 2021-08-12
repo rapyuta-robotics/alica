@@ -467,32 +467,14 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
 void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
-    //    deactivateChildren();
     revokeAllConstraints();
     deactivateChildren();
 
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
-        if (_basicBehaviour) {
-            std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
-            std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-            _ae->editScheduler().schedule(std::move(terminateJob));
-        }
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
-    }
-
-    //    revokeAllConstraints();
-    //    deactivateChildren();
-
-    if (_basicPlan) {
-        std::function<void()> cb = std::bind(&BasicPlan::onTermination, _basicPlan);
-        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-        _ae->editScheduler().schedule(std::move(terminateJob));
-    } else if (_basicBehaviour) {
-//        std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
-//        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-//        _ae->editScheduler().schedule(std::move(terminateJob));
+        _basicPlan->stop();
     }
 }
 
@@ -578,19 +560,11 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
-        if (!_basicBehaviour) {
-            std::cerr << "basicBehaviour ptr is null" << std::endl;
-        }
         _basicPlan = nullptr;
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
-    }
-
-    if (_basicPlan) {
-        auto& scheduler = _ae->editScheduler();
-        std::function<void()> cb = std::bind(&BasicPlan::init, _basicPlan);
-        std::shared_ptr<scheduler::Job> initJob = std::make_shared<scheduler::Job>(cb);
-        scheduler.schedule(std::move(initJob));
+        _basicPlan->setEngine(_ae);
+        _basicPlan->start();
     }
 
     attachPlanConstraints();
