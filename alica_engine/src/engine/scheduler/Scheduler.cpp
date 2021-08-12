@@ -41,13 +41,10 @@ void Scheduler::terminate()
     }
     _workers.clear();
 
-    {
-        std::unique_lock<std::mutex> lock(_timerMtx);
-        auto it = _timers.begin();
-        while (it != _timers.end()) {
-            it->second.stop();
-            it = _timers.erase(it);
-        }
+    auto it = _timers.begin();
+    while (it != _timers.end()) {
+        it->second.stop();
+        it = _timers.erase(it);
     }
 }
 
@@ -58,13 +55,8 @@ int Scheduler::schedule(std::shared_ptr<Job>&& job, std::unique_ptr<alica::Alica
         std::unique_lock<std::mutex> lock(_workerMtx);
         if (repeatInterval) {
             jobId = getNextJobId();
-            {
-                std::unique_lock<std::mutex> lock(_timerMtx);
-                _timers.emplace(jobId, std::move(_alicaTimerFactory->createTimer(job->cb, *repeatInterval)));
-                _timers.at(jobId).start();
-            }
-//            _timers.emplace(jobId, std::move(_alicaTimerFactory->createTimer(job->cb, *repeatInterval)));
-//            _timers.at(jobId).start();
+            _timers.emplace(jobId, std::move(_alicaTimerFactory->createTimer(job->cb, *repeatInterval)));
+            _timers.at(jobId).start();
         } else {
             _jobQueue.insert(std::move(job));
         }
@@ -76,7 +68,6 @@ int Scheduler::schedule(std::shared_ptr<Job>&& job, std::unique_ptr<alica::Alica
 
 void Scheduler::stopJob(int jobId)
 {
-    std::unique_lock<std::mutex> lock(_timerMtx);
     auto it = _timers.find(jobId);
 
     if (it != _timers.end()) {
