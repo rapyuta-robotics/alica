@@ -18,17 +18,17 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
-#include "engine/teammanager/TeamManager.h"
-#include "engine/model/Configuration.h"
-#include "engine/model/Parameter.h"
 #include "engine/scheduler/Scheduler.h"
+#include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -46,8 +46,7 @@ AlicaTime s_assignmentProtectionTime = AlicaTime::zero();
 
 void RunningPlan::init(const YAML::Node& config)
 {
-    s_assignmentProtectionTime =
-            AlicaTime::milliseconds(config["Alica"]["AssignmentProtectionTime"].as<unsigned long>());
+    s_assignmentProtectionTime = AlicaTime::milliseconds(config["Alica"]["AssignmentProtectionTime"].as<unsigned long>());
 }
 
 void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
@@ -216,7 +215,7 @@ bool RunningPlan::evalRuntimeCondition() const
     if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
         runtimeCondition = plan->getRuntimeCondition();
     }
-    if (runtimeCondition== nullptr) {
+    if (runtimeCondition == nullptr) {
         _status.runTimeConditionStatus = EvalStatus::True;
         return true;
     }
@@ -468,30 +467,32 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
 void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
+    //    deactivateChildren();
+    revokeAllConstraints();
+    deactivateChildren();
+
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
+        if (_basicBehaviour) {
+            std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
+            std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
+            _ae->editScheduler().schedule(std::move(terminateJob));
+        }
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
     }
 
-    revokeAllConstraints();
-    deactivateChildren();
+    //    revokeAllConstraints();
+    //    deactivateChildren();
 
-    auto& scheduler = _ae->editScheduler();
-
-    std::function<void()> cb;
     if (_basicPlan) {
-        cb = std::bind(&BasicPlan::onTermination, _basicPlan);
+        std::function<void()> cb = std::bind(&BasicPlan::onTermination, _basicPlan);
+        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
+        _ae->editScheduler().schedule(std::move(terminateJob));
     } else if (_basicBehaviour) {
-        cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
-    }
-
-    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
-    if (_basicPlan) {
-        scheduler.schedule(std::move(terminateJob));
-    }
-    if (_basicBehaviour) {
-        scheduler.schedule(std::move(terminateJob));
+//        std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, _basicBehaviour);
+//        std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
+//        _ae->editScheduler().schedule(std::move(terminateJob));
     }
 }
 
@@ -577,6 +578,9 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
+        if (!_basicBehaviour) {
+            std::cerr << "basicBehaviour ptr is null" << std::endl;
+        }
         _basicPlan = nullptr;
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
@@ -634,7 +638,6 @@ void RunningPlan::attachPlanConstraints()
         _constraintStore.addCondition(plan->getPreCondition());
         _constraintStore.addCondition(plan->getRuntimeCondition());
     }
-
 }
 
 bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
@@ -842,7 +845,8 @@ bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) co
     }
 }
 
-const Configuration* RunningPlan::getConfiguration() const {
+const Configuration* RunningPlan::getConfiguration() const
+{
     return _configuration;
 }
 

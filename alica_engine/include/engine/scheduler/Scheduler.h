@@ -31,6 +31,7 @@ public:
 
 private:
     JobQueue _jobQueue;
+    std::mutex _timerMtx;
     std::mutex _workerMtx;
     std::condition_variable _workerCV;
     std::vector<std::thread> _workers;

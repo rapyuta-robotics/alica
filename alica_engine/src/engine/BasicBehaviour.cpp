@@ -67,11 +67,6 @@ void BasicBehaviour::setBehaviour(const Behaviour* beh)
 {
     assert(_behaviour == nullptr);
     _behaviour = beh;
-    if (_behaviour->isEventDriven()) {
-        //        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
-    } else {
-        //        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
-    }
 }
 
 void BasicBehaviour::setConfiguration(const Configuration* conf)
@@ -94,14 +89,18 @@ essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
  */
 bool BasicBehaviour::stop()
 {
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::STOP);
-        setStopCalled(true);
-    }
-    if (_behaviour->isEventDriven()) {
-        _runCV.notify_all();
-    }
+//    if (_activeRunJobId != -1) {
+//        _engine->editScheduler().stopJob(_activeRunJobId);
+//        _activeRunJobId = -1;
+//    }
+//    _engine->editScheduler().stopJob(_activeRunJobId);
+//    _engine->editScheduler().stopJob(_activeRunJobId);
+    setSignalState(SignalState::STOP);
+    setStopCalled(true);
+
+//    std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, this);
+//    std::shared_ptr<scheduler::Job> terminateJob = std::make_shared<scheduler::Job>(cb);
+//    _engine->editScheduler().schedule(std::move(terminateJob));
     return true;
 }
 
@@ -213,8 +212,7 @@ void BasicBehaviour::doTrigger()
 
 void BasicBehaviour::doTermination()
 {
-    auto& scheduler = _engine->editScheduler();
-    scheduler.stopJob(_activeRunJobId);
+    _engine->editScheduler().stopJob(_activeRunJobId);
     onTermination();
     setBehaviourState(BehaviourState::UNINITIALIZED);
 }
