@@ -11,8 +11,8 @@
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/scheduler/Scheduler.h"
+#include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -91,8 +91,7 @@ essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
 bool BasicBehaviour::stop()
 {
     if (!isStopCalled()) {
-        std::function<void()> cb = std::bind(&BasicBehaviour::doTermination, this);
-        _engine->editScheduler().schedule(std::move(cb));
+        _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doTermination, this));
     }
 
     setSignalState(SignalState::STOP);
@@ -106,9 +105,7 @@ bool BasicBehaviour::stop()
 bool BasicBehaviour::start()
 {
     setSignalState(SignalState::START);
-
-    std::function<void()> cbInit = std::bind(&BasicBehaviour::doInit, this);
-    _engine->editScheduler().schedule(std::move(cbInit));
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doInit, this));
     return true;
 }
 
@@ -197,8 +194,7 @@ void BasicBehaviour::doTrigger()
         return;
     }
     _triggeredJobRunning = true;
-    std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-    _engine->editScheduler().schedule(std::move(runCb));
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doRun, this, nullptr));
 }
 
 void BasicBehaviour::doTermination()
