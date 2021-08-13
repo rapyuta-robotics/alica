@@ -6,23 +6,23 @@
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
-#include "engine/modelmanagement/ModelManager.h"
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/BlackBoard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
+#include "engine/modelmanagement/ModelManager.h"
+#include "engine/scheduler/JobQueue.h"
+#include "engine/scheduler/Scheduler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/scheduler/Scheduler.h"
-#include "engine/scheduler/JobQueue.h"
 
-#include <essentials/IdentifierConstPtr.h>
 #include <essentials/IDManager.h>
+#include <essentials/IdentifierConstPtr.h>
 
+#include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
-#include <functional>
 
 namespace alica
 {
@@ -41,9 +41,8 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& configPath,
-                const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const essentials::Identifier& agentID = essentials::Identifier());
+    AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+            const essentials::Identifier& agentID = essentials::Identifier());
     ~AlicaEngine();
 
     // State modifiers:
@@ -70,7 +69,7 @@ public:
     PlanBase& editPlanBase() { return _planBase; }
 
     const ModelManager& getModelManager() const { return _modelManager; }
-    ModelManager& editModelManager() {return _modelManager; }
+    ModelManager& editModelManager() { return _modelManager; }
 
     const PlanRepository& getPlanRepository() const { return _planRepository; }
     PlanRepository& editPlanRepository() { return _planRepository; }
@@ -114,7 +113,7 @@ public:
     bool existSolver() const;
     template <class Prototype>
     essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
+    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
     essentials::IdentifierConstPtr generateID(std::size_t size);
 
     void reload(const YAML::Node& config);
@@ -156,10 +155,10 @@ private:
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
     BlackBoard _blackboard;
-    bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
+    bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
-    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
-    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
+    bool _stepEngine;      /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled;      /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 /**

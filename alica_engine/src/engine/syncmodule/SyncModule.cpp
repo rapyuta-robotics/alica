@@ -102,7 +102,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-    ALICA_DEBUG_MSG( "[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId());
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId());
     _successfulSynchronisations.push_back(sync);
 }
 /**
@@ -132,7 +132,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG( "[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st );
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st);
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
@@ -144,7 +144,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 
         const Synchronisation* synchronisation = trans->getSynchronisation();
         if (synchronisation == nullptr) {
-            ALICA_ERROR_MSG( "[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation");
+            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation");
             return;
         }
 
@@ -210,7 +210,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_ae->maySendMessages())
         return;
     sr.senderID = _myId;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr );
+    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr);
     _ae->getCommunicator().sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const

@@ -72,7 +72,7 @@ public:
 private:
     void run()
     {
-        while(_running) {
+        while (_running) {
             auto job = _jobQueue.pop();
             if (!job) {
                 std::unique_lock<std::mutex> lock(_mutex);

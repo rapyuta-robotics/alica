@@ -38,7 +38,8 @@ struct SyncData
 inline std::ostream& operator<<(std::ostream& o, const SyncData& sd)
 {
     std::stringstream ss;
-    ss << "SyncData: TransID " << sd.transitionID << " AgentID " << sd.agentID << (sd.conditionHolds ? "  COND" : " !COND") << (sd.ack ? "  ACK" : " !ACK") << std::endl;
+    ss << "SyncData: TransID " << sd.transitionID << " AgentID " << sd.agentID << (sd.conditionHolds ? "  COND" : " !COND") << (sd.ack ? "  ACK" : " !ACK")
+       << std::endl;
     return o << ss.str();
 }
 

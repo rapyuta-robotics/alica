@@ -15,6 +15,7 @@ public:
     SwitchEntryPointsSummand(double weight);
     virtual ~SwitchEntryPointsSummand();
     UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
+
 private:
     std::string toString(IAssignment ass) const;
 };

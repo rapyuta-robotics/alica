@@ -6,18 +6,16 @@
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/CycleManager.h"
+#include "engine/constraintmodul/ConditionStore.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
 #include "engine/planselector/PlanSelector.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/syncmodule/SyncModule.h"
-#include "engine/constraintmodul/ConditionStore.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
-
-
+#include "engine/teammanager/TeamManager.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>

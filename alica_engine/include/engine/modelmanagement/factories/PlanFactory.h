@@ -12,6 +12,7 @@ class PlanFactory : public Factory
 public:
     static Plan* create(AlicaEngine* ae, const YAML::Node& node);
     static void attachReferences();
+
 private:
     PlanFactory() = delete;
 };
