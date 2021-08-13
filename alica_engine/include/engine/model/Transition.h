@@ -37,7 +37,7 @@ private:
     void setPreCondition(PreCondition* preCondition);
     void setInState(State* inState);
     void setOutState(State* outState);
-    void setSynchronisation(Synchronisation *synchronisation);
+    void setSynchronisation(Synchronisation* synchronisation);
 
     /**
      * The condition guarding this transition.

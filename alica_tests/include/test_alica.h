@@ -3,8 +3,8 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "PlanCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
+#include "PlanCreator.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
 
@@ -58,14 +58,12 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(
-                alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
@@ -115,13 +113,11 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            alica::AlicaContext* ac = new alica::AlicaContext(
-                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(),
-                                              getMasterPlanName(), stepEngine()));
+            alica::AlicaContext* ac =
+                    new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -141,7 +137,7 @@ protected:
     }
 };
 
-class AlicaTestNotInitializedFixture: public AlicaTestFixtureBase
+class AlicaTestNotInitializedFixture : public AlicaTestFixtureBase
 {
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
@@ -156,8 +152,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(
-                alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ae = AlicaTestsEngineGetter::getEngine(ac);

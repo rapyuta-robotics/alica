@@ -11,4 +11,4 @@ public:
             : BasicBehaviour("IdleBehaviour"){};
     void run(void* msg) override;
 };
-} // namespace alica::mockups
+} // namespace alica::test
