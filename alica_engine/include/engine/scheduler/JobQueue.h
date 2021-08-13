@@ -32,7 +32,7 @@ public:
         if (_queue.empty()) {
             return std::nullopt;
         }
-        auto val = _queue.front();
+        std::optional<T> val{std::move(_queue.front())};
         _queue.pop_front();
         return val;
     }
