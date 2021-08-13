@@ -53,6 +53,7 @@ TEST_F(BackForthTest, testing)
     SimpleSwitches::set(1, true);
     for (int i = 0; i < 10; ++i) {
         ac->stepEngine();
+        ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
         ASSERT_GT(CounterClass::called, curCount);
         curCount = CounterClass::called;
     }

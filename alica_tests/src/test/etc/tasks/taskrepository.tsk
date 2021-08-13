@@ -298,5 +298,30 @@
     "name" : "MidFieldTask",
     "comment" : "",
     "taskRepository" : 1226672409680
+  }, {
+    "id" : 1613371619454,
+    "name" : "SchedulerTestEntrypoint",
+    "comment" : "",
+    "taskRepository" : 1226672409680
+  }, {
+    "id" : 1613372009777,
+    "name" : "SchedulerTestSubPlanEntrypoint",
+    "comment" : "",
+    "taskRepository" : 1226672409680
+  }, {
+    "id" : 1625610762033,
+    "name" : "EngineRulesSchedulingTestEntry",
+    "comment" : "",
+    "taskRepository" : 1226672409680
+  }, {
+    "id" : 1625610785404,
+    "name" : "EngineRulesSchedulingTestSecondEntry",
+    "comment" : "",
+    "taskRepository" : 1226672409680
+  }, {
+    "id" : 1625614670867,
+    "name" : "EngineRulesTest",
+    "comment" : "",
+    "taskRepository" : 1226672409680
   } ]
 }

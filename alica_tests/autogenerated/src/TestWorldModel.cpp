@@ -41,6 +41,10 @@ void TestWorldModel::reset()
     transitionCondition1418825427317 = false;
     transitionCondition1418825428924 = false;
 
+    transitionCondition1625614729978 = false;
+    transitionCondition1625776897472 = false;
+    switchEntryPoints = false;
+
     x = 0;
 }
 
@@ -126,6 +130,66 @@ bool TestWorldModel::isRuntimeCondition1418042967134()
 void TestWorldModel::setRuntimeCondition1418042967134(bool runtimeCondition1418042967134)
 {
     this->runtimeCondition1418042967134 = runtimeCondition1418042967134;
+}
+
+bool TestWorldModel::isTransitionCondition1625614729978()
+{
+    return this->transitionCondition1625614729978;
+}
+
+void TestWorldModel::setTransitionCondition1625614729978(bool transitionCondition1625614729978)
+{
+    this->transitionCondition1625614729978 = transitionCondition1625614729978;
+}
+
+bool TestWorldModel::isTransitionCondition1625776897472()
+{
+    return this->transitionCondition1625776897472;
+}
+
+void TestWorldModel::setTransitionCondition1625776897472(bool transitionCondition1625776897472)
+{
+    this->transitionCondition1625776897472 = transitionCondition1625776897472;
+}
+
+bool TestWorldModel::isTransitionCondition1625783869825()
+{
+    return this->transitionCondition1625783869825;
+}
+
+void TestWorldModel::setTransitionCondition1625783869825(bool transitionCondition1625783869825)
+{
+    this->transitionCondition1625783869825 = transitionCondition1625783869825;
+}
+
+bool TestWorldModel::isTransitionCondition1625783867495()
+{
+    return this->transitionCondition1625783867495;
+}
+
+void TestWorldModel::setTransitionCondition1625783867495(bool transitionCondition1625783867495)
+{
+    this->transitionCondition1625783867495 = transitionCondition1625783867495;
+}
+
+bool TestWorldModel::isTransitionCondition1626848015861()
+{
+    return this->transitionCondition1626848015861;
+}
+
+void TestWorldModel::setTransitionCondition1626848015861(bool transitionCondition1626848015861)
+{
+    this->transitionCondition1626848015861 = transitionCondition1626848015861;
+}
+
+bool TestWorldModel::isSwitchingEntryPoints()
+{
+    return this->switchEntryPoints;
+}
+
+void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
+{
+    this->switchEntryPoints = switchEntryPoints;
 }
 
 } // namespace alicaTests
