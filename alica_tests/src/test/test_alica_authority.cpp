@@ -3,6 +3,7 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
+#include "PlanCreator.h"
 #include "DummyTestSummand.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"

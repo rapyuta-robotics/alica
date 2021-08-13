@@ -43,6 +43,8 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     ASSERT_NO_SIGNAL
     ae->start();
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
+    uint8_t timeoutCount = 0;
+
     do {
         ae->getAlicaClock().sleep(sleepTime);
     } while (!alica::test::Util::isPlanActive(ae, 1412252439925));
@@ -51,14 +53,27 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     EXPECT_TRUE(ae->getPlanBase().getRootNode()->isRuntimeConditionValid());
     // Check whether RC has been called
     EXPECT_GE(CounterClass::called, 1);
+
+    while (!alica::test::Util::isStateActive(ae, 1412761855746) && timeoutCount < 5) {
+        ae->getAlicaClock().sleep(sleepTime);
+        timeoutCount++;
+    }
+    timeoutCount = 0;
+
     // Check final state
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1412761855746));
     // Check execution of final state behaviour
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1402488848841));
-    // Assuming 30 Hz were 11 iterations are executed by MidFieldStandard, we expect at least 29*sleeptime-15 calls on
-    // Attack
-    EXPECT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter,
-            (sleepTime.inSeconds()) * 29 - 15);
+
+    // We assume at least 30 calls to Attack in (3 * sleepTime) seconds.
+
+    while (std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter < 30 && timeoutCount < 3) {
+        ae->getAlicaClock().sleep(sleepTime);
+        timeoutCount++;
+    }
+    timeoutCount = 0;
+
+    EXPECT_GE(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter, 30);
     EXPECT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->initCounter, 0);
 
     // Check whether we have been in state1 to execute midfield standard

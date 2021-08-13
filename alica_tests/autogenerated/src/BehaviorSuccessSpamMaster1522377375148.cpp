@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:BehaviorSuccessSpamMaster
+// Plan:BehaviorSuccessSpamMaster1522377375148
+BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1522377375148) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148()
+{
+    /*PROTECTED REGION ID(dcon1522377375148) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1522377375150
  */
@@ -32,7 +45,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
  *   - Normal (1522377375149)
  *   - Dummy (1522377929290)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -56,7 +69,7 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Normal (1522377375149)
  *   - Dummy (1522377929290)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -66,4 +79,8 @@ bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp)
     return ok;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1522377375148) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

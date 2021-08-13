@@ -8,7 +8,20 @@
 
 namespace alica
 {
-// Plan:MultiAgentTestPlan
+// Plan:MultiAgentTestPlan1413200862180
+MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1413200862180) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MultiAgentTestPlan1413200862180::~MultiAgentTestPlan1413200862180()
+{
+    /*PROTECTED REGION ID(dcon1413200862180) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: AttackTask  -> EntryPoint-ID: 1413200877337
  * Task: DefaultTask  -> EntryPoint-ID: 1413200890537
@@ -42,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
  *   - NewSuccessState2 (1413552736921)
  *   - Idle (1413807264574)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -76,7 +89,7 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - NewSuccessState2 (1413552736921)
  *   - Idle (1413807264574)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -110,7 +123,7 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - NewSuccessState2 (1413552736921)
  *   - Idle (1413807264574)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -125,4 +138,8 @@ bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp)
     }
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1413200862180) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

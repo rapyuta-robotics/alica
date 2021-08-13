@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:ConfigurationTestPlan
+// Plan:ConfigurationTestPlan1588060981661
+ConfigurationTestPlan1588060981661::ConfigurationTestPlan1588060981661()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1588060981661) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ConfigurationTestPlan1588060981661::~ConfigurationTestPlan1588060981661()
+{
+    /*PROTECTED REGION ID(dcon1588060981661) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588061024407
  */
@@ -33,7 +46,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
  *   - Default Name (1588060991102)
  *   - Default Name (1588253341545)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -41,4 +54,8 @@ bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp)
     return CounterClass::called == 1;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1588060981661) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica
