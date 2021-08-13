@@ -37,7 +37,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403413451::getUtilityFunctio
     function->editUtilSummands().emplace_back(us);
 
     return function;
-
     /*PROTECTED REGION END*/
 }
 

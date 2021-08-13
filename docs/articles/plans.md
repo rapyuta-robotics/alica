@@ -30,7 +30,7 @@ Obviously this part is about specifics of the household domain. Therefore, it wo
 
 For the progress in an ALICA program, it is important to know when a plan is successful or when it failed. A plan is successful, if **all** success-required FSMs of the plan are successful. Further a FSM is successful, if the number of agents that reached the success state of the FSM is equal to or greater than the minimum cardinality of the entrypoint of the FSM. If the minimum cardinality is 0, then at least one agent needs to enter the success state of the FSM.
 
-Figure 2 and Table 1 together explain some cave eats of the plan success semantics.
+Figure 2 and Table 1 together explain some caveats of the plan success semantics.
 
 ![](../images/docs_plan_success_semantics.svg)
 
