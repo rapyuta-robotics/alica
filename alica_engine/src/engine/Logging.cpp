@@ -33,4 +33,4 @@ std::string getErrLogFilename(AlicaEngine* ae, const std::string& file)
     return getLogFilename(ae, errFile);
 }
 } // namespace logging
-} // namespace alica
+} /* namespace essentials */

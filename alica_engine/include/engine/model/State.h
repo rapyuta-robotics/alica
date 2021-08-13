@@ -53,7 +53,7 @@ private:
     void setInTransitions(const TransitionGrp& inTransitions);
     void setOutTransitions(const TransitionGrp& outTransition);
 
-    void setVariableBindings(const VariableBindingGrp& variableBindingGrp);
+    void setVariableBindings(const VariableBindingGrp &variableBindingGrp);
 
     void setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers);
 

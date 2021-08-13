@@ -66,8 +66,7 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
     _pap.reset();
     try {
         if (rp.getPlanType() == nullptr) {
-            return createRunningPlan(
-                    rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, rp.getConfiguration(), robots, &rp, nullptr, o_currentUtility);
+            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, rp.getConfiguration(), robots, &rp, nullptr, o_currentUtility);
         } else {
             return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), rp.getConfiguration(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
@@ -94,8 +93,8 @@ bool PlanSelector::getPlansForState(
     }
 }
 
-RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs,
-        const RunningPlan* oldRp, const PlanType* relevantPlanType, double& o_oldUtility)
+RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs, const RunningPlan* oldRp,
+        const PlanType* relevantPlanType, double& o_oldUtility)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
@@ -210,7 +209,7 @@ bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
     ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent: " << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
-                                                            << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>");
+                                                           << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>");
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {

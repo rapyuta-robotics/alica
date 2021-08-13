@@ -50,4 +50,4 @@ void IAlicaCommunication::onAgentAnnouncement(const AgentAnnouncement& pa)
 {
     ae->editTeamManager().handleAgentAnnouncement(pa);
 }
-} // namespace alica
+}

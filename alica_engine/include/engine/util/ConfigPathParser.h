@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <vector>
+#include <string>
 
 class ConfigPathParser
 {
@@ -14,3 +14,5 @@ public:
      */
     std::vector<std::string> getParams(char separator, const std::string& path);
 };
+
+

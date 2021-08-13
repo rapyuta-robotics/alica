@@ -4,9 +4,8 @@
 
 #include <string>
 
-namespace essentials
-{
-class SystemConfig;
+namespace essentials{
+    class SystemConfig;
 }
 
 namespace alica
@@ -56,5 +55,6 @@ private:
     void generateTemplateVariables();
     void computeReachabilities();
 };
+
 
 } // namespace alica

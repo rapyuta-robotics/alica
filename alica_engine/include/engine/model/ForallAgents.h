@@ -7,9 +7,8 @@
 
 #include <vector>
 
-namespace essentials
-{
-class IdentifierConstPtr;
+namespace essentials{
+    class IdentifierConstPtr;
 }
 
 namespace alica

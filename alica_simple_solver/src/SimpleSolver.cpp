@@ -1,7 +1,7 @@
 #include "alica/reasoner/SimpleSolver.h"
+#include "alica_solver_interface/SimpleContext.h"
 #include "alica/reasoner/SimpleTerm.h"
 #include "alica/reasoner/SimpleVariable.h"
-#include "alica_solver_interface/SimpleContext.h"
 
 #include <engine/AlicaEngine.h>
 #include <engine/blackboard/BlackBoard.h>
@@ -15,7 +15,7 @@ namespace reasoner
 {
 
 SimpleSolver::SimpleSolver(AlicaEngine* ae)
-        : ISolver(ae)
+    : ISolver(ae)
 {
 }
 

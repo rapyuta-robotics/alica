@@ -2,9 +2,9 @@
 
 #include "engine/PlanRepository.h"
 #include "engine/model/AlicaElement.h"
+#include "engine/model/EntryPoint.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
-#include "engine/model/EntryPoint.h"
 #include "engine/modelmanagement/Strings.h"
 
 #include <alica_common_config/debug_output.h>
@@ -142,8 +142,7 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
     }
 }
 
-void Factory::setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id)
-{
+void Factory::setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id) {
     element->setName(name);
     element->setId(id);
 }

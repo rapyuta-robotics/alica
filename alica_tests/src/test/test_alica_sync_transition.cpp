@@ -17,10 +17,10 @@
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
 
-#include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
+#include <alica/test/Util.h>
 
 #include <gtest/gtest.h>
 
@@ -77,11 +77,11 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825404963));
         }
         if (i == 5) {
-            //            std::cout << "TEST Iteration " << i << std::endl;
+//            std::cout << "TEST Iteration " << i << std::endl;
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1418825409988));
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825411686));
         }
     }
 }
-} // namespace
-} // namespace alica
+}
+}

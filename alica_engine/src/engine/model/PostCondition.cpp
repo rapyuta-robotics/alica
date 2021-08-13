@@ -4,7 +4,7 @@
 namespace alica
 {
 
-PostCondition::PostCondition() {}
+PostCondition::PostCondition(){}
 
 PostCondition::~PostCondition() {}
 

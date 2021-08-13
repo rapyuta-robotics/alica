@@ -1,8 +1,8 @@
 #pragma once
 
 #include "AbstractPlan.h"
-#include "engine/BasicPlan.h"
 #include "engine/Types.h"
+#include "engine/BasicPlan.h"
 
 namespace alica
 {
@@ -66,7 +66,7 @@ private:
     void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
     void setStates(const StateGrp& states);
-    void setSynchronisations(const SynchronisationGrp& synchronisations);
+    void setSynchronisations(const SynchronisationGrp &synchronisations);
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);

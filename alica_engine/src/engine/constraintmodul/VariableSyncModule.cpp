@@ -64,8 +64,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = new essentials::NotifyTimer<VariableSyncModule>(
-                    std::chrono::milliseconds(interval.inMilliseconds()), std::chrono::milliseconds(0), &VariableSyncModule::publishContent, this);
+            _timer = new essentials::NotifyTimer<VariableSyncModule>(std::chrono::milliseconds(interval.inMilliseconds()), std::chrono::milliseconds (0), &VariableSyncModule::publishContent, this);
         }
         _timer->start();
     }

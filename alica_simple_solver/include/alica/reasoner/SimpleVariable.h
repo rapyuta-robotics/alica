@@ -11,7 +11,7 @@ namespace reasoner
 
 class SimpleVariable : public SimpleTerm, public alica::SolverVariable
 {
-public:
+  public:
     SimpleVariable(int64_t representingVariableID);
     static std::string NO_VALUE;
 };

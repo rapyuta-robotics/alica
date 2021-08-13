@@ -189,8 +189,7 @@ const State* Assignment::getStateOfAgent(essentials::IdentifierConstPtr id) cons
 void Assignment::getAllAgents(AgentGrp& o_agents) const
 {
     for (const AgentStatePairs& asps : _assignmentData) {
-        std::transform(
-                asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
+        std::transform(asps.begin(), asps.end(), std::back_inserter(o_agents), [](const AgentStatePair asp) -> essentials::IdentifierConstPtr { return asp.first; });
     }
 }
 

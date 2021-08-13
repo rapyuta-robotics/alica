@@ -6,8 +6,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
 
-#include <assert.h>
 #include <essentials/IdentifierConstPtr.h>
+#include <assert.h>
 #include <numeric>
 #include <sstream>
 #include <vector>

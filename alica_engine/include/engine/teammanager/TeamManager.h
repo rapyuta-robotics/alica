@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <engine/AlicaClock.h>
 #include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
@@ -9,8 +10,8 @@
 #include <list>
 #include <map>
 #include <memory>
-#include <mutex>
 #include <string>
+#include <mutex>
 #include <yaml-cpp/yaml.h>
 
 namespace alica

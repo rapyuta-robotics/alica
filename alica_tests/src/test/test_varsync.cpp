@@ -61,5 +61,5 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
     EXPECT_EQ(1.23, seeds[0].getDouble());
     EXPECT_EQ(-10.0, seeds[1].getDouble());
 }
-} // namespace
-} // namespace alica
+}
+}

@@ -39,7 +39,7 @@ void Transition::setOutState(State* outState)
     _outState = outState;
 }
 
-void Transition::setSynchronisation(Synchronisation* synchronisation)
+void Transition::setSynchronisation(Synchronisation *synchronisation)
 {
     _synchronisation = synchronisation;
 }

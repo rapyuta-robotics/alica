@@ -8,8 +8,7 @@
 
 namespace alica
 {
-typedef std::tuple<essentials::IdentifierConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<essentials::IdentifierConstPtr>>
-        stdAlicaEngineInfo;
+typedef std::tuple<essentials::IdentifierConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<essentials::IdentifierConstPtr>> stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
     AlicaEngineInfo()

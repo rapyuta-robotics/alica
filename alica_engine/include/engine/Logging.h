@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "engine/AlicaEngine.h"
 #include <iostream>
 #include <string>
+#include "engine/AlicaEngine.h"
 
 namespace alica
 {
@@ -66,4 +66,4 @@ void Log(const char* file, const char* function, int line, LogData<List>&& data)
 
 #define LOG(msg) (alica::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, alica::logging::LogData<alica::logging::None>() << msg))
 } // namespace logging
-} // namespace alica
+} /* namespace essentials */

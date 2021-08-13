@@ -4,11 +4,10 @@
 
 #include <condition_variable>
 #include <functional>
-#include <memory>
 #include <mutex>
-#include <ros/callback_queue.h>
-#include <ros/callback_queue_interface.h>
 #include <ros/ros.h>
+
+#include <memory>
 
 namespace alica
 {
@@ -23,14 +22,14 @@ public:
             : _userCb(std::move(userCb))
             , _nh()
             , _timer()
-            , _cbQ(std::move(cbQ))
+            , _cbQ(cbQ)
             , _stopMutex()
             , _stopCv()
             , _userCbInProgress(false)
             , _stop(false)
             , _period(period)
     {
-        _nh.setCallbackQueue(_cbQ.get());
+        _nh.setCallbackQueue(std::addressof(*cbQ));
         initTimer();
     }
 
@@ -100,12 +99,13 @@ class ThreadPoolRos
 {
 public:
     ThreadPoolRos(std::shared_ptr<CallbackQ> cbQ, uint32_t numThreads)
-            : _asyncSpinner(numThreads, cbQ.get())
-            , _cbQ(std::move(cbQ))
+            : _asyncSpinner(numThreads, std::addressof(*cbQ))
+            , _cbQ(cbQ)
     {
     }
 
     void start() { _asyncSpinner.start(); }
+
     void stop() { _asyncSpinner.stop(); }
 
 private:
@@ -116,11 +116,10 @@ private:
 template <template <class> class Timer, class CallbackQ, template <class> class ThreadPool>
 class AlicaTimerFactory
 {
+    using TimerType = Timer<CallbackQ>;
     using TimerCb = typename Timer<CallbackQ>::TimerCb;
 
 public:
-    using TimerType = Timer<CallbackQ>;
-
     AlicaTimerFactory(uint32_t numThreads)
             : _cbQ(std::make_shared<CallbackQ>())
             , _threadPool(_cbQ, numThreads)
@@ -134,13 +133,13 @@ public:
     AlicaTimerFactory&& operator=(AlicaTimerFactory&&) = delete;
     ~AlicaTimerFactory() = default;
 
-    std::unique_ptr<TimerType> createTimer(TimerCb timerCb, AlicaTime period) { return std::make_unique<TimerType>(_cbQ, std::move(timerCb), period); }
+    std::unique_ptr<TimerType> createTimer(TimerCb timerCb, AlicaTime period) { return TimerType(_cbQ, std::move(timerCb), period); }
 
 private:
+    // TODO: pass shared_ptr's to the CallbackQ to the timers & threadpool
     std::shared_ptr<CallbackQ> _cbQ;
     ThreadPool<CallbackQ> _threadPool;
 };
 
 using TimerFactoryRos = AlicaTimerFactory<SyncStopTimerRos, ros::CallbackQueue, ThreadPoolRos>;
-
 } // namespace alica

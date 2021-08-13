@@ -33,5 +33,5 @@ TEST_F(AlicaEngineTestBehPool, behaviourPoolInit)
         std::cout << "Behaviour: " << behaviour->getName() << std::endl;
     }
 }
-} // namespace
-} // namespace alica
+}
+}

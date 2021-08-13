@@ -12,8 +12,7 @@
 namespace alica
 {
 
-typedef std::tuple<essentials::IdentifierConstPtr, int64_t, int64_t, int64_t, essentials::IdentifierConstPtr, std::vector<stdEntryPointRobot>>
-        stdAllocationAuthorityInfo;
+typedef std::tuple<essentials::IdentifierConstPtr, int64_t, int64_t, int64_t, essentials::IdentifierConstPtr, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()

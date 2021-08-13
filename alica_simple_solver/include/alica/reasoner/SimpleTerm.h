@@ -14,7 +14,7 @@ class SimpleVariable;
 
 class SimpleTerm : public alica::SolverTerm
 {
-public:
+  public:
     SimpleTerm();
     virtual ~SimpleTerm();
 
@@ -22,7 +22,7 @@ public:
     const std::string& getValue(alica::reasoner::SimpleVariable* dv) const;
     const std::string* tryGetValue(int64_t id) const;
 
-private:
+  private:
     std::map<int64_t, std::string> _variableValueMap;
 };
 

@@ -7,8 +7,6 @@
 #include "UtilityFunctionCreator.h"
 
 #include <alica/test/Util.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
@@ -21,6 +19,8 @@
 #include <engine/model/Plan.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/State.h>
+#include <engine/AlicaClock.h>
+#include <engine/AlicaEngine.h>
 
 #include <gtest/gtest.h>
 
@@ -48,5 +48,5 @@ TEST_F(AlicaSpamSuccess, runBehaviour)
     }
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
 }
-} // namespace
-} // namespace alica
+}
+}

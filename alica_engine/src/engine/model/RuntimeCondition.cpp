@@ -1,11 +1,13 @@
 #include "engine/model/RuntimeCondition.h"
-#include <iostream>
 #include <sstream>
+#include <iostream>
 
 namespace alica
 {
 
-RuntimeCondition::RuntimeCondition() {}
+RuntimeCondition::RuntimeCondition()
+{
+}
 
 RuntimeCondition::~RuntimeCondition() {}
 

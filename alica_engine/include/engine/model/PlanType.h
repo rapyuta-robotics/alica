@@ -30,7 +30,7 @@ public:
 private:
     friend ModelFactory;
     friend PlanTypeFactory;
-    void setVariableBindings(const VariableBindingGrp& variableBindings);
+    void setVariableBindings(const VariableBindingGrp &variableBindings);
     void setPlans(const PlanGrp& plans);
 
     PlanGrp _plans;

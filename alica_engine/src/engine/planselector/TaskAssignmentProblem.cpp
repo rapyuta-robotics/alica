@@ -140,8 +140,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(
-        PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
     essentials::IdentifierConstPtr ownAgentId = _tm.getLocalAgentID();
     bool haveToRevalute = false;
@@ -159,6 +158,7 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(
     }
     return haveToRevalute;
 }
+
 
 std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
 {

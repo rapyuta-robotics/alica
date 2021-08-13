@@ -14,7 +14,7 @@ public:
     virtual ~ConfAbstractPlanWrapper();
 
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
-    void setAbstractPlan(const AbstractPlan* abstractPlan) { _abstractPlan = abstractPlan; }
+    void  setAbstractPlan(const AbstractPlan* abstractPlan) { _abstractPlan = abstractPlan; }
     const Configuration* getConfiguration() const { return _configuration; }
 
 private:

@@ -9,4 +9,4 @@ class BehaviourTrigger : public essentials::ITrigger
 public:
     void run(bool notifyAll) override;
 };
-} // namespace alica::test
+} // namespace alica

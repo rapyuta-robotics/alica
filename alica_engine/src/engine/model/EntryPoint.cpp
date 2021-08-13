@@ -62,7 +62,7 @@ std::string EntryPoint::toString(std::string indent) const
     ss << indent << "\t Cardinality: " << _cardinality << std::endl;
     ss << indent << "\t Task: ";
     if (_task != nullptr) {
-        ss << "Name: " << _task->getName() << " ID: " << _task->getId() << std::endl;
+        ss << "Name: " << _task->getName() << " ID: " <<  _task->getId() << std::endl;
     } else {
         ss << "null" << std::endl;
     }

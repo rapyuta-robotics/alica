@@ -1,8 +1,8 @@
+#include <engine/model/Task.h>
 #include "engine/modelmanagement/factories/EntryPointFactory.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/Factory.h"
-#include <engine/model/Task.h>
 
 namespace alica
 {

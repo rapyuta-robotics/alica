@@ -3,8 +3,8 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "DummyTestSummand.h"
 #include "PlanCreator.h"
+#include "DummyTestSummand.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
 
@@ -16,8 +16,6 @@
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
 
-#include <alica/test/Util.h>
-#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
@@ -25,8 +23,11 @@
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
 #include <engine/modelmanagement/factories/TaskFactory.h>
+#include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 
 #include <gtest/gtest.h>
+
 
 namespace alica
 {
@@ -137,5 +138,5 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         }
     }
 }
-} // namespace
-} // namespace alica
+}
+}
