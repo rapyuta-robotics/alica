@@ -31,7 +31,7 @@ private:
 
 public:
     Scheduler(const YAML::Node& config)
-            : _running(false)
+            : _running(true)
             , _jobQueue()
             , _mutex()
             , _cv()
@@ -72,25 +72,28 @@ public:
 private:
     void run()
     {
-        auto job = _jobQueue.pop();
-        if (!job) {
-            std::unique_lock<std::mutex> lock(_mutex);
-            _cv.wait(lock, [this, &job]() {
-                if (!_running) {
-                    return true;
-                }
-                job = _jobQueue.pop();
-                return job.has_value();
-            });
-        }
-        if (!_running) {
-            return;
-        }
-        auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
-        if (repeatInterval) {
-            _repeatableJobs[jobId] = _timerFactory.createTimer(std::move(jobCb), std::move(*repeatInterval));
-        } else {
-            jobCb();
+        while(_running) {
+            auto job = _jobQueue.pop();
+            if (!job) {
+                std::unique_lock<std::mutex> lock(_mutex);
+                _cv.wait(lock, [this, &job]() {
+                    if (!_running) {
+                        return true;
+                    }
+                    job = _jobQueue.pop();
+                    return job.has_value();
+                });
+            }
+            if (!_running) {
+                return;
+            }
+            auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
+            if (repeatInterval) {
+                _repeatableJobs[jobId] = _timerFactory.createTimer(std::move(jobCb), std::move(*repeatInterval));
+                _repeatableJobs[jobId]->start();
+            } else {
+                jobCb();
+            }
         }
     }
 
