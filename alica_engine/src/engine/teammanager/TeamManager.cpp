@@ -8,10 +8,10 @@
 
 #include <alica_common_config/debug_output.h>
 
+#include <functional>
 #include <limits>
 #include <random>
 #include <utility>
-#include <functional>
 
 namespace alica
 {
@@ -314,7 +314,6 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
             agentRole = role->getName();
         }
     }
-
 
     agentInfo = new Agent(_engine, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_engine->getAlicaClock().now());

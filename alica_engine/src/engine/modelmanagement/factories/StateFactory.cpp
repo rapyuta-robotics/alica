@@ -1,9 +1,9 @@
 #include "engine/modelmanagement/factories/StateFactory.h"
-#include "engine/model/State.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/State.h"
 #include "engine/modelmanagement/Strings.h"
-#include "engine/modelmanagement/factories/VariableBindingFactory.h"
 #include "engine/modelmanagement/factories/ConfAbstractPlanWrapperFactory.h"
+#include "engine/modelmanagement/factories/VariableBindingFactory.h"
 
 namespace alica
 {

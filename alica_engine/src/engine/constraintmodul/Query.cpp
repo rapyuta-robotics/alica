@@ -39,7 +39,8 @@ void Query::addDomainVariable(essentials::IdentifierConstPtr agent, const std::s
     _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
 }
 
-void Query::addDomainVariable(const DomainVariable* domainVariable) {
+void Query::addDomainVariable(const DomainVariable* domainVariable)
+{
     _queriedDomainVariables.push_back(domainVariable);
 }
 

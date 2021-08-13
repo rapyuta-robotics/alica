@@ -13,9 +13,9 @@
 
 #include <essentials/IDManager.h>
 
+#include <algorithm>
 #include <alica_common_config/debug_output.h>
 #include <functional>
-#include <algorithm>
 
 namespace alica
 {
@@ -32,9 +32,8 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
-                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const essentials::Identifier& agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+        const essentials::Identifier& agentID)
         : _ctx(ctx)
         , _scheduler(ctx.getConfig())
         , _stepCalled(false)

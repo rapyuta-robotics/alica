@@ -2,9 +2,9 @@
 
 #include "SimpleSwitches.h"
 
+#include <alica/test/Util.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
-#include <alica/test/Util.h>
 
 namespace alica
 {

@@ -5,7 +5,8 @@
 namespace alica
 {
 
-PlanType::PlanType(AlicaEngine* ae) : AbstractPlan(ae)
+PlanType::PlanType(AlicaEngine* ae)
+        : AbstractPlan(ae)
 {
 }
 
@@ -35,7 +36,7 @@ std::string PlanType::toString(std::string indent) const
     return ss.str();
 }
 
-void PlanType::setVariableBindings(const VariableBindingGrp &variableBindings)
+void PlanType::setVariableBindings(const VariableBindingGrp& variableBindings)
 {
     _variableBindings = variableBindings;
 }

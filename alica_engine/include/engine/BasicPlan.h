@@ -18,6 +18,7 @@ public:
     void start();
     void stop();
     void setEngine(AlicaEngine* engine) { _ae = engine; }
+
 private:
     alica::AlicaEngine* _ae;
 };

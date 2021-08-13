@@ -1,29 +1,44 @@
 #pragma once
 
-#include <memory>
+#include <deque>
 #include <mutex>
+#include <optional>
 
-namespace alica {
-namespace scheduler {
+namespace alica
+{
+namespace scheduler
+{
 
 template <class T>
 class FIFOQueue
 {
 public:
-    void push(T&& value) {
+    void push(T&& value)
+    {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(std::move(value));
     }
-    
-    std::optional<T> pop() {
+
+    template <class... Args>
+    void emplace(Args&&... args)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _queue.emplace_back(std::forward<Args>(args)...);
+    }
+
+    std::optional<T> pop()
+    {
         std::lock_guard<std::mutex> lock(_mutex);
         if (_queue.empty()) {
             return std::nullopt;
         }
-        return _queue.pop_front();
+        auto val = _queue.front();
+        _queue.pop_front();
+        return val;
     }
-    
-    void clear() {
+
+    void clear()
+    {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.clear();
     }
@@ -35,6 +50,5 @@ private:
 
 // TODO: use a lock free single producer/consumer queue
 
-}
-}
-
+} // namespace scheduler
+} // namespace alica

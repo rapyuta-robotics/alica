@@ -20,26 +20,23 @@
 #include <yaml-cpp/yaml.h>
 
 #include "test_alica.h"
-namespace alica {
+namespace alica
+{
 
-namespace {
+namespace
+{
 
-class AlicaTestYamlConfig : public AlicaTestFixture {
-    const char *getMasterPlanName() const override
-    {
-        return "MasterPlan";
-    };
+class AlicaTestYamlConfig : public AlicaTestFixture
+{
+    const char* getMasterPlanName() const override { return "MasterPlan"; };
 
-    void TestBody() override
-    {
-        this->SetUp();
-    };
+    void TestBody() override { this->SetUp(); };
 };
-}
+} // namespace
 
 void printNode(const YAML::Node& node, int depth)
 {
-    for (YAML::const_iterator it = node.begin(); it != node.end(); ++it){
+    for (YAML::const_iterator it = node.begin(); it != node.end(); ++it) {
         std::cerr << std::string(depth * 2, ' ');
         if (it->second.IsScalar()) {
             std::cerr << it->first << ": " << it->second << std::endl;
@@ -56,7 +53,7 @@ TEST_F(AlicaTestYamlConfig, CheckConfigInitialization)
     const YAML::Node& node = ac->getConfig();
     printNode(node, 0);
 
-    //Check if config has been initialized correctly
+    // Check if config has been initialized correctly
     EXPECT_EQ(false, node["Local"]["IsGoalie"].as<bool>());
     EXPECT_EQ(9, node["Local"]["ID"].as<int>());
     EXPECT_EQ(3000.0f, node["Local"]["MaxTranslation"].as<float>());
@@ -66,4 +63,4 @@ TEST_F(AlicaTestYamlConfig, CheckConfigInitialization)
     EXPECT_EQ(45, node["Alica"]["CycleDetection"]["HistorySize"].as<int>());
 }
 
-} //namespace alica
+} // namespace alica
