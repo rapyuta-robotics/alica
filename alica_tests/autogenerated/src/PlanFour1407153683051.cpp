@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:PlanFour
+// Plan:PlanFour1407153683051
+PlanFour1407153683051::PlanFour1407153683051()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1407153683051) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+PlanFour1407153683051::~PlanFour1407153683051()
+{
+    /*PROTECTED REGION ID(dcon1407153683051) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153696703
  * Task: AttackTask  -> EntryPoint-ID: 1407153949327
@@ -19,4 +32,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1407153683051::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1407153683051) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

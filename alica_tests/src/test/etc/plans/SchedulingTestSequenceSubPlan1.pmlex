@@ -1,0 +1,23 @@
+{
+  "plan" : "SchedulingTestSequenceSubPlan1.pml#1614964379654",
+  "uiElementMap" : {
+    "1614964853637" : {
+      "id" : 1614964853638,
+      "name" : "1614964853638",
+      "comment" : "",
+      "x" : 153,
+      "y" : -67,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1614964864614" : {
+      "id" : 1614964864615,
+      "name" : "1614964864615",
+      "comment" : "",
+      "x" : -77,
+      "y" : -99,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

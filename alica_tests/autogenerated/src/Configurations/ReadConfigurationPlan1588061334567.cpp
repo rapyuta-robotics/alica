@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:ReadConfigurationPlan
+// Plan:ReadConfigurationPlan1588061334567
+ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1588061334567) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ReadConfigurationPlan1588061334567::~ReadConfigurationPlan1588061334567()
+{
+    /*PROTECTED REGION ID(dcon1588061334567) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588069183324
  */
@@ -30,7 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
  *   - StateA (1588069261047)
  *   - StateB (1588069265377)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -54,7 +67,7 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - StateA (1588069261047)
  *   - StateB (1588069265377)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -64,4 +77,8 @@ bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
     return value.compare("2") == 0;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1588061334567) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica
