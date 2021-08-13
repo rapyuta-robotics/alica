@@ -1,0 +1,23 @@
+{
+  "plan" : "SchedulingTestPlan3.pml#1613378433623",
+  "uiElementMap" : {
+    "1613378578364" : {
+      "id" : 1613378578365,
+      "name" : "1613378578365",
+      "comment" : "",
+      "x" : 30,
+      "y" : 34,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1613378580338" : {
+      "id" : 1613378580339,
+      "name" : "1613378580339",
+      "comment" : "",
+      "x" : -372,
+      "y" : 4,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}

@@ -36,7 +36,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1414403413451,
-    "confAbstractPlanWrappers" : [ ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1626437211225,
+      "name" : "1626437211225",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/EmptyBehaviour.beh#1625610857563",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
@@ -47,7 +53,13 @@
     "comment" : "",
     "entryPoint" : null,
     "parentPlan" : 1414403413451,
-    "confAbstractPlanWrappers" : [ ],
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1626437213779,
+      "name" : "1626437213779",
+      "comment" : "",
+      "abstractPlan" : "Behaviour/EmptyBehaviour.beh#1625610857563",
+      "configuration" : null
+    } ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
     "inTransitions" : [ ]
