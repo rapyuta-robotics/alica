@@ -190,10 +190,9 @@ void BasicBehaviour::doRun(void* msg)
 
 void BasicBehaviour::doTrigger()
 {
-    if (!_behaviour->isEventDriven() || isTriggeredRunFinished()) {
+    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
         return;
     }
-
     _triggeredJobRunning = true;
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doRun, this, nullptr));
 }
