@@ -155,7 +155,7 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
             if (Factory::isValid(node[alica::Strings::defaultRoleSet]) && Factory::getValue<bool>(node, alica::Strings::defaultRoleSet)) {
                 return file;
             }
-        } catch (YAML::BadFile badFile) {
+        } catch (const YAML::BadFile& badFile) {
             AlicaEngine::abort("MM: Could not parse roleset file: ", badFile.msg);
         }
     }
