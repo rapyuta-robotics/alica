@@ -5,20 +5,7 @@
 
 namespace alica
 {
-// Plan:BehaviourTriggerTestPlan1428508768572
-BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
-{
-    /*PROTECTED REGION ID(dcon1428508768572) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:BehaviourTriggerTestPlan
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1428508768574
  */
@@ -47,7 +34,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
  *   - NewState (1428508768573)
  *   - NewState (1429017227839)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -55,8 +42,4 @@ bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1428508768572) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

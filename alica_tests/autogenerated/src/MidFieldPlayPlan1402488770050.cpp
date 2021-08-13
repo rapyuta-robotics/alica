@@ -5,20 +5,7 @@
 
 namespace alica
 {
-// Plan:MidFieldPlayPlan1402488770050
-MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
-{
-    /*PROTECTED REGION ID(dcon1402488770050) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:MidFieldPlayPlan
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**
@@ -60,7 +47,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -85,7 +72,7 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -109,7 +96,7 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Kill (1402500830885)
  *   - Shoot (1402500833246)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -117,8 +104,4 @@ bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1402488770050) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

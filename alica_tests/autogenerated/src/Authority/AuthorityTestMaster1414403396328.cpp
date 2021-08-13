@@ -7,20 +7,7 @@ using namespace std;
 
 namespace alica
 {
-// Plan:AuthorityTestMaster1414403396328
-AuthorityTestMaster1414403396328::AuthorityTestMaster1414403396328()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1414403396328) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-AuthorityTestMaster1414403396328::~AuthorityTestMaster1414403396328()
-{
-    /*PROTECTED REGION ID(dcon1414403396328) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:AuthorityTestMaster
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414403396331
  */
@@ -46,7 +33,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
  *   - testState (1414403396329)
  *   - Init (1414403820806)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -54,8 +41,4 @@ bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp)
     return true;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1414403396328) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

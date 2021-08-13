@@ -5,20 +5,7 @@
 
 namespace alica
 {
-// Plan:MasterPlan1402488437260
-MasterPlan1402488437260::MasterPlan1402488437260()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1402488437260) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-MasterPlan1402488437260::~MasterPlan1402488437260()
-{
-    /*PROTECTED REGION ID(dcon1402488437260) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:MasterPlan
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488437263
  */
@@ -48,7 +35,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488437260::getUtilityFunctio
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -73,7 +60,7 @@ bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -98,7 +85,7 @@ bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -125,7 +112,7 @@ bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - MidField (1402488477650)
  *   - SucGoalState (1402488536570)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -133,8 +120,4 @@ bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1402488437260) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

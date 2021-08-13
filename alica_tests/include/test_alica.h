@@ -3,7 +3,6 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "PlanCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
 #include "TestWorldModel.h"
 #include "UtilityFunctionCreator.h"
@@ -64,8 +63,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
@@ -115,8 +113,7 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac = new alica::AlicaContext(

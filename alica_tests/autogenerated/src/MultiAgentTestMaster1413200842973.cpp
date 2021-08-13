@@ -8,20 +8,7 @@
 
 namespace alica
 {
-// Plan:MultiAgentTestMaster1413200842973
-MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1413200842973) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-MultiAgentTestMaster1413200842973::~MultiAgentTestMaster1413200842973()
-{
-    /*PROTECTED REGION ID(dcon1413200842973) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:MultiAgentTestMaster
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1413200842975
  */
@@ -48,7 +35,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
  *   - Start (1413201213955)
  *   - Finished (1413201380359)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -78,7 +65,7 @@ bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Start (1413201213955)
  *   - Finished (1413201380359)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -92,8 +79,4 @@ bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp)
     }
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1413200842973) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

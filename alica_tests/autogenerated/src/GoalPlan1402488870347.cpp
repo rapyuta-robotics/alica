@@ -5,20 +5,7 @@
 
 namespace alica
 {
-// Plan:GoalPlan1402488870347
-GoalPlan1402488870347::GoalPlan1402488870347()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1402488870347) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-GoalPlan1402488870347::~GoalPlan1402488870347()
-{
-    /*PROTECTED REGION ID(dcon1402488870347) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:GoalPlan
 // Check of PreCondition - (Name): PreCondition, (ConditionString):  , (Comment) :
 
 /**
@@ -83,7 +70,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -105,7 +92,7 @@ bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -127,7 +114,7 @@ bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Miss (1402489152217)
  *   - Scored (1402489192198)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -135,8 +122,4 @@ bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1402488870347) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

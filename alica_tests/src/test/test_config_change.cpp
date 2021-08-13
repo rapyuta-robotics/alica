@@ -16,8 +16,7 @@ namespace
 TEST_F(AlicaNotInitialized, TestUpdatingComponents)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                                  std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                                          std::make_unique<alica::PlanCreator>());
+                                  std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
     EXPECT_TRUE(ae->maySendMessages());
@@ -37,8 +36,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents)
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                                  std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                                          std::make_unique<alica::PlanCreator>());
+                                  std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
     EXPECT_TRUE(!ac->init(creators));

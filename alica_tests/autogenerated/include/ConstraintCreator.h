@@ -11,7 +11,7 @@ class ConstraintCreator : public IConstraintCreator
 public:
     ConstraintCreator();
     virtual ~ConstraintCreator();
-    std::shared_ptr<BasicConstraint> createConstraint(int64_t constraintConfId);
+    std::shared_ptr<BasicConstraint> createConstraint(long constraintConfId);
 };
 
 } /* namespace alica */

@@ -46,25 +46,22 @@ TEST_F(AlicaBehaviourTrigger, triggerTest)
     EXPECT_EQ(std::dynamic_pointer_cast<alica::TriggerC>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 0);
     EXPECT_EQ(std::dynamic_pointer_cast<alica::NotToTrigger>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
 
-    std::dynamic_pointer_cast<alica::TriggerA>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerB>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerC>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    std::dynamic_pointer_cast<alica::TriggerA>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerB>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerC>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    std::dynamic_pointer_cast<alica::TriggerA>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerB>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    std::dynamic_pointer_cast<alica::TriggerC>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    alicaTests::TestWorldModel::getOne()->trigger1->run(true);
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
 
-    std::dynamic_pointer_cast<alica::TriggerC>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    alicaTests::TestWorldModel::getOne()->trigger2->run(true);
 
     ae->getAlicaClock().sleep(duration * 2);
 

@@ -9,20 +9,7 @@
 
 namespace alica
 {
-// Plan:PreConditionPlan1418042796751
-PreConditionPlan1418042796751::PreConditionPlan1418042796751()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1418042796751) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
-{
-    /*PROTECTED REGION ID(dcon1418042796751) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:PreConditionPlan
 // Check of PreCondition - (Name): NewPreCondition, (ConditionString): Test , (Comment) :
 
 /**
@@ -47,8 +34,4 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042796751::getUtilityFunctio
     return function;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1418042796751) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

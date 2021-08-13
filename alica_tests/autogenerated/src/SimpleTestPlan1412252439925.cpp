@@ -6,20 +6,7 @@
 
 namespace alica
 {
-// Plan:SimpleTestPlan1412252439925
-SimpleTestPlan1412252439925::SimpleTestPlan1412252439925()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1412252439925) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-SimpleTestPlan1412252439925::~SimpleTestPlan1412252439925()
-{
-    /*PROTECTED REGION ID(dcon1412252439925) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:SimpleTestPlan
 // Check of PreCondition - (Name): NewPreCondition, (ConditionString):  , (Comment) :
 
 /**
@@ -70,7 +57,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
  *   - TestState1 (1412252439926)
  *   - TestState2 (1412761855746)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -78,8 +65,4 @@ bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp)
     return rp->isAnyChildStatus(PlanStatus::Success);
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1412252439925) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

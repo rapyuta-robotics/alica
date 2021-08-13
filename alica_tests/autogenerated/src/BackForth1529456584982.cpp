@@ -6,20 +6,7 @@
 
 namespace alica
 {
-// Plan:BackForth1529456584982
-BackForth1529456584982::BackForth1529456584982()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1529456584982) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-BackForth1529456584982::~BackForth1529456584982()
-{
-    /*PROTECTED REGION ID(dcon1529456584982) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:BackForth
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1529456584984
  */
@@ -46,7 +33,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1529456584982::getUtilityFunctio
  *   - First (1529456584983)
  *   - Second (1529456591410)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -68,7 +55,7 @@ bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - First (1529456584983)
  *   - Second (1529456591410)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  */
 bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -76,8 +63,4 @@ bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp)
     return SimpleSwitches::isSet(1);
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1529456584982) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

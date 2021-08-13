@@ -5,20 +5,7 @@
 
 namespace alica
 {
-// Plan:AttackPlan1402488634525
-AttackPlan1402488634525::AttackPlan1402488634525()
-        : DomainPlan()
-{
-    /*PROTECTED REGION ID(con1402488634525) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-AttackPlan1402488634525::~AttackPlan1402488634525()
-{
-    /*PROTECTED REGION ID(dcon1402488634525) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+// Plan:AttackPlan
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488646221
  */
@@ -46,7 +33,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
  *   - Attack (1402488646220)
  *   - Shoot (1402489396914)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  *	- ABC (1403772834750)
  *	- TestVar1 (1403772778288)
  */
@@ -70,7 +57,7 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Attack (1402488646220)
  *   - Shoot (1402489396914)
  *
- * Variables of precondition:
+ * Variables of preconditon:
  *	- TestVar1 (1403772778288)
  *	- VarTest2 (1403772797469)
  *	- NewVar (1403772816953)
@@ -82,8 +69,4 @@ bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
-
-/*PROTECTED REGION ID(methods1402488634525) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica
