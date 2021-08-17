@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <atomic>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -101,7 +102,7 @@ private:
     mutable std::mutex _mutex;
     std::condition_variable _cv;
     std::thread _thread;
-    JobId _nextJobId;
+    std::atomic<JobId> _nextJobId;
     std::unordered_map<JobId, std::unique_ptr<IAlicaTimer>> _repeatableJobs;
     IAlicaTimerFactory& _timerFactory;
 };
