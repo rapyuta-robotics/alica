@@ -132,8 +132,6 @@ private:
     bool isStopCalled() const { return _stopCalled.load(); }
     void setStopCalled(bool val) { _stopCalled.store(val); }
     bool isBehaviourStarted() const { return _behaviourState.load() != BehaviourState::UNINITIALIZED; }
-
-    void runThread(bool timed);
     void doStop();
 
     /**
@@ -157,11 +155,8 @@ private:
     std::atomic<BehaviourResult> _behaviourResult;
     std::atomic<BehaviourState> _behaviourState;
 
-    std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
-
     essentials::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
                                                   is event triggered, alternative to timer */
-    std::condition_variable _runCV;
     mutable std::mutex _runLoopMutex;
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;

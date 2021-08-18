@@ -563,7 +563,8 @@ void RunningPlan::activate()
         _basicPlan = nullptr;
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
-        _basicPlan->setEngine(_ae);
+        _basicPlan->setConfiguration(getConfiguration());
+        _basicPlan->setRunningPlan(this);
         _basicPlan->start();
     }
 

@@ -36,7 +36,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
                          const essentials::Identifier& agentID)
         : _ctx(ctx)
-        , _scheduler(ctx.getConfig())
+        , _scheduler()
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
@@ -85,12 +85,14 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
+    _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
+
     _stepCalled = false;
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
 
-    _expressionHandler.attachAll(_planRepository, creatorCtx);
+    _expressionHandler.attachAll(this, _planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
     RunningPlan::init(_ctx.getConfig());
@@ -113,7 +115,7 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
-    _scheduler.terminate();
+    _scheduler->terminate();
     _behaviourPool.stopAll();
     _behaviourPool.terminateAll();
     _planBase.stop();

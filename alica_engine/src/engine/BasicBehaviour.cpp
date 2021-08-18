@@ -23,7 +23,7 @@ namespace alica
 {
 /**
  * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
- * If using eventTrigger set behaviourTrigger and register runCV
+ * If using eventTrigger set behaviourTrigger
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
@@ -39,7 +39,6 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behaviourResult(BehaviourResult::UNKNOWN)
         , _behaviourState(BehaviourState::UNINITIALIZED)
         , _behaviourTrigger(nullptr)
-        , _runThread(nullptr)
         , _context(nullptr)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
@@ -51,11 +50,6 @@ void BasicBehaviour::terminate()
     {
         std::lock_guard<std::mutex> lck(_runLoopMutex);
         setSignalState(SignalState::TERMINATE);
-    }
-    _runCV.notify_all();
-    if (_runThread) {
-        _runThread->join();
-        delete _runThread;
     }
 }
 
@@ -144,7 +138,6 @@ void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
 
     std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
     _behaviourTrigger = trigger;
-    _behaviourTrigger->registerCV(&_runCV);
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
@@ -167,8 +160,7 @@ void BasicBehaviour::doInit()
     // Do not schedule repeatable run job when behaviour is event driven.
     if (!isEventDriven()) {
         auto& scheduler = _engine->editScheduler();
-        std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-        _activeRunJobId = scheduler.schedule(std::move(runCb), getInterval());
+        _activeRunJobId = scheduler.schedule(std::bind(&BasicBehaviour::doRun, this, nullptr), getInterval());
     }
 }
 

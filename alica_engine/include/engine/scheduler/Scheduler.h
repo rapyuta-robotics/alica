@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/AlicaTimer.h"
+#include "engine/IAlicaTimer.h"
 #include "engine/scheduler/JobQueue.h"
 
 #include <condition_variable>
@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <atomic>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -27,10 +28,9 @@ public:
 
 private:
     using JobQueue = Queue<std::tuple<JobId, JobCb, std::optional<AlicaTime>>>;
-    using Timer = alica::TimerFactoryRos::TimerType;
 
 public:
-    Scheduler(const YAML::Node& config)
+    Scheduler(IAlicaTimerFactory& timerFactory)
             : _running(true)
             , _jobQueue()
             , _mutex()
@@ -38,7 +38,7 @@ public:
             , _thread(&Scheduler::run, this)
             , _nextJobId(1)
             , _repeatableJobs()
-            , _timerFactory(config["Alica"]["ThreadPoolSize"].as<int, int>(std::max(1u, std::thread::hardware_concurrency())))
+            , _timerFactory(timerFactory)
     {
     }
 
@@ -102,9 +102,9 @@ private:
     mutable std::mutex _mutex;
     std::condition_variable _cv;
     std::thread _thread;
-    JobId _nextJobId;
-    std::unordered_map<JobId, std::unique_ptr<Timer>> _repeatableJobs;
-    alica::TimerFactoryRos _timerFactory;
+    std::atomic<JobId> _nextJobId;
+    std::unordered_map<JobId, std::unique_ptr<IAlicaTimer>> _repeatableJobs;
+    IAlicaTimerFactory& _timerFactory;
 };
 
 using JobScheduler = Scheduler<FIFOQueue>;

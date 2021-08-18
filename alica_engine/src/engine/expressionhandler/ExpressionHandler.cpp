@@ -29,11 +29,12 @@ ExpressionHandler::~ExpressionHandler() {}
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */
-void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
+void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx)
 {
     for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
-        p->setBasicPlan(std::move(creatorCtx.planCreator->createPlan(p->getId())));
+        p->setBasicPlan(creatorCtx.planCreator->createPlan(p->getId()));
+        p->getBasicPlan()->setEngine(ae);
 
         auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);

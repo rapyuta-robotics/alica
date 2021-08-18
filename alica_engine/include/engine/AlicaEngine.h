@@ -93,7 +93,7 @@ public:
     const BlackBoard& getBlackBoard() const { return _blackboard; }
     BlackBoard& editBlackBoard() { return _blackboard; }
 
-    scheduler::JobScheduler& editScheduler() { return _scheduler; }
+    scheduler::JobScheduler& editScheduler() { return *_scheduler; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -133,7 +133,7 @@ private:
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
-    scheduler::JobScheduler _scheduler;
+    std::unique_ptr<scheduler::JobScheduler> _scheduler;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
