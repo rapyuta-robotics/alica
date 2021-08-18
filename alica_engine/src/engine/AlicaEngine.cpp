@@ -90,7 +90,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
     _roleAssignment->init();
 
-    _expressionHandler.attachAll(_planRepository, creatorCtx);
+    _expressionHandler.attachAll(this, _planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
     RunningPlan::init(_ctx.getConfig());
