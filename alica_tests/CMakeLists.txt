@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_common_config
     alica_solver_interface
     alica_test_utility
+    alica_ros_timer
 )
 
 ##Yaml

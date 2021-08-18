@@ -9,7 +9,7 @@
 #include "UtilityFunctionCreator.h"
 
 #include <communication/AlicaDummyCommunication.h>
-#include <alica_ros_timer/AlicaRosTimer.h
+#include <alica_ros_timer/AlicaRosTimer.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
