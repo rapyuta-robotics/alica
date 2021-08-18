@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <typeindex>
 
@@ -30,16 +30,16 @@ public:
     void stopAll();
     void terminateAll();
     bool isBehaviourRunningInContext(const RunningPlan& rp) const;
-    const std::unordered_map<int64_t, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
+    const std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
 
 private:
-    const std::shared_ptr<BasicBehaviour> getBasicBehaviour(const Behaviour* behaviour) const;
+    const std::shared_ptr<BasicBehaviour> getBasicBehaviour(const Behaviour* behaviour, const Configuration* configuration) const;
     /**
      * Manages behaviours used by the running ALICA program.
-     * The key of the map is the Behaviour id, which is implicitly created through the PlanDesigner.
+     * The key of the map is the ConfAbstractPlanWrapper, which is implicitly created through the PlanDesigner.
      * The value is the basic behaviour, which is the implementation of that behaviour.
      */
-    std::unordered_map<int64_t, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
+    std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>> _availableBehaviours;
     AlicaEngine* _ae;
 };
 

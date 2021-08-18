@@ -7,11 +7,16 @@ namespace alica::test
 {
 std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID)
 {
-    auto it = ae->getBehaviourPool().getAvailableBehaviours().find(behaviourID);
-    if (it != ae->getBehaviourPool().getAvailableBehaviours().end()) {
-        return it->second;
+    std::shared_ptr<alica::BasicBehaviour> behaviour = nullptr;
+    for (auto& behaviourEntry : ae->getBehaviourPool().getAvailableBehaviours()) {
+        if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
+                (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
+                                      : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
+            behaviour = behaviourEntry.second;
+            break;
+        }
     }
-    return nullptr;
+    return behaviour;
 }
 
 bool Util::isStateActive(alica::AlicaEngine* ae, int64_t id)
