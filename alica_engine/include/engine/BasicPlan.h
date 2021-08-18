@@ -38,6 +38,6 @@ private:
     alica::AlicaEngine* _ae;
     RunningPlan* _context;
     std::atomic<bool> _planStarted;
-    Configuration* _configuration;
+    const Configuration* _configuration;
 };
 } // namespace alica
