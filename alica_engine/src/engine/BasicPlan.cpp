@@ -8,8 +8,8 @@ namespace alica
 {
 
 BasicPlan::BasicPlan()
-        : _planStarted(false)
-        , _context(nullptr)
+        : _context(nullptr)
+        , _planStarted(false)
         , _configuration(nullptr)
 {
 }
@@ -28,14 +28,12 @@ void BasicPlan::doTerminate()
 
 void BasicPlan::start()
 {
-    std::function<void()> cb = std::bind(&BasicPlan::doInit, this);
-    _ae->editScheduler().schedule(cb);
+    _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
 void BasicPlan::stop()
 {
-    std::function<void()> cb = std::bind(&BasicPlan::doTerminate, this);
-    _ae->editScheduler().schedule(cb);
+    _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
 }
 
 void BasicPlan::setConfiguration(const Configuration* conf)
