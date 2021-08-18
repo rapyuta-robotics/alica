@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
+#include <yaml-cpp/yaml.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -64,7 +65,8 @@ protected:
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+        const YAML::Node& config = ac->getConfig();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
                 std::make_unique<alica::PlanCreator>());
@@ -126,7 +128,8 @@ protected:
                                               getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+            const YAML::Node& config = ac->getConfig();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
@@ -163,7 +166,8 @@ protected:
                 alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+        const YAML::Node& config = ac->getConfig();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ae = AlicaTestsEngineGetter::getEngine(ac);
     }
 
