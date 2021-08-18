@@ -3,25 +3,33 @@
 #include "engine/AlicaEngine.h"
 #include "engine/model/Configuration.h"
 #include "engine/PlanInterface.h"
+#include "engine/scheduler/Scheduler.h"
 
 namespace alica
 {
 
 BasicPlan::BasicPlan()
-        : _context(nullptr)
+        : _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _planStarted(false)
-        , _configuration(nullptr)
+        , _activeRunJobId(-1)
 {
 }
 
 void BasicPlan::doInit()
 {
-    init();
     _planStarted = true;
+    init();
+    _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+}
+
+void BasicPlan::doRun(void* msg)
+{
+    run(msg);
 }
 
 void BasicPlan::doTerminate()
 {
+    _ae->editScheduler().stopJob(_activeRunJobId);
     onTermination();
     _planStarted = false;
 }

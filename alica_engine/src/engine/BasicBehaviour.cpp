@@ -160,8 +160,7 @@ void BasicBehaviour::doInit()
     // Do not schedule repeatable run job when behaviour is event driven.
     if (!isEventDriven()) {
         auto& scheduler = _engine->editScheduler();
-        std::function<void()> runCb = std::bind(&BasicBehaviour::doRun, this, nullptr);
-        _activeRunJobId = scheduler.schedule(std::move(runCb), getInterval());
+        _activeRunJobId = scheduler.schedule(std::bind(&BasicBehaviour::doRun, this, nullptr), getInterval());
     }
 }
 

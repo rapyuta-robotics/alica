@@ -18,9 +18,11 @@ public:
     virtual ~BasicPlan() = default;
 
     virtual void init(){};
+    virtual void run(void* msg){};
     virtual void onTermination(){};
 
     void doInit();
+    void doRun(void* msg);
     void doTerminate();
 
     void start();
@@ -34,10 +36,16 @@ public:
 
     void setConfiguration(const Configuration* conf);
 
+    AlicaTime getInterval() { return _msInterval; }
+
 private:
+    static constexpr int DEFAULT_MS_INTERVAL = 100;
+
     alica::AlicaEngine* _ae;
+    const Configuration* _configuration;
+    AlicaTime _msInterval;
     RunningPlan* _context;
     std::atomic<bool> _planStarted;
-    const Configuration* _configuration;
+    int64_t _activeRunJobId;
 };
 } // namespace alica
