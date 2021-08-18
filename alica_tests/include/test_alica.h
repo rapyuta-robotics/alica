@@ -9,6 +9,7 @@
 #include "UtilityFunctionCreator.h"
 
 #include <communication/AlicaDummyCommunication.h>
+#include <alica_ros_timer/AlicaRosTimer.h
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
@@ -63,6 +64,7 @@ protected:
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
                 std::make_unique<alica::PlanCreator>());
@@ -124,6 +126,7 @@ protected:
                                               getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
@@ -160,6 +163,7 @@ protected:
                 alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
         ae = AlicaTestsEngineGetter::getEngine(ac);
     }
 
