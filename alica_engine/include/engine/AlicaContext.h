@@ -296,7 +296,7 @@ public:
 
     /**
      * Set timer factory to be used by this alica framework instance.
-     * Example usage: setCommunicator<alicaRosTimer::TimerFactoryRos>();
+     * Example usage: setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
      *
      * @note TimerFactoryType must be a derived class of IAlicaTimerFactory
      * @note This must be called before initializing context
