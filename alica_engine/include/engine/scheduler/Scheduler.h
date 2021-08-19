@@ -51,9 +51,10 @@ public:
 
     JobId schedule(JobCb jobCb, std::optional<AlicaTime> repeatInterval = std::nullopt)
     {
-        _jobQueue.emplace(_nextJobId++, std::move(jobCb), std::move(repeatInterval));
+        JobId jobId = _nextJobId++;
+        _jobQueue.emplace(jobId, std::move(jobCb), std::move(repeatInterval));
         _cv.notify_one();
-        return _nextJobId;
+        return jobId;
     }
 
     void terminate()
