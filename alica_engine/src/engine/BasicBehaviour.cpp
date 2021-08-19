@@ -28,46 +28,18 @@ namespace alica
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
-        , _engine(nullptr)
         , _behaviour(nullptr)
-        , _contextInRun(nullptr)
+        , _engine(nullptr)
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
-        , _signalState(SignalState::STOP)
-        , _stopCalled(false)
-        , _behaviourResult(BehaviourResult::UNKNOWN)
-        , _behaviourState(BehaviourState::UNINITIALIZED)
-        , _behaviourTrigger(nullptr)
         , _context(nullptr)
+        , _signalState(1)
+        , _execState(1)
+        , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
 {
-}
-
-void BasicBehaviour::terminate()
-{
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::TERMINATE);
-    }
-}
-
-bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
-{
-    return _context == rp && (getSignalState() == SignalState::START || isBehaviourStarted());
-}
-
-void BasicBehaviour::setBehaviour(const Behaviour* beh)
-{
-    assert(_behaviour == nullptr);
-    _behaviour = beh;
-}
-
-void BasicBehaviour::setConfiguration(const Configuration* conf)
-{
-    assert(_configuration == nullptr);
-    _configuration = conf;
 }
 
 /**
@@ -84,73 +56,56 @@ essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
  */
 bool BasicBehaviour::stop()
 {
-    if (!isStopCalled()) {
-        _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doTermination, this));
+    if (!isActive(_signalState.load())) {
+        return true;
     }
-
-    setSignalState(SignalState::STOP);
-    setStopCalled(true);
+    ++_signalState;
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::terminateJob, this));
     return true;
 }
 
 /**
  * Starts the execution of this BasicBehaviour.
  */
-bool BasicBehaviour::start()
+bool BasicBehaviour::start(RunningPlan* rp)
 {
-    setSignalState(SignalState::START);
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doInit, this));
+    if (isActive(_signalState.load())) {
+        return true;
+    }
+    ++_signalState;
+    // This has to be done after incrementing _signalState for correct behaviour of getPlanContext()
+    _context.store(rp);
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
 }
 
 void BasicBehaviour::setSuccess()
 {
-    if (getBehaviourResult() != BehaviourResult::SUCCESS && getBehaviourState() == BehaviourState::RUNNING) {
-        setBehaviourResult(BehaviourResult::SUCCESS);
-        _engine->editPlanBase().addFastPathEvent(_context);
+    auto prev = _behResult.exchange(BehResult::SUCCESS);
+    if (prev != BehResult::SUCCESS) {
+        _engine->editPlanBase().addFastPathEvent(_context.load());
     }
-}
-
-bool BasicBehaviour::isSuccess() const
-{
-    // Check for isStopCalled() before checking the behaviour result
-    return !isStopCalled() && getBehaviourResult() == BehaviourResult::SUCCESS;
 }
 
 void BasicBehaviour::setFailure()
 {
-    if (getBehaviourResult() != BehaviourResult::FAILURE && getBehaviourState() == BehaviourState::RUNNING) {
-        setBehaviourResult(BehaviourResult::FAILURE);
-        _engine->editPlanBase().addFastPathEvent(_context);
+    auto prev = _behResult.exchange(BehResult::FAILURE);
+    if (prev != BehResult::SUCCESS) {
+        _engine->editPlanBase().addFastPathEvent(_context.load());
     }
-}
-
-bool BasicBehaviour::isFailure() const
-{
-    // Check for isStopCalled() before checking the behaviour result
-    return !isStopCalled() && getBehaviourResult() == BehaviourResult::FAILURE;
-}
-
-void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
-{
-    if (!trigger)
-        return;
-
-    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
-    _behaviourTrigger = trigger;
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
 {
-    return !_triggeredJobRunning;
+    return !_triggeredJobRunning.load();
 }
 
-void BasicBehaviour::doInit()
+void BasicBehaviour::initJob()
 {
-    setBehaviourResult(BehaviourResult::UNKNOWN);
-    setStopCalled(false);
-    setBehaviourState(BehaviourState::INITIALIZING);
+    assert(_behResult.load() == BehResult::UNKNOWN);
+    ++_execState;
 
+    // Todo: Optimization: don't call initialiseParameters if not in context
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
@@ -159,23 +114,14 @@ void BasicBehaviour::doInit()
 
     // Do not schedule repeatable run job when behaviour is event driven.
     if (!isEventDriven()) {
-        auto& scheduler = _engine->editScheduler();
-        _activeRunJobId = scheduler.schedule(std::bind(&BasicBehaviour::doRun, this, nullptr), getInterval());
+        // TODO: account for delayed start
+        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr), getInterval());
     }
 }
 
-void BasicBehaviour::doStop()
+void BasicBehaviour::runJob(void* msg)
 {
-    // important to set stopCalled to false after setting behaviour result for correct lock-free
-    // behaviour of isSuccess() & isFailure(). Should be called when _runLoopMutex is held by the thread
-    setBehaviourResult(BehaviourResult::UNKNOWN);
-    setBehaviourState(BehaviourState::TERMINATING);
-    setStopCalled(false);
-}
-
-void BasicBehaviour::doRun(void* msg)
-{
-    setBehaviourState(BehaviourState::RUNNING);
+    // TODO: get rid of msg
     run(msg);
     _triggeredJobRunning = false;
 }
@@ -186,14 +132,18 @@ void BasicBehaviour::doTrigger()
         return;
     }
     _triggeredJobRunning = true;
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::doRun, this, nullptr));
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
 }
 
-void BasicBehaviour::doTermination()
+void BasicBehaviour::terminateJob()
 {
     _engine->editScheduler().stopJob(_activeRunJobId);
+    // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
+    _behResult.store(BehResult::UNKNOWN);
+    ++_execState;
+    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
+    // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     onTermination();
-    setBehaviourState(BehaviourState::UNINITIALIZED);
 }
 
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const

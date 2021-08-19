@@ -43,6 +43,17 @@ public:
         _queue.clear();
     }
 
+    template <class Compare>
+    void erase(const T& key, Compare compare)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        for (const auto& val : _queue) {
+            if (compare(key, val)) {
+                // remove from _queue
+            }
+        }
+    }
+
 private:
     std::mutex _mutex;
     std::deque<T> _queue;
