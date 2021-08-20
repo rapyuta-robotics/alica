@@ -25,9 +25,10 @@ class Scheduler
 public:
     using JobId = int64_t;
     using JobCb = std::function<void()>;
+    using Job = std::tuple<JobId, JobCb, std::optional<AlicaTime>>;
 
 private:
-    using JobQueue = Queue<std::tuple<JobId, JobCb, std::optional<AlicaTime>>>;
+    using JobQueue = Queue<Job>;
 
 public:
     Scheduler(IAlicaTimerFactory& timerFactory)
@@ -67,7 +68,15 @@ public:
         _repeatableJobs.clear();
     }
 
-    void stopJob(JobId jobId) { _repeatableJobs.erase(jobId); }
+    void cancelJob(JobId jobId)
+    {
+        if (_repeatableJobs.erase(jobId) != 0) {
+            _jobQueue.erase(std::make_tuple(jobId, nullptr, std::nullopt),
+                            [](Job job, Job otherJob) {
+                        return std::get<0>(job) == std::get<0>(otherJob);
+                    });
+        }
+    }
 
 private:
     void run()

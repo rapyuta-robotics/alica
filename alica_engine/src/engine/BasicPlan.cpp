@@ -29,7 +29,7 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
-    _ae->editScheduler().stopJob(_activeRunJobId);
+    _ae->editScheduler().cancelJob(_activeRunJobId);
     onTermination();
     _planStarted = false;
 }

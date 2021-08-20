@@ -137,7 +137,7 @@ void BasicBehaviour::doTrigger()
 
 void BasicBehaviour::terminateJob()
 {
-    _engine->editScheduler().stopJob(_activeRunJobId);
+    _engine->editScheduler().cancelJob(_activeRunJobId);
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
     ++_execState;
