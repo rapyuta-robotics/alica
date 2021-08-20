@@ -40,6 +40,8 @@ public:
     AlicaTime getInterval() { return _msInterval; }
 
 private:
+    void sendLogMessage(int level, const std::string& message) const;
+
     static constexpr int DEFAULT_MS_INTERVAL = 100;
 
     alica::AlicaEngine* _ae;

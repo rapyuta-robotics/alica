@@ -18,20 +18,38 @@ BasicPlan::BasicPlan()
 void BasicPlan::doInit()
 {
     _planStarted = true;
-    init();
+    try {
+        init();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
+    }
     _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
 }
 
 void BasicPlan::doRun(void* msg)
 {
-    run(msg);
+    try {
+        run(msg);
+    } catch (const std::exception& e) {
+        std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
+        sendLogMessage(4, err);
+    }
 }
 
 void BasicPlan::doTerminate()
 {
     _ae->editScheduler().cancelJob(_activeRunJobId);
-    onTermination();
+    try {
+        onTermination();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
+    }
     _planStarted = false;
+}
+
+void BasicPlan::sendLogMessage(int level, const std::string& message) const
+{
+    _ae->getCommunicator().sendLogMessage(level, message);
 }
 
 void BasicPlan::start()

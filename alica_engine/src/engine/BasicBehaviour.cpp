@@ -122,7 +122,12 @@ void BasicBehaviour::initJob()
 void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
-    run(msg);
+    try {
+        run(msg);
+    } catch (const std::exception& e) {
+        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
+        sendLogMessage(4, err);
+    }
     _triggeredJobRunning = false;
 }
 
@@ -143,7 +148,11 @@ void BasicBehaviour::terminateJob()
     ++_execState;
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
-    onTermination();
+    try {
+        onTermination();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+    }
 }
 
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
