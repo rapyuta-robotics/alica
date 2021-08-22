@@ -34,12 +34,12 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378423610::getUtilityFunctio
 
 /*PROTECTED REGION ID(methods1613378423610) ENABLED START*/
 // Add additional options here
-void SchedulingTestPlan21613378423610::init()
+void SchedulingTestPlan21613378423610::onInit()
 {
     CounterClass::called += 1;
 }
 
-void SchedulingTestPlan21613378423610::onTermination()
+void SchedulingTestPlan21613378423610::onTerminate()
 {
     CounterClass::called += 1;
 }
