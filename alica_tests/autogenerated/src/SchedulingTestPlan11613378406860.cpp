@@ -80,12 +80,12 @@ bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp)
 
 /*PROTECTED REGION ID(methods1613378406860) ENABLED START*/
 // Add additional options here
-void SchedulingTestPlan11613378406860::init()
+void SchedulingTestPlan11613378406860::onInit()
 {
     CounterClass::called = 1;
 }
 
-void SchedulingTestPlan11613378406860::onTermination()
+void SchedulingTestPlan11613378406860::onTerminate()
 {
     CounterClass::called += 1;
 }
