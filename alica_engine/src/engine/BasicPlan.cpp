@@ -19,7 +19,7 @@ void BasicPlan::doInit()
 {
     _planStarted = true;
     try {
-        init();
+        onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
     }
@@ -40,7 +40,7 @@ void BasicPlan::doTerminate()
 {
     _ae->editScheduler().cancelJob(_activeRunJobId);
     try {
-        onTermination();
+        onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }

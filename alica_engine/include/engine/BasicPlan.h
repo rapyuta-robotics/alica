@@ -18,10 +18,6 @@ public:
     BasicPlan();
     virtual ~BasicPlan() = default;
 
-    virtual void init(){};
-    virtual void run(void* msg){};
-    virtual void onTermination(){};
-
     void doInit();
     void doRun(void* msg);
     void doTerminate();
@@ -40,6 +36,9 @@ public:
     AlicaTime getInterval() { return _msInterval; }
 
 private:
+    virtual void onInit(){};
+    virtual void run(void* msg){};
+    virtual void onTerminate(){};
     void sendLogMessage(int level, const std::string& message) const;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
