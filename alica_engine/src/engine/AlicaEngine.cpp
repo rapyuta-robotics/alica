@@ -115,7 +115,9 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
-    _scheduler->terminate();
+    if (_scheduler) {
+        _scheduler->terminate();
+    }
     _behaviourPool.stopAll();
     _behaviourPool.terminateAll();
     _planBase.stop();

@@ -61,6 +61,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -80,6 +81,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
         , _assignment(plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -93,6 +95,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuratio
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -105,6 +108,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuratio
         , _behaviour(true)
         , _assignment()
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)
         , _configuration(configuration)
@@ -560,7 +564,6 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
-        _basicPlan = nullptr;
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
         _basicPlan->setConfiguration(getConfiguration());
