@@ -5,7 +5,14 @@
 
 namespace alica
 {
-// Plan:MasterPlanTestConditionPlanType1418042656594
+// Plan:  MasterPlanTestConditionPlanType (1418042656594)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418042656596)
+//
+// States:
+//   - Start (1418042656595)
+//   - Plantype (1418042674811)
 MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594()
         : DomainPlan()
 {
@@ -16,6 +23,13 @@ MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType141
 MasterPlanTestConditionPlanType1418042656594::~MasterPlanTestConditionPlanType1418042656594()
 {
     /*PROTECTED REGION ID(dcon1418042656594) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void MasterPlanTestConditionPlanType1418042656594::run(void* msg)
+{
+    /*PROTECTED REGION ID(runMasterPlanTestConditionPlanType1418042656594) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -32,19 +46,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1418042682960)
+ *   - Comment:
+ *   - Source2Dest: Start --> Plantype
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1418042683692)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1418042656596)
- *
- * States in plan:
- *   - Start (1418042656595)
- *   - Plantype (1418042674811)
- *
- * Variables of precondition:
+ * Abstract Plans in Start:
  */
 bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp)
 {

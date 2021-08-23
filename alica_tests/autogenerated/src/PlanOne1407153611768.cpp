@@ -5,7 +5,14 @@
 
 namespace alica
 {
-// Plan:PlanOne1407153611768
+// Plan:  PlanOne (1407153611768)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1407153636262)//   - AttackTask (1407153522080) (Entrypoint: 1407153791141)
+//
+// States:
+//   - DefaultState (1407153636261)
+//   - AttackState (1407153807487)
 PlanOne1407153611768::PlanOne1407153611768()
         : DomainPlan()
 {
@@ -16,6 +23,13 @@ PlanOne1407153611768::PlanOne1407153611768()
 PlanOne1407153611768::~PlanOne1407153611768()
 {
     /*PROTECTED REGION ID(dcon1407153611768) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void PlanOne1407153611768::run(void* msg)
+{
+    /*PROTECTED REGION ID(runPlanOne1407153611768) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

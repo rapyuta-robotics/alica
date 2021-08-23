@@ -13,7 +13,6 @@ class DomainPlan : public BasicPlan
 public:
     DomainPlan();
     virtual ~DomainPlan();
-
     /*PROTECTED REGION ID(domainPlanClassDecl) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/

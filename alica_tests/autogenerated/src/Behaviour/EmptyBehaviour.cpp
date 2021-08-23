@@ -37,6 +37,7 @@ void EmptyBehaviour::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1625610857563) ENABLED START*/
     // Add additional options here
     CounterClass::called = 0;
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1625610857563) ENABLED START*/

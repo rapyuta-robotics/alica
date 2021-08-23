@@ -9,7 +9,13 @@
 
 namespace alica
 {
-// Plan:RuntimeConditionPlan1418042806575
+// Plan:  RuntimeConditionPlan (1418042806575)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418042806577)
+//
+// States:
+//   - RuntimeConditionTest (1418042806576)
 RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575()
         : DomainPlan()
 {
@@ -20,6 +26,13 @@ RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575()
 RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
 {
     /*PROTECTED REGION ID(dcon1418042806575) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void RuntimeConditionPlan1418042806575::run(void* msg)
+{
+    /*PROTECTED REGION ID(runRuntimeConditionPlan1418042806575) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

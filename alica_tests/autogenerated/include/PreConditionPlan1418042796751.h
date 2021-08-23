@@ -19,6 +19,7 @@ class PreConditionPlan1418042796751 : public DomainPlan
 public:
     PreConditionPlan1418042796751();
     virtual ~PreConditionPlan1418042796751();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1418042796751) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

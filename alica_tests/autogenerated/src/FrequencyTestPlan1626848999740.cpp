@@ -5,7 +5,13 @@
 
 namespace alica
 {
-// Plan:FrequencyTestPlan1626848999740
+// Plan:  FrequencyTestPlan (1626848999740)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1626849024805)
+//
+// States:
+//   - Default Name (1626849027475)
 FrequencyTestPlan1626848999740::FrequencyTestPlan1626848999740()
         : DomainPlan()
 {
@@ -16,6 +22,13 @@ FrequencyTestPlan1626848999740::FrequencyTestPlan1626848999740()
 FrequencyTestPlan1626848999740::~FrequencyTestPlan1626848999740()
 {
     /*PROTECTED REGION ID(dcon1626848999740) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void FrequencyTestPlan1626848999740::run(void* msg)
+{
+    /*PROTECTED REGION ID(runFrequencyTestPlan1626848999740) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

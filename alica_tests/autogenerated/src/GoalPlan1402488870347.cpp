@@ -5,7 +5,15 @@
 
 namespace alica
 {
-// Plan:GoalPlan1402488870347
+// Plan:  GoalPlan (1402488870347)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1402488881800)
+//
+// States:
+//   - Shoot (1402488881799)
+//   - Miss (1402489152217)
+//   - Scored (1402489192198)
 GoalPlan1402488870347::GoalPlan1402488870347()
         : DomainPlan()
 {
@@ -16,6 +24,13 @@ GoalPlan1402488870347::GoalPlan1402488870347()
 GoalPlan1402488870347::~GoalPlan1402488870347()
 {
     /*PROTECTED REGION ID(dcon1402488870347) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void GoalPlan1402488870347::run(void* msg)
+{
+    /*PROTECTED REGION ID(runGoalPlan1402488870347) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -70,20 +85,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402489173167)
+ *   - Comment:
+ *   - Source2Dest: Shoot --> Miss
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489174338)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488881800)
- *
- * States in plan:
- *   - Shoot (1402488881799)
- *   - Miss (1402489152217)
- *   - Scored (1402489192198)
- *
- * Variables of precondition:
+ * Abstract Plans in Shoot:
  */
 bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -92,20 +105,18 @@ bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402489205153)
+ *   - Comment:
+ *   - Source2Dest: Miss --> Shoot
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489206278)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488881800)
- *
- * States in plan:
- *   - Shoot (1402488881799)
- *   - Miss (1402489152217)
- *   - Scored (1402489192198)
- *
- * Variables of precondition:
+ * Abstract Plans in Miss:
  */
 bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -114,20 +125,18 @@ bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402489216617)
+ *   - Comment:
+ *   - Source2Dest: Miss --> Scored
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489218027)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488881800)
- *
- * States in plan:
- *   - Shoot (1402488881799)
- *   - Miss (1402489152217)
- *   - Scored (1402489192198)
- *
- * Variables of precondition:
+ * Abstract Plans in Miss:
  */
 bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp)
 {

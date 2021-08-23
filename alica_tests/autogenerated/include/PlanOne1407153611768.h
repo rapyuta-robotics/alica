@@ -19,6 +19,7 @@ class PlanOne1407153611768 : public DomainPlan
 public:
     PlanOne1407153611768();
     virtual ~PlanOne1407153611768();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1407153611768) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

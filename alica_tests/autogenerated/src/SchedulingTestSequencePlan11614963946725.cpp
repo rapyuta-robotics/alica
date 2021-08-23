@@ -6,7 +6,17 @@
 
 namespace alica
 {
-// Plan:SchedulingTestSequencePlan11614963946725
+// Plan:  SchedulingTestSequencePlan1 (1614963946725)
+//
+// Tasks:
+//   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1614963977287)
+//
+// States:
+//   - InitSequencePlan1 (1614963979424)
+//   - InitSequenceSubPlan1 (1614964540694)
+//   - InitSequenceSubPlan2 (1614964541828)
+//   - InitSequenceSubPlan3 (1614964542678)
+//   - TerminateSequenceSubPlan3 (1614964543300)
 SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan11614963946725()
         : DomainPlan()
 {
@@ -17,6 +27,13 @@ SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan116149639467
 SchedulingTestSequencePlan11614963946725::~SchedulingTestSequencePlan11614963946725()
 {
     /*PROTECTED REGION ID(dcon1614963946725) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void SchedulingTestSequencePlan11614963946725::run(void* msg)
+{
+    /*PROTECTED REGION ID(runSchedulingTestSequencePlan11614963946725) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -31,22 +48,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1614963946725::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1614964566531, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromInitSequencePlan1To InitSequenceSubPlan1 (1614964566530)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: InitSequencePlan1 --> InitSequenceSubPlan1
  *
- * Abstract plans in current state:
+ * Precondition: 1614964566531 (1614964566531)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1614963977287)
- *
- * States in plan:
- *   - InitSequencePlan1 (1614963979424)
- *   - InitSequenceSubPlan1 (1614964540694)
- *   - InitSequenceSubPlan2 (1614964541828)
- *   - InitSequenceSubPlan3 (1614964542678)
- *   - TerminateSequenceSubPlan3 (1614964543300)
- *
- * Variables of precondition:
+ * Abstract Plans in InitSequencePlan1:
  */
 bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -55,23 +68,19 @@ bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1614964572495, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromInitSequenceSubPlan1To InitSequenceSubPlan2 (1614964572494)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: InitSequenceSubPlan1 --> InitSequenceSubPlan2
  *
- * Abstract plans in current state:
+ * Precondition: 1614964572495 (1614964572495)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in InitSequenceSubPlan1:
  *   - SchedulingTestSequenceSubPlan1 (1614964379654)
- *
- * Tasks in plan:
- *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1614963977287)
- *
- * States in plan:
- *   - InitSequencePlan1 (1614963979424)
- *   - InitSequenceSubPlan1 (1614964540694)
- *   - InitSequenceSubPlan2 (1614964541828)
- *   - InitSequenceSubPlan3 (1614964542678)
- *   - TerminateSequenceSubPlan3 (1614964543300)
- *
- * Variables of precondition:
  */
 bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -80,23 +89,19 @@ bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1614964575553, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromInitSequenceSubPlan2To InitSequenceSubPlan3 (1614964575552)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: InitSequenceSubPlan2 --> InitSequenceSubPlan3
  *
- * Abstract plans in current state:
+ * Precondition: 1614964575553 (1614964575553)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in InitSequenceSubPlan2:
  *   - SchedulingTestSequenceSubPlan2 (1614964444419)
- *
- * Tasks in plan:
- *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1614963977287)
- *
- * States in plan:
- *   - InitSequencePlan1 (1614963979424)
- *   - InitSequenceSubPlan1 (1614964540694)
- *   - InitSequenceSubPlan2 (1614964541828)
- *   - InitSequenceSubPlan3 (1614964542678)
- *   - TerminateSequenceSubPlan3 (1614964543300)
- *
- * Variables of precondition:
  */
 bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -105,23 +110,19 @@ bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1614964578016, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromInitSequenceSubPlan3To TerminateSequenceSubPlan3 (1614964578015)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: InitSequenceSubPlan3 --> TerminateSequenceSubPlan3
  *
- * Abstract plans in current state:
+ * Precondition: 1614964578016 (1614964578016)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in InitSequenceSubPlan3:
  *   - SchedulingTestSequenceSubPlan3 (1614964478264)
- *
- * Tasks in plan:
- *   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1614963977287)
- *
- * States in plan:
- *   - InitSequencePlan1 (1614963979424)
- *   - InitSequenceSubPlan1 (1614964540694)
- *   - InitSequenceSubPlan2 (1614964541828)
- *   - InitSequenceSubPlan3 (1614964542678)
- *   - TerminateSequenceSubPlan3 (1614964543300)
- *
- * Variables of precondition:
  */
 bool PreCondition1614964578016::evaluate(std::shared_ptr<RunningPlan> rp)
 {

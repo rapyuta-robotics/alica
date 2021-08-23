@@ -19,6 +19,7 @@ class FrequencyTestPlan1626848999740 : public DomainPlan
 public:
     FrequencyTestPlan1626848999740();
     virtual ~FrequencyTestPlan1626848999740();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1626848999740) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

@@ -19,6 +19,7 @@ class MultiAgentTestMaster1413200842973 : public DomainPlan
 public:
     MultiAgentTestMaster1413200842973();
     virtual ~MultiAgentTestMaster1413200842973();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1413200842973) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
