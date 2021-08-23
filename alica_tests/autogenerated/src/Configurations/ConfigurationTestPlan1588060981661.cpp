@@ -5,7 +5,14 @@
 
 namespace alica
 {
-// Plan:ConfigurationTestPlan1588060981661
+// Plan:  ConfigurationTestPlan (1588060981661)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1588061024407)
+//
+// States:
+//   - Default Name (1588060991102)
+//   - Default Name (1588253341545)
 ConfigurationTestPlan1588060981661::ConfigurationTestPlan1588060981661()
         : DomainPlan()
 {
@@ -16,6 +23,13 @@ ConfigurationTestPlan1588060981661::ConfigurationTestPlan1588060981661()
 ConfigurationTestPlan1588060981661::~ConfigurationTestPlan1588060981661()
 {
     /*PROTECTED REGION ID(dcon1588060981661) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void ConfigurationTestPlan1588060981661::run(void* msg)
+{
+    /*PROTECTED REGION ID(runConfigurationTestPlan1588060981661) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -30,23 +44,22 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1588253347213, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromDefault NameTo Default Name (1588253347211)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: Default Name --> Default Name
  *
- * Abstract plans in current state:
+ * Precondition: 1588253347213 (1588253347213)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Default Name:
  *   - ReadConfigurationBehaviour (1588061129360)
  *   - ReadConfigurationBehaviour (1588061129360)
  *   - ReadConfigurationPlantype (1588061351007)
  *   - ReadConfigurationPlan (1588061334567)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1588061024407)
- *
- * States in plan:
- *   - Default Name (1588060991102)
- *   - Default Name (1588253341545)
- *
- * Variables of precondition:
  */
 bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp)
 {

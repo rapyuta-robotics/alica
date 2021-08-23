@@ -9,7 +9,13 @@
 
 namespace alica
 {
-// Plan:PreConditionPlan1418042796751
+// Plan:  PreConditionPlan (1418042796751)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418042796753)
+//
+// States:
+//   - PreConditionTest (1418042796752)
 PreConditionPlan1418042796751::PreConditionPlan1418042796751()
         : DomainPlan()
 {
@@ -20,6 +26,13 @@ PreConditionPlan1418042796751::PreConditionPlan1418042796751()
 PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
 {
     /*PROTECTED REGION ID(dcon1418042796751) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void PreConditionPlan1418042796751::run(void* msg)
+{
+    /*PROTECTED REGION ID(runPreConditionPlan1418042796751) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

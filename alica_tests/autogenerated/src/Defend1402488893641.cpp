@@ -5,7 +5,16 @@
 
 namespace alica
 {
-// Plan:Defend1402488893641
+// Plan:  Defend (1402488893641)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1402488903550)
+//
+// States:
+//   - Tackle (1402488903549)
+//   - GetGoal (1402488910751)
+//   - GetBall (1402488959965)
+//   - TryToDefendGoal (1402489037735)
 Defend1402488893641::Defend1402488893641()
         : DomainPlan()
 {
@@ -16,6 +25,13 @@ Defend1402488893641::Defend1402488893641()
 Defend1402488893641::~Defend1402488893641()
 {
     /*PROTECTED REGION ID(dcon1402488893641) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void Defend1402488893641::run(void* msg)
+{
+    /*PROTECTED REGION ID(runDefend1402488893641) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -32,23 +48,20 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: TackleToGetBall (1402488991762)
+ *   - Comment:
+ *   - Source2Dest: Tackle --> GetBall
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402488993122)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Tackle:
  *   - Tackle (1402488939130)
  *   - Tackle (1402489318663)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488903550)
- *
- * States in plan:
- *   - Tackle (1402488903549)
- *   - GetGoal (1402488910751)
- *   - GetBall (1402488959965)
- *   - TryToDefendGoal (1402489037735)
- *
- * Variables of precondition:
  */
 bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -57,21 +70,18 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: TackleToGetBall (1402488990761)
+ *   - Comment:
+ *   - Source2Dest: GetBall --> Tackle
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402488991641)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488903550)
- *
- * States in plan:
- *   - Tackle (1402488903549)
- *   - GetGoal (1402488910751)
- *   - GetBall (1402488959965)
- *   - TryToDefendGoal (1402489037735)
- *
- * Variables of precondition:
+ * Abstract Plans in GetBall:
  */
 bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -80,21 +90,18 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: GetBallToTryToDefendGoal (1402489064693)
+ *   - Comment:
+ *   - Source2Dest: GetBall --> TryToDefendGoal
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489065962)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488903550)
- *
- * States in plan:
- *   - Tackle (1402488903549)
- *   - GetGoal (1402488910751)
- *   - GetBall (1402488959965)
- *   - TryToDefendGoal (1402489037735)
- *
- * Variables of precondition:
+ * Abstract Plans in GetBall:
  */
 bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -103,22 +110,19 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: TryToDefendGoalToGetGoal (1402489071510)
+ *   - Comment:
+ *   - Source2Dest: TryToDefendGoal --> GetGoal
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489073613)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in TryToDefendGoal:
  *   - PlanType (1402489564599)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488903550)
- *
- * States in plan:
- *   - Tackle (1402488903549)
- *   - GetGoal (1402488910751)
- *   - GetBall (1402488959965)
- *   - TryToDefendGoal (1402489037735)
- *
- * Variables of precondition:
  */
 bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp)
 {

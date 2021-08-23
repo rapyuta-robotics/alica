@@ -8,7 +8,15 @@
 
 namespace alica
 {
-// Plan:MultiAgentTestMaster1413200842973
+// Plan:  MultiAgentTestMaster (1413200842973)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1413200842975)
+//
+// States:
+//   - Init (1413200842974)
+//   - Start (1413201213955)
+//   - Finished (1413201380359)
 MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973()
         : DomainPlan()
 {
@@ -19,6 +27,13 @@ MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973()
 MultiAgentTestMaster1413200842973::~MultiAgentTestMaster1413200842973()
 {
     /*PROTECTED REGION ID(dcon1413200842973) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void MultiAgentTestMaster1413200842973::run(void* msg)
+{
+    /*PROTECTED REGION ID(runMultiAgentTestMaster1413200842973) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -35,20 +50,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1413201227586, ConditionString: , Comment:
+ * Transition: 1413201226246 (1413201226246)
+ *   - Comment:
+ *   - Source2Dest: Init --> Start
  *
- * Abstract plans in current state:
+ * Precondition: 1413201227586 (1413201227586)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1413200842975)
- *
- * States in plan:
- *   - Init (1413200842974)
- *   - Start (1413201213955)
- *   - Finished (1413201380359)
- *
- * Variables of precondition:
+ * Abstract Plans in Init:
  */
 bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -64,21 +77,19 @@ bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1413201389955, ConditionString: , Comment:
+ * Transition: 1413201388722 (1413201388722)
+ *   - Comment:
+ *   - Source2Dest: Start --> Finished
  *
- * Abstract plans in current state:
+ * Precondition: 1413201389955 (1413201389955)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Start:
  *   - MultiAgentTestPlan (1413200862180)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1413200842975)
- *
- * States in plan:
- *   - Init (1413200842974)
- *   - Start (1413201213955)
- *   - Finished (1413201380359)
- *
- * Variables of precondition:
  */
 bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp)
 {

@@ -5,7 +5,16 @@
 
 namespace alica
 {
-// Plan:PlanTwo1407153645238
+// Plan:  PlanTwo (1407153645238)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1407153656782)//   - AttackTask (1407153522080) (Entrypoint: 1407153821287)//   - DefendTask (1402488486725)
+//   (Entrypoint: 1407153842648)
+//
+// States:
+//   - DefaultState (1407153656781)
+//   - AttackState (1407153860891)
+//   - DefendState (1407153869754)
 PlanTwo1407153645238::PlanTwo1407153645238()
         : DomainPlan()
 {
@@ -16,6 +25,13 @@ PlanTwo1407153645238::PlanTwo1407153645238()
 PlanTwo1407153645238::~PlanTwo1407153645238()
 {
     /*PROTECTED REGION ID(dcon1407153645238) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void PlanTwo1407153645238::run(void* msg)
+{
+    /*PROTECTED REGION ID(runPlanTwo1407153645238) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

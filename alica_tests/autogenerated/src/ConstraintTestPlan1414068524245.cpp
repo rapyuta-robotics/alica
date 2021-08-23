@@ -5,7 +5,13 @@
 
 namespace alica
 {
-// Plan:ConstraintTestPlan1414068524245
+// Plan:  ConstraintTestPlan (1414068524245)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1414068524247)
+//
+// States:
+//   - constraintRunner (1414068524246)
 ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245()
         : DomainPlan()
 {
@@ -16,6 +22,13 @@ ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245()
 ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
 {
     /*PROTECTED REGION ID(dcon1414068524245) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void ConstraintTestPlan1414068524245::run(void* msg)
+{
+    /*PROTECTED REGION ID(runConstraintTestPlan1414068524245) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

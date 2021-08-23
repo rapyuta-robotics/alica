@@ -19,6 +19,7 @@ class MidFieldPlayPlan1402488770050 : public DomainPlan
 public:
     MidFieldPlayPlan1402488770050();
     virtual ~MidFieldPlayPlan1402488770050();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1402488770050) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

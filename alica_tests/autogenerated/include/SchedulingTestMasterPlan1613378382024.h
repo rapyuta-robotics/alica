@@ -19,6 +19,7 @@ class SchedulingTestMasterPlan1613378382024 : public DomainPlan
 public:
     SchedulingTestMasterPlan1613378382024();
     virtual ~SchedulingTestMasterPlan1613378382024();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1613378382024) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

@@ -8,7 +8,13 @@
 
 namespace alica
 {
-// Plan:OtherPlan1418042819203
+// Plan:  OtherPlan (1418042819203)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418042819206)
+//
+// States:
+//   - OtherPlanTest (1418042819204)
 OtherPlan1418042819203::OtherPlan1418042819203()
         : DomainPlan()
 {
@@ -19,6 +25,13 @@ OtherPlan1418042819203::OtherPlan1418042819203()
 OtherPlan1418042819203::~OtherPlan1418042819203()
 {
     /*PROTECTED REGION ID(dcon1418042819203) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void OtherPlan1418042819203::run(void* msg)
+{
+    /*PROTECTED REGION ID(runOtherPlan1418042819203) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

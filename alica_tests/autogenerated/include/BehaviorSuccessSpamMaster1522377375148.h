@@ -19,6 +19,7 @@ class BehaviorSuccessSpamMaster1522377375148 : public DomainPlan
 public:
     BehaviorSuccessSpamMaster1522377375148();
     virtual ~BehaviorSuccessSpamMaster1522377375148();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1522377375148) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

@@ -19,6 +19,7 @@ class ReadConfInPlantype1588061801734 : public DomainPlan
 public:
     ReadConfInPlantype1588061801734();
     virtual ~ReadConfInPlantype1588061801734();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1588061801734) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

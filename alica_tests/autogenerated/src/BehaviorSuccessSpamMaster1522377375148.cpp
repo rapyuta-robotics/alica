@@ -5,7 +5,14 @@
 
 namespace alica
 {
-// Plan:BehaviorSuccessSpamMaster1522377375148
+// Plan:  BehaviorSuccessSpamMaster (1522377375148)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1522377375150)
+//
+// States:
+//   - Normal (1522377375149)
+//   - Dummy (1522377929290)
 BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
         : DomainPlan()
 {
@@ -16,6 +23,13 @@ BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
 BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148()
 {
     /*PROTECTED REGION ID(dcon1522377375148) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void BehaviorSuccessSpamMaster1522377375148::run(void* msg)
+{
+    /*PROTECTED REGION ID(runBehaviorSuccessSpamMaster1522377375148) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -32,20 +46,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1522377944058)
+ *   - Comment:
+ *   - Source2Dest: Normal --> Dummy
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1522377944921)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Normal:
  *   - SuccessSpam (1522377401286)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1522377375150)
- *
- * States in plan:
- *   - Normal (1522377375149)
- *   - Dummy (1522377929290)
- *
- * Variables of precondition:
  */
 bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -56,20 +69,19 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1522377945069)
+ *   - Comment:
+ *   - Source2Dest: Dummy --> Normal
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1522377946607)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Dummy:
  *   - SuccessSpam (1522377401286)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1522377375150)
- *
- * States in plan:
- *   - Normal (1522377375149)
- *   - Dummy (1522377929290)
- *
- * Variables of precondition:
  */
 bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp)
 {

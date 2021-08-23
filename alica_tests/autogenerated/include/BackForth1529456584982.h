@@ -19,6 +19,7 @@ class BackForth1529456584982 : public DomainPlan
 public:
     BackForth1529456584982();
     virtual ~BackForth1529456584982();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1529456584982) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

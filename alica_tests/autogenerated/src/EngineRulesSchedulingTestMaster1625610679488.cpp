@@ -6,7 +6,16 @@
 
 namespace alica
 {
-// Plan:EngineRulesSchedulingTestMaster1625610679488
+// Plan:  EngineRulesSchedulingTestMaster (1625610679488)
+//
+// Tasks:
+//   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
+//
+// States:
+//   - GoIntoSubPlan (1625614677498)
+//   - EntryState (1625783824098)
+//   - FailureState (1625783835198)
+//   - Default Name (1626848011700)
 EngineRulesSchedulingTestMaster1625610679488::EngineRulesSchedulingTestMaster1625610679488()
         : DomainPlan()
 {
@@ -17,6 +26,13 @@ EngineRulesSchedulingTestMaster1625610679488::EngineRulesSchedulingTestMaster162
 EngineRulesSchedulingTestMaster1625610679488::~EngineRulesSchedulingTestMaster1625610679488()
 {
     /*PROTECTED REGION ID(dcon1625610679488) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void EngineRulesSchedulingTestMaster1625610679488::run(void* msg)
+{
+    /*PROTECTED REGION ID(runEngineRulesSchedulingTestMaster1625610679488) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -31,22 +47,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1625610679488::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1626848015861, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromGoIntoSubPlanTo Default Name (1626848015857)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: GoIntoSubPlan --> Default Name
  *
- * Abstract plans in current state:
+ * Precondition: 1626848015861 (1626848015861)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in GoIntoSubPlan:
  *   - EngineRulesSchedulingTestPlan (1625614640417)
- *
- * Tasks in plan:
- *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
- *
- * States in plan:
- *   - GoIntoSubPlan (1625614677498)
- *   - EntryState (1625783824098)
- *   - FailureState (1625783835198)
- *   - Default Name (1626848011700)
- *
- * Variables of precondition:
  */
 bool PreCondition1626848015861::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -55,22 +68,19 @@ bool PreCondition1626848015861::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1625783867495, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromEntryStateTo GoIntoSubPlan (1625783867494)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: EntryState --> GoIntoSubPlan
  *
- * Abstract plans in current state:
+ * Precondition: 1625783867495 (1625783867495)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in EntryState:
  *   - EmptyBehaviour (1625610857563)
- *
- * Tasks in plan:
- *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
- *
- * States in plan:
- *   - GoIntoSubPlan (1625614677498)
- *   - EntryState (1625783824098)
- *   - FailureState (1625783835198)
- *   - Default Name (1626848011700)
- *
- * Variables of precondition:
  */
 bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -79,22 +89,19 @@ bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1625783869825, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromEntryStateTo FailureState (1625783869824)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: EntryState --> FailureState
  *
- * Abstract plans in current state:
+ * Precondition: 1625783869825 (1625783869825)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in EntryState:
  *   - EmptyBehaviour (1625610857563)
- *
- * Tasks in plan:
- *   - EngineRulesTest (1625614670867) (Entrypoint: 1625614674465)
- *
- * States in plan:
- *   - GoIntoSubPlan (1625614677498)
- *   - EntryState (1625783824098)
- *   - FailureState (1625783835198)
- *   - Default Name (1626848011700)
- *
- * Variables of precondition:
  */
 bool PreCondition1625783869825::evaluate(std::shared_ptr<RunningPlan> rp)
 {

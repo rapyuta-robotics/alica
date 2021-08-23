@@ -5,7 +5,13 @@
 
 namespace alica
 {
-// Plan:RealMasterPlanForSyncTest1418902217839
+// Plan:  RealMasterPlanForSyncTest (1418902217839)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418902217841)
+//
+// States:
+//   - NewState (1418902217840)
 RealMasterPlanForSyncTest1418902217839::RealMasterPlanForSyncTest1418902217839()
         : DomainPlan()
 {
@@ -16,6 +22,13 @@ RealMasterPlanForSyncTest1418902217839::RealMasterPlanForSyncTest1418902217839()
 RealMasterPlanForSyncTest1418902217839::~RealMasterPlanForSyncTest1418902217839()
 {
     /*PROTECTED REGION ID(dcon1418902217839) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void RealMasterPlanForSyncTest1418902217839::run(void* msg)
+{
+    /*PROTECTED REGION ID(runRealMasterPlanForSyncTest1418902217839) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

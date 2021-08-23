@@ -19,6 +19,7 @@ class MasterPlanTaskAssignment1407152758497 : public DomainPlan
 public:
     MasterPlanTaskAssignment1407152758497();
     virtual ~MasterPlanTaskAssignment1407152758497();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1407152758497) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

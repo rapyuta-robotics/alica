@@ -19,6 +19,7 @@ class AuthorityTest1414403413451 : public DomainPlan
 public:
     AuthorityTest1414403413451();
     virtual ~AuthorityTest1414403413451();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1414403413451) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
