@@ -93,9 +93,7 @@ void BehaviourPool::startBehaviour(RunningPlan& rp)
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
             // set both directions rp <-> bb
             rp.setBasicBehaviour(bb.get());
-            bb->setRunningPlan(&rp);
-
-            bb->start();
+            bb->start(&rp);
             return;
         }
     }

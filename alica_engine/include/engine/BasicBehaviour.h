@@ -37,34 +37,34 @@ public:
     virtual ~BasicBehaviour(){};
     virtual void run(void* msg) = 0;
 
-    bool isRunningInContext(const RunningPlan* rp) const;
+    bool isRunningInContext(const RunningPlan* rp) const { return isExecutingInContext() && rp == _context.load(); };
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
 
-    void setBehaviour(const Behaviour* beh);
-    void setConfiguration(const Configuration* conf);
+    void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
+    void setConfiguration(const Configuration* conf) { _configuration = conf; };
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
     bool stop();
-    bool start();
-    void terminate();
+    bool start(RunningPlan* rp);
+    void terminate() { stop(); };
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
 
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isBehaviourStarted() ? _context : nullptr); }
-    void setRunningPlan(RunningPlan* rp) { _context = rp; }
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
 
-    bool isSuccess() const;
+    bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
     void setSuccess();
-    bool isFailure() const;
+    bool isFailure() const { return isExecutingInContext() && _behResult.load() == BehResult::FAILURE; };
     void setFailure();
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
-    void setTrigger(essentials::ITrigger* trigger);
+
+    void doTrigger();
     bool isTriggeredRunFinished();
 
     void sendLogMessage(int level, const std::string& message) const;
@@ -74,11 +74,6 @@ public:
      * Override in case custom initialization has to happen after the behavior has been integrated into the engine.
      */
     virtual void init() {}
-
-    void doRun(void* msg);
-    void doTrigger();
-    void doInit();
-    void doTermination();
 
     AlicaTime getInterval() { return _msInterval; }
 
@@ -102,37 +97,24 @@ protected:
 
 private:
     friend alica::test::TestContext;
-    enum BehaviourResult
+    using BehState = uint64_t;
+    enum class BehResult : uint8_t
     {
         UNKNOWN,
         SUCCESS,
         FAILURE
     };
-    enum BehaviourState
-    {
-        UNINITIALIZED,
-        INITIALIZING,
-        RUNNING,
-        TERMINATING
-    };
-    enum SignalState
-    {
-        START,
-        STOP,
-        TERMINATE
-    };
 
-    SignalState getSignalState() const { return _signalState; }
-    void setSignalState(SignalState signalState) { _signalState = signalState; }
-    bool isTerminated() const { return _signalState == SignalState::TERMINATE; }
-    BehaviourState getBehaviourState() const { return _behaviourState.load(); }
-    void setBehaviourState(BehaviourState state) { _behaviourState.store(state); }
-    BehaviourResult getBehaviourResult() const { return _behaviourResult.load(); }
-    void setBehaviourResult(BehaviourResult result) { _behaviourResult.store(result); }
-    bool isStopCalled() const { return _stopCalled.load(); }
-    void setStopCalled(bool val) { _stopCalled.store(val); }
-    bool isBehaviourStarted() const { return _behaviourState.load() != BehaviourState::UNINITIALIZED; }
-    void doStop();
+    void runJob(void* msg);
+    void initJob();
+    void terminateJob();
+
+    static constexpr bool isActive(BehState st) { return !(st & 1); }
+    bool isExecutingInContext() const
+    {
+        BehState ss = _signalState.load(), es = _execState.load();
+        return ss == es && isActive(ss);
+    }
 
     /**
      * The name of this behaviour.
@@ -141,25 +123,24 @@ private:
 
     const Behaviour* _behaviour;
     AlicaEngine* _engine;
-    RunningPlan* _context;
 
     /**
      * The configuration, that is set in the behaviour pool, associated with
      * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
      */
     const Configuration* _configuration;
-    std::atomic<RunningPlan*> _contextInRun;
-    SignalState _signalState;      // current state of the signal from main thread (start, stop or terminate)
-    std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
 
-    std::atomic<BehaviourResult> _behaviourResult;
-    std::atomic<BehaviourState> _behaviourState;
-
-    essentials::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
-                                                  is event triggered, alternative to timer */
-    mutable std::mutex _runLoopMutex;
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
+
+    // TODO: Optimization: It should be okay (confirm it) for all accesses to atomic variables to be done using acquire-release semantics instead
+    // of the current used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
+    // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
+    std::atomic<RunningPlan*> _context;
+    std::atomic<BehState> _signalState;
+    std::atomic<BehState> _execState;
+    std::atomic<BehResult> _behResult;
+
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
 };
