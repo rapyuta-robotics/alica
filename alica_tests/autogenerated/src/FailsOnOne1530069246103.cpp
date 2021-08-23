@@ -6,7 +6,13 @@
 
 namespace alica
 {
-// Plan:FailsOnOne1530069246103
+// Plan:  FailsOnOne (1530069246103)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1530069246105)
+//
+// States:
+//   - NewState (1530069246104)
 FailsOnOne1530069246103::FailsOnOne1530069246103()
         : DomainPlan()
 {
@@ -17,6 +23,13 @@ FailsOnOne1530069246103::FailsOnOne1530069246103()
 FailsOnOne1530069246103::~FailsOnOne1530069246103()
 {
     /*PROTECTED REGION ID(dcon1530069246103) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void FailsOnOne1530069246103::run(void* msg)
+{
+    /*PROTECTED REGION ID(runFailsOnOne1530069246103) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

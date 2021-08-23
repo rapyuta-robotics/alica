@@ -5,7 +5,15 @@
 
 namespace alica
 {
-// Plan:ReadConfInPlantype1588061801734
+// Plan:  ReadConfInPlantype (1588061801734)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1588103719479)
+//
+// States:
+//   - Default Name (1588103714226)
+//   - ConfA (1588246134801)
+//   - ConfB (1588246136647)
 ReadConfInPlantype1588061801734::ReadConfInPlantype1588061801734()
         : DomainPlan()
 {
@@ -16,6 +24,13 @@ ReadConfInPlantype1588061801734::ReadConfInPlantype1588061801734()
 ReadConfInPlantype1588061801734::~ReadConfInPlantype1588061801734()
 {
     /*PROTECTED REGION ID(dcon1588061801734) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void ReadConfInPlantype1588061801734::run(void* msg)
+{
+    /*PROTECTED REGION ID(runReadConfInPlantype1588061801734) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -30,20 +45,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061801734::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1588246144841, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromDefault NameTo Default Name (1588246144840)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: Default Name --> ConfB
  *
- * Abstract plans in current state:
+ * Precondition: 1588246144841 (1588246144841)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1588103719479)
- *
- * States in plan:
- *   - Default Name (1588103714226)
- *   - ConfA (1588246134801)
- *   - ConfB (1588246136647)
- *
- * Variables of precondition:
+ * Abstract Plans in Default Name:
  */
 bool PreCondition1588246144841::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -54,20 +67,18 @@ bool PreCondition1588246144841::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1588246141557, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromDefault NameTo Default Name (1588246141555)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: Default Name --> ConfA
  *
- * Abstract plans in current state:
+ * Precondition: 1588246141557 (1588246141557)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1588103719479)
- *
- * States in plan:
- *   - Default Name (1588103714226)
- *   - ConfA (1588246134801)
- *   - ConfB (1588246136647)
- *
- * Variables of precondition:
+ * Abstract Plans in Default Name:
  */
 bool PreCondition1588246141557::evaluate(std::shared_ptr<RunningPlan> rp)
 {

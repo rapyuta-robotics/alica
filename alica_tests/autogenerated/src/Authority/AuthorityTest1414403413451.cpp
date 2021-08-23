@@ -8,7 +8,14 @@
 
 namespace alica
 {
-// Plan:AuthorityTest1414403413451
+// Plan:  AuthorityTest (1414403413451)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1414403429951)//   - AttackTask (1407153522080) (Entrypoint: 1414403522424)
+//
+// States:
+//   - UpperState (1414403429950)
+//   - LowerState (1414403553717)
 AuthorityTest1414403413451::AuthorityTest1414403413451()
         : DomainPlan()
 {
@@ -19,6 +26,13 @@ AuthorityTest1414403413451::AuthorityTest1414403413451()
 AuthorityTest1414403413451::~AuthorityTest1414403413451()
 {
     /*PROTECTED REGION ID(dcon1414403413451) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void AuthorityTest1414403413451::run(void* msg)
+{
+    /*PROTECTED REGION ID(runAuthorityTest1414403413451) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }

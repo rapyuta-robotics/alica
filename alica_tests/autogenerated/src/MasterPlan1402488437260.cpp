@@ -5,7 +5,17 @@
 
 namespace alica
 {
-// Plan:MasterPlan1402488437260
+// Plan:  MasterPlan (1402488437260)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1402488437263)
+//
+// States:
+//   - Attack (1402488437261)
+//   - Defend (1402488463437)
+//   - Goal (1402488470615)
+//   - MidField (1402488477650)
+//   - SucGoalState (1402488536570)
 MasterPlan1402488437260::MasterPlan1402488437260()
         : DomainPlan()
 {
@@ -16,6 +26,13 @@ MasterPlan1402488437260::MasterPlan1402488437260()
 MasterPlan1402488437260::~MasterPlan1402488437260()
 {
     /*PROTECTED REGION ID(dcon1402488437260) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void MasterPlan1402488437260::run(void* msg)
+{
+    /*PROTECTED REGION ID(runMasterPlan1402488437260) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -32,23 +49,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488437260::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: AttackToGoal (1402488517667)
+ *   - Comment:
+ *   - Source2Dest: Attack --> MidField
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402488519140)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Attack:
  *   - Attack (1402488848841)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488437263)
- *
- * States in plan:
- *   - Attack (1402488437261)
- *   - Defend (1402488463437)
- *   - Goal (1402488470615)
- *   - MidField (1402488477650)
- *   - SucGoalState (1402488536570)
- *
- * Variables of precondition:
  */
 bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -57,23 +70,19 @@ bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: AttackToDefend (1409218318661)
+ *   - Comment:
+ *   - Source2Dest: Attack --> Defend
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1409218319990)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Attack:
  *   - Attack (1402488848841)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488437263)
- *
- * States in plan:
- *   - Attack (1402488437261)
- *   - Defend (1402488463437)
- *   - Goal (1402488470615)
- *   - MidField (1402488477650)
- *   - SucGoalState (1402488536570)
- *
- * Variables of precondition:
  */
 bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -82,23 +91,19 @@ bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: GoalToSucGoal (1402488557864)
+ *   - Comment:
+ *   - Source2Dest: Goal --> SucGoalState
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402488558741)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Goal:
  *   - GoalPlan (1402488870347)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488437263)
- *
- * States in plan:
- *   - Attack (1402488437261)
- *   - Defend (1402488463437)
- *   - Goal (1402488470615)
- *   - MidField (1402488477650)
- *   - SucGoalState (1402488536570)
- *
- * Variables of precondition:
  */
 bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -107,25 +112,21 @@ bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MidFieldToGoal (1402488519757)
+ *   - Comment:
+ *   - Source2Dest: MidField --> Goal
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402488520968)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in MidField:
  *   - MidFieldStandard (1402488696205)
  *   - DefendMid (1402488730695)
  *   - MidFieldPlayPlan (1402488770050)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488437263)
- *
- * States in plan:
- *   - Attack (1402488437261)
- *   - Defend (1402488463437)
- *   - Goal (1402488470615)
- *   - MidField (1402488477650)
- *   - SucGoalState (1402488536570)
- *
- * Variables of precondition:
  */
 bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp)
 {

@@ -19,6 +19,7 @@ class BehaviourTriggerTestPlan1428508768572 : public DomainPlan
 public:
     BehaviourTriggerTestPlan1428508768572();
     virtual ~BehaviourTriggerTestPlan1428508768572();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1428508768572) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

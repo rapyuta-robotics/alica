@@ -8,7 +8,19 @@
 
 namespace alica
 {
-// Plan:MultiAgentTestPlan1413200862180
+// Plan:  MultiAgentTestPlan (1413200862180)
+//
+// Tasks:
+//   - AttackTask (1407153522080) (Entrypoint: 1413200877337)//   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)//   - DefaultTask (1225112227903)
+//   (Entrypoint: 1413807260446)
+//
+// States:
+//   - OtherState (1413200877336)
+//   - State1 (1413200910490)
+//   - State2 (1413201030936)
+//   - NewSuccessState1 (1413201164999)
+//   - NewSuccessState2 (1413552736921)
+//   - Idle (1413807264574)
 MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180()
         : DomainPlan()
 {
@@ -19,6 +31,13 @@ MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180()
 MultiAgentTestPlan1413200862180::~MultiAgentTestPlan1413200862180()
 {
     /*PROTECTED REGION ID(dcon1413200862180) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void MultiAgentTestPlan1413200862180::run(void* msg)
+{
+    /*PROTECTED REGION ID(runMultiAgentTestPlan1413200862180) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
@@ -37,25 +56,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1413201370590, ConditionString: , Comment:
+ * Transition: 1413201368286 (1413201368286)
+ *   - Comment:
+ *   - Source2Dest: OtherState --> NewSuccessState1
  *
- * Abstract plans in current state:
+ * Precondition: 1413201370590 (1413201370590)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in OtherState:
  *   - Attack (1402488848841)
- *
- * Tasks in plan:
- *   - AttackTask (1407153522080) (Entrypoint: 1413200877337)*   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)*   - DefaultTask (1225112227903)
- * (Entrypoint: 1413807260446)
- *
- * States in plan:
- *   - OtherState (1413200877336)
- *   - State1 (1413200910490)
- *   - State2 (1413201030936)
- *   - NewSuccessState1 (1413201164999)
- *   - NewSuccessState2 (1413552736921)
- *   - Idle (1413807264574)
- *
- * Variables of precondition:
  */
 bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -71,25 +84,19 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1413201052549, ConditionString: , Comment:
+ * Transition: 1413201050743 (1413201050743)
+ *   - Comment:
+ *   - Source2Dest: State1 --> State2
  *
- * Abstract plans in current state:
+ * Precondition: 1413201052549 (1413201052549)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in State1:
  *   - Attack (1402488848841)
- *
- * Tasks in plan:
- *   - AttackTask (1407153522080) (Entrypoint: 1413200877337)*   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)*   - DefaultTask (1225112227903)
- * (Entrypoint: 1413807260446)
- *
- * States in plan:
- *   - OtherState (1413200877336)
- *   - State1 (1413200910490)
- *   - State2 (1413201030936)
- *   - NewSuccessState1 (1413201164999)
- *   - NewSuccessState2 (1413552736921)
- *   - Idle (1413807264574)
- *
- * Variables of precondition:
  */
 bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -105,25 +112,19 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1413201367990, ConditionString: , Comment:
+ * Transition: 1413201367062 (1413201367062)
+ *   - Comment:
+ *   - Source2Dest: State2 --> NewSuccessState2
  *
- * Abstract plans in current state:
+ * Precondition: 1413201367990 (1413201367990)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in State2:
  *   - Attack (1402488848841)
- *
- * Tasks in plan:
- *   - AttackTask (1407153522080) (Entrypoint: 1413200877337)*   - DefaultTask (1225112227903) (Entrypoint: 1413200890537)*   - DefaultTask (1225112227903)
- * (Entrypoint: 1413807260446)
- *
- * States in plan:
- *   - OtherState (1413200877336)
- *   - State1 (1413200910490)
- *   - State2 (1413201030936)
- *   - NewSuccessState1 (1413201164999)
- *   - NewSuccessState2 (1413552736921)
- *   - Idle (1413807264574)
- *
- * Variables of precondition:
  */
 bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp)
 {

@@ -19,6 +19,7 @@ class HandleFailExplicitMaster1530004940652 : public DomainPlan
 public:
     HandleFailExplicitMaster1530004940652();
     virtual ~HandleFailExplicitMaster1530004940652();
+    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1530004940652) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

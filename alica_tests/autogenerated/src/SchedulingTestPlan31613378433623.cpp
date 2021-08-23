@@ -7,7 +7,13 @@
 
 namespace alica
 {
-// Plan:SchedulingTestPlan31613378433623
+// Plan:  SchedulingTestPlan3 (1613378433623)
+//
+// Tasks:
+//   - SchedulerTestSubPlanEntrypoint (1613372009777) (Entrypoint: 1613378578364)
+//
+// States:
+//   - InitPlan3 (1613378580338)
 SchedulingTestPlan31613378433623::SchedulingTestPlan31613378433623()
         : DomainPlan()
 {
@@ -18,6 +24,13 @@ SchedulingTestPlan31613378433623::SchedulingTestPlan31613378433623()
 SchedulingTestPlan31613378433623::~SchedulingTestPlan31613378433623()
 {
     /*PROTECTED REGION ID(dcon1613378433623) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void SchedulingTestPlan31613378433623::run(void* msg)
+{
+    /*PROTECTED REGION ID(runSchedulingTestPlan31613378433623) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
