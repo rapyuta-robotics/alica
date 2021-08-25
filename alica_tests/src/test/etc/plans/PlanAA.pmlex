@@ -1,0 +1,23 @@
+{
+  "plan" : "PlanAA.pml#1629895864090",
+  "uiElementMap" : {
+    "1629896006533" : {
+      "id" : 1629896006534,
+      "name" : "1629896006534",
+      "comment" : "",
+      "x" : 64,
+      "y" : 14,
+      "visible" : false,
+      "bendPoints" : [ ]
+    },
+    "1629896015785" : {
+      "id" : 1629896015786,
+      "name" : "1629896015786",
+      "comment" : "",
+      "x" : -118,
+      "y" : 14,
+      "visible" : false,
+      "bendPoints" : [ ]
+    }
+  }
+}
