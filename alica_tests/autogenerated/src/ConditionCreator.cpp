@@ -7,6 +7,8 @@
 #include "Behaviour/AlwaysFail1532424188199.h"
 #include "Behaviour/Attack1402488848841.h"
 #include "Behaviour/AttackOpp1402489351885.h"
+#include "Behaviour/BehAAA1629895901559.h"
+#include "Behaviour/BehBAA1629895911592.h"
 #include "Behaviour/ConstraintUsingBehaviour1414068597716.h"
 #include "Behaviour/CountIndefinitely1529456643148.h"
 #include "Behaviour/DefendMid1402488730695.h"
@@ -40,7 +42,12 @@
 #include "MidFieldPlayPlan1402488770050.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PlanA1629895837159.h"
+#include "PlanAA1629895864090.h"
+#include "PlanB1629895853508.h"
+#include "PlanBA1629895873188.h"
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
@@ -263,6 +270,18 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1626848015861:
         return std::make_shared<PreCondition1626848015861>();
+        break;
+    case 1629895598471:
+        return std::make_shared<PreCondition1629895598471>();
+        break;
+    case 1629895607018:
+        return std::make_shared<PreCondition1629895607018>();
+        break;
+    case 1629895758612:
+        return std::make_shared<PreCondition1629895758612>();
+        break;
+    case 1629895768182:
+        return std::make_shared<PreCondition1629895768182>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
