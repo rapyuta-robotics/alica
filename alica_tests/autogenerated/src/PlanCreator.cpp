@@ -25,7 +25,12 @@
 #include "MidFieldPlayPlan1402488770050.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PlanA1629895837159.h"
+#include "PlanAA1629895864090.h"
+#include "PlanB1629895853508.h"
+#include "PlanBA1629895873188.h"
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
@@ -190,6 +195,21 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
         break;
     case 1626848999740:
         return std::make_unique<FrequencyTestPlan1626848999740>();
+        break;
+    case 1629895582410:
+        return std::make_unique<OrderedSchedulingTestPlan1629895582410>();
+        break;
+    case 1629895837159:
+        return std::make_unique<PlanA1629895837159>();
+        break;
+    case 1629895853508:
+        return std::make_unique<PlanB1629895853508>();
+        break;
+    case 1629895864090:
+        return std::make_unique<PlanAA1629895864090>();
+        break;
+    case 1629895873188:
+        return std::make_unique<PlanBA1629895873188>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;
