@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1629895911592) ENABLED START*/
 // Add additional includes here
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -34,11 +35,15 @@ void BehBAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
-
+    alica_test::SchedWM::instance().execOrder += "6_";
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895911592) ENABLED START*/
 // Add additional options here
+void BehBAA::onTermination()
+{
+
+}
 /*PROTECTED REGION END*/
 
 } /* namespace alica */
