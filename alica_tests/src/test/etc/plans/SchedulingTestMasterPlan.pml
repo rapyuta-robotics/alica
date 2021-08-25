@@ -46,7 +46,7 @@
     "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
     "outTransitions" : [ ],
-    "inTransitions" : [ 1613530643879, 1615797365363 ]
+    "inTransitions" : [ 1613530643879, 1615797365363, 1629895607017 ]
   }, {
     "type" : "State",
     "id" : 1615797271229,
@@ -56,7 +56,7 @@
     "parentPlan" : 1613378382024,
     "confAbstractPlanWrappers" : [ ],
     "variableBindings" : [ ],
-    "outTransitions" : [ 1615797316170, 1615797327076 ],
+    "outTransitions" : [ 1615797316170, 1615797327076, 1629895598464 ],
     "inTransitions" : [ ]
   }, {
     "type" : "State",
@@ -75,6 +75,23 @@
     "variableBindings" : [ ],
     "outTransitions" : [ 1615797365363 ],
     "inTransitions" : [ 1615797327076 ]
+  }, {
+    "type" : "State",
+    "id" : 1629895593451,
+    "name" : "OrderedSchedulingTestPlan",
+    "comment" : "",
+    "entryPoint" : null,
+    "parentPlan" : 1613378382024,
+    "confAbstractPlanWrappers" : [ {
+      "id" : 1629895663156,
+      "name" : "1629895663156",
+      "comment" : "",
+      "abstractPlan" : "OrderedSchedulingTestPlan.pml#1629895582410",
+      "configuration" : null
+    } ],
+    "variableBindings" : [ ],
+    "outTransitions" : [ 1629895607017 ],
+    "inTransitions" : [ 1629895598464 ]
   } ],
   "transitions" : [ {
     "id" : 1613530643879,
@@ -136,6 +153,40 @@
     "preCondition" : {
       "id" : 1615797365364,
       "name" : "1615797365364",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : null,
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  }, {
+    "id" : 1629895598464,
+    "name" : "FromDefault NameTo Default Name",
+    "comment" : "MISSING_COMMENT",
+    "inState" : 1615797271229,
+    "outState" : 1629895593451,
+    "preCondition" : {
+      "id" : 1629895598471,
+      "name" : "1629895598471",
+      "comment" : "",
+      "enabled" : true,
+      "conditionString" : null,
+      "pluginName" : "DefaultPlugin",
+      "variables" : [ ],
+      "quantifiers" : [ ]
+    },
+    "synchronisation" : null
+  }, {
+    "id" : 1629895607017,
+    "name" : "FromDefault NameTo EndTest",
+    "comment" : "MISSING_COMMENT",
+    "inState" : 1629895593451,
+    "outState" : 1613530614559,
+    "preCondition" : {
+      "id" : 1629895607018,
+      "name" : "1629895607018",
       "comment" : "",
       "enabled" : true,
       "conditionString" : null,

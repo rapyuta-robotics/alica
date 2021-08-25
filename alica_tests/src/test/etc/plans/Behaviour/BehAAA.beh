@@ -1,0 +1,13 @@
+{
+  "id" : 1629895901559,
+  "name" : "BehAAA",
+  "comment" : "",
+  "relativeDirectory" : "Behaviour",
+  "variables" : [ ],
+  "frequency" : 0,
+  "deferring" : 0,
+  "eventDriven" : false,
+  "preCondition" : null,
+  "runtimeCondition" : null,
+  "postCondition" : null
+}
