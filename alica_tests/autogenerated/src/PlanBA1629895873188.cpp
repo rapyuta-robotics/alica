@@ -1,6 +1,7 @@
 #include "PlanBA1629895873188.h"
 /*PROTECTED REGION ID(eph1629895873188) ENABLED START*/
 // Add additional options here
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -45,5 +46,14 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895873188::getUtilityFunctio
 
 /*PROTECTED REGION ID(methods1629895873188) ENABLED START*/
 // Add additional options here
+void PlanBA1629895873188::onInit()
+{
+    alica_test::SchedWM::instance().execOrder += "5_";
+}
+
+void PlanBA1629895873188::onTerminate()
+{
+
+}
 /*PROTECTED REGION END*/
 } // namespace alica

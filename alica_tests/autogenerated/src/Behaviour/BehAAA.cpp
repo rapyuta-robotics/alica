@@ -34,11 +34,15 @@ void BehAAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
-
+    alica_test::SchedWM::instance().execOrder += "3_";
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895901559) ENABLED START*/
 // Add additional options here
+void BehAAA::onTermination()
+{
+
+}
 /*PROTECTED REGION END*/
 
 } /* namespace alica */
