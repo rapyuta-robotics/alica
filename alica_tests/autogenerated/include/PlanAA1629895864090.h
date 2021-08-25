@@ -22,6 +22,8 @@ public:
     virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1629895864090) ENABLED START*/
     // Add additional public methods here
+    virtual void onInit() override;
+    virtual void onTerminate() override;
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1629895864090) ENABLED START*/
