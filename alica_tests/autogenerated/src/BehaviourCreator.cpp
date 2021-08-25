@@ -2,6 +2,8 @@
 #include "Behaviour/AlwaysFail.h"
 #include "Behaviour/Attack.h"
 #include "Behaviour/AttackOpp.h"
+#include "Behaviour/BehAAA.h"
+#include "Behaviour/BehBAA.h"
 #include "Behaviour/ConstraintUsingBehaviour.h"
 #include "Behaviour/CountIndefinitely.h"
 #include "Behaviour/DefendMid.h"
@@ -70,6 +72,12 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 1625610857563:
         return std::make_shared<EmptyBehaviour>();
+        break;
+    case 1629895901559:
+        return std::make_shared<BehAAA>();
+        break;
+    case 1629895911592:
+        return std::make_shared<BehBAA>();
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
