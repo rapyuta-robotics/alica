@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <atomic>
 
 namespace alica_test
 {
@@ -17,9 +18,14 @@ public:
     void reset()
     {
         execOrderTest = planA2PlanB = planB2PlanA = false;
+        execOrder.clear();
+
         planARunCalled = planARunOutOfOrder = false;
         behAAARunCalled = behAAARunOutOfOrder = false;
-        execOrder.clear();
+
+        behAAASetSuccess = behAAASetSuccessFailed = behAAASetFailure = behAAASetFailureFailed = false;
+        behAAABlockRun = false;
+        behAAASuccessInInit = behAAAFailureInInit = behAAASuccessInTerminate = behAAAFailureInTerminate = false;
     }
 
     bool execOrderTest;
@@ -27,10 +33,20 @@ public:
     bool planB2PlanA;
     std::string execOrder;
 
-    bool planARunCalled;
-    bool planARunOutOfOrder;
-    bool behAAARunCalled;
-    bool behAAARunOutOfOrder;
+    std::atomic<bool> planARunCalled;
+    std::atomic<bool> planARunOutOfOrder;
+    std::atomic<bool> behAAARunCalled;
+    std::atomic<bool> behAAARunOutOfOrder;
+
+    std::atomic<bool> behAAASetSuccess;
+    std::atomic<bool> behAAASetSuccessFailed;
+    std::atomic<bool> behAAASetFailure;
+    std::atomic<bool> behAAASetFailureFailed;
+    std::atomic<bool> behAAABlockRun;
+    std::atomic<bool> behAAASuccessInInit;
+    std::atomic<bool> behAAAFailureInInit;
+    std::atomic<bool> behAAASuccessInTerminate;
+    std::atomic<bool> behAAAFailureInTerminate;
 
 private:
     SchedWM() { reset(); }
