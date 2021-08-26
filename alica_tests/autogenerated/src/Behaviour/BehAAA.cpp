@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1629895901559) ENABLED START*/
 // Add additional includes here
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -28,6 +29,11 @@ void BehAAA::run(void* msg)
 {
     /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
     // Add additional options here
+    auto& wm = alica_test::SchedWM::instance();
+    wm.behAAARunCalled = true;
+    if (!_inRunContext) {
+        wm.behAAARunOutOfOrder = true;
+    }
     /*PROTECTED REGION END*/
 }
 void BehAAA::initialiseParameters()
@@ -35,12 +41,14 @@ void BehAAA::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
     alica_test::SchedWM::instance().execOrder += "BehAAA::Init\n";
+    _inRunContext = true;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895901559) ENABLED START*/
 // Add additional options here
 void BehAAA::onTermination()
 {
+    _inRunContext = false;
     alica_test::SchedWM::instance().execOrder += "BehAAA::Term\n";
 }
 /*PROTECTED REGION END*/

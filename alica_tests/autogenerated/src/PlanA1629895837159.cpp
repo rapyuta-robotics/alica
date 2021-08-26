@@ -18,6 +18,7 @@ PlanA1629895837159::PlanA1629895837159()
 {
     /*PROTECTED REGION ID(con1629895837159) ENABLED START*/
     // Add additional options here
+    _inRunContext = false;
     /*PROTECTED REGION END*/
 }
 PlanA1629895837159::~PlanA1629895837159()
@@ -31,6 +32,11 @@ void PlanA1629895837159::run(void* msg)
 {
     /*PROTECTED REGION ID(runPlanA1629895837159) ENABLED START*/
     // Add additional options here
+    auto& wm = alica_test::SchedWM::instance();
+    wm.planARunCalled = true;
+    if (!_inRunContext) {
+        wm.planARunOutOfOrder = true;
+    }
     /*PROTECTED REGION END*/
 }
 /**
@@ -49,10 +55,12 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895837159::getUtilityFunctio
 void PlanA1629895837159::onInit()
 {
     alica_test::SchedWM::instance().execOrder += "PlanA::Init\n";
+    _inRunContext = true;
 }
 
 void PlanA1629895837159::onTerminate()
 {
+    _inRunContext = false;
     alica_test::SchedWM::instance().execOrder += "PlanA::Term\n";
 }
 
