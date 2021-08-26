@@ -2,6 +2,7 @@
 /*PROTECTED REGION ID(eph1613378382024) ENABLED START*/
 // Add additional options here
 #include "CounterClass.h"
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -125,8 +126,7 @@ bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1629895598464) ENABLED START*/
-    std::cout << "The PreCondition 1629895598471 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
-    return false;
+    return alica_test::SchedWM::instance().execOrderTest;
     /*PROTECTED REGION END*/
 }
 /**

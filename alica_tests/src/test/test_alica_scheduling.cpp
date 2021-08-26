@@ -3,6 +3,7 @@
 
 #include <alica/test/Util.h>
 #include <gtest/gtest.h>
+#include <alica_tests/test_sched_world_model.h>
 
 namespace alica
 {
@@ -15,6 +16,16 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
     bool stepEngine() const override { return true; }
+    virtual void SetUp() override
+    {
+        alica_test::SchedWM::instance().reset();
+        AlicaTestFixture::SetUp();
+    }
+    virtual void TearDown() override
+    {
+        AlicaTestFixture::TearDown();
+        alica_test::SchedWM::instance().reset();
+    }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)
@@ -40,6 +51,49 @@ TEST_F(AlicaSchedulingPlan, scheduling)
     ac->stepEngine();
     // onTermination of scheduling plan 1 called
     ASSERT_EQ(9, CounterClass::called);
+}
+
+TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
+{
+    ae->start();
+
+    auto& wm = alica_test::SchedWM::instance();
+
+    std::string planAInitOrder = "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n";
+    std::string planATermOrder = "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n";
+    std::string planBInitOrder = "PlanB::Init\nPlanBA::Init\nBehBAA::Init\n";
+    std::string planBTermOrder = "BehBAA::Term\nPlanBA::Term\nPlanB::Term\n";
+
+    std::string expectedExecOrder = planAInitOrder;
+    wm.execOrderTest = true;
+    ac->stepEngine();
+    ASSERT_EQ(expectedExecOrder, wm.execOrder);
+
+    for (int i = 0; i < 10; ++i) {
+        expectedExecOrder += planATermOrder + planBInitOrder;
+        wm.planA2PlanB = true;
+        wm.planB2PlanA = false;
+        ac->stepEngine();
+        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+
+        expectedExecOrder += planBTermOrder + planAInitOrder;
+        wm.planA2PlanB = false;
+        wm.planB2PlanA = true;
+        ac->stepEngine();
+        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+    }
+
+    wm.execOrder.clear();
+    wm.execOrder = planAInitOrder;
+    for (int i = 0; i < 10; ++i) {
+        wm.planA2PlanB = true;
+        wm.planB2PlanA = false;
+        ac->stepEngine();
+        wm.planA2PlanB = false;
+        wm.planB2PlanA = true;
+        ac->stepEngine();
+    }
+    ASSERT_EQ(expectedExecOrder, wm.execOrder);
 }
 
 } // namespace
