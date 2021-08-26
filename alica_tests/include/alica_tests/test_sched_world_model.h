@@ -14,10 +14,19 @@ public:
         return schedwm;
     }
 
+    void reset()
+    {
+        execOrderTest = planA2PlanB = planB2PlanA = false;
+        execOrder.clear();
+    }
+
+    bool execOrderTest;
+    bool planA2PlanB;
+    bool planB2PlanA;
     std::string execOrder;
 
 private:
-    SchedWM() = default;
+    SchedWM() { reset(); }
     SchedWM(const SchedWM&) = delete;
     ~SchedWM() = default;
 };

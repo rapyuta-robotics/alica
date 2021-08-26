@@ -35,14 +35,14 @@ void BehBAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
-    alica_test::SchedWM::instance().execOrder += "6_";
+    alica_test::SchedWM::instance().execOrder += "BehBAA::Init\n";
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895911592) ENABLED START*/
 // Add additional options here
 void BehBAA::onTermination()
 {
-
+    alica_test::SchedWM::instance().execOrder += "BehBAA::Term\n";
 }
 /*PROTECTED REGION END*/
 
