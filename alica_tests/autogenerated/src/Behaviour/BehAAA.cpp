@@ -30,9 +30,27 @@ void BehAAA::run(void* msg)
     /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
     // Add additional options here
     auto& wm = alica_test::SchedWM::instance();
+
     wm.behAAARunCalled = true;
     if (!_inRunContext) {
         wm.behAAARunOutOfOrder = true;
+    }
+
+    if (wm.behAAASetFailure) {
+        setFailure();
+        if (!isFailure()) {
+            wm.behAAASetFailureFailed = true;
+        }
+    }
+    if (wm.behAAASetSuccess) {
+        setSuccess();
+        if (!isSuccess()) {
+            wm.behAAASetSuccessFailed = true;
+        }
+    }
+
+    while (wm.behAAABlockRun) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     /*PROTECTED REGION END*/
 }
@@ -42,6 +60,15 @@ void BehAAA::initialiseParameters()
     // Add additional options here
     alica_test::SchedWM::instance().execOrder += "BehAAA::Init\n";
     _inRunContext = true;
+
+    auto& wm = alica_test::SchedWM::instance();
+
+    if (isSuccess()) {
+        wm.behAAASuccessInInit = true;
+    }
+    if (isFailure()) {
+        wm.behAAAFailureInInit = true;
+    }
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895901559) ENABLED START*/
@@ -50,6 +77,24 @@ void BehAAA::onTermination()
 {
     _inRunContext = false;
     alica_test::SchedWM::instance().execOrder += "BehAAA::Term\n";
+
+    auto& wm = alica_test::SchedWM::instance();
+
+    if (isSuccess()) {
+        wm.behAAASuccessInTerminate = true;
+    }
+    setSuccess();
+    if (isSuccess()) {
+        wm.behAAASuccessInTerminate = true;
+    }
+
+    if (isFailure()) {
+        wm.behAAAFailureInTerminate = true;
+    }
+    setFailure();
+    if (isFailure()) {
+        wm.behAAAFailureInTerminate = true;
+    }
 }
 /*PROTECTED REGION END*/
 
