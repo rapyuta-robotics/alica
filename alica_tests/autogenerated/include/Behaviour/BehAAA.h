@@ -3,7 +3,7 @@
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1629895901559) ENABLED START*/
 // Add additional includes here
-#include <alica_tests/test_sched_world_model.h>
+#include <atomic>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -26,6 +26,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv1629895901559) ENABLED START*/
     // Add additional private methods here
+    std::atomic<bool> _inRunContext;
     /*PROTECTED REGION END*/
 };
 } /* namespace alica */

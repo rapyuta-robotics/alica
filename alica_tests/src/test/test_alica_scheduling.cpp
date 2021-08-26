@@ -96,5 +96,30 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     ASSERT_EQ(expectedExecOrder, wm.execOrder);
 }
 
+TEST_F(AlicaSchedulingPlan, orderedRunCheck)
+{
+    ae->start();
+
+    auto& wm = alica_test::SchedWM::instance();
+    wm.execOrderTest = true;
+    ac->stepEngine();
+
+    for (int i = 0; i < 10; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+        wm.planA2PlanB = true;
+        wm.planB2PlanA = false;
+        ac->stepEngine();
+
+        wm.planA2PlanB = false;
+        wm.planB2PlanA = true;
+        ac->stepEngine();
+    }
+    ASSERT_TRUE(wm.planARunCalled);
+    ASSERT_FALSE(wm.planARunOutOfOrder);
+    ASSERT_TRUE(wm.behAAARunCalled);
+    ASSERT_FALSE(wm.behAAARunOutOfOrder);
+}
+
 } // namespace
 } // namespace alica
