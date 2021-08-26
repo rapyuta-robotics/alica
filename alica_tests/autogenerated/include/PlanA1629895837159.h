@@ -7,6 +7,7 @@
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1629895837159) ENABLED START*/
 // Add additional includes here
+#include <atomic>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -32,6 +33,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv1629895837159) ENABLED START*/
     // Add additional private methods here
+    std::atomic<bool> _inRunContext;
     /*PROTECTED REGION END*/
 };
 
