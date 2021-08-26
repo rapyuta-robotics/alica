@@ -48,12 +48,12 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895837159::getUtilityFunctio
 // Add additional options here
 void PlanA1629895837159::onInit()
 {
-    alica_test::SchedWM::instance().execOrder += "1_";
+    alica_test::SchedWM::instance().execOrder += "PlanA::Init\n";
 }
 
 void PlanA1629895837159::onTerminate()
 {
-
+    alica_test::SchedWM::instance().execOrder += "PlanA::Term\n";
 }
 
 /*PROTECTED REGION END*/

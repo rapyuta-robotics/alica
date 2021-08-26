@@ -51,7 +51,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    void SetUp() override
+    virtual void SetUp() override
     {
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
@@ -75,7 +75,7 @@ protected:
         EXPECT_TRUE(ae->init(creators));
     }
 
-    void TearDown() override
+    virtual void TearDown() override
     {
         ac->terminate();
         delete ac;
