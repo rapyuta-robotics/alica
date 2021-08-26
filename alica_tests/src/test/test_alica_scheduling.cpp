@@ -121,5 +121,71 @@ TEST_F(AlicaSchedulingPlan, orderedRunCheck)
     ASSERT_FALSE(wm.behAAARunOutOfOrder);
 }
 
+TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
+{
+    ae->start();
+
+    auto& wm = alica_test::SchedWM::instance();
+    wm.execOrderTest = true;
+    ac->stepEngine();
+
+    auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_FALSE(wm.behAAASuccessInInit);
+    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+
+    wm.behAAASetSuccess = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_TRUE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+    ASSERT_FALSE(wm.behAAASetSuccessFailed);
+
+    wm.behAAASetSuccess = false;
+    wm.behAAASetFailure = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_FALSE(behAAA->isSuccess());
+    ASSERT_TRUE(behAAA->isFailure());
+    ASSERT_FALSE(wm.behAAASetFailureFailed);
+
+    wm.planA2PlanB = true;
+    wm.planB2PlanA = false;
+    ac->stepEngine();
+    wm.behAAASetSuccess = false;
+    wm.behAAASetFailure = false;
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_FALSE(wm.behAAASuccessInTerminate);
+    ASSERT_FALSE(wm.behAAAFailureInTerminate);
+    ASSERT_FALSE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+
+    wm.planA2PlanB = false;
+    wm.planB2PlanA = true;
+    ac->stepEngine();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_FALSE(wm.behAAASuccessInInit);
+    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+
+    wm.behAAASetSuccess = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_TRUE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+    ASSERT_FALSE(wm.behAAASetSuccessFailed);
+    wm.behAAABlockRun = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    wm.planA2PlanB = true;
+    wm.planB2PlanA = false;
+    ac->stepEngine();
+    wm.behAAABlockRun = false;
+    ASSERT_FALSE(behAAA->isSuccess());
+    ASSERT_FALSE(behAAA->isFailure());
+}
+
 } // namespace
 } // namespace alica
