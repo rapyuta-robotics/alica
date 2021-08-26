@@ -81,6 +81,9 @@ bool BasicBehaviour::start(RunningPlan* rp)
 
 void BasicBehaviour::setSuccess()
 {
+    if (!isExecutingInContext()) {
+        return;
+    }
     auto prev = _behResult.exchange(BehResult::SUCCESS);
     if (prev != BehResult::SUCCESS) {
         _engine->editPlanBase().addFastPathEvent(_context.load());
@@ -89,6 +92,9 @@ void BasicBehaviour::setSuccess()
 
 void BasicBehaviour::setFailure()
 {
+    if (!isExecutingInContext()) {
+        return;
+    }
     auto prev = _behResult.exchange(BehResult::FAILURE);
     if (prev != BehResult::SUCCESS) {
         _engine->editPlanBase().addFastPathEvent(_context.load());
