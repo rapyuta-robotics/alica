@@ -54,7 +54,11 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
             basicBeh->setConfiguration(wrapper->getConfiguration());
             basicBeh->setBehaviour(behaviour);
             basicBeh->setDelayedStart(behaviour->getDeferring());
-            basicBeh->setInterval(1000 / (behaviour->getFrequency() < 1 ? 1 : behaviour->getFrequency()));
+            if (behaviour->getFrequency() == 0) {
+                basicBeh->setInterval(-1);
+            } else {
+                basicBeh->setInterval(1000 / (behaviour->getFrequency() < 1 ? 1 : behaviour->getFrequency()));
+            }
             basicBeh->setEngine(_ae);
             basicBeh->init();
             _availableBehaviours.insert(std::make_pair(wrapper, basicBeh));
