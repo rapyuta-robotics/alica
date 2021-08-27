@@ -14,17 +14,17 @@ public:
     using TimerCb = std::function<void()>;
 
     /**
-     * Starts the AlicaTimer.
-     * The implementation of start should start the repeated execution of the TimerCb.
+     * Timer is expected to start on construction & TimerCb should be fired immediately
+     * after this start.
      */
-    virtual void start() = 0;
+
     /**
-     * Stops the AlicaTimer.
+     * Timer is expected to stop on destruction.
      * The implementation of stop should stop the repeated execution of the TimerCb.
      * Stopping the timer is expected to be synchronized. After leaving the stop method,
-     * the timer should no longer execute any TimerCb.
+     * the timer should no longer execute any TimerCb. If TimerCb is already invoked stop
+     * waits until TimerCb returns, therefore destruction is blocking.
      */
-    virtual void stop() = 0;
     virtual ~IAlicaTimer() = default;
 };
 

@@ -71,9 +71,10 @@ public:
 
     void cancelJob(JobId jobId)
     {
-        if (_repeatableJobs.erase(jobId) != 0) {
-            _jobQueue.erase(std::make_tuple(jobId, nullptr, std::nullopt),
-                            [](Job job, Job otherJob) {
+        // Should be called by the scheduler thread
+        if (_repeatableJobs.erase(jobId)) {
+            _jobQueue.erase({jobId, nullptr, std::nullopt},
+                            [](const Job& job, const Job& otherJob) {
                         return std::get<0>(job) == std::get<0>(otherJob);
                     });
         }
@@ -100,7 +101,6 @@ private:
             auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
             if (repeatInterval) {
                 _repeatableJobs[jobId] = _timerFactory.createTimer(std::move(jobCb), std::move(*repeatInterval));
-                _repeatableJobs[jobId]->start();
             } else {
                 jobCb();
             }
