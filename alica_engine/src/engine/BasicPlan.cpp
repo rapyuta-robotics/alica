@@ -41,7 +41,10 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
-    _ae->editScheduler().cancelJob(_activeRunJobId);
+    if (_activeRunJobId != -1) {
+        _ae->editScheduler().cancelJob(_activeRunJobId);
+        _activeRunJobId = -1;
+    }
     try {
         onTerminate();
     } catch (const std::exception& e) {
