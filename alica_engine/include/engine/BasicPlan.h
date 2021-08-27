@@ -34,6 +34,7 @@ public:
     void setConfiguration(const Configuration* conf);
 
     AlicaTime getInterval() { return _msInterval; }
+    void setInterval(int32_t msInterval);
 
 private:
     virtual void onInit(){};

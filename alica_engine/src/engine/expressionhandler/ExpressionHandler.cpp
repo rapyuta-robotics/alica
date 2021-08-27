@@ -36,6 +36,7 @@ void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCrea
         // TODO: remove this once plan pool is implemented
         p->setBasicPlan(creatorCtx.planCreator->createPlan(p->getId()));
         p->getBasicPlan()->setEngine(ae);
+        p->getBasicPlan()->setInterval(1000 / (p->getFrequency() < 1 ? 1 : p->getFrequency()));
 
         auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId());
         p->_utilityFunction = ufGen->getUtilityFunction(p);

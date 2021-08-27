@@ -67,6 +67,11 @@ void BasicPlan::setConfiguration(const Configuration* conf)
     _configuration = conf;
 }
 
+void BasicPlan::setInterval(int32_t msInterval)
+{
+    _msInterval = AlicaTime::milliseconds(msInterval);
+}
+
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isPlanStarted() ? _context : nullptr); }
 
 } // namespace alica
