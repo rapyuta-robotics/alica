@@ -22,7 +22,7 @@ public:
     void doRun(void* msg);
     void doTerminate();
 
-    void start();
+    void start(RunningPlan* rp);
     void stop();
     void setEngine(AlicaEngine* engine) { _ae = engine; }
 

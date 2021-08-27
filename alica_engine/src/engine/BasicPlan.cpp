@@ -62,10 +62,10 @@ void BasicPlan::sendLogMessage(int level, const std::string& message) const
     _ae->getCommunicator().sendLogMessage(level, message);
 }
 
-void BasicPlan::start()
+void BasicPlan::start(RunningPlan* rp)
 {
     if (isActive(_signalState.load())) {
-        return true;
+        return;
     }
     ++_signalState;
     // This has to be done after incrementing _signalState for correct behaviour of getPlanContext()
@@ -76,7 +76,7 @@ void BasicPlan::start()
 void BasicPlan::stop()
 {
     if (!isActive(_signalState.load())) {
-        return true;
+        return;
     }
     ++_signalState;
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
@@ -92,6 +92,6 @@ void BasicPlan::setInterval(int32_t msInterval)
     _msInterval = AlicaTime::milliseconds(msInterval);
 }
 
-ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isPlanStarted() ? _context : nullptr); }
+ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
 
 } // namespace alica
