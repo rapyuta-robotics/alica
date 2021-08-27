@@ -12,11 +12,14 @@ BasicPlan::BasicPlan()
         : _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _planStarted(false)
         , _activeRunJobId(-1)
+        , _signalState(1)
+        , _execState(1)
 {
 }
 
 void BasicPlan::doInit()
 {
+    ++_execState;
     _planStarted = true;
     try {
         onInit();
@@ -45,6 +48,7 @@ void BasicPlan::doTerminate()
         _ae->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
+    ++_execState;
     try {
         onTerminate();
     } catch (const std::exception& e) {
@@ -60,11 +64,21 @@ void BasicPlan::sendLogMessage(int level, const std::string& message) const
 
 void BasicPlan::start()
 {
+    if (isActive(_signalState.load())) {
+        return true;
+    }
+    ++_signalState;
+    // This has to be done after incrementing _signalState for correct behaviour of getPlanContext()
+    _context.store(rp);
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
 void BasicPlan::stop()
 {
+    if (!isActive(_signalState.load())) {
+        return true;
+    }
+    ++_signalState;
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
 }
 
