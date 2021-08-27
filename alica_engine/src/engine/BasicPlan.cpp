@@ -23,7 +23,10 @@ void BasicPlan::doInit()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
     }
-    _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+    // Do not schedule runJob when freq is 0.
+    if (_msInterval > AlicaTime::milliseconds(0)) {
+        _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+    }
 }
 
 void BasicPlan::doRun(void* msg)

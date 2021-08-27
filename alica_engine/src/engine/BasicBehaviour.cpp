@@ -117,8 +117,8 @@ void BasicBehaviour::initJob()
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
 
-    // Do not schedule repeatable run job when behaviour is event driven.
-    if (!isEventDriven()) {
+    // Do not schedule repeatable run job when behaviour is event driven or when frequency is 0.
+    if (!isEventDriven() && _msInterval > AlicaTime::milliseconds(0)) {
         // TODO: account for delayed start
         _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr), getInterval());
     }
