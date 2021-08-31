@@ -1,4 +1,4 @@
-#include "CounterClass.h"
+#include <alica_tests/CounterClass.h>
 #include "test_alica.h"
 
 #include <alica/test/Util.h>

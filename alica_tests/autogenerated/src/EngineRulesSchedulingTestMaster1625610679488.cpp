@@ -1,7 +1,7 @@
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 /*PROTECTED REGION ID(eph1625610679488) ENABLED START*/
 // Add additional options here
-#include <TestWorldModel.h>
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica

@@ -4,8 +4,8 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "PlanCreator.h"
-#include "DummyTestSummand.h"
-#include "TestWorldModel.h"
+#include <alica_tests/DummyTestSummand.h>
+#include <alica_tests/TestWorldModel.h>
 #include "UtilityFunctionCreator.h"
 
 #include <engine/PlanBase.h>

@@ -1,5 +1,5 @@
-#include "DistBallRobot.h"
-#include "TestWorldModel.h"
+#include <alica_tests/DistBallRobot.h>
+#include <alica_tests/TestWorldModel.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 #include <essentials/IdentifierConstPtr.h>

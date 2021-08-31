@@ -1,6 +1,6 @@
 #include "MasterPlanTaskAssignment1407152758497.h"
 /*PROTECTED REGION ID(eph1407152758497) ENABLED START*/
-#include "SwitchEntryPointsSummand.h"
+#include <alica_tests/SwitchEntryPointsSummand.h>
 /*PROTECTED REGION END*/
 
 namespace alica

@@ -3,7 +3,7 @@
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1429017274116) ENABLED START*/
 // Add additional includes here
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 
 #include <essentials/ITrigger.hpp>
 /*PROTECTED REGION END*/

@@ -3,7 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1414068597716) ENABLED START*/
 // Add additional includes here
-#include "ConstraintTestPlanDummySolver.h"
+#include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <iostream>
 
 /*PROTECTED REGION END*/

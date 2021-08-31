@@ -1,7 +1,7 @@
 #include "MasterSyncTransition1418825395939.h"
 /*PROTECTED REGION ID(eph1418825395939) ENABLED START*/
 // Add additional using directives here
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 #include <engine/AlicaEngine.h>
 #include <essentials/IdentifierConstPtr.h>
 /*PROTECTED REGION END*/

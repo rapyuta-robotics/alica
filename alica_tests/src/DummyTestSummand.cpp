@@ -5,10 +5,10 @@
  *      Author: Stefan Jakob
  */
 
-#include "DummyTestSummand.h"
+#include <alica_tests/DummyTestSummand.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/IAssignment.h"
-#include <TestWorldModel.h>
+#include <alica_tests/TestWorldModel.h>
 #include <essentials/IdentifierConstPtr.h>
 
 namespace alica
