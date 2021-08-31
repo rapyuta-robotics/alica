@@ -1,4 +1,4 @@
-#include "SwitchEntryPointsSummand.h"
+#include <alica_tests/SwitchEntryPointsSummand.h>
 #include "engine/planselector/IAssignment.h"
 
 namespace alica

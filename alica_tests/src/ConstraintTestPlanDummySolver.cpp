@@ -1,4 +1,4 @@
-#include "ConstraintTestPlanDummySolver.h"
+#include <alica_tests/ConstraintTestPlanDummySolver.h>
 
 #include <alica_solver_interface/SimpleContext.h>
 #include <alica_solver_interface/SolverVariable.h>

@@ -1,7 +1,7 @@
 #include <test_alica.h>
 
-#include "CounterClass.h"
-#include "SimpleSwitches.h"
+#include <alica_tests/CounterClass.h>
+#include <alica_tests/SimpleSwitches.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaEngine.h>

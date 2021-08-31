@@ -39,6 +39,15 @@ if (CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
     #file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp" src/test_alica.cpp)
     set(test_alica_SOURCES
+        src/ConstraintTestPlanDummySolver.cpp
+        src/CounterClass.cpp
+        src/DistBallRobot.cpp
+        src/DistXContourTest.cpp
+        src/DummyTestSummand.cpp
+        src/SimpleSwitches.cpp
+        src/SwitchEntryPointsSummand.cpp
+        src/TestConstantValueSummand.cpp
+        src/TestWorldModel.cpp
         src/test_alica.cpp
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp

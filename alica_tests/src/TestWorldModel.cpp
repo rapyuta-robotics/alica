@@ -1,4 +1,4 @@
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 
 #include <essentials/EventTrigger.h>
 

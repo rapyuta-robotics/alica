@@ -4,8 +4,8 @@
  *  Created on: Oct 27, 2014
  *      Author: Stefan Jakob
  */
-#include "DistXContourTest.h"
-#include "TestWorldModel.h"
+#include <alica_tests/DistXContourTest.h>
+#include <alica_tests/TestWorldModel.h>
 
 #include <engine/planselector/IAssignment.h>
 

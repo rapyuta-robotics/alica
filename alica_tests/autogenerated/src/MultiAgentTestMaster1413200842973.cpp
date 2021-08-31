@@ -1,7 +1,7 @@
 #include "MultiAgentTestMaster1413200842973.h"
 /*PROTECTED REGION ID(eph1413200842973) ENABLED START*/
 // Add additional using directives here
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 #include <engine/AlicaEngine.h>
 #include <essentials/IdentifierConstPtr.h>
 /*PROTECTED REGION END*/

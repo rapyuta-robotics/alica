@@ -5,7 +5,7 @@
  *      Author: Paul Panin
  */
 
-#include "TestConstantValueSummand.h"
+#include <alica_tests/TestConstantValueSummand.h>
 
 #include <engine/planselector/IAssignment.h>
 

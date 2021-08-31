@@ -3,7 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1625610857563) ENABLED START*/
 // Add additional includes here
-#include <CounterClass.h>
+#include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica

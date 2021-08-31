@@ -1,6 +1,6 @@
 #include "constraints/ConstraintTestPlan1414068524245Constraints.h"
 /*PROTECTED REGION ID(ch1414068524245) ENABLED START*/
-#include "CounterClass.h"
+#include <alica_tests/CounterClass.h>
 #include <iostream>
 // Add additional using directives here
 /*PROTECTED REGION END*/

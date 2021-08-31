@@ -1,7 +1,7 @@
 #include "FailsOnOne1530069246103.h"
 /*PROTECTED REGION ID(eph1530069246103) ENABLED START*/
 // Add additional using directives here
-#include "SimpleSwitches.h"
+#include <alica_tests/SimpleSwitches.h>
 /*PROTECTED REGION END*/
 
 namespace alica

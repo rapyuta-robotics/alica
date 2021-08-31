@@ -1,6 +1,6 @@
 #include "test_alica.h"
 
-#include "SimpleSwitches.h"
+#include <alica_tests/SimpleSwitches.h>
 
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
