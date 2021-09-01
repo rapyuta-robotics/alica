@@ -60,8 +60,8 @@ public:
 
     void init()
     {
-        _thread = std::thread(&Scheduler::run, this);
         _running = true;
+        _thread = std::thread(&Scheduler::run, this);
     }
 
     void terminate()
