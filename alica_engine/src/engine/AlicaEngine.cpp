@@ -86,6 +86,7 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
     _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
+    _scheduler->init();
 
     _stepCalled = false;
     bool everythingWorked = true;

@@ -73,7 +73,6 @@ bool BasicBehaviour::start(RunningPlan* rp)
         return true;
     }
     ++_signalState;
-    // This has to be done after incrementing _signalState for correct behaviour of getPlanContext()
     _context.store(rp);
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
@@ -96,7 +95,7 @@ void BasicBehaviour::setFailure()
         return;
     }
     auto prev = _behResult.exchange(BehResult::FAILURE);
-    if (prev != BehResult::SUCCESS) {
+    if (prev != BehResult::FAILURE) {
         _engine->editPlanBase().addFastPathEvent(_context.load());
     }
 }

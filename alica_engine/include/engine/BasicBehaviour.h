@@ -55,19 +55,13 @@ public:
 
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
-
     bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
-    void setSuccess();
     bool isFailure() const { return isExecutingInContext() && _behResult.load() == BehResult::FAILURE; };
-    void setFailure();
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
 
     void doTrigger();
     bool isTriggeredRunFinished();
-
-    void sendLogMessage(int level, const std::string& message) const;
 
     /**
      * Called after construction.
@@ -83,6 +77,10 @@ protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
+    void setSuccess();
+    void setFailure();
+
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
@@ -97,7 +95,7 @@ protected:
 
 private:
     friend alica::test::TestContext;
-    using BehState = uint64_t;
+    using Counter = uint64_t;
     enum class BehResult : uint8_t
     {
         UNKNOWN,
@@ -109,11 +107,32 @@ private:
     void initJob();
     void terminateJob();
 
-    static constexpr bool isActive(BehState st) { return !(st & 1); }
+    void sendLogMessage(int level, const std::string& message) const;
+
+    /*
+     * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
+     * & _signalState is used to track this context [signal context].
+     *
+     * The scheduler thread is the one that actually executes the initialiseParameters(), run() & onTermination() methods
+     * of this behaviour & _execState is used to track this context [execution context].
+     *
+     * The states are tracked using simple counters: if the counter is even then the behaviour is active within that context
+     * i.e. behaviour is started [equivalently: not stopped] & the counter is incremented whenever the behaviour is started
+     * or stopped within its context.
+     *
+     * Therefore the execution of the behaviour by the scheduler thread is in the context of the running plan only if
+     * _signalState == _execState && _signalState is even.
+     *
+     */
+
+    // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
+    static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
+
+    // Returns true if the behaviour is executing in the context of the running plan
     bool isExecutingInContext() const
     {
-        BehState ss = _signalState.load(), es = _execState.load();
-        return ss == es && isActive(ss);
+        Counter sc = _signalState.load(), ec = _execState.load();
+        return sc == ec && isActive(sc);
     }
 
     /**
@@ -137,8 +156,8 @@ private:
     // of the current used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
     // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
     std::atomic<RunningPlan*> _context;
-    std::atomic<BehState> _signalState;
-    std::atomic<BehState> _execState;
+    std::atomic<Counter> _signalState; // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
+    std::atomic<Counter> _execState; // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<BehResult> _behResult;
 
     int64_t _activeRunJobId;

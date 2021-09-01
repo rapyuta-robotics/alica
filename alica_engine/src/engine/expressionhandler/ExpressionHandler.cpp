@@ -33,6 +33,7 @@ void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCrea
 {
     for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
+        // TODO: remove this once plan pool is implemented
         p->setBasicPlan(creatorCtx.planCreator->createPlan(p->getId()));
         p->getBasicPlan()->setEngine(ae);
 

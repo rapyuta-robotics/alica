@@ -32,11 +32,11 @@ private:
 
 public:
     Scheduler(IAlicaTimerFactory& timerFactory)
-            : _running(true)
+            : _running(false)
             , _jobQueue()
             , _mutex()
             , _cv()
-            , _thread(&Scheduler::run, this)
+            , _thread()
             , _nextJobId(1)
             , _repeatableJobs()
             , _timerFactory(timerFactory)
@@ -58,6 +58,12 @@ public:
         return jobId;
     }
 
+    void init()
+    {
+        _thread = std::thread(&Scheduler::run, this);
+        _running = true;
+    }
+
     void terminate()
     {
         _running = false;
@@ -72,7 +78,7 @@ public:
     void cancelJob(JobId jobId)
     {
         // Should be called by the scheduler thread
-        if (_repeatableJobs.erase(jobId)) {
+        if (!_repeatableJobs.erase(jobId)) {
             _jobQueue.erase({jobId, nullptr, std::nullopt},
                             [](const Job& job, const Job& otherJob) {
                         return std::get<0>(job) == std::get<0>(otherJob);

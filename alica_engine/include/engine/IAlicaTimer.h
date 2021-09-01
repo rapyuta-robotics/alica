@@ -19,11 +19,8 @@ public:
      */
 
     /**
-     * Timer is expected to stop on destruction.
-     * The implementation of stop should stop the repeated execution of the TimerCb.
-     * Stopping the timer is expected to be synchronized. After leaving the stop method,
-     * the timer should no longer execute any TimerCb. If TimerCb is already invoked stop
-     * waits until TimerCb returns, therefore destruction is blocking.
+     * The destructor should stop the repeated execution of the TimerCb and needs to block if any
+     * TimerCb is already in progress.
      */
     virtual ~IAlicaTimer() = default;
 };

@@ -80,6 +80,7 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
+    // TODO: move to plan pool once it is implemented
     std::unique_ptr<BasicPlan> _basicPlan;
 
     /**
