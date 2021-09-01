@@ -55,6 +55,7 @@ TEST_F(AlicaSchedulingPlan, scheduling)
 
 TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
 {
+    CounterClass::called = -1;
     ae->start();
 
     auto& wm = alica_test::SchedWM::instance();
@@ -98,6 +99,7 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
 
 TEST_F(AlicaSchedulingPlan, orderedRunCheck)
 {
+    CounterClass::called = -1;
     ae->start();
 
     auto& wm = alica_test::SchedWM::instance();
@@ -123,6 +125,7 @@ TEST_F(AlicaSchedulingPlan, orderedRunCheck)
 
 TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
 {
+    CounterClass::called = -1;
     ae->start();
 
     auto& wm = alica_test::SchedWM::instance();
