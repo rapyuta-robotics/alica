@@ -54,10 +54,11 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
             basicBeh->setConfiguration(wrapper->getConfiguration());
             basicBeh->setBehaviour(behaviour);
             basicBeh->setDelayedStart(behaviour->getDeferring());
-            if (behaviour->getFrequency() == 0) {
-                basicBeh->setInterval(-1);
+            if (behaviour->getFrequency() < 1) {
+                // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
+                basicBeh->setInterval(0);
             } else {
-                basicBeh->setInterval(1000 / (behaviour->getFrequency() < 1 ? 1 : behaviour->getFrequency()));
+                basicBeh->setInterval(1000 / behaviour->getFrequency());
             }
             basicBeh->setEngine(_ae);
             basicBeh->init();

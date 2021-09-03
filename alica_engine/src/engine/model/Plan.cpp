@@ -23,7 +23,7 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _runtimeCondition(nullptr)
         , _preCondition(nullptr)
         , _basicPlan(nullptr)
-        , _frequency(1)
+        , _frequency(0)
 {
 }
 
