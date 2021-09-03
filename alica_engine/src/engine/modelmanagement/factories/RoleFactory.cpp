@@ -26,9 +26,6 @@ namespace alica
         for (std::tuple<int64_t, int64_t, double> triple: Factory::roleTaskReferences) {
             Role* role = (Role*) Factory::getElement(std::get<0>(triple));
             Task* task = (Task*) Factory::getElement(std::get<1>(triple));
-            if (!role || !task) {
-                continue;
-            }
             role->_taskPriorities.emplace(task, std::get<2>(triple));
         }
         Factory::planTypePlanReferences.clear();

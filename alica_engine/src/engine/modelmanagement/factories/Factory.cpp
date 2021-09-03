@@ -71,6 +71,7 @@ int64_t Factory::getReferencedId(const std::string& idString)
 
 void Factory::setModelManager(alica::ModelManager* modelManager)
 {
+    roleTaskReferences.clear();
     Factory::modelManager = modelManager;
 }
 
