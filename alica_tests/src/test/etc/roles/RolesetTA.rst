@@ -6,7 +6,7 @@
   "defaultPriority" : 0.5,
   "defaultRoleSet" : true,
   "roles" : [ {
-    "id" : 1222973297047,
+    "id" : 1222973291111,
     "name" : "Attacker",
     "comment" : "",
     "taskPriorities" : {
@@ -18,7 +18,7 @@
     "characteristics" : [ ],
     "roleSet" : 1410440904638
   }, {
-    "id" : 1222973297049,
+    "id" : 1222973292222,
     "name" : "Defender",
     "comment" : "",
     "taskPriorities" : {
@@ -28,7 +28,7 @@
     "characteristics" : [ ],
     "roleSet" : 1410440904638
   }, {
-    "id" : 1222973297051,
+    "id" : 1222973293333,
     "name" : "DefendSupporter",
     "comment" : "",
     "taskPriorities" : {
@@ -40,7 +40,7 @@
     "characteristics" : [ ],
     "roleSet" : 1410440904638
   }, {
-    "id" : 1222973297052,
+    "id" : 1222973294444,
     "name" : "Keeper",
     "comment" : "",
     "taskPriorities" : {
@@ -52,7 +52,7 @@
     "characteristics" : [ ],
     "roleSet" : 1410440904638
   }, {
-    "id" : 1222973297054,
+    "id" : 1222973295555,
     "name" : "AttackSupporter",
     "comment" : "",
     "taskPriorities" : {
@@ -64,7 +64,7 @@
     "characteristics" : [ ],
     "roleSet" : 1410440904638
   }, {
-    "id" : 1222973297056,
+    "id" : 1222973296666,
     "name" : "Supporter",
     "comment" : "",
     "taskPriorities" : {
