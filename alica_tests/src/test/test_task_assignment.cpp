@@ -59,13 +59,13 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
         aa.senderID = ac->getIDManager().getID<int>(agentId);
         if (agentId == 8) {
-            aa.roleId = 1222973297047; // Attacker
+            aa.roleId = 1222973291111; // Attacker
             aa.senderName = "hairy";
         } else if (agentId == 10) {
-            aa.roleId = 1222973297054; // AttackSupporter
+            aa.roleId = 1222973295555; // AttackSupporter
             aa.senderName = "savvy";
         } else if (agentId == 11) {
-            aa.roleId = 1222973297056; // Supporter;
+            aa.roleId = 1222973296666; // Supporter;
             aa.senderName = "myo";
         }
 
@@ -109,13 +109,13 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
         aa.senderID = ac->getIDManager().getID<int>(agentId);
         if (agentId == 8) {
-            aa.roleId = 1222973297047; // Attacker
+            aa.roleId = 1222973291111; // Attacker
             aa.senderName = "hairy";
         } else if (agentId == 10) {
-            aa.roleId = 1222973297054; // AttackSupporter
+            aa.roleId = 1222973295555; // AttackSupporter
             aa.senderName = "savvy";
         } else if (agentId == 11) {
-            aa.roleId = 1222973297056; // Supporter;
+            aa.roleId = 1222973296666; // Supporter;
             aa.senderName = "myo";
         }
 
