@@ -9,15 +9,19 @@ namespace alica
 {
 
 BasicPlan::BasicPlan()
-        : _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _planStarted(false)
+        : _ae(nullptr)
+        , _configuration(nullptr)
+        , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _activeRunJobId(-1)
+        , _context(nullptr)
+        , _signalState(1)
+        , _execState(1)
 {
 }
 
 void BasicPlan::doInit()
 {
-    _planStarted = true;
+    ++_execState;
     try {
         onInit();
     } catch (const std::exception& e) {
@@ -45,12 +49,12 @@ void BasicPlan::doTerminate()
         _ae->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
+    ++_execState;
     try {
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
-    _planStarted = false;
 }
 
 void BasicPlan::sendLogMessage(int level, const std::string& message) const
@@ -58,26 +62,25 @@ void BasicPlan::sendLogMessage(int level, const std::string& message) const
     _ae->getCommunicator().sendLogMessage(level, message);
 }
 
-void BasicPlan::start()
+void BasicPlan::start(RunningPlan* rp)
 {
+    if (isActive(_signalState.load())) {
+        return;
+    }
+    ++_signalState;
+    _context.store(rp);
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
 void BasicPlan::stop()
 {
+    if (!isActive(_signalState.load())) {
+        return;
+    }
+    ++_signalState;
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
 }
 
-void BasicPlan::setConfiguration(const Configuration* conf)
-{
-    _configuration = conf;
-}
-
-void BasicPlan::setInterval(int32_t msInterval)
-{
-    _msInterval = AlicaTime::milliseconds(msInterval);
-}
-
-ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isPlanStarted() ? _context : nullptr); }
+ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
 
 } // namespace alica

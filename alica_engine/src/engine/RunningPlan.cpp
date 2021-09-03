@@ -567,8 +567,7 @@ void RunningPlan::activate()
     } else if (_activeTriple.abstractPlan) {
         _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
         _basicPlan->setConfiguration(getConfiguration());
-        _basicPlan->setRunningPlan(this);
-        _basicPlan->start();
+        _basicPlan->start(this);
     }
 
     attachPlanConstraints();
