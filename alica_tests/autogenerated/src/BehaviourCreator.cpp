@@ -2,9 +2,12 @@
 #include "Behaviour/AlwaysFail.h"
 #include "Behaviour/Attack.h"
 #include "Behaviour/AttackOpp.h"
+#include "Behaviour/BehAAA.h"
+#include "Behaviour/BehBAA.h"
 #include "Behaviour/ConstraintUsingBehaviour.h"
 #include "Behaviour/CountIndefinitely.h"
 #include "Behaviour/DefendMid.h"
+#include "Behaviour/EmptyBehaviour.h"
 #include "Behaviour/MidFieldStandard.h"
 #include "Behaviour/NotToTrigger.h"
 #include "Behaviour/ReadConfigurationBehaviour.h"
@@ -22,7 +25,7 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
+std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId)
 {
     switch (behaviourId) {
     case 1402488696205:
@@ -66,6 +69,15 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviour
         break;
     case 1588061129360:
         return std::make_shared<ReadConfigurationBehaviour>();
+        break;
+    case 1625610857563:
+        return std::make_shared<EmptyBehaviour>();
+        break;
+    case 1629895901559:
+        return std::make_shared<BehAAA>();
+        break;
+    case 1629895911592:
+        return std::make_shared<BehBAA>();
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

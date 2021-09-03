@@ -3,17 +3,20 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "ConstraintTestPlanDummySolver.h"
-#include "TestWorldModel.h"
+#include "PlanCreator.h"
+#include <alica_tests/ConstraintTestPlanDummySolver.h>
+#include <alica_tests/TestWorldModel.h>
 #include "UtilityFunctionCreator.h"
 
 #include <communication/AlicaDummyCommunication.h>
+#include <alica_ros_timer/AlicaRosTimer.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
+#include <yaml-cpp/yaml.h>
 
 #include <csetjmp>
 #include <csignal>
@@ -48,7 +51,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    void SetUp() override
+    virtual void SetUp() override
     {
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
@@ -62,14 +65,17 @@ protected:
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        const YAML::Node& config = ac->getConfig();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
     }
 
-    void TearDown() override
+    virtual void TearDown() override
     {
         ac->terminate();
         delete ac;
@@ -113,7 +119,8 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac = new alica::AlicaContext(
@@ -121,6 +128,8 @@ protected:
                                               getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            const YAML::Node& config = ac->getConfig();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));
@@ -157,6 +166,8 @@ protected:
                 alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        const YAML::Node& config = ac->getConfig();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ae = AlicaTestsEngineGetter::getEngine(ac);
     }
 

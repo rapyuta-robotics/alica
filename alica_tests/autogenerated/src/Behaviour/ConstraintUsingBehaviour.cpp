@@ -3,7 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1414068597716) ENABLED START*/
 // Add additional includes here
-#include "ConstraintTestPlanDummySolver.h"
+#include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <iostream>
 
 /*PROTECTED REGION END*/
@@ -34,7 +34,7 @@ void ConstraintUsingBehaviour::run(void* msg)
     /*PROTECTED REGION ID(run1414068597716) ENABLED START*/
     // Add additional options here
     ++_callCounter;
-    std::cout << "ConstraintUsingBehaviour was called " << _callCounter << " times!" << std::endl;
+
     _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }

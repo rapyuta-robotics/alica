@@ -5,7 +5,37 @@
 
 namespace alica
 {
-// Plan:MidFieldPlayPlan
+// Plan:  MidFieldPlayPlan (1402488770050)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1402488787819)//   - DefaultTask (1225112227903) (Entrypoint: 1402500828244)
+//
+// States:
+//   - Wander (1402488787818)
+//   - Tackle (1402489237914)
+//   - Sync (1402489273401)
+//   - Kill (1402500830885)
+//   - Shoot (1402500833246)
+MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
+{
+    /*PROTECTED REGION ID(dcon1402488770050) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void MidFieldPlayPlan1402488770050::run(void* msg)
+{
+    /*PROTECTED REGION ID(runMidFieldPlayPlan1402488770050) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**
@@ -31,23 +61,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402489257607)
+ *   - Comment:
+ *   - Source2Dest: Wander --> Tackle
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489258509)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488787819)*   - DefaultTask (1225112227903) (Entrypoint: 1402500828244)
- *
- * States in plan:
- *   - Wander (1402488787818)
- *   - Tackle (1402489237914)
- *   - Sync (1402489273401)
- *   - Kill (1402500830885)
- *   - Shoot (1402500833246)
- *
- * Variables of preconditon:
  */
 bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -56,23 +82,19 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402489276995)
+ *   - Comment:
+ *   - Source2Dest: Wander --> Sync
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402489278408)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
- *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488787819)*   - DefaultTask (1225112227903) (Entrypoint: 1402500828244)
- *
- * States in plan:
- *   - Wander (1402488787818)
- *   - Tackle (1402489237914)
- *   - Sync (1402489273401)
- *   - Kill (1402500830885)
- *   - Shoot (1402500833246)
- *
- * Variables of preconditon:
  */
 bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -81,22 +103,18 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment:
+ * Transition: MISSING_NAME (1402500843072)
+ *   - Comment:
+ *   - Source2Dest: Kill --> Shoot
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1402500844446)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1402488787819)*   - DefaultTask (1225112227903) (Entrypoint: 1402500828244)
- *
- * States in plan:
- *   - Wander (1402488787818)
- *   - Tackle (1402489237914)
- *   - Sync (1402489273401)
- *   - Kill (1402500830885)
- *   - Shoot (1402500833246)
- *
- * Variables of preconditon:
+ * Abstract Plans in Kill:
  */
 bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -104,4 +122,8 @@ bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
     return false;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1402488770050) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

@@ -1,88 +1,119 @@
 {
-  "id" : 1428508768572,
-  "name" : "BehaviourTriggerTestPlan",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : true,
-  "utilityThreshold" : 0.1,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1428508768574,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1225112227903",
-    "state" : 1428508768573,
-    "plan" : 1428508768572
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1428508768573,
-    "name" : "NewState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1428508768572,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662751,
-      "name" : "1587718662751",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/TriggerA.beh#1428508297492",
-      "configuration" : null
-    }, {
-      "id" : 1587718662753,
-      "name" : "1587718662753",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/TriggerB.beh#1428508316905",
-      "configuration" : null
-    }, {
-      "id" : 1587718662755,
-      "name" : "1587718662755",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/TriggerC.beh#1428508355209",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1429017235181 ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1429017227839,
-    "name" : "NewState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1428508768572,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662758,
-      "name" : "1587718662758",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/NotToTrigger.beh#1429017274116",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1429017235181 ]
-  } ],
-  "transitions" : [ {
-    "id" : 1429017235181,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "inState" : 1428508768573,
-    "outState" : 1429017227839,
-    "preCondition" : {
-      "id" : 1429017236633,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1428508768574,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "MISSING_NAME",
+      "plan": 1428508768572,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1428508768573,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1225112227903"
+    }
+  ],
+  "frequency": 0,
+  "id": 1428508768572,
+  "masterPlan": true,
+  "name": "BehaviourTriggerTestPlan",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/TriggerA.beh#1428508297492",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662751,
+          "name": "1587718662751"
+        },
+        {
+          "abstractPlan": "behaviours/TriggerB.beh#1428508316905",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662753,
+          "name": "1587718662753"
+        },
+        {
+          "abstractPlan": "behaviours/TriggerC.beh#1428508355209",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662755,
+          "name": "1587718662755"
+        }
+      ],
+      "entryPoint": 1428508768574,
+      "id": 1428508768573,
+      "inTransitions": [],
+      "name": "NewState",
+      "outTransitions": [
+        1429017235181
+      ],
+      "parentPlan": 1428508768572,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  } ],
-  "synchronisations" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/NotToTrigger.beh#1429017274116",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662758,
+          "name": "1587718662758"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1429017227839,
+      "inTransitions": [
+        1429017235181
+      ],
+      "name": "NewState",
+      "outTransitions": [],
+      "parentPlan": 1428508768572,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [
+    {
+      "comment": "",
+      "id": 1429017235181,
+      "inState": 1428508768573,
+      "name": "MISSING_NAME",
+      "outState": 1429017227839,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1429017236633,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
+  "utilityThreshold": 0.1,
+  "variables": []
 }

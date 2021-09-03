@@ -1,4 +1,4 @@
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 #include "test_alica.h"
 
 #include <alica/test/Util.h>

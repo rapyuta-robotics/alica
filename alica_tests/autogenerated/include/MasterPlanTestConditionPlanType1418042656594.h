@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DomainCondition.h"
+#include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
@@ -13,6 +14,25 @@ namespace alica
 /*PROTECTED REGION ID(meth1418042656594) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
+class MasterPlanTestConditionPlanType1418042656594 : public DomainPlan
+{
+public:
+    MasterPlanTestConditionPlanType1418042656594();
+    virtual ~MasterPlanTestConditionPlanType1418042656594();
+    virtual void run(void* msg) override;
+    /*PROTECTED REGION ID(pub1418042656594) ENABLED START*/
+    // Add additional public methods here
+    /*PROTECTED REGION END*/
+protected:
+    /*PROTECTED REGION ID(pro1418042656594) ENABLED START*/
+    // Add additional protected methods here
+    /*PROTECTED REGION END*/
+private:
+    /*PROTECTED REGION ID(prv1418042656594) ENABLED START*/
+    // Add additional private methods here
+    /*PROTECTED REGION END*/
+};
+
 class UtilityFunction1418042656594 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);

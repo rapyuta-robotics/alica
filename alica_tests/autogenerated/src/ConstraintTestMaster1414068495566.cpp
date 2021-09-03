@@ -5,7 +5,33 @@
 
 namespace alica
 {
-// Plan:ConstraintTestMaster
+// Plan:  ConstraintTestMaster (1414068495566)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1414068495568)
+//
+// States:
+//   - Start (1414068495567)
+ConstraintTestMaster1414068495566::ConstraintTestMaster1414068495566()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1414068495566) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ConstraintTestMaster1414068495566::~ConstraintTestMaster1414068495566()
+{
+    /*PROTECTED REGION ID(dcon1414068495566) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void ConstraintTestMaster1414068495566::run(void* msg)
+{
+    /*PROTECTED REGION ID(runConstraintTestMaster1414068495566) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414068495568
  */
@@ -18,4 +44,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414068495566::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1414068495566) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

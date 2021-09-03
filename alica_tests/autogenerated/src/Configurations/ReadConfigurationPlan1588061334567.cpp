@@ -5,7 +5,35 @@
 
 namespace alica
 {
-// Plan:ReadConfigurationPlan
+// Plan:  ReadConfigurationPlan (1588061334567)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1588069183324)
+//
+// States:
+//   - DecisionState (1588069177860)
+//   - StateA (1588069261047)
+//   - StateB (1588069265377)
+ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1588061334567) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+ReadConfigurationPlan1588061334567::~ReadConfigurationPlan1588061334567()
+{
+    /*PROTECTED REGION ID(dcon1588061334567) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
+void ReadConfigurationPlan1588061334567::run(void* msg)
+{
+    /*PROTECTED REGION ID(runReadConfigurationPlan1588061334567) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588069183324
  */
@@ -17,20 +45,18 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1588069612661, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromDefault NameTo Default Name (1588069612659)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: DecisionState --> StateA
  *
- * Abstract plans in current state:
+ * Precondition: 1588069612661 (1588069612661)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1588069183324)
- *
- * States in plan:
- *   - DecisionState (1588069177860)
- *   - StateA (1588069261047)
- *   - StateB (1588069265377)
- *
- * Variables of preconditon:
+ * Abstract Plans in DecisionState:
  */
 bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -41,20 +67,18 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: 1588069615553, ConditionString: , Comment: MISSING_COMMENT
+ * Transition: FromDefault NameTo Default Name (1588069615552)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: DecisionState --> StateB
  *
- * Abstract plans in current state:
+ * Precondition: 1588069615553 (1588069615553)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1588069183324)
- *
- * States in plan:
- *   - DecisionState (1588069177860)
- *   - StateA (1588069261047)
- *   - StateB (1588069265377)
- *
- * Variables of preconditon:
+ * Abstract Plans in DecisionState:
  */
 bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -64,4 +88,8 @@ bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
     return value.compare("2") == 0;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1588061334567) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

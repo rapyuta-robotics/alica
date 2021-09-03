@@ -1,134 +1,193 @@
 {
-  "id" : 1418825395939,
-  "name" : "MasterSyncTransition",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.1,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1418825395941,
-    "name" : "AttackTask",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 1,
-    "maxCardinality" : 10000,
-    "task" : "taskrepository.tsk#1407153522080",
-    "state" : 1418825395940,
-    "plan" : 1418825395939
-  }, {
-    "id" : 1418825402617,
-    "name" : "DefaultTask",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 1,
-    "maxCardinality" : 10000,
-    "task" : "taskrepository.tsk#1225112227903",
-    "state" : 1418825404963,
-    "plan" : 1418825395939
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1418825395940,
-    "name" : "FirstTaskFirstState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1418825395939,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1418825425833 ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1418825404963,
-    "name" : "SecondTaskFirstState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1418825395939,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1418825427469 ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1418825409988,
-    "name" : "FirstTaskSecondState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1418825395939,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662770,
-      "name" : "1587718662770",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1418825425833 ]
-  }, {
-    "type" : "State",
-    "id" : 1418825411686,
-    "name" : "SecondTaskSecondState",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1418825395939,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662773,
-      "name" : "1587718662773",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/Attack.beh#1402488848841",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1418825427469 ]
-  } ],
-  "transitions" : [ {
-    "id" : 1418825425833,
-    "name" : "FirstTaskTran",
-    "comment" : "",
-    "inState" : 1418825395940,
-    "outState" : 1418825409988,
-    "preCondition" : {
-      "id" : 1418825427317,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1418825395941,
+      "maxCardinality": 10000,
+      "minCardinality": 1,
+      "name": "AttackTask",
+      "plan": 1418825395939,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1418825395940,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1407153522080"
     },
-    "synchronisation" : 1418825482116
-  }, {
-    "id" : 1418825427469,
-    "name" : "SecondTaskTran",
-    "comment" : "",
-    "inState" : 1418825404963,
-    "outState" : 1418825411686,
-    "preCondition" : {
-      "id" : 1418825428924,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "id": 1418825402617,
+      "maxCardinality": 10000,
+      "minCardinality": 1,
+      "name": "DefaultTask",
+      "plan": 1418825395939,
+      "positionWeb": {
+        "x": 200,
+        "y": 612
+      },
+      "state": 1418825404963,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1225112227903"
+    }
+  ],
+  "frequency": 0,
+  "id": 1418825395939,
+  "masterPlan": false,
+  "name": "MasterSyncTransition",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1418825395941,
+      "id": 1418825395940,
+      "inTransitions": [],
+      "name": "FirstTaskFirstState",
+      "outTransitions": [
+        1418825425833
+      ],
+      "parentPlan": 1418825395939,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : 1418825482116
-  } ],
-  "synchronisations" : [ {
-    "id" : 1418825482116,
-    "name" : "Sync",
-    "comment" : "",
-    "talkTimeout" : 30,
-    "syncTimeout" : 10000,
-    "failOnSyncTimeout" : false,
-    "plan" : 1418825395939,
-    "syncedTransitions" : [ 1418825425833, 1418825427469 ]
-  } ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1418825402617,
+      "id": 1418825404963,
+      "inTransitions": [],
+      "name": "SecondTaskFirstState",
+      "outTransitions": [
+        1418825427469
+      ],
+      "parentPlan": 1418825395939,
+      "positionWeb": {
+        "x": 428,
+        "y": 600
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662770,
+          "name": "1587718662770"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1418825409988,
+      "inTransitions": [
+        1418825425833
+      ],
+      "name": "FirstTaskSecondState",
+      "outTransitions": [],
+      "parentPlan": 1418825395939,
+      "positionWeb": {
+        "x": 918,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/Attack.beh#1402488848841",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662773,
+          "name": "1587718662773"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1418825411686,
+      "inTransitions": [
+        1418825427469
+      ],
+      "name": "SecondTaskSecondState",
+      "outTransitions": [],
+      "parentPlan": 1418825395939,
+      "positionWeb": {
+        "x": 918,
+        "y": 800
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [
+    {
+      "comment": "",
+      "failOnSyncTimeout": false,
+      "id": 1418825482116,
+      "name": "Sync",
+      "plan": 1418825395939,
+      "positionWeb": {
+        "x": 435,
+        "y": 807
+      },
+      "syncTimeout": 10000,
+      "syncedTransitions": [
+        1418825425833,
+        1418825427469
+      ],
+      "talkTimeout": 30
+    }
+  ],
+  "transitions": [
+    {
+      "comment": "",
+      "id": 1418825425833,
+      "inState": 1418825395940,
+      "name": "FirstTaskTran",
+      "outState": 1418825409988,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1418825427317,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": 1418825482116
+    },
+    {
+      "comment": "",
+      "id": 1418825427469,
+      "inState": 1418825404963,
+      "name": "SecondTaskTran",
+      "outState": 1418825411686,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1418825428924,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": 1418825482116
+    }
+  ],
+  "utilityThreshold": 0.1,
+  "variables": []
 }

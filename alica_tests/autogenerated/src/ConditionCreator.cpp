@@ -7,9 +7,12 @@
 #include "Behaviour/AlwaysFail1532424188199.h"
 #include "Behaviour/Attack1402488848841.h"
 #include "Behaviour/AttackOpp1402489351885.h"
+#include "Behaviour/BehAAA1629895901559.h"
+#include "Behaviour/BehBAA1629895911592.h"
 #include "Behaviour/ConstraintUsingBehaviour1414068597716.h"
 #include "Behaviour/CountIndefinitely1529456643148.h"
 #include "Behaviour/DefendMid1402488730695.h"
+#include "Behaviour/EmptyBehaviour1625610857563.h"
 #include "Behaviour/MidFieldStandard1402488696205.h"
 #include "Behaviour/NotToTrigger1429017274116.h"
 #include "Behaviour/ReadConfigurationBehaviour1588061129360.h"
@@ -25,7 +28,10 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "EngineRulesSchedulingTestMaster1625610679488.h"
+#include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
+#include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
 #include "HandleFailExplicitMaster1530004940652.h"
@@ -36,7 +42,12 @@
 #include "MidFieldPlayPlan1402488770050.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PlanA1629895837159.h"
+#include "PlanAA1629895864090.h"
+#include "PlanB1629895853508.h"
+#include "PlanBA1629895873188.h"
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
@@ -45,6 +56,14 @@
 #include "PreConditionPlan1418042796751.h"
 #include "RealMasterPlanForSyncTest1418902217839.h"
 #include "RuntimeConditionPlan1418042806575.h"
+#include "SchedulingTestMasterPlan1613378382024.h"
+#include "SchedulingTestPlan11613378406860.h"
+#include "SchedulingTestPlan21613378423610.h"
+#include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 
@@ -54,7 +73,7 @@ namespace alica
 ConditionCreator::ConditionCreator() {}
 ConditionCreator::~ConditionCreator() {}
 
-std::shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditionConfId)
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId)
 {
     switch (conditionConfId) {
     case 1402488519140:
@@ -206,6 +225,63 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(long conditio
         break;
     case 1588253347213:
         return std::make_shared<PreCondition1588253347213>();
+        break;
+    case 1613530643882:
+        return std::make_shared<PreCondition1613530643882>();
+        break;
+    case 1614960055821:
+        return std::make_shared<PreCondition1614960055821>();
+        break;
+    case 1614960063843:
+        return std::make_shared<PreCondition1614960063843>();
+        break;
+    case 1614964566531:
+        return std::make_shared<PreCondition1614964566531>();
+        break;
+    case 1614964572495:
+        return std::make_shared<PreCondition1614964572495>();
+        break;
+    case 1614964575553:
+        return std::make_shared<PreCondition1614964575553>();
+        break;
+    case 1614964578016:
+        return std::make_shared<PreCondition1614964578016>();
+        break;
+    case 1615797316171:
+        return std::make_shared<PreCondition1615797316171>();
+        break;
+    case 1615797327077:
+        return std::make_shared<PreCondition1615797327077>();
+        break;
+    case 1615797365364:
+        return std::make_shared<PreCondition1615797365364>();
+        break;
+    case 1625614729981:
+        return std::make_shared<PreCondition1625614729981>();
+        break;
+    case 1625776897472:
+        return std::make_shared<PreCondition1625776897472>();
+        break;
+    case 1625783867495:
+        return std::make_shared<PreCondition1625783867495>();
+        break;
+    case 1625783869825:
+        return std::make_shared<PreCondition1625783869825>();
+        break;
+    case 1626848015861:
+        return std::make_shared<PreCondition1626848015861>();
+        break;
+    case 1629895598471:
+        return std::make_shared<PreCondition1629895598471>();
+        break;
+    case 1629895607018:
+        return std::make_shared<PreCondition1629895607018>();
+        break;
+    case 1629895758612:
+        return std::make_shared<PreCondition1629895758612>();
+        break;
+    case 1629895768182:
+        return std::make_shared<PreCondition1629895768182>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

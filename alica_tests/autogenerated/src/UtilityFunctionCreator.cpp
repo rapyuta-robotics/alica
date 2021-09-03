@@ -11,7 +11,10 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "EngineRulesSchedulingTestMaster1625610679488.h"
+#include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
+#include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
 #include "HandleFailExplicitMaster1530004940652.h"
@@ -22,7 +25,12 @@
 #include "MidFieldPlayPlan1402488770050.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PlanA1629895837159.h"
+#include "PlanAA1629895864090.h"
+#include "PlanB1629895853508.h"
+#include "PlanBA1629895873188.h"
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
@@ -31,6 +39,14 @@
 #include "PreConditionPlan1418042796751.h"
 #include "RealMasterPlanForSyncTest1418902217839.h"
 #include "RuntimeConditionPlan1418042806575.h"
+#include "SchedulingTestMasterPlan1613378382024.h"
+#include "SchedulingTestPlan11613378406860.h"
+#include "SchedulingTestPlan21613378423610.h"
+#include "SchedulingTestPlan31613378433623.h"
+#include "SchedulingTestSequencePlan11614963946725.h"
+#include "SchedulingTestSequenceSubPlan11614964379654.h"
+#include "SchedulingTestSequenceSubPlan21614964444419.h"
+#include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include <iostream>
@@ -42,7 +58,7 @@ UtilityFunctionCreator::~UtilityFunctionCreator() {}
 
 UtilityFunctionCreator::UtilityFunctionCreator() {}
 
-std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long utilityfunctionConfId)
+std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
 {
     switch (utilityfunctionConfId) {
     case 1402488437260:
@@ -146,6 +162,54 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(long
         break;
     case 1588061801734:
         return std::make_shared<UtilityFunction1588061801734>();
+        break;
+    case 1613378382024:
+        return std::make_shared<UtilityFunction1613378382024>();
+        break;
+    case 1613378406860:
+        return std::make_shared<UtilityFunction1613378406860>();
+        break;
+    case 1613378423610:
+        return std::make_shared<UtilityFunction1613378423610>();
+        break;
+    case 1613378433623:
+        return std::make_shared<UtilityFunction1613378433623>();
+        break;
+    case 1614963946725:
+        return std::make_shared<UtilityFunction1614963946725>();
+        break;
+    case 1614964379654:
+        return std::make_shared<UtilityFunction1614964379654>();
+        break;
+    case 1614964444419:
+        return std::make_shared<UtilityFunction1614964444419>();
+        break;
+    case 1614964478264:
+        return std::make_shared<UtilityFunction1614964478264>();
+        break;
+    case 1625610679488:
+        return std::make_shared<UtilityFunction1625610679488>();
+        break;
+    case 1625614640417:
+        return std::make_shared<UtilityFunction1625614640417>();
+        break;
+    case 1626848999740:
+        return std::make_shared<UtilityFunction1626848999740>();
+        break;
+    case 1629895582410:
+        return std::make_shared<UtilityFunction1629895582410>();
+        break;
+    case 1629895837159:
+        return std::make_shared<UtilityFunction1629895837159>();
+        break;
+    case 1629895853508:
+        return std::make_shared<UtilityFunction1629895853508>();
+        break;
+    case 1629895864090:
+        return std::make_shared<UtilityFunction1629895864090>();
+        break;
+    case 1629895873188:
+        return std::make_shared<UtilityFunction1629895873188>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
