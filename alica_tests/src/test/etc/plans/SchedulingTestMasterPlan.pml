@@ -1,200 +1,272 @@
 {
-  "id" : 1613378382024,
-  "name" : "SchedulingTestMasterPlan",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : true,
-  "utilityThreshold" : 0.0,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1615797283419,
-    "name" : "1615797283419",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1613371619454",
-    "state" : 1615797271229,
-    "plan" : 1613378382024
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1613378474109,
-    "name" : "InitTest",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1613378382024,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1613378494690,
-      "name" : "1613378494690",
-      "comment" : "",
-      "abstractPlan" : "SchedulingTestPlan1.pml#1613378406860",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1613530643879 ],
-    "inTransitions" : [ 1615797316170 ]
-  }, {
-    "type" : "State",
-    "id" : 1613530614559,
-    "name" : "EndTest",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1613378382024,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1613530643879, 1615797365363, 1629895607017 ]
-  }, {
-    "type" : "State",
-    "id" : 1615797271229,
-    "name" : "Default Name",
-    "comment" : "",
-    "entryPoint" : 1615797283419,
-    "parentPlan" : 1613378382024,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1615797316170, 1615797327076, 1629895598464 ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1615797319003,
-    "name" : "Default Name",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1613378382024,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1615797379906,
-      "name" : "1615797379906",
-      "comment" : "",
-      "abstractPlan" : "SchedulingTestSequencePlan1.pml#1614963946725",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1615797365363 ],
-    "inTransitions" : [ 1615797327076 ]
-  }, {
-    "type" : "State",
-    "id" : 1629895593451,
-    "name" : "OrderedSchedulingTestPlan",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1613378382024,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1629895663156,
-      "name" : "1629895663156",
-      "comment" : "",
-      "abstractPlan" : "OrderedSchedulingTestPlan.pml#1629895582410",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1629895607017 ],
-    "inTransitions" : [ 1629895598464 ]
-  } ],
-  "transitions" : [ {
-    "id" : 1613530643879,
-    "name" : "FromDefault NameTo EndTest",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1613378474109,
-    "outState" : 1613530614559,
-    "preCondition" : {
-      "id" : 1613530643882,
-      "name" : "1613530643882",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1615797283419,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "1615797283419",
+      "plan": 1613378382024,
+      "positionWeb": {
+        "x": 200,
+        "y": 412
+      },
+      "state": 1615797271229,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1613371619454"
+    }
+  ],
+  "frequency": 0,
+  "id": 1613378382024,
+  "masterPlan": true,
+  "name": "SchedulingTestMasterPlan",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SchedulingTestPlan1.pml#1613378406860",
+          "comment": "",
+          "configuration": null,
+          "id": 1613378494690,
+          "name": "1613378494690"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1613378474109,
+      "inTransitions": [
+        1615797316170
+      ],
+      "name": "InitTest",
+      "outTransitions": [
+        1613530643879
+      ],
+      "parentPlan": 1613378382024,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1615797316170,
-    "name" : "FromDefault NameTo InitTest",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1615797271229,
-    "outState" : 1613378474109,
-    "preCondition" : {
-      "id" : 1615797316171,
-      "name" : "1615797316171",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1613530614559,
+      "inTransitions": [
+        1613530643879,
+        1615797365363,
+        1629895607017
+      ],
+      "name": "EndTest",
+      "outTransitions": [],
+      "parentPlan": 1613378382024,
+      "positionWeb": {
+        "x": 944,
+        "y": 600
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1615797327076,
-    "name" : "FromDefault NameTo Default Name",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1615797271229,
-    "outState" : 1615797319003,
-    "preCondition" : {
-      "id" : 1615797327077,
-      "name" : "1615797327077",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1615797283419,
+      "id": 1615797271229,
+      "inTransitions": [],
+      "name": "Default Name",
+      "outTransitions": [
+        1615797316170,
+        1615797327076,
+        1629895598464
+      ],
+      "parentPlan": 1613378382024,
+      "positionWeb": {
+        "x": 428,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1615797365363,
-    "name" : "FromDefault NameTo EndTest",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1615797319003,
-    "outState" : 1613530614559,
-    "preCondition" : {
-      "id" : 1615797365364,
-      "name" : "1615797365364",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SchedulingTestSequencePlan1.pml#1614963946725",
+          "comment": "",
+          "configuration": null,
+          "id": 1615797379906,
+          "name": "1615797379906"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1615797319003,
+      "inTransitions": [
+        1615797327076
+      ],
+      "name": "Default Name",
+      "outTransitions": [
+        1615797365363
+      ],
+      "parentPlan": 1613378382024,
+      "positionWeb": {
+        "x": 686,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1629895598464,
-    "name" : "FromDefault NameTo Default Name",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1615797271229,
-    "outState" : 1629895593451,
-    "preCondition" : {
-      "id" : 1629895598471,
-      "name" : "1629895598471",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "OrderedSchedulingTestPlan.pml#1629895582410",
+          "comment": "",
+          "configuration": null,
+          "id": 1629895663156,
+          "name": "1629895663156"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1629895593451,
+      "inTransitions": [
+        1629895598464
+      ],
+      "name": "OrderedSchedulingTestPlan",
+      "outTransitions": [
+        1629895607017
+      ],
+      "parentPlan": 1613378382024,
+      "positionWeb": {
+        "x": 686,
+        "y": 600
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1613530643879,
+      "inState": 1613378474109,
+      "name": "FromDefault NameTo EndTest",
+      "outState": 1613530614559,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1613530643882,
+        "name": "1613530643882",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1629895607017,
-    "name" : "FromDefault NameTo EndTest",
-    "comment" : "MISSING_COMMENT",
-    "inState" : 1629895593451,
-    "outState" : 1613530614559,
-    "preCondition" : {
-      "id" : 1629895607018,
-      "name" : "1629895607018",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : null,
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1615797316170,
+      "inState": 1615797271229,
+      "name": "FromDefault NameTo InitTest",
+      "outState": 1613378474109,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1615797316171,
+        "name": "1615797316171",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
     },
-    "synchronisation" : null
-  } ],
-  "synchronisations" : [ ]
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1615797327076,
+      "inState": 1615797271229,
+      "name": "FromDefault NameTo Default Name",
+      "outState": 1615797319003,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1615797327077,
+        "name": "1615797327077",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1615797365363,
+      "inState": 1615797319003,
+      "name": "FromDefault NameTo EndTest",
+      "outState": 1613530614559,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1615797365364,
+        "name": "1615797365364",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1629895598464,
+      "inState": 1615797271229,
+      "name": "FromDefault NameTo Default Name",
+      "outState": 1629895593451,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1629895598471,
+        "name": "1629895598471",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "MISSING_COMMENT",
+      "id": 1629895607017,
+      "inState": 1629895593451,
+      "name": "FromDefault NameTo EndTest",
+      "outState": 1613530614559,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": null,
+        "enabled": true,
+        "id": 1629895607018,
+        "name": "1629895607018",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
+  "utilityThreshold": 0.0,
+  "variables": []
 }

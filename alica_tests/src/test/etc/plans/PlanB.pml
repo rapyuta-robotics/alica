@@ -1,42 +1,57 @@
 {
-  "id" : 1629895853508,
-  "name" : "PlanB",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.0,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1629896055805,
-    "name" : "1629896055805",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1613371619454",
-    "state" : 1629896057548,
-    "plan" : 1629895853508
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1629896057548,
-    "name" : "PlanBA",
-    "comment" : "",
-    "entryPoint" : 1629896055805,
-    "parentPlan" : 1629895853508,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1629896077656,
-      "name" : "1629896077656",
-      "comment" : "",
-      "abstractPlan" : "PlanBA.pml#1629895873188",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ ]
-  } ],
-  "transitions" : [ ],
-  "synchronisations" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1629896055805,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "1629896055805",
+      "plan": 1629895853508,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1629896057548,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1613371619454"
+    }
+  ],
+  "frequency": 50,
+  "id": 1629895853508,
+  "masterPlan": false,
+  "name": "PlanB",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "PlanBA.pml#1629895873188",
+          "comment": "",
+          "configuration": null,
+          "id": 1629896077656,
+          "name": "1629896077656"
+        }
+      ],
+      "entryPoint": 1629896055805,
+      "id": 1629896057548,
+      "inTransitions": [],
+      "name": "PlanBA",
+      "outTransitions": [],
+      "parentPlan": 1629895853508,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [],
+  "utilityThreshold": 0.0,
+  "variables": []
 }

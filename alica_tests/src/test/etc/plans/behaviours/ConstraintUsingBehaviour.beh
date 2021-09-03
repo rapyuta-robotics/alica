@@ -1,0 +1,26 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1414068597716,
+  "name": "ConstraintUsingBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": [
+    {
+      "comment": "",
+      "id": 1416487733086,
+      "name": "X",
+      "variableType": ""
+    },
+    {
+      "comment": "",
+      "id": 1416488161203,
+      "name": "Y",
+      "variableType": ""
+    }
+  ]
+}
