@@ -55,8 +55,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
  *   - Variables:
- *	   - ABC (1403772834750)
- *	   - TestVar1 (1403772778288)
  *   - Quantifiers:
  *	   - MISSING_NAME (1403773214317)
  *	   - MISSING_NAME (1403773224776)
