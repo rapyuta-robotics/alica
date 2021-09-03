@@ -1,150 +1,199 @@
 {
-  "id" : 1402488870347,
-  "name" : "GoalPlan",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ {
-    "id" : 1403773747758,
-    "name" : "test",
-    "comment" : "",
-    "variableType" : "test"
-  } ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.1,
-  "preCondition" : {
-    "id" : 1402489131988,
-    "name" : "PreCondition",
-    "comment" : "",
-    "enabled" : true,
-    "conditionString" : "",
-    "pluginName" : "DefaultPlugin",
-    "variables" : [ ],
-    "quantifiers" : [ ]
-  },
-  "runtimeCondition" : {
-    "id" : 1403773741874,
-    "name" : "NewRuntimeCondition",
-    "comment" : "",
-    "enabled" : false,
-    "conditionString" : "test",
-    "pluginName" : "DefaultPlugin",
-    "variables" : [ 1403773747758 ],
-    "quantifiers" : [ {
-      "id" : 1403773772633,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "quantifierType" : "all",
-      "scope" : 1402489152217,
-      "sorts" : [ "test" ]
-    } ]
-  },
-  "entryPoints" : [ {
-    "id" : 1402488881800,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1225112227903",
-    "state" : 1402488881799,
-    "plan" : 1402488870347
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1402488881799,
-    "name" : "Shoot",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1402488870347,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1402489173167 ],
-    "inTransitions" : [ 1402489205153 ]
-  }, {
-    "type" : "State",
-    "id" : 1402489152217,
-    "name" : "Miss",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1402488870347,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1402489205153, 1402489216617 ],
-    "inTransitions" : [ 1402489173167 ]
-  }, {
-    "type" : "TerminalState",
-    "id" : 1402489192198,
-    "name" : "Scored",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1402488870347,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1402489216617 ],
-    "success" : true,
-    "postCondition" : {
-      "id" : 1402489620773,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : false,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1402488881800,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "MISSING_NAME",
+      "plan": 1402488870347,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1402488881799,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1225112227903"
     }
-  } ],
-  "transitions" : [ {
-    "id" : 1402489173167,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "inState" : 1402488881799,
-    "outState" : 1402489152217,
-    "preCondition" : {
-      "id" : 1402489174338,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  ],
+  "frequency": 0,
+  "id": 1402488870347,
+  "masterPlan": false,
+  "name": "GoalPlan",
+  "preCondition": {
+    "comment": "",
+    "conditionString": "",
+    "enabled": true,
+    "id": 1402489131988,
+    "name": "PreCondition",
+    "pluginName": "DefaultPlugin",
+    "quantifiers": [],
+    "variables": []
+  },
+  "relativeDirectory": "",
+  "runtimeCondition": {
+    "comment": "",
+    "conditionString": "test",
+    "enabled": false,
+    "id": 1403773741874,
+    "name": "NewRuntimeCondition",
+    "pluginName": "DefaultPlugin",
+    "quantifiers": [
+      {
+        "comment": "",
+        "id": 1403773772633,
+        "name": "MISSING_NAME",
+        "quantifierType": "all",
+        "scope": 1402489152217,
+        "sorts": [
+          "test"
+        ]
+      }
+    ],
+    "variables": [
+      1403773747758
+    ]
+  },
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1402488881800,
+      "id": 1402488881799,
+      "inTransitions": [
+        1402489205153
+      ],
+      "name": "Shoot",
+      "outTransitions": [
+        1402489173167
+      ],
+      "parentPlan": 1402488870347,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1402489205153,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "inState" : 1402489152217,
-    "outState" : 1402488881799,
-    "preCondition" : {
-      "id" : 1402489206278,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1402489152217,
+      "inTransitions": [
+        1402489173167
+      ],
+      "name": "Miss",
+      "outTransitions": [
+        1402489205153,
+        1402489216617
+      ],
+      "parentPlan": 1402488870347,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1402489216617,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "inState" : 1402489152217,
-    "outState" : 1402489192198,
-    "preCondition" : {
-      "id" : 1402489218027,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1402489192198,
+      "inTransitions": [
+        1402489216617
+      ],
+      "name": "Scored",
+      "outTransitions": [],
+      "parentPlan": 1402488870347,
+      "positionWeb": {
+        "x": 944,
+        "y": 200
+      },
+      "postCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": false,
+        "id": 1402489620773,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [
+    {
+      "comment": "",
+      "id": 1402489173167,
+      "inState": 1402488881799,
+      "name": "MISSING_NAME",
+      "outState": 1402489152217,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1402489174338,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
     },
-    "synchronisation" : null
-  } ],
-  "synchronisations" : [ ]
+    {
+      "comment": "",
+      "id": 1402489205153,
+      "inState": 1402489152217,
+      "name": "MISSING_NAME",
+      "outState": 1402488881799,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1402489206278,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 1402489216617,
+      "inState": 1402489152217,
+      "name": "MISSING_NAME",
+      "outState": 1402489192198,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1402489218027,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
+  "utilityThreshold": 0.1,
+  "variables": [
+    {
+      "comment": "",
+      "id": 1403773747758,
+      "name": "test",
+      "variableType": "test"
+    }
+  ]
 }

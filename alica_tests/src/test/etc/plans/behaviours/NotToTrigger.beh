@@ -1,0 +1,13 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": true,
+  "frequency": 30,
+  "id": 1429017274116,
+  "name": "NotToTrigger",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

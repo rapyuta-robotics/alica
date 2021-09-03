@@ -1,27 +1,31 @@
 {
-  "id" : 1407153314946,
-  "name" : "Attack",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "variableBindings" : [ ],
-  "annotatedPlans" : [ {
-    "id" : 1407153357692,
-    "name" : "AnnotatedAttackPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "AttackPlan.pml#1402488634525"
-  }, {
-    "id" : 1407153361565,
-    "name" : "AnnotatedGoalPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "GoalPlan.pml#1402488870347"
-  }, {
-    "id" : 1407153363136,
-    "name" : "AnnotatedTackle",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "Tackle.pml#1402489318663"
-  } ]
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1407153357692,
+      "name": "AnnotatedAttackPlan",
+      "plan": "AttackPlan.pml#1402488634525"
+    },
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1407153361565,
+      "name": "AnnotatedGoalPlan",
+      "plan": "GoalPlan.pml#1402488870347"
+    },
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1407153363136,
+      "name": "AnnotatedTackle",
+      "plan": "Tackle.pml#1402489318663"
+    }
+  ],
+  "comment": "",
+  "id": 1407153314946,
+  "name": "Attack",
+  "relativeDirectory": "",
+  "variableBindings": [],
+  "variables": []
 }

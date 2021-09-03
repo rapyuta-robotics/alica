@@ -1,42 +1,57 @@
 {
-  "id" : 1629895873188,
-  "name" : "PlanBA",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.0,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1629896091322,
-    "name" : "1629896091322",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1613371619454",
-    "state" : 1629896094706,
-    "plan" : 1629895873188
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1629896094706,
-    "name" : "BehBAA",
-    "comment" : "",
-    "entryPoint" : 1629896091322,
-    "parentPlan" : 1629895873188,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1629896123291,
-      "name" : "1629896123291",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/BehBAA.beh#1629895911592",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ ]
-  } ],
-  "transitions" : [ ],
-  "synchronisations" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1629896091322,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "1629896091322",
+      "plan": 1629895873188,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1629896094706,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1613371619454"
+    }
+  ],
+  "frequency": 60,
+  "id": 1629895873188,
+  "masterPlan": false,
+  "name": "PlanBA",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/BehBAA.beh#1629895911592",
+          "comment": "",
+          "configuration": null,
+          "id": 1629896123291,
+          "name": "1629896123291"
+        }
+      ],
+      "entryPoint": 1629896091322,
+      "id": 1629896094706,
+      "inTransitions": [],
+      "name": "BehBAA",
+      "outTransitions": [],
+      "parentPlan": 1629895873188,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [],
+  "utilityThreshold": 0.0,
+  "variables": []
 }
