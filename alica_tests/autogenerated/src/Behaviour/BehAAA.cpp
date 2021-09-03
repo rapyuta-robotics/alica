@@ -69,6 +69,7 @@ void BehAAA::initialiseParameters()
     if (isFailure()) {
         wm.behAAAFailureInInit = true;
     }
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895901559) ENABLED START*/

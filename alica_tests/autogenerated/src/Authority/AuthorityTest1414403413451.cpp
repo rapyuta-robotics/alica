@@ -1,9 +1,9 @@
 #include "Authority/AuthorityTest1414403413451.h"
 /*PROTECTED REGION ID(eph1414403413451) ENABLED START*/
 // Add additional using directives here
-#include <alica_tests/DummyTestSummand.h>
 #include "engine/USummand.h"
 #include <alica_tests/DistXContourTest.h>
+#include <alica_tests/DummyTestSummand.h>
 /*PROTECTED REGION END*/
 
 namespace alica
