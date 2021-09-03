@@ -191,7 +191,7 @@ bool PartialAssignment::compare(const PartialAssignment* a, const PartialAssignm
     // Now we are sure that both partial assignments have the same utility
     else if (a->getPlan()->getId() < b->getPlan()->getId()) {
         return false;
-    } else if (b->getPlan()->getId() > b->getPlan()->getId()) {
+    } else if (a->getPlan()->getId() > b->getPlan()->getId()) {
         return true;
     }
     // Now we are sure that both partial assignments have the same utility and the same plan id
