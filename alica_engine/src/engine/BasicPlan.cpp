@@ -9,9 +9,11 @@ namespace alica
 {
 
 BasicPlan::BasicPlan()
-        : _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _planStarted(false)
+        : _ae(nullptr)
+        , _configuration(nullptr)
+        , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _activeRunJobId(-1)
+        , _context(nullptr)
         , _signalState(1)
         , _execState(1)
 {
@@ -20,7 +22,6 @@ BasicPlan::BasicPlan()
 void BasicPlan::doInit()
 {
     ++_execState;
-    _planStarted = true;
     try {
         onInit();
     } catch (const std::exception& e) {
@@ -54,7 +55,6 @@ void BasicPlan::doTerminate()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
-    _planStarted = false;
 }
 
 void BasicPlan::sendLogMessage(int level, const std::string& message) const
@@ -68,7 +68,6 @@ void BasicPlan::start(RunningPlan* rp)
         return;
     }
     ++_signalState;
-    // This has to be done after incrementing _signalState for correct behaviour of getPlanContext()
     _context.store(rp);
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
@@ -80,16 +79,6 @@ void BasicPlan::stop()
     }
     ++_signalState;
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
-}
-
-void BasicPlan::setConfiguration(const Configuration* conf)
-{
-    _configuration = conf;
-}
-
-void BasicPlan::setInterval(int32_t msInterval)
-{
-    _msInterval = AlicaTime::milliseconds(msInterval);
 }
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
