@@ -23,7 +23,10 @@ void BasicPlan::doInit()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
     }
-    _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+    // Do not schedule runJob when freq is 0.
+    if (_msInterval > AlicaTime::milliseconds(0)) {
+        _activeRunJobId =  _ae->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+    }
 }
 
 void BasicPlan::doRun(void* msg)
@@ -38,7 +41,10 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
-    _ae->editScheduler().cancelJob(_activeRunJobId);
+    if (_activeRunJobId != -1) {
+        _ae->editScheduler().cancelJob(_activeRunJobId);
+        _activeRunJobId = -1;
+    }
     try {
         onTerminate();
     } catch (const std::exception& e) {
@@ -65,6 +71,11 @@ void BasicPlan::stop()
 void BasicPlan::setConfiguration(const Configuration* conf)
 {
     _configuration = conf;
+}
+
+void BasicPlan::setInterval(int32_t msInterval)
+{
+    _msInterval = AlicaTime::milliseconds(msInterval);
 }
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isPlanStarted() ? _context : nullptr); }

@@ -52,6 +52,8 @@ public:
     const PreCondition* getPreCondition() const { return _preCondition; }
     BasicPlan* getBasicPlan() const { return _basicPlan.get(); }
 
+    int getFrequency() const { return _frequency; }
+
     std::string toString(std::string indent = "") const;
 
 private:
@@ -104,6 +106,10 @@ private:
      * This behaviour's precondition
      */
     PreCondition* _preCondition;
+    /**
+     * The frequency with which this Plan is called.
+     */
+    int _frequency;
 };
 
 } // namespace alica

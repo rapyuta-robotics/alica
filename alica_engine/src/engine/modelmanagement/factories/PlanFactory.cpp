@@ -33,6 +33,9 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::masterPlan])) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();
     }
+    if (Factory::isValid(node[alica::Strings::frequency])) {
+        plan->_frequency = node[alica::Strings::frequency].as<int>();
+    }
     if (Factory::isValid(node[alica::Strings::utilityThreshold])) {
         plan->_utilityThreshold = node[alica::Strings::utilityThreshold].as<double>();
     }
