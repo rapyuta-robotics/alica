@@ -31,12 +31,6 @@ EngineRulesSchedulingTestPlan1625614640417::~EngineRulesSchedulingTestPlan162561
     /*PROTECTED REGION END*/
 }
 
-void EngineRulesSchedulingTestPlan1625614640417::run(void* msg)
-{
-    /*PROTECTED REGION ID(runEngineRulesSchedulingTestPlan1625614640417) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: EngineRulesSchedulingTestEntry  -> EntryPoint-ID: 1625614705483
  * Task: EngineRulesSchedulingTestSecondEntry  -> EntryPoint-ID: 1625614710816

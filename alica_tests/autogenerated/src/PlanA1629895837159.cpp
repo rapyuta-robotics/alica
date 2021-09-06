@@ -28,17 +28,6 @@ PlanA1629895837159::~PlanA1629895837159()
     /*PROTECTED REGION END*/
 }
 
-void PlanA1629895837159::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanA1629895837159) ENABLED START*/
-    // Add additional options here
-    auto& wm = alica_test::SchedWM::instance();
-    wm.planARunCalled = true;
-    if (!_inRunContext) {
-        wm.planARunOutOfOrder = true;
-    }
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: SchedulerTestEntrypoint  -> EntryPoint-ID: 1629895952886
  */
@@ -56,6 +45,15 @@ void PlanA1629895837159::onInit()
 {
     alica_test::SchedWM::instance().execOrder += "PlanA::Init\n";
     _inRunContext = true;
+}
+
+void PlanA1629895837159::run(void* msg)
+{
+    auto& wm = alica_test::SchedWM::instance();
+    wm.planARunCalled = true;
+    if (!_inRunContext) {
+        wm.planARunOutOfOrder = true;
+    }
 }
 
 void PlanA1629895837159::onTerminate()

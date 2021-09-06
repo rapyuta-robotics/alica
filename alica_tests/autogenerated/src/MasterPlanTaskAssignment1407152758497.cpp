@@ -30,12 +30,6 @@ MasterPlanTaskAssignment1407152758497::~MasterPlanTaskAssignment1407152758497()
     /*PROTECTED REGION END*/
 }
 
-void MasterPlanTaskAssignment1407152758497::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMasterPlanTaskAssignment1407152758497) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407152758499
  * Task: AttackTask  -> EntryPoint-ID: 1407152894887

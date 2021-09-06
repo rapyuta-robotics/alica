@@ -30,12 +30,6 @@ RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
     /*PROTECTED REGION END*/
 }
 
-void RuntimeConditionPlan1418042806575::run(void* msg)
-{
-    /*PROTECTED REGION ID(runRuntimeConditionPlan1418042806575) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

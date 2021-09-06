@@ -27,12 +27,6 @@ BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
     /*PROTECTED REGION END*/
 }
 
-void BehaviourTriggerTestPlan1428508768572::run(void* msg)
-{
-    /*PROTECTED REGION ID(runBehaviourTriggerTestPlan1428508768572) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1428508768574
  */

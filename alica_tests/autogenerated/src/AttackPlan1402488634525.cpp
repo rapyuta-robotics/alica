@@ -27,12 +27,6 @@ AttackPlan1402488634525::~AttackPlan1402488634525()
     /*PROTECTED REGION END*/
 }
 
-void AttackPlan1402488634525::run(void* msg)
-{
-    /*PROTECTED REGION ID(runAttackPlan1402488634525) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488646221
  */

@@ -26,12 +26,6 @@ ConstraintTestMaster1414068495566::~ConstraintTestMaster1414068495566()
     /*PROTECTED REGION END*/
 }
 
-void ConstraintTestMaster1414068495566::run(void* msg)
-{
-    /*PROTECTED REGION ID(runConstraintTestMaster1414068495566) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414068495568
  */

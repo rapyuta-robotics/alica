@@ -29,12 +29,6 @@ Defend1402488893641::~Defend1402488893641()
     /*PROTECTED REGION END*/
 }
 
-void Defend1402488893641::run(void* msg)
-{
-    /*PROTECTED REGION ID(runDefend1402488893641) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488903550
  */

@@ -29,12 +29,6 @@ PlanTwo1407153645238::~PlanTwo1407153645238()
     /*PROTECTED REGION END*/
 }
 
-void PlanTwo1407153645238::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanTwo1407153645238) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153656782
  * Task: AttackTask  -> EntryPoint-ID: 1407153821287

@@ -27,12 +27,6 @@ BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148(
     /*PROTECTED REGION END*/
 }
 
-void BehaviorSuccessSpamMaster1522377375148::run(void* msg)
-{
-    /*PROTECTED REGION ID(runBehaviorSuccessSpamMaster1522377375148) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1522377375150
  */

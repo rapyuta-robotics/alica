@@ -29,12 +29,6 @@ AuthorityTestMaster1414403396328::~AuthorityTestMaster1414403396328()
     /*PROTECTED REGION END*/
 }
 
-void AuthorityTestMaster1414403396328::run(void* msg)
-{
-    /*PROTECTED REGION ID(runAuthorityTestMaster1414403396328) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414403396331
  */

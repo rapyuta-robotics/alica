@@ -19,11 +19,14 @@ class FailsOnOne1530069246103 : public DomainPlan
 public:
     FailsOnOne1530069246103();
     virtual ~FailsOnOne1530069246103();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1530069246103) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1530069246103) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

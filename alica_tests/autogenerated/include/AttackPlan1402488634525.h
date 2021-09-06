@@ -19,11 +19,14 @@ class AttackPlan1402488634525 : public DomainPlan
 public:
     AttackPlan1402488634525();
     virtual ~AttackPlan1402488634525();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1402488634525) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1402488634525) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

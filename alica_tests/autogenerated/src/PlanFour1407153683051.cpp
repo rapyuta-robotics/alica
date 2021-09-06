@@ -27,12 +27,6 @@ PlanFour1407153683051::~PlanFour1407153683051()
     /*PROTECTED REGION END*/
 }
 
-void PlanFour1407153683051::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanFour1407153683051) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153696703
  * Task: AttackTask  -> EntryPoint-ID: 1407153949327

@@ -31,12 +31,6 @@ HandleFailExplicit1530004915640::~HandleFailExplicit1530004915640()
     /*PROTECTED REGION END*/
 }
 
-void HandleFailExplicit1530004915640::run(void* msg)
-{
-    /*PROTECTED REGION ID(runHandleFailExplicit1530004915640) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1530004915642
  */

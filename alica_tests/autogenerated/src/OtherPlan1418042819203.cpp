@@ -29,12 +29,6 @@ OtherPlan1418042819203::~OtherPlan1418042819203()
     /*PROTECTED REGION END*/
 }
 
-void OtherPlan1418042819203::run(void* msg)
-{
-    /*PROTECTED REGION ID(runOtherPlan1418042819203) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418042819206
  */

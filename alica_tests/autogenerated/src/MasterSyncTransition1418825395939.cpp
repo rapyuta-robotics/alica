@@ -32,12 +32,6 @@ MasterSyncTransition1418825395939::~MasterSyncTransition1418825395939()
     /*PROTECTED REGION END*/
 }
 
-void MasterSyncTransition1418825395939::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMasterSyncTransition1418825395939) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: AttackTask  -> EntryPoint-ID: 1418825395941
  * Task: DefaultTask  -> EntryPoint-ID: 1418825402617

@@ -27,12 +27,6 @@ ConfigurationTestPlan1588060981661::~ConfigurationTestPlan1588060981661()
     /*PROTECTED REGION END*/
 }
 
-void ConfigurationTestPlan1588060981661::run(void* msg)
-{
-    /*PROTECTED REGION ID(runConfigurationTestPlan1588060981661) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588061024407
  */

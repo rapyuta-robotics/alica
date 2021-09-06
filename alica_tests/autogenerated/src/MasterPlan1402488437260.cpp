@@ -30,12 +30,6 @@ MasterPlan1402488437260::~MasterPlan1402488437260()
     /*PROTECTED REGION END*/
 }
 
-void MasterPlan1402488437260::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMasterPlan1402488437260) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488437263
  */

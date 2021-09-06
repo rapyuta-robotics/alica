@@ -28,12 +28,6 @@ ReadConfigurationPlan1588061334567::~ReadConfigurationPlan1588061334567()
     /*PROTECTED REGION END*/
 }
 
-void ReadConfigurationPlan1588061334567::run(void* msg)
-{
-    /*PROTECTED REGION ID(runReadConfigurationPlan1588061334567) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1588069183324
  */

@@ -27,12 +27,6 @@ PlanBA1629895873188::~PlanBA1629895873188()
     /*PROTECTED REGION END*/
 }
 
-void PlanBA1629895873188::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanBA1629895873188) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: SchedulerTestEntrypoint  -> EntryPoint-ID: 1629896091322
  */

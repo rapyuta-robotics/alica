@@ -27,12 +27,6 @@ MasterPlanTestConditionPlanType1418042656594::~MasterPlanTestConditionPlanType14
     /*PROTECTED REGION END*/
 }
 
-void MasterPlanTestConditionPlanType1418042656594::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMasterPlanTestConditionPlanType1418042656594) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418042656596
  */

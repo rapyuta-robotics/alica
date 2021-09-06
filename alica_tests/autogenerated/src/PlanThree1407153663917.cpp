@@ -29,12 +29,6 @@ PlanThree1407153663917::~PlanThree1407153663917()
     /*PROTECTED REGION END*/
 }
 
-void PlanThree1407153663917::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanThree1407153663917) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153675525
  * Task: MidFieldTask  -> EntryPoint-ID: 1407153896585

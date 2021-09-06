@@ -26,12 +26,6 @@ RealMasterPlanForSyncTest1418902217839::~RealMasterPlanForSyncTest1418902217839(
     /*PROTECTED REGION END*/
 }
 
-void RealMasterPlanForSyncTest1418902217839::run(void* msg)
-{
-    /*PROTECTED REGION ID(runRealMasterPlanForSyncTest1418902217839) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418902217841
  */

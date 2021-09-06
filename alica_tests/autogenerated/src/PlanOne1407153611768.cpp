@@ -27,12 +27,6 @@ PlanOne1407153611768::~PlanOne1407153611768()
     /*PROTECTED REGION END*/
 }
 
-void PlanOne1407153611768::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanOne1407153611768) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153636262
  * Task: AttackTask  -> EntryPoint-ID: 1407153791141

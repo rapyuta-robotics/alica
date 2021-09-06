@@ -28,12 +28,6 @@ OrderedSchedulingTestPlan1629895582410::~OrderedSchedulingTestPlan1629895582410(
     /*PROTECTED REGION END*/
 }
 
-void OrderedSchedulingTestPlan1629895582410::run(void* msg)
-{
-    /*PROTECTED REGION ID(runOrderedSchedulingTestPlan1629895582410) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: SchedulerTestEntrypoint  -> EntryPoint-ID: 1629895738193
  */

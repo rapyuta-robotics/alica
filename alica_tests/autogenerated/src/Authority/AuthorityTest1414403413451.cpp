@@ -30,12 +30,6 @@ AuthorityTest1414403413451::~AuthorityTest1414403413451()
     /*PROTECTED REGION END*/
 }
 
-void AuthorityTest1414403413451::run(void* msg)
-{
-    /*PROTECTED REGION ID(runAuthorityTest1414403413451) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1414403429951
  * Task: AttackTask  -> EntryPoint-ID: 1414403522424

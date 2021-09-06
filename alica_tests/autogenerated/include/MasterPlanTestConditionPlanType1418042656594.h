@@ -19,11 +19,14 @@ class MasterPlanTestConditionPlanType1418042656594 : public DomainPlan
 public:
     MasterPlanTestConditionPlanType1418042656594();
     virtual ~MasterPlanTestConditionPlanType1418042656594();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1418042656594) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1418042656594) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

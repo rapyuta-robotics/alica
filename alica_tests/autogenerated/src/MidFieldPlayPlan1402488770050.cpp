@@ -30,12 +30,6 @@ MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
     /*PROTECTED REGION END*/
 }
 
-void MidFieldPlayPlan1402488770050::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMidFieldPlayPlan1402488770050) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

@@ -26,12 +26,6 @@ FrequencyTestPlan1626848999740::~FrequencyTestPlan1626848999740()
     /*PROTECTED REGION END*/
 }
 
-void FrequencyTestPlan1626848999740::run(void* msg)
-{
-    /*PROTECTED REGION ID(runFrequencyTestPlan1626848999740) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1626849024805
  */

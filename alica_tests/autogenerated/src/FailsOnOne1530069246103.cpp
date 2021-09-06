@@ -27,12 +27,6 @@ FailsOnOne1530069246103::~FailsOnOne1530069246103()
     /*PROTECTED REGION END*/
 }
 
-void FailsOnOne1530069246103::run(void* msg)
-{
-    /*PROTECTED REGION ID(runFailsOnOne1530069246103) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) : Is not set 1
 
 /**

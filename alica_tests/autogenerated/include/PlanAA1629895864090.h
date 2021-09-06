@@ -19,15 +19,18 @@ class PlanAA1629895864090 : public DomainPlan
 public:
     PlanAA1629895864090();
     virtual ~PlanAA1629895864090();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1629895864090) ENABLED START*/
     // Add additional public methods here
-    virtual void onInit() override;
-    virtual void onTerminate() override;
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1629895864090) ENABLED START*/
     // Add additional protected methods here
+    virtual void onInit() override;
+    virtual void onTerminate() override;
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1629895864090) ENABLED START*/

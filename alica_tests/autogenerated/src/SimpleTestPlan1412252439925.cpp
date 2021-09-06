@@ -28,12 +28,6 @@ SimpleTestPlan1412252439925::~SimpleTestPlan1412252439925()
     /*PROTECTED REGION END*/
 }
 
-void SimpleTestPlan1412252439925::run(void* msg)
-{
-    /*PROTECTED REGION ID(runSimpleTestPlan1412252439925) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of PreCondition - (Name): NewPreCondition, (ConditionString):  , (Comment) :
 
 /**

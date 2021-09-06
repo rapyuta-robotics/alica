@@ -28,12 +28,6 @@ SchedulingTestSequenceSubPlan31614964478264::~SchedulingTestSequenceSubPlan31614
     /*PROTECTED REGION END*/
 }
 
-void SchedulingTestSequenceSubPlan31614964478264::run(void* msg)
-{
-    /*PROTECTED REGION ID(runSchedulingTestSequenceSubPlan31614964478264) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: SchedulerTestSubPlanEntrypoint  -> EntryPoint-ID: 1614964917149
  */

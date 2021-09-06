@@ -31,12 +31,6 @@ MultiAgentTestMaster1413200842973::~MultiAgentTestMaster1413200842973()
     /*PROTECTED REGION END*/
 }
 
-void MultiAgentTestMaster1413200842973::run(void* msg)
-{
-    /*PROTECTED REGION ID(runMultiAgentTestMaster1413200842973) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1413200842975
  */

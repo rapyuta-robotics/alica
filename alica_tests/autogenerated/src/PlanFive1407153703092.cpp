@@ -30,12 +30,6 @@ PlanFive1407153703092::~PlanFive1407153703092()
     /*PROTECTED REGION END*/
 }
 
-void PlanFive1407153703092::run(void* msg)
-{
-    /*PROTECTED REGION ID(runPlanFive1407153703092) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1407153717809
  * Task: AttackTask  -> EntryPoint-ID: 1407153972059

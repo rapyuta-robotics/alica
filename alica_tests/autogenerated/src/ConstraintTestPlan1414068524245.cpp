@@ -26,12 +26,6 @@ ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
     /*PROTECTED REGION END*/
 }
 
-void ConstraintTestPlan1414068524245::run(void* msg)
-{
-    /*PROTECTED REGION ID(runConstraintTestPlan1414068524245) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**

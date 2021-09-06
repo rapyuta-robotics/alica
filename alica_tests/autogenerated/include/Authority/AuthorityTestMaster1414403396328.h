@@ -20,11 +20,14 @@ class AuthorityTestMaster1414403396328 : public DomainPlan
 public:
     AuthorityTestMaster1414403396328();
     virtual ~AuthorityTestMaster1414403396328();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1414403396328) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1414403396328) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

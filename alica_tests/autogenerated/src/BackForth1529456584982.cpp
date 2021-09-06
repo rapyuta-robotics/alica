@@ -28,12 +28,6 @@ BackForth1529456584982::~BackForth1529456584982()
     /*PROTECTED REGION END*/
 }
 
-void BackForth1529456584982::run(void* msg)
-{
-    /*PROTECTED REGION ID(runBackForth1529456584982) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1529456584984
  */

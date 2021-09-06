@@ -28,12 +28,6 @@ GoalPlan1402488870347::~GoalPlan1402488870347()
     /*PROTECTED REGION END*/
 }
 
-void GoalPlan1402488870347::run(void* msg)
-{
-    /*PROTECTED REGION ID(runGoalPlan1402488870347) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 // Check of PreCondition - (Name): PreCondition, (ConditionString):  , (Comment) :
 
 /**

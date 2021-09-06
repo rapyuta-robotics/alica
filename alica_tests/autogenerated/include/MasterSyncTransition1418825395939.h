@@ -19,11 +19,14 @@ class MasterSyncTransition1418825395939 : public DomainPlan
 public:
     MasterSyncTransition1418825395939();
     virtual ~MasterSyncTransition1418825395939();
-    virtual void run(void* msg) override;
     /*PROTECTED REGION ID(pub1418825395939) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    // Override these methods for your use case
+    // virtual void run(void* msg) override;
+    // virtual void onInit() override;
+    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1418825395939) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

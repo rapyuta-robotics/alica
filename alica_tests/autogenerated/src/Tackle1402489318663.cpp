@@ -26,12 +26,6 @@ Tackle1402489318663::~Tackle1402489318663()
     /*PROTECTED REGION END*/
 }
 
-void Tackle1402489318663::run(void* msg)
-{
-    /*PROTECTED REGION ID(runTackle1402489318663) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402489329142
  */
