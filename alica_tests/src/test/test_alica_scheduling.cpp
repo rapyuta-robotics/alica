@@ -194,6 +194,8 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
 
 TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 {
+    std::cerr << "__TEST_SCHED__: start " << std::endl;
+
     CounterClass::called = -1;
     ae->start();
     auto& wm = alica_test::SchedWM::instance();
@@ -222,6 +224,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 
         ASSERT_EQ(behBAA->runCount, 0);
     }
+
+    std::cerr << "__TEST_SCHED__: stop " << std::endl;
 }
 
 } // namespace

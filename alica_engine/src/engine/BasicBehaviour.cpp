@@ -107,6 +107,7 @@ bool BasicBehaviour::isTriggeredRunFinished()
 
 void BasicBehaviour::initJob()
 {
+    std::cerr << "__BEH__: init job " << std::endl;
     assert(_behResult.load() == BehResult::UNKNOWN);
     ++_execState;
 
@@ -126,6 +127,7 @@ void BasicBehaviour::initJob()
 
 void BasicBehaviour::runJob(void* msg)
 {
+    std::cerr << "__BEH__: run job " << std::endl;
     // TODO: get rid of msg
     try {
         run(msg);
@@ -147,7 +149,9 @@ void BasicBehaviour::doTrigger()
 
 void BasicBehaviour::terminateJob()
 {
+    std::cerr << "__BEH__: terminate job " << std::endl;
     if (_activeRunJobId != -1) {
+        std::cerr << "__BEH__: cancelling run job " << std::endl;
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
