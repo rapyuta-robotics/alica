@@ -2,7 +2,7 @@
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
-  "frequency": 0,
+  "frequency": 1,
   "id": 1588061129360,
   "name": "ReadConfigurationBehaviour",
   "postCondition": null,
