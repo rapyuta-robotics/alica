@@ -78,7 +78,7 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     aa.planHash = acs[0]->getVersion() + 1;
     aa.senderSdk = acs[0]->getVersion();
     aa.senderID = aes[0]->getID(id);
-    aa.roleId = 1222973297047; // Attacker
+    aa.roleId = 1222973291111; // Attacker
     aa.senderName = "myo";
     aes[0]->editTeamManager().handleAgentAnnouncement(aa);
     acs[0]->stepEngine();
