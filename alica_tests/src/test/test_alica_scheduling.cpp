@@ -1,5 +1,7 @@
 #include <alica_tests/CounterClass.h>
 #include "test_alica.h"
+#include "Behaviour/BehAAA.h"
+#include "Behaviour/BehBAA.h"
 
 #include <alica/test/Util.h>
 #include <gtest/gtest.h>
@@ -188,6 +190,38 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     wm.behAAABlockRun = false;
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
+}
+
+TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
+{
+    CounterClass::called = -1;
+    ae->start();
+    auto& wm = alica_test::SchedWM::instance();
+    wm.execOrderTest = true;
+    ac->stepEngine();
+
+    auto behAAA = std::dynamic_pointer_cast<alica::BehAAA>(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0));
+    auto behBAA = std::dynamic_pointer_cast<alica::BehBAA>(alica::test::Util::getBasicBehaviour(ae, 1629895911592, 0));
+
+    for (int i = 0; i < 10; ++i) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        ASSERT_GT(behAAA->runCount, 10);
+
+        wm.planA2PlanB = true;
+        wm.planB2PlanA = false;
+        ac->stepEngine();
+
+        ASSERT_EQ(behAAA->runCount, 0);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        ASSERT_GT(behBAA->runCount, 10);
+
+        wm.planA2PlanB = false;
+        wm.planB2PlanA = true;
+        ac->stepEngine();
+
+        ASSERT_EQ(behBAA->runCount, 0);
+    }
 }
 
 } // namespace

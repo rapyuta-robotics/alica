@@ -29,6 +29,7 @@ void BehAAA::run(void* msg)
 {
     /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
     // Add additional options here
+    ++runCount;
     auto& wm = alica_test::SchedWM::instance();
 
     wm.behAAARunCalled = true;
@@ -58,6 +59,7 @@ void BehAAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
+    runCount = 0;
     alica_test::SchedWM::instance().execOrder += "BehAAA::Init\n";
     _inRunContext = true;
 
@@ -76,6 +78,7 @@ void BehAAA::initialiseParameters()
 // Add additional options here
 void BehAAA::onTermination()
 {
+    runCount = 0;
     _inRunContext = false;
     alica_test::SchedWM::instance().execOrder += "BehAAA::Term\n";
 

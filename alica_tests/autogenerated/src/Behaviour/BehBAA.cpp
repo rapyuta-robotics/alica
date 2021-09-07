@@ -29,6 +29,7 @@ void BehBAA::run(void* msg)
 {
     /*PROTECTED REGION ID(run1629895911592) ENABLED START*/
     // Add additional options here
+    ++runCount;
     /*PROTECTED REGION END*/
 }
 void BehBAA::initialiseParameters()
@@ -36,13 +37,14 @@ void BehBAA::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
     alica_test::SchedWM::instance().execOrder += "BehBAA::Init\n";
-
+    runCount = 0;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895911592) ENABLED START*/
 // Add additional options here
 void BehBAA::onTermination()
 {
+    runCount = 0;
     alica_test::SchedWM::instance().execOrder += "BehBAA::Term\n";
 }
 /*PROTECTED REGION END*/
