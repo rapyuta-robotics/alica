@@ -1,0 +1,10 @@
+<launch>
+  <arg name="use_gdb"       default="false" />
+  <arg name="time_limit"    value="100000" if="$(arg use_gdb)" />
+  <arg name="time_limit"    value="600" unless="$(arg use_gdb)" />
+  <arg name="launch_prefix" value="xterm -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
+  <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
+
+  <test test-name="alica_ros_timer_tests" pkg="alica_ros_proxy" type="alica_ros_timer_tests" time-limit="$(arg time_limit)" launch-prefix="$(arg launch_prefix)">
+  </test>
+</launch>

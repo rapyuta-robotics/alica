@@ -5,7 +5,27 @@
 
 namespace alica
 {
-// Plan:GSolverTestPlan
+// Plan:  GSolverTestPlan (1417423757243)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1417423777546)
+//
+// States:
+//   - SolverState (1417423777544)
+GSolverTestPlan1417423757243::GSolverTestPlan1417423757243()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1417423757243) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+GSolverTestPlan1417423757243::~GSolverTestPlan1417423757243()
+{
+    /*PROTECTED REGION ID(dcon1417423757243) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): , (Comment) :
 
 /**
@@ -31,4 +51,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1417423757243::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1417423757243) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_ros_proxy)
 
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   alica_engine
@@ -47,3 +47,15 @@ install(DIRECTORY include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )
+
+if(CATKIN_ENABLE_TESTING)
+  find_package(catkin REQUIRED COMPONENTS
+    rostest
+    roscpp
+  )
+  include_directories(
+    ${catkin_INCLUDE_DIRS}
+  )
+  add_rostest_gtest(alica_ros_timer_tests test/alica_ros_timer_tests.test test/alica_ros_timer_tests.cpp)
+  target_link_libraries(alica_ros_timer_tests ${catkin_LIBRARIES})
+endif()

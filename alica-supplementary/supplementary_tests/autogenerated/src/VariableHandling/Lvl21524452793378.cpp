@@ -5,7 +5,28 @@
 
 namespace alica
 {
-// Plan:Lvl2
+// Plan:  Lvl2 (1524452793378)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1524452793380)//   - AttackTask (1407153522080) (Entrypoint: 1524453238753)
+//
+// States:
+//   - NewState (1524452793379)
+//   - Dummy (1524453248579)
+Lvl21524452793378::Lvl21524452793378()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1524452793378) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+Lvl21524452793378::~Lvl21524452793378()
+{
+    /*PROTECTED REGION ID(dcon1524452793378) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): Lvl2 Runtime Condition, (Comment) :
 
 /**
@@ -33,4 +54,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452793378::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1524452793378) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

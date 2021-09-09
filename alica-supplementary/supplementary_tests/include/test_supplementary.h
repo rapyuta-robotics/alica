@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PlanCreator.h"
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
@@ -7,6 +8,7 @@
 #include "UtilityFunctionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
+#include <clock/AlicaRosTimer.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
@@ -61,8 +63,10 @@ protected:
         ac = new alica::AlicaContext(AlicaContextParams("nase",path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                                      std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+                                      std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                                      std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
@@ -111,12 +115,14 @@ protected:
         std::string path;
         nh.param<std::string>("rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac = new alica::AlicaContext(AlicaContextParams(getHostName(i),path+ "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(constraintsolver)
 
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 
 ##Yaml
 find_package(yaml-cpp REQUIRED)

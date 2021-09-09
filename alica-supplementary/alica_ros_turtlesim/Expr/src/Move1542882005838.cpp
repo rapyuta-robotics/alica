@@ -5,7 +5,20 @@
 
 namespace alica
 {
-// Plan:Move
+// Plan:Move1542882005838
+Move1542882005838::Move1542882005838()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1542882005838) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+Move1542882005838::~Move1542882005838()
+{
+    /*PROTECTED REGION ID(dcon1542882005838) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 // Check of RuntimeCondition - (Name): CircleRuntimeCondition, (ConditionString): , (Comment) :
 
 /**
@@ -30,4 +43,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1542882005838::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1542882005838) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

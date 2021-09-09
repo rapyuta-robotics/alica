@@ -67,7 +67,7 @@ void Constraint1524453470580::getConstraint(std::shared_ptr<ProblemDescriptor> c
  * - ConditionString:
  *
  *
- * Plans in State:
+ * AbstractPlans in State:
  * Static Variables:
  * Domain Variables:
  * forall agents in MISSING_NAME let v = [X, Y]

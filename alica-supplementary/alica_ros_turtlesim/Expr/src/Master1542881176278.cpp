@@ -6,7 +6,20 @@
 
 namespace alica
 {
-// Plan:Master
+// Plan:Master1542881176278
+Master1542881176278::Master1542881176278()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1542881176278) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+Master1542881176278::~Master1542881176278()
+{
+    /*PROTECTED REGION ID(dcon1542881176278) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1543227864154
  */
@@ -33,7 +46,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1542881176278::getUtilityFunctio
  *   - Init (1542881176280)
  *   - Move (1542881580237)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1542881647180::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -55,7 +68,7 @@ bool PreCondition1542881647180::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Init (1542881176280)
  *   - Move (1542881580237)
  *
- * Variables of preconditon:
+ * Variables of precondition:
  */
 bool PreCondition1542881650423::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -64,4 +77,8 @@ bool PreCondition1542881650423::evaluate(std::shared_ptr<RunningPlan> rp)
     return turtlesim::ALICATurtleWorldModel::get()->getInit();
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1542881176278) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

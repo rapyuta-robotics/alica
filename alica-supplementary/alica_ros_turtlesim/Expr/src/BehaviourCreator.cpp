@@ -10,7 +10,7 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(long behaviourId)
+std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId)
 {
     switch (behaviourId) {
     case 1542881969548:

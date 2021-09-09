@@ -26,8 +26,8 @@ namespace alica
  * - ConditionString:
  *
  *
- * Plans in State:
- * - Plan Name: ProbBuildingLevel1, PlanID: 1479557378264
+ * AbstractPlans in State:
+ * - AbstractPlan Name: ProbBuildingLevel1, PlanID: 1479557378264
  * Static Variables: PBMX PBMY
  * Domain Variables:
  * forall agents in State1 let v = [X, Y]

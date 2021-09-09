@@ -54,11 +54,11 @@ void QueryBehaviour1::initialiseParameters()
 }
 /*PROTECTED REGION ID(methods1479556104511) ENABLED START*/
 // Add additional methods here
-    void QueryBehaviour1::stopQueries()
-    {
-        std::lock_guard<std::mutex> guard(queryMutex);
-        stopQuerying = true;
-    }
+void QueryBehaviour1::stopQueries()
+{
+    std::lock_guard<std::mutex> guard(queryMutex);
+    stopQuerying = true;
+}
 
 int QueryBehaviour1::getCallCounter()
 {

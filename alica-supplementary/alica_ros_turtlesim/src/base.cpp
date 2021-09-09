@@ -1,6 +1,7 @@
 #include <BehaviourCreator.h>
 #include <ConditionCreator.h>
 #include <ConstraintCreator.h>
+#include <PlanCreator.h>
 #include <UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
 
@@ -28,7 +29,8 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 void Base::start()
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>());
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+            std::make_unique<alica::PlanCreator>());
     ac->init(creators);
 }
 

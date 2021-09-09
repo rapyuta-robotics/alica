@@ -6,7 +6,28 @@ bool vhStartCondition = false;
 
 namespace alica
 {
-// Plan:Lvl1
+// Plan:  Lvl1 (1524452759599)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1524452759601)
+//
+// States:
+//   - NewState (1524452759600)
+//   - BeforeTrans (1524453481856)
+Lvl11524452759599::Lvl11524452759599()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1524452759599) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+Lvl11524452759599::~Lvl11524452759599()
+{
+    /*PROTECTED REGION ID(dcon1524452759599) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
 // Check of RuntimeCondition - (Name): NewRuntimeCondition, (ConditionString): Lvl1 Runtime Condition, (Comment) :
 
 /**
@@ -33,19 +54,19 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 /**
- * Outgoing transition:
- *   - Name: MISSING_NAME, ConditionString: , Comment: Lvl1 Transition
+ * Transition: MISSING_NAME (1524453490345)
+ *   - Comment: Lvl1 Transition
+ *   - Source2Dest: BeforeTrans --> NewState
  *
- * Abstract plans in current state:
+ * Precondition: MISSING_NAME (1524453491764)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *	   - MISSING_NAME (1524453546255)
  *
- * Tasks in plan:
- *   - DefaultTask (1225112227903) (Entrypoint: 1524452759601)
- *
- * States in plan:
- *   - NewState (1524452759600)
- *   - BeforeTrans (1524453481856)
- *
- * Variables of preconditon:
+ * Abstract Plans in BeforeTrans:
  */
 bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -53,4 +74,8 @@ bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp)
     return vhStartCondition;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1524452759599) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica
