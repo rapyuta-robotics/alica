@@ -22,6 +22,8 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _utilityThreshold(1.0)
         , _runtimeCondition(nullptr)
         , _preCondition(nullptr)
+        , _basicPlan(nullptr)
+        , _frequency(0)
 {
 }
 
@@ -102,6 +104,11 @@ void Plan::setSynchronisations(const SynchronisationGrp& synchronisations)
 void Plan::setTransitions(const TransitionGrp& transitions)
 {
     _transitions = transitions;
+}
+
+void Plan::setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan)
+{
+    _basicPlan = std::move(basicPlan);
 }
 
 std::string Plan::toString(std::string indent) const

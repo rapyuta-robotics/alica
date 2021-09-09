@@ -8,6 +8,7 @@ class Condition;
 class PlanRepository;
 class AlicaCreators;
 class IConstraintCreator;
+class AlicaEngine;
 
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
@@ -17,7 +18,7 @@ class ExpressionHandler
 public:
     ExpressionHandler();
     virtual ~ExpressionHandler();
-    void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
+    void attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx);
 
 private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);

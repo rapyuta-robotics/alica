@@ -1,6 +1,6 @@
 #include "Behaviour/Attack.h"
 #include "Behaviour/ConstraintUsingBehaviour.h"
-#include "CounterClass.h"
+#include <alica_tests/CounterClass.h>
 #include "test_alica.h"
 
 #include <alica/test/Util.h>
@@ -69,6 +69,7 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     ae->start();
     ac->stepEngine();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
     std::shared_ptr<alica::ConstraintUsingBehaviour> constraintUsingBehaviour =
             std::dynamic_pointer_cast<alica::ConstraintUsingBehaviour>(alica::test::Util::getBasicBehaviour(ae, 1414068597716, 0));

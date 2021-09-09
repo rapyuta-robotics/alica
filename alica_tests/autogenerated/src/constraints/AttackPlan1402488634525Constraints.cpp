@@ -31,7 +31,7 @@ namespace alica
  * AbstractPlans in State:
  * - AbstractPlan Name: Tackle, PlanID: 1402489318663
  * - AbstractPlan Name: AttackOpp, PlanID: 1402489351885
- * Static Variables: ABC TestVar1
+ * Static Variables:
  * Domain Variables:
  * forall agents in AttackPlan let v = [X, Y]
  * forall agents in Attack let v = [A, B]

@@ -11,6 +11,7 @@
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
+#include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
@@ -22,60 +23,23 @@ namespace alica
 {
 /**
  * Basic constructor. Initialises the timer. Should only be called from the constructor of inheriting classes.
- * If using eventTrigger set behaviourTrigger and register runCV
+ * If using eventTrigger set behaviourTrigger
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
         : _name(name)
-        , _engine(nullptr)
         , _behaviour(nullptr)
-        , _contextInRun(nullptr)
+        , _engine(nullptr)
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
-        , _signalState(SignalState::STOP)
-        , _stopCalled(false)
-        , _behaviourResult(BehaviourResult::UNKNOWN)
-        , _behaviourState(BehaviourState::UNINITIALIZED)
-        , _behaviourTrigger(nullptr)
-        , _runThread(nullptr)
         , _context(nullptr)
+        , _signalState(1)
+        , _execState(1)
+        , _behResult(BehResult::UNKNOWN)
+        , _activeRunJobId(-1)
+        , _triggeredJobRunning(false)
 {
-}
-
-void BasicBehaviour::terminate()
-{
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::TERMINATE);
-    }
-    _runCV.notify_all();
-    if (_runThread) {
-        _runThread->join();
-        delete _runThread;
-    }
-}
-
-bool BasicBehaviour::isRunningInContext(const RunningPlan* rp) const
-{
-    return _context == rp && (getSignalState() == SignalState::START || isBehaviourStarted());
-}
-
-void BasicBehaviour::setBehaviour(const Behaviour* beh)
-{
-    assert(_behaviour == nullptr);
-    _behaviour = beh;
-    if (_behaviour->isEventDriven()) {
-        _runThread = new std::thread(&BasicBehaviour::runThread, this, false);
-    } else {
-        _runThread = new std::thread(&BasicBehaviour::runThread, this, true);
-    }
-}
-
-void BasicBehaviour::setConfiguration(const Configuration* conf)
-{
-    assert(_configuration == nullptr);
-    _configuration = conf;
 }
 
 /**
@@ -92,168 +56,110 @@ essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
  */
 bool BasicBehaviour::stop()
 {
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::STOP);
-        setStopCalled(true);
+    if (!isActive(_signalState.load())) {
+        return true;
     }
-    if (_behaviour->isEventDriven()) {
-        _runCV.notify_all();
-    }
+    ++_signalState;
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::terminateJob, this));
     return true;
 }
 
 /**
  * Starts the execution of this BasicBehaviour.
  */
-bool BasicBehaviour::start()
+bool BasicBehaviour::start(RunningPlan* rp)
 {
-    {
-        std::lock_guard<std::mutex> lck(_runLoopMutex);
-        setSignalState(SignalState::START);
+    if (isActive(_signalState.load())) {
+        return true;
     }
-
-    if (!_behaviour->isEventDriven()) {
-        _runCV.notify_all();
-    }
+    ++_signalState;
+    _context.store(rp);
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
 }
 
 void BasicBehaviour::setSuccess()
 {
-    if (getBehaviourResult() != BehaviourResult::SUCCESS && getBehaviourState() == BehaviourState::RUNNING) {
-        setBehaviourResult(BehaviourResult::SUCCESS);
-        _engine->editPlanBase().addFastPathEvent(_context);
+    if (!isExecutingInContext()) {
+        return;
     }
-}
-
-bool BasicBehaviour::isSuccess() const
-{
-    // Check for isStopCalled() before checking the behaviour result
-    return !isStopCalled() && getBehaviourResult() == BehaviourResult::SUCCESS;
+    auto prev = _behResult.exchange(BehResult::SUCCESS);
+    if (prev != BehResult::SUCCESS) {
+        _engine->editPlanBase().addFastPathEvent(_context.load());
+    }
 }
 
 void BasicBehaviour::setFailure()
 {
-    if (getBehaviourResult() != BehaviourResult::FAILURE && getBehaviourState() == BehaviourState::RUNNING) {
-        setBehaviourResult(BehaviourResult::FAILURE);
-        _engine->editPlanBase().addFastPathEvent(_context);
-    }
-}
-
-bool BasicBehaviour::isFailure() const
-{
-    // Check for isStopCalled() before checking the behaviour result
-    return !isStopCalled() && getBehaviourResult() == BehaviourResult::FAILURE;
-}
-
-void BasicBehaviour::setTrigger(essentials::ITrigger* trigger)
-{
-    if (!trigger)
+    if (!isExecutingInContext()) {
         return;
-
-    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
-    _behaviourTrigger = trigger;
-    _behaviourTrigger->registerCV(&_runCV);
+    }
+    auto prev = _behResult.exchange(BehResult::FAILURE);
+    if (prev != BehResult::FAILURE) {
+        _engine->editPlanBase().addFastPathEvent(_context.load());
+    }
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
 {
-    std::lock_guard<std::mutex> lockGuard(_runLoopMutex);
-    if (!_behaviourTrigger)
-        return false;
-
-    return !_behaviourTrigger->isNotifyCalled(&_runCV);
+    return !_triggeredJobRunning.load();
 }
 
-bool BasicBehaviour::doWait()
+void BasicBehaviour::initJob()
 {
-    std::unique_lock<std::mutex> lck(_runLoopMutex);
-    _runCV.wait(lck, [this] { return getSignalState() == SignalState::START || isTerminated(); });
-    if (isTerminated()) {
-        return false;
-    }
-    setBehaviourResult(BehaviourResult::UNKNOWN);
-    setStopCalled(false);
-    setBehaviourState(BehaviourState::INITIALIZING);
-    return true;
-}
+    assert(_behResult.load() == BehResult::UNKNOWN);
+    ++_execState;
 
-void BasicBehaviour::doInit(bool timed)
-{
-    if (timed && _msDelayedStart > AlicaTime::milliseconds(0)) {
-        _engine->getAlicaClock().sleep(_msDelayedStart);
-    }
+    // Todo: Optimization: don't call initialiseParameters if not in context
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
-}
 
-void BasicBehaviour::doStop()
-{
-    // important to set stopCalled to false after setting behaviour result for correct lock-free
-    // behaviour of isSuccess() & isFailure(). Should be called when _runLoopMutex is held by the thread
-    setBehaviourResult(BehaviourResult::UNKNOWN);
-    setBehaviourState(BehaviourState::TERMINATING);
-    setStopCalled(false);
-}
-
-void BasicBehaviour::doRun(bool timed)
-{
-    setBehaviourState(BehaviourState::RUNNING);
-    if (timed) {
-        while (true) {
-            {
-                std::unique_lock<std::mutex> lck(_runLoopMutex);
-                if (isTerminated() || isStopCalled()) {
-                    doStop();
-                    return;
-                }
-            }
-            AlicaTime start = _engine->getAlicaClock().now();
-            try {
-                run(nullptr);
-            } catch (const std::exception& e) {
-                std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-                sendLogMessage(4, err);
-            }
-            AlicaTime duration = _engine->getAlicaClock().now() - start;
-            ALICA_WARNING_MSG_IF(duration > _msInterval + AlicaTime::microseconds(100),
-                    "[BasicBehaviour] Behaviour " << _name << "exceeded runtime:  " << duration.inMilliseconds() << "ms!");
-            if (duration < _msInterval) {
-                _engine->getAlicaClock().sleep(_msInterval - duration);
-            }
-        }
-    } else {
-        while (true) {
-            {
-                std::unique_lock<std::mutex> lck(_runLoopMutex);
-                _runCV.wait(lck, [this] { return (_behaviourTrigger && _behaviourTrigger->isNotifyCalled(&_runCV)) || isStopCalled() || isTerminated(); });
-                if (isTerminated() || isStopCalled()) {
-                    doStop();
-                    return;
-                }
-            }
-            try {
-                run(static_cast<void*>(_behaviourTrigger));
-            } catch (const std::exception& e) {
-                std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-                sendLogMessage(4, err);
-            }
-            _behaviourTrigger->setNotifyCalled(&_runCV, false);
-        }
+    // Do not schedule repeatable run job when behaviour is event driven or when frequency is 0.
+    if (!isEventDriven() && _msInterval > AlicaTime::milliseconds(0)) {
+        // TODO: account for delayed start
+        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr), getInterval());
     }
 }
 
-void BasicBehaviour::runThread(bool timed)
+void BasicBehaviour::runJob(void* msg)
 {
-    while (doWait()) {
-        doInit(timed);
-        doRun(timed);
+    // TODO: get rid of msg
+    try {
+        run(msg);
+    } catch (const std::exception& e) {
+        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
+        sendLogMessage(4, err);
+    }
+    _triggeredJobRunning = false;
+}
+
+void BasicBehaviour::doTrigger()
+{
+    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
+        return;
+    }
+    _triggeredJobRunning = true;
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
+}
+
+void BasicBehaviour::terminateJob()
+{
+    if (_activeRunJobId != -1) {
+        _engine->editScheduler().cancelJob(_activeRunJobId);
+        _activeRunJobId = -1;
+    }
+    // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
+    _behResult.store(BehResult::UNKNOWN);
+    ++_execState;
+    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
+    // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
+    try {
         onTermination();
-        setBehaviourState(BehaviourState::UNINITIALIZED);
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
 }
 

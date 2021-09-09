@@ -1,27 +1,31 @@
 {
-  "id" : 1418042702402,
-  "name" : "TestPlanType",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "variableBindings" : [ ],
-  "annotatedPlans" : [ {
-    "id" : 1418042836377,
-    "name" : "AnnotatedOtherPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "OtherPlan.pml#1418042819203"
-  }, {
-    "id" : 1418042833223,
-    "name" : "AnnotatedRuntimeConditionPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "RuntimeConditionPlan.pml#1418042806575"
-  }, {
-    "id" : 1418042831574,
-    "name" : "AnnotatedPreConditionPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "PreConditionPlan.pml#1418042796751"
-  } ]
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1418042831574,
+      "name": "AnnotatedPreConditionPlan",
+      "plan": "PreConditionPlan.pml#1418042796751"
+    },
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1418042833223,
+      "name": "AnnotatedRuntimeConditionPlan",
+      "plan": "RuntimeConditionPlan.pml#1418042806575"
+    },
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1418042836377,
+      "name": "AnnotatedOtherPlan",
+      "plan": "OtherPlan.pml#1418042819203"
+    }
+  ],
+  "comment": "",
+  "id": 1418042702402,
+  "name": "TestPlanType",
+  "relativeDirectory": "",
+  "variableBindings": [],
+  "variables": []
 }

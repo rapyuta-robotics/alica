@@ -1,7 +1,7 @@
 #include "test_alica.h"
 
-#include "TestConstantValueSummand.h"
-#include "TestWorldModel.h"
+#include <alica_tests/TestConstantValueSummand.h>
+#include <alica_tests/TestWorldModel.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>

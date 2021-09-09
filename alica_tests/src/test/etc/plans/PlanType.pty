@@ -1,27 +1,31 @@
 {
-  "id" : 1402489564599,
-  "name" : "PlanType",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "variableBindings" : [ ],
-  "annotatedPlans" : [ {
-    "id" : 1402489581917,
-    "name" : "AnnotatedMidFieldPlayPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "MidFieldPlayPlan.pml#1402488770050"
-  }, {
-    "id" : 1402489580756,
-    "name" : "AnnotatedGoalPlan",
-    "comment" : "",
-    "activated" : false,
-    "plan" : "GoalPlan.pml#1402488870347"
-  }, {
-    "id" : 1402489579755,
-    "name" : "AnnotatedAttackPlan",
-    "comment" : "",
-    "activated" : true,
-    "plan" : "AttackPlan.pml#1402488634525"
-  } ]
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1402489579755,
+      "name": "AnnotatedAttackPlan",
+      "plan": "AttackPlan.pml#1402488634525"
+    },
+    {
+      "activated": false,
+      "comment": "",
+      "id": 1402489580756,
+      "name": "AnnotatedGoalPlan",
+      "plan": "GoalPlan.pml#1402488870347"
+    },
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1402489581917,
+      "name": "AnnotatedMidFieldPlayPlan",
+      "plan": "MidFieldPlayPlan.pml#1402488770050"
+    }
+  ],
+  "comment": "",
+  "id": 1402489564599,
+  "name": "PlanType",
+  "relativeDirectory": "",
+  "variableBindings": [],
+  "variables": []
 }

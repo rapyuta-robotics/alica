@@ -18,7 +18,6 @@ NotToTrigger::NotToTrigger()
     // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    setTrigger(alicaTests::TestWorldModel::getOne()->trigger1.get());
     /*PROTECTED REGION END*/
 }
 NotToTrigger::~NotToTrigger()

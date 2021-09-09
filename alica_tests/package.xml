@@ -19,9 +19,10 @@
   <depend>id_ros</depend>
   <depend>alica_solver_interface</depend>
   <depend>alica_test_utility</depend>
+  <depend>alica_ros_proxy</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
-  
+
   <test_depend>rostest</test_depend>
   <test_depend>gtest</test_depend>
   <export>
