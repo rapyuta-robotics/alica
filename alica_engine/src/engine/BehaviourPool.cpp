@@ -54,7 +54,12 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
             basicBeh->setConfiguration(wrapper->getConfiguration());
             basicBeh->setBehaviour(behaviour);
             basicBeh->setDelayedStart(behaviour->getDeferring());
-            basicBeh->setInterval(1000 / (behaviour->getFrequency() < 1 ? 1 : behaviour->getFrequency()));
+            if (behaviour->getFrequency() < 1) {
+                // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
+                basicBeh->setInterval(0);
+            } else {
+                basicBeh->setInterval(1000 / behaviour->getFrequency());
+            }
             basicBeh->setEngine(_ae);
             basicBeh->init();
             _availableBehaviours.insert(std::make_pair(wrapper, basicBeh));
@@ -93,9 +98,7 @@ void BehaviourPool::startBehaviour(RunningPlan& rp)
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
             // set both directions rp <-> bb
             rp.setBasicBehaviour(bb.get());
-            bb->setRunningPlan(&rp);
-
-            bb->start();
+            bb->start(&rp);
             return;
         }
     }

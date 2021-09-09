@@ -25,6 +25,7 @@ class AbstractPlan;
 class AlicaEngine;
 class BehaviourPool;
 class BasicBehaviour;
+class BasicPlan;
 class Configuration;
 class State;
 class EntryPoint;
@@ -134,6 +135,7 @@ public:
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
+    BasicPlan* getBasicPlan() const { return _basicPlan; }
 
     void printRecursive() const;
 
@@ -146,6 +148,7 @@ public:
     void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
     void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
+    void setBasicPlan(BasicPlan* basicPlan) { _basicPlan = basicPlan; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
 
@@ -222,6 +225,7 @@ private:
     RunningPlan* _parent;
 
     BasicBehaviour* _basicBehaviour;
+    BasicPlan* _basicPlan;
     // Components
     Assignment _assignment;
     CycleManager _cycleManagement;

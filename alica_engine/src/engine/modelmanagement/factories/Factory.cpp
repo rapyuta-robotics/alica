@@ -71,6 +71,23 @@ int64_t Factory::getReferencedId(const std::string& idString)
 
 void Factory::setModelManager(alica::ModelManager* modelManager)
 {
+    stateInTransitionReferences.clear();
+    stateOutTransitionReferences.clear();
+    transitionSynchReferences.clear();
+    synchTransitionReferences.clear();
+    transitionInStateReferences.clear();
+    transitionOutStateReferences.clear();
+    bindingSubPlanReferences.clear();
+    bindingSubVarReferences.clear();
+    bindingVarReferences.clear();
+    conditionVarReferences.clear();
+    quantifierScopeReferences.clear();
+    epStateReferences.clear();
+    epTaskReferences.clear();
+    planTypePlanReferences.clear();
+    wrapperAbstractPlanReferences.clear();
+    wrapperConfigurationReferences.clear();
+    roleTaskReferences.clear();
     Factory::modelManager = modelManager;
 }
 

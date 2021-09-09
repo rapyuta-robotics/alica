@@ -3,7 +3,7 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "CounterClass.h"
+#include <alica_tests/CounterClass.h>
 #include "UtilityFunctionCreator.h"
 
 #include <alica/test/Util.h>

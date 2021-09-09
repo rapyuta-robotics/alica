@@ -9,7 +9,9 @@
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
+#include "engine/IPlanCreator.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
 
 #include <essentials/IDManager.h>
@@ -44,19 +46,21 @@ namespace test {
 struct AlicaCreators
 {
     AlicaCreators(std::unique_ptr<IConditionCreator> cc, std::unique_ptr<IUtilityCreator> uc, std::unique_ptr<IConstraintCreator> crc,
-            std::unique_ptr<IBehaviourCreator> bc)
+            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc)
             : conditionCreator(std::move(cc))
             , utilityCreator(std::move(uc))
             , constraintCreator(std::move(crc))
             , behaviourCreator(std::move(bc))
+            , planCreator(std::move(pc))
     {
-        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator);
+        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator);
     }
 
     std::unique_ptr<IConditionCreator> conditionCreator;
     std::unique_ptr<IUtilityCreator> utilityCreator;
     std::unique_ptr<IConstraintCreator> constraintCreator;
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
+    std::unique_ptr<IPlanCreator> planCreator;
 };
 
 /**
@@ -71,7 +75,7 @@ struct AlicaContextParams
      * @param masterPlanName Name of the masterPlan
      * @param stepEngine Signify engine is trigger based. Defaults to false.
      * @param agentID Identifier of the local Agent. If no identifier is given,
-     * the engine will try to read the local agent's identifier from the 
+     * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
@@ -94,8 +98,8 @@ struct AlicaContextParams
     /**
      * @param agentName Name of the local agent.
      * @param configPath Path to the configuration folder.
-     * @param agentID Identifier of the local Agent. If no identifier is given, 
-     * the engine will try to read the local agent's identifier from the 
+     * @param agentID Identifier of the local Agent. If no identifier is given,
+     * the engine will try to read the local agent's identifier from the
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
@@ -289,6 +293,30 @@ public:
     template <class SolverType>
     bool existSolver() const;
 
+
+    /**
+     * Set timer factory to be used by this alica framework instance.
+     * Example usage: setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+     *
+     * @note TimerFactoryType must be a derived class of IAlicaTimerFactory
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of timer factory. Might be empty.
+     */
+    template <class TimerFactoryType, class... Args>
+    void setTimerFactory(Args&&... args);
+
+    /**
+     * Get timer factory being used by this alica instance.
+     *
+     * @return A reference to timer factory object being used by context
+     */
+    IAlicaTimerFactory& getTimerFactory() const
+    {
+        assert(_timerFactory.get());
+        return *_timerFactory;
+    }
+
     /**
      * Check whether object is a valid AlicaContext.
      *
@@ -364,6 +392,7 @@ private:
     std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
+    std::unique_ptr<IAlicaTimerFactory> _timerFactory;
 
     bool _initialized = false;
 
@@ -440,6 +469,17 @@ bool AlicaContext::existSolver() const
 {
     auto cit = _solvers.find(typeid(SolverType).hash_code());
     return (cit != _solvers.end());
+}
+
+template <class TimerFactoryType, class... Args>
+void AlicaContext::setTimerFactory(Args&&... args)
+{
+    static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
+#else
+    _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
+#endif
 }
 
 template <class T>

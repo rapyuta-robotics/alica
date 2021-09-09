@@ -37,37 +37,31 @@ public:
     virtual ~BasicBehaviour(){};
     virtual void run(void* msg) = 0;
 
-    bool isRunningInContext(const RunningPlan* rp) const;
+    bool isRunningInContext(const RunningPlan* rp) const { return isExecutingInContext() && rp == _context.load(); };
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
 
-    void setBehaviour(const Behaviour* beh);
-    void setConfiguration(const Configuration* conf);
+    void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
+    void setConfiguration(const Configuration* conf) { _configuration = conf; };
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
     bool stop();
-    bool start();
-    void terminate();
+    bool start(RunningPlan* rp);
+    void terminate() { stop(); };
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
 
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isBehaviourStarted() ? _context : nullptr); }
-    void setRunningPlan(RunningPlan* rp) { _context = rp; }
-
-    bool isSuccess() const;
-    void setSuccess();
-    bool isFailure() const;
-    void setFailure();
+    bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
+    bool isFailure() const { return isExecutingInContext() && _behResult.load() == BehResult::FAILURE; };
 
     bool getParameter(const std::string& key, std::string& valueOut) const;
-    void setTrigger(essentials::ITrigger* trigger);
-    bool isTriggeredRunFinished();
 
-    void sendLogMessage(int level, const std::string& message) const;
+    void doTrigger();
+    bool isTriggeredRunFinished();
 
     /**
      * Called after construction.
@@ -75,15 +69,24 @@ public:
      */
     virtual void init() {}
 
+    AlicaTime getInterval() { return _msInterval; }
+
+    bool isEventDriven() const { return _behaviour->isEventDriven(); }
+
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
+
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
+    void setSuccess();
+    void setFailure();
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.
      */
     virtual void initialiseParameters() {}
+
     /**
      * Called whenever a basic behavior is stopped, i.e., when the corresponding state is left.
      * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
@@ -92,44 +95,45 @@ protected:
 
 private:
     friend alica::test::TestContext;
-    enum BehaviourResult
+    using Counter = uint64_t;
+    enum class BehResult : uint8_t
     {
         UNKNOWN,
         SUCCESS,
         FAILURE
     };
-    enum BehaviourState
+
+    void runJob(void* msg);
+    void initJob();
+    void terminateJob();
+
+    void sendLogMessage(int level, const std::string& message) const;
+
+    /*
+     * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
+     * & _signalState is used to track this context [signal context].
+     *
+     * The scheduler thread is the one that actually executes the initialiseParameters(), run() & onTermination() methods
+     * of this behaviour & _execState is used to track this context [execution context].
+     *
+     * The states are tracked using simple counters: if the counter is even then the behaviour is active within that context
+     * i.e. behaviour is started [equivalently: not stopped] & the counter is incremented whenever the behaviour is started
+     * or stopped within its context.
+     *
+     * Therefore the execution of the behaviour by the scheduler thread is in the context of the running plan only if
+     * _signalState == _execState && _signalState is even.
+     *
+     */
+
+    // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
+    static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
+
+    // Returns true if the behaviour is executing in the context of the running plan
+    bool isExecutingInContext() const
     {
-        UNINITIALIZED,
-        INITIALIZING,
-        RUNNING,
-        TERMINATING
-    };
-    enum SignalState
-    {
-        START,
-        STOP,
-        TERMINATE
-    };
-
-    SignalState getSignalState() const { return _signalState; }
-    void setSignalState(SignalState signalState) { _signalState = signalState; }
-    bool isTerminated() const { return _signalState == SignalState::TERMINATE; }
-    BehaviourState getBehaviourState() const { return _behaviourState.load(); }
-    void setBehaviourState(BehaviourState state) { _behaviourState.store(state); }
-    BehaviourResult getBehaviourResult() const { return _behaviourResult.load(); }
-    void setBehaviourResult(BehaviourResult result) { _behaviourResult.store(result); }
-    bool isStopCalled() const { return _stopCalled.load(); }
-    void setStopCalled(bool val) { _stopCalled.store(val); }
-    bool isBehaviourStarted() const { return _behaviourState.load() != BehaviourState::UNINITIALIZED; }
-
-    void runThread(bool timed);
-
-    // wait, init, run & stop the behaviour
-    bool doWait();
-    void doInit(bool timed);
-    void doRun(bool timed);
-    void doStop();
+        Counter sc = _signalState.load(), ec = _execState.load();
+        return sc == ec && isActive(sc);
+    }
 
     /**
      * The name of this behaviour.
@@ -138,27 +142,25 @@ private:
 
     const Behaviour* _behaviour;
     AlicaEngine* _engine;
-    RunningPlan* _context;
 
     /**
      * The configuration, that is set in the behaviour pool, associated with
      * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
      */
     const Configuration* _configuration;
-    std::atomic<RunningPlan*> _contextInRun;
-    SignalState _signalState;      // current state of the signal from main thread (start, stop or terminate)
-    std::atomic<bool> _stopCalled; // used by behaviour thread to check if stop was signalled while it was running user code
 
-    std::atomic<BehaviourResult> _behaviourResult;
-    std::atomic<BehaviourState> _behaviourState;
-
-    std::thread* _runThread; /** < executes the runInternal and thereby the abstract run method */
-
-    essentials::ITrigger* _behaviourTrigger; /** triggers the condition_variable of the runThread, if this behaviour
-                                                  is event triggered, alternative to timer */
-    std::condition_variable _runCV;
-    mutable std::mutex _runLoopMutex;
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
+
+    // TODO: Optimization: It should be okay (confirm it) for all accesses to atomic variables to be done using acquire-release semantics instead
+    // of the current used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
+    // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
+    std::atomic<RunningPlan*> _context;
+    std::atomic<Counter> _signalState; // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
+    std::atomic<Counter> _execState; // Tracks the actual executate state of the behaviour by the scheduler thread
+    std::atomic<BehResult> _behResult;
+
+    int64_t _activeRunJobId;
+    std::atomic<bool> _triggeredJobRunning;
 };
 } /* namespace alica */

@@ -1,160 +1,222 @@
 {
-  "id" : 1530004915640,
-  "name" : "HandleFailExplicit",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.1,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1530004915642,
-    "name" : "MISSING_NAME",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "taskrepository.tsk#1225112227903",
-    "state" : 1530004915641,
-    "plan" : 1530004915640
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1530004915641,
-    "name" : "A",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1530004915640,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1530004992551 ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1530004973591,
-    "name" : "B",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1530004915640,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662548,
-      "name" : "1587718662548",
-      "comment" : "",
-      "abstractPlan" : "FailsOnOne.pml#1530069246103",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1530004993680 ],
-    "inTransitions" : [ 1530004992551 ]
-  }, {
-    "type" : "State",
-    "id" : 1530004975275,
-    "name" : "C",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1530004915640,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1532424092280 ],
-    "inTransitions" : [ 1530004993680 ]
-  }, {
-    "type" : "State",
-    "id" : 1532424087894,
-    "name" : "D",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1530004915640,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1587718662553,
-      "name" : "1587718662553",
-      "comment" : "",
-      "abstractPlan" : "Behaviour/AlwaysFail.beh#1532424188199",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1532424112331 ],
-    "inTransitions" : [ 1532424092280 ]
-  }, {
-    "type" : "State",
-    "id" : 1532424097662,
-    "name" : "E",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1530004915640,
-    "confAbstractPlanWrappers" : [ ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ 1532424112331 ]
-  } ],
-  "transitions" : [ {
-    "id" : 1530004992551,
-    "name" : "MISSING_NAME",
-    "comment" : "From A to B, isset(0)",
-    "inState" : 1530004915641,
-    "outState" : 1530004973591,
-    "preCondition" : {
-      "id" : 1530004993493,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 1530004915642,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "MISSING_NAME",
+      "plan": 1530004915640,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 1530004915641,
+      "successRequired": false,
+      "task": "taskrepository.tsk#1225112227903"
+    }
+  ],
+  "frequency": 0,
+  "id": 1530004915640,
+  "masterPlan": false,
+  "name": "HandleFailExplicit",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1530004915642,
+      "id": 1530004915641,
+      "inTransitions": [],
+      "name": "A",
+      "outTransitions": [
+        1530004992551
+      ],
+      "parentPlan": 1530004915640,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1530004993680,
-    "name" : "MISSING_NAME",
-    "comment" : "AnyChildFail",
-    "inState" : 1530004973591,
-    "outState" : 1530004975275,
-    "preCondition" : {
-      "id" : 1530004994611,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "FailsOnOne.pml#1530069246103",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662548,
+          "name": "1587718662548"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1530004973591,
+      "inTransitions": [
+        1530004992551
+      ],
+      "name": "B",
+      "outTransitions": [
+        1530004993680
+      ],
+      "parentPlan": 1530004915640,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1532424092280,
-    "name" : "MISSING_NAME",
-    "comment" : "C to D, isset(2)",
-    "inState" : 1530004975275,
-    "outState" : 1532424087894,
-    "preCondition" : {
-      "id" : 1532424093178,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1530004975275,
+      "inTransitions": [
+        1530004993680
+      ],
+      "name": "C",
+      "outTransitions": [
+        1532424092280
+      ],
+      "parentPlan": 1530004915640,
+      "positionWeb": {
+        "x": 944,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1532424112331,
-    "name" : "MISSING_NAME",
-    "comment" : "AnyChildFail",
-    "inState" : 1532424087894,
-    "outState" : 1532424097662,
-    "preCondition" : {
-      "id" : 1532424113475,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/AlwaysFail.beh#1532424188199",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662553,
+          "name": "1587718662553"
+        }
+      ],
+      "entryPoint": null,
+      "id": 1532424087894,
+      "inTransitions": [
+        1532424092280
+      ],
+      "name": "D",
+      "outTransitions": [
+        1532424112331
+      ],
+      "parentPlan": 1530004915640,
+      "positionWeb": {
+        "x": 1202,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  } ],
-  "synchronisations" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1532424097662,
+      "inTransitions": [
+        1532424112331
+      ],
+      "name": "E",
+      "outTransitions": [],
+      "parentPlan": 1530004915640,
+      "positionWeb": {
+        "x": 1460,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [
+    {
+      "comment": "From A to B, isset(0)",
+      "id": 1530004992551,
+      "inState": 1530004915641,
+      "name": "MISSING_NAME",
+      "outState": 1530004973591,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1530004993493,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "AnyChildFail",
+      "id": 1530004993680,
+      "inState": 1530004973591,
+      "name": "MISSING_NAME",
+      "outState": 1530004975275,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1530004994611,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "C to D, isset(2)",
+      "id": 1532424092280,
+      "inState": 1530004975275,
+      "name": "MISSING_NAME",
+      "outState": 1532424087894,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1532424093178,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "AnyChildFail",
+      "id": 1532424112331,
+      "inState": 1532424087894,
+      "name": "MISSING_NAME",
+      "outState": 1532424097662,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1532424113475,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
+  "utilityThreshold": 0.1,
+  "variables": []
 }

@@ -1,15 +1,35 @@
 #include "PreConditionPlan1418042796751.h"
 /*PROTECTED REGION ID(eph1418042796751) ENABLED START*/
 // Add additional using directives here
-#include "TestConstantValueSummand.h"
-#include "TestWorldModel.h"
 #include "engine/USummand.h"
-#include <DistXContourTest.h>
+#include <alica_tests/DistXContourTest.h>
+#include <alica_tests/TestConstantValueSummand.h>
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-// Plan:PreConditionPlan
+// Plan:  PreConditionPlan (1418042796751)
+//
+// Tasks:
+//   - DefaultTask (1225112227903) (Entrypoint: 1418042796753)
+//
+// States:
+//   - PreConditionTest (1418042796752)
+PreConditionPlan1418042796751::PreConditionPlan1418042796751()
+        : DomainPlan()
+{
+    /*PROTECTED REGION ID(con1418042796751) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
+{
+    /*PROTECTED REGION ID(dcon1418042796751) ENABLED START*/
+    // Add additional options here
+    /*PROTECTED REGION END*/
+}
+
 // Check of PreCondition - (Name): NewPreCondition, (ConditionString): Test , (Comment) :
 
 /**
@@ -34,4 +54,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042796751::getUtilityFunctio
     return function;
     /*PROTECTED REGION END*/
 }
+
+/*PROTECTED REGION ID(methods1418042796751) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
 } // namespace alica

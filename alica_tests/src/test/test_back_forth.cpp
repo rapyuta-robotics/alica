@@ -1,7 +1,7 @@
 #include <test_alica.h>
 
-#include "CounterClass.h"
-#include "SimpleSwitches.h"
+#include <alica_tests/CounterClass.h>
+#include <alica_tests/SimpleSwitches.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaEngine.h>
@@ -53,6 +53,7 @@ TEST_F(BackForthTest, testing)
     SimpleSwitches::set(1, true);
     for (int i = 0; i < 10; ++i) {
         ac->stepEngine();
+        ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
         ASSERT_GT(CounterClass::called, curCount);
         curCount = CounterClass::called;
     }

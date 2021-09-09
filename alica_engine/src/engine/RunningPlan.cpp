@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/BasicPlan.h"
 #include "engine/BehaviourPool.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IPlanTreeVisitor.h"
@@ -17,16 +18,17 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
+#include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
+#include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/model/Configuration.h"
-#include "engine/model/Parameter.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -44,8 +46,7 @@ AlicaTime s_assignmentProtectionTime = AlicaTime::zero();
 
 void RunningPlan::init(const YAML::Node& config)
 {
-    s_assignmentProtectionTime =
-            AlicaTime::milliseconds(config["Alica"]["AssignmentProtectionTime"].as<unsigned long>());
+    s_assignmentProtectionTime = AlicaTime::milliseconds(config["Alica"]["AssignmentProtectionTime"].as<unsigned long>());
 }
 
 void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
@@ -60,6 +61,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -79,6 +81,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
         , _assignment(plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -92,6 +95,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuratio
         , _assignment()
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -104,6 +108,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuratio
         , _behaviour(true)
         , _assignment()
         , _basicBehaviour(nullptr)
+        , _basicPlan(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)
         , _configuration(configuration)
@@ -214,7 +219,7 @@ bool RunningPlan::evalRuntimeCondition() const
     if (const Plan* plan = dynamic_cast<const Plan*>(_activeTriple.abstractPlan)) {
         runtimeCondition = plan->getRuntimeCondition();
     }
-    if (runtimeCondition== nullptr) {
+    if (runtimeCondition == nullptr) {
         _status.runTimeConditionStatus = EvalStatus::True;
         return true;
     }
@@ -466,13 +471,15 @@ void RunningPlan::accept(IPlanTreeVisitor* vis)
 void RunningPlan::deactivate()
 {
     _status.active = PlanActivity::Retired;
+    revokeAllConstraints();
+    deactivateChildren();
+
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
+        _basicPlan->stop();
     }
-    revokeAllConstraints();
-    deactivateChildren();
 }
 
 /**
@@ -557,7 +564,12 @@ void RunningPlan::activate()
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
+    } else if (_activeTriple.abstractPlan) {
+        _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
+        _basicPlan->setConfiguration(getConfiguration());
+        _basicPlan->start(this);
     }
+
     attachPlanConstraints();
     for (RunningPlan* r : _children) {
         r->activate();
@@ -603,7 +615,6 @@ void RunningPlan::attachPlanConstraints()
         _constraintStore.addCondition(plan->getPreCondition());
         _constraintStore.addCondition(plan->getRuntimeCondition());
     }
-
 }
 
 bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now)
@@ -811,7 +822,8 @@ bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) co
     }
 }
 
-const Configuration* RunningPlan::getConfiguration() const {
+const Configuration* RunningPlan::getConfiguration() const
+{
     return _configuration;
 }
 

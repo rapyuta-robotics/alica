@@ -4,7 +4,7 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include "TestWorldModel.h"
+#include <alica_tests/TestWorldModel.h>
 #include "UtilityFunctionCreator.h"
 
 #include <alica/test/Util.h>
