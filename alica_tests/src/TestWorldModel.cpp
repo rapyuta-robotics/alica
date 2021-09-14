@@ -45,6 +45,8 @@ void TestWorldModel::reset()
     transitionCondition1625776897472 = false;
     switchEntryPoints = false;
 
+    transitionCondition4238964946542987247 = false;
+
     x = 0;
 }
 
@@ -180,6 +182,26 @@ bool TestWorldModel::isTransitionCondition1626848015861()
 void TestWorldModel::setTransitionCondition1626848015861(bool transitionCondition1626848015861)
 {
     this->transitionCondition1626848015861 = transitionCondition1626848015861;
+}
+
+bool TestWorldModel::isTransitionCondition4238964946542987247()
+{
+    return this->transitionCondition4238964946542987247;
+}
+
+void TestWorldModel::setTransitionCondition4238964946542987247(bool transitionCondition4238964946542987247)
+{
+    this->transitionCondition4238964946542987247 = transitionCondition4238964946542987247;
+}
+
+bool TestWorldModel::isTransitionCondition4115970455290610262()
+{
+    return this->transitionCondition4115970455290610262;
+}
+
+void TestWorldModel::setTransitionCondition4115970455290610262(bool transitionCondition4115970455290610262)
+{
+    this->transitionCondition4115970455290610262 = transitionCondition4115970455290610262;
 }
 
 bool TestWorldModel::isSwitchingEntryPoints()
