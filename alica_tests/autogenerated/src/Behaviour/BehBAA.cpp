@@ -38,6 +38,7 @@ void BehBAA::initialiseParameters()
     // Add additional options here
     alica_test::SchedWM::instance().execOrder += "BehBAA::Init\n";
     runCount = 0;
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895911592) ENABLED START*/

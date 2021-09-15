@@ -478,7 +478,7 @@ void RunningPlan::deactivate()
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
-        _basicPlan->stop();
+        _ae->editPlanPool().stopPlan(*this);
     }
 }
 
@@ -565,9 +565,7 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
-        _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
-        _basicPlan->setConfiguration(getConfiguration());
-        _basicPlan->start(this);
+        _ae->editPlanPool().startPlan(*this);
     }
 
     attachPlanConstraints();
