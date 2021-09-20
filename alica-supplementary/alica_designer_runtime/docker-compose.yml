@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13.1
+    environment:
+      - POSTGRES_DB=alicadb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    volumes:
+      - awpd:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+    command: redis-server
+    ports:
+      - "14000:6379"
+
+  alica-backend:
+    image: rrdockerhub/alica_backend:v0.1
+    # build: .
+    environment:
+      - POSTGRES_DB=alicadb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+  alica-frontend:
+    image: rrdockerhub/alica_frontend:v0.1
+    ports:
+      - '3000:80'
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - alica-backend
+
+volumes:
+  awpd:
