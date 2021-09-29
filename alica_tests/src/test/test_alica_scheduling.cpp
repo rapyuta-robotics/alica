@@ -224,5 +224,24 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
     }
 }
 
+TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
+{
+    CounterClass::called = -1;
+    ae->start();
+
+    auto& wm = alica_test::SchedWM::instance();
+    wm.execBehaviourTest = true;
+    ac->stepEngine();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    ASSERT_TRUE(wm.executeBehaviourRunCalled);
+
+    alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    ASSERT_TRUE(wm.executeBehaviourRunCalled);
+
+    alica_test::SchedWM::instance().transitionToEndTest = true;
+}
+
 } // namespace
 } // namespace alica

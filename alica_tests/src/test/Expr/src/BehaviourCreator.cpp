@@ -16,6 +16,7 @@
 #include "Behaviour/TriggerA.h"
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
+#include "TestBehaviour.h"
 #include "engine/BasicBehaviour.h"
 
 namespace alica
@@ -78,6 +79,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 1629895911592:
         return std::make_shared<BehBAA>();
+        break;
+    case 55178365253414982:
+        return std::make_shared<TestBehaviour>();
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
