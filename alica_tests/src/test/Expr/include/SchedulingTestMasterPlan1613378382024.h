@@ -56,11 +56,23 @@ class PreCondition1629895598471 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
+class PreCondition61978004585920576 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
+};
 class PreCondition1615797365364 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class PreCondition1629895607018 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
+};
+class PreCondition3213510506830850443 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
+};
+class PreCondition68542020926196536 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp);
 };

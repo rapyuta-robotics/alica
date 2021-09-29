@@ -30,6 +30,8 @@
 #include "Defend1402488893641.h"
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
+#include "ExecuteBehaviourPlan23172561495666303184.h"
+#include "ExecuteBehaviourPlan2773486839180285027.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
@@ -68,6 +70,7 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestBehaviour55178365253414982.h"
 
 namespace alica
 {
@@ -290,6 +293,21 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 4238964946542987247:
         return std::make_shared<PreCondition4238964946542987247>();
+        break;
+    case 61978004585920576:
+        return std::make_shared<PreCondition61978004585920576>();
+        break;
+    case 68542020926196536:
+        return std::make_shared<PreCondition68542020926196536>();
+        break;
+    case 1943478533524176732:
+        return std::make_shared<PreCondition1943478533524176732>();
+        break;
+    case 3213510506830850443:
+        return std::make_shared<PreCondition3213510506830850443>();
+        break;
+    case 3266818544279107129:
+        return std::make_shared<PreCondition3266818544279107129>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
