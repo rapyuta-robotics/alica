@@ -7,7 +7,7 @@ alica-supplementary/alica_designer_runtime/:
 
   `$ docker-compose up`
 
-- The designer is web based & runs on the browser. After executing the above command, 
+- The designer is web based & runs in the browser. After executing the above command, 
 navigate to http://localhost:3000/ to run the designer.
 - When you start the plan designer for the first time, it should look like this:
 
@@ -45,7 +45,7 @@ After logging in, the login button will be replaced with your GitHub username.
 
 ### 2.3 Create alica elements menu
 
-In the top right corner of the plan designer sits a menu for creating plans and elements of it.
+In the top right corner of the plan designer sits a menu for creating plans and other elements.
 Selecting an element (for example Plan) will open up a menu for creating that element. Pressing "More"
 will open up the menu and reveal the options to create Tasks and Roles.
 
@@ -92,11 +92,11 @@ You can create a RoleSet by switching the tab from "Role" to "Role Set".
 ![create_roleset](./doc/create_roleset.png)
 
 - Default Priority: When a role of this roleset does not have a priority set for a task, this value
-will be used as it's priority.
+will be used as its priority.
 - Default Role Set: Check this box to use this RoleSet as your default one.
 
 #### 2.3.4 Plan Type, Configuration & TaskRepository
-For the remaining elemenents of alica plans you only need to provide a name. 
+For the remaining elements of plans you only need to provide a name. 
 
 ![create_plantype](./doc/create_plantype.png)
 
@@ -121,7 +121,7 @@ is a button for copying the id to your clipboard.
 #### 2.5.1 Properties
 
 In the properties tab you can adjust general properties of an element. The selection of properties
-you can changes differ between the element types.
+you can change differ between the element types.
 
 ![behaviours_properties](./doc/properties_tab.png)
 
@@ -151,8 +151,8 @@ list of usages will open the plan.
 
 #### 2.5.5 Plans
 You can apply plans to a PlanType in the "Plans" tab. Click on "Apply Plan" and select a plan from
-the list. You can click on the switch in the column "Active" to deactivate a plan in the
-PlanType without deleting it.
+the list. You can click on the switch in the column "Active" to deactivate an active plan 
+or activate a deactivated one in the PlanType without deleting it.
 
 ![plans_tab](./doc/plans_tab.png)
 
@@ -167,7 +167,7 @@ To learn more about variable bindings, have a look at the
 ![create_variable_binding](./doc/create_variable_binding.png)
 
 #### 2.5.7 Parameters
-You can set parameters for configurations. Click on "Apply Copnfiguration Parameter" to create
+You can set parameters for configurations. Click on "Apply Configuration Parameter" to create
 a parameter with name and value.
 
 To learn more about configurations and parameters, have a look at the
@@ -175,7 +175,7 @@ To learn more about configurations and parameters, have a look at the
 
 #### 2.5.8 Roles
 In the roles tab of a RoleSet you can add new roles to the roleset and remove existing ones.
-Clicking on the edit button of a role will open it's properties tab.
+Clicking on the edit button of a role will open its properties tab.
 
 #### 2.5.9 Task Priorities
 You can set task priorities for a role by clicking on "Apply Task Priority", selecting a task
@@ -208,7 +208,7 @@ window for creating your entry point.
 You can either select a task or create a new one.
 
 After creating the entry point it will be visible in the plan space. You can select it
-with the selection tool and adjust it's properties in the properties tab.
+with the selection tool and adjust its properties in the properties tab.
 
 To learn more about entry points have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/entrypoints.html).
@@ -235,18 +235,34 @@ of a transition. A connection from an entry point to a state does not have a pre
 To learn more about transitions have a look at the 
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
 
-### 2.6.4 Add behaviours, configurations, plan types and plans
+###2.6.4 Synchronization
+
+Select the synchronization tool and place a synchronization node in the plan space.
+Select the transition synchronization tool and place it in the plan space.
+
+Connect the synchronization node with the transition synchronization node.
+
+You can synchronize transitions by creating a connection from the source node to the
+transition synchronization node. Then create a transition from the transition synchronization
+node to the target node.
+
+To learn more about synchronization, have a look at the
+[documentation](https://rapyuta-robotics.github.io/alica/articles/synchronisations.html).
+
+![synchronization](./doc/synchronization.png)
+
+### 2.6.5 Add behaviours, configurations, plan types and plans
 
 To add a behaviour / configuration / plan type / plan to a state, drag and drop it from
 the selection menu to a state of your choice.
 
-### 2.6.5 Delete parts of your plan
+### 2.6.6 Delete parts of your plan
 
 You can delete parts of your plan by selecting the node / transition with the selection
 tool and hitting the delete key on your keyboard.
 
 You can remove behaviours / configurations / plan types / plans from a state by hovering
-over the element you want to remove and clicking on the 'X'.
+over the element you want to remove and clicking on the "X".
 
 ## 3 How to import and export plans?
 
@@ -285,7 +301,7 @@ On successful import the plans should be visible in the right panel.
 It is also possible to import plans from a remote GitHub repository,
 as well as push changes back to the same repo, or any other, if explicitly specified.
 
-To be able to use this, you first need to login to your github account from the
+To be able to use this, you first need to log in to your GitHub account from the
 web-plan-designer. Use the Login button (see first image in this readme). 
 If you have not used the plan designer before, the application asks for access rights.
 
@@ -305,7 +321,7 @@ Branch Name: You can also enter a branch name, if kept blank, remote’s default
 
 Plans Path: It is also recommended to provide the path to the plan elements (relative to repo root), in case your repo contains many different folders each organising an ALICA designer project.
 
-Eg.  If your plans are in the lbc-repo , then the path for plans would be `lbc/etc`, since that’s where the plans are located remotely.
+E.g.  If your plans are in the lbc-repo , then the path for plans would be `lbc/etc`, since that’s where the plans are located remotely.
 
 NOTE: If the repository contains duplicate plans, but in different sub paths of the repo, providing Plans Path is necessary or else, the import process will fail.
 
@@ -315,7 +331,7 @@ After a successful git-import the plans should be visible in the right panel as 
 
 #### 3.2.2 Export
 
-On the top left corner  ‘+’ -> Github -> Git Export
+In the top left corner  ‘+’ -> GitHub -> Git Export
 The following form will pop up:
 
 ![export_git](./doc/export_git.png)
@@ -330,7 +346,7 @@ Commit Message: Optional commit msg
 Plans Path: The exact path (relative to repo root) where you want the plans to be available in the newly created branch after export.
 If kept empty there are two possibilities for Plans Path:
 Same as the Plans Path in the previous import operation.
-If there wasn’t any previous import operation the plans will be available inside the ‘plan_elems’ folder in repo root.
+If there was not any previous import operation the plans will be available inside the ‘plan_elems’ folder in repo root.
 
 ## 4 Code-Generation
 To generate the source code you need to download
