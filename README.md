@@ -7,7 +7,5 @@
 **Note:** This page is under construction and will include links to further resources in future. In the meantime we advice you to have a look at the following resources:
 
 * [alica_turtlesim_tutorial](https://github.com/rapyuta-robotics/alica-supplementary/tree/rr-devel/alica_ros_turtlesim)
-* [ALICA Plan Designer](https://github.com/rapyuta-robotics/alica-plan-designer-fx)
-  * [User Guide](https://github.com/rapyuta-robotics/alica-plan-designer-fx/blob/master/doc/user_guide/user_guide.md)
-  * [Developer Guide](https://github.com/rapyuta-robotics/alica-plan-designer-fx/blob/master/doc/developer_guide/developer_guide.md)
+* [ALICA Plan Designer](https://github.com/rapyuta-robotics/alica-supplementary/tree/rr-devel/alica_designer_runtime)
 * [GitHUB Pages of the ALICA Framework](https://rapyuta-robotics.github.io/alica/)
