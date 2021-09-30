@@ -23,6 +23,7 @@ void BasicPlan::doInit()
 {
     ++_execState;
     try {
+        auto trace = amr_tracing::Trace("Init", _trace->context());
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
@@ -51,6 +52,7 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
     try {
+        auto trace = std::make_unique<amr_tracing::Trace>("Terminate", _trace->context());
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
@@ -69,6 +71,7 @@ void BasicPlan::start(RunningPlan* rp)
     }
     ++_signalState;
     _context.store(rp);
+
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
@@ -82,5 +85,19 @@ void BasicPlan::stop()
 }
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
+
+void BasicPlan::startTrace()
+{
+    RunningPlan* parent = _context.load()->getParent();
+    if (parent == nullptr) {
+        return;
+    }
+
+    if (auto parentPlan = parent->getBasicPlan()) {
+        _trace = std::make_unique<amr_tracing::Trace>("Plan", parentPlan->getTraceContext());
+    } else {
+        _trace = std::make_unique<amr_tracing::Trace>("MasterPlan");
+    }
+}
 
 } // namespace alica
