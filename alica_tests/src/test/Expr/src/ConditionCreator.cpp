@@ -30,8 +30,7 @@
 #include "Defend1402488893641.h"
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
-#include "ExecuteBehaviourPlan23172561495666303184.h"
-#include "ExecuteBehaviourPlan2773486839180285027.h"
+#include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
@@ -69,6 +68,7 @@
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "TestBehaviour55178365253414982.h"
+#include "WaitPlan2773486839180285027.h"
 
 namespace alica
 {
@@ -300,6 +300,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 3266818544279107129:
         return std::make_shared<PreCondition3266818544279107129>();
+        break;
+    case 4165333637052704488:
+        return std::make_shared<PreCondition4165333637052704488>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

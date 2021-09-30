@@ -27,7 +27,8 @@ public:
         behAAABlockRun = false;
         behAAASuccessInInit = behAAAFailureInInit = behAAASuccessInTerminate = behAAAFailureInTerminate = false;
 
-        executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan = transitionToEndTest = false;
+        executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan
+                = transitionToEndTest = transitionToExecuteBehaviour = false;
     }
 
     bool execOrderTest;
@@ -53,6 +54,7 @@ public:
     std::atomic<bool> executeBehaviourRunCalled;
     std::atomic<bool> execBehaviourTest;
     std::atomic<bool> transitionToExecuteBehaviourInSubPlan;
+    std::atomic<bool> transitionToExecuteBehaviour;
     std::atomic<bool> transitionToEndTest;
 
 private:

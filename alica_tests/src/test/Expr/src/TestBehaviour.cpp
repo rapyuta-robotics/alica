@@ -1,9 +1,9 @@
 #include "TestBehaviour.h"
 #include <memory>
-#include <alica_tests/test_sched_world_model.h>
 
 /*PROTECTED REGION ID(inccpp55178365253414982) ENABLED START*/
 // Add additional includes here
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica

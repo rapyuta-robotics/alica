@@ -233,12 +233,24 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     wm.execBehaviourTest = true;
     ac->stepEngine();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ASSERT_TRUE(wm.executeBehaviourRunCalled);
 
     alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ASSERT_TRUE(wm.executeBehaviourRunCalled);
+
+    for (int i = 0; i < 10; i++) {
+        alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = false;
+        alica_test::SchedWM::instance().transitionToExecuteBehaviour = true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        ASSERT_TRUE(wm.executeBehaviourRunCalled);
+
+        alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = true;
+        alica_test::SchedWM::instance().transitionToExecuteBehaviour = false;
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        ASSERT_TRUE(wm.executeBehaviourRunCalled);
+    }
 
     alica_test::SchedWM::instance().transitionToEndTest = true;
 }

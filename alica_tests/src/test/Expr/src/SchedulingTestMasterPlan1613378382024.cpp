@@ -18,8 +18,8 @@ namespace alica
 //   - Default Name (1615797271229)
 //   - Default Name (1615797319003)
 //   - OrderedSchedulingTestPlan (1629895593451)
-//   - ExecutePlan (1206766322278521913)
-//   - ExecutePlanAsSubPlan (3802371674214346622)
+//   - ExecuteBehaviour (1206766322278521913)
+//   - ExecuteBehaviourInSubPlan (3802371674214346622)
 SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024()
         : DomainPlan()
 {
@@ -128,7 +128,7 @@ bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp)
 /**
  * Transition: 3351673290341906102 (3351673290341906102)
  *   - Comment:
- *   - Source2Dest: Default Name --> ExecutePlan
+ *   - Source2Dest: Default Name --> ExecuteBehaviour
  *
  * Precondition: ToExecutePlan (61978004585920576)
  *   - Enabled: true
@@ -189,9 +189,9 @@ bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION END*/
 }
 /**
- * Transition: 383854659955639601 (383854659955639601)
+ * Transition: ExecuteBehaviourToExecuteBehaviourInSubPlan (383854659955639601)
  *   - Comment:
- *   - Source2Dest: ExecutePlan --> ExecutePlanAsSubPlan
+ *   - Source2Dest: ExecuteBehaviour --> ExecuteBehaviourInSubPlan
  *
  * Precondition: ToExecutePlanAsSubPlan (3213510506830850443)
  *   - Enabled: true
@@ -200,8 +200,9 @@ bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in ExecutePlan:
- *   - ExecuteBehaviourPlan (2773486839180285027)
+ * Abstract Plans in ExecuteBehaviour:
+ *   - WaitPlan (2773486839180285027)
+ *   - TestBehaviour (55178365253414982)
  */
 bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp)
 {
@@ -216,7 +217,7 @@ bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp)
 /**
  * Transition: 1506708037135242126 (1506708037135242126)
  *   - Comment:
- *   - Source2Dest: ExecutePlanAsSubPlan --> EndTest
+ *   - Source2Dest: ExecuteBehaviourInSubPlan --> EndTest
  *
  * Precondition: ToEndTest (68542020926196536)
  *   - Enabled: true
@@ -225,12 +226,38 @@ bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in ExecutePlanAsSubPlan:
+ * Abstract Plans in ExecuteBehaviourInSubPlan:
+ *   - ExecuteBehaviourInSubPlan (3172561495666303184)
  */
 bool PreCondition68542020926196536::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1506708037135242126) ENABLED START*/
     return alica_test::SchedWM::instance().transitionToEndTest;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Transition: ExecuteBehaviourInSubPlanToExecuteBehaviour (1773144683253207826)
+ *   - Comment:
+ *   - Source2Dest: ExecuteBehaviourInSubPlan --> ExecuteBehaviour
+ *
+ * Precondition: 4165333637052704488 (4165333637052704488)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ExecuteBehaviourInSubPlan:
+ *   - ExecuteBehaviourInSubPlan (3172561495666303184)
+ */
+bool PreCondition4165333637052704488::evaluate(std::shared_ptr<RunningPlan> rp)
+{
+    /*PROTECTED REGION ID(1773144683253207826) ENABLED START*/
+    if (alica_test::SchedWM::instance().transitionToExecuteBehaviour) {
+        alica_test::SchedWM::instance().executeBehaviourRunCalled = false;
+        return true;
+    }
+    return false;
     /*PROTECTED REGION END*/
 }
 
