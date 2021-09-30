@@ -318,6 +318,28 @@ public:
     }
 
     /**
+     * Set trace factory to be used by this alica framework instance.
+     * Example usage: setTraceFactory<amr_tracing::TraceFactory>();
+     *
+     * @note TraceFactoryType must be a derived class of IAlicaTraceFactory
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of trace factory. Might be empty.
+     */
+    template <class TraceFactoryType, class... Args>
+    void setTraceFactory(Args&&... args);
+
+    /**
+     * Get trace factory being used by this alica instance.
+     *
+     * @return A reference to trace factory object being used by context
+     */
+    IAlicaTraceFactory& getTraceFactory() const
+    {
+        return traceFactory;
+    }
+
+    /**
      * Check whether object is a valid AlicaContext.
      *
      * @return True if object is a valid context, false otherwise
@@ -393,6 +415,7 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
+    IAlicaTraceFactory& _traceFactory;
 
     bool _initialized = false;
 
@@ -480,6 +503,18 @@ void AlicaContext::setTimerFactory(Args&&... args)
 #else
     _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
 #endif
+}
+
+template <class TraceFactoryType, class... Args>
+void AlicaContext::setTraceFactory(Args&&... args)
+{
+    static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
+    _traceFactory = TraceFactoryType(std::forward<Args>(args))
+//#if (defined __cplusplus && __cplusplus >= 201402L)
+//    _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
+//#else
+//    _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
+//#endif
 }
 
 template <class T>

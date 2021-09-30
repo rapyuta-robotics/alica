@@ -3,6 +3,9 @@
 #include "engine/AlicaClock.h"
 #include <string>
 #include <atomic>
+#include <amr_tracing/TraceFactory.hpp>
+#include <amr_interfaces/TraceContext.h>
+#include <amr_tracing/Trace.hpp>
 
 namespace alica
 {
@@ -27,6 +30,7 @@ public:
 
     AlicaTime getInterval() { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
+    amr_interfaces::TraceContext getTraceContext() { return _trace->context(); };
 
 protected:
     ThreadSafePlanInterface getPlanContext() const;
@@ -43,6 +47,7 @@ private:
     void doTerminate();
 
     void sendLogMessage(int level, const std::string& message) const;
+    void startTrace();
 
     // See BasicBehaviour.h for explanation of the logic used
     static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
@@ -58,6 +63,7 @@ private:
     const Configuration* _configuration;
     AlicaTime _msInterval;
     int64_t _activeRunJobId;
+    std::unique_ptr<amr_tracing::Trace> _trace;
 
     std::atomic<RunningPlan*> _context;
     std::atomic<Counter> _signalState;
