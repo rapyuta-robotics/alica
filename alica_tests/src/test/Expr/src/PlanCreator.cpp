@@ -13,8 +13,7 @@
 #include "Defend1402488893641.h"
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
-#include "ExecuteBehaviourPlan23172561495666303184.h"
-#include "ExecuteBehaviourPlan2773486839180285027.h"
+#include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
@@ -53,6 +52,7 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "WaitPlan2773486839180285027.h"
 #include "engine/BasicPlan.h"
 
 namespace alica
@@ -222,10 +222,10 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>();
         break;
     case 2773486839180285027:
-        return std::make_unique<ExecuteBehaviourPlan2773486839180285027>();
+        return std::make_unique<WaitPlan2773486839180285027>();
         break;
     case 3172561495666303184:
-        return std::make_unique<ExecuteBehaviourPlan23172561495666303184>();
+        return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

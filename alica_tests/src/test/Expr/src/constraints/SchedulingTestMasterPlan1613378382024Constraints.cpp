@@ -16,8 +16,8 @@ namespace alica
  * - Default Name (1615797271229)
  * - Default Name (1615797319003)
  * - OrderedSchedulingTestPlan (1629895593451)
- * - ExecutePlan (1206766322278521913)
- * - ExecutePlanAsSubPlan (3802371674214346622)
+ * - ExecuteBehaviour (1206766322278521913)
+ * - ExecuteBehaviourInSubPlan (3802371674214346622)
  *
  * Vars:
  */
@@ -26,6 +26,6 @@ namespace alica
 // State: Default Name
 // State: Default Name
 // State: OrderedSchedulingTestPlan
-// State: ExecutePlan
-// State: ExecutePlanAsSubPlan
+// State: ExecuteBehaviour
+// State: ExecuteBehaviourInSubPlan
 } // namespace alica

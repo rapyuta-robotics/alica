@@ -155,19 +155,27 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "ExecuteBehaviourPlan.pml#2773486839180285027",
+          "abstractPlan": "WaitPlan.pml#2773486839180285027",
           "comment": "",
           "configuration": null,
           "id": 2635394503179223242,
+          "name": ""
+        },
+        {
+          "abstractPlan": "behaviours/TestBehaviour.beh#55178365253414982",
+          "comment": "",
+          "configuration": null,
+          "id": 923638215106179740,
           "name": ""
         }
       ],
       "entryPoint": null,
       "id": 1206766322278521913,
       "inTransitions": [
-        3351673290341906102
+        3351673290341906102,
+        1773144683253207826
       ],
-      "name": "ExecutePlan",
+      "name": "ExecuteBehaviour",
       "outTransitions": [
         383854659955639601
       ],
@@ -181,15 +189,24 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "ExecuteBehaviourInSubPlan.pml#3172561495666303184",
+          "comment": "",
+          "configuration": null,
+          "id": 2772491646832615539,
+          "name": ""
+        }
+      ],
       "entryPoint": null,
       "id": 3802371674214346622,
       "inTransitions": [
         383854659955639601
       ],
-      "name": "ExecutePlanAsSubPlan",
+      "name": "ExecuteBehaviourInSubPlan",
       "outTransitions": [
-        1506708037135242126
+        1506708037135242126,
+        1773144683253207826
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
@@ -318,17 +335,17 @@
     },
     {
       "comment": "",
-      "id": 3351673290341906102,
-      "inState": 1615797271229,
-      "name": "",
-      "outState": 1206766322278521913,
+      "id": 383854659955639601,
+      "inState": 1206766322278521913,
+      "name": "ExecuteBehaviourToExecuteBehaviourInSubPlan",
+      "outState": 3802371674214346622,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 61978004585920576,
-        "name": "ToExecutePlan",
+        "id": 3213510506830850443,
+        "name": "ToExecutePlanAsSubPlan",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
@@ -356,17 +373,36 @@
     },
     {
       "comment": "",
-      "id": 383854659955639601,
-      "inState": 1206766322278521913,
+      "id": 3351673290341906102,
+      "inState": 1615797271229,
       "name": "",
-      "outState": 3802371674214346622,
+      "outState": 1206766322278521913,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3213510506830850443,
-        "name": "ToExecutePlanAsSubPlan",
+        "id": 61978004585920576,
+        "name": "ToExecutePlan",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 1773144683253207826,
+      "inState": 3802371674214346622,
+      "name": "ExecuteBehaviourInSubPlanToExecuteBehaviour",
+      "outState": 1206766322278521913,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4165333637052704488,
+        "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

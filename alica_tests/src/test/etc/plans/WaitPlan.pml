@@ -3,24 +3,24 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 560547937773733569,
+      "id": 13426738844110157,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "",
-      "plan": 3172561495666303184,
+      "plan": 2773486839180285027,
       "positionWeb": {
-        "x": 278,
-        "y": 261
+        "x": 200,
+        "y": 211.48134443681317
       },
-      "state": 4459593820134418510,
+      "state": 1909100645626369899,
       "successRequired": false,
       "task": "taskrepository.tsk#1222613952469"
     }
   ],
   "frequency": 0,
-  "id": 3172561495666303184,
+  "id": 2773486839180285027,
   "masterPlan": false,
-  "name": "ExecuteBehaviourPlan2",
+  "name": "WaitPlan",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -29,16 +29,16 @@
       "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": null,
-      "id": 3575867719445223184,
+      "id": 699161635959867032,
       "inTransitions": [
-        2330492839242485043
+        1509957282302076977
       ],
       "name": "Suc",
       "outTransitions": [],
-      "parentPlan": 3172561495666303184,
+      "parentPlan": 2773486839180285027,
       "positionWeb": {
-        "x": 1306,
-        "y": 313
+        "x": 685.96875,
+        "y": 200
       },
       "postCondition": null,
       "success": true,
@@ -47,26 +47,18 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "ExecuteBehaviourPlan.pml#2773486839180285027",
-          "comment": "",
-          "configuration": null,
-          "id": 1933475273272858624,
-          "name": ""
-        }
-      ],
-      "entryPoint": 560547937773733569,
-      "id": 4459593820134418510,
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 13426738844110157,
+      "id": 1909100645626369899,
       "inTransitions": [],
-      "name": "Start",
+      "name": "Wait",
       "outTransitions": [
-        2330492839242485043
+        1509957282302076977
       ],
-      "parentPlan": 3172561495666303184,
+      "parentPlan": 2773486839180285027,
       "positionWeb": {
-        "x": 800,
-        "y": 277
+        "x": 427.984375,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -76,17 +68,17 @@
   "transitions": [
     {
       "comment": "",
-      "id": 2330492839242485043,
-      "inState": 4459593820134418510,
+      "id": 1509957282302076977,
+      "inState": 1909100645626369899,
       "name": "",
-      "outState": 3575867719445223184,
+      "outState": 699161635959867032,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 1943478533524176732,
-        "name": "ToSuc",
+        "id": 3266818544279107129,
+        "name": "ToSuccess",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

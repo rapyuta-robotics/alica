@@ -1,26 +1,26 @@
-#include "ExecuteBehaviourPlan2773486839180285027.h"
+#include "WaitPlan2773486839180285027.h"
 /*PROTECTED REGION ID(eph2773486839180285027) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-// Plan:  ExecuteBehaviourPlan (2773486839180285027)
+// Plan:  WaitPlan (2773486839180285027)
 //
 // Tasks:
 //   - Attack (1222613952469) (Entrypoint: 13426738844110157)
 //
 // States:
 //   - Suc (699161635959867032)
-//   - ExecuteBehaviour (1909100645626369899)
-ExecuteBehaviourPlan2773486839180285027::ExecuteBehaviourPlan2773486839180285027()
+//   - Wait (1909100645626369899)
+WaitPlan2773486839180285027::WaitPlan2773486839180285027()
         : DomainPlan()
 {
     /*PROTECTED REGION ID(con2773486839180285027) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-ExecuteBehaviourPlan2773486839180285027::~ExecuteBehaviourPlan2773486839180285027()
+WaitPlan2773486839180285027::~WaitPlan2773486839180285027()
 {
     /*PROTECTED REGION ID(dcon2773486839180285027) ENABLED START*/
     // Add additional options here
@@ -40,7 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2773486839180285027::getUtilityF
 /**
  * Transition: 1509957282302076977 (1509957282302076977)
  *   - Comment:
- *   - Source2Dest: ExecuteBehaviour --> Suc
+ *   - Source2Dest: Wait --> Suc
  *
  * Precondition: ToSuccess (3266818544279107129)
  *   - Enabled: true
@@ -49,8 +49,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2773486839180285027::getUtilityF
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in ExecuteBehaviour:
- *   - TestBehaviour (55178365253414982)
+ * Abstract Plans in Wait:
  */
 bool PreCondition3266818544279107129::evaluate(std::shared_ptr<RunningPlan> rp)
 {
