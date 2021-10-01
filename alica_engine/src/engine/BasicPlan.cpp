@@ -23,7 +23,7 @@ void BasicPlan::doInit()
 {
     ++_execState;
     try {
-        auto trace = amr_tracing::Trace("Init", _trace->context());
+        auto trace = IAlicaTrace("Init", _trace->context());
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
@@ -52,7 +52,7 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
     try {
-        auto trace = std::make_unique<amr_tracing::Trace>("Terminate", _trace->context());
+        auto trace = IAlicaTrace("Terminate", _trace->context());
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
@@ -71,7 +71,7 @@ void BasicPlan::start(RunningPlan* rp)
     }
     ++_signalState;
     _context.store(rp);
-
+    startTrace();
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
@@ -90,13 +90,14 @@ void BasicPlan::startTrace()
 {
     RunningPlan* parent = _context.load()->getParent();
     if (parent == nullptr) {
+        _trace = std::make_unique<IAlicaTrace>("MasterPlan");
         return;
     }
 
     if (auto parentPlan = parent->getBasicPlan()) {
-        _trace = std::make_unique<amr_tracing::Trace>("Plan", parentPlan->getTraceContext());
+        _trace = std::make_unique<IAlicaTrace>("Plan", parentPlan->getTraceContext());
     } else {
-        _trace = std::make_unique<amr_tracing::Trace>("MasterPlan");
+        // a plan should always have a plan as its parent
     }
 }
 

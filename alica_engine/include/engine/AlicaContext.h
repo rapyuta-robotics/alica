@@ -13,6 +13,7 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
+#include "engine/IAlicaTrace.h"
 
 #include <essentials/IDManager.h>
 #include <alica_common_config/debug_output.h>
@@ -336,7 +337,8 @@ public:
      */
     IAlicaTraceFactory& getTraceFactory() const
     {
-        return traceFactory;
+        assert(_traceFactory.get());
+        return *_traceFactory;
     }
 
     /**
@@ -415,7 +417,7 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
-    IAlicaTraceFactory& _traceFactory;
+    std::unique_ptr<IAlicaTraceFactory> _traceFactory;
 
     bool _initialized = false;
 
@@ -509,12 +511,11 @@ template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
-    _traceFactory = TraceFactoryType(std::forward<Args>(args))
-//#if (defined __cplusplus && __cplusplus >= 201402L)
-//    _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
-//#else
-//    _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
-//#endif
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
+#else
+    _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
+#endif
 }
 
 template <class T>

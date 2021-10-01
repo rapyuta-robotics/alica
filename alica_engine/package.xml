@@ -16,6 +16,7 @@
   <depend>event_handling</depend>
   <depend>system_util</depend>
   <depend>id_manager</depend>
+  <depend>amr_interfaces</depend>
 
   <test_depend>gtest</test_depend>
 </package>

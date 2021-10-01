@@ -4,8 +4,10 @@
 #include "engine/PlanInterface.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
+#include "engine/IAlicaTrace.h"
 
 #include <essentials/ITrigger.hpp>
+#include <amr_interfaces/TraceContext.h>
 
 #include <atomic>
 #include <chrono>
@@ -73,6 +75,8 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
+    amr_interfaces::TraceContext getTraceContext() { return _trace->context(); };
+
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -108,6 +112,7 @@ private:
     void terminateJob();
 
     void sendLogMessage(int level, const std::string& message) const;
+    void startTrace();
 
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
@@ -162,5 +167,6 @@ private:
 
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
+    std::unique_ptr<IAlicaTrace> _trace;
 };
 } /* namespace alica */
