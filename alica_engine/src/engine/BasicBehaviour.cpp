@@ -74,6 +74,7 @@ bool BasicBehaviour::start(RunningPlan* rp)
     }
     ++_signalState;
     _context.store(rp);
+    startTrace();
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
 }
@@ -112,6 +113,7 @@ void BasicBehaviour::initJob()
 
     // Todo: Optimization: don't call initialiseParameters if not in context
     try {
+        auto trace = IAlicaTrace("Init", _trace->context());
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
@@ -157,6 +159,7 @@ void BasicBehaviour::terminateJob()
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     try {
+        auto trace = IAlicaTrace("Terminate", _trace->context());
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
@@ -182,6 +185,21 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
     } else {
         valueOut.clear();
         return false;
+    }
+}
+
+void BasicBehaviour::startTrace()
+{
+    RunningPlan* parent = _context.load()->getParent();
+    if (parent == nullptr) {
+        // a behaviour always has a plan as its parent
+        return;
+    }
+
+    if (auto parentPlan = parent->getBasicPlan()) {
+        _trace = std::make_unique<IAlicaTrace>("Behaviour", parentPlan->getTraceContext());
+    } else {
+        // a behaviour always has a plan as its parent
     }
 }
 

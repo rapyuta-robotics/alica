@@ -1,11 +1,10 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
+#include "engine/IAlicaTrace.h"
 #include <string>
 #include <atomic>
-#include <amr_tracing/TraceFactory.hpp>
 #include <amr_interfaces/TraceContext.h>
-#include <amr_tracing/Trace.hpp>
 
 namespace alica
 {
@@ -63,7 +62,7 @@ private:
     const Configuration* _configuration;
     AlicaTime _msInterval;
     int64_t _activeRunJobId;
-    std::unique_ptr<amr_tracing::Trace> _trace;
+    std::unique_ptr<IAlicaTrace> _trace;
 
     std::atomic<RunningPlan*> _context;
     std::atomic<Counter> _signalState;
