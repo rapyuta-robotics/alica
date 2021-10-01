@@ -28,9 +28,14 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - REDIS_HOST=redis
+      - SITE_NAME=localhost
+      - SITE_DOMAIN=localhost:${BACKEND_PORT:-8000}
+      - SOCIAL_APP_CLIENT_ID=${SOCIAL_APP_CLIENT_ID}
+      - SOCIAL_APP_SECRET=${SOCIAL_APP_SECRET}
+
     command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - "8000:8000"
+      - ${BACKEND_PORT:-8000}:8000
     depends_on:
       - db
       - redis
