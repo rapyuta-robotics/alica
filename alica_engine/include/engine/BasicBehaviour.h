@@ -7,7 +7,6 @@
 #include "engine/IAlicaTrace.h"
 
 #include <essentials/ITrigger.hpp>
-#include <amr_interfaces/TraceContext.h>
 
 #include <atomic>
 #include <chrono>
@@ -75,7 +74,7 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
-    amr_interfaces::TraceContext getTraceContext() { return _trace->context(); };
+    IAlicaTrace& getTrace() { return *_trace; };
 
 protected:
     essentials::IdentifierConstPtr getOwnId() const;

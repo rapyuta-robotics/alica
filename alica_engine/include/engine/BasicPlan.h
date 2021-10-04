@@ -4,7 +4,6 @@
 #include "engine/IAlicaTrace.h"
 #include <string>
 #include <atomic>
-#include <amr_interfaces/TraceContext.h>
 
 namespace alica
 {
@@ -29,7 +28,7 @@ public:
 
     AlicaTime getInterval() { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
-    amr_interfaces::TraceContext getTraceContext() { return _trace->context(); };
+    IAlicaTrace& getTrace() { return *_trace; };
 
 protected:
     ThreadSafePlanInterface getPlanContext() const;
