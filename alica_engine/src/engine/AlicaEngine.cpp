@@ -138,6 +138,11 @@ const AlicaClock& AlicaEngine::getAlicaClock() const
     return _ctx.getAlicaClock();
 }
 
+const IAlicaTraceFactory& AlicaEngine::getTraceFactory() const
+{
+    return _ctx.getTraceFactory();
+}
+
 std::string AlicaEngine::getLocalAgentName() const
 {
     return _ctx.getLocalAgentName();

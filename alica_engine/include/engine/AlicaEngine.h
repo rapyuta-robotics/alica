@@ -107,6 +107,7 @@ public:
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
+    const IAlicaTraceFactory& getTraceFactory() const;
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;
