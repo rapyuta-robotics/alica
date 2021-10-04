@@ -113,7 +113,7 @@ void BasicBehaviour::initJob()
 
     // Todo: Optimization: don't call initialiseParameters if not in context
     try {
-        auto trace = IAlicaTrace("Init", _trace->context());
+        _trace->setTag("Init", "true");
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
@@ -159,7 +159,7 @@ void BasicBehaviour::terminateJob()
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     try {
-        auto trace = IAlicaTrace("Terminate", _trace->context());
+        _trace->setTag("Terminate", "true");
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
@@ -197,7 +197,7 @@ void BasicBehaviour::startTrace()
     }
 
     if (auto parentPlan = parent->getBasicPlan()) {
-        _trace = std::make_unique<IAlicaTrace>("Behaviour", parentPlan->getTraceContext());
+        _trace = _engine->getTraceFactory().create("Behaviour", parentPlan->getTrace().context());
     } else {
         // a behaviour always has a plan as its parent
     }

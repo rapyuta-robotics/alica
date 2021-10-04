@@ -23,7 +23,7 @@ void BasicPlan::doInit()
 {
     ++_execState;
     try {
-        auto trace = IAlicaTrace("Init", _trace->context());
+        _trace->setTag("Init", "true");
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
@@ -52,7 +52,7 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
     try {
-        auto trace = IAlicaTrace("Terminate", _trace->context());
+        _trace->setTag("Terminate", "true");
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
@@ -90,12 +90,12 @@ void BasicPlan::startTrace()
 {
     RunningPlan* parent = _context.load()->getParent();
     if (parent == nullptr) {
-        _trace = std::make_unique<IAlicaTrace>("MasterPlan");
+        _trace = _ae->getTraceFactory().create("MasterPlan");
         return;
     }
 
     if (auto parentPlan = parent->getBasicPlan()) {
-        _trace = std::make_unique<IAlicaTrace>("Plan", parentPlan->getTraceContext());
+        _trace = _ae->getTraceFactory().create("Plan", parentPlan->getTrace().context());
     } else {
         // a plan should always have a plan as its parent
     }
