@@ -10,6 +10,7 @@ class IAlicaTrace
 {
 public:
     virtual ~IAlicaTrace() = default;
+    IAlicaTrace() = default;
     IAlicaTrace(const std::string& opName, std::optional<const std::string> parent = std::nullopt);
     IAlicaTrace(IAlicaTrace&& other) = default;
     IAlicaTrace& operator=(IAlicaTrace&& other) = default;
@@ -26,7 +27,7 @@ private:
 class IAlicaTraceFactory
 {
 public:
-    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const;
+    virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const = 0;
     virtual ~IAlicaTraceFactory() = default;
 };
 
