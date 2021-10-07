@@ -113,7 +113,9 @@ void BasicBehaviour::initJob()
 
     // Todo: Optimization: don't call initialiseParameters if not in context
     try {
-        _trace->setTag("Init", "true");
+        if (_trace) {
+            _trace->setTag("Init", "true");
+        }
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
@@ -130,6 +132,9 @@ void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
     try {
+        if (_trace) {
+            _trace->setTag("Run", "true");
+        }
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
@@ -159,7 +164,9 @@ void BasicBehaviour::terminateJob()
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     try {
-        _trace->setTag("Terminate", "true");
+        if (_trace) {
+            _trace->setTag("Terminate", "true");
+        }
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
@@ -191,15 +198,11 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
 void BasicBehaviour::startTrace()
 {
     RunningPlan* parent = _context.load()->getParent();
-    if (parent == nullptr) {
-        // a behaviour always has a plan as its parent
-        return;
-    }
-
-    if (auto parentPlan = parent->getBasicPlan()) {
-        _trace = _engine->getTraceFactory().create("Behaviour", parentPlan->getTrace().context());
-    } else {
-        // a behaviour always has a plan as its parent
+    assert(parent);
+    if (_engine->getTraceFactory()) {
+        auto parentPlan = parent->getBasicPlan();
+        assert(parentPlan);
+        _trace = _engine->getTraceFactory()->create("Behaviour", parentPlan->getTrace().context());
     }
 }
 
