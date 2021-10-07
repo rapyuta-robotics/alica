@@ -138,7 +138,7 @@ const AlicaClock& AlicaEngine::getAlicaClock() const
     return _ctx.getAlicaClock();
 }
 
-const IAlicaTraceFactory& AlicaEngine::getTraceFactory() const
+const IAlicaTraceFactory* AlicaEngine::getTraceFactory() const
 {
     return _ctx.getTraceFactory();
 }
