@@ -15,12 +15,9 @@ services:
   redis:
     image: redis
     command: redis-server
-    ports:
-      - "14000:6379"
 
   alica-backend:
     image: rrdockerhub/alica_backend:v0.1
-    # build: .
     environment:
       - POSTGRES_DB=alicadb
       - POSTGRES_USER=postgres
@@ -28,17 +25,29 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - REDIS_HOST=redis
+      - SITE_NAME=localhost
+      - SITE_DOMAIN=localhost:${BACKEND_PORT:-9000}
+      - SOCIAL_APP_CLIENT_ID=${SOCIAL_APP_CLIENT_ID}
+      - SOCIAL_APP_SECRET=${SOCIAL_APP_SECRET}
+      - OAUTH_APPLICATION_URL=http://localhost:3030
     command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - "8000:8000"
+      - ${BACKEND_PORT:-9000}:8000
     depends_on:
       - db
       - redis
 
+  alica-debug-tree:
+    image: rrdockerhub/alica_backend:interface_v0.1  # TODO: move to separate repo
+    command: roslaunch alica_interface alica_interface.launch demo:=false
+    network_mode: host
+    expose:
+      - 7890
+
   alica-frontend:
-    image: rrdockerhub/alica_frontend:v0.1
+    image: rrdockerhub/alica_frontend:v0.2
     ports:
-      - '3000:80'
+      - 3030:80
     environment:
       - NODE_ENV=development
     depends_on:
