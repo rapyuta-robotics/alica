@@ -25,6 +25,7 @@ public:
     void setEngine(AlicaEngine* engine) { _ae = engine; }
     void setRunningPlan(RunningPlan* rp) { _context = rp; }
     void setConfiguration(const Configuration* conf) { _configuration = conf; }
+    void setName(const std::string& name) { _name = name; }
 
     AlicaTime getInterval() { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
@@ -62,6 +63,7 @@ private:
     AlicaTime _msInterval;
     int64_t _activeRunJobId;
     std::unique_ptr<IAlicaTrace> _trace;
+    std::string _name;
 
     std::atomic<RunningPlan*> _context;
     std::atomic<Counter> _signalState;
