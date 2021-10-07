@@ -23,7 +23,9 @@ void BasicPlan::doInit()
 {
     ++_execState;
     try {
-        _trace->setTag("Init", "true");
+        if (_trace) {
+            _trace->setTag("Init", "true");
+        }
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
@@ -37,6 +39,9 @@ void BasicPlan::doInit()
 void BasicPlan::doRun(void* msg)
 {
     try {
+        if (_trace) {
+            _trace->setTag("Run", "true");
+        }
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
@@ -52,7 +57,9 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
     try {
-        _trace->setTag("Terminate", "true");
+        if (_trace) {
+            _trace->setTag("Terminate", "true");
+        }
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
@@ -88,16 +95,16 @@ ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePla
 
 void BasicPlan::startTrace()
 {
-    RunningPlan* parent = _context.load()->getParent();
-    if (parent == nullptr) {
-        _trace = _ae->getTraceFactory().create("MasterPlan");
+    if (!_ae->getTraceFactory()) {
         return;
     }
-
-    if (auto parentPlan = parent->getBasicPlan()) {
-        _trace = _ae->getTraceFactory().create("Plan", parentPlan->getTrace().context());
+    RunningPlan* parent = _context.load()->getParent();
+    if (parent == nullptr) {
+        _trace = _ae->getTraceFactory()->create("MasterPlan");
     } else {
-        // a plan should always have a plan as its parent
+        auto parentPlan = parent->getBasicPlan();
+        assert(parentPlan);
+        _trace = _ae->getTraceFactory()->create("Plan", parentPlan->getTrace().context());
     }
 }
 
