@@ -104,7 +104,7 @@ void BasicPlan::startTrace()
     } else {
         auto parentPlan = parent->getBasicPlan();
         assert(parentPlan);
-        _trace = _ae->getTraceFactory()->create("Plan", parentPlan->getTrace().context());
+        _trace = _ae->getTraceFactory()->create(_name, parentPlan->getTrace().context());
     }
 }
 

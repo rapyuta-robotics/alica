@@ -202,7 +202,7 @@ void BasicBehaviour::startTrace()
     if (_engine->getTraceFactory()) {
         auto parentPlan = parent->getBasicPlan();
         assert(parentPlan);
-        _trace = _engine->getTraceFactory()->create("Behaviour", parentPlan->getTrace().context());
+        _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTrace().context());
     }
 }
 
