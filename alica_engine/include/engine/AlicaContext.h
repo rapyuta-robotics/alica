@@ -335,10 +335,9 @@ public:
      *
      * @return A reference to trace factory object being used by context
      */
-    IAlicaTraceFactory& getTraceFactory() const
+    IAlicaTraceFactory* getTraceFactory() const
     {
-        assert(_traceFactory.get());
-        return *_traceFactory;
+        return _traceFactory.get();
     }
 
     /**
