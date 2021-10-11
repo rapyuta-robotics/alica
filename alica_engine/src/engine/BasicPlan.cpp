@@ -16,6 +16,7 @@ BasicPlan::BasicPlan()
         , _context(nullptr)
         , _signalState(1)
         , _execState(1)
+        , _tracingDisabled(false)
 {
 }
 
@@ -96,15 +97,18 @@ ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePla
 
 void BasicPlan::startTrace()
 {
-    if (!_ae->getTraceFactory()) {
+    if (!_ae->getTraceFactory() || _tracingDisabled) {
         return;
     }
     RunningPlan* parent = _context.load()->getParent();
     if (parent == nullptr) {
         _trace = _ae->getTraceFactory()->create("MasterPlan");
     } else {
-        auto parentPlan = parent->getBasicPlan();
-        assert(parentPlan);
+        BasicPlan* parentPlan;
+        do {
+            parentPlan = parent->getBasicPlan();
+            assert(parentPlan);
+        } while (parentPlan->isTracingDisabled());
         _trace = _ae->getTraceFactory()->create(_name, parentPlan->getTrace().context());
     }
 }

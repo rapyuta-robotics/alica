@@ -30,6 +30,8 @@ public:
     AlicaTime getInterval() { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
     IAlicaTrace& getTrace() { return *_trace; };
+    void disableTracing() { _tracingDisabled = true;}
+    bool isTracingDisabled() { return _tracingDisabled; }
 
 protected:
     ThreadSafePlanInterface getPlanContext() const;
@@ -68,5 +70,6 @@ private:
     std::atomic<RunningPlan*> _context;
     std::atomic<Counter> _signalState;
     std::atomic<Counter> _execState;
+    std::atomic<bool> _tracingDisabled;
 };
 } // namespace alica

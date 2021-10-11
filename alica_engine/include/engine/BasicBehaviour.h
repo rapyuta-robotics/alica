@@ -76,6 +76,9 @@ public:
 
     IAlicaTrace& getTrace() { return *_trace; };
 
+    void disableTracing() { _tracingDisabled = true;}
+    bool isTracingDisabled() { return _tracingDisabled; }
+
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -167,5 +170,6 @@ private:
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
     std::unique_ptr<IAlicaTrace> _trace;
+    std::atomic<bool> _tracingDisabled;
 };
 } /* namespace alica */

@@ -39,6 +39,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
+        , _tracingDisabled(false)
 {
 }
 
@@ -198,13 +199,19 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
 
 void BasicBehaviour::startTrace()
 {
-    RunningPlan* parent = _context.load()->getParent();
-    assert(parent);
-    if (_engine->getTraceFactory()) {
-        auto parentPlan = parent->getBasicPlan();
-        assert(parentPlan);
-        _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTrace().context());
+    if (!_engine->getTraceFactory() || _tracingDisabled) {
+        return;
     }
+
+    BasicPlan* parentPlan;
+    do {
+        RunningPlan* parent = _context.load()->getParent();
+        assert(parent);
+        parentPlan = parent->getBasicPlan();
+        assert(parentPlan);
+    } while (parentPlan->isTracingDisabled());
+
+    _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTrace().context());
 }
 
 } /* namespace alica */
