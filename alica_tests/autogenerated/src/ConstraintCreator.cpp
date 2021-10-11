@@ -29,6 +29,8 @@
 #include "constraints/ConstraintTestMaster1414068495566Constraints.h"
 #include "constraints/ConstraintTestPlan1414068524245Constraints.h"
 #include "constraints/Defend1402488893641Constraints.h"
+#include "constraints/DisabledTracing863651328966767832Constraints.h"
+#include "constraints/EnabledTracing3606794787493300754Constraints.h"
 #include "constraints/EngineRulesSchedulingTestMaster1625610679488Constraints.h"
 #include "constraints/EngineRulesSchedulingTestPlan1625614640417Constraints.h"
 #include "constraints/FailsOnOne1530069246103Constraints.h"
@@ -67,6 +69,8 @@
 #include "constraints/SchedulingTestSequenceSubPlan31614964478264Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
+#include "constraints/TracingDisabledPlan3148641312534759067Constraints.h"
+#include "constraints/TracingTestMasterPlan2798866311782929984Constraints.h"
 
 #include <iostream>
 

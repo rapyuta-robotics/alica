@@ -16,6 +16,8 @@
 #include "Behaviour/TriggerA.h"
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
+#include "DisabledTracing.h"
+#include "EnabledTracing.h"
 #include "engine/BasicBehaviour.h"
 
 namespace alica
@@ -78,6 +80,12 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 1629895911592:
         return std::make_shared<BehBAA>();
+        break;
+    case 863651328966767832:
+        return std::make_shared<DisabledTracing>();
+        break;
+    case 3606794787493300754:
+        return std::make_shared<EnabledTracing>();
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

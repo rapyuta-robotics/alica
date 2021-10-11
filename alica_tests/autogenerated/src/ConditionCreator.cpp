@@ -28,6 +28,8 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "DisabledTracing863651328966767832.h"
+#include "EnabledTracing3606794787493300754.h"
 #include "EngineRulesSchedulingTestMaster1625610679488.h"
 #include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "FailsOnOne1530069246103.h"
@@ -66,6 +68,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TracingDisabledPlan3148641312534759067.h"
+#include "TracingTestMasterPlan2798866311782929984.h"
 
 namespace alica
 {
@@ -282,6 +286,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1629895768182:
         return std::make_shared<PreCondition1629895768182>();
+        break;
+    case 657847900438516106:
+        return std::make_shared<PreCondition657847900438516106>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

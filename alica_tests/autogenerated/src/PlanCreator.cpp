@@ -49,6 +49,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TracingDisabledPlan3148641312534759067.h"
+#include "TracingTestMasterPlan2798866311782929984.h"
 #include "engine/BasicPlan.h"
 
 namespace alica
@@ -210,6 +212,12 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
         break;
     case 1629895873188:
         return std::make_unique<PlanBA1629895873188>();
+        break;
+    case 2798866311782929984:
+        return std::make_unique<TracingTestMasterPlan2798866311782929984>();
+        break;
+    case 3148641312534759067:
+        return std::make_unique<TracingDisabledPlan3148641312534759067>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

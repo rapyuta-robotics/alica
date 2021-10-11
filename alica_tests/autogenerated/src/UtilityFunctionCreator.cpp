@@ -49,6 +49,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TracingDisabledPlan3148641312534759067.h"
+#include "TracingTestMasterPlan2798866311782929984.h"
 #include <iostream>
 
 namespace alica
@@ -210,6 +212,12 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 1629895873188:
         return std::make_shared<UtilityFunction1629895873188>();
+        break;
+    case 2798866311782929984:
+        return std::make_shared<UtilityFunction2798866311782929984>();
+        break;
+    case 3148641312534759067:
+        return std::make_shared<UtilityFunction3148641312534759067>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
