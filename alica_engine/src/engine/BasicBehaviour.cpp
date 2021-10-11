@@ -166,6 +166,7 @@ void BasicBehaviour::terminateJob()
     try {
         if (_trace) {
             _trace->setTag("Terminate", "true");
+            _trace.reset();
         }
         onTermination();
     } catch (const std::exception& e) {

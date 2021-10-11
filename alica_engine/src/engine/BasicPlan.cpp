@@ -59,6 +59,7 @@ void BasicPlan::doTerminate()
     try {
         if (_trace) {
             _trace->setTag("Terminate", "true");
+            _trace.reset();
         }
         onTerminate();
     } catch (const std::exception& e) {
