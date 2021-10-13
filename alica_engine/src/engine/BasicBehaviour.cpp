@@ -39,6 +39,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
+        , _runCallLogged(false)
 {
 }
 
@@ -74,6 +75,7 @@ bool BasicBehaviour::start(RunningPlan* rp)
     }
     ++_signalState;
     _context.store(rp);
+    _runCallLogged = false;
     startTrace();
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
@@ -87,6 +89,10 @@ void BasicBehaviour::setSuccess()
     auto prev = _behResult.exchange(BehResult::SUCCESS);
     if (prev != BehResult::SUCCESS) {
         _engine->editPlanBase().addFastPathEvent(_context.load());
+        if (_trace) {
+            _trace->setLog({"Result", "Success"});
+            _trace->setTag("Result", "Success");
+        }
     }
 }
 
@@ -98,6 +104,10 @@ void BasicBehaviour::setFailure()
     auto prev = _behResult.exchange(BehResult::FAILURE);
     if (prev != BehResult::FAILURE) {
         _engine->editPlanBase().addFastPathEvent(_context.load());
+        if (_trace) {
+            _trace->setLog({"Result", "Fail"});
+            _trace->setTag("Result", "Fail");
+        }
     }
 }
 
@@ -114,7 +124,7 @@ void BasicBehaviour::initJob()
     // Todo: Optimization: don't call initialiseParameters if not in context
     try {
         if (_trace) {
-            _trace->setTag("Init", "true");
+            _trace->setLog({"Init", "true"});
         }
         initialiseParameters();
     } catch (const std::exception& e) {
@@ -132,8 +142,9 @@ void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
     try {
-        if (_trace) {
-            _trace->setTag("Run", "true");
+        if (_trace && !_runCallLogged) {
+            _trace->setLog({"Run", "true"});
+            _runCallLogged = true;
         }
         run(msg);
     } catch (const std::exception& e) {
@@ -165,7 +176,7 @@ void BasicBehaviour::terminateJob()
     // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     try {
         if (_trace) {
-            _trace->setTag("Terminate", "true");
+            _trace->setLog({"Terminate", "true"});
             _trace.reset();
         }
         onTermination();
@@ -203,7 +214,7 @@ void BasicBehaviour::startTrace()
     if (_engine->getTraceFactory()) {
         auto parentPlan = parent->getBasicPlan();
         assert(parentPlan);
-        _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTrace().context());
+        _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTraceContext());
     }
 }
 
