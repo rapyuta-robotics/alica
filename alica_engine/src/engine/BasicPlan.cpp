@@ -16,6 +16,7 @@ BasicPlan::BasicPlan()
         , _context(nullptr)
         , _signalState(1)
         , _execState(1)
+        , _runCallLogged(false)
 {
 }
 
@@ -24,7 +25,7 @@ void BasicPlan::doInit()
     ++_execState;
     try {
         if (_trace) {
-            _trace->setTag("Init", "true");
+            _trace->setLog({"Init", "true"});
         }
         onInit();
     } catch (const std::exception& e) {
@@ -39,8 +40,9 @@ void BasicPlan::doInit()
 void BasicPlan::doRun(void* msg)
 {
     try {
-        if (_trace) {
-            _trace->setTag("Run", "true");
+        if (_trace && !_runCallLogged) {
+            _trace->setLog({"Run", "true"});
+            _runCallLogged = true;
         }
         run(msg);
     } catch (const std::exception& e) {
@@ -58,7 +60,7 @@ void BasicPlan::doTerminate()
     ++_execState;
     try {
         if (_trace) {
-            _trace->setTag("Terminate", "true");
+            _trace->setLog({"Terminate", "true"});
             _trace.reset();
         }
         onTerminate();
@@ -79,6 +81,7 @@ void BasicPlan::start(RunningPlan* rp)
     }
     ++_signalState;
     _context.store(rp);
+    _runCallLogged = false;
     startTrace();
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }

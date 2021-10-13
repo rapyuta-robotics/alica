@@ -74,8 +74,6 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
-    IAlicaTrace& getTrace() { return *_trace; };
-
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -83,6 +81,7 @@ protected:
     ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
     void setSuccess();
     void setFailure();
+    IAlicaTrace& getTrace() { return *_trace; };
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -167,5 +166,6 @@ private:
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
     std::unique_ptr<IAlicaTrace> _trace;
+    std::atomic<bool> _runCallLogged;
 };
 } /* namespace alica */

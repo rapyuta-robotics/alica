@@ -29,7 +29,7 @@ public:
 
     AlicaTime getInterval() { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
-    IAlicaTrace& getTrace() { return *_trace; };
+    std::string getTraceContext() { return _trace->context(); }
 
 protected:
     ThreadSafePlanInterface getPlanContext() const;
@@ -37,6 +37,7 @@ protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
+    IAlicaTrace& getTrace() { return *_trace; };
 
 private:
     using Counter = uint64_t;
@@ -68,5 +69,6 @@ private:
     std::atomic<RunningPlan*> _context;
     std::atomic<Counter> _signalState;
     std::atomic<Counter> _execState;
+    std::atomic<bool> _runCallLogged;
 };
 } // namespace alica
