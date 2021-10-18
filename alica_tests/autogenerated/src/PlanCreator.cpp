@@ -49,6 +49,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestTracingMasterPlan691392966514374878.h"
+#include "TestTracingSubPlan1482512794732634139.h"
 #include "engine/BasicPlan.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -211,6 +213,12 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
+        break;
+    case 691392966514374878:
+        return std::make_unique<TestTracingMasterPlan691392966514374878>(wm);
+        break;
+    case 1482512794732634139:
+        return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;
