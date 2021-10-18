@@ -10,6 +10,7 @@
 #include "UtilityFunctionCreator.h"
 
 #include <communication/AlicaDummyCommunication.h>
+#include <alica_tests/TestTracing.h>
 #include <clock/AlicaRosTimer.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
@@ -212,6 +213,39 @@ protected:
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
     }
+};
+
+class AlicaTestTracingFixture : public AlicaTestFixtureBase
+{
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual bool stepEngine() const { return true; }
+    virtual void SetUp() override
+    {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        ac = new alica::AlicaContext(
+                alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
+        ASSERT_TRUE(ac->isValid());
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setWorldModel<alica_test::SchedWM>();
+        ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
+        const YAML::Node& config = ac->getConfig();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        EXPECT_TRUE(ae->init(creators));
+    }
 
     virtual void TearDown() override
     {
@@ -219,7 +253,6 @@ protected:
         delete ac;
     }
 };
-
 } // namespace alica
 
 extern std::jmp_buf restore_point;
