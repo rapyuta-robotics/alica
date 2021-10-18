@@ -41,7 +41,7 @@ Clicking on that symbol opens the import and export menu of the plan designer.
 - Logout: Log out from your GitHub account.
 
 A more detailed description of how the import and export process works can be found in
-"<b>3 How to import and export plans?</b>".
+[3 How to import and export plans?](#3-how-to-import-and-export-plans)
 
 ![import_export](./doc/import_export.png)
 
@@ -346,7 +346,7 @@ After logging in via GitHub you should be able to see additional options.
 
 #### 3.2.0 Setup
 
-To be able to login to github and use the Git-workflow to import and export plan, it is necessary to register the web-plan-designer application as an oauth2 client with github.
+To be able to login to github and use the Git-workflow to import and export plan, it is necessary to register the web-plan-designer application as an oauth2 client with github before launching the web-plan-designer.
 
 1. Follow [Github's guide](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) to create a new oauth application. Enter the URL of the plan designer (default: `http://localhost:3030/`) as the 'Homepage URL' and 'Authorization Callback URL'.
 
@@ -369,7 +369,7 @@ To be able to login to github and use the Git-workflow to import and export plan
 
 #### 3.2.1 Import
 
-Click on ‘Github -> Git Import’ (see image above), and you’ll see the following form.
+Click on ‘Github -> Git Import’, and you’ll see the following form.
 
 ![import_git](./doc/import_git.png)
 
