@@ -52,6 +52,8 @@
 #include "constraints/PlanFive1407153703092Constraints.h"
 #include "constraints/PlanFour1407153683051Constraints.h"
 #include "constraints/PlanOne1407153611768Constraints.h"
+#include "constraints/PlanPoolTestMasterPlan1964838032551226161Constraints.h"
+#include "constraints/PlanPoolTestSubPlan432995127772554364Constraints.h"
 #include "constraints/PlanThree1407153663917Constraints.h"
 #include "constraints/PlanTwo1407153645238Constraints.h"
 #include "constraints/PreConditionPlan1418042796751Constraints.h"
