@@ -35,7 +35,7 @@ void BasicPlan::doInit()
     if (areFlagsSet(Flags::TRACING_ENABLED)) {
         auto parent = _execContext.load()->getParent();
         for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
-        if (parent) {
+        if (parent && _ae->getTraceFactory()) {
             _trace = _ae->getTraceFactory()->create(_name, parent->getBasicPlan()->getTraceContext());
         }
     }
