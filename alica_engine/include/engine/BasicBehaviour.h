@@ -37,7 +37,10 @@ public:
     virtual ~BasicBehaviour(){};
     virtual void run(void* msg) = 0;
 
-    bool isRunningInContext(const RunningPlan* rp) const { return isExecutingInContext() && rp == _context.load(); };
+    // This method returns true when it is safe to delete the RunningPlan instance that is passed to it
+    // Note that for things to work correctly it is assumed that this method is called after start() has finished execution
+    // i.e. either on the same thread or via some other synchronization mechanism
+    bool isRunningInContext(const RunningPlan* rp) const { return rp == _execContext.load() || rp == _signalContext.load(); };
     void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
 
@@ -77,7 +80,7 @@ protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
+    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
     void setSuccess();
     void setFailure();
 
@@ -123,6 +126,9 @@ private:
      * Therefore the execution of the behaviour by the scheduler thread is in the context of the running plan only if
      * _signalState == _execState && _signalState is even.
      *
+     * The behaviour also maintains the current RunningPlan context under which it is executing & this is used by the alica
+     * main thread to know when it is safe to destroy the RunningPlan object.
+     *
      */
 
     // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
@@ -153,14 +159,19 @@ private:
     AlicaTime _msDelayedStart;
 
     // TODO: Optimization: It should be okay (confirm it) for all accesses to atomic variables to be done using acquire-release semantics instead
-    // of the current used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
+    // of the currently used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
     // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
-    std::atomic<RunningPlan*> _context;
+    std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
+    std::atomic<RunningPlan*> _execContext; // The running plan context under which the behaviour is executing
     std::atomic<Counter> _signalState; // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
     std::atomic<Counter> _execState; // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<BehResult> _behResult;
 
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
+
+    // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
+    // used to track this. In such a case we should not be calling onTermination either
+    bool _initExecuted;
 };
 } /* namespace alica */
