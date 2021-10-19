@@ -33,13 +33,15 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
-        , _context(nullptr)
+        , _signalContext(nullptr)
+        , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
         , _runCallLogged(false)
+        , _initExecuted(false)
 {
 }
 
@@ -73,10 +75,11 @@ bool BasicBehaviour::start(RunningPlan* rp)
     if (isActive(_signalState.load())) {
         return true;
     }
+    // Increment _signalState before setting the signal context, see initJob() for explanation
     ++_signalState;
-    _context.store(rp);
     _runCallLogged = false;
     startTrace();
+    _signalContext.store(rp);
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
 }
@@ -88,7 +91,7 @@ void BasicBehaviour::setSuccess()
     }
     auto prev = _behResult.exchange(BehResult::SUCCESS);
     if (prev != BehResult::SUCCESS) {
-        _engine->editPlanBase().addFastPathEvent(_context.load());
+        _engine->editPlanBase().addFastPathEvent(_execContext.load());
         if (_trace) {
             _trace->setLog({"Result", "Success"});
             _trace->setTag("Result", "Success");
@@ -103,7 +106,7 @@ void BasicBehaviour::setFailure()
     }
     auto prev = _behResult.exchange(BehResult::FAILURE);
     if (prev != BehResult::FAILURE) {
-        _engine->editPlanBase().addFastPathEvent(_context.load());
+        _engine->editPlanBase().addFastPathEvent(_execContext.load());
         if (_trace) {
             _trace->setLog({"Result", "Fail"});
             _trace->setTag("Result", "Fail");
@@ -121,7 +124,18 @@ void BasicBehaviour::initJob()
     assert(_behResult.load() == BehResult::UNKNOWN);
     ++_execState;
 
-    // Todo: Optimization: don't call initialiseParameters if not in context
+    if (!isExecutingInContext()) {
+        return;
+    }
+    _initExecuted = true;
+
+    // There is a possible race condition here in the sense that the _execState can be behind the _signalState
+    // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
+    // since all methods are guarded by isExecutingInContext() which will return false in all such cases.
+    // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
+    // when the behaviour is terminated
+    _execContext = _signalContext.exchange(nullptr);
+
     try {
         if (_trace) {
             _trace->setLog({"Init", "true"});
@@ -165,6 +179,7 @@ void BasicBehaviour::doTrigger()
 
 void BasicBehaviour::terminateJob()
 {
+    // There will be no run job if the interval is 0 or init is not executed
     if (_activeRunJobId != -1) {
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
@@ -172,8 +187,15 @@ void BasicBehaviour::terminateJob()
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
     ++_execState;
+
+    if (!_initExecuted) {
+        // Reset the execution context so that the RunningPlan instance can be deleted
+        _execContext.store(nullptr);
+        return;
+    }
+    _initExecuted = false;
+
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
-    // TODO: Optimization: don't call onTermination if initiliaseParameters in not called because we were not in context
     try {
         if (_trace) {
             _trace->setLog({"Terminate", "true"});
@@ -183,6 +205,9 @@ void BasicBehaviour::terminateJob()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
+
+    // Reset the execution context so that the RunningPlan instance can be deleted
+    _execContext.store(nullptr);
 }
 
 void BasicBehaviour::sendLogMessage(int level, const std::string& message) const

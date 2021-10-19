@@ -13,16 +13,26 @@ BasicPlan::BasicPlan()
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _activeRunJobId(-1)
-        , _context(nullptr)
+        , _signalContext(nullptr)
+        , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
         , _runCallLogged(false)
+        , _initExecuted(false)
 {
 }
 
 void BasicPlan::doInit()
 {
     ++_execState;
+
+    if (!isExecutingInContext()) {
+        return;
+    }
+    _initExecuted = true;
+
+    _execContext = _signalContext.exchange(nullptr);
+
     try {
         if (_trace) {
             _trace->setLog({"Init", "true"});
@@ -58,6 +68,13 @@ void BasicPlan::doTerminate()
         _activeRunJobId = -1;
     }
     ++_execState;
+
+    if (!_initExecuted) {
+        _execContext.store(nullptr);
+        return;
+    }
+    _initExecuted = false;
+
     try {
         if (_trace) {
             _trace->setLog({"Terminate", "true"});
@@ -67,6 +84,8 @@ void BasicPlan::doTerminate()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
+
+    _execContext.store(nullptr);
 }
 
 void BasicPlan::sendLogMessage(int level, const std::string& message) const
@@ -80,9 +99,9 @@ void BasicPlan::start(RunningPlan* rp)
         return;
     }
     ++_signalState;
-    _context.store(rp);
     _runCallLogged = false;
     startTrace();
+    _signalContext.store(rp);
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
 
@@ -95,7 +114,7 @@ void BasicPlan::stop()
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
 }
 
-ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _context.load() : nullptr); }
+ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
 
 void BasicPlan::startTrace()
 {
