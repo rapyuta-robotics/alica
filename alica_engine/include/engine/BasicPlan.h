@@ -26,11 +26,13 @@ public:
 
     void setEngine(AlicaEngine* engine) { _ae = engine; }
     void setConfiguration(const Configuration* conf) { _configuration = conf; }
+    // TODO: get the name in the constructor
     void setName(const std::string& name) { _name = name; }
 
-    AlicaTime getInterval() { return _msInterval; }
+    AlicaTime getInterval() const { return _msInterval; }
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
-    std::string getTraceContext() { return _trace->context(); }
+
+    std::optional<std::string> getTraceContext() const;
 
 protected:
     ThreadSafePlanInterface getPlanContext() const;
@@ -38,7 +40,9 @@ protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
-    IAlicaTrace& getTrace() { return *_trace; };
+
+    std::optional<IAlicaTrace*> getTrace() const;
+    void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
 
 private:
     using Counter = uint64_t;
@@ -48,7 +52,6 @@ private:
     void doTerminate();
 
     void sendLogMessage(int level, const std::string& message) const;
-    void startTrace();
 
     static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
     bool isExecutingInContext() const
@@ -70,8 +73,18 @@ private:
     std::atomic<RunningPlan*> _execContext;
     std::atomic<Counter> _signalState;
     std::atomic<Counter> _execState;
-    std::atomic<bool> _runCallLogged;
 
-    bool _initExecuted;
+    enum class Flags : uint8_t
+    {
+        INIT_EXECUTED = 1u,
+        TRACING_ENABLED = 1u << 1,
+        RUN_TRACED = 1u << 2
+    };
+
+    uint8_t _flags;
+
+    void setFlags(Flags flags) { _flags |= static_cast<uint8_t>(flags); }
+    void clearFlags(Flags flags) { _flags &= ~static_cast<uint8_t>(flags); }
+    bool areFlagsSet(Flags flags) { return (static_cast<uint8_t>(flags) & _flags) == static_cast<uint8_t>(flags); }
 };
 } // namespace alica

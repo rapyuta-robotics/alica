@@ -40,8 +40,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
-        , _runCallLogged(false)
-        , _initExecuted(false)
+        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
 {
 }
 
@@ -77,8 +76,6 @@ bool BasicBehaviour::start(RunningPlan* rp)
     }
     // Increment _signalState before setting the signal context, see initJob() for explanation
     ++_signalState;
-    _runCallLogged = false;
-    startTrace();
     _signalContext.store(rp);
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
@@ -93,7 +90,6 @@ void BasicBehaviour::setSuccess()
     if (prev != BehResult::SUCCESS) {
         _engine->editPlanBase().addFastPathEvent(_execContext.load());
         if (_trace) {
-            _trace->setLog({"Result", "Success"});
             _trace->setTag("Result", "Success");
         }
     }
@@ -108,7 +104,6 @@ void BasicBehaviour::setFailure()
     if (prev != BehResult::FAILURE) {
         _engine->editPlanBase().addFastPathEvent(_execContext.load());
         if (_trace) {
-            _trace->setLog({"Result", "Fail"});
             _trace->setTag("Result", "Fail");
         }
     }
@@ -127,7 +122,7 @@ void BasicBehaviour::initJob()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
+    setFlags(Flags::INIT_EXECUTED);
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
@@ -135,6 +130,15 @@ void BasicBehaviour::initJob()
     // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
     // when the behaviour is terminated
     _execContext = _signalContext.exchange(nullptr);
+
+    // Get closest parent that has a trace
+    if (areFlagsSet(Flags::TRACING_ENABLED)) {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
+        if (parent) {
+            _trace = _engine->getTraceFactory()->create(_name, parent->getBasicPlan()->getTraceContext());
+        }
+    }
 
     try {
         if (_trace) {
@@ -156,9 +160,9 @@ void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
     try {
-        if (_trace && !_runCallLogged) {
+        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
             _trace->setLog({"Run", "true"});
-            _runCallLogged = true;
+            setFlags(Flags::RUN_TRACED);
         }
         run(msg);
     } catch (const std::exception& e) {
@@ -188,12 +192,12 @@ void BasicBehaviour::terminateJob()
     _behResult.store(BehResult::UNKNOWN);
     ++_execState;
 
-    if (!_initExecuted) {
+    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
         // Reset the execution context so that the RunningPlan instance can be deleted
         _execContext.store(nullptr);
         return;
     }
-    _initExecuted = false;
+    clearFlags(Flags::INIT_EXECUTED);
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
@@ -232,15 +236,14 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
     }
 }
 
-void BasicBehaviour::startTrace()
+std::optional<IAlicaTrace*> BasicBehaviour::getTrace() const
 {
-    RunningPlan* parent = _context.load()->getParent();
-    assert(parent);
-    if (_engine->getTraceFactory()) {
-        auto parentPlan = parent->getBasicPlan();
-        assert(parentPlan);
-        _trace = _engine->getTraceFactory()->create(_name, parentPlan->getTraceContext());
-    }
+    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
+}
+
+std::optional<std::string> BasicBehaviour::getTraceContext() const
+{
+    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 } /* namespace alica */

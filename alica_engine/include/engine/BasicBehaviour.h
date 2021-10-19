@@ -77,6 +77,9 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
+    // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
+    std::optional<std::string> getTraceContext() const;
+
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -84,7 +87,9 @@ protected:
     ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
     void setSuccess();
     void setFailure();
-    IAlicaTrace& getTrace() { return *_trace; };
+
+    std::optional<IAlicaTrace*> getTrace() const;
+    void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -113,7 +118,6 @@ private:
     void terminateJob();
 
     void sendLogMessage(int level, const std::string& message) const;
-    void startTrace();
 
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
@@ -173,10 +177,22 @@ private:
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
     std::unique_ptr<IAlicaTrace> _trace;
-    std::atomic<bool> _runCallLogged;
 
-    // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
-    // used to track this. In such a case we should not be calling onTermination either
-    bool _initExecuted;
+    enum class Flags : uint8_t
+    {
+        // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
+        // used to track this. In such a case we should not be calling onTermination either
+        INIT_EXECUTED = 1u,
+        // Is tracing enabled for this behaviour?
+        TRACING_ENABLED = 1u << 1,
+        // We only want to trace the first run call
+        RUN_TRACED = 1u << 2
+    };
+
+    uint8_t _flags;
+
+    void setFlags(Flags flags) { _flags |= static_cast<uint8_t>(flags); }
+    void clearFlags(Flags flags) { _flags &= ~static_cast<uint8_t>(flags); }
+    bool areFlagsSet(Flags flags) { return (static_cast<uint8_t>(flags) & _flags) == static_cast<uint8_t>(flags); }
 };
 } /* namespace alica */
