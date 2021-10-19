@@ -17,8 +17,7 @@ BasicPlan::BasicPlan()
         , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
-        , _runCallLogged(false)
-        , _initExecuted(false)
+        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
 {
 }
 
@@ -29,9 +28,17 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
+    setFlags(Flags::INIT_EXECUTED);
 
     _execContext = _signalContext.exchange(nullptr);
+
+    if (areFlagsSet(Flags::TRACING_ENABLED)) {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
+        if (parent) {
+            _trace = _ae->getTraceFactory()->create(_name, parent->getBasicPlan()->getTraceContext());
+        }
+    }
 
     try {
         if (_trace) {
@@ -50,9 +57,9 @@ void BasicPlan::doInit()
 void BasicPlan::doRun(void* msg)
 {
     try {
-        if (_trace && !_runCallLogged) {
+        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
             _trace->setLog({"Run", "true"});
-            _runCallLogged = true;
+            setFlags(Flags::RUN_TRACED);
         }
         run(msg);
     } catch (const std::exception& e) {
@@ -69,11 +76,11 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
 
-    if (!_initExecuted) {
+    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
         _execContext.store(nullptr);
         return;
     }
-    _initExecuted = false;
+    clearFlags(Flags::INIT_EXECUTED);
 
     try {
         if (_trace) {
@@ -99,8 +106,6 @@ void BasicPlan::start(RunningPlan* rp)
         return;
     }
     ++_signalState;
-    _runCallLogged = false;
-    startTrace();
     _signalContext.store(rp);
     _ae->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
 }
@@ -116,19 +121,14 @@ void BasicPlan::stop()
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
 
-void BasicPlan::startTrace()
+std::optional<IAlicaTrace*> BasicPlan::getTrace() const
 {
-    if (!_ae->getTraceFactory()) {
-        return;
-    }
-    RunningPlan* parent = _context.load()->getParent();
-    if (parent == nullptr) {
-        _trace = _ae->getTraceFactory()->create("MasterPlan");
-    } else {
-        auto parentPlan = parent->getBasicPlan();
-        assert(parentPlan);
-        _trace = _ae->getTraceFactory()->create(_name, parentPlan->getTrace().context());
-    }
+    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
+}
+
+std::optional<std::string> BasicPlan::getTraceContext() const
+{
+    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 } // namespace alica
