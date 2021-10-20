@@ -52,7 +52,7 @@ bool PlanPool::init(IPlanCreator& planCreator)
 
             // set stuff from plan and configuration in basic plan object
             basicPlan->setConfiguration(wrapper->getConfiguration());
-            basicPlan->setName(wrapper->getName());
+            basicPlan->setName(plan->getName());
             if (plan->getFrequency() < 1) {
                 basicPlan->setInterval(0);
             } else {
