@@ -32,12 +32,10 @@ void BasicPlan::doInit()
 
     _execContext = _signalContext.exchange(nullptr);
 
-    if (areFlagsSet(Flags::TRACING_ENABLED)) {
+    if (areFlagsSet(Flags::TRACING_ENABLED) && _ae->getTraceFactory()) {
         auto parent = _execContext.load()->getParent();
-        for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
-        if (parent && _ae->getTraceFactory()) {
-            _trace = _ae->getTraceFactory()->create(_name, parent->getBasicPlan()->getTraceContext());
-        }
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _ae->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
     }
 
     try {

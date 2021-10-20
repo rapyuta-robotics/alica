@@ -132,12 +132,10 @@ void BasicBehaviour::initJob()
     _execContext = _signalContext.exchange(nullptr);
 
     // Get closest parent that has a trace
-    if (areFlagsSet(Flags::TRACING_ENABLED)) {
+    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
         auto parent = _execContext.load()->getParent();
-        for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
-        if (parent && _engine->getTraceFactory()) {
-            _trace = _engine->getTraceFactory()->create(_name, parent->getBasicPlan()->getTraceContext());
-        }
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
     }
 
     try {
