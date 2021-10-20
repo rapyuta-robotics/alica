@@ -35,6 +35,12 @@ public:
     bool isTransitionCondition1626848015861();
     void setTransitionCondition1626848015861(bool transitionCondition1626848015861);
 
+    // PlanPool test transitions
+    bool isTransitionCondition4238964946542987247();
+    void setTransitionCondition4238964946542987247(bool transitionCondition4238964946542987247);
+    bool isTransitionCondition4115970455290610262();
+    void setTransitionCondition4115970455290610262(bool transitionCondition4115970455290610262);
+
     // MasterPlanTestSyncTransition
     bool isTransitionCondition1418825427317();
     void setTransitionCondition1418825427317(bool transitionCondition1418825427317);
@@ -53,6 +59,7 @@ public:
     double x;
     std::shared_ptr<essentials::ITrigger> trigger1;
     std::shared_ptr<essentials::ITrigger> trigger2;
+    std::vector<std::string> configParameter;
 
     void reset();
 
@@ -82,6 +89,10 @@ private:
     bool transitionCondition1625783867495;
     // master plan final transition
     bool transitionCondition1626848015861;
+
+    //PlanPoolTest transitions
+    bool transitionCondition4238964946542987247;
+    bool transitionCondition4115970455290610262;
 
     bool switchEntryPoints;
 };

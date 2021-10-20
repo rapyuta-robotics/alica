@@ -34,6 +34,8 @@
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
+#include "PlanPoolTestMasterPlan1964838032551226161.h"
+#include "PlanPoolTestSubPlan432995127772554364.h"
 #include "PlanThree1407153663917.h"
 #include "PlanTwo1407153645238.h"
 #include "PreConditionPlan1418042796751.h"
@@ -210,6 +212,12 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId)
         break;
     case 1629895873188:
         return std::make_unique<PlanBA1629895873188>();
+        break;
+    case 432995127772554364:
+        return std::make_unique<PlanPoolTestSubPlan432995127772554364>();
+        break;
+    case 1964838032551226161:
+        return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>();
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

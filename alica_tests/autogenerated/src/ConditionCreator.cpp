@@ -51,6 +51,8 @@
 #include "PlanFive1407153703092.h"
 #include "PlanFour1407153683051.h"
 #include "PlanOne1407153611768.h"
+#include "PlanPoolTestMasterPlan1964838032551226161.h"
+#include "PlanPoolTestSubPlan432995127772554364.h"
 #include "PlanThree1407153663917.h"
 #include "PlanTwo1407153645238.h"
 #include "PreConditionPlan1418042796751.h"
@@ -282,6 +284,12 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1629895768182:
         return std::make_shared<PreCondition1629895768182>();
+        break;
+    case 4115970455290610262:
+        return std::make_shared<PreCondition4115970455290610262>();
+        break;
+    case 4238964946542987247:
+        return std::make_shared<PreCondition4238964946542987247>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
