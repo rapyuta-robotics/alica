@@ -1,93 +1,138 @@
 {
-  "id" : 1542881176278,
-  "name" : "Master",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : true,
-  "utilityThreshold" : 0.1,
-  "preCondition" : null,
-  "runtimeCondition" : null,
-  "entryPoints" : [ {
-    "id" : 1543227864154,
-    "name" : "NewEntryPoint",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "TaskRepository.tsk#1542881176318",
-    "state" : 1542881176280,
-    "plan" : 1542881176278
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1542881176280,
-    "name" : "Init",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1542881176278,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1601278930769,
-      "name" : "1601278930769",
-      "comment" : "",
-      "abstractPlan" : "Behaviours/Go2RandomPosition.beh#1542881969548",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1542881645594 ],
-    "inTransitions" : [ 1542881648973 ]
-  }, {
-    "type" : "State",
-    "id" : 1542881580237,
-    "name" : "Move",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1542881176278,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1601278930772,
-      "name" : "1601278930772",
-      "comment" : "",
-      "abstractPlan" : "Move.pml#1542882005838",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ 1542881648973 ],
-    "inTransitions" : [ 1542881645594 ]
-  } ],
-  "transitions" : [ {
-    "id" : 1542881645594,
-    "name" : "Init2Move",
-    "comment" : "",
-    "inState" : 1542881176280,
-    "outState" : 1542881580237,
-    "preCondition" : {
-      "id" : 1542881647180,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 2741715629576575326,
+      "maxCardinality": 2147483647,
+      "minCardinality": 1,
+      "name": "",
+      "plan": 2425328142973735249,
+      "positionWeb": {
+        "x": 194,
+        "y": 334
+      },
+      "state": 3997532517592149463,
+      "successRequired": false,
+      "task": "TaskRepository.tsk#3310236980587704776"
+    }
+  ],
+  "frequency": 0,
+  "id": 2425328142973735249,
+  "masterPlan": true,
+  "name": "Master",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/Go2RandomPosition.beh#4085572422059465423",
+          "comment": "",
+          "configuration": null,
+          "id": 586073573470828748,
+          "name": ""
+        }
+      ],
+      "entryPoint": 2741715629576575326,
+      "id": 3997532517592149463,
+      "inTransitions": [
+        635844345274619238
+      ],
+      "name": "Init",
+      "outTransitions": [
+        3486027875296378577
+      ],
+      "parentPlan": 2425328142973735249,
+      "positionWeb": {
+        "x": 328,
+        "y": 308
+      },
+      "type": "State",
+      "variableBindings": []
     },
-    "synchronisation" : null
-  }, {
-    "id" : 1542881648973,
-    "name" : "Move2Init",
-    "comment" : "Transition from Move to Init",
-    "inState" : 1542881580237,
-    "outState" : 1542881176280,
-    "preCondition" : {
-      "id" : 1542881650423,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "enabled" : true,
-      "conditionString" : "",
-      "pluginName" : "DefaultPlugin",
-      "variables" : [ ],
-      "quantifiers" : [ ]
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "Move.pml#1889749086610694100",
+          "comment": "",
+          "configuration": null,
+          "id": 496472308860171093,
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 2405597980801916441,
+      "inTransitions": [
+        3486027875296378577
+      ],
+      "name": "Move",
+      "outTransitions": [
+        635844345274619238
+      ],
+      "parentPlan": 2425328142973735249,
+      "positionWeb": {
+        "x": 578,
+        "y": 355
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [
+    {
+      "comment": "",
+      "id": 635844345274619238,
+      "inState": 2405597980801916441,
+      "name": "",
+      "outState": 3997532517592149463,
+      "pointsWeb": [
+        {
+          "x": 479,
+          "y": 396
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1136497454350831106,
+        "name": "Move2Init",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
     },
-    "synchronisation" : null
-  } ],
-  "synchronisations" : [ ]
+    {
+      "comment": "",
+      "id": 3486027875296378577,
+      "inState": 3997532517592149463,
+      "name": "",
+      "outState": 2405597980801916441,
+      "pointsWeb": [
+        {
+          "x": 488,
+          "y": 329
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1597434482701133956,
+        "name": "Init2Move",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
+  "utilityThreshold": 0.0,
+  "variables": []
 }

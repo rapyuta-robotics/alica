@@ -8,6 +8,7 @@
 #include <constraintsolver/CGSolver.h>
 #include <clock/AlicaROSClock.h>
 #include <communication/AlicaRosCommunication.h>
+#include <clock/AlicaRosTimer.h>
 #include <ros/ros.h>
 
 #include <alica_ros_turtlesim/base.hpp>
@@ -23,6 +24,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false));
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
+    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
     ac->addSolver<alica::reasoner::CGSolver>();
 }
 

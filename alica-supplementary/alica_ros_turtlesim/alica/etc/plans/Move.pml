@@ -1,85 +1,117 @@
 {
-  "id" : 1542882005838,
-  "name" : "Move",
-  "comment" : "",
-  "relativeDirectory" : "",
-  "variables" : [ ],
-  "masterPlan" : false,
-  "utilityThreshold" : 0.1,
-  "preCondition" : null,
-  "runtimeCondition" : {
-    "id" : 1543284793605,
-    "name" : "CircleRuntimeCondition",
-    "comment" : "",
-    "enabled" : false,
-    "conditionString" : "",
-    "pluginName" : "DefaultPlugin",
-    "variables" : [ ],
-    "quantifiers" : [ {
-      "id" : 1543284852310,
-      "name" : "MISSING_NAME",
-      "comment" : "",
-      "quantifierType" : "all",
-      "scope" : 1542882005838,
-      "sorts" : [ "x", "y" ]
-    } ]
+  "comment": "",
+  "entryPoints": [
+    {
+      "comment": "",
+      "id": 3277312192440194145,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "",
+      "plan": 1889749086610694100,
+      "positionWeb": {
+        "x": 200,
+        "y": 412
+      },
+      "state": 2299237921449867536,
+      "successRequired": false,
+      "task": "TaskRepository.tsk#3759439551323513525"
+    },
+    {
+      "comment": "",
+      "id": 4346694000146342467,
+      "maxCardinality": 1,
+      "minCardinality": 1,
+      "name": "",
+      "plan": 1889749086610694100,
+      "positionWeb": {
+        "x": 200,
+        "y": 212
+      },
+      "state": 4158797811607100614,
+      "successRequired": false,
+      "task": "TaskRepository.tsk#826983480584534597"
+    }
+  ],
+  "frequency": 0,
+  "id": 1889749086610694100,
+  "masterPlan": false,
+  "name": "Move",
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": {
+    "comment": "",
+    "conditionString": "",
+    "enabled": false,
+    "id": 1288817888979746811,
+    "name": "CircleRuntimeCondition",
+    "pluginName": "DefaultPlugin",
+    "quantifiers": [
+      {
+        "comment": "",
+        "id": 4131856376940334089,
+        "name": "",
+        "quantifierType": "all",
+        "scope": 1889749086610694100,
+        "sorts": [
+          "x",
+          "y"
+        ]
+      }
+    ],
+    "variables": []
   },
-  "entryPoints" : [ {
-    "id" : 1543227886876,
-    "name" : "LeaderTask",
-    "comment" : "",
-    "successRequired" : true,
-    "minCardinality" : 1,
-    "maxCardinality" : 1,
-    "task" : "TaskRepository.tsk#1543224732214",
-    "state" : 1542882041936,
-    "plan" : 1542882005838
-  }, {
-    "id" : 1543227889789,
-    "name" : "FollowerTask",
-    "comment" : "",
-    "successRequired" : false,
-    "minCardinality" : 0,
-    "maxCardinality" : 2147483647,
-    "task" : "TaskRepository.tsk#1543224747408",
-    "state" : 1542882494678,
-    "plan" : 1542882005838
-  } ],
-  "states" : [ {
-    "type" : "State",
-    "id" : 1542882041936,
-    "name" : "Move2Center",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1542882005838,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1601278930757,
-      "name" : "1601278930757",
-      "comment" : "",
-      "abstractPlan" : "Behaviours/GoTo.beh#1544160969061",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ ]
-  }, {
-    "type" : "State",
-    "id" : 1542882494678,
-    "name" : "AlignCircle",
-    "comment" : "",
-    "entryPoint" : null,
-    "parentPlan" : 1542882005838,
-    "confAbstractPlanWrappers" : [ {
-      "id" : 1601278930760,
-      "name" : "1601278930760",
-      "comment" : "",
-      "abstractPlan" : "Behaviours/GoTo.beh#1544160969061",
-      "configuration" : null
-    } ],
-    "variableBindings" : [ ],
-    "outTransitions" : [ ],
-    "inTransitions" : [ ]
-  } ],
-  "transitions" : [ ],
-  "synchronisations" : [ ]
+  "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/GoTo.beh#4054297592460872311",
+          "comment": "",
+          "configuration": null,
+          "id": 3768390995110815611,
+          "name": ""
+        }
+      ],
+      "entryPoint": 3277312192440194145,
+      "id": 2299237921449867536,
+      "inTransitions": [],
+      "name": "AlignCircle",
+      "outTransitions": [],
+      "parentPlan": 1889749086610694100,
+      "positionWeb": {
+        "x": 428,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/GoTo.beh#4054297592460872311",
+          "comment": "",
+          "configuration": null,
+          "id": 139589851715028435,
+          "name": ""
+        }
+      ],
+      "entryPoint": 4346694000146342467,
+      "id": 4158797811607100614,
+      "inTransitions": [],
+      "name": "Move2Center",
+      "outTransitions": [],
+      "parentPlan": 1889749086610694100,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    }
+  ],
+  "synchronisations": [],
+  "transitions": [],
+  "utilityThreshold": 0.0,
+  "variables": []
 }
