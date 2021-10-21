@@ -67,7 +67,6 @@ public:
     void terminate()
     {
         _running = false;
-        _jobQueue.clear();
 
         _cv.notify_one();
         _thread.join();
@@ -89,7 +88,7 @@ public:
 private:
     void run()
     {
-        while(_running) {
+        while (_running) {
             auto job = _jobQueue.pop();
             if (!job) {
                 std::unique_lock<std::mutex> lock(_mutex);
@@ -101,13 +100,24 @@ private:
                     return job.has_value();
                 });
             }
-            if (!_running) {
+            if (!job) {
                 return;
             }
             auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
             if (repeatInterval) {
                 _repeatableJobs[jobId] = _timerFactory.createTimer(std::move(jobCb), std::move(*repeatInterval));
             } else {
+                jobCb();
+            }
+        }
+        // Execute all pending non repeatable jobs i.e. all init's & terminate's
+        while (true) {
+            auto job = _jobQueue.pop();
+            if (!job) {
+                return;
+            }
+            auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
+            if (!repeatInterval) {
                 jobCb();
             }
         }

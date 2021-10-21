@@ -100,6 +100,16 @@ void PlanPool::stopPlan(RunningPlan& rp)
    }
 }
 
+/**
+ * Calls stop on all BasicPlans.
+ */
+void PlanPool::stopAll()
+{
+    for (auto& plan_pair : _availablePlans) {
+        plan_pair.second->stop();
+    }
+}
+
 BasicPlan* PlanPool::getBasicPlan(const Plan* plan, const Configuration* configuration) const
 {
     for (const auto& poolEntry : _availablePlans) {

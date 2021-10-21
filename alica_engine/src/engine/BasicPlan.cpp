@@ -40,6 +40,7 @@ void BasicPlan::doInit()
 
     try {
         if (_trace) {
+            _trace->setLog({"Plan", "true"});
             _trace->setLog({"Init", "true"});
         }
         onInit();

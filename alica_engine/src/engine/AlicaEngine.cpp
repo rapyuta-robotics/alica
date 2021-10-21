@@ -118,12 +118,10 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
-    if (_scheduler) {
-        _scheduler->terminate();
-    }
-    _behaviourPool.stopAll();
-    _behaviourPool.terminateAll();
     _planBase.stop();
+    _behaviourPool.stopAll();
+    _planPool.stopAll();
+    _scheduler->terminate();
     _auth.close();
     _syncModul.close();
     _teamObserver.close();
