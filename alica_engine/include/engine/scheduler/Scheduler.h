@@ -117,6 +117,7 @@ private:
                 return;
             }
             auto&& [jobId, jobCb, repeatInterval] = std::move(*job);
+            (void) jobId;
             if (!repeatInterval) {
                 jobCb();
             }
