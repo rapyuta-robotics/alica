@@ -140,6 +140,7 @@ void BasicBehaviour::initJob()
 
     try {
         if (_trace) {
+            _trace->setLog({"Behaviour", "true"});
             _trace->setLog({"Init", "true"});
         }
         initialiseParameters();

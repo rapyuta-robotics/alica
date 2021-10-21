@@ -27,6 +27,7 @@ public:
     bool init(IPlanCreator& bc);
     void startPlan(RunningPlan& rp);
     void stopPlan(RunningPlan& rp);
+    void stopAll();
     const std::map<const ConfAbstractPlanWrapper*, std::unique_ptr<BasicPlan>>& getAvailablePlans() const { return _availablePlans; }
 
 private:
