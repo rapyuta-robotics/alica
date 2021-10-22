@@ -75,6 +75,7 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
 
+    clearFlags(Flags::RUN_TRACED);
     if (!areFlagsSet(Flags::INIT_EXECUTED)) {
         _execContext.store(nullptr);
         return;

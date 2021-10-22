@@ -32,12 +32,14 @@ public:
 
 private:
     BasicPlan* getBasicPlan(const Plan* plan, const Configuration* configuration) const;
+    std::unique_ptr<BasicPlan> createBasicPlan(IPlanCreator& planCreator, const Plan* plan, const Configuration* configuration);
     /**
      * Manages plans used by the running ALICA program.
      * The key of the map is the ConfAbstractPlanWrapper, which is implicitly created through the PlanDesigner.
      * The value is the basic plan, which is the implementation of that plan.
      */
     std::map<const ConfAbstractPlanWrapper*, std::unique_ptr<BasicPlan>> _availablePlans;
+    std::unique_ptr<BasicPlan> _masterPlan;
     AlicaEngine* _ae;
 };
 
