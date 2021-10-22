@@ -55,6 +55,7 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
+    std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -115,6 +116,7 @@ protected:
 
     void SetUp() override
     {
+    std::cerr << "-----------NewTest 2--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
@@ -159,6 +161,7 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
+    std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -223,6 +226,7 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
+        std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -251,6 +255,55 @@ protected:
     {
         ac->terminate();
         delete ac;
+    }
+};
+
+class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
+{
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual int getAgentCount() const = 0;
+    virtual bool stepEngine() const { return true; }
+    virtual const char* getHostName(int agentNumber) const { return "nase"; }
+    virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
+
+    void SetUp() override
+    {
+        std::cerr << "-----------NewTest 2--------------" << std::endl;
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
+
+        for (int i = 0; i < getAgentCount(); ++i) {
+            alica::AlicaContext* ac = new alica::AlicaContext(
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(),
+                            getMasterPlanName(), stepEngine()));
+            ASSERT_TRUE(ac->isValid());
+            ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>(); // TODO: Remove, create single fixture
+            const YAML::Node& config = ac->getConfig();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+            EXPECT_TRUE(ae->init(creators));
+            acs.push_back(ac);
+            aes.push_back(ae);
+        }
+    }
+
+    void TearDown() override
+    {
+        for (alica::AlicaContext* ac : acs) {
+            ac->terminate();
+            delete ac;
+        }
     }
 };
 } // namespace alica
