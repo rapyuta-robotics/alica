@@ -191,6 +191,7 @@ void BasicBehaviour::terminateJob()
     _behResult.store(BehResult::UNKNOWN);
     ++_execState;
 
+    clearFlags(Flags::RUN_TRACED);
     if (!areFlagsSet(Flags::INIT_EXECUTED)) {
         // Reset the execution context so that the RunningPlan instance can be deleted
         _execContext.store(nullptr);
