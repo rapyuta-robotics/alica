@@ -55,7 +55,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-    std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -116,7 +115,6 @@ protected:
 
     void SetUp() override
     {
-    std::cerr << "-----------NewTest 2--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
@@ -161,7 +159,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
-    std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -226,7 +223,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        std::cerr << "-----------NewTest 1--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
 
@@ -270,7 +266,6 @@ protected:
 
     void SetUp() override
     {
-        std::cerr << "-----------NewTest 2--------------" << std::endl;
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
@@ -287,7 +282,7 @@ protected:
                             getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>(); // TODO: Remove, create single fixture
+            ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
             const YAML::Node& config = ac->getConfig();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);

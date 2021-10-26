@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <string>
-#include <queue>
 
 namespace alicaTests
 {
@@ -64,9 +63,12 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
+    std::shared_ptr<essentials::ITrigger> trigger1;
+    std::shared_ptr<essentials::ITrigger> trigger2;
+
     std::vector<std::string> configParameter;
-    std::queue<std::pair<std::string, std::string>> tracingTags;
-    std::queue<std::pair<std::string, std::string>> tracingLogs;
+    std::vector<std::pair<std::string, std::string>> tracingTags;
+    std::vector<std::pair<std::string, std::string>> tracingLogs;
 
     void reset();
 

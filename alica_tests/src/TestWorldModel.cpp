@@ -46,6 +46,8 @@ void TestWorldModel::reset()
     preCondition1840401110297459509 = false;
 
     x = 0;
+    tracingLogs.clear();
+    tracingTags.clear();
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586() const

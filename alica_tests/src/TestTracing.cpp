@@ -15,18 +15,18 @@ AlicaTestTrace::AlicaTestTrace(const std::string& opName, std::optional<const st
 
 void AlicaTestTrace::setTag(const std::string& key, const std::string& value)
 {
-    alicaTests::TestWorldModel::getOne()->tracingTags.push({key, value});
+    alicaTests::TestWorldModel::getOne()->tracingTags.push_back({key, value});
 }
 
 void AlicaTestTrace::setLog(std::pair<std::string, std::string> logEntry)
 {
-    alicaTests::TestWorldModel::getOne()->tracingLogs.push({logEntry.first, logEntry.second});
+    alicaTests::TestWorldModel::getOne()->tracingLogs.push_back({logEntry.first, logEntry.second});
 }
 
 void AlicaTestTrace::markError(const std::string& description)
 {
-    alicaTests::TestWorldModel::getOne()->tracingTags.push({"error", "true"});
-    alicaTests::TestWorldModel::getOne()->tracingTags.push({"error.description", description});
+    alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error", "true"});
+    alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error.description", description});
 }
 
 std::string AlicaTestTrace::context() const
