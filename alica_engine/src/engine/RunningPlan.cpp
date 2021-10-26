@@ -395,14 +395,19 @@ void RunningPlan::clearChildren()
  */
 void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 {
-    std::cerr << "adaptAssignment" << std::endl;
-    std::cerr << "Replacement: " << replacement.getActiveEntryPoint()->getName() << replacement.getActiveEntryPoint()->getId() << std::endl;
     _assignment.adaptTaskChangesFrom(replacement.getAssignment());
     const State* newState = _assignment.getStateOfAgent(getOwnID());
 
     bool reactivate = false;
 
     if (_activeTriple.state != newState) {
+        if (_ae->getTraceFactory() && _basicBehaviour) {
+            auto trace = _ae->getTraceFactory()->create("RP" + _basicBehaviour->getName(), _basicBehaviour->getTraceContext());
+            trace->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId())});
+        } else if (_ae->getTraceFactory() && _basicPlan) {
+            auto trace = _ae->getTraceFactory()->create("RP" + _basicPlan->getName(), _basicPlan->getTraceContext());
+            trace->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId())});
+        }
         _status.active = PlanActivity::InActive;
         deactivateChildren();
         revokeAllConstraints();
@@ -638,14 +643,6 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
         if (spt->getState()->getInPlan() != _activeTriple.abstractPlan) { // the robot is no longer participating in this plan
             if (!keepTask && !auth) {
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
-                if (_ae->getTraceFactory() && _basicBehaviour) {
-                    auto trace = _ae->getTraceFactory()->create("RP" + _basicBehaviour->getName(), _basicBehaviour->getTraceContext());
-                    trace->setLog({"TaskAssignmentChange", spt->getEntryPoint()->getName() + std::to_string(spt->getEntryPoint()->getId())});
-                } else if (_ae->getTraceFactory() && _basicPlan) {
-                    auto trace = _ae->getTraceFactory()->create("RP" + _basicBehaviour->getName(), _basicPlan->getTraceContext());
-                    trace->setLog({"TaskAssignmentChange", spt->getEntryPoint()->getName() + std::to_string(spt->getEntryPoint()->getId())});
-                }
-
                 if (ep != nullptr) {
                     _assignment.removeAgentFrom(id, ep);
                     ret = true;
@@ -669,14 +666,6 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
                 const EntryPoint* ep = _assignment.getEntryPointOfAgent(id);
                 ret |= _assignment.updateAgent(id, spt->getEntryPoint(), spt->getState());
                 if (spt->getEntryPoint() != ep) {
-                    if (_ae->getTraceFactory() && _basicBehaviour) {
-                        auto trace = _ae->getTraceFactory()->create("RP" + _basicBehaviour->getName(), _basicBehaviour->getTraceContext());
-                        trace->setLog({"TaskAssignmentChange", spt->getEntryPoint()->getName() + std::to_string(spt->getEntryPoint()->getId())});
-                    } else if (_ae->getTraceFactory() && _basicPlan) {
-                        auto trace = _ae->getTraceFactory()->create("RP" + _basicPlan->getName(), _basicPlan->getTraceContext());
-                        trace->setLog({"TaskAssignmentChange", spt->getEntryPoint()->getName() + std::to_string(spt->getEntryPoint()->getId())});
-                    }
-
                     aldif.editAdditions().emplace_back(spt->getEntryPoint(), id);
                     if (ep != nullptr) {
                         aldif.editSubtractions().emplace_back(ep, id);
