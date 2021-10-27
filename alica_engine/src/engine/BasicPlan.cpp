@@ -13,12 +13,55 @@ BasicPlan::BasicPlan()
         , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _activeRunJobId(-1)
+        , _isMasterPlan(false)
         , _signalContext(nullptr)
         , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
+        , _tracingType(TracingType::DEFAULT)
+        , _customTraceContextGetter()
+        , _trace()
+        , _runTraced(false)
+        , _initExecuted(false)
 {
+}
+
+void BasicPlan::startTrace()
+{
+    if (!_ae->getTraceFactory()) {
+        return;
+    }
+
+    switch (_tracingType) {
+    case TracingType::DEFAULT: {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _ae->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
+        break;
+    }
+    case TracingType::SKIP: {
+        break;
+    }
+    case TracingType::ROOT: {
+        _trace = _ae->getTraceFactory()->create(_name);
+        break;
+    }
+    case TracingType::CUSTOM: {
+        if (!_customTraceContextGetter) {
+            ALICA_ERROR_MSG("[BasicPlan] Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+            _tracingType = TracingType::DEFAULT;
+            startTrace();
+            break;
+        }
+        _trace = _ae->getTraceFactory()->create(_name, _customTraceContextGetter(this));
+        break;
+    }
+    }
+
+    if (_isMasterPlan && _trace) {
+        // Immediately send out the trace for the master plan, otherwise the traces will not be available till the application end
+        _trace->finish();
+    }
 }
 
 void BasicPlan::doInit()
@@ -28,15 +71,11 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    setFlags(Flags::INIT_EXECUTED);
+    _initExecuted = true;
 
     _execContext = _signalContext.exchange(nullptr);
 
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _ae->getTraceFactory()) {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
-        _trace = _ae->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
-    }
+    startTrace();
 
     try {
         if (_trace) {
@@ -56,9 +95,9 @@ void BasicPlan::doInit()
 void BasicPlan::doRun(void* msg)
 {
     try {
-        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
+        if (_trace && !_runTraced) {
             _trace->setLog({"Run", "true"});
-            setFlags(Flags::RUN_TRACED);
+            _runTraced = true;
         }
         run(msg);
     } catch (const std::exception& e) {
@@ -75,12 +114,12 @@ void BasicPlan::doTerminate()
     }
     ++_execState;
 
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
+    _runTraced = false;
+    if (!_initExecuted) {
         _execContext.store(nullptr);
         return;
     }
-    clearFlags(Flags::INIT_EXECUTED);
+    _initExecuted = false;
 
     try {
         if (_trace) {
@@ -120,15 +159,5 @@ void BasicPlan::stop()
 }
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
-
-std::optional<IAlicaTrace*> BasicPlan::getTrace() const
-{
-    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
-}
-
-std::optional<std::string> BasicPlan::getTraceContext() const
-{
-    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
-}
 
 } // namespace alica
