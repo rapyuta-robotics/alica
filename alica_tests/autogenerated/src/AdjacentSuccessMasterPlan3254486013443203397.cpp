@@ -1,6 +1,7 @@
 #include "AdjacentSuccessMasterPlan3254486013443203397.h"
 /*PROTECTED REGION ID(eph3254486013443203397) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -55,7 +56,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction3254486013443203397::getUtilityF
 bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(3345031375302716643) ENABLED START*/
-    std::cout << "The PreCondition 807250359520655888 in Transition '3345031375302716643' is not implement yet!" << std::endl;
+    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3345031375302716643()) {
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition3345031375302716643(false);
+        return true;
+    }
     return false;
     /*PROTECTED REGION END*/
 }
@@ -77,7 +81,10 @@ bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1914245867924544479) ENABLED START*/
-    std::cout << "The PreCondition 289358204208851392 in Transition '1914245867924544479' is not implement yet!" << std::endl;
+    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition1914245867924544479()) {
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition1914245867924544479(false);
+        return true;
+    }
     return false;
     /*PROTECTED REGION END*/
 }

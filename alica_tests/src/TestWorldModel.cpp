@@ -211,4 +211,24 @@ void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
     this->switchEntryPoints = switchEntryPoints;
 }
 
+bool TestWorldModel::isTransitionCondition1914245867924544479()
+{
+    return this->transitionCondition1914245867924544479;
+}
+
+void TestWorldModel::setTransitionCondition1914245867924544479(bool transitionCondition1914245867924544479)
+{
+    this->transitionCondition1914245867924544479 = transitionCondition1914245867924544479;
+}
+
+bool TestWorldModel::isTransitionCondition3345031375302716643()
+{
+    return this->transitionCondition3345031375302716643;
+}
+
+void TestWorldModel::setTransitionCondition3345031375302716643(bool transitionCondition3345031375302716643)
+{
+    this->transitionCondition3345031375302716643 = transitionCondition3345031375302716643;
+}
+
 } // namespace alicaTests

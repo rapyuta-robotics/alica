@@ -54,6 +54,16 @@ public:
     bool isRuntimeCondition1418042967134() const;
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
+    // Adjacent plans success test transitions
+    bool isTransitionCondition1914245867924544479();
+    void setTransitionCondition1914245867924544479(bool transitionCondition1914245867924544479);
+    bool isTransitionCondition3345031375302716643();
+    void setTransitionCondition3345031375302716643(bool transitionCondition3345031375302716643);
+    bool isTransitionCondition1390829819585906015();
+    void setTransitionCondition1390829819585906015(bool transitionCondition1390829819585906015);
+    bool isTransitionCondition3143778092687974738();
+    void setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738);
+
     bool isSwitchingEntryPoints() const;
     void setSwitchingEntryPoints(bool switchEntryPoints);
 
@@ -89,9 +99,15 @@ private:
     // master plan final transition
     bool transitionCondition1626848015861;
 
-    //PlanPoolTest transitions
+    // PlanPoolTest transitions
     bool transitionCondition4238964946542987247;
     bool transitionCondition4115970455290610262;
+
+    // Adjacent plans success test
+    bool transitionCondition1914245867924544479;
+    bool transitionCondition3345031375302716643;
+    bool transitionCondition1390829819585906015;
+    bool transitionCondition3143778092687974738;
 
     bool switchEntryPoints;
 };
