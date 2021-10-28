@@ -305,12 +305,12 @@ Same as export, but click on File System -> Import. This will import plans direc
 
 On successful import the plans should be visible in the right panel.
 
-### 3.1 Zip-Workflow
+### 3.2 Zip-Workflow
 
 The web-plan-designer provides the capability to export
 your plans to a zip file, and also import plans from a zip file.
 
-#### 3.1.1 Export
+#### 3.2.1 Export
 Simply click on the ‘+’ button in the top left corner of the page, and then click on Zip -> Export to Zip.
 
 ![import_export_zip](./doc/import_export_zip.png)
@@ -323,7 +323,7 @@ To use your alica plans in your project you have to
  - Replace the content of your projects etc/ folder with the plans,
 roles and tasks folder in web_designer_program/alica_program/
 
-#### 3.1.2 Import
+#### 3.2.2 Import
 Same as export, but click on Zip -> Import from Zip, and select a zip file from your computer containing valid ALICA plan elements,
 to import them to the web-designer. Usually this will be a zip file of your etc/ folder.
 
@@ -332,7 +332,7 @@ you’ve done on the web-designer, so make sure to export first, to save your da
 
 On successful import the plans should be visible in the right panel.
 
-### 3.2 Git-Workflow
+### 3.3 Git-Workflow
 It is also possible to import plans from a remote GitHub repository,
 as well as push changes back to the same repo, or any other, if explicitly specified.
 
@@ -344,7 +344,7 @@ After logging in via GitHub you should be able to see additional options.
 
 ![import_export_git](./doc/import_export_git.png)
 
-#### 3.2.0 Setup
+#### 3.3.0 Setup
 
 To be able to login to github and use the Git-workflow to import and export plan, it is necessary to register the web-plan-designer application as an oauth2 client with github before launching the web-plan-designer.
 
@@ -367,7 +367,7 @@ To be able to login to github and use the Git-workflow to import and export plan
 ![oauth_settings](./doc/oauth_settings.png)
 
 
-#### 3.2.1 Import
+#### 3.3.1 Import
 
 Click on ‘Github -> Git Import’, and you’ll see the following form.
 
@@ -387,7 +387,7 @@ After a successful git-import the plans should be visible in the right panel as 
 
 ![import_suc](./doc/import_suc.png)
 
-#### 3.2.2 Export
+#### 3.3.2 Export
 
 In the top left corner  ‘+’ -> GitHub -> Git Export
 The following form will pop up:
