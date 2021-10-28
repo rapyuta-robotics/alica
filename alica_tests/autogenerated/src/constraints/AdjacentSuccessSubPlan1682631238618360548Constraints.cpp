@@ -1,0 +1,23 @@
+#include "constraints/AdjacentSuccessSubPlan1682631238618360548Constraints.h"
+/*PROTECTED REGION ID(ch1682631238618360548) ENABLED START*/
+// Add additional options here
+/*PROTECTED REGION END*/
+
+namespace alica
+{
+// Plan:AdjacentSuccessSubPlan
+/*
+ * Tasks:
+ * - EP:3470417373268048093 : DefaultTask (1225112227903)
+ *
+ * States:
+ * - 1181007688948643441 (1181007688948643441)
+ * - 496520533178003845 (496520533178003845)
+ * - 656998006978148289 (656998006978148289)
+ *
+ * Vars:
+ */
+// State: 1181007688948643441
+// State: 496520533178003845
+// State: 656998006978148289
+} // namespace alica

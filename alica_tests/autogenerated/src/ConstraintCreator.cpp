@@ -22,6 +22,8 @@
 #include "Configurations/constraints/ConfigurationTestPlan1588060981661Constraints.h"
 #include "Configurations/constraints/ReadConfInPlantype1588061801734Constraints.h"
 #include "Configurations/constraints/ReadConfigurationPlan1588061334567Constraints.h"
+#include "constraints/AdjacentSuccessMasterPlan3254486013443203397Constraints.h"
+#include "constraints/AdjacentSuccessSubPlan1682631238618360548Constraints.h"
 #include "constraints/AttackPlan1402488634525Constraints.h"
 #include "constraints/BackForth1529456584982Constraints.h"
 #include "constraints/BehaviorSuccessSpamMaster1522377375148Constraints.h"
