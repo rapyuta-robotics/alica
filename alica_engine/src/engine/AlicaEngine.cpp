@@ -118,12 +118,12 @@ void AlicaEngine::start()
 void AlicaEngine::terminate()
 {
     _maySendMessages = false;
+    _planBase.stop();
+    _behaviourPool.stopAll();
+    _planPool.stopAll();
     if (_scheduler) {
         _scheduler->terminate();
     }
-    _behaviourPool.stopAll();
-    _behaviourPool.terminateAll();
-    _planBase.stop();
     _auth.close();
     _syncModul.close();
     _teamObserver.close();
@@ -138,6 +138,11 @@ const IAlicaCommunication& AlicaEngine::getCommunicator() const
 const AlicaClock& AlicaEngine::getAlicaClock() const
 {
     return _ctx.getAlicaClock();
+}
+
+const IAlicaTraceFactory* AlicaEngine::getTraceFactory() const
+{
+    return _ctx.getTraceFactory();
 }
 
 std::string AlicaEngine::getLocalAgentName() const

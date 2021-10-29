@@ -13,6 +13,7 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
+#include "engine/IAlicaTrace.h"
 
 #include <essentials/IDManager.h>
 #include <alica_common_config/debug_output.h>
@@ -318,6 +319,28 @@ public:
     }
 
     /**
+     * Set trace factory to be used by this alica framework instance.
+     * Example usage: setTraceFactory<amr_tracing::TraceFactory>();
+     *
+     * @note TraceFactoryType must be a derived class of IAlicaTraceFactory
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of trace factory. Might be empty.
+     */
+    template <class TraceFactoryType, class... Args>
+    void setTraceFactory(Args&&... args);
+
+    /**
+     * Get trace factory being used by this alica instance.
+     *
+     * @return A reference to trace factory object being used by context
+     */
+    IAlicaTraceFactory* getTraceFactory() const
+    {
+        return _traceFactory.get();
+    }
+
+    /**
      * Check whether object is a valid AlicaContext.
      *
      * @return True if object is a valid context, false otherwise
@@ -393,6 +416,7 @@ private:
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
+    std::unique_ptr<IAlicaTraceFactory> _traceFactory;
 
     bool _initialized = false;
 
@@ -479,6 +503,17 @@ void AlicaContext::setTimerFactory(Args&&... args)
     _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
 #else
     _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
+#endif
+}
+
+template <class TraceFactoryType, class... Args>
+void AlicaContext::setTraceFactory(Args&&... args)
+{
+    static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
+#else
+    _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
 #endif
 }
 

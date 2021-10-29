@@ -308,6 +308,11 @@ void PlanBase::stop()
         _mainThread->join();
         delete _mainThread;
     }
+
+    if (_rootNode) {
+        _rootNode->deactivate();
+    }
+
     _mainThread = nullptr;
 }
 
