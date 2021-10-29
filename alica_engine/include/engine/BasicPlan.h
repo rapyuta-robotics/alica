@@ -54,7 +54,7 @@ protected:
         CUSTOM
     };
 
-    void setTracing(TracingType type, std::function<std::string(BasicPlan*)> customTraceContextGetter = {})
+    void setTracing(TracingType type, std::function<std::string(const BasicPlan*)> customTraceContextGetter = {})
     {
         _tracingType = type;
         _customTraceContextGetter = std::move(customTraceContextGetter);
@@ -98,7 +98,7 @@ private:
     std::atomic<Counter> _execState;
 
     TracingType _tracingType;
-    std::function<std::string(BasicPlan*)> _customTraceContextGetter;
+    std::function<std::string(const BasicPlan*)> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
     bool _runTraced;
 

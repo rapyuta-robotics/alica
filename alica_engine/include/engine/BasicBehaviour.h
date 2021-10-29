@@ -105,7 +105,7 @@ protected:
 
     // Set the tracing type for this behaviour. customTraceContextGetter is required for custom tracing
     // & this method will be called to get the parent trace context before initialiseParameters is called
-    void setTracing(TracingType type, std::function<std::string(BasicBehaviour*)> customTraceContextGetter = {})
+    void setTracing(TracingType type, std::function<std::string(const BasicBehaviour*)> customTraceContextGetter = {})
     {
         _tracingType = type;
         _customTraceContextGetter = std::move(customTraceContextGetter);
@@ -205,7 +205,7 @@ private:
     std::atomic<bool> _triggeredJobRunning;
 
     TracingType _tracingType;
-    std::function<std::string(BasicBehaviour*)> _customTraceContextGetter;
+    std::function<std::string(const BasicBehaviour*)> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
     bool _runTraced;
 
