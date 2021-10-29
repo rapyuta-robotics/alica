@@ -91,7 +91,6 @@ protected:
     void setSuccess();
     void setFailure();
 
-    // Tracing type: the values for the enum constants are such that they can be used as flags, see: enum Flags below
     enum class TracingType : uint8_t
     {
         // Use the trace context of the lowest ancestor plan for which tracing is not skipped
