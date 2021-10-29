@@ -60,9 +60,9 @@ protected:
         _customTraceContextGetter = std::move(customTraceContextGetter);
     }
 
-    std::optional<IAlicaTrace*> getTrace() const
+    IAlicaTrace* getTrace() const
     {
-        return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
+        return _trace ? _trace.get() : nullptr;
     }
 
 private:
