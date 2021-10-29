@@ -40,7 +40,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
-        , _initExecuted(false)
+        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
 {
 }
 
@@ -89,6 +89,9 @@ void BasicBehaviour::setSuccess()
     auto prev = _behResult.exchange(BehResult::SUCCESS);
     if (prev != BehResult::SUCCESS) {
         _engine->editPlanBase().addFastPathEvent(_execContext.load());
+        if (_trace) {
+            _trace->setTag("Result", "Success");
+        }
     }
 }
 
@@ -100,6 +103,9 @@ void BasicBehaviour::setFailure()
     auto prev = _behResult.exchange(BehResult::FAILURE);
     if (prev != BehResult::FAILURE) {
         _engine->editPlanBase().addFastPathEvent(_execContext.load());
+        if (_trace) {
+            _trace->setTag("Result", "Fail");
+        }
     }
 }
 
@@ -116,7 +122,7 @@ void BasicBehaviour::initJob()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
+    setFlags(Flags::INIT_EXECUTED);
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
@@ -125,7 +131,18 @@ void BasicBehaviour::initJob()
     // when the behaviour is terminated
     _execContext = _signalContext.exchange(nullptr);
 
+    // Get closest parent that has a trace
+    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
+    }
+
     try {
+        if (_trace) {
+            _trace->setLog({"Behaviour", "true"});
+            _trace->setLog({"Init", "true"});
+        }
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
@@ -142,6 +159,10 @@ void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
     try {
+        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
+            _trace->setLog({"Run", "true"});
+            setFlags(Flags::RUN_TRACED);
+        }
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
@@ -170,15 +191,20 @@ void BasicBehaviour::terminateJob()
     _behResult.store(BehResult::UNKNOWN);
     ++_execState;
 
-    if (!_initExecuted) {
+    clearFlags(Flags::RUN_TRACED);
+    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
         // Reset the execution context so that the RunningPlan instance can be deleted
         _execContext.store(nullptr);
         return;
     }
-    _initExecuted = false;
+    clearFlags(Flags::INIT_EXECUTED);
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
+        if (_trace) {
+            _trace->setLog({"Terminate", "true"});
+            _trace.reset();
+        }
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
@@ -208,6 +234,16 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
         valueOut.clear();
         return false;
     }
+}
+
+std::optional<IAlicaTrace*> BasicBehaviour::getTrace() const
+{
+    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
+}
+
+std::optional<std::string> BasicBehaviour::getTraceContext() const
+{
+    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 } /* namespace alica */
