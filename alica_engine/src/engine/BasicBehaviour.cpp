@@ -235,9 +235,9 @@ void BasicBehaviour::terminateJob()
     try {
         if (_trace) {
             _trace->setLog({"status", "terminating"});
-            _trace.reset();
         }
         onTermination();
+        _trace.reset();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }

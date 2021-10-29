@@ -124,9 +124,9 @@ void BasicPlan::doTerminate()
     try {
         if (_trace) {
             _trace->setLog({"status", "terminating"});
-            _trace.reset();
         }
         onTerminate();
+        _trace.reset();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
