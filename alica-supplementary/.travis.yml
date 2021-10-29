@@ -26,31 +26,31 @@ before_install:
 
 install:
   - docker exec -t alica-test bash -c "
-    apt-get update && 
+    apt-get update &&
     apt-get upgrade -y&&
-    apt-get install -y 
+    apt-get install -y
         build-essential
-        python-catkin-pkg 
-        python-rosdep 
-        python-wstool 
-        python-catkin-tools 
-        ros-$ROS_DISTRO-catkin 
-        ros-$ROS_DISTRO-rostest 
+        python-catkin-pkg
+        python-rosdep
+        python-wstool
+        python-catkin-tools
+        ros-$ROS_DISTRO-catkin
+        ros-$ROS_DISTRO-rostest
         libyaml-cpp-dev
         libqt5x11extras5-dev
-        wget 
-        curl && 
-    rm -f /etc/ros/rosdep/sources.list.d/20-default.list && 
-    rosdep init && 
-    rosdep update && 
-    mkdir -p ~/catkin_ws/src && 
-    cd ~/catkin_ws/src && 
-    source /opt/ros/$ROS_DISTRO/setup.bash && 
-    catkin_init_workspace && 
-    cd ~/catkin_ws && 
-    catkin build && 
-    source devel/setup.bash && 
-    cd ~/catkin_ws/src && 
+        wget
+        curl &&
+    rm -f /etc/ros/rosdep/sources.list.d/20-default.list &&
+    rosdep init &&
+    rosdep update &&
+    mkdir -p ~/catkin_ws/src &&
+    cd ~/catkin_ws/src &&
+    source /opt/ros/$ROS_DISTRO/setup.bash &&
+    catkin_init_workspace &&
+    cd ~/catkin_ws &&
+    catkin build &&
+    source devel/setup.bash &&
+    cd ~/catkin_ws/src &&
     ln -s /travis ."
 
 # Install all dependencies, using wstool first and rosdep second.
@@ -69,26 +69,27 @@ before_script: ./travis_scripts/before_script.sh $BRANCH $BASE_BRANCH
 # non-zero when a test fails (which notifies Travis the build failed).
 script:
   - docker exec -t alica-test bash -c "
-    source /opt/ros/$ROS_DISTRO/setup.bash && 
-    cd ~/catkin_ws && 
+    source /opt/ros/$ROS_DISTRO/setup.bash &&
+    /travis/alica_tracing/scripts/install.sh &&
+    cd ~/catkin_ws &&
     catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror &&
-    catkin build --no-status && 
-    source devel/setup.bash && 
-    catkin run_tests --no-status && catkin_test_results --verbose && 
-    if [[ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ]] ; then 
-        wget -qO- https://scan.coverity.com/download/cxx/linux64 
-            --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" | 
+    catkin build --no-status &&
+    source devel/setup.bash &&
+    catkin run_tests --no-status && catkin_test_results --verbose &&
+    if [[ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ]] ; then
+        wget -qO- https://scan.coverity.com/download/cxx/linux64
+            --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
 
-        tar xvz && 
-        python /travis/generate_coverity-analysis_script.py . && 
-        chmod +x coverity-analysis.sh && 
-        ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh && 
-        tar czvf cs.tgz cov-int && 
-        curl 
-            --form token=\"$COVERITY_TOKEN\" 
-            --form email=\"$COVERITY_EMAIL\" 
-            --form file=@cs.tgz 
-            --form version=\"1.0\" 
-            --form description=\"$COVERITY_PROJECT\" 
-            https://scan.coverity.com/builds?project=rapyuta-robotics%2F$COVERITY_PROJECT ; 
+        tar xvz &&
+        python /travis/generate_coverity-analysis_script.py . &&
+        chmod +x coverity-analysis.sh &&
+        ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh &&
+        tar czvf cs.tgz cov-int &&
+        curl
+            --form token=\"$COVERITY_TOKEN\"
+            --form email=\"$COVERITY_EMAIL\"
+            --form file=@cs.tgz
+            --form version=\"1.0\"
+            --form description=\"$COVERITY_PROJECT\"
+            https://scan.coverity.com/builds?project=rapyuta-robotics%2F$COVERITY_PROJECT ;
     fi"
