@@ -71,7 +71,7 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    setFlags(Flags::INIT_EXECUTED);
+    _initExecuted = true;
 
     _execContext = _signalContext.exchange(nullptr);
 
@@ -119,7 +119,7 @@ void BasicPlan::doTerminate()
         _execContext.store(nullptr);
         return;
     }
-    clearFlags(Flags::INIT_EXECUTED);
+    _initExecuted = false;
 
     try {
         if (_trace) {
@@ -159,15 +159,5 @@ void BasicPlan::stop()
 }
 
 ThreadSafePlanInterface BasicPlan::getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
-
-std::optional<IAlicaTrace*> BasicPlan::getTrace() const
-{
-    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
-}
-
-std::optional<std::string> BasicPlan::getTraceContext() const
-{
-    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
-}
 
 } // namespace alica

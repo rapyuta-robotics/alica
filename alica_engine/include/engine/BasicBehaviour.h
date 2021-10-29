@@ -204,20 +204,6 @@ private:
 
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
-    std::unique_ptr<IAlicaTrace> _trace;
-
-    enum class Flags : uint8_t
-    {
-        // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
-        // used to track this. In such a case we should not be calling onTermination either
-        INIT_EXECUTED = 1u,
-        // Is tracing enabled for this behaviour?
-        TRACING_ENABLED = 1u << 1,
-        // We only want to trace the first run call
-        RUN_TRACED = 1u << 2
-    };
-
-    uint8_t _flags;
 
     TracingType _tracingType;
     std::function<std::string(BasicBehaviour*)> _customTraceContextGetter;
