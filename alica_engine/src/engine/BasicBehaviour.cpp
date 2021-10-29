@@ -159,7 +159,7 @@ void BasicBehaviour::initJob()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
+    setFlags(Flags::INIT_EXECUTED);
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
@@ -229,7 +229,7 @@ void BasicBehaviour::terminateJob()
         _execContext.store(nullptr);
         return;
     }
-    _initExecuted = false;
+    clearFlags(Flags::INIT_EXECUTED);
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
@@ -266,6 +266,16 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
         valueOut.clear();
         return false;
     }
+}
+
+std::optional<IAlicaTrace*> BasicBehaviour::getTrace() const
+{
+    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
+}
+
+std::optional<std::string> BasicBehaviour::getTraceContext() const
+{
+    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 } /* namespace alica */
