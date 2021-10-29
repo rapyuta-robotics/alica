@@ -172,8 +172,8 @@ void BasicBehaviour::initJob()
 
     try {
         if (_trace) {
-            _trace->setLog({"Behaviour", "true"});
-            _trace->setLog({"Init", "true"});
+            _trace->setTag("type", "behaviour");
+            _trace->setLog({"status", "initializing"});
         }
         initialiseParameters();
     } catch (const std::exception& e) {
@@ -192,7 +192,7 @@ void BasicBehaviour::runJob(void* msg)
     // TODO: get rid of msg
     try {
         if (_trace && !_runTraced) {
-            _trace->setLog({"Run", "true"});
+            _trace->setLog({"status", "running"});
             _runTraced = true;
         }
         run(msg);
@@ -234,7 +234,7 @@ void BasicBehaviour::terminateJob()
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
         if (_trace) {
-            _trace->setLog({"Terminate", "true"});
+            _trace->setLog({"status", "terminating"});
             _trace.reset();
         }
         onTermination();

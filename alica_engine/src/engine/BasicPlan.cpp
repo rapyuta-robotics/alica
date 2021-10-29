@@ -79,8 +79,8 @@ void BasicPlan::doInit()
 
     try {
         if (_trace) {
-            _trace->setLog({"Plan", "true"});
-            _trace->setLog({"Init", "true"});
+            _trace->setTag("type", _isMasterPlan ? "master_plan" : "plan");
+            _trace->setLog({"status", "initializing"});
         }
         onInit();
     } catch (const std::exception& e) {
@@ -96,7 +96,7 @@ void BasicPlan::doRun(void* msg)
 {
     try {
         if (_trace && !_runTraced) {
-            _trace->setLog({"Run", "true"});
+            _trace->setLog({"status", "running"});
             _runTraced = true;
         }
         run(msg);
@@ -123,7 +123,7 @@ void BasicPlan::doTerminate()
 
     try {
         if (_trace) {
-            _trace->setLog({"Terminate", "true"});
+            _trace->setLog({"status", "terminating"});
             _trace.reset();
         }
         onTerminate();
