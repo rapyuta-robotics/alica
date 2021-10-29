@@ -66,6 +66,8 @@ public:
 
     bool isSwitchingEntryPoints() const;
     void setSwitchingEntryPoints(bool switchEntryPoints);
+    bool doWait();
+    void setWait(bool wait);
 
     std::vector<double> robotsXPos;
     double x;
@@ -110,6 +112,7 @@ private:
     bool transitionCondition3143778092687974738;
 
     bool switchEntryPoints;
+    bool wait;
 };
 
 } // namespace alicaTests

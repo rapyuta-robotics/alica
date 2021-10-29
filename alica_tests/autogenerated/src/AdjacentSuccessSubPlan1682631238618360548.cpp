@@ -1,6 +1,7 @@
 #include "AdjacentSuccessSubPlan1682631238618360548.h"
 /*PROTECTED REGION ID(eph1682631238618360548) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -56,8 +57,21 @@ std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityF
 bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1390829819585906015) ENABLED START*/
-    std::cout << "The PreCondition 3875618235052823378 in Transition '1390829819585906015' is not implement yet!" << std::endl;
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (child->getStatus() == alica::PlanStatus::Success) {
+            std::cerr << "succeeding in subplan" << std::endl;
+            return true;
+        }
+    }
     return false;
+    // if (rp->isBehaviour()) {
+    //     std::cerr << "isBehaviour" << std::endl;
+    //     if (rp->getStatus() == alica::PlanStatus::Success) {
+    //         std::cerr << "doTransition subPlan" << std::endl;
+    //     }
+    //     return rp->getStatus() == alica::PlanStatus::Success;
+    // }
+    // return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -77,7 +91,10 @@ bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition3441061963559991094::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(3143778092687974738) ENABLED START*/
-    std::cout << "The PreCondition 3441061963559991094 in Transition '3143778092687974738' is not implement yet!" << std::endl;
+    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3143778092687974738()) {
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition3143778092687974738(false);
+        return true;
+    }
     return false;
     /*PROTECTED REGION END*/
 }

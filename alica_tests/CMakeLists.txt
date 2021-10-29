@@ -75,6 +75,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
         src/test/test_alica_engine_plan_pool.cpp
+        src/test/test_adjacent_plans_success.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

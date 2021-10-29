@@ -57,7 +57,9 @@ bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(3345031375302716643) ENABLED START*/
     if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3345031375302716643()) {
+        std::cerr << "doTransitionMasterPlan FromEntryToSecond" << std::endl;
         alicaTests::TestWorldModel::getOne()->setTransitionCondition3345031375302716643(false);
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition1914245867924544479(false);
         return true;
     }
     return false;
@@ -82,6 +84,8 @@ bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1914245867924544479) ENABLED START*/
     if (alicaTests::TestWorldModel::getOne()->isTransitionCondition1914245867924544479()) {
+        std::cerr << "doTransition MasterPlan FromSecondToEntry" << std::endl;
+        alicaTests::TestWorldModel::getOne()->setTransitionCondition3345031375302716643(false);
         alicaTests::TestWorldModel::getOne()->setTransitionCondition1914245867924544479(false);
         return true;
     }

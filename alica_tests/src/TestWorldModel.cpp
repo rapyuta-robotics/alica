@@ -231,4 +231,24 @@ void TestWorldModel::setTransitionCondition3345031375302716643(bool transitionCo
     this->transitionCondition3345031375302716643 = transitionCondition3345031375302716643;
 }
 
+bool TestWorldModel::isTransitionCondition1390829819585906015()
+{
+    return this->transitionCondition1390829819585906015;
+}
+
+void TestWorldModel::setTransitionCondition1390829819585906015(bool transitionCondition1390829819585906015)
+{
+    this->transitionCondition1390829819585906015 = transitionCondition1390829819585906015;
+}
+
+bool TestWorldModel::isTransitionCondition3143778092687974738()
+{
+    return this->transitionCondition3143778092687974738;
+}
+
+void TestWorldModel::setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738)
+{
+    this->transitionCondition3143778092687974738 = transitionCondition3143778092687974738;
+}
+
 } // namespace alicaTests
