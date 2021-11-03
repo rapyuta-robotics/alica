@@ -1,14 +1,18 @@
 #pragma once
 
+#include <essentials/ITrigger.hpp>
+#include <engine/IAlicaWorldModel.h>
+
 #include <vector>
 #include <string>
 
 namespace alicaTests
 {
 
-class TestWorldModel
+class TestWorldModel : public alica::IAlicaWorldModel
 {
 public:
+    TestWorldModel();
     virtual ~TestWorldModel();
     static TestWorldModel* getOne();
     static TestWorldModel* getTwo();
@@ -61,7 +65,6 @@ public:
     void reset();
 
 private:
-    TestWorldModel();
     bool transitionCondition1413201227586;
     bool transitionCondition1413201389955;
     bool transitionCondition1413201052549;

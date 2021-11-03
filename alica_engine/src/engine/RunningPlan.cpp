@@ -825,6 +825,11 @@ const Configuration* RunningPlan::getConfiguration() const
     return _configuration;
 }
 
+IAlicaWorldModel* RunningPlan::getWorldModel() const
+{
+    return _ae->getWorldModel();
+}
+
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
 {
     out << "######## RP ##########" << std::endl;

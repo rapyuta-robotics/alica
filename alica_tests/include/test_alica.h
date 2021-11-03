@@ -65,6 +65,7 @@ protected:
 
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
         const YAML::Node& config = ac->getConfig();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -128,6 +129,7 @@ protected:
                                               getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            ac->setWorldModel<alicaTests::TestWorldModel>();
             const YAML::Node& config = ac->getConfig();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -166,6 +168,7 @@ protected:
                 alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
         const YAML::Node& config = ac->getConfig();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ae = AlicaTestsEngineGetter::getEngine(ac);

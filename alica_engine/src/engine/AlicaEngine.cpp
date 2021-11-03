@@ -194,6 +194,11 @@ const YAML::Node& AlicaEngine::getConfig() const
     return _ctx.getConfig();
 }
 
+IAlicaWorldModel* AlicaEngine::getWorldModel() const
+{
+    return _ctx.getWorldModel();
+}
+
 void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
 {
     _configChangeListenerCBs.push_back(reloadFunction);

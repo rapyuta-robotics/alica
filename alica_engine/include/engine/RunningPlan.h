@@ -8,6 +8,7 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/IAlicaWorldModel.h"
 
 #include <algorithm>
 #include <iostream>
@@ -136,6 +137,7 @@ public:
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
     BasicPlan* getBasicPlan() const { return _basicPlan; }
+    IAlicaWorldModel* getWorldModel() const;
 
     void printRecursive() const;
 
