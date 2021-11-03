@@ -3,6 +3,7 @@
 // Add additional options here
 #include <alica_tests/CounterClass.h>
 #include <alica_tests/test_sched_world_model.h>
+#include "engine/PlanInterface.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -120,7 +121,8 @@ bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1629895598464) ENABLED START*/
-    return alica_test::SchedWM::instance().execOrderTest;
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(rp->getWorldModel());
+    return wm->execOrderTest;
     /*PROTECTED REGION END*/
 }
 /**

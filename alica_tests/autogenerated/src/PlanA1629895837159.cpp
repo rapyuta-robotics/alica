@@ -2,6 +2,7 @@
 /*PROTECTED REGION ID(eph1629895837159) ENABLED START*/
 // Add additional options here
 #include <alica_tests/test_sched_world_model.h>
+#include "engine/PlanInterface.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -43,23 +44,25 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895837159::getUtilityFunctio
 // Add additional options here
 void PlanA1629895837159::onInit()
 {
-    alica_test::SchedWM::instance().execOrder += "PlanA::Init\n";
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    wm->execOrder += "PlanA::Init\n";
     _inRunContext = true;
 }
 
 void PlanA1629895837159::run(void* msg)
 {
-    auto& wm = alica_test::SchedWM::instance();
-    wm.planARunCalled = true;
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    wm->planARunCalled = true;
     if (!_inRunContext) {
-        wm.planARunOutOfOrder = true;
+        wm->planARunOutOfOrder = true;
     }
 }
 
 void PlanA1629895837159::onTerminate()
 {
     _inRunContext = false;
-    alica_test::SchedWM::instance().execOrder += "PlanA::Term\n";
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    wm->execOrder += "PlanA::Term\n";
 }
 
 /*PROTECTED REGION END*/
