@@ -79,7 +79,7 @@ void BasicPlan::doInit()
 
     try {
         if (_trace) {
-            _trace->setTag("type", _isMasterPlan ? "master_plan" : "plan");
+            _trace->setTag("Type", _isMasterPlan ? "master_plan" : "plan");
             _trace->setLog({"status", "initializing"});
         }
         onInit();

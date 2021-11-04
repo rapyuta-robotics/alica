@@ -172,7 +172,7 @@ void BasicBehaviour::initJob()
 
     try {
         if (_trace) {
-            _trace->setTag("type", "behaviour");
+            _trace->setTag("Type", "behaviour");
             _trace->setLog({"status", "initializing"});
         }
         initialiseParameters();
