@@ -14,11 +14,6 @@ public:
     SchedWM() { reset(); }
     SchedWM(const SchedWM&) = delete;
     ~SchedWM() = default;
-    // static SchedWM& instance()
-    // {
-    //     static SchedWM schedwm;
-    //     return schedwm;
-    // }
 
     void reset()
     {

@@ -182,13 +182,13 @@ protected:
     }
 };
 
-class AlicaSchedulingTestFixture: public AlicaTestFixtureBase
+class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
 {
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    void SetUp() override
+    virtual void SetUp() override
     {
         alicaTests::TestWorldModel::getOne()->reset();
         alicaTests::TestWorldModel::getTwo()->reset();
@@ -199,15 +199,21 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         ac = new alica::AlicaContext(
                 alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alica_test::SchedWM>();
         const YAML::Node& config = ac->getConfig();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
+                std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        EXPECT_TRUE(ae->init(creators));
     }
 
-    void TearDown() override
+    virtual void TearDown() override
     {
         ac->terminate();
         delete ac;

@@ -31,27 +31,25 @@ void BehAAA::run(void* msg)
     /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
     // Add additional options here
     ++runCount;
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-
-    wm->behAAARunCalled = true;
+    _wm->behAAARunCalled = true;
     if (!_inRunContext) {
-        wm->behAAARunOutOfOrder = true;
+        _wm->behAAARunOutOfOrder = true;
     }
 
-    if (wm->behAAASetFailure) {
+    if (_wm->behAAASetFailure) {
         setFailure();
         if (!isFailure()) {
-            wm->behAAASetFailureFailed = true;
+            _wm->behAAASetFailureFailed = true;
         }
     }
-    if (wm->behAAASetSuccess) {
+    if (_wm->behAAASetSuccess) {
         setSuccess();
         if (!isSuccess()) {
-            wm->behAAASetSuccessFailed = true;
+            _wm->behAAASetSuccessFailed = true;
         }
     }
 
-    while (wm->behAAABlockRun) {
+    while (_wm->behAAABlockRun) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     /*PROTECTED REGION END*/
@@ -61,15 +59,15 @@ void BehAAA::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
     runCount = 0;
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "BehAAA::Init\n";
+    _wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    _wm->execOrder += "BehAAA::Init\n";
     _inRunContext = true;
 
     if (isSuccess()) {
-        wm->behAAASuccessInInit = true;
+        _wm->behAAASuccessInInit = true;
     }
     if (isFailure()) {
-        wm->behAAAFailureInInit = true;
+        _wm->behAAAFailureInInit = true;
     }
 
     /*PROTECTED REGION END*/
@@ -80,24 +78,22 @@ void BehAAA::onTermination()
 {
     runCount = 0;
     _inRunContext = false;
-
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "BehAAA::Term\n";
+    _wm->execOrder += "BehAAA::Term\n";
 
     if (isSuccess()) {
-        wm->behAAASuccessInTerminate = true;
+        _wm->behAAASuccessInTerminate = true;
     }
     setSuccess();
     if (isSuccess()) {
-        wm->behAAASuccessInTerminate = true;
+        _wm->behAAASuccessInTerminate = true;
     }
 
     if (isFailure()) {
-        wm->behAAAFailureInTerminate = true;
+        _wm->behAAAFailureInTerminate = true;
     }
     setFailure();
     if (isFailure()) {
-        wm->behAAAFailureInTerminate = true;
+        _wm->behAAAFailureInTerminate = true;
     }
 }
 /*PROTECTED REGION END*/

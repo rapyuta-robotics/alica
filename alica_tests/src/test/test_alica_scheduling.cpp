@@ -18,16 +18,14 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
     bool stepEngine() const override { return true; }
-    // virtual void SetUp() override
-    // {
-    //     // alica_test::SchedWM::instance().reset();
-    //     AlicaTestFixture::SetUp();
-    // }
-    // virtual void TearDown() override
-    // {
-    //     AlicaTestFixture::TearDown();
-    //     // alica_test::SchedWM::instance().reset();
-    // }
+    virtual void SetUp() override
+    {
+        AlicaSchedulingTestFixture::SetUp();
+    }
+    virtual void TearDown() override
+    {
+        AlicaSchedulingTestFixture::TearDown();
+    }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)
@@ -199,6 +197,7 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 {
     CounterClass::called = -1;
     ae->start();
+
     IAlicaWorldModel* wmTemp = ac->getWorldModel();
     alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
     wm->execOrderTest = true;

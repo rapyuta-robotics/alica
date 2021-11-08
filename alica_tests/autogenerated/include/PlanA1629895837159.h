@@ -8,6 +8,10 @@
 /*PROTECTED REGION ID(incl1629895837159) ENABLED START*/
 // Add additional includes here
 #include <atomic>
+namespace alica_test
+{
+    class SchedWM;
+}
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -38,6 +42,7 @@ private:
     /*PROTECTED REGION ID(prv1629895837159) ENABLED START*/
     // Add additional private methods here
     std::atomic<bool> _inRunContext;
+     alica_test::SchedWM* _wm;
     /*PROTECTED REGION END*/
 };
 

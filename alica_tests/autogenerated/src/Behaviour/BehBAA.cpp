@@ -37,10 +37,9 @@ void BehBAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "BehBAA::Init\n";
+    _wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    _wm->execOrder += "BehBAA::Init\n";
     runCount = 0;
-
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1629895911592) ENABLED START*/
@@ -48,8 +47,7 @@ void BehBAA::initialiseParameters()
 void BehBAA::onTermination()
 {
     runCount = 0;
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "BehBAA::Term\n";
+    _wm->execOrder += "BehBAA::Term\n";
 }
 /*PROTECTED REGION END*/
 

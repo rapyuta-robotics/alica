@@ -44,25 +44,23 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895837159::getUtilityFunctio
 // Add additional options here
 void PlanA1629895837159::onInit()
 {
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "PlanA::Init\n";
+    _wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    _wm->execOrder += "PlanA::Init\n";
     _inRunContext = true;
 }
 
 void PlanA1629895837159::run(void* msg)
 {
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->planARunCalled = true;
+    _wm->planARunCalled = true;
     if (!_inRunContext) {
-        wm->planARunOutOfOrder = true;
+        _wm->planARunOutOfOrder = true;
     }
 }
 
 void PlanA1629895837159::onTerminate()
 {
     _inRunContext = false;
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
-    wm->execOrder += "PlanA::Term\n";
+    _wm->execOrder += "PlanA::Term\n";
 }
 
 /*PROTECTED REGION END*/

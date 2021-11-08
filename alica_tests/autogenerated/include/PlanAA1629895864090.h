@@ -7,6 +7,10 @@
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1629895864090) ENABLED START*/
 // Add additional includes here
+namespace alica_test
+{
+    class SchedWM;
+}
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -35,6 +39,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv1629895864090) ENABLED START*/
     // Add additional private methods here
+    alica_test::SchedWM* _wm;
     /*PROTECTED REGION END*/
 };
 
