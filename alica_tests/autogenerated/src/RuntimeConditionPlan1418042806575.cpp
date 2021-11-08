@@ -38,7 +38,8 @@ RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
 bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1418042967134) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isRuntimeCondition1418042967134();
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(rp->getWorldModel());
+    return wm->isRuntimeCondition1418042967134();
     /*PROTECTED REGION END*/
 }
 /**

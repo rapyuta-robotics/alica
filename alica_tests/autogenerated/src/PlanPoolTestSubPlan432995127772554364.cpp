@@ -46,7 +46,8 @@ void PlanPoolTestSubPlan432995127772554364::onInit()
     // write config parameter "text_value" into world model
     std::string value;
     getPlanContext().getRunningPlan()->getParameter("TestValue", value);
-    alicaTests::TestWorldModel::getOne()->configParameter.push_back(value);
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(getPlanContext().getRunningPlan()->getWorldModel());
+    wm->configParameter.push_back(value);
 }
 /*PROTECTED REGION END*/
 } // namespace alica

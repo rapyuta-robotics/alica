@@ -117,11 +117,15 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     aes[1]->start();
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
+    
+    auto* wmOne = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto* wmTwo = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
 
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(2000);
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
+    wmOne->robotsXPos.push_back(0);
+    wmOne->robotsXPos.push_back(2000);
+
+    wmTwo->robotsXPos.push_back(2000);
+    wmTwo->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
         acs[0]->stepEngine();

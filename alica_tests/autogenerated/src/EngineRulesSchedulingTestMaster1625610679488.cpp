@@ -58,7 +58,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction1625610679488::getUtilityFunctio
 bool PreCondition1626848015861::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1626848015857) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition1626848015861();
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(rp->getWorldModel());
+    return wm->isTransitionCondition1626848015861();
     /*PROTECTED REGION END*/
 }
 /**
@@ -79,7 +80,8 @@ bool PreCondition1626848015861::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1625783867494) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition1625783867495();
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(rp->getWorldModel());
+    return wm->isTransitionCondition1625783867495();
     /*PROTECTED REGION END*/
 }
 /**
@@ -100,8 +102,9 @@ bool PreCondition1625783867495::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1625783869825::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1625783869824) ENABLED START*/
-    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition1625783869825()) {
-        alicaTests::TestWorldModel::getOne()->setTransitionCondition1625783869825(false);
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(rp->getWorldModel());
+    if (wm->isTransitionCondition1625783869825()) {
+        wm->setTransitionCondition1625783869825(false);
         return true;
     }
     return false;

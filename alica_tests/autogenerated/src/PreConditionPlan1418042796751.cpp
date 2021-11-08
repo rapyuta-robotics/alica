@@ -40,7 +40,8 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
-    return alicaTests::TestWorldModel::getOne()->isPreCondition1418042929966();
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(rp->getWorldModel());
+    return wm->isPreCondition1418042929966();
     /*PROTECTED REGION END*/
 }
 /**
