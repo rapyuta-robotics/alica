@@ -1,0 +1,5 @@
+<launch>
+ <param name="rootPath" value ="$(find supplementary_tests)/src/test" />
+ <test name="all_tests" test-name="all_tests" pkg="supplementary_tests" type="supplementary_tests-test" time-limit="600.0"/>
+</launch>
+

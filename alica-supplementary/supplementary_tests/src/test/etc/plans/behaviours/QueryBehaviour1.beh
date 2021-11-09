@@ -1,0 +1,26 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1479556104511,
+  "name": "QueryBehaviour1",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "ProblemModule",
+  "runtimeCondition": null,
+  "variables": [
+    {
+      "comment": "",
+      "id": 1479556246733,
+      "name": "QBX",
+      "variableType": ""
+    },
+    {
+      "comment": "",
+      "id": 1479557263650,
+      "name": "QBY",
+      "variableType": ""
+    }
+  ]
+}
