@@ -29,7 +29,7 @@ class Agent
 public:
     ~Agent();
 
-    essentials::IdentifierConstPtr getId() const { return _id; }
+    uint64_t getId() const { return _id; }
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
@@ -45,7 +45,7 @@ private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
-    essentials::IdentifierConstPtr _id;
+    uint64_t _id;
     bool _active;
     bool _ignored;
     bool _local;

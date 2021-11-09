@@ -4,8 +4,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Task.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <algorithm>
 #include <sstream>
 
@@ -25,7 +23,7 @@ SuccessCollection::SuccessCollection(const Plan* plan)
 
 SuccessCollection::~SuccessCollection() {}
 
-void SuccessCollection::setSuccess(essentials::IdentifierConstPtr agentId, const EntryPoint* ep)
+void SuccessCollection::setSuccess(uint64_t agentId, const EntryPoint* ep)
 {
     if (ep->getPlan() == _plan) {
         _successData[ep->getIndex()].push_back(agentId);
@@ -69,8 +67,8 @@ std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
             }
             haveAny = true;
             out << eps[i]->getId() << " (" << eps[i]->getTask()->getName() << "): ";
-            for (essentials::IdentifierConstPtr r : c._successData[i]) {
-                out << *r << " ";
+            for (uint64_t r : c._successData[i]) {
+                out << r << " ";
             }
             out << std::endl;
         }

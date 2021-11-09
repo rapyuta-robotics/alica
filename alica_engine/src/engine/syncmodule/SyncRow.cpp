@@ -1,4 +1,3 @@
-#include <essentials/IdentifierConstPtr.h>
 #include <engine/containers/SyncData.h>
 #include <engine/syncmodule/SyncRow.h>
 
@@ -36,7 +35,7 @@ std::ostream& operator<<(std::ostream& os, const SyncRow& sr)
 {
     std::stringstream ss;
     ss << "## SyncRow: ReceivedBy: ";
-    for (essentials::IdentifierConstPtr i : sr._receivedBy) {
+    for (uint64_t i : sr._receivedBy) {
         ss << i << " ";
     }
     ss << std::endl << sr._syncData << "##" << std::endl;

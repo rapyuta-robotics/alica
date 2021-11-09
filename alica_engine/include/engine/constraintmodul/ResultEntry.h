@@ -5,8 +5,6 @@
 #include "engine/Types.h"
 #include "engine/collections/Variant.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <mutex>
 #include <unordered_map>
 #include <vector>
@@ -21,9 +19,9 @@ class ResultEntry
 {
 public:
     ResultEntry();
-    ResultEntry(essentials::IdentifierConstPtr robotId);
+    ResultEntry(uint64_t robotId);
 
-    essentials::IdentifierConstPtr getId() const { return _id; }
+    uint64_t getId() const { return _id; }
 
     ResultEntry(const ResultEntry&) = delete;
     ResultEntry& operator=(const ResultEntry&) = delete;
@@ -53,7 +51,7 @@ private:
     };
     std::unordered_map<int64_t, VarValue> _values;
     mutable std::mutex _valueLock;
-    essentials::IdentifierConstPtr _id;
+    uint64_t _id;
 };
 
 template <typename VarType>

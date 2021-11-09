@@ -20,7 +20,7 @@ namespace alica
  */
 AuthorityManager::AuthorityManager(AlicaEngine* engine)
         : _engine(engine)
-        , _localAgentID(nullptr)
+        , _localAgentID(0)
 {
 }
 
@@ -55,7 +55,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
     if (_localAgentID < aai.senderID) {
         // notify TO that evidence about other robots is available
         for (EntryPointRobots epr : aai.entryPointRobots) {
-            for (essentials::IdentifierConstPtr rid : epr.robots) {
+            for (uint64_t rid : epr.robots) {
                 if (rid != _localAgentID) {
                     tm.setTimeLastMsgReceived(rid, now);
                 }

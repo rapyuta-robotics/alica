@@ -1,8 +1,6 @@
 #pragma once
 
 #include <engine/USummand.h>
-#include <essentials/IDManager.h>
-#include <essentials/IdentifierConstPtr.h>
 
 #include <memory>
 #include <string>
@@ -19,13 +17,12 @@ public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
     UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
-    essentials::IdentifierConstPtr robotId;
+    uint64_t robotId;
 
 protected:
     double sb;
     double angleBallOpp;
     double velAngle;
-    essentials::IDManager* manager;
 };
 
 } /* namespace alica */

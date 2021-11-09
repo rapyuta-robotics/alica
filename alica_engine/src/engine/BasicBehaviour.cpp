@@ -39,7 +39,7 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
+uint64_t BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

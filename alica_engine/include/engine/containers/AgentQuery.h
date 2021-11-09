@@ -1,18 +1,16 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
-
 namespace alica
 {
 struct AgentQuery
 {
     AgentQuery()
-            : senderID(nullptr)
+            : senderID(0)
             , senderSdk(0)
             , planHash(0)
     {
     }
-    essentials::IdentifierConstPtr senderID;
+    uint64_t senderID;
     uint32_t senderSdk;
     uint32_t planHash;
 };

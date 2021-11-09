@@ -19,7 +19,7 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, essentials::IdentifierConstPtr myID, const Synchronisation* sync, SyncModule* sm)
+SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, uint64_t myID, const Synchronisation* sync, SyncModule* sm)
         : _ae(ae)
         , _myID(myID)
         , _synchronisation(sync)
@@ -261,7 +261,7 @@ void SynchronisationProcess::sendSyncReady()
  */
 bool SynchronisationProcess::allSyncReady() const
 {
-    for (essentials::IdentifierConstPtr robotID : _myRow->getReceivedBy()) {
+    for (uint64_t robotID : _myRow->getReceivedBy()) {
         // we do not necessarily need an ack from ourselves
         if (robotID == _myID) {
             continue;
@@ -319,7 +319,7 @@ bool SynchronisationProcess::isSyncComplete()
         return false;
     }
     for (SyncRow* row : _rowsOK) {
-        essentials::IdentifierConstPtr agentID = row->getSyncData().agentID;
+        uint64_t agentID = row->getSyncData().agentID;
         if (std::find(_myRow->getReceivedBy().begin(), _myRow->getReceivedBy().end(), agentID) == _myRow->getReceivedBy().end()) {
             return false;
         }

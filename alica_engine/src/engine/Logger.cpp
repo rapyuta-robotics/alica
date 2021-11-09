@@ -15,8 +15,6 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-
-#include <essentials/IdentifierConstPtr.h>
 #include <essentials/FileSystem.h>
 
 //#define ALICA_DEBUG_LEVEL_ALL
@@ -130,7 +128,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << tm.getTeamSize();
 
     _sBuild << " TeamMember:";
-    for (essentials::IdentifierConstPtr id : agents) {
+    for (uint64_t id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }

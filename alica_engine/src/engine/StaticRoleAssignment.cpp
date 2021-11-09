@@ -8,8 +8,6 @@
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <alica_common_config/debug_output.h>
 
 namespace alica

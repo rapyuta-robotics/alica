@@ -31,9 +31,9 @@ TEST(Assignment, RobotsInserted)
     int b1 = 2;
     int b2 = 1;
     int b3 = 3;
-    essentials::IdentifierConstPtr robot1 = idManager.getID<int>(b1);
-    essentials::IdentifierConstPtr robot2 = idManager.getID<int>(b2);
-    essentials::IdentifierConstPtr robot3 = idManager.getID<int>(b3);
+    uint64_t robot1 = 2;
+    uint64_t robot2 = 1;
+    uint64_t robot3 = 3;
 
     ASSERT_EQ(robot2->getRaw()[0], 0x1);
     ASSERT_EQ(robot1->getRaw()[0], 0x2);
@@ -89,7 +89,7 @@ TEST(Assignment, RobotsInserted)
 
     int i = 0;
 
-    for (essentials::IdentifierConstPtr id : as1.getAgentsInState(s1)) {
+    for (uint64_t id : as1.getAgentsInState(s1)) {
         EXPECT_TRUE(bool(id));
         ++i;
     }

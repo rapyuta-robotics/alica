@@ -17,9 +17,6 @@
 #include "engine/scheduler/Scheduler.h"
 #include "engine/scheduler/JobQueue.h"
 
-#include <essentials/IdentifierConstPtr.h>
-#include <essentials/IDManager.h>
-
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -44,7 +41,7 @@ public:
 
     AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const essentials::Identifier& agentID = essentials::Identifier());
+                const uint64_t agentID);
     ~AlicaEngine();
 
     // State modifiers:
@@ -120,9 +117,9 @@ public:
     template <class SolverType>
     bool existSolver() const;
     template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr generateID(std::size_t size);
+    uint64_t getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
+    uint64_t getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
+    uint64_t generateID(std::size_t size);
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
@@ -178,7 +175,7 @@ private:
  * a pointer to a corresponding Identifier object.
  */
 template <class Prototype>
-essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type)
+uint64_t AlicaEngine::getID(Prototype& idPrototype, uint8_t type)
 {
     return _ctx.getIDManager().getID<Prototype>(idPrototype, type);
 }

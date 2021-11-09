@@ -25,11 +25,6 @@
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
-namespace essentials
-{
-class IdentifierConstPtr;
-} // namespace essentials
-
 namespace alica
 {
 
@@ -87,7 +82,7 @@ struct AlicaContextParams
                        const std::string& roleSetName,
                        const std::string& masterPlanName,
                        bool stepEngine = false,
-                       const essentials::Identifier& agentID = essentials::Identifier())
+                       const uint64_t agentID = 0)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName(roleSetName)
@@ -108,7 +103,7 @@ struct AlicaContextParams
      */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
-                       const essentials::Identifier& agentID = essentials::Identifier())
+                       const uint64_t agentID)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName("RoleSet")
@@ -122,7 +117,7 @@ struct AlicaContextParams
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
-    essentials::Identifier agentID;
+    uint64_t agentID;
 };
 
 /*
@@ -352,7 +347,7 @@ public:
      *
      * @return Object representing id of local agent.
      */
-    essentials::IdentifierConstPtr getLocalAgentId() const;
+    uint64_t getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously

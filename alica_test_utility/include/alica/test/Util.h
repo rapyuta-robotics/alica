@@ -13,7 +13,7 @@ namespace alica::test{
         static bool isPlanActive(alica::AlicaEngine* ae, int64_t id);
         static const alica::Agent* getLocalAgent(alica::AlicaEngine* ae);
         static int getTeamSize(alica::AlicaEngine* ae);
-        static const alica::Agent* getAgentByID(alica::AlicaEngine* ae, essentials::IdentifierConstPtr agentID);
+        static const alica::Agent* getAgentByID(alica::AlicaEngine* ae, uint64_t agentID);
     private:
         static bool isPlanActiveHelper(const RunningPlan* rp, int64_t id);
         static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);

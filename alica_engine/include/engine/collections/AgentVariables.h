@@ -3,7 +3,6 @@
 #include "engine/Types.h"
 #include <alica_solver_interface/Interval.h>
 #include <alica_solver_interface/SolverVariable.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -12,7 +11,7 @@ template <class T>
 class AgentElements
 {
 public:
-    AgentElements(essentials::IdentifierConstPtr id)
+    AgentElements(uint64_t id)
             : _id(id)
     {
     }
@@ -32,19 +31,19 @@ public:
         _vars = std::move(o._vars);
         return *this;
     }
-    essentials::IdentifierConstPtr getId() const { return _id; }
+    uint64_t getId() const { return _id; }
 
     const std::vector<T>& getVars() const { return _vars; }
     std::vector<T>& editVars() { return _vars; }
 
-    bool operator<(const AgentElements& o) const { return *_id < *o._id; }
-    bool operator>(const AgentElements& o) const { return *_id > *o._id; }
+    bool operator<(const AgentElements& o) const { return _id < o._id; }
+    bool operator>(const AgentElements& o) const { return _id > o._id; }
 
-    bool operator<=(const AgentElements& o) const { return !(*_id > *o._id); }
-    bool operator>=(const AgentElements& o) const { return !(*_id < *o._id); }
+    bool operator<=(const AgentElements& o) const { return !(_id > o._id); }
+    bool operator>=(const AgentElements& o) const { return !(_id < o._id); }
 
 private:
-    essentials::IdentifierConstPtr _id;
+    uint64_t _id;
     std::vector<T> _vars;
 };
 

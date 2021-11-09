@@ -2,8 +2,6 @@
 
 #include "engine/model/EntryPoint.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <memory>
 
 namespace alica
@@ -15,17 +13,17 @@ namespace alica
 class EntryPointRobotPair final
 {
 public:
-    EntryPointRobotPair(const EntryPoint* ep, essentials::IdentifierConstPtr r);
+    EntryPointRobotPair(const EntryPoint* ep, uint64_t r);
     const EntryPoint* getEntryPoint() const;
     void setEntryPoint(const EntryPoint* entryPoint);
-    essentials::IdentifierConstPtr getRobot() const { return _robot; }
-    void setRobot(essentials::IdentifierConstPtr robot);
+    uint64_t getRobot() const { return _robot; }
+    void setRobot(uint64_t robot);
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 private:
     const EntryPoint* _entryPoint;
-    essentials::IdentifierConstPtr _robot;
+    uint64_t _robot;
 };
 
 } /* namespace alica */
@@ -38,6 +36,6 @@ struct hash<alica::EntryPointRobotPair>
     typedef alica::EntryPointRobotPair argument_type;
     typedef std::size_t value_type;
 
-    value_type operator()(argument_type& eprp) const { return std::hash<long int>()(eprp.getEntryPoint()->getId()) + eprp.getRobot()->hash(); }
+    value_type operator()(argument_type& eprp) const { return std::hash<long int>()(eprp.getEntryPoint()->getId()) + eprp.getRobot(); }
 };
 } // namespace std

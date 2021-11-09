@@ -2,24 +2,22 @@
 
 #include "engine/containers/SyncData.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <tuple>
 #include <vector>
 
 namespace alica
 {
 
-typedef std::tuple<essentials::IdentifierConstPtr, std::vector<stdSyncData>> stdSyncTalk;
+typedef std::tuple<uint64_t, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk
 {
     SyncTalk()
-            : senderID(nullptr)
+            : senderID(0)
     {
     }
     ~SyncTalk() {}
 
-    essentials::IdentifierConstPtr senderID;
+    uint64_t senderID;
     std::vector<SyncData> syncData;
 
     SyncTalk(const stdSyncTalk& s)

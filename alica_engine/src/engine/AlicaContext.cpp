@@ -2,7 +2,6 @@
 #include "engine/AlicaEngine.h"
 
 #include <essentials/FileSystem.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -77,7 +76,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
+uint64_t AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

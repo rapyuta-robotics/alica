@@ -9,7 +9,7 @@ namespace alica
 {
 
 SimplePlanTree::SimplePlanTree()
-        : _agentId(nullptr)
+        : _agentId(0)
         , _parent(nullptr)
         , _state(nullptr)
         , _entryPoint(nullptr)

@@ -102,7 +102,7 @@ void CycleManager::update()
  */
 bool CycleManager::isOverridden() const
 {
-    return _state == CycleState::overridden && _fixedAllocation.authority != nullptr;
+    return _state == CycleState::overridden && _fixedAllocation.authority != 0;
 }
 
 AllocationDifference& CycleManager::editNextDifference()
@@ -169,7 +169,7 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (!_enabled) {
         return;
     }
-    essentials::IdentifierConstPtr rid = aai.authority;
+    uint64_t rid = aai.authority;
     if (rid == _myID) {
         return;
     }
@@ -214,7 +214,7 @@ bool CycleManager::applyAssignment()
 {
     ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << _rp->getActivePlan()->getName());
 
-    if (_fixedAllocation.authority == nullptr) {
+    if (_fixedAllocation.authority == 0) {
         return false;
     }
     const EntryPoint* myEntryPoint = nullptr;
@@ -232,7 +232,7 @@ bool CycleManager::applyAssignment()
         modifiedSelf = true;
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
-            for (essentials::IdentifierConstPtr robot : epr.robots) {
+            for (uint64_t robot : epr.robots) {
                 const EntryPoint* e = _ae->getPlanRepository().getEntryPoints()[epr.entrypoint];
                 bool changed = _rp->editAssignment().updateAgent(robot, e);
                 if (changed) {

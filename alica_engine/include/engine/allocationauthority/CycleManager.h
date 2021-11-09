@@ -52,7 +52,7 @@ private:
     int _newestAllocationDifference;
     int _maxAllocationCycles;
     bool _enabled;
-    essentials::IdentifierConstPtr _myID;
+    uint64_t _myID;
     AlicaTime _overrideTimestamp;
     double _intervalIncFactor;
     double _intervalDecFactor;

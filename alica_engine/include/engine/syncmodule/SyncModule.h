@@ -1,7 +1,5 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <iostream>
 #include <list>
 #include <map>
@@ -42,7 +40,7 @@ public:
 private:
     bool _running;
     const AlicaEngine* _ae;
-    essentials::IdentifierConstPtr _myId;
+    uint64_t _myId;
     unsigned long _ticks;
     std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
     std::map<const Synchronisation*, SynchronisationProcess*> _synchProcessMapping; /**< Mapping from synchronisations to their ongoing synchronisation process */

@@ -172,7 +172,7 @@ template <>
 void InProcQueue<alica::AgentAnnouncement>::process(std::unique_ptr<alica::AgentAnnouncement>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    essentials::IdentifierConstPtr prev = first->senderID;
+    uint64_t prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
         first->senderID = module->getEngine()->getIDFromBytes(prev->getRaw(), prev->getSize(), prev->getType());
         module->onAgentAnnouncement(*first);
@@ -183,7 +183,7 @@ template <>
 void InProcQueue<alica::AgentQuery>::process(std::unique_ptr<alica::AgentQuery>& first)
 {
     std::vector<AlicaDummyCommunication*> registeredModules = _commModules.getModules();
-    essentials::IdentifierConstPtr prev = first->senderID;
+    uint64_t prev = first->senderID;
     for (AlicaDummyCommunication* module : registeredModules) {
         first->senderID = module->getEngine()->getIDFromBytes(prev->getRaw(), prev->getSize(), prev->getType());
         module->onAgentQuery(*first);

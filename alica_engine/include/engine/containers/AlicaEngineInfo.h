@@ -1,27 +1,25 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <string>
 #include <tuple>
 #include <vector>
 
 namespace alica
 {
-typedef std::tuple<essentials::IdentifierConstPtr, std::string, std::string, std::string, std::string, std::string, std::vector<essentials::IdentifierConstPtr>> stdAlicaEngineInfo;
+typedef std::tuple<uint64_t, std::string, std::string, std::string, std::string, std::string, std::vector<uint64_t>> stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
     AlicaEngineInfo()
-            : senderID(nullptr)
+            : senderID(0)
     {
     }
-    essentials::IdentifierConstPtr senderID;
+    uint64_t senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<essentials::IdentifierConstPtr> robotIDsWithMe;
+    std::vector<uint64_t> robotIDsWithMe;
 
     AlicaEngineInfo(stdAlicaEngineInfo&& s)
     {
