@@ -61,10 +61,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
 bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1418825425833) ENABLED START*/
-    int id8 = 8;
-    uint64_t agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    uint64_t agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1418825427317();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1418825427317();
@@ -91,7 +90,7 @@ bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION ID(1418825427469) ENABLED START*/
     uint64_t agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1418825428924();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1418825428924();

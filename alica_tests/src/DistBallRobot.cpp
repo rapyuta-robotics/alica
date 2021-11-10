@@ -15,17 +15,19 @@ DistBallRobot::DistBallRobot(double weight)
 {
 }
 
+DistBallRobot::~DistBallRobot()
+{
+}
+
 UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss) const
 {
     UtilityInterval ui(0.0, 1.0);
 
     int numAssignedRobots = 0;
 
-    long id8 = 8;
-    uint64_t agentID8 = id8;
+    uint64_t agentID8 = 8;
 
-    long id9 = 9;
-    uint64_t agentID9 = id9;
+    uint64_t agentID9 = 9;
 
     double curPosition;
     for (uint64_t id : ass.getAgentsWorking(_relevantEntryPoints[0])) {

@@ -65,7 +65,6 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 
-    essentials::IDManager idManager;
     uint64_t a1 = 1;
     uint64_t a2 = 2;
 

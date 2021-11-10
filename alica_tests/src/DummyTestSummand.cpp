@@ -18,7 +18,7 @@ DummyTestSummand::DummyTestSummand(double weight)
 {
     this->angleBallOpp = 0;
     this->velAngle = 0;
-    this->robotId = nullptr;
+    this->robotId = 0;
     this->sb = 0;
 }
 

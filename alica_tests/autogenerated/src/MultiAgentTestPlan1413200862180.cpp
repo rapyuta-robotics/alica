@@ -66,10 +66,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
 bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201368286) ENABLED START*/
-    int id8 = 8;
-    uint64_t agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    uint64_t agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201370590();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201370590();
@@ -94,10 +93,9 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201050743) ENABLED START*/
-    int id8 = 8;
-    uint64_t agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    uint64_t agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201052549();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201052549();
@@ -122,10 +120,9 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
 bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201367062) ENABLED START*/
-    int id8 = 8;
-    uint64_t agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    uint64_t agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201367990();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201367990();

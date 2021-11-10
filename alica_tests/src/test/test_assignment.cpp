@@ -5,8 +5,6 @@
 #include <engine/modelmanagement/ModelManager.h>
 #include <engine/AlicaContext.h>
 
-#include <essentials/IDManager.h>
-
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <vector>
@@ -27,19 +25,12 @@ TEST(Assignment, RobotsInserted)
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    essentials::IDManager idManager;
-    int b1 = 2;
-    int b2 = 1;
-    int b3 = 3;
     uint64_t robot1 = 2;
     uint64_t robot2 = 1;
     uint64_t robot3 = 3;
 
-    ASSERT_EQ(robot2->getRaw()[0], 0x1);
-    ASSERT_EQ(robot1->getRaw()[0], 0x2);
-
-    ASSERT_TRUE(*robot1 > *robot2);
-    ASSERT_TRUE(*robot1 < *robot3);
+    ASSERT_TRUE(robot1 > robot2);
+    ASSERT_TRUE(robot1 < robot3);
 
     alica::AlicaContext *ac = new alica::AlicaContext(
             alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
