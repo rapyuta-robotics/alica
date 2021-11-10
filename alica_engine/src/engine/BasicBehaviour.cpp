@@ -27,10 +27,9 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-        : _name(name)
+        : RunnableObject()
+        , _name(name)
         , _behaviour(nullptr)
-        , _engine(nullptr)
-        , _configuration(nullptr)
         , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
         , _signalContext(nullptr)
@@ -40,7 +39,6 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
         , _behResult(BehResult::UNKNOWN)
         , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
 {
 }
 
@@ -79,20 +77,6 @@ bool BasicBehaviour::start(RunningPlan* rp)
     _signalContext.store(rp);
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
     return true;
-}
-
-void BasicBehaviour::setSuccess()
-{
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::SUCCESS);
-    if (prev != BehResult::SUCCESS) {
-        _engine->editPlanBase().addFastPathEvent(_execContext.load());
-        if (_trace) {
-            _trace->setTag("Result", "Success");
-        }
-    }
 }
 
 void BasicBehaviour::setFailure()
@@ -134,7 +118,8 @@ void BasicBehaviour::initJob()
     // Get closest parent that has a trace
     if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
         auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
+            ;
         _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
     }
 
@@ -214,11 +199,6 @@ void BasicBehaviour::terminateJob()
     _execContext.store(nullptr);
 }
 
-void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
-{
-    _engine->getCommunicator().sendLogMessage(level, message);
-}
-
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
 {
     if (!_configuration) {
@@ -234,16 +214,6 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
         valueOut.clear();
         return false;
     }
-}
-
-std::optional<IAlicaTrace*> BasicBehaviour::getTrace() const
-{
-    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
-}
-
-std::optional<std::string> BasicBehaviour::getTraceContext() const
-{
-    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 } /* namespace alica */

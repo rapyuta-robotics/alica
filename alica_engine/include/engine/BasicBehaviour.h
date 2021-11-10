@@ -1,10 +1,11 @@
 #pragma once
 
 #include "engine/Assignment.h"
+#include "engine/IAlicaTrace.h"
 #include "engine/PlanInterface.h"
+#include "engine/RunnableObject.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
-#include "engine/IAlicaTrace.h"
 
 #include <essentials/ITrigger.hpp>
 
@@ -24,14 +25,12 @@ class TestContext;
 }
 class Variable;
 class RunningPlan;
-class Configuration;
 class EntryPoint;
-class AlicaEngine;
 
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
-class BasicBehaviour
+class BasicBehaviour : public RunnableObject
 {
 public:
     BasicBehaviour(const std::string& name);
@@ -42,11 +41,9 @@ public:
     // Note that for things to work correctly it is assumed that this method is called after start() has finished execution
     // i.e. either on the same thread or via some other synchronization mechanism
     bool isRunningInContext(const RunningPlan* rp) const { return rp == _execContext.load() || rp == _signalContext.load(); };
-    void setEngine(AlicaEngine* engine) { _engine = engine; }
     const std::string& getName() const { return _name; }
 
     void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
-    void setConfiguration(const Configuration* conf) { _configuration = conf; };
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
@@ -77,9 +74,6 @@ public:
 
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
-    // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
-    std::optional<std::string> getTraceContext() const;
-
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -88,7 +82,6 @@ protected:
     void setSuccess();
     void setFailure();
 
-    std::optional<IAlicaTrace*> getTrace() const;
     void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
 
     /**
@@ -105,7 +98,6 @@ protected:
 
 private:
     friend alica::test::TestContext;
-    using Counter = uint64_t;
     enum class BehResult : uint8_t
     {
         UNKNOWN,
@@ -116,8 +108,6 @@ private:
     void runJob(void* msg);
     void initJob();
     void terminateJob();
-
-    void sendLogMessage(int level, const std::string& message) const;
 
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
@@ -154,13 +144,6 @@ private:
     std::string _name;
 
     const Behaviour* _behaviour;
-    AlicaEngine* _engine;
-
-    /**
-     * The configuration, that is set in the behaviour pool, associated with
-     * this basic behaviour through its corresponding ConfAbstractPlanWrapper.
-     */
-    const Configuration* _configuration;
 
     AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
@@ -169,30 +152,13 @@ private:
     // of the currently used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
     // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
-    std::atomic<RunningPlan*> _execContext; // The running plan context under which the behaviour is executing
-    std::atomic<Counter> _signalState; // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
-    std::atomic<Counter> _execState; // Tracks the actual executate state of the behaviour by the scheduler thread
+    std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
+    std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
+    std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<BehResult> _behResult;
 
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
     std::unique_ptr<IAlicaTrace> _trace;
-
-    enum class Flags : uint8_t
-    {
-        // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
-        // used to track this. In such a case we should not be calling onTermination either
-        INIT_EXECUTED = 1u,
-        // Is tracing enabled for this behaviour?
-        TRACING_ENABLED = 1u << 1,
-        // We only want to trace the first run call
-        RUN_TRACED = 1u << 2
-    };
-
-    uint8_t _flags;
-
-    void setFlags(Flags flags) { _flags |= static_cast<uint8_t>(flags); }
-    void clearFlags(Flags flags) { _flags &= ~static_cast<uint8_t>(flags); }
-    bool areFlagsSet(Flags flags) { return (static_cast<uint8_t>(flags) & _flags) == static_cast<uint8_t>(flags); }
 };
 } /* namespace alica */
