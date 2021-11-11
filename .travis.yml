@@ -69,8 +69,9 @@ script:
     source /opt/ros/$ROS_DISTRO/setup.bash &&
     cd ~/catkin_ws &&
     catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror &&
-    catkin build --verbose --catkin-make-args run_tests -- --no-status &&
+    catkin build --no-status &&
     source devel/setup.bash &&
+    catkin run_tests --no-status && catkin_test_results --verbose &&
     if [ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ] || [ \"$TRAVIS_EVENT_TYPE\" = \"cron\" ] ; then
         wget -qO- https://scan.coverity.com/download/cxx/linux64
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
