@@ -68,11 +68,9 @@ script:
   - docker exec -t alica-test bash -c "
     source /opt/ros/$ROS_DISTRO/setup.bash &&
     cd ~/catkin_ws &&
-    ./src/alica-supplementary/alica_tracing/scripts/install.sh &&
-    catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror &&
-    catkin build --no-status &&
+    catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror --blacklist alica_tracing &&
+    catkin build --verbose --catkin-make-args run_tests -- --no-status &&
     source devel/setup.bash &&
-    catkin run_tests --no-status && catkin_test_results --verbose &&
     if [ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ] || [ \"$TRAVIS_EVENT_TYPE\" = \"cron\" ] ; then
         wget -qO- https://scan.coverity.com/download/cxx/linux64
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
