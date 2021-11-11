@@ -68,7 +68,7 @@ script:
   - docker exec -t alica-test bash -c "
     source /opt/ros/$ROS_DISTRO/setup.bash &&
     cd ~/catkin_ws &&
-    catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror --blacklist alica_tracing &&
+    catkin config --cmake-args -DCMAKE_CXX_FLAGS=-Werror &&
     catkin build --verbose --catkin-make-args run_tests -- --no-status &&
     source devel/setup.bash &&
     if [ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ] || [ \"$TRAVIS_EVENT_TYPE\" = \"cron\" ] ; then
