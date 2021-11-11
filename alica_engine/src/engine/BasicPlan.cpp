@@ -11,12 +11,6 @@ namespace alica
 
 BasicPlan::BasicPlan()
         : RunnableObject()
-        , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _activeRunJobId(-1)
-        , _signalContext(nullptr)
-        , _execContext(nullptr)
-        , _signalState(1)
-        , _execState(1)
 {
 }
 
@@ -31,18 +25,10 @@ void BasicPlan::doInit()
 
     _execContext = _signalContext.exchange(nullptr);
 
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
-            ;
-        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
-    }
+    initTrace();
 
     try {
-        if (_trace) {
-            _trace->setLog({"Plan", "true"});
-            _trace->setLog({"Init", "true"});
-        }
+        traceInit("Plan");
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
@@ -56,10 +42,7 @@ void BasicPlan::doInit()
 void BasicPlan::doRun(void* msg)
 {
     try {
-        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
-            _trace->setLog({"Run", "true"});
-            setFlags(Flags::RUN_TRACED);
-        }
+        traceRun();
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
@@ -69,59 +52,15 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
-    if (_activeRunJobId != -1) {
-        _engine->editScheduler().cancelJob(_activeRunJobId);
-        _activeRunJobId = -1;
-    }
-    ++_execState;
-
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
-        _execContext.store(nullptr);
-        return;
-    }
-    clearFlags(Flags::INIT_EXECUTED);
-
+    setTerminatedState();
     try {
-        if (_trace) {
-            _trace->setLog({"Terminate", "true"});
-            _trace.reset();
-        }
+        traceTermination();
         onTerminate();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
 
     _execContext.store(nullptr);
-}
-
-void BasicPlan::sendLogMessage(int level, const std::string& message) const
-{
-    _engine->getCommunicator().sendLogMessage(level, message);
-}
-
-void BasicPlan::start(RunningPlan* rp)
-{
-    if (isActive(_signalState.load())) {
-        return;
-    }
-    ++_signalState;
-    _signalContext.store(rp);
-    _engine->editScheduler().schedule(std::bind(&BasicPlan::doInit, this));
-}
-
-void BasicPlan::stop()
-{
-    if (!isActive(_signalState.load())) {
-        return;
-    }
-    ++_signalState;
-    _engine->editScheduler().schedule(std::bind(&BasicPlan::doTerminate, this));
-}
-
-ThreadSafePlanInterface BasicPlan::getPlanContext() const
-{
-    return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr);
 }
 
 } // namespace alica

@@ -2,7 +2,6 @@
 
 #include "engine/Assignment.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/PlanInterface.h"
 #include "engine/RunnableObject.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
@@ -24,7 +23,6 @@ namespace test
 class TestContext;
 }
 class Variable;
-class RunningPlan;
 class EntryPoint;
 
 /**
@@ -48,13 +46,9 @@ public:
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
-    bool stop();
-    bool start(RunningPlan* rp);
     void terminate() { stop(); };
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
-
-    void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
 
     bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
     bool isFailure() const { return isExecutingInContext() && _behResult.load() == BehResult::FAILURE; };
@@ -70,19 +64,14 @@ public:
      */
     virtual void init() {}
 
-    AlicaTime getInterval() { return _msInterval; }
-
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
-    ThreadSafePlanInterface getPlanContext() const { return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr); }
     void setSuccess();
     void setFailure();
-
-    void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -106,8 +95,8 @@ private:
     };
 
     void runJob(void* msg);
-    void initJob();
-    void terminateJob();
+    void doInit() override;
+    void doTerminate() override;
 
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
@@ -128,37 +117,9 @@ private:
      *
      */
 
-    // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
-    static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
-
-    // Returns true if the behaviour is executing in the context of the running plan
-    bool isExecutingInContext() const
-    {
-        Counter sc = _signalState.load(), ec = _execState.load();
-        return sc == ec && isActive(sc);
-    }
-
-    /**
-     * The name of this behaviour.
-     */
-    std::string _name;
-
     const Behaviour* _behaviour;
-
-    AlicaTime _msInterval;
     AlicaTime _msDelayedStart;
-
-    // TODO: Optimization: It should be okay (confirm it) for all accesses to atomic variables to be done using acquire-release semantics instead
-    // of the currently used sequentially-consistent ordering which can be a performance bottleneck because of the necessiated memory fence instruction
-    // (see https://en.cppreference.com/w/cpp/atomic/memory_order#Sequentially-consistent_ordering)
-    std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
-    std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
-    std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
-    std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<BehResult> _behResult;
-
-    int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
-    std::unique_ptr<IAlicaTrace> _trace;
 };
 } /* namespace alica */
