@@ -25,12 +25,12 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss) c
 
     int numAssignedRobots = 0;
 
-    uint64_t agentID8 = 8;
+    AgentId agentID8 = 8;
 
-    uint64_t agentID9 = 9;
+    AgentId agentID9 = 9;
 
     double curPosition;
-    for (uint64_t id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+    for (AgentId id : ass.getAgentsWorking(_relevantEntryPoints[0])) {
         int pos = 0;
         if (id == agentID9) {
             pos = 1;

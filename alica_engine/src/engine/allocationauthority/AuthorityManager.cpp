@@ -55,7 +55,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
     if (_localAgentID < aai.senderID) {
         // notify TO that evidence about other robots is available
         for (EntryPointRobots epr : aai.entryPointRobots) {
-            for (uint64_t rid : epr.robots) {
+            for (AgentId rid : epr.robots) {
                 if (rid != _localAgentID) {
                     tm.setTimeLastMsgReceived(rid, now);
                 }

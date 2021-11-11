@@ -6,20 +6,20 @@
 
 namespace alica
 {
-typedef std::tuple<uint64_t, std::string, std::string, std::string, std::string, std::string, std::vector<uint64_t>> stdAlicaEngineInfo;
+typedef std::tuple<alica::AgentId, std::string, std::string, std::string, std::string, std::string, std::vector<alica::AgentId>> stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
     AlicaEngineInfo()
             : senderID(0)
     {
     }
-    uint64_t senderID;
+    alica::AgentId senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<uint64_t> robotIDsWithMe;
+    std::vector<alica::AgentId> robotIDsWithMe;
 
     AlicaEngineInfo(stdAlicaEngineInfo&& s)
     {

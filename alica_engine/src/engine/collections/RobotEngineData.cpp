@@ -18,7 +18,7 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine* engine, uint64_t agentId)
+RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentId agentId)
         : _engine(engine)
         , _agentId(agentId)
         , _successMarks()

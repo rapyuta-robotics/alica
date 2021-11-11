@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <tuple>
+#include <sstream>
 
 namespace alica
 {
-typedef std::tuple<uint64_t, int64_t, bool, bool> stdSyncData;
-
+using AgentId = uint64_t;
+typedef std::tuple<alica::AgentId, int64_t, bool, bool> stdSyncData;
 struct SyncData
 {
     SyncData()
@@ -27,7 +28,7 @@ struct SyncData
 
     stdSyncData toStandard() const { return std::make_tuple(agentID, transitionID, conditionHolds, ack); }
 
-    uint64_t agentID;
+    alica::AgentId agentID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;

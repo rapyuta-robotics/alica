@@ -19,9 +19,9 @@ class ResultEntry
 {
 public:
     ResultEntry();
-    ResultEntry(uint64_t robotId);
+    ResultEntry(alica::AgentId robotId);
 
-    uint64_t getId() const { return _id; }
+    alica::AgentId getId() const { return _id; }
 
     ResultEntry(const ResultEntry&) = delete;
     ResultEntry& operator=(const ResultEntry&) = delete;
@@ -51,7 +51,7 @@ private:
     };
     std::unordered_map<int64_t, VarValue> _values;
     mutable std::mutex _valueLock;
-    uint64_t _id;
+    alica::AgentId _id;
 };
 
 template <typename VarType>

@@ -24,7 +24,7 @@ class TestContext : public alica::AlicaContext
 public:
     TestContext(const std::string& agentName, const std::string& configPath,
                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const uint64_t agentID);
+                const AgentId agentID);
 
     /**
      * Initialize alica framework and related modules. Note that this

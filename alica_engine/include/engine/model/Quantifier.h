@@ -37,7 +37,7 @@ public:
     const VariableGrp& getTemplateVariables() const { return _templateVars; }
     bool hasTemplateVariable(const Variable* v) const { return std::find(_templateVars.begin(), _templateVars.end(), v) != _templateVars.end(); }
 
-    virtual bool isAgentInScope(uint64_t id, const RunningPlan& rp) const = 0;
+    virtual bool isAgentInScope(alica::AgentId id, const RunningPlan& rp) const = 0;
     /**
      * Access the list of sorted Variables under the scope of this quantifier given a runningplan.
      * @param p A RunningPlan

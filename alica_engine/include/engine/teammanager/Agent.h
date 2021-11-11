@@ -20,6 +20,8 @@ class DomainVariable;
 class SuccessMarks;
 struct AgentAnnouncement;
 
+using AgentId = uint64_t;
+
 class Agent
 {
     // allows the TeamManager to call setTimeLastMsgReceived(..)
@@ -29,7 +31,7 @@ class Agent
 public:
     ~Agent();
 
-    uint64_t getId() const { return _id; }
+    alica::AgentId getId() const { return _id; }
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
@@ -45,7 +47,7 @@ private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
-    uint64_t _id;
+    alica::AgentId _id;
     bool _active;
     bool _ignored;
     bool _local;

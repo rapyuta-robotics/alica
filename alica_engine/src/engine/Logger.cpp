@@ -128,7 +128,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
     _sBuild << tm.getTeamSize();
 
     _sBuild << " TeamMember:";
-    for (uint64_t id : agents) {
+    for (AgentId id : agents) {
         _sBuild << "\t";
         _sBuild << id;
     }

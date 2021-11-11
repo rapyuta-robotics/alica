@@ -77,7 +77,7 @@ int Util::getTeamSize(alica::AlicaEngine* ae)
     return ae->getTeamManager().getTeamSize();
 }
 
-const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, uint64_t agentID)
+const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, AgentId agentID)
 {
     return ae->getTeamManager().getAgentByID(agentID);
 }

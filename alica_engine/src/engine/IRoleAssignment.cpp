@@ -10,7 +10,7 @@ IRoleAssignment::IRoleAssignment()
 {
 }
 
-const Role* IRoleAssignment::getRole(uint64_t robotId) const
+const Role* IRoleAssignment::getRole(AgentId robotId) const
 {
     auto iter = _robotRoleMapping.find(robotId);
     if (iter != _robotRoleMapping.end()) {

@@ -7,7 +7,7 @@ namespace alica
 {
 struct SolverResult
 {
-    uint64_t senderID;
+    alica::AgentId senderID;
     std::vector<SolverVar> vars;
 };
 } /* namespace alica */

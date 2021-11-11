@@ -6,6 +6,7 @@
 
 namespace alica
 {
+using AgentId = uint64_t;
 struct AgentAnnouncement
 {
     using CapabilityPair = std::pair<std::string, std::string>;
@@ -17,7 +18,7 @@ struct AgentAnnouncement
             , roleId(0)
     {
     }
-    uint64_t senderID;
+    alica::AgentId senderID;
     uint32_t token;
     std::string senderName;
     uint32_t senderSdk;

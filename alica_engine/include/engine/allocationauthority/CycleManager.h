@@ -52,7 +52,7 @@ private:
     int _newestAllocationDifference;
     int _maxAllocationCycles;
     bool _enabled;
-    uint64_t _myID;
+    alica::AgentId _myID;
     AlicaTime _overrideTimestamp;
     double _intervalIncFactor;
     double _intervalDecFactor;

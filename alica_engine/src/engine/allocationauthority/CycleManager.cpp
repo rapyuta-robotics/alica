@@ -169,7 +169,7 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (!_enabled) {
         return;
     }
-    uint64_t rid = aai.authority;
+    AgentId rid = aai.authority;
     if (rid == _myID) {
         return;
     }
@@ -232,7 +232,7 @@ bool CycleManager::applyAssignment()
         modifiedSelf = true;
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
-            for (uint64_t robot : epr.robots) {
+            for (AgentId robot : epr.robots) {
                 const EntryPoint* e = _ae->getPlanRepository().getEntryPoints()[epr.entrypoint];
                 bool changed = _rp->editAssignment().updateAgent(robot, e);
                 if (changed) {

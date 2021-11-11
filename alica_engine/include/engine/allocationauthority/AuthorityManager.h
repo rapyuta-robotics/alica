@@ -34,7 +34,7 @@ private:
 
     std::vector<AllocationAuthorityInfo> _queue;
     AlicaEngine* _engine;
-    uint64_t _localAgentID;
+    alica::AgentId _localAgentID;
     std::mutex _mutex;
 };
 } /* namespace alica */

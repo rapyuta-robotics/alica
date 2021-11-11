@@ -11,12 +11,11 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/IDManager.h>
-
 #include <alica_common_config/debug_output.h>
 #include <functional>
 #include <algorithm>
 #include <chrono>
+#include <random>
 #include <stdlib.h>
 
 namespace alica
@@ -36,7 +35,7 @@ void AlicaEngine::abort(const std::string& msg)
  */
 AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const uint64_t agentID)
+                         const alica::AgentId agentID)
         : _ctx(ctx)
         , _scheduler()
         , _stepCalled(false)
@@ -222,19 +221,15 @@ void AlicaEngine::stepNotify()
  */
 
 /**
- * Generates random ID of given size.
- * @param size
- * @return The ID Object
+ * Generates random ID.
+ * @return The ID
  */
-uint64_t AlicaEngine::generateID(std::size_t size)
-{
-    return _ctx.getIDManager().generateID(size);
-}
 
-static uint64_t generateId() {
-    std::atomic<uint64_t> cnt = rand() % ULLONG_MAX;
-    uint64_t id = std::chrono::system_clock::now().time_since_epoch().count();
-    id = (id << 64) | (cnt);
+alica::AgentId AlicaEngine::generateID() {
+    std::random_device device;
+    std::uniform_int_distribution<int> distribution(1,INT_MAX);
+    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    id = (id << 32) | (distribution(device));
     return id;
 }
 

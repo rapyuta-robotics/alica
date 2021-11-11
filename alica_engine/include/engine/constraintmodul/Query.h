@@ -76,7 +76,7 @@ public:
     void addStaticVariable(const alica::Variable* v);
     void addDomainVariable(const DomainVariable* domainVariable);
     [[deprecated("use addDomainVariable(const DomainVariable* domainVariable) instead")]]
-    void addDomainVariable(uint64_t robot, const std::string& ident, const AlicaEngine* ae);
+    void addDomainVariable(alica::AgentId robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 

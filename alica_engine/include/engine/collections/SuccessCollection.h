@@ -20,7 +20,7 @@ public:
     int getCount() const { return _successData.size(); }
     const EntryPointGrp& getEntryPoints() const { return _plan->getEntryPoints(); }
 
-    void setSuccess(uint64_t robot, const EntryPoint* ep);
+    void setSuccess(alica::AgentId robot, const EntryPoint* ep);
     void clear();
     const AgentGrp* getAgents(const EntryPoint* ep) const;
     const AgentGrp* getAgentsById(int64_t id) const;

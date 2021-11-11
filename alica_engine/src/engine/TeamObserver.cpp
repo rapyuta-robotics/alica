@@ -56,7 +56,7 @@ bool TeamObserver::updateTeamPlanTrees()
         _msgQueue.clear();
     }
 
-    std::vector<uint64_t> deactivatedAgentIds;
+    std::vector<AgentId> deactivatedAgentIds;
     bool changedSomeAgent = _tm.updateAgents(deactivatedAgentIds);
     for (auto agent : deactivatedAgentIds) {
         _simplePlanTrees.erase(agent);
@@ -280,7 +280,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  * @param ids The list of long encoding another robot's plantree as received in a PlanTreeInfo message.
  * @return a SimplePlanTree
  */
-std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(uint64_t agentId, const IdGrp& ids, AlicaTime time) const
+std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, const IdGrp& ids, AlicaTime time) const
 {
     ALICA_DEBUG_MSG("Spt from robot " << agentId);
     ALICA_DEBUG_MSG(ids);

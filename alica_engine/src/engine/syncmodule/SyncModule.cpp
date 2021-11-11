@@ -27,7 +27,7 @@ using std::shared_ptr;
 using std::vector;
 
 SyncModule::SyncModule(const AlicaEngine* ae)
-        : _myId(nullptr)
+        : _myId(0)
         , _ae(ae)
         , _running(false)
         , _ticks(0)
@@ -160,7 +160,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
                 doAck = syncProc->integrateSyncTalk(st, _ticks);
             }
         }
-        if (!sd.ack && *(st->senderID) == *(sd.agentID) && doAck) {
+        if (!sd.ack && st->senderID == sd.agentID && doAck) {
             toAck.push_back(sd);
         }
     }

@@ -4,7 +4,7 @@
 
 namespace alica
 {
-typedef std::tuple<uint64_t, int64_t> stdSyncReady;
+typedef std::tuple<alica::AgentId, int64_t> stdSyncReady;
 struct SyncReady
 {
     SyncReady()
@@ -12,7 +12,7 @@ struct SyncReady
             , synchronisationID(0)
     {
     }
-    uint64_t senderID;
+    alica::AgentId senderID;
     int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)

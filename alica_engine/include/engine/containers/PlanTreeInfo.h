@@ -5,7 +5,7 @@
 
 namespace alica
 {
-typedef std::tuple<uint64_t, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+typedef std::tuple<alica::AgentId, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
 struct PlanTreeInfo
 {
     PlanTreeInfo()
@@ -20,7 +20,7 @@ struct PlanTreeInfo
     {
     }
 
-    uint64_t senderID;
+    alica::AgentId senderID;
     std::vector<int64_t> stateIDs;
     std::vector<int64_t> succeededEPs;
 

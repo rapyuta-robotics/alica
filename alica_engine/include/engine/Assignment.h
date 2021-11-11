@@ -34,9 +34,9 @@ class AgentStatePairs
 {
 public:
     AgentStatePairs() {}
-    bool hasAgent(const uint64_t id) const;
-    const State* getStateOfAgent(const uint64_t id) const;
-    void setStateOfAgent(const uint64_t id, const State* s);
+    bool hasAgent(const alica::AgentId id) const;
+    const State* getStateOfAgent(const alica::AgentId id) const;
+    void setStateOfAgent(const alica::AgentId id, const State* s);
 
     const std::vector<AgentStatePair>& getRaw() const { return _data; }
     std::vector<AgentStatePair>& editRaw() { return _data; }
@@ -45,10 +45,10 @@ public:
     bool empty() const { return _data.size() == 0; }
 
     void clear() { _data.clear(); }
-    void emplace_back(uint64_t id, const State* s) { _data.emplace_back(id, s); }
+    void emplace_back(alica::AgentId id, const State* s) { _data.emplace_back(id, s); }
 
     void removeAt(int idx) { _data.erase(_data.begin() + idx); }
-    void remove(uint64_t agent)
+    void remove(alica::AgentId agent)
     {
         _data.erase(std::find_if(_data.begin(), _data.end(), [agent](AgentStatePair asp) { return asp.first == agent; }));
     }
@@ -87,17 +87,17 @@ public:
     bool isValid() const;
     bool isSuccessful() const;
     bool isAnyTaskSuccessful() const;
-    bool isAgentSuccessful(uint64_t id, const EntryPoint* ep) const;
+    bool isAgentSuccessful(alica::AgentId id, const EntryPoint* ep) const;
 
-    bool hasAgent(uint64_t id) const;
+    bool hasAgent(alica::AgentId id) const;
     int size() const
     {
         return std::accumulate(_assignmentData.begin(), _assignmentData.end(), 0, [](int val, const AgentStatePairs& asps) { return val + asps.size(); });
     }
     int getEntryPointCount() const { return static_cast<int>(_assignmentData.size()); }
     const EntryPoint* getEntryPoint(int idx) const { return _plan->getEntryPoints()[idx]; }
-    const EntryPoint* getEntryPointOfAgent(uint64_t id) const;
-    const State* getStateOfAgent(uint64_t id) const;
+    const EntryPoint* getEntryPointOfAgent(alica::AgentId id) const;
+    const State* getStateOfAgent(alica::AgentId id) const;
 
     void getAllAgents(AgentGrp& o_agents) const;
     const AgentStatePairs& getAgentStates(int idx) const { return _assignmentData[idx]; }
@@ -123,18 +123,18 @@ public:
 
     void getAgentsInState(const State* s, AgentGrp& o_agents) const;
 
-    bool updateAgent(uint64_t agent, const EntryPoint* e);
-    bool updateAgent(uint64_t agent, const EntryPoint* e, const State* s);
-    void addAgent(uint64_t agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
+    bool updateAgent(alica::AgentId agent, const EntryPoint* e);
+    bool updateAgent(alica::AgentId agent, const EntryPoint* e, const State* s);
+    void addAgent(alica::AgentId agent, const EntryPoint* e, const State* s) { _assignmentData[e->getIndex()].emplace_back(agent, s); }
     void setAllToInitialState(const AgentGrp& agents, const EntryPoint* e);
     template <typename ForwardIterator>
     void setAllToInitialState(ForwardIterator begin, ForwardIterator end, const EntryPoint* e);
 
-    void setState(uint64_t agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
+    void setState(alica::AgentId agent, const State* s, const EntryPoint* hint) { _assignmentData[hint->getIndex()].setStateOfAgent(agent, s); }
     bool removeAllIn(const AgentGrp& limit, const State* watchState);
     bool removeAllNotIn(const AgentGrp& limit, const State* watchState);
-    void removeAgentFrom(uint64_t agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
-    void removeAgent(uint64_t agent);
+    void removeAgentFrom(alica::AgentId agent, const EntryPoint* ep) { _assignmentData[ep->getIndex()].remove(agent); }
+    void removeAgent(alica::AgentId agent);
     void removeAllFrom(const AgentGrp& agents, const EntryPoint* ep) { _assignmentData[ep->getIndex()].removeAllIn(agents); }
     void clear();
     void moveAllFromTo(const EntryPoint* scope, const State* from, const State* to);
@@ -159,7 +159,7 @@ void Assignment::setAllToInitialState(ForwardIterator begin, ForwardIterator end
         if (isTargetEp) {
             const State* s = ep->getState();
             for (ForwardIterator agent_it = begin; agent_it != end; ++agent_it) {
-                uint64_t id = *agent_it;
+                alica::AgentId id = *agent_it;
                 auto it = std::find_if(_assignmentData[i].begin(), _assignmentData[i].end(), [id](AgentStatePair asp) { return asp.first == id; });
                 if (it == _assignmentData[i].end()) {
                     _assignmentData[i].emplace_back(id, s);
@@ -180,7 +180,7 @@ void AgentStatePairs::removeAllIn(ForwardIterator begin, ForwardIterator end)
             _data.end());
 }
 
-class AssignmentIterator : public std::iterator<std::forward_iterator_tag, uint64_t>
+class AssignmentIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
 {
 public:
     AssignmentIterator(int idx, const AgentStatePairs* aps)
@@ -188,7 +188,7 @@ public:
             , _idx(idx)
     {
     }
-    uint64_t operator*() const { return _agents->getRaw()[_idx].first; }
+    alica::AgentId operator*() const { return _agents->getRaw()[_idx].first; }
     AssignmentIterator& operator++()
     {
         ++_idx;
@@ -229,7 +229,7 @@ private:
     const int _epIdx;
 };
 
-class AllAgentsIterator : public std::iterator<std::forward_iterator_tag, uint64_t>
+class AllAgentsIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
 {
 public:
     AllAgentsIterator(int epIdx, int agentIdx, const Assignment* a)
@@ -240,7 +240,7 @@ public:
         toNextValid();
     }
 
-    uint64_t operator*() const { return _assignment->getAgentStates(_epIdx).getRaw()[_agentIdx].first; }
+    alica::AgentId operator*() const { return _assignment->getAgentStates(_epIdx).getRaw()[_agentIdx].first; }
     AllAgentsIterator& operator++()
     {
         ++_agentIdx;
@@ -297,7 +297,7 @@ private:
     const Assignment* _assignment;
 };
 
-class AgentsInStateIterator : public std::iterator<std::forward_iterator_tag, uint64_t>
+class AgentsInStateIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
 {
 public:
     AgentsInStateIterator(int idx, const State* s, const AgentStatePairs* aps)
@@ -307,7 +307,7 @@ public:
     {
         toNextValid();
     }
-    uint64_t operator*() const { return _agents->getRaw()[_idx].first; }
+    alica::AgentId operator*() const { return _agents->getRaw()[_idx].first; }
     AgentsInStateIterator& operator++()
     {
         ++_idx;
@@ -366,7 +366,7 @@ private:
     const State* _state;
 };
 
-class AssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, uint64_t>
+class AssignmentSuccessIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
 {
 public:
     AssignmentSuccessIterator(int idx, bool inSuccess, const AgentStatePairs* aps, const AgentGrp* successes)
@@ -380,7 +380,7 @@ public:
             _idx = 0;
         }
     }
-    uint64_t operator*() const
+    alica::AgentId operator*() const
     {
         if (_inSuccess) {
             return (*_successData)[_idx];

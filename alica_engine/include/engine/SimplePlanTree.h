@@ -23,8 +23,8 @@ public:
     std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
     SimplePlanTree* getParent() const { return _parent; }
     void setParent(SimplePlanTree* p) { _parent = p; }
-    uint64_t getAgentId() const { return _agentId; }
-    void setAgentId(uint64_t agentId) { _agentId = agentId; }
+    alica::AgentId getAgentId() const { return _agentId; }
+    void setAgentId(alica::AgentId agentId) { _agentId = agentId; }
     bool isNewSimplePlanTree() const { return _isNew; }
     void setProcessed() { _isNew = false; }
     AlicaTime getReceiveTime() const { return _receiveTime; }
@@ -48,7 +48,7 @@ private:
     /**
      * The id of the robot to which this tree refers to
      */
-    uint64_t _agentId;
+    alica::AgentId _agentId;
     bool _isNew;
     /**
      * The timestamp denoting when this tree was received.

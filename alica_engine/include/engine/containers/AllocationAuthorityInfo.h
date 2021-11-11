@@ -10,7 +10,7 @@
 namespace alica
 {
 
-typedef std::tuple<uint64_t, int64_t, int64_t, int64_t, uint64_t, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+typedef std::tuple<alica::AgentId, int64_t, int64_t, int64_t, alica::AgentId, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()
@@ -22,11 +22,11 @@ struct AllocationAuthorityInfo
     {
     }
 
-    uint64_t senderID;
+    alica::AgentId senderID;
     int64_t planId;
     int64_t parentState;
     int64_t planType;
-    uint64_t authority;
+    alica::AgentId authority;
     std::vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)

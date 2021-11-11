@@ -19,7 +19,7 @@ ResultEntry::ResultEntry()
 {
 }
 
-ResultEntry::ResultEntry(uint64_t robotId)
+ResultEntry::ResultEntry(AgentId robotId)
         : _id(robotId)
 {
 }

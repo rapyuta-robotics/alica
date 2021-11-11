@@ -13,7 +13,7 @@ public:
     DummyTestSummand(double weight);
     virtual ~DummyTestSummand();
     UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
-    uint64_t robotId;
+    AgentId robotId;
 
 protected:
     double sb;

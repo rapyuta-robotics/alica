@@ -13,17 +13,17 @@ namespace alica
 class EntryPointRobotPair final
 {
 public:
-    EntryPointRobotPair(const EntryPoint* ep, uint64_t r);
+    EntryPointRobotPair(const EntryPoint* ep, alica::AgentId r);
     const EntryPoint* getEntryPoint() const;
     void setEntryPoint(const EntryPoint* entryPoint);
-    uint64_t getRobot() const { return _robot; }
-    void setRobot(uint64_t robot);
+    alica::AgentId getRobot() const { return _robot; }
+    void setRobot(alica::AgentId robot);
     bool operator==(const EntryPointRobotPair& o) const;
     bool operator!=(const EntryPointRobotPair& o) const { return !(*this == o); }
 
 private:
     const EntryPoint* _entryPoint;
-    uint64_t _robot;
+    alica::AgentId _robot;
 };
 
 } /* namespace alica */

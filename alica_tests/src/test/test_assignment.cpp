@@ -25,9 +25,9 @@ TEST(Assignment, RobotsInserted)
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    uint64_t robot1 = 2;
-    uint64_t robot2 = 1;
-    uint64_t robot3 = 3;
+    alica::AgentId robot1 = 2;
+    alica::AgentId robot2 = 1;
+    alica::AgentId robot3 = 3;
 
     ASSERT_TRUE(robot1 > robot2);
     ASSERT_TRUE(robot1 < robot3);
@@ -80,7 +80,7 @@ TEST(Assignment, RobotsInserted)
 
     int i = 0;
 
-    for (uint64_t id : as1.getAgentsInState(s1)) {
+    for (alica::AgentId id : as1.getAgentsInState(s1)) {
         EXPECT_TRUE(bool(id));
         ++i;
     }

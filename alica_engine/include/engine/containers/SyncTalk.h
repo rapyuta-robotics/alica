@@ -8,7 +8,7 @@
 namespace alica
 {
 
-typedef std::tuple<uint64_t, std::vector<stdSyncData>> stdSyncTalk;
+typedef std::tuple<alica::AgentId, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk
 {
     SyncTalk()
@@ -17,7 +17,7 @@ struct SyncTalk
     }
     ~SyncTalk() {}
 
-    uint64_t senderID;
+    alica::AgentId senderID;
     std::vector<SyncData> syncData;
 
     SyncTalk(const stdSyncTalk& s)

@@ -22,7 +22,7 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(const AlicaEngine* ae, uint64_t myID, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(const AlicaEngine* ae, alica::AgentId myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -45,7 +45,7 @@ private:
     std::mutex _rowOkMutex;
     SyncModule* _syncModule;
     const Synchronisation* _synchronisation;
-    uint64_t _myID;
+    alica::AgentId _myID;
     SyncData* _lastTalkData;
     AlicaTime _lastTalkTime;
     AlicaTime _syncStartTime;

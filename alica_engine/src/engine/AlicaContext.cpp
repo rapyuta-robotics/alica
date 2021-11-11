@@ -25,7 +25,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
                                                 alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
-        , _idManager(std::make_unique<essentials::IDManager>())
 {}
 
 AlicaContext::~AlicaContext()
@@ -76,7 +75,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-uint64_t AlicaContext::getLocalAgentId() const
+alica::AgentId AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

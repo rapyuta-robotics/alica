@@ -19,7 +19,7 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, uint64_t myID, const Synchronisation* sync, SyncModule* sm)
+SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, AgentId myID, const Synchronisation* sync, SyncModule* sm)
         : _ae(ae)
         , _myID(myID)
         , _synchronisation(sync)
@@ -74,7 +74,7 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
     {
         std::lock_guard<mutex> lock(_syncMutex);
         if (_myRow) {
-            if (sd.conditionHolds != _myRow->getSyncData().conditionHolds || *(sd.agentID) != *(_myRow->getSyncData().agentID) ||
+            if (sd.conditionHolds != _myRow->getSyncData().conditionHolds || sd.agentID != _myRow->getSyncData().agentID ||
                     sd.transitionID != _myRow->getSyncData().transitionID) {
                 // my sync row has changed
                 _myRow->setSyncData(sd);
@@ -167,7 +167,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             // find row matching the received data
             SyncRow* rowInMatrix = nullptr;
             for (SyncRow* row : _syncMatrix) {
-                if (sd.conditionHolds == row->getSyncData().conditionHolds && *(sd.agentID) == *(row->getSyncData().agentID) &&
+                if (sd.conditionHolds == row->getSyncData().conditionHolds && sd.agentID == row->getSyncData().agentID &&
                         sd.transitionID == row->getSyncData().transitionID) {
                     rowInMatrix = row;
                     break;
@@ -215,7 +215,7 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
     // every robot that has acknowledged my row needs to send me a SyncReady
     bool found = false;
     for (std::shared_ptr<SyncReady>& sr : _receivedSyncReadys) {
-        if (*(sr->senderID) == *(ready->senderID)) {
+        if (sr->senderID == ready->senderID) {
             found = true;
             break;
         }
@@ -261,7 +261,7 @@ void SynchronisationProcess::sendSyncReady()
  */
 bool SynchronisationProcess::allSyncReady() const
 {
-    for (uint64_t robotID : _myRow->getReceivedBy()) {
+    for (AgentId robotID : _myRow->getReceivedBy()) {
         // we do not necessarily need an ack from ourselves
         if (robotID == _myID) {
             continue;
@@ -319,7 +319,7 @@ bool SynchronisationProcess::isSyncComplete()
         return false;
     }
     for (SyncRow* row : _rowsOK) {
-        uint64_t agentID = row->getSyncData().agentID;
+        AgentId agentID = row->getSyncData().agentID;
         if (std::find(_myRow->getReceivedBy().begin(), _myRow->getReceivedBy().end(), agentID) == _myRow->getReceivedBy().end()) {
             return false;
         }

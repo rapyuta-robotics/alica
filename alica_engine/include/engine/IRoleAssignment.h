@@ -22,7 +22,7 @@ public:
     virtual void update() = 0;
 
     const Role* getOwnRole() const { return _ownRole; }
-    const Role* getRole(uint64_t agentId) const;
+    const Role* getRole(alica::AgentId agentId) const;
     void setCommunication(const IAlicaCommunication* communication);
 
 protected:
@@ -30,7 +30,7 @@ protected:
      * Current Robot's role.
      */
     const Role* _ownRole;
-    std::map<uint64_t, const Role*> _robotRoleMapping;
+    std::map<alica::AgentId, const Role*> _robotRoleMapping;
     const IAlicaCommunication* communication;
 };
 } // namespace alica

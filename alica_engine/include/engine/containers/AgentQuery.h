@@ -10,7 +10,7 @@ struct AgentQuery
             , planHash(0)
     {
     }
-    uint64_t senderID;
+    alica::AgentId senderID;
     uint32_t senderSdk;
     uint32_t planHash;
 };
