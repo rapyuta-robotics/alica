@@ -152,4 +152,5 @@ void RunnableObject::traceInit(const std::string& type)
         _trace->setLog({"Init", "true"});
     }
 }
+
 } /* namespace alica */
