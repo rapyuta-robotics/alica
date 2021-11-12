@@ -59,19 +59,10 @@ bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp)
     /*PROTECTED REGION ID(1390829819585906015) ENABLED START*/
     for (const alica::RunningPlan* child : rp->getChildren()) {
         if (child->getStatus() == alica::PlanStatus::Success) {
-            std::cerr << "succeeding in subplan" << std::endl;
             return true;
         }
     }
     return false;
-    // if (rp->isBehaviour()) {
-    //     std::cerr << "isBehaviour" << std::endl;
-    //     if (rp->getStatus() == alica::PlanStatus::Success) {
-    //         std::cerr << "doTransition subPlan" << std::endl;
-    //     }
-    //     return rp->getStatus() == alica::PlanStatus::Success;
-    // }
-    // return false;
     /*PROTECTED REGION END*/
 }
 /**
