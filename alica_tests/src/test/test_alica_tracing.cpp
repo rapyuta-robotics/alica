@@ -45,7 +45,9 @@ TEST_F(AlicaTracingTest, runTracing)
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
     auto logs = alicaTests::TestWorldModel::getOne()->tracingLogs;
-    EXPECT_EQ(logs.size(), 9);
+
+    size_t expected_num_of_logs = 9;
+    EXPECT_EQ(logs.size(), expected_num_of_logs);
 
     auto log = logs.front(); // MasterPlan
     EXPECT_EQ(log.first, "Plan");
