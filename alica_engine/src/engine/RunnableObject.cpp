@@ -1,6 +1,7 @@
 #include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanInterface.h"
+
 #include <alica_common_config/debug_output.h>
 
 #include <assert.h>
@@ -22,60 +23,9 @@ RunnableObject::RunnableObject(const std::string& name)
 {
 }
 
-void RunnableObject::disableTracing()
-{
-    clearFlags(Flags::TRACING_ENABLED);
-}
-
-bool RunnableObject::isExecutingInContext() const
-{
-    Counter sc = _signalState.load(), ec = _execState.load();
-    return sc == ec && isActive(sc);
-}
-
-bool RunnableObject::isActive(Counter cnt)
-{
-    return !(cnt & 1);
-}
-
-AlicaTime RunnableObject::getInterval() const
-{
-    return _msInterval;
-}
-
-void RunnableObject::setInterval(int32_t msInterval)
-{
-    _msInterval = AlicaTime::milliseconds(msInterval);
-}
-
-void RunnableObject::setName(const std::string& name)
-{
-    _name = name;
-}
-
-void RunnableObject::setEngine(AlicaEngine* engine)
-{
-    _engine = engine;
-}
-
-void RunnableObject::setConfiguration(const Configuration* conf)
-{
-    _configuration = conf;
-}
-
 void RunnableObject::sendLogMessage(int level, const std::string& message) const
 {
     _engine->getCommunicator().sendLogMessage(level, message);
-}
-
-std::optional<IAlicaTrace*> RunnableObject::getTrace() const
-{
-    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
-}
-
-std::optional<std::string> RunnableObject::getTraceContext() const
-{
-    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
 }
 
 ThreadSafePlanInterface RunnableObject::getPlanContext() const

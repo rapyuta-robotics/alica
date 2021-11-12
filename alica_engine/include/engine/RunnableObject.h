@@ -14,9 +14,9 @@ namespace test
 class TestContext;
 }
 class Configuration;
-class AlicaEngine;
 class RunningPlan;
 class ThreadSafePlanInterface;
+class AlicaEngine;
 
 /**
  * The base class for BasicBehaviour and BasicPlan
@@ -26,17 +26,17 @@ class RunnableObject
 public:
     RunnableObject(const std::string& name = "");
     virtual ~RunnableObject() = default;
-    void setEngine(AlicaEngine* engine);
-    void setConfiguration(const Configuration* conf);
-    void setName(const std::string& name);
-    AlicaTime getInterval() const;
-    void setInterval(int32_t msInterval);
-    void disableTracing();
+    void setEngine(AlicaEngine* engine) { _engine = engine; };
+    void setConfiguration(const Configuration* conf) { _configuration = conf; };
+    void setName(const std::string& name) { _name = name; };
+    AlicaTime getInterval() const { return _msInterval; };
+    void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
+    void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
     void stop();
     void start(RunningPlan* rp);
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
-    std::optional<std::string> getTraceContext() const;
+    std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
 
 protected:
     using Counter = uint64_t;
@@ -65,14 +65,19 @@ protected:
     virtual void doInit() = 0;
     virtual void doTerminate() = 0;
 
-    std::optional<IAlicaTrace*> getTrace() const;
+    std::optional<IAlicaTrace*> getTrace() const { return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt; };
     void sendLogMessage(int level, const std::string& message) const;
     void setFlags(Flags flags) { _flags |= static_cast<uint8_t>(flags); }
     void clearFlags(Flags flags) { _flags &= ~static_cast<uint8_t>(flags); }
     bool areFlagsSet(Flags flags) { return (static_cast<uint8_t>(flags) & _flags) == static_cast<uint8_t>(flags); }
-    bool isExecutingInContext() const;
+    bool isExecutingInContext() const
+    {
+        Counter sc = _signalState.load();
+        Counter ec = _execState.load();
+        return sc == ec && isActive(sc);
+    };
     // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
-    static bool isActive(Counter cnt);
+    constexpr static bool isActive(Counter cnt) { return !(cnt & 1); };
     ThreadSafePlanInterface getPlanContext() const;
     void setTerminatedState();
     void traceTermination();
