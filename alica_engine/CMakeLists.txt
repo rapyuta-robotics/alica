@@ -10,16 +10,16 @@ find_package(yaml-cpp REQUIRED)
 ##ROS/Catkin
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS id_manager fsystem event_handling system_util alica_common_config alica_solver_interface)
+  find_package(catkin REQUIRED COMPONENTS id_manager fsystem event_handling alica_common_config alica_solver_interface)
 else (catkin_FOUND)
-  set(catkin_LIBRARIES "id_manager" "fsystem" "event_handling" "system_util" "alica_common_config" "alica_solver_interface")
+  set(catkin_LIBRARIES "id_manager" "fsystem" "event_handling" "alica_common_config" "alica_solver_interface")
 endif(catkin_FOUND)
 
 if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS id_manager fsystem event_handling system_util alica_common_config alica_solver_interface
+    CATKIN_DEPENDS id_manager fsystem event_handling alica_common_config alica_solver_interface
   )
 endif(catkin_FOUND)
 
