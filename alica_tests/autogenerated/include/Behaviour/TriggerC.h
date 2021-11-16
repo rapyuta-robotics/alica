@@ -4,7 +4,6 @@
 /*PROTECTED REGION ID(inc1428508355209) ENABLED START*/
 // Add additional includes here
 #include <alica_tests/TestWorldModel.h>
-#include <essentials/ITrigger.hpp>
 
 /*PROTECTED REGION END*/
 

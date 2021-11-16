@@ -6,8 +6,6 @@
 #include "engine/model/Behaviour.h"
 #include "engine/IAlicaTrace.h"
 
-#include <essentials/ITrigger.hpp>
-
 #include <atomic>
 #include <chrono>
 #include <condition_variable>

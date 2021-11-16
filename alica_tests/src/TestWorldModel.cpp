@@ -1,7 +1,5 @@
 #include <alica_tests/TestWorldModel.h>
 
-#include <essentials/EventTrigger.h>
-
 namespace alicaTests
 {
 
@@ -18,8 +16,6 @@ TestWorldModel* TestWorldModel::getTwo()
 }
 
 TestWorldModel::TestWorldModel()
-        : trigger1(new essentials::EventTrigger())
-        , trigger2(new essentials::EventTrigger())
 {
     reset();
 }

@@ -5,7 +5,6 @@
 // Add additional includes here
 #include <alica_tests/TestWorldModel.h>
 
-#include <essentials/ITrigger.hpp>
 /*PROTECTED REGION END*/
 
 namespace alica

@@ -6,7 +6,6 @@ add_compile_options(-std=c++17)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     fsystem
-    event_handling
     alica_engine
     alica_dummy_proxy
     alica_ros_proxy
