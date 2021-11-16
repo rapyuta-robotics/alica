@@ -77,7 +77,7 @@ public:
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
 protected:
-    alica::AgentId getOwnId() const;
+    AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
     void setSuccess();

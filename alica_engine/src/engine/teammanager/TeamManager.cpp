@@ -97,7 +97,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
     }
     const std::string localAgentName = _engine->getLocalAgentName();
 
-    if (_localAgentID == 0) {
+    if (_localAgentID == InvalidAgentID) {
         constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
         uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
         if (id != notAValidID) {
@@ -172,7 +172,7 @@ Agent* TeamManager::getAgent(AgentId agentId) const
     return nullptr;
 }
 
-    AgentId TeamManager::getLocalAgentID() const
+AgentId TeamManager::getLocalAgentID() const
 {
     return _localAgent->getId();
 }

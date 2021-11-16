@@ -14,6 +14,7 @@
 #include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
 #include "engine/IAlicaTrace.h"
+#include "engine/Types.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -81,7 +82,7 @@ struct AlicaContextParams
                        const std::string& roleSetName,
                        const std::string& masterPlanName,
                        bool stepEngine = false,
-                       const alica::AgentId agentID = 0)
+                       const AgentId agentID = InvalidAgentID)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName(roleSetName)
@@ -102,7 +103,7 @@ struct AlicaContextParams
      */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
-                       const alica::AgentId agentID)
+                       const AgentId agentID = InvalidAgentID)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName("RoleSet")
@@ -116,7 +117,7 @@ struct AlicaContextParams
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
-    alica::AgentId agentID;
+    AgentId agentID;
 };
 
 /*
@@ -322,7 +323,7 @@ public:
      *
      * @return Object representing id of local agent.
      */
-    alica::AgentId getLocalAgentId() const;
+    AgentId getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously

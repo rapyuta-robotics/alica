@@ -1,5 +1,7 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <iterator>
 #include <ostream>
 #include <tuple>
@@ -8,7 +10,7 @@
 namespace alica
 {
 
-typedef std::tuple<int64_t, std::vector<alica::AgentId>> stdEntryPointRobot;
+typedef std::tuple<int64_t, std::vector<AgentId>> stdEntryPointRobot;
 struct EntryPointRobots
 {
     EntryPointRobots()
@@ -17,7 +19,7 @@ struct EntryPointRobots
     }
 
     int64_t entrypoint;
-    std::vector<alica::AgentId> robots;
+    std::vector<AgentId> robots;
 
     EntryPointRobots(const stdEntryPointRobot& s)
     {
@@ -31,7 +33,7 @@ struct EntryPointRobots
 inline std::ostream& operator<<(std::ostream& o, const EntryPointRobots& epr)
 {
     o << "EP: " << epr.entrypoint << " Robots: ";
-    std::copy(epr.robots.begin(), epr.robots.end(), std::ostream_iterator<alica::AgentId>(o, ", "));
+    std::copy(epr.robots.begin(), epr.robots.end(), std::ostream_iterator<AgentId>(o, ", "));
     o << std::endl;
     return o;
 }

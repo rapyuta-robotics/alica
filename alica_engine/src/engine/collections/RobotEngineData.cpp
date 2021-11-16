@@ -64,7 +64,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
-    int64_t ret = static_cast<int64_t>(_agentId + std::hash<std::string>()(s));
+    int64_t ret = static_cast<int64_t>(std::hash<AgentId>()(_agentId) + std::hash<std::string>()(s));
     assert(!_engine->getModelManager().idExists(ret));
     return ret;
 }

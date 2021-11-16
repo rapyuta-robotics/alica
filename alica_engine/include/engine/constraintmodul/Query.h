@@ -15,6 +15,7 @@
 #include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
+# include "engine/Types.h"
 
 #include <alica_solver_interface/SolverContext.h>
 
@@ -76,7 +77,7 @@ public:
     void addStaticVariable(const alica::Variable* v);
     void addDomainVariable(const DomainVariable* domainVariable);
     [[deprecated("use addDomainVariable(const DomainVariable* domainVariable) instead")]]
-    void addDomainVariable(alica::AgentId robot, const std::string& ident, const AlicaEngine* ae);
+    void addDomainVariable(AgentId robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 

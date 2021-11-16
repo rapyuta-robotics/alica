@@ -8,6 +8,7 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/Types.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -20,7 +21,7 @@ namespace alica
  */
 AuthorityManager::AuthorityManager(AlicaEngine* engine)
         : _engine(engine)
-        , _localAgentID(0)
+        , _localAgentID(InvalidAgentID)
 {
 }
 

@@ -30,7 +30,7 @@ struct AgentQuery;
 class AgentsCache
 {
 public:
-    using AgentMap = std::map<alica::AgentId , Agent*>;
+    using AgentMap = std::map<AgentId , Agent*>;
 
     AgentsCache();
     ~AgentsCache();
@@ -47,12 +47,12 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine, alica::AgentId agentID);
+    TeamManager(AlicaEngine* engine, AgentId agentID);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
 
-    alica::AgentId getLocalAgentID() const;
+    AgentId getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
     Agent* editLocalAgent() { return _localAgent; }
 
@@ -60,15 +60,15 @@ public:
     ActiveAgentView getActiveAgents() const;
 
     int getTeamSize() const;
-    const Agent* getAgentByID(alica::AgentId agentId) const;
+    const Agent* getAgentByID(AgentId agentId) const;
 
-    void setTimeLastMsgReceived(alica::AgentId agendId, AlicaTime timeLastMsgReceived);
-    bool isAgentIgnored(alica::AgentId agentId) const;
-    bool isAgentActive(alica::AgentId agentId) const;
-    void setAgentIgnored(alica::AgentId , bool) const;
-    bool setSuccess(alica::AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(alica::AgentId agentId, const IdGrp& suceededEps);
-    const DomainVariable* getDomainVariable(alica::AgentId agentId, const std::string& sort) const;
+    void setTimeLastMsgReceived(AgentId agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(AgentId agentId) const;
+    bool isAgentActive(AgentId agentId) const;
+    void setAgentIgnored(AgentId , bool) const;
+    bool setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
+    bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
+    const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
     bool updateAgents(AgentGrp& deactivatedAgents);
@@ -81,7 +81,7 @@ private:
     void readSelfFromConfig(const YAML::Node& config);
     void announcePresence() const;
     void queryPresence() const;
-    Agent* getAgent(alica::AgentId agentId) const;
+    Agent* getAgent(AgentId agentId) const;
 
     AlicaTime _teamTimeOut;
     AlicaTime _agentAnnouncementTimeInterval;
@@ -93,10 +93,10 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
-    alica::AgentId _localAgentID;
+    AgentId _localAgentID;
 };
 
-class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
+class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>
 {
 public:
     ActiveAgentBaseIterator(AgentsCache::AgentMap::const_iterator it, const AgentsCache::AgentMap& map)
@@ -135,7 +135,7 @@ public:
             : ActiveAgentBaseIterator(it, map)
     {
     }
-    alica::AgentId operator*() const { return _it->first; }
+    AgentId operator*() const { return _it->first; }
 };
 
 class ActiveAgentIterator : public ActiveAgentBaseIterator

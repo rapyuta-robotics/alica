@@ -1,13 +1,15 @@
 #pragma once
 
+#include <engine/Types.h>
+
 namespace alica
 {
-typedef std::tuple<alica::AgentId, int64_t> stdRoleSwitch;
+typedef std::tuple<AgentId, int64_t> stdRoleSwitch;
 struct RoleSwitch
 {
     RoleSwitch()
-            : senderID(0)
-            , roleID(0)
+            : senderID(InvalidAgentID)
+            , roleID(InvalidAgentID)
     {
     }
 
@@ -17,7 +19,7 @@ struct RoleSwitch
     {
     }
 
-    alica::AgentId senderID;
+    AgentId senderID;
     int64_t roleID;
 
     stdRoleSwitch toStandard() const { return std::make_tuple(senderID, roleID); }

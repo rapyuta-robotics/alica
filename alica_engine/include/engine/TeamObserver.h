@@ -33,7 +33,7 @@ public:
     void tick(RunningPlan* root);
     void doBroadCast(const IdGrp& msg) const;
 
-    const std::map<alica::AgentId, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
+    const std::map<AgentId, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
     int successesInPlan(const Plan* plan) const;
     SuccessCollection createSuccessCollection(const Plan* plan) const;
@@ -46,7 +46,7 @@ public:
 private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
-    std::unique_ptr<SimplePlanTree> sptFromMessage(alica::AgentId agent, const IdGrp& ids, AlicaTime time) const;
+    std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
 
     AlicaEngine* _ae;
     TeamManager& _tm;
@@ -55,7 +55,7 @@ private:
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;
 
-    std::map<alica::AgentId, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
+    std::map<AgentId, std::unique_ptr<SimplePlanTree>> _simplePlanTrees;
     std::vector<std::pair<std::shared_ptr<PlanTreeInfo>, AlicaTime>> _msgQueue;
 };
 

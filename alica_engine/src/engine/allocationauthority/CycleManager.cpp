@@ -102,7 +102,7 @@ void CycleManager::update()
  */
 bool CycleManager::isOverridden() const
 {
-    return _state == CycleState::overridden && _fixedAllocation.authority != 0;
+    return _state == CycleState::overridden && _fixedAllocation.authority != InvalidAgentID;
 }
 
 AllocationDifference& CycleManager::editNextDifference()
@@ -214,7 +214,7 @@ bool CycleManager::applyAssignment()
 {
     ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << _rp->getActivePlan()->getName());
 
-    if (_fixedAllocation.authority == 0) {
+    if (_fixedAllocation.authority == InvalidAgentID) {
         return false;
     }
     const EntryPoint* myEntryPoint = nullptr;

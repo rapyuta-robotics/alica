@@ -26,7 +26,7 @@ public:
     const Condition* getCondition() const { return _condition; }
     const RunningPlan* getRunningPlan() const { return _runningPlan; }
     const std::vector<AgentVariables>& getAllVariables() const { return _vars; }
-    const AgentVariables& getVarsOfAgent(alica::AgentId id) const;
+    const AgentVariables& getVarsOfAgent(AgentId id) const;
 
     // TODO: get rid of the shared ptr
     std::shared_ptr<ProblemDescriptor> generateProblemDescriptor(ISolverBase& solver, const UniqueVarStore& uvs, SolverContext* ctx);

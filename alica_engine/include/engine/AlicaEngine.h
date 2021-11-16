@@ -16,6 +16,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/scheduler/Scheduler.h"
 #include "engine/scheduler/JobQueue.h"
+#include "engine/Types.h"
 
 #include <list>
 #include <string>
@@ -32,8 +33,6 @@ class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
 
-using AgentId = uint64_t;
-
 class AlicaEngine
 {
 public:
@@ -43,7 +42,7 @@ public:
 
     AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const AgentId agentID);
+                const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:

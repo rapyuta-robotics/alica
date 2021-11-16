@@ -2,6 +2,7 @@
 
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
+#include <engine/Types.h>
 
 namespace alica::test
 {
@@ -77,7 +78,7 @@ int Util::getTeamSize(alica::AlicaEngine* ae)
     return ae->getTeamManager().getTeamSize();
 }
 
-const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, AgentId agentID)
+const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, alica::AgentId agentID)
 {
     return ae->getTeamManager().getAgentByID(agentID);
 }

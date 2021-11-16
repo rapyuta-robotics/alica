@@ -53,7 +53,7 @@ private:
 
 //-----------------------------View & Iterator classes below
 // All iterators are const, as this is a const interface.
-class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, alica::AgentId>
+class PartialAssignmentIterator : public std::iterator<std::forward_iterator_tag, AgentId>
 {
 public:
     PartialAssignmentIterator(int agentIdx, int epIdx, const PartialAssignment* pas)
@@ -63,7 +63,7 @@ public:
     {
         toNextValid();
     }
-    alica::AgentId operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
+    AgentId operator*() const { return _pas->getProblem()->getAgents()[_agentIdx]; }
     PartialAssignmentIterator& operator++()
     {
         ++_agentIdx;
@@ -103,7 +103,7 @@ private:
     int _epIdx;
 };
 
-class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, alica::AgentId>
+class PartialAssignmentSuccessIteratorBase : public std::iterator<std::forward_iterator_tag, AgentId>
 {
 public:
     PartialAssignmentSuccessIteratorBase(int idx, bool successRange, int epIdx, const PartialAssignment* pas)
@@ -113,7 +113,7 @@ public:
             , _inSuccessRange(successRange)
     {
     }
-    alica::AgentId operator*() const
+    AgentId operator*() const
     {
         if (_inSuccessRange) {
             return (*_pas->getSuccessData()->getAgentsByIndex(_epIdx))[_agentIdx];

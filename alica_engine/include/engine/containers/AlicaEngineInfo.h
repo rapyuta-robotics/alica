@@ -1,25 +1,27 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <string>
 #include <tuple>
 #include <vector>
 
 namespace alica
 {
-typedef std::tuple<alica::AgentId, std::string, std::string, std::string, std::string, std::string, std::vector<alica::AgentId>> stdAlicaEngineInfo;
+typedef std::tuple<AgentId, std::string, std::string, std::string, std::string, std::string, std::vector<AgentId>> stdAlicaEngineInfo;
 struct AlicaEngineInfo
 {
     AlicaEngineInfo()
-            : senderID(0)
+            : senderID(InvalidAgentID)
     {
     }
-    alica::AgentId senderID;
+    AgentId senderID;
     std::string masterPlan;
     std::string currentPlan;
     std::string currentState;
     std::string currentRole;
     std::string currentTask;
-    std::vector<alica::AgentId> robotIDsWithMe;
+    std::vector<AgentId> robotIDsWithMe;
 
     AlicaEngineInfo(stdAlicaEngineInfo&& s)
     {

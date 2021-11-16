@@ -32,7 +32,7 @@ class Variable;
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using ConfAbstractPlanWrapperGrp = std::vector<const ConfAbstractPlanWrapper*>;
 using AgentId = uint64_t;
-using AgentGrp = std::vector<alica::AgentId>;
+using AgentGrp = std::vector<AgentId>;
 using AlicaElementGrp = std::vector<const AlicaElement*>;
 using CapabilityGrp = std::vector<const Capability*>;
 using CapValueGrp = std::vector<const CapValue*>;
@@ -53,6 +53,8 @@ using TransitionGrp = std::vector<const Transition*>;
 using VariableGrp = std::vector<const Variable*>;
 
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
-using AgentStatePair = std::pair<alica::AgentId, const State*>;
+using AgentStatePair = std::pair<AgentId, const State*>;
+
+constexpr  auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 
 } // namespace alica

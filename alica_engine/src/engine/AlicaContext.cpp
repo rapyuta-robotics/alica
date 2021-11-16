@@ -1,5 +1,6 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
 
 #include <essentials/FileSystem.h>
 
@@ -75,7 +76,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-alica::AgentId AlicaContext::getLocalAgentId() const
+AgentId AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

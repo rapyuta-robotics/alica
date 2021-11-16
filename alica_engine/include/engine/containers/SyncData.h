@@ -1,17 +1,18 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <iostream>
 #include <tuple>
 #include <sstream>
 
 namespace alica
 {
-using AgentId = uint64_t;
-typedef std::tuple<alica::AgentId, int64_t, bool, bool> stdSyncData;
+typedef std::tuple<AgentId, int64_t, bool, bool> stdSyncData;
 struct SyncData
 {
     SyncData()
-            : agentID(0)
+            : agentID(InvalidAgentID)
             , ack(false)
             , conditionHolds(false)
             , transitionID(0)
@@ -28,7 +29,7 @@ struct SyncData
 
     stdSyncData toStandard() const { return std::make_tuple(agentID, transitionID, conditionHolds, ack); }
 
-    alica::AgentId agentID;
+    AgentId agentID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;

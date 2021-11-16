@@ -10,7 +10,7 @@ namespace alica
 
 inline std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
 {
-    std::copy(ag.begin(), ag.end(), std::ostream_iterator<alica::AgentId>(out, " "));
+    std::copy(ag.begin(), ag.end(), std::ostream_iterator<AgentId>(out, " "));
     return out;
 }
 

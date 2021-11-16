@@ -3,13 +3,14 @@
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
+#include "engine/Types.h"
 #include <engine/SimplePlanTree.h>
 
 namespace alica
 {
 
 SimplePlanTree::SimplePlanTree()
-        : _agentId(0)
+        : _agentId(InvalidAgentID)
         , _parent(nullptr)
         , _state(nullptr)
         , _entryPoint(nullptr)

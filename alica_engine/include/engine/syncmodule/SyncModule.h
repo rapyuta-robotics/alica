@@ -1,5 +1,7 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <iostream>
 #include <list>
 #include <map>
@@ -18,8 +20,6 @@ struct SyncData;
 struct SyncReady;
 struct SyncTalk;
 class IAlicaCommunication;
-
-using AgentId = uint64_t;
 
 class SyncModule
 {
@@ -42,7 +42,7 @@ public:
 private:
     bool _running;
     const AlicaEngine* _ae;
-    alica::AgentId _myId;
+    AgentId _myId;
     unsigned long _ticks;
     std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
     std::map<const Synchronisation*, SynchronisationProcess*> _synchProcessMapping; /**< Mapping from synchronisations to their ongoing synchronisation process */

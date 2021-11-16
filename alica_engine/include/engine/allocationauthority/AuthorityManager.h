@@ -5,6 +5,7 @@
 #include "../IAlicaCommunication.h"
 #include "../RunningPlan.h"
 #include "../containers/AllocationAuthorityInfo.h"
+#include "engine/Types.h"
 
 #include <memory>
 #include <mutex>
@@ -34,7 +35,7 @@ private:
 
     std::vector<AllocationAuthorityInfo> _queue;
     AlicaEngine* _engine;
-    alica::AgentId _localAgentID;
+    AgentId _localAgentID;
     std::mutex _mutex;
 };
 } /* namespace alica */

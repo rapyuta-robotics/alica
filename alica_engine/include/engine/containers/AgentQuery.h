@@ -1,16 +1,18 @@
 #pragma once
 
+#include "engine/Types.h"
+
 namespace alica
 {
 struct AgentQuery
 {
     AgentQuery()
-            : senderID(0)
+            : senderID(InvalidAgentID)
             , senderSdk(0)
             , planHash(0)
     {
     }
-    alica::AgentId senderID;
+    AgentId senderID;
     uint32_t senderSdk;
     uint32_t planHash;
 };

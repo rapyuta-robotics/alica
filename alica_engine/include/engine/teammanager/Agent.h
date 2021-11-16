@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/Types.h"
 
 #include <list>
 #include <memory>
@@ -20,8 +21,6 @@ class DomainVariable;
 class SuccessMarks;
 struct AgentAnnouncement;
 
-using AgentId = uint64_t;
-
 class Agent
 {
     // allows the TeamManager to call setTimeLastMsgReceived(..)
@@ -31,7 +30,7 @@ class Agent
 public:
     ~Agent();
 
-    alica::AgentId getId() const { return _id; }
+    AgentId getId() const { return _id; }
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
@@ -47,7 +46,7 @@ private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
-    alica::AgentId _id;
+    AgentId _id;
     bool _active;
     bool _ignored;
     bool _local;

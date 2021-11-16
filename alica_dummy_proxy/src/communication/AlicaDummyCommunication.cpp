@@ -13,6 +13,7 @@
 #include "engine/containers/SolverResult.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
+#include "engine/Types.h"
 
 namespace alicaDummyProxy
 {

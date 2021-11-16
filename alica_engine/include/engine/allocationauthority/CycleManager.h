@@ -4,6 +4,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
+#include "engine/Types.h"
 
 #include <mutex>
 #include <thread>
@@ -52,7 +53,7 @@ private:
     int _newestAllocationDifference;
     int _maxAllocationCycles;
     bool _enabled;
-    alica::AgentId _myID;
+    AgentId _myID;
     AlicaTime _overrideTimestamp;
     double _intervalIncFactor;
     double _intervalDecFactor;

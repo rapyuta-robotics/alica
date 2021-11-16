@@ -67,7 +67,7 @@ private:
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;
-    bool addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<alica::AgentId, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap);
+    bool addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentId, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap);
 
 #ifdef EXPANSIONEVAL
     int _expansionCount;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/containers/SyncData.h"
+#include "engine/Types.h"
 
 #include <tuple>
 #include <vector>
@@ -8,16 +9,16 @@
 namespace alica
 {
 
-typedef std::tuple<alica::AgentId, std::vector<stdSyncData>> stdSyncTalk;
+typedef std::tuple<AgentId, std::vector<stdSyncData>> stdSyncTalk;
 struct SyncTalk
 {
     SyncTalk()
-            : senderID(0)
+            : senderID(InvalidAgentID)
     {
     }
     ~SyncTalk() {}
 
-    alica::AgentId senderID;
+    AgentId senderID;
     std::vector<SyncData> syncData;
 
     SyncTalk(const stdSyncTalk& s)

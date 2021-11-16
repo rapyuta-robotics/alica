@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EntryPointRobots.h"
+#include "engine/Types.h"
 
 #include <iterator>
 #include <ostream>
@@ -10,11 +11,11 @@
 namespace alica
 {
 
-typedef std::tuple<alica::AgentId, int64_t, int64_t, int64_t, alica::AgentId, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+typedef std::tuple<AgentId, int64_t, int64_t, int64_t, AgentId, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()
-            : senderID(0)
+            : senderID(InvalidAgentID)
             , planId(0)
             , parentState(0)
             , planType(0)
@@ -22,11 +23,11 @@ struct AllocationAuthorityInfo
     {
     }
 
-    alica::AgentId senderID;
+    AgentId senderID;
     int64_t planId;
     int64_t parentState;
     int64_t planType;
-    alica::AgentId authority;
+    AgentId authority;
     std::vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)

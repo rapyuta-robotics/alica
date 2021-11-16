@@ -11,7 +11,7 @@ template <class T>
 class AgentElements
 {
 public:
-    AgentElements(alica::AgentId id)
+    AgentElements(AgentId id)
             : _id(id)
     {
     }
@@ -31,7 +31,7 @@ public:
         _vars = std::move(o._vars);
         return *this;
     }
-    alica::AgentId getId() const { return _id; }
+    AgentId getId() const { return _id; }
 
     const std::vector<T>& getVars() const { return _vars; }
     std::vector<T>& editVars() { return _vars; }
@@ -43,7 +43,7 @@ public:
     bool operator>=(const AgentElements& o) const { return !(_id < o._id); }
 
 private:
-    alica::AgentId _id;
+    AgentId _id;
     std::vector<T> _vars;
 };
 

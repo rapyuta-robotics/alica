@@ -22,7 +22,7 @@ class ForallAgents : public Quantifier
 public:
     ForallAgents();
     virtual ~ForallAgents();
-    bool isAgentInScope(alica::AgentId id, const RunningPlan& rp) const override;
+    bool isAgentInScope(AgentId id, const RunningPlan& rp) const override;
     bool addDomainVariables(const RunningPlan& p, std::vector<AgentVariables>& io_agentVarsInScope) const override;
 
 private:
@@ -32,7 +32,7 @@ private:
         MODIFIED,
         NONE
     };
-    Result TryAddId(alica::AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const;
+    Result TryAddId(AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const;
 };
 
 } // namespace alica

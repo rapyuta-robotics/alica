@@ -1,18 +1,20 @@
 #pragma once
 
+#include <engine/Types.h>
+
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<alica::AgentId, int64_t> stdSyncReady;
+typedef std::tuple<AgentId, int64_t> stdSyncReady;
 struct SyncReady
 {
     SyncReady()
-            : senderID(0)
+            : senderID(InvalidAgentID)
             , synchronisationID(0)
     {
     }
-    alica::AgentId senderID;
+    AgentId senderID;
     int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)
