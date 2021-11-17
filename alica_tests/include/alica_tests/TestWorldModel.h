@@ -1,8 +1,7 @@
 #pragma once
 
-#include <essentials/ITrigger.hpp>
-
 #include <vector>
+#include <string>
 
 namespace alicaTests
 {
@@ -57,8 +56,6 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
-    std::shared_ptr<essentials::ITrigger> trigger1;
-    std::shared_ptr<essentials::ITrigger> trigger2;
     std::vector<std::string> configParameter;
 
     void reset();

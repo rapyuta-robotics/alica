@@ -128,6 +128,7 @@ void AlicaEngine::terminate()
     _syncModul.close();
     _teamObserver.close();
     _log.close();
+    _variableSyncModule->close();
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const
@@ -148,6 +149,11 @@ const IAlicaTraceFactory* AlicaEngine::getTraceFactory() const
 std::string AlicaEngine::getLocalAgentName() const
 {
     return _ctx.getLocalAgentName();
+}
+
+IAlicaTimerFactory& AlicaEngine::getTimerFactory() const
+{
+    return _ctx.getTimerFactory();
 }
 
 /**

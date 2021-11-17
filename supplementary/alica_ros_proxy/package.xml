@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_ros_proxy</name>
+  <version>0.0.0</version>
+  <description>The alica_ros_proxy package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>alica_engine</depend>
+  <depend>alica_common_config</depend>
+  <depend>alica_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>id_ros</depend>
+  <build_depend>message_generation</build_depend>
+
+  <exec_depend>message_runtime</exec_depend>
+  
+  <test_depend>gtest</test_depend>
+
+  <export>
+  </export>
+</package>
