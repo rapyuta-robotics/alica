@@ -98,9 +98,8 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
     const std::string localAgentName = _engine->getLocalAgentName();
 
     if (_localAgentID == InvalidAgentID) {
-        constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-        uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
-        if (id != notAValidID) {
+        uint64_t id = config["Local"]["ID"].as<uint64_t>(InvalidAgentID);
+        if (id != InvalidAgentID) {
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = _engine->generateID();
