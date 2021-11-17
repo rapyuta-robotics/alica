@@ -1,2 +1,2 @@
-id_ros/ID sender_id
+uint64 sender_id
 int64 sync_transition_id
