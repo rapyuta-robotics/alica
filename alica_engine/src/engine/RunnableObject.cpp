@@ -54,10 +54,6 @@ void RunnableObject::start(RunningPlan* rp)
 
 void RunnableObject::setTerminatedState()
 {
-    if (_activeRunJobId != -1) {
-        _engine->editScheduler().cancelJob(_activeRunJobId);
-        _activeRunJobId = -1;
-    }
     ++_execState;
 
     clearFlags(Flags::RUN_TRACED);

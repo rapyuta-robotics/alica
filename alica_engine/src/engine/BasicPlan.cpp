@@ -52,6 +52,10 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
+    if (_activeRunJobId != -1) {
+        _engine->editScheduler().cancelJob(_activeRunJobId);
+        _activeRunJobId = -1;
+    }
     setTerminatedState();
     try {
         traceTermination();
