@@ -28,11 +28,23 @@ class EntryPoint;
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
-class BasicBehaviour : public RunnableObject
+class BasicBehaviour : private RunnableObject
 {
 public:
     BasicBehaviour(const std::string& name);
     virtual ~BasicBehaviour(){};
+
+    // Use of private inheritance and explciltly making members public
+    // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
+    using RunnableObject::getPlanContext;
+    using RunnableObject::getTraceContext;
+    using RunnableObject::setConfiguration;
+    using RunnableObject::setEngine;
+    using RunnableObject::setInterval;
+    using RunnableObject::setName;
+    using RunnableObject::start;
+    using RunnableObject::stop;
+
     virtual void run(void* msg) = 0;
 
     // This method returns true when it is safe to delete the RunningPlan instance that is passed to it

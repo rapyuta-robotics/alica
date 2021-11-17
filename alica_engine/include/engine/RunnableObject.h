@@ -23,7 +23,7 @@ class AlicaEngine;
  */
 class RunnableObject
 {
-public:
+protected:
     RunnableObject(const std::string& name = "");
     virtual ~RunnableObject() = default;
     void setEngine(AlicaEngine* engine) { _engine = engine; };
@@ -38,7 +38,6 @@ public:
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
     std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
 
-protected:
     using Counter = uint64_t;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
