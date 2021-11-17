@@ -27,20 +27,11 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(const std::string& name)
-        : _name(name)
+        : RunnableObject(name)
         , _behaviour(nullptr)
-        , _engine(nullptr)
-        , _configuration(nullptr)
-        , _msInterval(AlicaTime::milliseconds(100))
         , _msDelayedStart(AlicaTime::milliseconds(0))
-        , _signalContext(nullptr)
-        , _execContext(nullptr)
-        , _signalState(1)
-        , _execState(1)
         , _behResult(BehResult::UNKNOWN)
-        , _activeRunJobId(-1)
         , _triggeredJobRunning(false)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
 {
 }
 
@@ -51,48 +42,6 @@ BasicBehaviour::BasicBehaviour(const std::string& name)
 essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
-}
-
-/**
- * Stops the execution of this BasicBehaviour.
- */
-bool BasicBehaviour::stop()
-{
-    if (!isActive(_signalState.load())) {
-        return true;
-    }
-    ++_signalState;
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::terminateJob, this));
-    return true;
-}
-
-/**
- * Starts the execution of this BasicBehaviour.
- */
-bool BasicBehaviour::start(RunningPlan* rp)
-{
-    if (isActive(_signalState.load())) {
-        return true;
-    }
-    // Increment _signalState before setting the signal context, see initJob() for explanation
-    ++_signalState;
-    _signalContext.store(rp);
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
-    return true;
-}
-
-void BasicBehaviour::setSuccess()
-{
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::SUCCESS);
-    if (prev != BehResult::SUCCESS) {
-        _engine->editPlanBase().addFastPathEvent(_execContext.load());
-        if (_trace) {
-            _trace->setTag("Result", "Success");
-        }
-    }
 }
 
 void BasicBehaviour::setFailure()
@@ -114,7 +63,7 @@ bool BasicBehaviour::isTriggeredRunFinished()
     return !_triggeredJobRunning.load();
 }
 
-void BasicBehaviour::initJob()
+void BasicBehaviour::doInit()
 {
     assert(_behResult.load() == BehResult::UNKNOWN);
     ++_execState;
@@ -130,19 +79,9 @@ void BasicBehaviour::initJob()
     // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
     // when the behaviour is terminated
     _execContext = _signalContext.exchange(nullptr);
-
-    // Get closest parent that has a trace
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
-        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
-    }
-
+    initTrace();
     try {
-        if (_trace) {
-            _trace->setLog({"Behaviour", "true"});
-            _trace->setLog({"Init", "true"});
-        }
+        traceInit("Behaviour");
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
@@ -159,10 +98,7 @@ void BasicBehaviour::runJob(void* msg)
 {
     // TODO: get rid of msg
     try {
-        if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
-            _trace->setLog({"Run", "true"});
-            setFlags(Flags::RUN_TRACED);
-        }
+        traceRun();
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
@@ -180,31 +116,20 @@ void BasicBehaviour::doTrigger()
     _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
 }
 
-void BasicBehaviour::terminateJob()
+void BasicBehaviour::doTerminate()
 {
-    // There will be no run job if the interval is 0 or init is not executed
+
     if (_activeRunJobId != -1) {
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
-    ++_execState;
-
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
-        // Reset the execution context so that the RunningPlan instance can be deleted
-        _execContext.store(nullptr);
-        return;
-    }
-    clearFlags(Flags::INIT_EXECUTED);
+    setTerminatedState();
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
-        if (_trace) {
-            _trace->setLog({"Terminate", "true"});
-            _trace.reset();
-        }
+        traceTermination();
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
@@ -212,11 +137,6 @@ void BasicBehaviour::terminateJob()
 
     // Reset the execution context so that the RunningPlan instance can be deleted
     _execContext.store(nullptr);
-}
-
-void BasicBehaviour::sendLogMessage(int level, const std::string& message) const
-{
-    _engine->getCommunicator().sendLogMessage(level, message);
 }
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
@@ -236,14 +156,18 @@ bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut)
     }
 }
 
-std::optional<IAlicaTrace*> BasicBehaviour::getTrace() const
+void BasicBehaviour::setSuccess()
 {
-    return _trace ? std::optional<IAlicaTrace*>(_trace.get()) : std::nullopt;
-}
-
-std::optional<std::string> BasicBehaviour::getTraceContext() const
-{
-    return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
+    if (!isExecutingInContext()) {
+        return;
+    }
+    auto prev = _behResult.exchange(BehResult::SUCCESS);
+    if (prev != BehResult::SUCCESS) {
+        _engine->editPlanBase().addFastPathEvent(_execContext.load());
+        if (_trace) {
+            _trace->setTag("Result", "Success");
+        }
+    }
 }
 
 } /* namespace alica */
