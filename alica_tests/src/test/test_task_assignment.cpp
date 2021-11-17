@@ -138,7 +138,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
 //    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
 
-    int harryId = 8;
+    uint64_t harryId = 8;
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
     EXPECT_TRUE(o_plans[0]->getAssignment().isValid());
