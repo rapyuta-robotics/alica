@@ -6,8 +6,6 @@
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 
-#include <essentials/ITrigger.hpp>
-
 #include <atomic>
 #include <chrono>
 #include <condition_variable>

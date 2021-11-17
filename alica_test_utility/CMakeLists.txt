@@ -22,7 +22,6 @@ include_directories(
 add_library(${PROJECT_NAME}
 	src/TestBehaviourCreator.cpp
 	src/TestContext.cpp
-	src/BehaviourTrigger.cpp
 	src/IdleBehaviour.cpp
 	src/Util.cpp
 )

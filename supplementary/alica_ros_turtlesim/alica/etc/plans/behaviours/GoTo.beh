@@ -1,0 +1,13 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 4054297592460872311,
+  "name": "GoTo",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}

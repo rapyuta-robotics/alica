@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_ros_turtlesim</name>
+  <version>0.0.1</version>
+  <description>
+    contains base file for alica_turtle behaviour which uses ALICA engine
+  </description>
+  <maintainer email="yu.okamoto@rapyuta-robotics.com">Yu Okamoto</maintainer>
+  <license>Commercial</license>
+
+  <author>Yu Okamoto</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>turtlesim</depend>
+  <depend>geometry_msgs</depend>
+
+  <depend>alica_common_config</depend>
+  <depend>alica_engine</depend>
+
+  <depend>id_ros</depend>
+  <depend>alica_ros_proxy</depend>
+  <depend>constraintsolver</depend>
+</package>

@@ -11,7 +11,6 @@
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
-#include <essentials/EventTrigger.h>
 
 #include <condition_variable>
 #include <mutex>

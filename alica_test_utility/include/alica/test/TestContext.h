@@ -2,8 +2,6 @@
 
 #include <engine/AlicaContext.h>
 
-#include "BehaviourTrigger.h"
-
 #include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/PlanRepository.h>
@@ -21,7 +19,6 @@
 namespace alica::test
 {
 class TestBehaviourCreator;
-class BehaviourTrigger;
 class TestContext : public alica::AlicaContext
 {
 public:
@@ -65,17 +62,6 @@ public:
     bool makeBehaviourEventDriven(int64_t behaviourID);
 
     /**
-     * Adds the given trigger to the lookup table of triggers, if none is known already for
-     * the given behaviour and configuration ID pair.
-     * @param behaviourID ID of the Behaviour
-     * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
-     * @param trigger Optional trigger, if not given, a standard trigger is created and returned.
-     * @return Returns the created trigger, if no trigger was passed. Otherwise, the passed trigger is returned.
-     */
-    std::shared_ptr<essentials::ITrigger> addBehaviourTrigger(
-            int64_t behaviourID, int64_t configurationID = 0, std::shared_ptr<essentials::ITrigger> trigger = nullptr);
-
-    /**
      * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
      * to check properties of their domain specific behaviours.
      * @param behaviourID ID of the Behaviour
@@ -83,18 +69,6 @@ public:
      * @return Shared Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
      */
     std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
-
-    /**
-     * Triggers the given behaviour to execute its run method one time.
-     *
-     * @param timeout Timeout for waiting the behaviour to finish its run method.
-     * @param behaviourID The ID of the behaviour that should be stepped.
-     * @param configurationID Optional parameter for distinguishing different BasicBehaviour instances. 0 identifies
-     * all BasicBehaviour instances that have no configuration attached.
-     * @return True, if the behaviour finished its run method in time. False, in case of timeout or unknown IDs.
-     */
-    template <typename Rep, typename Period>
-    bool stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID = 0);
 
     /**
      * Allows to retrieve the name of an AlicaElement.
@@ -137,7 +111,6 @@ private:
         }
     };
 
-    std::unordered_map<std::pair<int64_t, int64_t>, std::shared_ptr<essentials::ITrigger>, hash_pair> _behaviourTriggers;
     bool _initCalled;
 };
 
@@ -180,29 +153,6 @@ bool TestContext::stepUntilStateReached(int64_t state, std::chrono::duration<Rep
         }
     }
     std::cerr << "[TestContext] Stuck in state: " << std::endl << _engine->getPlanBase().getDeepestNode()->getActiveState()->toString() << std::endl;
-    return false;
-}
-
-template <typename Rep, typename Period>
-bool TestContext::stepBehaviour(std::chrono::duration<Rep, Period> timeout, int64_t behaviourID, int64_t configurationID)
-{
-    auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
-    auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
-
-    if (behaviourTriggerEntry != _behaviourTriggers.end()) {
-        _behaviourTriggers[behaviourConfKey]->run(false);
-    } else {
-        std::cerr << "[TestContext] There is no trigger known for the given <behaviourID,configurationID>-Pair in case of <" << behaviourID << ", "
-                  << configurationID << ">. Either trigger it yourself or register the trigger to the TestContext first." << std::endl;
-    }
-
-    auto basicBehaviour = getBasicBehaviour(behaviourID, configurationID);
-    auto start = std::chrono::system_clock::now();
-    while (std::chrono::system_clock::now() - start < timeout) {
-        if (basicBehaviour->isTriggeredRunFinished()) {
-            return true;
-        }
-    }
     return false;
 }
 
