@@ -29,7 +29,7 @@ void Condition::setConditionString(const std::string& conditionString)
     _conditionString = conditionString;
 }
 
-bool Condition::evaluate(const RunningPlan& rp) const
+bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel& wm) const
 {
     if (_basicCondition == nullptr) {
         ALICA_ERROR_MSG("Condition: Missing implementation of condition: ID " << getId());
@@ -38,7 +38,7 @@ bool Condition::evaluate(const RunningPlan& rp) const
         bool ret = false;
         try {
             // TODO: fix const cast below
-            ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer());
+            ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), wm);
         } catch (const std::exception& e) {
             ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());
         }

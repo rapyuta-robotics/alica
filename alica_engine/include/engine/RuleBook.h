@@ -23,6 +23,7 @@ class UtilityFunction;
 class AlicaEngine;
 class TeamObserver;
 class TeamManager;
+class IAlicaWorldModel;
 
 /**
  * Defines the operational semantics of the used ALICA dialect.
@@ -33,7 +34,7 @@ public:
     RuleBook(AlicaEngine* ae, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
-    PlanChange visit(RunningPlan& r);
+    PlanChange visit(RunningPlan& r, IAlicaWorldModel& wm);
     PlanChange updateChange(PlanChange cur, PlanChange update);
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
@@ -49,8 +50,8 @@ private:
     int _maxConsecutiveChanges;
     bool _changeOccurred;
 
-    PlanChange synchTransitionRule(RunningPlan& rp);
-    PlanChange transitionRule(RunningPlan& r);
+    PlanChange synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel& wm);
+    PlanChange transitionRule(RunningPlan& r, const IAlicaWorldModel& wm);
     PlanChange topFailRule(RunningPlan& r);
     PlanChange allocationRule(RunningPlan& r);
     PlanChange authorityOverrideRule(RunningPlan& r);

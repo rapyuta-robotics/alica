@@ -2,6 +2,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
+#include "engine/IAlicaWorldModel.h"
 
 namespace alica
 {
@@ -16,12 +17,12 @@ Transition::Transition()
 
 Transition::~Transition() {}
 
-bool Transition::evalCondition(const RunningPlan& r) const
+bool Transition::evalCondition(const RunningPlan& r, const IAlicaWorldModel& wm) const
 {
     if (!_preCondition) {
         std::cerr << "Transition " << this->getId() << " has no precondition attached!" << std::endl;
     }
-    return _preCondition && _preCondition->evaluate(r);
+    return _preCondition && _preCondition->evaluate(r, wm);
 }
 
 void Transition::setPreCondition(PreCondition* preCondition)

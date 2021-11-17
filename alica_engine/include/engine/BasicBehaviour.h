@@ -29,7 +29,7 @@ class EntryPoint;
 class BasicBehaviour : private RunnableObject
 {
 public:
-    BasicBehaviour(const std::string& name);
+    BasicBehaviour(const std::string& name, IAlicaWorldModel* wm);
     virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explciltly making members public

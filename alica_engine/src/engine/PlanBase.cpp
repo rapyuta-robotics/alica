@@ -267,7 +267,7 @@ void PlanBase::run(const Plan* masterPlan)
                 if (rp->isActive()) {
                     bool first = true;
                     while (rp != nullptr) {
-                        PlanChange change = _ruleBook.visit(*rp);
+                        PlanChange change = _ruleBook.visit(*rp, *(_ae->getWorldModel()));
                         if (!first && change == PlanChange::NoChange) {
                             break;
                         }
