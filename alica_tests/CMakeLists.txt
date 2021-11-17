@@ -7,7 +7,6 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     fsystem
-    event_handling
     alica_engine
     alica_dummy_proxy
     alica_simple_solver
