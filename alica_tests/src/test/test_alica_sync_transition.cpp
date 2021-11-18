@@ -58,10 +58,10 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     for (int i = 0; i < 20; i++) {
-        std::cout << i << "AE ----------------------------------------------- " << *(acs[0]->getLocalAgentId()) << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << acs[0]->getLocalAgentId() << std::endl;
         acs[0]->stepEngine();
 
-        std::cout << i << "AE ----------------------------------------------- " << *(acs[1]->getLocalAgentId()) << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << acs[1]->getLocalAgentId() << std::endl;
         acs[1]->stepEngine();
 
         if (i == 2) {

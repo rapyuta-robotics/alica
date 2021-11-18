@@ -5,8 +5,6 @@
 #include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <list>
 #include <map>
 #include <memory>
@@ -32,7 +30,7 @@ struct AgentQuery;
 class AgentsCache
 {
 public:
-    using AgentMap = std::map<essentials::IdentifierConstPtr, Agent*>;
+    using AgentMap = std::map<AgentId , Agent*>;
 
     AgentsCache();
     ~AgentsCache();
@@ -49,12 +47,12 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID = nullptr);
+    TeamManager(AlicaEngine* engine, AgentId agentID);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
 
-    essentials::IdentifierConstPtr getLocalAgentID() const;
+    AgentId getLocalAgentID() const;
     const Agent* getLocalAgent() const { return _localAgent; }
     Agent* editLocalAgent() { return _localAgent; }
 
@@ -62,15 +60,15 @@ public:
     ActiveAgentView getActiveAgents() const;
 
     int getTeamSize() const;
-    const Agent* getAgentByID(essentials::IdentifierConstPtr agentId) const;
+    const Agent* getAgentByID(AgentId agentId) const;
 
-    void setTimeLastMsgReceived(essentials::IdentifierConstPtr agendId, AlicaTime timeLastMsgReceived);
-    bool isAgentIgnored(essentials::IdentifierConstPtr agentId) const;
-    bool isAgentActive(essentials::IdentifierConstPtr agentId) const;
-    void setAgentIgnored(essentials::IdentifierConstPtr, bool) const;
-    bool setSuccess(essentials::IdentifierConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(essentials::IdentifierConstPtr agentId, const IdGrp& suceededEps);
-    const DomainVariable* getDomainVariable(essentials::IdentifierConstPtr agentId, const std::string& sort) const;
+    void setTimeLastMsgReceived(AgentId agendId, AlicaTime timeLastMsgReceived);
+    bool isAgentIgnored(AgentId agentId) const;
+    bool isAgentActive(AgentId agentId) const;
+    void setAgentIgnored(AgentId , bool) const;
+    bool setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
+    bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
+    const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
     bool updateAgents(AgentGrp& deactivatedAgents);
@@ -83,7 +81,7 @@ private:
     void readSelfFromConfig(const YAML::Node& config);
     void announcePresence() const;
     void queryPresence() const;
-    Agent* getAgent(essentials::IdentifierConstPtr agentId) const;
+    Agent* getAgent(AgentId agentId) const;
 
     AlicaTime _teamTimeOut;
     AlicaTime _agentAnnouncementTimeInterval;
@@ -95,10 +93,10 @@ private:
     AgentsCache _agentsCache;
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
-    essentials::IdentifierConstPtr _localAgentID;
+    AgentId _localAgentID;
 };
 
-class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, essentials::IdentifierConstPtr>
+class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>
 {
 public:
     ActiveAgentBaseIterator(AgentsCache::AgentMap::const_iterator it, const AgentsCache::AgentMap& map)
@@ -137,7 +135,7 @@ public:
             : ActiveAgentBaseIterator(it, map)
     {
     }
-    essentials::IdentifierConstPtr operator*() const { return _it->first; }
+    AgentId operator*() const { return _it->first; }
 };
 
 class ActiveAgentIterator : public ActiveAgentBaseIterator

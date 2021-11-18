@@ -24,7 +24,7 @@ ForallAgents::ForallAgents()
 
 ForallAgents::~ForallAgents() {}
 
-ForallAgents::Result ForallAgents::TryAddId(essentials::IdentifierConstPtr id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
+ForallAgents::Result ForallAgents::TryAddId(AgentId id, std::vector<AgentVariables>& io_agentVarsInScope, const TeamManager& tm) const
 {
     std::vector<AgentVariables>::iterator it =
             std::find_if(io_agentVarsInScope.begin(), io_agentVarsInScope.end(), [id](const AgentVariables& av) { return av.getId() == id; });
@@ -53,7 +53,7 @@ ForallAgents::Result ForallAgents::TryAddId(essentials::IdentifierConstPtr id, s
     }
 }
 
-bool ForallAgents::isAgentInScope(essentials::IdentifierConstPtr id, const RunningPlan& rp) const
+bool ForallAgents::isAgentInScope(AgentId id, const RunningPlan& rp) const
 {
     switch (getScopeType()) {
     case PLANSCOPE:
@@ -79,7 +79,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
     switch (getScopeType()) {
     case PLANSCOPE:
         if (p.getActivePlan() == getScopedPlan()) {
-            for (essentials::IdentifierConstPtr id : p.getAssignment().getAllAgents()) {
+            for (AgentId id : p.getAssignment().getAllAgents()) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;
@@ -88,7 +88,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
         break;
     case ENTRYPOINTSCOPE:
         if (p.getActivePlan() == getScopedEntryPoint()->getPlan()) {
-            for (essentials::IdentifierConstPtr id : p.getAssignment().getAgentsWorking(getScopedEntryPoint())) {
+            for (AgentId id : p.getAssignment().getAgentsWorking(getScopedEntryPoint())) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;
@@ -98,7 +98,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
 
     case STATESCOPE:
         if (p.getActivePlan() == getScopedState()->getInPlan()) {
-            for (essentials::IdentifierConstPtr id : p.getAssignment().getAgentsInState(getScopedState())) {
+            for (AgentId id : p.getAssignment().getAgentsInState(getScopedState())) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;

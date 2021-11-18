@@ -51,7 +51,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
     _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
     _distThreshold = config["Alica"]["CSPSolving"]["SeedMergingThreshold"].as<double>();
 
-    essentials::IdentifierConstPtr ownId = _ae->getTeamManager().getLocalAgentID();
+    AgentId ownId = _ae->getTeamManager().getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));
@@ -92,7 +92,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
 
     ResultEntry* re = nullptr;
     for (std::unique_ptr<ResultEntry>& r : _store) {
-        if (*(r->getId()) == *(msg.senderID)) {
+        if ((r->getId()) == (msg.senderID)) {
             re = r.get();
             break;
         }

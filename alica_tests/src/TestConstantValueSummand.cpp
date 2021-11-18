@@ -14,7 +14,7 @@ namespace alica
 
 TestConstantValueSummand::TestConstantValueSummand(double weight, double val)
         : USummand(weight)
-        , robotId(nullptr)
+        , robotId(0)
         , val(val)
 {
 }
