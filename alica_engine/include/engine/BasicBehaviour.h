@@ -29,7 +29,7 @@ class EntryPoint;
 class BasicBehaviour : private RunnableObject
 {
 public:
-    BasicBehaviour(const std::string& name, IAlicaWorldModel* wm);
+    BasicBehaviour(IAlicaWorldModel* wm, const std::string& name);
     virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explciltly making members public
@@ -42,6 +42,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getWorldModel;
 
     virtual void run(void* msg) = 0;
 

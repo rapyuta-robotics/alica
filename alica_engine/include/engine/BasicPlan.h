@@ -21,6 +21,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getWorldModel;
 
 protected:
     virtual void onInit(){};
