@@ -5,8 +5,7 @@
  *      Author: Paul Panin
  */
 
-#ifndef PLANCHANGE_H_
-#define PLANCHANGE_H_
+#pragma once
 
 namespace alica
 {
@@ -21,5 +20,3 @@ enum PlanChange
     FailChange      //!< FailChange, change occurred and led to a failure, upper level should react
 };
 } // namespace alica
-
-#endif /* PLANCHANGE_H_ */

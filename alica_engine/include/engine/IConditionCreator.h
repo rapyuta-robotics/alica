@@ -5,9 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#ifndef ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONDITIONCREATOR_H_
-#define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONDITIONCREATOR_H_
-
+#pragma once
 #include "engine/BasicCondition.h"
 
 namespace alica
@@ -22,5 +20,3 @@ public:
 };
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONDITIONCREATOR_H_ */

@@ -5,8 +5,7 @@
  *      Author: Stefan Jakob
  */
 
-#ifndef ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONSTRAINTCREATOR_H_
-#define ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONSTRAINTCREATOR_H_
+#pragma once
 
 #include "engine/BasicConstraint.h"
 #include <memory>
@@ -25,5 +24,3 @@ public:
 };
 
 } /* namespace alica */
-
-#endif /* ALICA_ALICA_ENGINE_INCLUDE_ENGINE_ICONSTRAINTCREATOR_H_ */
