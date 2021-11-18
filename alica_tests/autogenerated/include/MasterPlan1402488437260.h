@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1402488437260) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class MasterPlan1402488437260 : public DomainPlan
 {
 public:
-    MasterPlan1402488437260();
+    MasterPlan1402488437260(IAlicaWorldModel* wm);
     virtual ~MasterPlan1402488437260();
     /*PROTECTED REGION ID(pub1402488437260) ENABLED START*/
     // Add additional public methods here
@@ -42,18 +43,18 @@ class UtilityFunction1402488437260 : public BasicUtilityFunction
 };
 class PreCondition1402488519140 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 class PreCondition1409218319990 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 class PreCondition1402488558741 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 class PreCondition1402488520968 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 } /* namespace alica */

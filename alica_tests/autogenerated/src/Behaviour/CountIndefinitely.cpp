@@ -12,8 +12,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-CountIndefinitely::CountIndefinitely()
-        : DomainBehaviour("CountIndefinitely")
+CountIndefinitely::CountIndefinitely(IAlicaWorldModel* wm)
+        : DomainBehaviour("CountIndefinitely", wm)
 {
     /*PROTECTED REGION ID(con1529456643148) ENABLED START*/
     // Add additional options here

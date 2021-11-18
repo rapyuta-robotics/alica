@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Start (1418042656595)
 //   - Plantype (1418042674811)
-MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594()
-        : DomainPlan()
+MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1418042656594) ENABLED START*/
     // Add additional options here
@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
  *
  * Abstract Plans in Start:
  */
-bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1418042682960) ENABLED START*/
     return true;

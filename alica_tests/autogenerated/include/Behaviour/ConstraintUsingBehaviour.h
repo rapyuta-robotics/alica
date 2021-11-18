@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DomainBehaviour.h"
+#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1414068597716) ENABLED START*/
 // Add additional includes here
 #include <engine/blackboard/BBIdent.h>
@@ -13,7 +14,7 @@ namespace alica
 class ConstraintUsingBehaviour : public DomainBehaviour
 {
 public:
-    ConstraintUsingBehaviour();
+    ConstraintUsingBehaviour(IAlicaWorldModel* wm);
     virtual ~ConstraintUsingBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/

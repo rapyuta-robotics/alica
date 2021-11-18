@@ -4,6 +4,7 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "alica_tests/TestWorldModel.h"
 
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -44,6 +45,7 @@ protected:
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
     ASSERT_NO_SIGNAL
+    auto& wm = dynamic_cast<const alicaTests::TestWorldModel&>(*(ae->getWorldModel()));
 
     // fake a list of existing robots
     alica::AgentGrp robots;
@@ -86,7 +88,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans, wm);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
 }
@@ -94,6 +96,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 TEST_F(TaskAssignmentTest, switchEntryPoints)
 {
     ASSERT_NO_SIGNAL
+    auto& wm = dynamic_cast<const alicaTests::TestWorldModel&>(*(ae->getWorldModel()));
 
     // fake a list of existing robots
     alica::AgentGrp robots;
@@ -136,7 +139,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans, wm);
 //    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
 
     int harryId = 8;
@@ -147,7 +150,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     EXPECT_EQ((o_plans[0]->getAssignment().getAgentsInState(1407152951886).begin()).operator*(), ac->getIDManager().getID<int>(harryId));
 
     // calculate again, this time with old assignment available
-    RunningPlan* rpSwitched = ps->getBestSimilarAssignment(*(o_plans[0]));
+    RunningPlan* rpSwitched = ps->getBestSimilarAssignment(*(o_plans[0]), wm);
 //    std::cout << "1st Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
 
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
@@ -155,7 +158,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     EXPECT_EQ((rpSwitched->getAssignment().getAgentsInState(1407152962295).begin()).operator*(), ac->getIDManager().getID<int>(harryId));
 
     // calculate again, this time with next old assignment
-    rpSwitched = ps->getBestSimilarAssignment(*rpSwitched);
+    rpSwitched = ps->getBestSimilarAssignment(*rpSwitched, wm);
 
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
     // Harry has to be inside MidField state again

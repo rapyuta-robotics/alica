@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-Attack::Attack()
-        : DomainBehaviour("Attack")
+Attack::Attack(IAlicaWorldModel* wm)
+        : DomainBehaviour("Attack", wm)
 {
     /*PROTECTED REGION ID(con1402488848841) ENABLED START*/
     // Add additional options here

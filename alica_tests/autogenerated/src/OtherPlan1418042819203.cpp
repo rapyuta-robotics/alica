@@ -15,8 +15,8 @@ namespace alica
 //
 // States:
 //   - OtherPlanTest (1418042819204)
-OtherPlan1418042819203::OtherPlan1418042819203()
-        : DomainPlan()
+OtherPlan1418042819203::OtherPlan1418042819203(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1418042819203) ENABLED START*/
     // Add additional options here

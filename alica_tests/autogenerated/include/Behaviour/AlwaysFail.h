@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DomainBehaviour.h"
+#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1532424188199) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -10,7 +11,7 @@ namespace alica
 class AlwaysFail : public DomainBehaviour
 {
 public:
-    AlwaysFail();
+    AlwaysFail(IAlicaWorldModel* wm);
     virtual ~AlwaysFail();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1532424188199) ENABLED START*/

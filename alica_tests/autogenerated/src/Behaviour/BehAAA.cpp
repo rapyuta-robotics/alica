@@ -3,8 +3,8 @@
 
 /*PROTECTED REGION ID(inccpp1629895901559) ENABLED START*/
 // Add additional includes here
-#include <alica_tests/test_sched_world_model.h>
 #include "engine/PlanInterface.h"
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +13,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-BehAAA::BehAAA()
-        : DomainBehaviour("BehAAA")
+BehAAA::BehAAA(IAlicaWorldModel* wm)
+        : DomainBehaviour("BehAAA", wm)
 {
     /*PROTECTED REGION ID(con1629895901559) ENABLED START*/
     // Add additional options here

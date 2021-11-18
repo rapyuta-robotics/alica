@@ -1,8 +1,8 @@
 #include "OrderedSchedulingTestPlan1629895582410.h"
 /*PROTECTED REGION ID(eph1629895582410) ENABLED START*/
 // Add additional options here
-#include <alica_tests/test_sched_world_model.h>
 #include "engine/PlanInterface.h"
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -15,8 +15,8 @@ namespace alica
 // States:
 //   - PlanA (1629895681520)
 //   - PlanB (1629895684249)
-OrderedSchedulingTestPlan1629895582410::OrderedSchedulingTestPlan1629895582410()
-        : DomainPlan()
+OrderedSchedulingTestPlan1629895582410::OrderedSchedulingTestPlan1629895582410(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1629895582410) ENABLED START*/
     // Add additional options here
@@ -54,11 +54,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895582410::getUtilityFunctio
  * Abstract Plans in PlanA:
  *   - PlanA (1629895837159)
  */
-bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1629895758611) ENABLED START*/
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(rp->getWorldModel());
-    return wm->planA2PlanB;
+    auto& worldModel = dynamic_cast<const alica_test::SchedWM&>(wm);
+    return worldModel.planA2PlanB;
     /*PROTECTED REGION END*/
 }
 /**
@@ -76,11 +76,11 @@ bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in PlanB:
  *   - PlanB (1629895853508)
  */
-bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1629895768181) ENABLED START*/
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(rp->getWorldModel());
-    return wm->planB2PlanA;
+    auto& worldModel = dynamic_cast<const alica_test::SchedWM&>(wm);
+    return worldModel.planB2PlanA;
     /*PROTECTED REGION END*/
 }
 

@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Attack (1402488646220)
 //   - Shoot (1402489396914)
-AttackPlan1402488634525::AttackPlan1402488634525()
-        : DomainPlan()
+AttackPlan1402488634525::AttackPlan1402488634525(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1402488634525) ENABLED START*/
     // Add additional options here
@@ -59,7 +59,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
  *   - Tackle (1402489318663)
  *   - AttackOpp (1402489351885)
  */
-bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402489459382) ENABLED START*/
     return false;
@@ -84,7 +84,7 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Shoot:
  *   - Attack (1402488848841)
  */
-bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402489460694) ENABLED START*/
     return false;

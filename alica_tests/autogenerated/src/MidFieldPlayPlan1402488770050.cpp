@@ -16,8 +16,8 @@ namespace alica
 //   - Sync (1402489273401)
 //   - Kill (1402500830885)
 //   - Shoot (1402500833246)
-MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
-        : DomainPlan()
+MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
     // Add additional options here
@@ -35,7 +35,7 @@ MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402489260911) ENABLED START*/
     return true;
@@ -69,7 +69,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402489257607) ENABLED START*/
     return false;
@@ -90,7 +90,7 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402489276995) ENABLED START*/
     return false;
@@ -110,7 +110,7 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Kill:
  */
-bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1402500843072) ENABLED START*/
     return false;

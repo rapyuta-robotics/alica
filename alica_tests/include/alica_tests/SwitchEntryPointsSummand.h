@@ -14,7 +14,7 @@ class SwitchEntryPointsSummand : public USummand
 public:
     SwitchEntryPointsSummand(double weight);
     virtual ~SwitchEntryPointsSummand();
-    UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const override;
 private:
     std::string toString(IAssignment ass) const;
 };

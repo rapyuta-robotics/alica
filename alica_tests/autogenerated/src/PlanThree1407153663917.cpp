@@ -15,8 +15,8 @@ namespace alica
 //   - DefaultState (1407153675524)
 //   - MidFieldState (1407153914126)
 //   - DefendState (1407153916646)
-PlanThree1407153663917::PlanThree1407153663917()
-        : DomainPlan()
+PlanThree1407153663917::PlanThree1407153663917(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1407153663917) ENABLED START*/
     // Add additional options here

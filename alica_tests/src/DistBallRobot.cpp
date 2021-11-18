@@ -2,6 +2,7 @@
 #include <alica_tests/TestWorldModel.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
+#include <engine/IAlicaWorldModel.h>
 #include <essentials/IdentifierConstPtr.h>
 
 #include <essentials/IDManager.h>
@@ -24,7 +25,7 @@ DistBallRobot::~DistBallRobot()
     delete manager;
 }
 
-UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss) const
+UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const
 {
     UtilityInterval ui(0.0, 1.0);
 

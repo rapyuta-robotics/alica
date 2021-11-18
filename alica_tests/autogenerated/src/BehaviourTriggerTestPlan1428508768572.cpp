@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - NewState (1428508768573)
 //   - NewState (1429017227839)
-BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572()
-        : DomainPlan()
+BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
     // Add additional options here
@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
  *   - TriggerB (1428508316905)
  *   - TriggerC (1428508355209)
  */
-bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1429017235181) ENABLED START*/
     return false;

@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1418825395939) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class MasterSyncTransition1418825395939 : public DomainPlan
 {
 public:
-    MasterSyncTransition1418825395939();
+    MasterSyncTransition1418825395939(IAlicaWorldModel* wm);
     virtual ~MasterSyncTransition1418825395939();
     /*PROTECTED REGION ID(pub1418825395939) ENABLED START*/
     // Add additional public methods here
@@ -42,10 +43,10 @@ class UtilityFunction1418825395939 : public BasicUtilityFunction
 };
 class PreCondition1418825427317 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 class PreCondition1418825428924 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 } /* namespace alica */

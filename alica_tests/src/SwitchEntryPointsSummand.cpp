@@ -1,5 +1,6 @@
 #include <alica_tests/SwitchEntryPointsSummand.h>
-#include "engine/planselector/IAssignment.h"
+#include <engine/planselector/IAssignment.h>
+#include <engine/IAlicaWorldModel.h>
 
 namespace alica
 {
@@ -11,7 +12,7 @@ SwitchEntryPointsSummand::SwitchEntryPointsSummand(double weight)
 
 SwitchEntryPointsSummand::~SwitchEntryPointsSummand() {}
 
-UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss) const
+UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const
 {
     if (!oldAss) {
         UtilityInterval ui(0.0, 1.0);

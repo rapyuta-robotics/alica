@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1413200842973) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class MultiAgentTestMaster1413200842973 : public DomainPlan
 {
 public:
-    MultiAgentTestMaster1413200842973();
+    MultiAgentTestMaster1413200842973(IAlicaWorldModel* wm);
     virtual ~MultiAgentTestMaster1413200842973();
     /*PROTECTED REGION ID(pub1413200842973) ENABLED START*/
     // Add additional public methods here
@@ -42,10 +43,10 @@ class UtilityFunction1413200842973 : public BasicUtilityFunction
 };
 class PreCondition1413201227586 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 class PreCondition1413201389955 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
 };
 } /* namespace alica */

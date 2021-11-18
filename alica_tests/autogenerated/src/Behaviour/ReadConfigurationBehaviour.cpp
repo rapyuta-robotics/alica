@@ -12,8 +12,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-ReadConfigurationBehaviour::ReadConfigurationBehaviour()
-        : DomainBehaviour("ReadConfigurationBehaviour")
+ReadConfigurationBehaviour::ReadConfigurationBehaviour(IAlicaWorldModel* wm)
+        : DomainBehaviour("ReadConfigurationBehaviour", wm)
 {
     /*PROTECTED REGION ID(con1588061129360) ENABLED START*/
     // Add additional options here

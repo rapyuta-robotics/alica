@@ -12,8 +12,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-EmptyBehaviour::EmptyBehaviour()
-        : DomainBehaviour("EmptyBehaviour")
+EmptyBehaviour::EmptyBehaviour(IAlicaWorldModel* wm)
+        : DomainBehaviour("EmptyBehaviour", wm)
 {
     /*PROTECTED REGION ID(con1625610857563) ENABLED START*/
     // Add additional options here

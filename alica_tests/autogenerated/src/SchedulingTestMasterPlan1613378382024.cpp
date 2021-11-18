@@ -1,9 +1,9 @@
 #include "SchedulingTestMasterPlan1613378382024.h"
 /*PROTECTED REGION ID(eph1613378382024) ENABLED START*/
 // Add additional options here
+#include "engine/PlanInterface.h"
 #include <alica_tests/CounterClass.h>
 #include <alica_tests/test_sched_world_model.h>
-#include "engine/PlanInterface.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -19,8 +19,8 @@ namespace alica
 //   - Default Name (1615797271229)
 //   - Default Name (1615797319003)
 //   - OrderedSchedulingTestPlan (1629895593451)
-SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024()
-        : DomainPlan()
+SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1613378382024) ENABLED START*/
     // Add additional options here
@@ -58,7 +58,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
  * Abstract Plans in InitTest:
  *   - SchedulingTestPlan1 (1613378406860)
  */
-bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1613530643879) ENABLED START*/
     return CounterClass::called == 8;
@@ -78,7 +78,7 @@ bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1615797316170) ENABLED START*/
     return CounterClass::called == 0;
@@ -98,7 +98,7 @@ bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1615797327076) ENABLED START*/
     return CounterClass::called == 1;
@@ -118,11 +118,11 @@ bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1629895598464) ENABLED START*/
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(rp->getWorldModel());
-    return wm->execOrderTest;
+    auto& worldModel = dynamic_cast<const alica_test::SchedWM&>(wm);
+    return worldModel.execOrderTest;
     /*PROTECTED REGION END*/
 }
 /**
@@ -140,7 +140,7 @@ bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Default Name:
  *   - SchedulingTestSequencePlan1 (1614963946725)
  */
-bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1615797365363) ENABLED START*/
     return CounterClass::called == 4;
@@ -161,7 +161,7 @@ bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in OrderedSchedulingTestPlan:
  *   - OrderedSchedulingTestPlan (1629895582410)
  */
-bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1629895607017) ENABLED START*/
     std::cout << "The PreCondition 1629895607018 in Transition 'FromDefault NameTo EndTest' is not implement yet!" << std::endl;

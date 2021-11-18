@@ -1,8 +1,8 @@
 #include "PlanB1629895853508.h"
 /*PROTECTED REGION ID(eph1629895853508) ENABLED START*/
 // Add additional options here
-#include <alica_tests/test_sched_world_model.h>
 #include "engine/PlanInterface.h"
+#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,8 +14,8 @@ namespace alica
 //
 // States:
 //   - PlanBA (1629896057548)
-PlanB1629895853508::PlanB1629895853508()
-        : DomainPlan()
+PlanB1629895853508::PlanB1629895853508(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1629895853508) ENABLED START*/
     // Add additional options here

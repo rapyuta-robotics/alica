@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - First (1529456584983)
 //   - Second (1529456591410)
-BackForth1529456584982::BackForth1529456584982()
-        : DomainPlan()
+BackForth1529456584982::BackForth1529456584982(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1529456584982) ENABLED START*/
     // Add additional options here
@@ -55,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1529456584982::getUtilityFunctio
  * Abstract Plans in First:
  *   - CountIndefinitely (1529456643148)
  */
-bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1529456609989) ENABLED START*/
     return SimpleSwitches::isSet(0);
@@ -76,7 +76,7 @@ bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Second:
  *   - CountIndefinitely (1529456643148)
  */
-bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1529456610905) ENABLED START*/
     return SimpleSwitches::isSet(1);
