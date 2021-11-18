@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 MidFieldStandard::MidFieldStandard(IAlicaWorldModel* wm)
-        : DomainBehaviour("MidFieldStandard", wm)
+        : DomainBehaviour(wm, "MidFieldStandard")
 {
     /*PROTECTED REGION ID(con1402488696205) ENABLED START*/
     // Add additional options here

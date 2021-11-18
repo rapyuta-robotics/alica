@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 AlwaysFail::AlwaysFail(IAlicaWorldModel* wm)
-        : DomainBehaviour("AlwaysFail", wm)
+        : DomainBehaviour(wm, "AlwaysFail")
 {
     /*PROTECTED REGION ID(con1532424188199) ENABLED START*/
     // Add additional options here

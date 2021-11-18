@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 DefendMid::DefendMid(IAlicaWorldModel* wm)
-        : DomainBehaviour("DefendMid", wm)
+        : DomainBehaviour(wm, "DefendMid")
 {
     /*PROTECTED REGION ID(con1402488730695) ENABLED START*/
     // Add additional options here

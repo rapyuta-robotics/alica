@@ -13,7 +13,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 ReadConfigurationBehaviour::ReadConfigurationBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour("ReadConfigurationBehaviour", wm)
+        : DomainBehaviour(wm, "ReadConfigurationBehaviour")
 {
     /*PROTECTED REGION ID(con1588061129360) ENABLED START*/
     // Add additional options here

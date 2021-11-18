@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 Tackle::Tackle(IAlicaWorldModel* wm)
-        : DomainBehaviour("Tackle", wm)
+        : DomainBehaviour(wm, "Tackle")
 {
     /*PROTECTED REGION ID(con1402488939130) ENABLED START*/
     // Add additional options here

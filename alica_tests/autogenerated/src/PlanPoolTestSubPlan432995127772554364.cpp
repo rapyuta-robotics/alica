@@ -48,8 +48,6 @@ void PlanPoolTestSubPlan432995127772554364::onInit()
     getPlanContext().getRunningPlan()->getParameter("TestValue", value);
     auto* worldModel = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
     worldModel->configParameter.push_back(value);
-    // auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(getPlanContext().getRunningPlan()->getWorldModel());
-    // wm->configParameter.push_back(value);
 }
 /*PROTECTED REGION END*/
 } // namespace alica

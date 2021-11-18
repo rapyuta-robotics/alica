@@ -14,7 +14,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 BehAAA::BehAAA(IAlicaWorldModel* wm)
-        : DomainBehaviour("BehAAA", wm)
+        : DomainBehaviour(wm, "BehAAA")
 {
     /*PROTECTED REGION ID(con1629895901559) ENABLED START*/
     // Add additional options here

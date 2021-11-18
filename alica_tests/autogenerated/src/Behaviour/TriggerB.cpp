@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 TriggerB::TriggerB(IAlicaWorldModel* wm)
-        : DomainBehaviour("TriggerB", wm)
+        : DomainBehaviour(wm, "TriggerB")
 {
     /*PROTECTED REGION ID(con1428508316905) ENABLED START*/
     // Add additional options here

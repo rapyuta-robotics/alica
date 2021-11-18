@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 Attack::Attack(IAlicaWorldModel* wm)
-        : DomainBehaviour("Attack", wm)
+        : DomainBehaviour(wm, "Attack")
 {
     /*PROTECTED REGION ID(con1402488848841) ENABLED START*/
     // Add additional options here

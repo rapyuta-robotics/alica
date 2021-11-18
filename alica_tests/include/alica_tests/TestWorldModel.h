@@ -1,6 +1,5 @@
 #pragma once
 
-#include <essentials/ITrigger.hpp>
 #include <engine/IAlicaWorldModel.h>
 
 #include <vector>

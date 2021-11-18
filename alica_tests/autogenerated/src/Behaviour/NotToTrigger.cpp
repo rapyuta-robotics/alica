@@ -12,7 +12,7 @@ namespace alica
 /*PROTECTED REGION END*/
 
 NotToTrigger::NotToTrigger(IAlicaWorldModel* wm)
-        : DomainBehaviour("NotToTrigger", wm)
+        : DomainBehaviour(wm, "NotToTrigger")
 {
     /*PROTECTED REGION ID(con1429017274116) ENABLED START*/
     // Add additional options here
