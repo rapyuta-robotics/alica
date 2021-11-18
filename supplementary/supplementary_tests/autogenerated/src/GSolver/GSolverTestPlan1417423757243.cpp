@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - SolverState (1417423777544)
-GSolverTestPlan1417423757243::GSolverTestPlan1417423757243()
-        : DomainPlan()
+GSolverTestPlan1417423757243::GSolverTestPlan1417423757243(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1417423757243) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ GSolverTestPlan1417423757243::~GSolverTestPlan1417423757243()
  *	- X (1417444589341)
  *	- Y (1417444593509)
  */
-bool RunTimeCondition1417424512343::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1417424512343::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1417424512343) ENABLED START*/
     return true;

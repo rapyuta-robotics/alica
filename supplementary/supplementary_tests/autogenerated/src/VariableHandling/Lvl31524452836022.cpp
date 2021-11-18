@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - NewState (1524452836023)
-Lvl31524452836022::Lvl31524452836022()
-        : DomainPlan()
+Lvl31524452836022::Lvl31524452836022(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1524452836022) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ Lvl31524452836022::~Lvl31524452836022()
  *	- L3A (1524453054226)
  *	- L3B (1524453060294)
  */
-bool RunTimeCondition1524452937477::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1524452937477::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1524452937477) ENABLED START*/
     return true;

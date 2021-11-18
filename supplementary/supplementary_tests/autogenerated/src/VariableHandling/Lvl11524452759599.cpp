@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - NewState (1524452759600)
 //   - BeforeTrans (1524453481856)
-Lvl11524452759599::Lvl11524452759599()
-        : DomainPlan()
+Lvl11524452759599::Lvl11524452759599(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1524452759599) ENABLED START*/
     // Add additional options here
@@ -35,7 +35,7 @@ Lvl11524452759599::~Lvl11524452759599()
  *	- L1A (1524453326397)
  *	- L1B (1524453331530)
  */
-bool RunTimeCondition1524453470580::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1524453470580::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1524453470580) ENABLED START*/
     return true;
@@ -68,7 +68,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunctio
  *
  * Abstract Plans in BeforeTrans:
  */
-bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
 {
     /*PROTECTED REGION ID(1524453490345) ENABLED START*/
     return vhStartCondition;
