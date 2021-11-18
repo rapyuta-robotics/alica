@@ -105,11 +105,11 @@ PlanChange RuleBook::visit(RunningPlan& r, IAlicaWorldModel& wm)
         }
         changeRecord = updateChange(changeRecord, transitionRule(r, wm));
         changeRecord = updateChange(changeRecord, topFailRule(r));
-        changeRecord = updateChange(changeRecord, allocationRule(r));
+        changeRecord = updateChange(changeRecord, allocationRule(r, wm));
         changeRecord = updateChange(changeRecord, authorityOverrideRule(r));
 
         if (doDynAlloc) {
-            changeRecord = updateChange(changeRecord, dynamicAllocationRule(r));
+            changeRecord = updateChange(changeRecord, dynamicAllocationRule(r, wm));
             doDynAlloc = false;
         }
         changeRecord = updateChange(changeRecord, planAbortRule(r));
@@ -138,9 +138,10 @@ PlanChange RuleBook::visit(RunningPlan& r, IAlicaWorldModel& wm)
  * Changes the allocation of r to a better one, if one can be found and the plan is currently allowed to change
  * allocation.
  * @param r A shared_ptr of a RunningPlan
+ * @param wm Worldmodel of the agent
  * @return PlanChange
  */
-PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
+PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r, const IAlicaWorldModel& wm)
 {
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: dynAlloc-Rule called.");
@@ -160,7 +161,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     AgentGrp robots;
     parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
     double curUtil = 0.0;
-    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil);
+    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil, wm);
 
     if (newr == nullptr) {
         return PlanChange::NoChange;
@@ -341,9 +342,10 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 /**
  * Allocates agents in the current state within r to sub-plans.
  * @param r A shared_ptr of a RunningPlan
+ * @param wm Worldmodel of the agent
  * @return PlanChange
  */
-PlanChange RuleBook::allocationRule(RunningPlan& rp)
+PlanChange RuleBook::allocationRule(RunningPlan& rp, const IAlicaWorldModel& wm)
 {
     assert(!rp.isRetired());
     ALICA_DEBUG_MSG("RB: Allocation-Rule called.");
@@ -360,7 +362,7 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
 
     std::vector<RunningPlan*> children;
-    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
+    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children, wm);
     if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
         ALICA_DEBUG_MSG("RB: PlanAllocFailed " << rp.getActivePlan()->getName());

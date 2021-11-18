@@ -23,15 +23,15 @@ public:
     PlanSelector(AlicaEngine* ae, PlanBase* pb);
     virtual ~PlanSelector();
 
-    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
-    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots, double& o_currentUtility);
-    virtual bool getPlansForState(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
+    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp, const IAlicaWorldModel& wm);
+    virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp, const AgentGrp& robots, double& o_currentUtility, const IAlicaWorldModel& wm);
+    virtual bool getPlansForState(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans, const IAlicaWorldModel& wm);
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs, const RunningPlan* oldRp,
-            const PlanType* relevantPlanType, double& o_oldUtility);
+            const PlanType* relevantPlanType, double& o_oldUtility, const IAlicaWorldModel& wm);
 
 private:
-    bool getPlansForStateInternal(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
+    bool getPlansForStateInternal(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans, const IAlicaWorldModel& wm);
 
     PartialAssignmentPool _pap;
     AlicaEngine* _ae;

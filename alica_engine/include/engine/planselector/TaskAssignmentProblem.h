@@ -21,6 +21,7 @@ class PartialAssignment;
 class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
+class IAlicaWorldModel;
 
 /**
  * Represents an instance of an assignment problem for one plan or a plantype.
@@ -31,9 +32,9 @@ class TaskAssignmentProblem final : public ITaskAssignmentProblem
 public:
     TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
     virtual ~TaskAssignmentProblem();
-    void preassignOtherAgents();
+    void preassignOtherAgents(const IAlicaWorldModel& wm);
 
-    Assignment getNextBestAssignment(const Assignment* oldAss) override;
+    Assignment getNextBestAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm) override;
 
 #ifdef EXPANSIONEVAL
     int getExpansionCount() const { return _expansionCount; }
@@ -56,7 +57,7 @@ public:
 private:
     friend std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
 
-    PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
+    PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm);
 
     const TeamManager& _tm;
     const TeamObserver& _to;

@@ -53,12 +53,12 @@ private:
     PlanChange synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel& wm);
     PlanChange transitionRule(RunningPlan& r, const IAlicaWorldModel& wm);
     PlanChange topFailRule(RunningPlan& r);
-    PlanChange allocationRule(RunningPlan& r);
+    PlanChange allocationRule(RunningPlan& r, const IAlicaWorldModel& wm);
     PlanChange authorityOverrideRule(RunningPlan& r);
     PlanChange planAbortRule(RunningPlan& r);
     PlanChange planRedoRule(RunningPlan& r);
     PlanChange planReplaceRule(RunningPlan& r);
     PlanChange planPropagationRule(RunningPlan& r);
-    PlanChange dynamicAllocationRule(RunningPlan& r);
+    PlanChange dynamicAllocationRule(RunningPlan& r, const IAlicaWorldModel& wm);
 };
 } // namespace alica

@@ -16,6 +16,7 @@ class AlicaEngine;
 class IRoleAssignment;
 class USummand;
 class IAssignment;
+class IAlicaWorldModel;
 struct TaskRoleStruct;
 
 class UtilityFunction
@@ -28,7 +29,7 @@ public:
     std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
     // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
-    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss) const;
+    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel& wm) const;
     // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData();
     void init(AlicaEngine* ae);

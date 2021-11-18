@@ -65,7 +65,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp&
     stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);
 }
 
-void TaskAssignmentProblem::preassignOtherAgents()
+void TaskAssignmentProblem::preassignOtherAgents(const IAlicaWorldModel& wm)
 {
     // TODO: fix this call
     const auto& simplePlanTreeMap = _to.getTeamPlanTrees();
@@ -77,7 +77,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr);
+            curPa->evaluate(nullptr, wm);
             changed = true;
         }
         ++i;
@@ -92,10 +92,10 @@ void TaskAssignmentProblem::preassignOtherAgents()
  * @param oldAss old Assignment
  * @return An Assignment for the plan
  */
-Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
+Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm)
 {
     ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
-    PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
+    PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss, wm);
 
     if (calculatedPa == nullptr) {
         return Assignment();
@@ -110,7 +110,7 @@ Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss
     return newAss;
 }
 
-PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss)
+PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm)
 {
     PartialAssignment* goal = nullptr;
     while (!_fringe.empty() && goal == nullptr) {
@@ -124,7 +124,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
         } else {
             ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
             ALICA_DEBUG_MSG(_fringe << "--->");
-            curPa->expand(_fringe, _pool, oldAss);
+            curPa->expand(_fringe, _pool, oldAss, wm);
             ALICA_DEBUG_MSG("<--- TA: AFTER fringe exp:" << std::endl << "TA: fringe size " << _fringe.size());
             ALICA_DEBUG_MSG(_fringe << "--->");
         }
