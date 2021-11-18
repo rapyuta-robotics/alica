@@ -8,6 +8,7 @@
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
 #include "engine/modelmanagement/ModelManager.h"
+#include "engine/util/HashFunctions.h"
 
 #include <assert.h>
 #include <typeinfo>

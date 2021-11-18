@@ -4,18 +4,14 @@
 
 namespace alica
 {
-
-BlackBoard::IdType BlackBoard::registerValue(const int8_t* buffer, int len)
+void BlackBoard::registerValue(const std::string& key, std::any val)
 {
-    ObjectType element(buffer, len);
-    IdType id(Hash64(element.begin(), element.size()));
-    _body[id] = std::move(element);
-    return id;
+    vals.emplace(key, val);
 }
 
-BlackBoard::IdType BlackBoard::registerValue(const char* buffer, int len)
+void BlackBoard::registerValue(const char* key, std::any val)
 {
-    return registerValue(reinterpret_cast<const int8_t*>(buffer), len);
+    vals.emplace(key, val);
 }
 
 } // namespace alica

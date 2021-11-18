@@ -1,5 +1,4 @@
 #pragma once
-#include "engine/blackboard/BBIdent.h"
 #include <assert.h>
 #include <stdint.h>
 #include <string.h> //for memcopy
@@ -17,7 +16,6 @@ class Variant
         TypeBool,
         TypePtr,
         TypeInt,
-        TypeIdent,
         TypeNone
     };
 
@@ -61,12 +59,6 @@ public:
         _value.asPtr = ptr;
     }
 
-    explicit Variant(BBIdent id)
-            : _type(TypeIdent)
-    {
-        _value.asIdent = id;
-    }
-
     // Test:
     bool isSet() const { return _type != TypeNone; }
     bool isDouble() const { return _type == TypeDouble; }
@@ -74,7 +66,6 @@ public:
     bool isInt() const { return _type == TypeInt; }
     bool isBool() const { return _type == TypeBool; }
     bool isPtr() const { return _type == TypePtr; }
-    bool isIdent() const { return _type == TypeIdent; }
 
     // Get:
 
@@ -103,11 +94,6 @@ public:
         assert(_type == TypePtr);
         return _value.asPtr;
     }
-    BBIdent getIdent() const
-    {
-        assert(_type == TypeIdent);
-        return _value.asIdent;
-    }
 
     // Set:
     void setDouble(double d)
@@ -135,11 +121,6 @@ public:
         _type = TypePtr;
         _value.asPtr = ptr;
     }
-    void setIDent(BBIdent id)
-    {
-        _type = TypeIdent;
-        _value.asIdent = id;
-    }
 
     int serializeTo(uint8_t* arr) const
     {
@@ -162,7 +143,6 @@ private:
         bool asBool;
         void* asPtr;
         int64_t asInt;
-        BBIdent asIdent;
         uint8_t asRaw[kUnionSize];
     } _value;
     static_assert(sizeof(Data) == kUnionSize, "Unexpected union size!");

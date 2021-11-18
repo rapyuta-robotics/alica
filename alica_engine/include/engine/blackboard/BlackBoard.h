@@ -1,12 +1,8 @@
 #pragma once
 
-#include "engine/blackboard/BBIdent.h"
-#include "engine/blackboard/ByteArray.h"
-#include "engine/util/HashFunctions.h"
-
+#include <any>
 #include <map>
-#include <stdint.h>
-#include <string.h>
+#include <string>
 #include <type_traits>
 
 namespace alica
@@ -15,23 +11,21 @@ namespace alica
 class BlackBoard
 {
 public:
-    using IdType = BBIdent;
-    using ObjectType = ByteArray;
     BlackBoard() = default;
 
-    IdType registerValue(const int8_t* buffer, int len);
-    IdType registerValue(const char* buffer, int len);
+    void registerValue(const std::string& key, std::any any);
+    void registerValue(const char* key, std::any any);
 
-    template <class InputIt>
-    IdType registerValue(InputIt begin, InputIt end);
+    template <typename T> const T& getValue(const std::string& key) {
+        return std::any_cast<const T&>(vals.at(key));
+    }
+    bool hasValue(const std::string& key) {
+        return vals.count(key);
+    }
+    void removeValue(const std::string& key) { vals.erase(key); }
 
-    bool hasValue(IdType id) const { return _body.find(id) != _body.end(); }
-
-    const ObjectType& getValue(IdType id) const { return _body.find(id)->second; }
-    void removeValue(IdType id) { _body.erase(_body.find(id)); }
-
-    bool empty() const { return _body.empty(); }
-    int size() const { return _body.size(); }
+    bool empty() const { return vals.empty(); }
+    size_t size() const { return vals.size(); }
 
     BlackBoard(const BlackBoard&) = delete;
     BlackBoard(BlackBoard&&) = delete;
@@ -39,25 +33,7 @@ public:
     BlackBoard& operator&=(BlackBoard&&) = delete;
 
 private:
-    std::map<IdType, ObjectType> _body;
+    std::map<std::string, std::any> vals;
 };
-
-template <class InputIt>
-BlackBoard::IdType BlackBoard::registerValue(InputIt begin, InputIt end)
-{
-    static_assert(std::is_pod<typename InputIt::value_type>::value, "Iterators must point to POD type.");
-    const int32_t len = std::distance(begin, end) * sizeof(typename InputIt::value_type);
-    ObjectType element(len);
-    int i = 0;
-    while (begin != end) {
-        memcpy(element.begin() + i, &*begin, sizeof(typename InputIt::value_type));
-        ++begin;
-        i += sizeof(typename InputIt::value_type);
-    }
-    IdType id(Hash64(element.begin(), element.size()));
-
-    _body[id] = std::move(element);
-    return id;
-}
 
 } // namespace alica
