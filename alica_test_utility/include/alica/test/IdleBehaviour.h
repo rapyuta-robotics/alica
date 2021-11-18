@@ -13,7 +13,7 @@ class IdleBehaviour : public BasicBehaviour
 {
 public:
     explicit IdleBehaviour(alica::IAlicaWorldModel* wm)
-            : BasicBehaviour("IdleBehaviour", wm){};
+            : BasicBehaviour(wm, "IdleBehaviour"){};
     void run(void* msg) override;
 };
 } // namespace alica::mockups
