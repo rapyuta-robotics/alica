@@ -1,8 +1,8 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
 
 #include <essentials/FileSystem.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -26,7 +26,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
                                                 alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
-        , _idManager(std::make_unique<essentials::IDManager>())
 {}
 
 AlicaContext::~AlicaContext()
@@ -77,7 +76,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
+AgentId AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

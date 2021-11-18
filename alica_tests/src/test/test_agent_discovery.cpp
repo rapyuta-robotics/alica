@@ -43,7 +43,7 @@ protected:
         ASSERT_EQ(discovered->getName(), original->getName());
         ASSERT_EQ(discovered->getSdk(), original->getSdk());
         ASSERT_EQ(discovered->getPlanHash(), original->getPlanHash());
-        ASSERT_EQ(*(discovered->getId()), *(original->getId()));
+        ASSERT_EQ(discovered->getId(), original->getId());
     }
 };
 
@@ -63,12 +63,12 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
     uint64_t id = 8;
-    const alica::Agent* hairydiscovered = alica::test::Util::getAgentByID(aes[0], aes[0]->getID(id));
+    const alica::Agent* hairydiscovered = alica::test::Util::getAgentByID(aes[0], id);
     const alica::Agent* hairyoriginal = alica::test::Util::getLocalAgent(aes[1]);
     verifyAgents(hairydiscovered, hairyoriginal);
 
     id = 9;
-    const alica::Agent* nasediscovered = alica::test::Util::getAgentByID(aes[1], aes[1]->getID(id));
+    const alica::Agent* nasediscovered = alica::test::Util::getAgentByID(aes[1], id);
     const alica::Agent* naseoriginal = alica::test::Util::getLocalAgent(aes[0]);
     verifyAgents(nasediscovered, naseoriginal);
 
@@ -77,12 +77,12 @@ TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
     alica::AgentAnnouncement aa;
     aa.planHash = acs[0]->getVersion() + 1;
     aa.senderSdk = acs[0]->getVersion();
-    aa.senderID = aes[0]->getID(id);
+    aa.senderID = id;
     aa.roleId = 1222973291111; // Attacker
     aa.senderName = "myo";
     aes[0]->editTeamManager().handleAgentAnnouncement(aa);
     acs[0]->stepEngine();
-    const alica::Agent* myodiscovered = alica::test::Util::getAgentByID(aes[0], aes[0]->getID(id));
+    const alica::Agent* myodiscovered = alica::test::Util::getAgentByID(aes[0], id);
     ASSERT_EQ(myodiscovered, nullptr);
 }
 } // namespace

@@ -1,17 +1,17 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
+#include <engine/Types.h>
 
 #include <tuple>
 #include <vector>
 
 namespace alica
 {
-typedef std::tuple<essentials::IdentifierConstPtr, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
+typedef std::tuple<AgentId, std::vector<int64_t>, std::vector<int64_t>> stdPlanTreeInfo;
 struct PlanTreeInfo
 {
     PlanTreeInfo()
-            : senderID(nullptr)
+            : senderID(InvalidAgentID)
     {
     }
 
@@ -22,7 +22,7 @@ struct PlanTreeInfo
     {
     }
 
-    essentials::IdentifierConstPtr senderID;
+    AgentId senderID;
     std::vector<int64_t> stateIDs;
     std::vector<int64_t> succeededEPs;
 

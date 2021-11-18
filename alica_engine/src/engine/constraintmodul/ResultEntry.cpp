@@ -15,11 +15,11 @@
 namespace alica
 {
 ResultEntry::ResultEntry()
-        : _id(nullptr)
+        : _id(0)
 {
 }
 
-ResultEntry::ResultEntry(essentials::IdentifierConstPtr robotId)
+ResultEntry::ResultEntry(AgentId robotId)
         : _id(robotId)
 {
 }

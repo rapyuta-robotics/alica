@@ -14,8 +14,8 @@
 #include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
 #include "engine/IAlicaTrace.h"
+#include "engine/Types.h"
 
-#include <essentials/IDManager.h>
 #include <alica_common_config/debug_output.h>
 
 #include <cassert>
@@ -24,11 +24,6 @@
 #include <type_traits>
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
-
-namespace essentials
-{
-class IdentifierConstPtr;
-} // namespace essentials
 
 namespace alica
 {
@@ -87,7 +82,7 @@ struct AlicaContextParams
                        const std::string& roleSetName,
                        const std::string& masterPlanName,
                        bool stepEngine = false,
-                       const essentials::Identifier& agentID = essentials::Identifier())
+                       const AgentId agentID = InvalidAgentID)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName(roleSetName)
@@ -108,7 +103,7 @@ struct AlicaContextParams
      */
     AlicaContextParams(const std::string& agentName,
                        const std::string& configPath,
-                       const essentials::Identifier& agentID = essentials::Identifier())
+                       const AgentId agentID = InvalidAgentID)
                        : agentName(agentName)
                        , configPath(configPath)
                        , roleSetName("RoleSet")
@@ -122,7 +117,7 @@ struct AlicaContextParams
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
-    essentials::Identifier agentID;
+    AgentId agentID;
 };
 
 /*
@@ -240,30 +235,6 @@ public:
     }
 
     /**
-     * Set id manager to be used by this alica framework instance.
-     * Example usage: setIDManager<essentials::IDManager>();
-     *
-     * @note Currently, the only implementation is essentials::IDManager
-     * @note This must be called before initializing context
-     *
-     * @param args Arguments to be forwarded to constructor of communicator. Might be empty.
-     */
-    template <class IDManagerType, class... Args>
-    void setIDManager(Args&&... args);
-
-    /**
-     * Get id manager being used by this alica instance.
-     *
-     * @note Currently, the only implementation is essentials::IDManager
-     * @return A reference to id manager object being used by context
-     */
-    essentials::IDManager& getIDManager() const
-    {
-        assert(_idManager.get());
-        return *_idManager;
-    }
-
-    /**
      * Add a solver to be used by this alica instance.
      * Example usage: addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
      *
@@ -352,7 +323,7 @@ public:
      *
      * @return Object representing id of local agent.
      */
-    essentials::IdentifierConstPtr getLocalAgentId() const;
+    AgentId getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously
@@ -412,7 +383,6 @@ private:
     // Please do not change the declaration order of members.
     std::unique_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
-    std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
@@ -456,16 +426,6 @@ void AlicaContext::setCommunicator(Args&&... args)
     _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
-#endif
-}
-
-template <class IDManagerType, class... Args>
-void AlicaContext::setIDManager(Args&&... args)
-{
-#if (defined __cplusplus && __cplusplus >= 201402L)
-    _idManager = std::make_unique<IDManagerType>(std::forward<Args>(args)...);
-#else
-    _idManager = std::unique_ptr<IDManagerType>(new IDManagerType(std::forward<Args>(args)...));
 #endif
 }
 

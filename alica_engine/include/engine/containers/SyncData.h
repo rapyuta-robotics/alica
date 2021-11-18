@@ -1,18 +1,18 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
+#include <engine/Types.h>
 
 #include <iostream>
 #include <tuple>
+#include <sstream>
 
 namespace alica
 {
-typedef std::tuple<essentials::IdentifierConstPtr, int64_t, bool, bool> stdSyncData;
-
+typedef std::tuple<AgentId, int64_t, bool, bool> stdSyncData;
 struct SyncData
 {
     SyncData()
-            : agentID(nullptr)
+            : agentID(InvalidAgentID)
             , ack(false)
             , conditionHolds(false)
             , transitionID(0)
@@ -29,7 +29,7 @@ struct SyncData
 
     stdSyncData toStandard() const { return std::make_tuple(agentID, transitionID, conditionHolds, ack); }
 
-    essentials::IdentifierConstPtr agentID;
+    AgentId agentID;
     int64_t transitionID;
     bool conditionHolds;
     bool ack;

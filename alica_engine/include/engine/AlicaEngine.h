@@ -16,9 +16,7 @@
 #include "engine/teammanager/TeamManager.h"
 #include "engine/scheduler/Scheduler.h"
 #include "engine/scheduler/JobQueue.h"
-
-#include <essentials/IdentifierConstPtr.h>
-#include <essentials/IDManager.h>
+#include "engine/Types.h"
 
 #include <list>
 #include <string>
@@ -44,7 +42,7 @@ public:
 
     AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                 const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const essentials::Identifier& agentID = essentials::Identifier());
+                const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:
@@ -119,10 +117,7 @@ public:
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-    template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr generateID(std::size_t size);
+    AgentId generateID();
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
@@ -169,19 +164,6 @@ private:
     bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
     bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
-
-/**
- * If present, returns the ID corresponding to the given prototype.
- * Otherwise, it creates a new one, stores and returns it.
- *
- * This method can be used, e.g., for passing an int and receiving
- * a pointer to a corresponding Identifier object.
- */
-template <class Prototype>
-essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type)
-{
-    return _ctx.getIDManager().getID<Prototype>(idPrototype, type);
-}
 
 template <typename T>
 void AlicaEngine::abort(const std::string& msg, const T& tail)

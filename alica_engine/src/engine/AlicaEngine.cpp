@@ -10,12 +10,14 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-
-#include <essentials/IDManager.h>
+#include "engine/Types.h"
 
 #include <alica_common_config/debug_output.h>
 #include <functional>
 #include <algorithm>
+#include <chrono>
+#include <random>
+#include <stdlib.h>
 
 namespace alica
 {
@@ -34,7 +36,7 @@ void AlicaEngine::abort(const std::string& msg)
  */
 AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
                          const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const essentials::Identifier& agentID)
+                         const AgentId agentID)
         : _ctx(ctx)
         , _scheduler()
         , _stepCalled(false)
@@ -43,7 +45,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
         , _modelManager(_planRepository, this, configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
-        , _teamManager(this, (static_cast<bool>(agentID) ? getIDFromBytes(agentID.toByteVector().data(), agentID.toByteVector().size()) : nullptr))
+        , _teamManager(this, agentID)
         , _syncModul(this)
         , _behaviourPool(this)
         , _planPool(this)
@@ -218,19 +220,18 @@ void AlicaEngine::stepNotify()
  * This method can be used, e.g., for passing a part of a ROS
  * message and receiving a pointer to a corresponding Identifier object.
  */
-essentials::IdentifierConstPtr AlicaEngine::getIDFromBytes(const uint8_t* idBytes, int idSize, uint8_t type)
-{
-    return _ctx.getIDManager().getIDFromBytes(idBytes, idSize, type);
-}
 
 /**
- * Generates random ID of given size.
- * @param size
- * @return The ID Object
+ * Generates random ID.
+ * @return The ID
  */
-essentials::IdentifierConstPtr AlicaEngine::generateID(std::size_t size)
-{
-    return _ctx.getIDManager().generateID(size);
+
+AgentId AlicaEngine::generateID() {
+    std::random_device device;
+    std::uniform_int_distribution<int32_t> distribution(1,std::numeric_limits<int32_t>::max());
+    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    id = (id << 32) | (distribution(device));
+    return id;
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

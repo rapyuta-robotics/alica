@@ -77,7 +77,7 @@ public:
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
 protected:
-    essentials::IdentifierConstPtr getOwnId() const;
+    AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
     void setSuccess();
