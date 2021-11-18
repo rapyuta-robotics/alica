@@ -13,8 +13,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-Go2RandomPosition::Go2RandomPosition()
-        : DomainBehaviour("Go2RandomPosition")
+Go2RandomPosition::Go2RandomPosition(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "Go2RandomPosition")
 {
     /*PROTECTED REGION ID(con4085572422059465423) ENABLED START*/
     // Add additional options here
