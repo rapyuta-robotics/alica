@@ -11,12 +11,13 @@ public:
     BasicPlan();
     virtual ~BasicPlan() = default;
 
-    // Use of private inheritance and explciltly making members public
+    // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
     using RunnableObject::getPlanContext;
     using RunnableObject::getTraceContext;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
+    using RunnableObject::setRequiresParameters;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
     using RunnableObject::start;

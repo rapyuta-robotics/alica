@@ -31,6 +31,8 @@ protected:
     void setName(const std::string& name) { _name = name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
+    bool getRequiresParameters() const { return _requiresParameters; }
+    void setRequiresParameters(bool requiresParameters) {_requiresParameters = requiresParameters;}
     void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
     void stop();
     void start(RunningPlan* rp);
@@ -54,6 +56,7 @@ protected:
     std::unique_ptr<IAlicaTrace> _trace;
     std::string _name;
     AlicaTime _msInterval;
+    bool _requiresParameters;
     uint8_t _flags;
     std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls

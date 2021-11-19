@@ -8,8 +8,8 @@ namespace alica
 class PlanAttachment
 {
 public:
-    PlanAttachment();
-    virtual ~PlanAttachment();
+    PlanAttachment() = default;
+    virtual ~PlanAttachment() = default;
     /**
      * Initialize blackboard of child given blackboard of parent and knowledge of which state/child we are setting parameters for
      * Returns false if the assumptions of beginning the child plan/behavior no longer hold true

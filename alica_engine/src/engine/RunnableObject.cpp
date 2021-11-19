@@ -1,6 +1,7 @@
 #include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanInterface.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -15,6 +16,7 @@ RunnableObject::RunnableObject(const std::string& name)
         , _configuration(nullptr)
         , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
+        , _requiresParameters(false)
         , _activeRunJobId(-1)
         , _signalContext(nullptr)
         , _execContext(nullptr)
@@ -49,6 +51,17 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
+    if(_requiresParameters) {
+        assert(rp->getParent());
+        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+        auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr){
+            return wrapper_ptr->getAbstractPlan()->getName() == _name;
+        });
+        assert(it != wrappers.end());
+
+        int64_t wrapper_id = (*it)->getId();
+        std::cerr << "Found wrapper id " << wrapper_id << " needs parameters";
+    }
     _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
 }
 

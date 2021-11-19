@@ -24,6 +24,7 @@ public:
     }
     void removeValue(const std::string& key) { vals.erase(key); }
 
+    void clear() { vals.clear(); }
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
 
