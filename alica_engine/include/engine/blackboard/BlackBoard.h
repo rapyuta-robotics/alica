@@ -28,11 +28,6 @@ public:
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
 
-    BlackBoard(const BlackBoard&) = delete;
-    BlackBoard(BlackBoard&&) = delete;
-    BlackBoard& operator&=(const BlackBoard&) = delete;
-    BlackBoard& operator&=(BlackBoard&&) = delete;
-
 private:
     std::map<std::string, std::any> vals;
 };

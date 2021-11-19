@@ -1,9 +1,14 @@
 #pragma once
 
 #include "engine/RunnableObject.h"
+#include "engine/PlanAttachment.h"
 
+#include <unordered_map>
 namespace alica
 {
+
+class IPlanAttachmentCreator;
+class Plan;
 
 class BasicPlan : private RunnableObject
 {
@@ -23,6 +28,9 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
 
+    void createChildAttachments(const Plan* plan, IPlanAttachmentCreator& planAttachmentCreator);
+
+    std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) {return _planAttachments.at(id);}
 protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
@@ -32,5 +40,8 @@ private:
     void doInit() override;
     void doRun(void* msg);
     void doTerminate() override;
+
+    // Map from ConfAbstractPlanWrapper id to associated attachment
+    std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;
 };
 } // namespace alica

@@ -13,6 +13,7 @@ class Configuration;
 class BasicPlan;
 class ConfAbstractPlanWrapper;
 class IPlanCreator;
+class IPlanAttachmentCreator;
 class RunningPlan;
 
 /**
@@ -24,7 +25,7 @@ class PlanPool
 public:
     PlanPool(AlicaEngine* ae);
     ~PlanPool();
-    bool init(IPlanCreator& bc);
+    bool init(IPlanCreator& bc, IPlanAttachmentCreator& planAttachmentCreator);
     void startPlan(RunningPlan& rp);
     void stopPlan(RunningPlan& rp);
     void stopAll();
@@ -32,7 +33,7 @@ public:
 
 private:
     BasicPlan* getBasicPlan(const Plan* plan, const Configuration* configuration) const;
-    std::unique_ptr<BasicPlan> createBasicPlan(IPlanCreator& planCreator, const Plan* plan, const Configuration* configuration);
+    std::unique_ptr<BasicPlan> createBasicPlan(IPlanCreator& planCreator, IPlanAttachmentCreator& planAttachmentCreator, const Plan* plan, const Configuration* configuration);
     /**
      * Manages plans used by the running ALICA program.
      * The key of the map is the ConfAbstractPlanWrapper, which is implicitly created through the PlanDesigner.

@@ -60,7 +60,10 @@ void RunnableObject::start(RunningPlan* rp)
         assert(it != wrappers.end());
 
         int64_t wrapper_id = (*it)->getId();
-        std::cerr << "Found wrapper id " << wrapper_id << " needs parameters";
+        auto& plan_attachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapper_id);
+        std::cerr << "Found wrapper id " << wrapper_id << " needs parameters.  Calling its functino at the wrong tim to test" << std::endl;
+        BlackBoard dummy;
+        plan_attachment->setParameters(BlackBoard(), dummy);
     }
     _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
 }

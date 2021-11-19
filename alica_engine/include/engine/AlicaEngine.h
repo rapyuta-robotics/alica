@@ -33,6 +33,7 @@ class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
+class IPlanAttachmentCreator;
 
 class AlicaEngine
 {
@@ -151,6 +152,7 @@ private:
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
+
     /**
      * TODO: Make VariableSyncModule a stack variable.
      * Currently, it has circular dependency with engine header, because it needs to access

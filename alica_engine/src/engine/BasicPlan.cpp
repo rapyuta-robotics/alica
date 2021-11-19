@@ -2,9 +2,12 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/Plan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
+#include "engine/IPlanAttachmentCreator.h"
 
 namespace alica
 {
@@ -65,6 +68,15 @@ void BasicPlan::doTerminate()
     }
 
     _execContext.store(nullptr);
+}
+
+void BasicPlan::createChildAttachments(const Plan* plan, IPlanAttachmentCreator& planAttachmentCreator)
+{
+    for(const State* state : plan->getStates()) {
+        for(const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            _planAttachments.emplace(wrapper->getId(), planAttachmentCreator.createPlanAttachment(wrapper->getId()));
+        }
+    }
 }
 
 } // namespace alica
