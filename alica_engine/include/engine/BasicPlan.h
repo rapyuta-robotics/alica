@@ -27,6 +27,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getBlackBoard;
 
     void createChildAttachments(const Plan* plan, IPlanAttachmentCreator& planAttachmentCreator);
 

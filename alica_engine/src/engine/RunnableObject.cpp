@@ -61,11 +61,19 @@ void RunnableObject::start(RunningPlan* rp)
 
         int64_t wrapper_id = (*it)->getId();
         auto& plan_attachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapper_id);
-        std::cerr << "Found wrapper id " << wrapper_id << " needs parameters.  Calling its functino at the wrong tim to test" << std::endl;
-        BlackBoard dummy;
-        plan_attachment->setParameters(BlackBoard(), dummy);
+        const BlackBoard& parent_bb = rp->getParent()->getBasicPlan()->getBlackBoard();
+        auto init_call = [&](){
+            _blackBoard.clear();
+            if(!plan_attachment->setParameters(parent_bb, _blackBoard)) {
+                std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                return;
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(init_call);
+    } else {
+        _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
     }
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
 }
 
 void RunnableObject::setTerminatedState()

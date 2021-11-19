@@ -2,7 +2,7 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTrace.h"
-
+#include "engine/blackboard/BlackBoard.h"
 #include <atomic>
 #include <memory>
 #include <string>
@@ -63,6 +63,7 @@ protected:
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
+    BlackBoard _blackBoard;
 
     virtual void doInit() = 0;
     virtual void doTerminate() = 0;
@@ -86,5 +87,7 @@ protected:
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
+    BlackBoard& editBlackBoard() {return _blackBoard;}
+    const BlackBoard& getBlackBoard() const {return _blackBoard;}
 };
 } /* namespace alica */

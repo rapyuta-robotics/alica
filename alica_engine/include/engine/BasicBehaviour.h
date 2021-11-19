@@ -43,6 +43,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getBlackBoard;
 
     virtual void run(void* msg) = 0;
 

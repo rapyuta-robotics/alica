@@ -16,10 +16,10 @@ public:
     void registerValue(const std::string& key, std::any any);
     void registerValue(const char* key, std::any any);
 
-    template <typename T> const T& getValue(const std::string& key) {
+    template <typename T> const T& getValue(const std::string& key) const {
         return std::any_cast<const T&>(vals.at(key));
     }
-    bool hasValue(const std::string& key) {
+    bool hasValue(const std::string& key) const{
         return vals.count(key);
     }
     void removeValue(const std::string& key) { vals.erase(key); }
