@@ -33,7 +33,7 @@ GSolverTestPlan1417423757243::~GSolverTestPlan1417423757243()
  *	- X (1417444589341)
  *	- Y (1417444593509)
  */
-bool RunTimeCondition1417424512343::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool RunTimeCondition1417424512343::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1417424512343) ENABLED START*/
     return true;

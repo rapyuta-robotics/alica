@@ -33,7 +33,7 @@ QueryPlan11479556074049::~QueryPlan11479556074049()
  *	- QP1X (1479556220234)
  *	- QP1Y (1479556572534)
  */
-bool RunTimeCondition1479556084493::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool RunTimeCondition1479556084493::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1479556084493) ENABLED START*/
     return true;
