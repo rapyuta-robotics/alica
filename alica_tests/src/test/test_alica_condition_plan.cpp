@@ -78,9 +78,8 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1u) << "Wrong result size";
-    const alica::ByteArray& ba = ae->getBlackBoard().getValue(alica::ConstraintUsingBehaviour::result[0]);
-    std::string resultingString(reinterpret_cast<const char*>(ba.begin()), ba.size());
-    EXPECT_EQ("1414068576620", resultingString); // id of variable at highest level
+    int64_t res = ae->getBlackBoard().getValue<int64_t>(std::to_string(alica::ConstraintUsingBehaviour::result[0]));
+    EXPECT_EQ(1414068576620, res); // id of variable at highest level
 }
 } // namespace
 } // namespace alica

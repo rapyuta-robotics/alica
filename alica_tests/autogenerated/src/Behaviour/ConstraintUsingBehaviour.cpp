@@ -12,7 +12,7 @@ namespace alica
 {
 /*PROTECTED REGION ID(staticVars1414068597716) ENABLED START*/
 // initialise static variables here
-std::vector<BBIdent> ConstraintUsingBehaviour::result;
+std::vector<int64_t> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 
 ConstraintUsingBehaviour::ConstraintUsingBehaviour(IAlicaWorldModel* wm)
@@ -35,7 +35,7 @@ void ConstraintUsingBehaviour::run(void* msg)
     // Add additional options here
     ++_callCounter;
 
-    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, BBIdent>(getPlanContext(), result);
+    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, int64_t>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void ConstraintUsingBehaviour::initialiseParameters()

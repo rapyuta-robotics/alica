@@ -37,13 +37,14 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
     return false;
 }
 
-bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
     BlackBoard& bb = getAlicaEngine()->editBlackBoard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
-        results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
+        bb.registerValue(s, var->getId());
+        results.push_back(var->getId());
     }
     ++s_getSolutionCallCounter;
     // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << s_getSolutionCallCounter << " times!"
