@@ -1,11 +1,13 @@
 <launch>
-    <arg name="use_gdb" default="false"/>
+    <arg name="use_gdb" default="$(optenv GDB false)"/>
     <arg name="launch_prefix" value="xterm -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
+    <arg name="time_limit"    value="100000" if="$(arg use_gdb)" />
+    <arg name="time_limit"    value="300" unless="$(arg use_gdb)" />
 
     <!-- In order to make gdb forward all exceptions, including stack-traces, to you, you need
          to type 'run <minus><minus>gtest_catch_exceptions=0' in the window, that pops up. Otherwise, just
          type 'run'. -->
     <param name="rootPath" value ="$(find alica_tests)/src/test" />
-    <test name="all_tests" test-name="all_tests" pkg="alica_tests" type="alica_tests-test" time-limit="300.0" launch-prefix="$(arg launch_prefix)"/>
+    <test name="all_tests" test-name="all_tests" pkg="alica_tests" type="alica_tests-test" time-limit="$(arg time_limit)" launch-prefix="$(arg launch_prefix)"/>
 </launch>
