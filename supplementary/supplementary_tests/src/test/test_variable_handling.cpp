@@ -67,8 +67,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
     const RunningPlan* rp2 = aes[1]->getPlanBase().getDeepestNode();
 
-    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
+    alica::AgentId id1 = acs[0]->getLocalAgentId();
+    alica::AgentId id2 = acs[1]->getLocalAgentId();
     EXPECT_NE(id1, id2) << "Agents use the same ID.";
 
     EXPECT_EQ(rp1->getActivePlan()->getId(), rp2->getActivePlan()->getId());

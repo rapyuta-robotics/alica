@@ -208,7 +208,7 @@ public:
     void attachPlanConstraints();
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
-    essentials::IdentifierConstPtr getOwnID() const;
+    AgentId getOwnID() const;
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }

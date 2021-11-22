@@ -3,8 +3,6 @@
 #include <engine/AlicaClock.h>
 #include <engine/Types.h>
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <ostream>
 
 namespace alica
@@ -27,8 +25,8 @@ public:
     std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
     SimplePlanTree* getParent() const { return _parent; }
     void setParent(SimplePlanTree* p) { _parent = p; }
-    essentials::IdentifierConstPtr getAgentId() const { return _agentId; }
-    void setAgentId(essentials::IdentifierConstPtr agentId) { _agentId = agentId; }
+    AgentId getAgentId() const { return _agentId; }
+    void setAgentId(AgentId agentId) { _agentId = agentId; }
     bool isNewSimplePlanTree() const { return _isNew; }
     void setProcessed() { _isNew = false; }
     AlicaTime getReceiveTime() const { return _receiveTime; }
@@ -52,7 +50,7 @@ private:
     /**
      * The id of the robot to which this tree refers to
      */
-    essentials::IdentifierConstPtr _agentId;
+    AgentId _agentId;
     bool _isNew;
     /**
      * The timestamp denoting when this tree was received.

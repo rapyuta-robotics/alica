@@ -9,7 +9,6 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/IAssignment.h"
 #include <alica_tests/TestWorldModel.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -19,7 +18,7 @@ DummyTestSummand::DummyTestSummand(double weight)
 {
     this->angleBallOpp = 0;
     this->velAngle = 0;
-    this->robotId = nullptr;
+    this->robotId = 0;
     this->sb = 0;
 }
 
@@ -29,7 +28,7 @@ UtilityInterval DummyTestSummand::eval(IAssignment ass, const Assignment* oldAss
 {
     UtilityInterval ui(0.0, 1.0);
 
-    for (essentials::IdentifierConstPtr agent : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+    for (AgentId agent : ass.getAgentsWorking(_relevantEntryPoints[0])) {
         if (agent == this->robotId) {
             ui.setMin(0.5);
         } else {
@@ -37,7 +36,7 @@ UtilityInterval DummyTestSummand::eval(IAssignment ass, const Assignment* oldAss
         }
     }
     if (_relevantEntryPoints.size() > 1) {
-        for (essentials::IdentifierConstPtr agent : ass.getAgentsWorking(_relevantEntryPoints[1])) {
+        for (AgentId agent : ass.getAgentsWorking(_relevantEntryPoints[1])) {
             if (agent != this->robotId) {
                 ui.setMin(ui.getMin() + 0.5);
             }

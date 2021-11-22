@@ -1,20 +1,20 @@
 #pragma once
 
-#include <essentials/IdentifierConstPtr.h>
+#include <engine/Types.h>
 
 #include <tuple>
 
 namespace alica
 {
-typedef std::tuple<essentials::IdentifierConstPtr, int64_t> stdSyncReady;
+typedef std::tuple<AgentId, int64_t> stdSyncReady;
 struct SyncReady
 {
     SyncReady()
-            : senderID(nullptr)
+            : senderID(InvalidAgentID)
             , synchronisationID(0)
     {
     }
-    essentials::IdentifierConstPtr senderID;
+    AgentId senderID;
     int64_t synchronisationID;
 
     SyncReady(const stdSyncReady& s)

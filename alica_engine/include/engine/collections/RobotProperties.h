@@ -2,8 +2,6 @@
 
 #include "engine/Types.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <algorithm>
 #include <map>
 #include <memory>

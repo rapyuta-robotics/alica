@@ -10,7 +10,6 @@
 #include "alica_msgs/SyncTalk.h"
 
 #include <engine/IAlicaCommunication.h>
-#include <essentials/Identifier.h>
 
 #include <ros/ros.h>
 #include <ros/callback_queue.h>

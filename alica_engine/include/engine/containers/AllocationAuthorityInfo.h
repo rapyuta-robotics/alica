@@ -1,8 +1,7 @@
 #pragma once
 
 #include "EntryPointRobots.h"
-
-#include <essentials/IdentifierConstPtr.h>
+#include "engine/Types.h"
 
 #include <iterator>
 #include <ostream>
@@ -12,23 +11,23 @@
 namespace alica
 {
 
-typedef std::tuple<essentials::IdentifierConstPtr, int64_t, int64_t, int64_t, essentials::IdentifierConstPtr, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
+typedef std::tuple<AgentId, int64_t, int64_t, int64_t, AgentId, std::vector<stdEntryPointRobot>> stdAllocationAuthorityInfo;
 struct AllocationAuthorityInfo
 {
     AllocationAuthorityInfo()
-            : senderID(nullptr)
+            : senderID(InvalidAgentID)
             , planId(0)
             , parentState(0)
             , planType(0)
-            , authority(nullptr)
+            , authority(0)
     {
     }
 
-    essentials::IdentifierConstPtr senderID;
+    AgentId senderID;
     int64_t planId;
     int64_t parentState;
     int64_t planType;
-    essentials::IdentifierConstPtr authority;
+    AgentId authority;
     std::vector<EntryPointRobots> entryPointRobots;
 
     AllocationAuthorityInfo(const stdAllocationAuthorityInfo& s)
