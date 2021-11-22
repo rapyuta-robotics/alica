@@ -47,6 +47,7 @@ void GoTo::initialiseParameters()
     _query.clearDomainVariables();
     _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "x"));
     _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "y"));
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods4054297592460872311) ENABLED START*/

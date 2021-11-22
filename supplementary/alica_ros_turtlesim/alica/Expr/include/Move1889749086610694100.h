@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1889749086610694100) ENABLED START*/
 // Add additional includes here
