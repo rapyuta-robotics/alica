@@ -59,7 +59,7 @@ void BehAAA::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
     runCount = 0;
-    _wm = dynamic_cast<alica_test::SchedWM*>(getPlanContext().getRunningPlan()->getWorldModel());
+    _wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
     _wm->execOrder += "BehAAA::Init\n";
     _inRunContext = true;
 

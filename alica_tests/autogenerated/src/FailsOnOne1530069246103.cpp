@@ -32,7 +32,7 @@ FailsOnOne1530069246103::~FailsOnOne1530069246103()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1530069251117) ENABLED START*/
     return !SimpleSwitches::isSet(1);

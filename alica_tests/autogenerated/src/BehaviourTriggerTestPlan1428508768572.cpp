@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
  *   - TriggerB (1428508316905)
  *   - TriggerC (1428508355209)
  */
-bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1429017235181) ENABLED START*/
     return false;

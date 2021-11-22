@@ -52,7 +52,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1588069612659) ENABLED START*/
     std::string value;
@@ -74,7 +74,7 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1588069615552) ENABLED START*/
     std::string value;

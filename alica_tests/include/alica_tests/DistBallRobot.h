@@ -19,7 +19,7 @@ class DistBallRobot : public USummand
 public:
     DistBallRobot(double weight);
     virtual ~DistBallRobot();
-    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const override;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const override;
     essentials::IdentifierConstPtr robotId;
 
 protected:

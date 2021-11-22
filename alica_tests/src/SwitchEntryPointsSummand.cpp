@@ -12,7 +12,7 @@ SwitchEntryPointsSummand::SwitchEntryPointsSummand(double weight)
 
 SwitchEntryPointsSummand::~SwitchEntryPointsSummand() {}
 
-UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const
+UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     if (!oldAss) {
         UtilityInterval ui(0.0, 1.0);

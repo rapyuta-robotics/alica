@@ -55,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
  *
  * Abstract Plans in Init:
  */
-bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1414403840950) ENABLED START*/
     return true;

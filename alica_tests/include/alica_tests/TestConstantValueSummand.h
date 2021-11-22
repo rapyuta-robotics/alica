@@ -12,7 +12,7 @@ public:
     TestConstantValueSummand(double weight, double val);
     virtual ~TestConstantValueSummand();
 
-    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const override;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const override;
     essentials::IdentifierConstPtr robotId;
 
 protected:

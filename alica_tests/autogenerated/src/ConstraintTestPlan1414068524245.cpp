@@ -33,7 +33,7 @@ ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
  *	- X (1414068572540)
  *	- Y (1414068576620)
  */
-bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1414068566297) ENABLED START*/
     return true;

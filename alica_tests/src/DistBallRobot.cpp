@@ -25,7 +25,7 @@ DistBallRobot::~DistBallRobot()
     delete manager;
 }
 
-UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel& wm) const
+UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     UtilityInterval ui(0.0, 1.0);
 

@@ -32,7 +32,7 @@ Move1889749086610694100::~Move1889749086610694100()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1288817888979746811) ENABLED START*/
     return true;

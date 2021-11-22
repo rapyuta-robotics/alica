@@ -43,26 +43,26 @@ class UtilityFunction1613378382024 : public BasicUtilityFunction
 };
 class PreCondition1613530643882 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1615797316171 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1615797327077 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1629895598471 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1615797365364 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1629895607018 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 } /* namespace alica */

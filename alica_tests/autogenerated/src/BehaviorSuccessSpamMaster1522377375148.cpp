@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
  * Abstract Plans in Normal:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1522377944058) ENABLED START*/
     bool ok = rp->isAnyChildStatus(alica::PlanStatus::Success);
@@ -77,7 +77,7 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Dummy:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1522377945069) ENABLED START*/
     bool ok = rp->isAnyChildStatus(alica::PlanStatus::Success);

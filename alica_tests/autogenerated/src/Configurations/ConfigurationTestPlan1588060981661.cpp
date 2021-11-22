@@ -55,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
  *   - ReadConfigurationPlantype (1588061351007)
  *   - ReadConfigurationPlan (1588061334567)
  */
-bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1588253347211) ENABLED START*/
     return CounterClass::called == 1;

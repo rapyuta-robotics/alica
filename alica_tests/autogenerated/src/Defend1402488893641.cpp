@@ -57,7 +57,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
  *   - Tackle (1402488939130)
  *   - Tackle (1402489318663)
  */
-bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402488991762) ENABLED START*/
     return false;
@@ -77,7 +77,7 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in GetBall:
  */
-bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402488990761) ENABLED START*/
     return false;
@@ -97,7 +97,7 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in GetBall:
  */
-bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489064693) ENABLED START*/
     return false;
@@ -118,7 +118,7 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in TryToDefendGoal:
  *   - PlanType (1402489564599)
  */
-bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489071510) ENABLED START*/
     return false;

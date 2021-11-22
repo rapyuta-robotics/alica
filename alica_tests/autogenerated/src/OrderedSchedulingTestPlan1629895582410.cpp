@@ -54,11 +54,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895582410::getUtilityFunctio
  * Abstract Plans in PlanA:
  *   - PlanA (1629895837159)
  */
-bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1629895758611) ENABLED START*/
-    auto& worldModel = dynamic_cast<const alica_test::SchedWM&>(wm);
-    return worldModel.planA2PlanB;
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    return worldModel->planA2PlanB;
     /*PROTECTED REGION END*/
 }
 /**
@@ -76,11 +76,11 @@ bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in PlanB:
  *   - PlanB (1629895853508)
  */
-bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm)
+bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1629895768181) ENABLED START*/
-    auto& worldModel = dynamic_cast<const alica_test::SchedWM&>(wm);
-    return worldModel.planB2PlanA;
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    return worldModel->planB2PlanA;
     /*PROTECTED REGION END*/
 }
 
