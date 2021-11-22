@@ -61,6 +61,7 @@ namespace alica {
         static const std::string minCardinality = "minCardinality";
         static const std::string maxCardinality = "maxCardinality";
         static const std::string successRequired = "successRequired";
+        static const std::string dynamic = "dynamic";
         static const std::string synchronisations = "synchronisations";
         static const std::string failOnSyncTimeout = "failOnSyncTimeout";
         static const std::string syncTimeout = "syncTimeout";

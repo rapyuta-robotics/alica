@@ -17,6 +17,7 @@ public:
     AlicaElement(int64_t id);
     AlicaElement(int64_t id, const std::string& name);
     AlicaElement(int64_t id, const std::string& name, const std::string& comment);
+    AlicaElement(const AlicaElement&) = default;
     virtual ~AlicaElement();
 
     const std::string& getName() const { return _name; }

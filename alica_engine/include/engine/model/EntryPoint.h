@@ -26,6 +26,7 @@ class EntryPoint : public AlicaElement
 public:
     EntryPoint();
     EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s);
+    EntryPoint(const EntryPoint&) = default;
     virtual ~EntryPoint();
 
     /**
@@ -53,6 +54,10 @@ public:
     bool isStateReachable(const State* s) const;
     int getIndex() const { return _index; }
 
+    bool isDynamic() const { return _dynamic; };
+    int64_t getDynamicId() const { return _dynamicId; };
+    void setDynamicId(int64_t id) { _dynamicId = id; };
+
 private:
     friend EntryPointFactory;
     friend ModelManager;
@@ -61,6 +66,7 @@ private:
     void setPlan(Plan* plan);
     void setState(State* state);
     void setSuccessRequired(bool successRequired);
+    void setDynamic(bool dynamic) { _dynamic = dynamic; };
 
     /**
      * The initial state of this entrypoint's task.
@@ -81,6 +87,14 @@ private:
      * whether or not a success of this task is required for Plan to be successful. Otherwise, this task is optional.
      */
     bool _successRequired;
+    /**
+     * whether the entry point is dynamic i.e. if the app can instantiate a entry point at runtime with a app specific dynamic id
+     */
+    bool _dynamic;
+    /**
+     * The id specified by the app for an instance of this entry point at runtime
+     */
+    int64_t _dynamicId;
     /**
      * The unique index of this entrypoint in a plan's EntryPointGrp
      */

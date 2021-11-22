@@ -26,6 +26,9 @@ std::vector<EntryPoint*> EntryPointFactory::create(const YAML::Node& entryPoints
         if (Factory::isValid(epNode[alica::Strings::successRequired])) {
             ep->setSuccessRequired(epNode[alica::Strings::successRequired].as<bool>());
         }
+        if (Factory::isValid(epNode[alica::Strings::dynamic])) {
+            ep->setDynamic(epNode[alica::Strings::dynamic].as<bool>());
+        }
         if (Factory::isValid(epNode[alica::Strings::state])) {
             Factory::epStateReferences.push_back(std::pair<int64_t, int64_t>(ep->getId(), Factory::getReferencedId(epNode[alica::Strings::state])));
         }
