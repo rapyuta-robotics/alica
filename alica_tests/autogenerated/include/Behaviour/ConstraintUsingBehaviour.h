@@ -3,7 +3,6 @@
 #include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc1414068597716) ENABLED START*/
 // Add additional includes here
-#include <engine/blackboard/BBIdent.h>
 #include <engine/constraintmodul/Query.h>
 #include <vector>
 /*PROTECTED REGION END*/
@@ -19,7 +18,7 @@ public:
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/
     // Add additional public methods here
     int getCallCounter() const;
-    static std::vector<BBIdent> result;
+    static std::vector<int64_t> result;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
