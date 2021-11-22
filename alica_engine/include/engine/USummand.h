@@ -57,7 +57,7 @@ public:
      * Cache every data for the current evaluation, to
      * assure consistency over the complete current evaluation.
      */
-    virtual void cacheEvalData(){};
+    virtual void cacheEvalData(const IAlicaWorldModel* wm){};
     // virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
     void setWeight(double weight) { _weight = weight; }
 

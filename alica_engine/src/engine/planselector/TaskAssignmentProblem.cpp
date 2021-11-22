@@ -56,7 +56,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp&
         // prep successinfo for this plan
         _successData.push_back(_to.createSuccessCollection(curPlan));
         // allow caching of eval data
-        curPlan->getUtilityFunction()->cacheEvalData();
+        curPlan->getUtilityFunction()->cacheEvalData(_wm);
         // seed the fringe with a partial assignment
         PartialAssignment* curPa = _pool.getNext();
 

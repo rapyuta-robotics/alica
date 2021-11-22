@@ -83,10 +83,10 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     return UtilityInterval(0.0, 0.0);
 }
 
-void UtilityFunction::cacheEvalData()
+void UtilityFunction::cacheEvalData(const IAlicaWorldModel* wm)
 {
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-        us->cacheEvalData();
+        us->cacheEvalData(wm);
     }
 }
 
