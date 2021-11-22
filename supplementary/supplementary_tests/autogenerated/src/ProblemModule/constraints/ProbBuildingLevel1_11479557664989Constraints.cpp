@@ -8,7 +8,7 @@ namespace alica
 // Plan:ProbBuildingLevel1_1
 /*
  * Tasks:
- * - EP:1479557690963 : DefaultTask (1225112227903)
+ * - EntryPoint:1479557690963 : DefaultTask (1225112227903)
  *
  * States:
  * - MiddleState (1479557690962)

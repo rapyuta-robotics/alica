@@ -13,7 +13,7 @@ namespace alica
 // Plan:Lvl1
 /*
  * Tasks:
- * - EP:1524452759601 : DefaultTask (1225112227903)
+ * - EntryPoint:1524452759601 : DefaultTask (1225112227903)
  *
  * States:
  * - NewState (1524452759600)

@@ -14,7 +14,7 @@ class PlanCreator : public IPlanCreator
 public:
     PlanCreator();
     virtual ~PlanCreator();
-    virtual std::unique_ptr<BasicPlan> createPlan(int64_t planId);
+    virtual std::unique_ptr<BasicPlan> createPlan(int64_t planId) override;
 };
 
 } /* namespace alica */

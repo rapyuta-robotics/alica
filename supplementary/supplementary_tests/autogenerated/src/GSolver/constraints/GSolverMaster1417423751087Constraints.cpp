@@ -8,7 +8,7 @@ namespace alica
 // Plan:GSolverMaster
 /*
  * Tasks:
- * - EP:1417423751089 : DefaultTask (1225112227903)
+ * - EntryPoint:1417423751089 : DefaultTask (1225112227903)
  *
  * States:
  * - Init (1417423751088)
