@@ -103,6 +103,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
             ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
         } else {
+            // compute the dynamic entry points before task assignment
+            plan->computeDynamicEntryPoints();
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
         }

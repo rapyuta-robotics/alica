@@ -33,7 +33,7 @@ public:
     const EntryPoint* getEntryPointByID(int64_t epID) const;
     const State* getStateByID(int64_t stateID) const;
 
-    const EntryPointGrp& getEntryPoints() const { return _entryPoints; }
+    const EntryPointGrp& getEntryPoints() const { return _allEntryPoints; }
 
     const StateGrp& getStates() const { return _states; }
     const FailureStateGrp& getFailureStates() const { return _failureStates; }
@@ -50,11 +50,13 @@ public:
     const SynchronisationGrp& getSynchronisations() const { return _synchronisations; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
-    BasicPlan* getBasicPlan() const { return _basicPlan.get(); }
 
     int getFrequency() const { return _frequency; }
 
     std::string toString(std::string indent = "") const;
+
+    // TODO: get rid of const
+    void computeDynamicEntryPoints() const;
 
 private:
     friend ModelFactory;
@@ -72,18 +74,26 @@ private:
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
-    void setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan);
+
+    struct IDHash
+    {
+        std::size_t operator()(std::pair<int64_t, int64_t> p) const
+        {
+            std::size_t seed = std::hash<int64_t>{}(p.first);
+            return seed ^ (std::hash<int64_t>{}(p.second) + 0x9e3779b97f4a7c15LLU + (seed << 12) + (seed >> 4));
+        }
+    };
 
     int _minCardinality;
     int _maxCardinality;
     EntryPointGrp _entryPoints;
+    mutable EntryPointGrp _allEntryPoints;
+    mutable std::unordered_map<std::pair<int64_t, int64_t>, const EntryPoint*, IDHash> _entryPointCache;
     StateGrp _states;
     SuccessStateGrp _successStates;
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    // TODO: move to plan pool once it is implemented
-    std::unique_ptr<BasicPlan> _basicPlan;
 
     /**
      * This plan's Utility function
