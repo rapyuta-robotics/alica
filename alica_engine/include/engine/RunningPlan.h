@@ -137,7 +137,6 @@ public:
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
     BasicPlan* getBasicPlan() const { return _basicPlan; }
-    IAlicaWorldModel* getWorldModel() const;
 
     void printRecursive() const;
 

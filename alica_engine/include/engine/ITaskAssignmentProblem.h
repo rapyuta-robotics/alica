@@ -17,7 +17,7 @@ public:
      * @param oldAss The old IAssignment,  possibly null in case of a completely new assignment problem.
      * @return The new Assignment
      */
-    virtual Assignment getNextBestAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm) = 0;
+    virtual Assignment getNextBestAssignment(const Assignment* oldAss) = 0;
 };
 
 } /* namespace alica */

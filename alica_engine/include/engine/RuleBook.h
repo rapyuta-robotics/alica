@@ -34,12 +34,13 @@ public:
     RuleBook(AlicaEngine* ae, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
-    PlanChange visit(RunningPlan& r, IAlicaWorldModel& wm);
+    PlanChange visit(RunningPlan& r);
     PlanChange updateChange(PlanChange cur, PlanChange update);
     RunningPlan* initialisationRule(const Plan* masterPlan);
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
     void reload(const YAML::Node& config);
+    void init(const IAlicaWorldModel* wm);
 
 private:
     const TeamManager& _tm;
@@ -49,16 +50,17 @@ private:
     Logger& _log;
     int _maxConsecutiveChanges;
     bool _changeOccurred;
+    const IAlicaWorldModel* _wm;
 
-    PlanChange synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel& wm);
-    PlanChange transitionRule(RunningPlan& r, const IAlicaWorldModel& wm);
+    PlanChange synchTransitionRule(RunningPlan& rp);
+    PlanChange transitionRule(RunningPlan& r);
     PlanChange topFailRule(RunningPlan& r);
-    PlanChange allocationRule(RunningPlan& r, const IAlicaWorldModel& wm);
+    PlanChange allocationRule(RunningPlan& r);
     PlanChange authorityOverrideRule(RunningPlan& r);
     PlanChange planAbortRule(RunningPlan& r);
     PlanChange planRedoRule(RunningPlan& r);
     PlanChange planReplaceRule(RunningPlan& r);
     PlanChange planPropagationRule(RunningPlan& r);
-    PlanChange dynamicAllocationRule(RunningPlan& r, const IAlicaWorldModel& wm);
+    PlanChange dynamicAllocationRule(RunningPlan& r);
 };
 } // namespace alica

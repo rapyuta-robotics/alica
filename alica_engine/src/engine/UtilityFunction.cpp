@@ -39,7 +39,7 @@ UtilityFunction::~UtilityFunction() {}
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
-UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel& wm) const
+UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     if (!newAss->isValid()) {
         return UtilityInterval(-1.0, -1.0);

@@ -34,9 +34,11 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool
+                , const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
+        , _wm(wm)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
@@ -65,7 +67,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp&
     stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);
 }
 
-void TaskAssignmentProblem::preassignOtherAgents(const IAlicaWorldModel& wm)
+void TaskAssignmentProblem::preassignOtherAgents()
 {
     // TODO: fix this call
     const auto& simplePlanTreeMap = _to.getTeamPlanTrees();
@@ -77,7 +79,7 @@ void TaskAssignmentProblem::preassignOtherAgents(const IAlicaWorldModel& wm)
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr, wm);
+            curPa->evaluate(nullptr, _wm);
             changed = true;
         }
         ++i;
@@ -92,10 +94,10 @@ void TaskAssignmentProblem::preassignOtherAgents(const IAlicaWorldModel& wm)
  * @param oldAss old Assignment
  * @return An Assignment for the plan
  */
-Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm)
+Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
     ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
-    PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss, wm);
+    PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
@@ -110,7 +112,7 @@ Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss
     return newAss;
 }
 
-PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm)
+PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const Assignment* oldAss)
 {
     PartialAssignment* goal = nullptr;
     while (!_fringe.empty() && goal == nullptr) {
@@ -124,7 +126,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
         } else {
             ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
             ALICA_DEBUG_MSG(_fringe << "--->");
-            curPa->expand(_fringe, _pool, oldAss, wm);
+            curPa->expand(_fringe, _pool, oldAss, _wm);
             ALICA_DEBUG_MSG("<--- TA: AFTER fringe exp:" << std::endl << "TA: fringe size " << _fringe.size());
             ALICA_DEBUG_MSG(_fringe << "--->");
         }

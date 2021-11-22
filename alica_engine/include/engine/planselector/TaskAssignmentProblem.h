@@ -30,11 +30,12 @@ class IAlicaWorldModel;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
+    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool
+            , const IAlicaWorldModel* wm);
     virtual ~TaskAssignmentProblem();
-    void preassignOtherAgents(const IAlicaWorldModel& wm);
+    void preassignOtherAgents();
 
-    Assignment getNextBestAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm) override;
+    Assignment getNextBestAssignment(const Assignment* oldAss) override;
 
 #ifdef EXPANSIONEVAL
     int getExpansionCount() const { return _expansionCount; }
@@ -57,7 +58,7 @@ public:
 private:
     friend std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
 
-    PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss, const IAlicaWorldModel& wm);
+    PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
     const TeamManager& _tm;
     const TeamObserver& _to;
@@ -65,6 +66,7 @@ private:
     PlanGrp _plans;
     AgentGrp _agents;
     std::vector<SuccessCollection> _successData;
+    const IAlicaWorldModel* _wm;
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;

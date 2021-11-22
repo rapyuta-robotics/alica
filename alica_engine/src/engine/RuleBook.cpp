@@ -48,6 +48,12 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
 
 RuleBook::~RuleBook() {}
 
+void RuleBook::init(const IAlicaWorldModel* wm)
+{
+    _wm = wm;
+    _ps->setWorldModel(wm);
+}
+
 void RuleBook::reload(const YAML::Node& config)
 {
     _maxConsecutiveChanges = config["Alica"]["MaxRuleApplications"].as<int>();
@@ -85,7 +91,7 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
  * @param r A shared_ptr of a RunningPlan
  * @return A PlanChange
  */
-PlanChange RuleBook::visit(RunningPlan& r, IAlicaWorldModel& wm)
+PlanChange RuleBook::visit(RunningPlan& r)
 {
     int changes = 0;
     bool doDynAlloc = true;
@@ -97,19 +103,19 @@ PlanChange RuleBook::visit(RunningPlan& r, IAlicaWorldModel& wm)
     do {
         msChange = updateChange(msChange, changeRecord);
         changeRecord = PlanChange::NoChange;
-        changeRecord = updateChange(changeRecord, synchTransitionRule(r, wm));
-        PlanChange transChange = transitionRule(r, wm);
+        changeRecord = updateChange(changeRecord, synchTransitionRule(r));
+        PlanChange transChange = transitionRule(r);
         while (transChange != PlanChange::NoChange && ++changes < _maxConsecutiveChanges) {
             changeRecord = updateChange(changeRecord, transChange);
-            transChange = transitionRule(r, wm);
+            transChange = transitionRule(r);
         }
-        changeRecord = updateChange(changeRecord, transitionRule(r, wm));
+        changeRecord = updateChange(changeRecord, transitionRule(r));
         changeRecord = updateChange(changeRecord, topFailRule(r));
-        changeRecord = updateChange(changeRecord, allocationRule(r, wm));
+        changeRecord = updateChange(changeRecord, allocationRule(r));
         changeRecord = updateChange(changeRecord, authorityOverrideRule(r));
 
         if (doDynAlloc) {
-            changeRecord = updateChange(changeRecord, dynamicAllocationRule(r, wm));
+            changeRecord = updateChange(changeRecord, dynamicAllocationRule(r));
             doDynAlloc = false;
         }
         changeRecord = updateChange(changeRecord, planAbortRule(r));
@@ -138,10 +144,9 @@ PlanChange RuleBook::visit(RunningPlan& r, IAlicaWorldModel& wm)
  * Changes the allocation of r to a better one, if one can be found and the plan is currently allowed to change
  * allocation.
  * @param r A shared_ptr of a RunningPlan
- * @param wm Worldmodel of the agent
  * @return PlanChange
  */
-PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r, const IAlicaWorldModel& wm)
+PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 {
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: dynAlloc-Rule called.");
@@ -161,7 +166,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r, const IAlicaWorldMode
     AgentGrp robots;
     parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
     double curUtil = 0.0;
-    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil, wm);
+    RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil);
 
     if (newr == nullptr) {
         return PlanChange::NoChange;
@@ -342,10 +347,9 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 /**
  * Allocates agents in the current state within r to sub-plans.
  * @param r A shared_ptr of a RunningPlan
- * @param wm Worldmodel of the agent
  * @return PlanChange
  */
-PlanChange RuleBook::allocationRule(RunningPlan& rp, const IAlicaWorldModel& wm)
+PlanChange RuleBook::allocationRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
     ALICA_DEBUG_MSG("RB: Allocation-Rule called.");
@@ -362,7 +366,7 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp, const IAlicaWorldModel& wm)
     ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
 
     std::vector<RunningPlan*> children;
-    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children, wm);
+    bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
     if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
         ALICA_DEBUG_MSG("RB: PlanAllocFailed " << rp.getActivePlan()->getName());
@@ -421,10 +425,9 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
  * flags the RunningPlan for allocation in the next state.
  * Note, in case multiple transitions are eligible, one is chosen implementation dependent.
  * @param r A shared_ptr of a RunningPlan
- * @param wm Worldmodel used by the agent.
  * @return PlanChange
  */
-PlanChange RuleBook::transitionRule(RunningPlan& r, const IAlicaWorldModel& wm)
+PlanChange RuleBook::transitionRule(RunningPlan& r)
 {
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: Transition-Rule called.");
@@ -437,7 +440,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r, const IAlicaWorldModel& wm)
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
         if (t->getSynchronisation() != nullptr)
             continue;
-        if (t->evalCondition(r, wm)) {
+        if (t->evalCondition(r, _wm)) {
             nextState = t->getOutState();
             r.editConstraintStore().addCondition(t->getPreCondition());
             break;
@@ -466,7 +469,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r, const IAlicaWorldModel& wm)
  * @param rp A shared_ptr of a RunningPlan
  * @return PlanChange
  */
-PlanChange RuleBook::synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel& wm)
+PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
     ALICA_DEBUG_MSG("RB: Sync-Rule called.");
@@ -483,7 +486,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel
             continue;
         }
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp, wm)) {
+            if (t->evalCondition(rp, _wm)) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 rp.editConstraintStore().addCondition(t->getPreCondition());
@@ -494,7 +497,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp, const IAlicaWorldModel
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->evalCondition(rp, wm));
+            _sm.setSynchronisation(t, t->evalCondition(rp, _wm));
         }
     }
     if (nextState == nullptr) {

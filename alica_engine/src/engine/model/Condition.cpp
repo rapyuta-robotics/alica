@@ -29,7 +29,7 @@ void Condition::setConditionString(const std::string& conditionString)
     _conditionString = conditionString;
 }
 
-bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel& wm) const
+bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const
 {
     if (_basicCondition == nullptr) {
         ALICA_ERROR_MSG("Condition: Missing implementation of condition: ID " << getId());

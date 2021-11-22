@@ -11,7 +11,7 @@ public:
     BasicFalseCondition();
     virtual ~BasicFalseCondition();
 
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel& wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 
 } /* namespace alica */

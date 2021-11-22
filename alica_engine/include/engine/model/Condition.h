@@ -44,7 +44,7 @@ public:
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
-    bool evaluate(const RunningPlan& rp, const IAlicaWorldModel& wm) const;
+    bool evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const;
 
 private:
     friend ModelFactory;

@@ -29,7 +29,7 @@ public:
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
-    bool evalCondition(const RunningPlan& r, const IAlicaWorldModel& wm) const;
+    bool evalCondition(const RunningPlan& r, const IAlicaWorldModel* wm) const;
 
 private:
     friend ModelFactory;

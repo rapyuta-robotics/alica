@@ -17,7 +17,7 @@ Transition::Transition()
 
 Transition::~Transition() {}
 
-bool Transition::evalCondition(const RunningPlan& r, const IAlicaWorldModel& wm) const
+bool Transition::evalCondition(const RunningPlan& r, const IAlicaWorldModel* wm) const
 {
     if (!_preCondition) {
         std::cerr << "Transition " << this->getId() << " has no precondition attached!" << std::endl;

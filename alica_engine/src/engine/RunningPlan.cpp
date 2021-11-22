@@ -147,7 +147,7 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         return PlanChange::NoChange;
     }
     _cycleManagement.update();
-    PlanChange myChange = rules->visit(*this, *(_ae->getWorldModel()));
+    PlanChange myChange = rules->visit(*this);
     if (isRetired()) {
         return myChange;
     }
@@ -158,7 +158,7 @@ PlanChange RunningPlan::tick(RuleBook* rules)
         childChange = rules->updateChange(childChange, rp->tick(rules));
     }
     if (childChange != PlanChange::NoChange && childChange != PlanChange::InternalChange) {
-        myChange = rules->updateChange(myChange, rules->visit(*this, *(_ae->getWorldModel())));
+        myChange = rules->updateChange(myChange, rules->visit(*this));
     }
     return myChange;
 }
@@ -195,7 +195,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this, *(_ae->getWorldModel()));
+        return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -224,7 +224,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this, *(_ae->getWorldModel()));
+        bool ret = runtimeCondition->evaluate(*this, _ae->getWorldModel());
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
@@ -823,11 +823,6 @@ bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) co
 const Configuration* RunningPlan::getConfiguration() const
 {
     return _configuration;
-}
-
-IAlicaWorldModel* RunningPlan::getWorldModel() const
-{
-    return _ae->getWorldModel();
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

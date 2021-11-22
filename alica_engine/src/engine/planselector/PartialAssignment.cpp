@@ -146,7 +146,7 @@ bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, essentia
     return false;
 }
 
-bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const IAlicaWorldModel& wm)
+bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const IAlicaWorldModel* wm)
 {
     // iterate next idx for cases of pre-assigned agents:
     while (_nextAgentIdx < static_cast<int>(_assignment.size()) && _assignment[_nextAgentIdx] >= 0) {

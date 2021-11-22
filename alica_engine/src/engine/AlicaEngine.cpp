@@ -109,7 +109,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan);
+    _planBase.start(_masterPlan, _ctx.getWorldModel());
     ALICA_DEBUG_MSG("AE: Engine started!");
 }
 /**
