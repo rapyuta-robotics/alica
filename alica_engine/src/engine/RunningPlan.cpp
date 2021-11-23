@@ -776,6 +776,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
         return;
     }
     if (_activeTriple.state != nullptr) {
+        message.push_back(_activeTriple.entryPoint->getDynamicId());
         message.push_back(_activeTriple.state->getId());
     } else {
         return;

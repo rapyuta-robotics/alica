@@ -93,9 +93,9 @@ private:
      */
     bool _dynamic;
     /**
-     * The id specified by the app for an instance of this entry point at runtime
+     * The id specified by the app for an instance of this entry point at runtime. 0 is reserved & signifies `no dynamic id`
      */
-    int64_t _dynamicId;
+    int64_t _dynamicId = 0;
     /**
      * The unique index of this entrypoint in a plan's EntryPointGrp
      */

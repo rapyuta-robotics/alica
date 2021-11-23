@@ -40,7 +40,7 @@ bool TeamObserver::updateTeamPlanTrees()
         lock_guard<mutex> queueLock(_msgQueueMutex);
 
         for (const auto& msg : _msgQueue) {
-            std::unique_ptr<SimplePlanTree> spt = sptFromMessage(msg.first->senderID, msg.first->stateIDs, msg.second);
+            std::unique_ptr<SimplePlanTree> spt = sptFromMessage(msg.first->senderID, msg.first->dynamicStateIDPairs, msg.second);
             if (spt != nullptr) {
                 _tm.setTimeLastMsgReceived(msg.first->senderID, msg.second);
                 _tm.setSuccessMarks(msg.first->senderID, msg.first->succeededEPs);
@@ -123,7 +123,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     }
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
-    pti.stateIDs = msg;
+    pti.dynamicStateIDPairs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _ae->getCommunicator().sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
@@ -285,22 +285,22 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     ALICA_DEBUG_MSG("Spt from robot " << agentId);
     ALICA_DEBUG_MSG(ids);
 
-    if (ids.empty()) {
-        ALICA_ERROR_MSG("TO: Empty state list for agent " << agentId);
+    if (ids.size() < 2) {
+        ALICA_ERROR_MSG("TO: Empty dynamic, state pair list for agent " << agentId);
         return nullptr;
     }
 
     std::unique_ptr<SimplePlanTree> root{new SimplePlanTree()};
     root->setAgentId(agentId);
     root->setReceiveTime(time);
-    root->setStateIds(ids);
+    root->setDynamicStateIDPairs(ids);
 
-    int64_t root_id = ids[0];
+    int64_t root_id = ids[1];
     const PlanRepository::Accessor<State>& states = _ae->getPlanRepository().getStates();
     const State* s = states.find(root_id);
     if (s) {
         root->setState(s);
-        root->setEntryPoint(s->getEntryPoint());
+        root->setEntryPoint(s->getEntryPoint(ids[0]));
     } else {
         return nullptr;
     }
@@ -308,11 +308,12 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     SimplePlanTree* curParent = nullptr;
     SimplePlanTree* cur = root.get();
 
-    for (int i = 1; i < static_cast<int>(ids.size()); ++i) {
+    for (int i = 2; i < static_cast<int>(ids.size()); ) {
         const int64_t id = ids[i];
         if (id == -1) {
             curParent = cur;
             cur = nullptr;
+            ++i;
         } else if (id == -2) {
             cur = curParent;
             if (cur == nullptr) {
@@ -320,20 +321,26 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
                 return nullptr;
             }
             curParent = cur->getParent();
+            ++i;
         } else {
+            if (i + 1 == ids.size()) {
+                ALICA_WARNING_MSG("State id missing in plan tree from " << agentId << " which is executing dynamic entry point with id " << ids[i]);
+                return nullptr;
+            }
             cur = new SimplePlanTree();
             cur->setAgentId(agentId);
             cur->setReceiveTime(time);
             cur->setParent(curParent);
             curParent->editChildren().emplace_back(cur);
-            const State* s2 = states.find(id);
+            const State* s2 = states.find(ids[i + 1]);
             if (s2) {
                 cur->setState(s2);
-                cur->setEntryPoint(s2->getEntryPoint());
+                cur->setEntryPoint(s2->getEntryPoint(id));
             } else {
-                ALICA_WARNING_MSG("Unknown State (" << id << ") received from " << agentId);
+                ALICA_WARNING_MSG("Unknown State (" << ids[i + 1] << ") received from " << agentId);
                 return nullptr;
             }
+            i += 2;
         }
     }
     return root;

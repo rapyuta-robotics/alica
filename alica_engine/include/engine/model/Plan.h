@@ -31,7 +31,7 @@ public:
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
-    const EntryPoint* getEntryPointByID(int64_t epID) const;
+    const EntryPoint* getEntryPointByID(int64_t epID, int64_t dynamicID = 0) const;
     const State* getStateByID(int64_t stateID) const;
 
     const EntryPointGrp& getEntryPoints() const { return _allEntryPoints; }
@@ -75,6 +75,8 @@ private:
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
+
+    const EntryPoint* getEntryPointByIDImpl(int64_t epID) const;
 
     struct IDHash
     {
