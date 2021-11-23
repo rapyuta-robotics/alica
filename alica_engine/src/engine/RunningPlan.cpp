@@ -395,6 +395,7 @@ void RunningPlan::clearChildren()
  */
 void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 {
+    double oldUtility = _assignment.getLastUtilityValue();
     _assignment.adaptTaskChangesFrom(replacement.getAssignment());
     const State* newState = _assignment.getStateOfAgent(getOwnID());
 
@@ -402,7 +403,10 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 
     if (_activeTriple.state != newState) {
         if (_ae->getTraceFactory() && _basicPlan && _basicPlan->getTraceContext().has_value()) {
-            _basicPlan->getTrace()->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId())});
+            _basicPlan->getTrace()->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId()) + "\n"
+                                                + "oldUtility: " + std::to_string(oldUtility) + "\n"
+                                                + "newUtility: " + std::to_string(_assignment.getLastUtilityValue()) + "\n"
+                                                + "numberOfAgents: " + std::to_string(_assignment.size())});
         }
         _status.active = PlanActivity::InActive;
         deactivateChildren();

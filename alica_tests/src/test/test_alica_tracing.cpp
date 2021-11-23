@@ -89,7 +89,7 @@ TEST_F(AlicaTracingTest, runTracing)
     auto log = logs.front(); // MasterPlan
     EXPECT_EQ(log.first, "Plan");
     EXPECT_EQ(log.second, "true");
-    logs.pop();
+    logs.erase(logs.begin());
 
     log = logs.front(); // MasterPlan Init
     EXPECT_EQ(log.first, "Init");
@@ -99,7 +99,7 @@ TEST_F(AlicaTracingTest, runTracing)
     log = logs.front(); // SubPlan
     EXPECT_EQ(log.first, "Plan");
     EXPECT_EQ(log.second, "true");
-    logs.pop();
+    logs.erase(logs.begin());
 
     log = logs.front(); // SubPlan Init
     EXPECT_EQ(log.first, "Init");
@@ -109,7 +109,7 @@ TEST_F(AlicaTracingTest, runTracing)
     log = logs.front(); // Behaviour
     EXPECT_EQ(log.first, "Behaviour");
     EXPECT_EQ(log.second, "true");
-    logs.pop();
+    logs.erase(logs.begin());
 
     log = logs.front(); // Behaviour Init
     EXPECT_EQ(log.first, "Init");
@@ -129,7 +129,7 @@ TEST_F(AlicaTracingTest, runTracing)
     log = logs.front(); // SubPlan Terminate
     EXPECT_EQ(log.first, "Terminate");
     EXPECT_EQ(log.second, "true");
-    logs.pop();
+    logs.erase(logs.begin());
 }
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
