@@ -48,9 +48,9 @@ void SimplePlanTree::setReceiveTime(AlicaTime receiveTime)
     _receiveTime = receiveTime;
 }
 
-void SimplePlanTree::setStateIds(const IdGrp& stateIds)
+void SimplePlanTree::setDynamicStateIDPairs(const IdGrp& dynamicStateIdPairs)
 {
-    _stateIds = stateIds;
+    _dynamicStateIdPairs = dynamicStateIdPairs;
 }
 
 std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt)

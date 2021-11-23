@@ -41,7 +41,7 @@ const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const
     return nullptr;
 }
 
-const EntryPoint* Plan::getEntryPointByID(int64_t epID) const
+const EntryPoint* Plan::getEntryPointByIDImpl(int64_t epID) const
 {
     for (const EntryPoint* ep : _entryPoints) {
         if (ep->getId() == epID) {
@@ -59,6 +59,18 @@ const State* Plan::getStateByID(int64_t id) const
         }
     }
     return nullptr;
+}
+
+const EntryPoint* Plan::getEntryPointByID(int64_t epID, int64_t dynamicID) const
+{
+    auto ep = getEntryPointByIDImpl(epID);
+    if (!ep) {
+        return ep;
+    }
+    if (!ep->isDynamic()) {
+        return dynamicID ? nullptr : ep;
+    }
+    return std::addressof(_entryPointCache.lookup({epID, dynamicID}, *ep, dynamicID));
 }
 
 void Plan::setEntryPoints(const EntryPointGrp& entryPoints)

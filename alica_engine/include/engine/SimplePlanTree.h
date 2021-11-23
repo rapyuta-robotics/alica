@@ -29,8 +29,8 @@ public:
     void setProcessed() { _isNew = false; }
     AlicaTime getReceiveTime() const { return _receiveTime; }
     void setReceiveTime(AlicaTime receiveTime);
-    const IdGrp& getStateIds() const { return _stateIds; }
-    void setStateIds(const IdGrp& stateIds);
+    const IdGrp& getDynamicStateIDPairs() const { return _dynamicStateIdPairs; }
+    void setDynamicStateIDPairs(const IdGrp& dynamicStateIdPairs);
     bool containsPlan(const AbstractPlan* plan) const;
 
 private:
@@ -54,7 +54,7 @@ private:
      * The timestamp denoting when this tree was received.
      */
     AlicaTime _receiveTime;
-    IdGrp _stateIds;
+    IdGrp _dynamicStateIdPairs;
 };
 std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt);
 } /* namespace alica */

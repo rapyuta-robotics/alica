@@ -148,7 +148,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
             _sBuild << kvp.first;
             _sBuild << "\t";
 
-            auto ids = createHumanReadablePlanTree(kvp.second->getStateIds());
+            auto ids = createHumanReadablePlanTree(kvp.second->getDynamicStateIDPairs());
 
             for (const std::string& name : (*ids)) {
                 _sBuild << name << "\t";

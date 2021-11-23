@@ -33,7 +33,7 @@ public:
 
     std::string toString(std::string indent = "") const override;
     const Plan* getInPlan() const { return _inPlan; }
-    const EntryPoint* getEntryPoint() const { return _entryPoint; }
+    const EntryPoint* getEntryPoint(int64_t dynamicID = 0) const { return getInPlan()->getEntryPointByID(_entryPoint->getId(), dynamicID); }
     const ConfAbstractPlanWrapperGrp& getConfAbstractPlanWrappers() const { return _confAbstractPlanWrappers; }
     const TransitionGrp& getInTransitions() const { return _inTransitions; }
     const TransitionGrp& getOutTransitions() const { return _outTransitions; }
