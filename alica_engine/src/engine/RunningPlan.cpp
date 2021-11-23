@@ -402,8 +402,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 
     if (_activeTriple.state != newState) {
         if (_ae->getTraceFactory() && _basicPlan && _basicPlan->getTraceContext().has_value()) {
-            auto trace = _ae->getTraceFactory()->create("RP" + _basicPlan->getName(), _basicPlan->getTraceContext());
-            trace->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId())});
+            _basicPlan->getTrace()->setLog({"TaskAssignmentChange", replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId())});
         }
         _status.active = PlanActivity::InActive;
         deactivateChildren();

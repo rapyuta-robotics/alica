@@ -24,6 +24,8 @@ public:
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
 
+    IAlicaTrace* getTrace() { return _trace.get(); };
+
 protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
