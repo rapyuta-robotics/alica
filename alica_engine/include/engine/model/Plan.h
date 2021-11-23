@@ -3,6 +3,7 @@
 #include "AbstractPlan.h"
 #include "engine/Types.h"
 #include "engine/BasicPlan.h"
+#include "engine/util/LRUCache.h"
 
 namespace alica
 {
@@ -88,7 +89,7 @@ private:
     int _maxCardinality;
     EntryPointGrp _entryPoints;
     mutable EntryPointGrp _allEntryPoints;
-    mutable std::unordered_map<std::pair<int64_t, int64_t>, const EntryPoint*, IDHash> _entryPointCache;
+    mutable LRUCache<std::pair<int64_t, int64_t>, EntryPoint, IDHash> _entryPointCache;
     StateGrp _states;
     SuccessStateGrp _successStates;
     FailureStateGrp _failureStates;

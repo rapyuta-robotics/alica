@@ -27,6 +27,7 @@ public:
     EntryPoint();
     EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s);
     EntryPoint(const EntryPoint&) = default;
+    EntryPoint(const EntryPoint&, int64_t dynamicId);
     virtual ~EntryPoint();
 
     /**
