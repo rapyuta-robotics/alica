@@ -36,6 +36,12 @@ EntryPoint::EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s)
 {
 }
 
+EntryPoint::EntryPoint(const EntryPoint& ep, int64_t dynamicId)
+        : EntryPoint(ep)
+{
+    _dynamicId = dynamicId;
+}
+
 EntryPoint::~EntryPoint() {}
 
 void EntryPoint::computeReachabilitySet()
