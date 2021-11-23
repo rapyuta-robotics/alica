@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(alica_msgs)
 
-find_package(catkin REQUIRED message_generation std_msgs geometry_msgs id_ros)
+find_package(catkin REQUIRED message_generation std_msgs geometry_msgs)
 
 add_message_files(
   DIRECTORY msg FILES
@@ -10,7 +10,7 @@ add_message_files(
   RoleSwitch.msg
   SolverVar.msg
   SyncReady.msg
-  AlicaEngineInfo.msg 
+  AlicaEngineInfo.msg
   PlanTreeInfo.msg
   SolverResult.msg
   SyncData.msg
@@ -23,13 +23,12 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   std_msgs
-  id_ros
 )
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES alica_msgs
-   CATKIN_DEPENDS std_msgs geometry_msgs message_runtime id_ros
+   CATKIN_DEPENDS std_msgs geometry_msgs message_runtime
 #  DEPENDS system_lib
 )
 

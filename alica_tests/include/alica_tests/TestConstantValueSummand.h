@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/USummand.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -13,7 +12,7 @@ public:
     virtual ~TestConstantValueSummand();
 
     UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const override;
-    essentials::IdentifierConstPtr robotId;
+    AgentId robotId;
 
 protected:
     double val;

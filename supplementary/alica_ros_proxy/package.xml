@@ -14,7 +14,6 @@
   <depend>alica_common_config</depend>
   <depend>alica_msgs</depend>
   <depend>roscpp</depend>
-  <depend>id_ros</depend>
   <build_depend>message_generation</build_depend>
 
   <exec_depend>message_runtime</exec_depend>

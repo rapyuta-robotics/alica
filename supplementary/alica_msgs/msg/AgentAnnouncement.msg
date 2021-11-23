@@ -1,4 +1,4 @@
-id_ros/ID sender_id
+uint64 sender_id
 uint32 token
 string sender_name
 uint32 sender_sdk

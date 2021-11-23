@@ -53,7 +53,7 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine, essentials::IdentifierConstPtr agentID)
+TeamManager::TeamManager(AlicaEngine* engine, AgentId agentID)
         : _localAgent(nullptr)
         , _localAgentID(agentID)
         , _engine(engine)
@@ -97,13 +97,12 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
     }
     const std::string localAgentName = _engine->getLocalAgentName();
 
-    if (_localAgentID == nullptr) {
-        constexpr auto notAValidID = std::numeric_limits<uint64_t>::max();
-        uint64_t id = config["Local"]["ID"].as<uint64_t>(notAValidID);
-        if (id != notAValidID) {
-            _localAnnouncement.senderID = _engine->getID(id);
+    if (_localAgentID == InvalidAgentID) {
+        uint64_t id = config["Local"]["ID"].as<uint64_t>(InvalidAgentID);
+        if (id != InvalidAgentID) {
+            _localAnnouncement.senderID = id;
         } else {
-            _localAnnouncement.senderID = _engine->generateID(DEFAULT_AGENT_ID_SIZE);
+            _localAnnouncement.senderID = _engine->generateID();
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
         }
     } else {
@@ -156,12 +155,12 @@ int TeamManager::getTeamSize() const
     return ActiveAgentIdView(_agentsCache.get()).size();
 }
 
-const Agent* TeamManager::getAgentByID(essentials::IdentifierConstPtr agentId) const
+const Agent* TeamManager::getAgentByID(AgentId agentId) const
 {
     return getAgent(agentId);
 }
 
-Agent* TeamManager::getAgent(essentials::IdentifierConstPtr agentId) const
+Agent* TeamManager::getAgent(AgentId agentId) const
 {
     AgentsCache::AgentMap& agents = *_agentsCache.get();
     auto agentEntry = agents.find(agentId);
@@ -172,12 +171,12 @@ Agent* TeamManager::getAgent(essentials::IdentifierConstPtr agentId) const
     return nullptr;
 }
 
-essentials::IdentifierConstPtr TeamManager::getLocalAgentID() const
+AgentId TeamManager::getLocalAgentID() const
 {
     return _localAgent->getId();
 }
 
-void TeamManager::setTimeLastMsgReceived(essentials::IdentifierConstPtr agentId, AlicaTime timeLastMsgReceived)
+void TeamManager::setTimeLastMsgReceived(AgentId agentId, AlicaTime timeLastMsgReceived)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -185,7 +184,7 @@ void TeamManager::setTimeLastMsgReceived(essentials::IdentifierConstPtr agentId,
     }
 }
 
-bool TeamManager::isAgentActive(essentials::IdentifierConstPtr agentId) const
+bool TeamManager::isAgentActive(AgentId agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -198,7 +197,7 @@ bool TeamManager::isAgentActive(essentials::IdentifierConstPtr agentId) const
  * Checks if an agent is ignored
  * @param agentId an essentials::AgentID identifying the agent
  */
-bool TeamManager::isAgentIgnored(essentials::IdentifierConstPtr agentId) const
+bool TeamManager::isAgentIgnored(AgentId agentId) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -208,7 +207,7 @@ bool TeamManager::isAgentIgnored(essentials::IdentifierConstPtr agentId) const
     return true;
 }
 
-void TeamManager::setAgentIgnored(essentials::IdentifierConstPtr agentId, const bool ignored) const
+void TeamManager::setAgentIgnored(AgentId agentId, const bool ignored) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -216,7 +215,7 @@ void TeamManager::setAgentIgnored(essentials::IdentifierConstPtr agentId, const 
     }
 }
 
-bool TeamManager::setSuccess(essentials::IdentifierConstPtr agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -226,7 +225,7 @@ bool TeamManager::setSuccess(essentials::IdentifierConstPtr agentId, const Abstr
     return false;
 }
 
-bool TeamManager::setSuccessMarks(essentials::IdentifierConstPtr agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(AgentId agentId, const IdGrp& suceededEps)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
@@ -236,7 +235,7 @@ bool TeamManager::setSuccessMarks(essentials::IdentifierConstPtr agentId, const 
     return false;
 }
 
-const DomainVariable* TeamManager::getDomainVariable(essentials::IdentifierConstPtr agentId, const std::string& sort) const
+const DomainVariable* TeamManager::getDomainVariable(AgentId agentId, const std::string& sort) const
 {
     Agent* agent = getAgent(agentId);
     if (agent) {

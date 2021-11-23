@@ -8,6 +8,7 @@
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/Types.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -20,7 +21,7 @@ namespace alica
  */
 AuthorityManager::AuthorityManager(AlicaEngine* engine)
         : _engine(engine)
-        , _localAgentID(nullptr)
+        , _localAgentID(InvalidAgentID)
 {
 }
 
@@ -55,7 +56,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
     if (_localAgentID < aai.senderID) {
         // notify TO that evidence about other robots is available
         for (EntryPointRobots epr : aai.entryPointRobots) {
-            for (essentials::IdentifierConstPtr rid : epr.robots) {
+            for (AgentId rid : epr.robots) {
                 if (rid != _localAgentID) {
                     tm.setTimeLastMsgReceived(rid, now);
                 }

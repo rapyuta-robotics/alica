@@ -65,11 +65,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 
-    essentials::IDManager idManager;
-    int idA1 = 1;
-    int idA2 = 2;
-    essentials::IdentifierConstPtr a1 = idManager.getID<int>(idA1);
-    essentials::IdentifierConstPtr a2 = idManager.getID<int>(idA2);
+    AgentId a1 = 1;
+    AgentId a2 = 2;
 
     alica::EntryPointRobotPair aTot1(&e1, a1);
     alica::EntryPointRobotPair bTot1(&e1, a2);
@@ -109,8 +106,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
     dbr2->robotId = acs[1]->getLocalAgentId();
 
-    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
+    AgentId id1 = acs[0]->getLocalAgentId();
+    AgentId id2 = acs[1]->getLocalAgentId();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
     aes[0]->start();

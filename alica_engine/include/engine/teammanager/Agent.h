@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
+#include "engine/Types.h"
 
 #include <list>
 #include <memory>
@@ -29,7 +30,7 @@ class Agent
 public:
     ~Agent();
 
-    essentials::IdentifierConstPtr getId() const { return _id; }
+    AgentId getId() const { return _id; }
     const std::string& getName() const { return _name; }
     const RobotProperties& getProperties() const { return _properties; }
     const RobotEngineData& getEngineData() const { return _engineData; }
@@ -45,7 +46,7 @@ private:
     Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
-    essentials::IdentifierConstPtr _id;
+    AgentId _id;
     bool _active;
     bool _ignored;
     bool _local;

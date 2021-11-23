@@ -122,7 +122,7 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
  * If the robot has already assigned itself, this method updates the partial assignment accordingly
  */
 // TODO: this is pretty inefficient
-bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, essentials::IdentifierConstPtr agent, int idx)
+bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentId agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
         const int numEps = static_cast<int>(_plan->getEntryPoints().size());
@@ -223,8 +223,8 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
     out << "Utility: " << pa._utility << std::endl;
     out << "Agents: ";
-    for (essentials::IdentifierConstPtr agent : pa._problem->getAgents()) {
-        out << *agent << " ";
+    for (AgentId agent : pa._problem->getAgents()) {
+        out << agent << " ";
     }
     out << std::endl;
     if (p) {

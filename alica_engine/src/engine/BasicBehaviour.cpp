@@ -39,7 +39,7 @@ BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name)
  * Convenience method to obtain the robot's own id.
  * @return the own robot id
  */
-essentials::IdentifierConstPtr BasicBehaviour::getOwnId() const
+AgentId BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

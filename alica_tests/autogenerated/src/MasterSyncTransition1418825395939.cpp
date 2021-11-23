@@ -3,7 +3,6 @@
 // Add additional using directives here
 #include <alica_tests/TestWorldModel.h>
 #include <engine/AlicaEngine.h>
-#include <essentials/IdentifierConstPtr.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -62,10 +61,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
 bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418825425833) ENABLED START*/
-    int id8 = 8;
-    essentials::IdentifierConstPtr agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    AgentId agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1418825427317();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1418825427317();
@@ -90,10 +88,9 @@ bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp, const 
 bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418825427469) ENABLED START*/
-    int id8 = 8;
-    essentials::IdentifierConstPtr agentID8 = rp->getAlicaEngine()->getID<int>(id8);
+    AgentId agentID8 = 8;
 
-    if (*(rp->getOwnID()) == *agentID8) {
+    if (rp->getOwnID() == agentID8) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition1418825428924();
     } else {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1418825428924();
