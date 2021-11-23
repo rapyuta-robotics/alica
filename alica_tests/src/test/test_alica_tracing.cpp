@@ -145,8 +145,8 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
     dbr2->robotId = acs[1]->getLocalAgentId();
 
-    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
+    AgentId id1 = acs[0]->getLocalAgentId();
+    AgentId id2 = acs[1]->getLocalAgentId();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
     aes[0]->start();
