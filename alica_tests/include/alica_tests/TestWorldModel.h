@@ -63,8 +63,6 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
-    std::shared_ptr<essentials::ITrigger> trigger1;
-    std::shared_ptr<essentials::ITrigger> trigger2;
 
     std::vector<std::string> configParameter;
     std::vector<std::pair<std::string, std::string>> tracingTags;
