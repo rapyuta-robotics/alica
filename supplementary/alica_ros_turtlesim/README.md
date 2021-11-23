@@ -1,6 +1,6 @@
 # Turtlesim Tutorial
 ## 1. Overview
-This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn 
+This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn
 - some of the core concepts of the ALICA language
 - how to achieve multi-agent collaboration with the ALICA framework
 
@@ -82,7 +82,7 @@ docker-compose up
 ```
 
 You can open the Plan Designer with a browser of your choice by visiting the url
-http://localhost:3000.
+http://localhost:3030.
 
  When you start the Plan Designer the first time, its main window should look like this:
 
@@ -173,9 +173,9 @@ alica_ros_turtlesim/alica/etc/ folder.
 
 Your generated files will be stored in /alica-supplementary/alica_ros_turtlesim/alica/Expr
 
-## 7. Implement Logics 
+## 7. Implement Logics
 
-After the ALICA plan designer generated the method stubs, you need to modify/implement the logic in these stubs. In this section, the necessary code changes are explained for this. 
+After the ALICA plan designer generated the method stubs, you need to modify/implement the logic in these stubs. In this section, the necessary code changes are explained for this.
 ### 7.1 World model
 
 We will explain only `base.cpp` which is related to ALICA.
@@ -534,7 +534,7 @@ void Constraint1288817888979746811::getConstraint(std::shared_ptr<ProblemDescrip
 ```
 
 
-  - L3~7: include alica engine related header files and world model.    
+  - L3~7: include alica engine related header files and world model.
   - L46~110: Iterate over all agents and add constraints for each
   - L47~73: Preparing/getting variables and add range constraints
   - L77: add constraints for `Leader` agent. Leader agent moves to center of circle within tolearence
@@ -732,7 +732,7 @@ Run application with roslaunch. video
 			`roslaunch alica_ros_turtlesim env.launch`
 - Turtle node(you can launch turtle with different name till 5 turtles)
 `roslaunch alica_ros_turtlesim turtle.launch name:=turtle1`
-- Start moving. 
+- Start moving.
 `rostopic pub /init std_msgs/Empty "{}" `
 
 
@@ -744,7 +744,3 @@ If you get the following error message when starting a turtle
 `Unknown quantifier type encountered!`, have a look at the
 file `alica/etc/plans/Move.pml` and make sure the value of the field
 `quantifierType` is set to `"all"`.
-
-
-
-
