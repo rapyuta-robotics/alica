@@ -35,11 +35,6 @@
 #include <engine/modelmanagement/factories/TaskFactory.h>
 #include <communication/AlicaDummyCommunication.h>
 
-// authority
-
-
-
-
 #include <gtest/gtest.h>
 
 namespace alica
@@ -178,7 +173,8 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 
     bool foundTaskAssignmentChangeLog = false;
     for (auto log : logs) {
-        if (log.first == "TaskAssignmentChange" && log.second == "AttackTask1414403522424") {
+        if (log.first == "TaskAssignmentChange") {
+            EXPECT_EQ(log.second, "AttackTask1414403522424\noldUtility: 0.022727\nnewUtility: 0.022727\nnumberOfAgents: 2");
             foundTaskAssignmentChangeLog = true;
             break;
         }
