@@ -62,20 +62,25 @@ protected:
         nh.param<std::string>("rootPath", path, ".");
         ac = new alica::AlicaContext(AlicaContextParams("nase", path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
+        spinner = std::make_unique<ros::AsyncSpinner>(4);
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        spinner->start();
         EXPECT_TRUE(ae->init(creators));
     }
 
     void TearDown() override
     {
+        spinner->stop();
         ac->terminate();
         delete ac;
     }
+
+    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestFixtureWithSolvers : public AlicaTestFixture
@@ -95,6 +100,8 @@ class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 protected:
     std::vector<alica::AlicaContext*> acs;
     std::vector<alica::AlicaEngine*> aes;
+    std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
+    std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
@@ -117,13 +124,17 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
+            cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
+            spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             alica::AlicaContext* ac =
                     new alica::AlicaContext(AlicaContextParams(getHostName(i), path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            alica::AlicaContext* ac = new alica::AlicaContext(AlicaContextParams(getHostName(i),path+ "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
-            ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+            ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(*cbQueues.back());
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+            spinners.back()->start();
             EXPECT_TRUE(ae->init(creators));
             acs.push_back(ac);
             aes.push_back(ae);
@@ -132,11 +143,15 @@ protected:
 
     void TearDown() override
     {
+        for (auto& spinner : spinners) {
+            spinner->stop();
+        }
         for (alica::AlicaContext* ac : acs) {
             ac->terminate();
             delete ac;
         }
     }
+
 };
 } // namespace supplementary
 extern std::jmp_buf restore_point;

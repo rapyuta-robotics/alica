@@ -23,8 +23,7 @@ namespace alicaRosProxy
 class AlicaRosCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaRosCommunication(AlicaEngine* ae);
-    AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCount, bool privateQueue = false);
+    AlicaRosCommunication(AlicaEngine* ae, ros::CallbackQueue& cb_queue = *ros::getGlobalCallbackQueue());
     virtual ~AlicaRosCommunication();
 
     void tick();
@@ -53,8 +52,7 @@ public:
 
 private:
     ros::NodeHandle* _rosNode;
-    ros::AsyncSpinner* _spinner;
-    ros::CallbackQueue* _callbackQueue;
+    ros::CallbackQueue& _callbackQueue;
 
     ros::Publisher _alicaEngineInfoPublisher;
     ros::Publisher _roleSwitchPublisher;
