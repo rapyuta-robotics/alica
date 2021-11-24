@@ -215,11 +215,11 @@ void TeamManager::setAgentIgnored(AgentId agentId, const bool ignored) const
     }
 }
 
-bool TeamManager::setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(AgentId agentId, std::optional<std::size_t> parentRpContext, const EntryPoint* entryPoint)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
-        agent->setSuccess(plan, entryPoint);
+        agent->setSuccess(parentRpContext, entryPoint);
         return true;
     }
     return false;

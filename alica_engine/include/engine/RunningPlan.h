@@ -218,6 +218,7 @@ private:
     bool evalRuntimeCondition() const;
     // Status Information
     PlanStateTriple _activeTriple;
+    std::size_t _contextHash; // hash of the dynamic entry point id, state id & parent hash
     PlanStatusInfo _status;
     const Configuration* _configuration;
 

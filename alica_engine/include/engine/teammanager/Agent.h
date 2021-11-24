@@ -62,7 +62,7 @@ private:
     void setLocal(bool local);
     void setIgnored(const bool ignored) { _ignored = ignored; }
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
-    void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
+    void setSuccess(std::optional<std::size_t> parentRpContext, const EntryPoint* entryPoint);
     void setSuccessMarks(const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
     const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;

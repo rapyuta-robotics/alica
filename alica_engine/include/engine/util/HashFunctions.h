@@ -7,6 +7,12 @@
 namespace alica
 {
 
+// TODO: implement a hash function for integers that avoids collissions
+std::size_t contextHash(int64_t value);
+
+// TODO: implement a function that can combine 2 hashes
+std::size_t contextHashCombine(std::size_t h1, std::size_t h2);
+
 inline uint64_t Hash64(const uint8_t* buf, size_t len)
 {
     return CityHash64(reinterpret_cast<const char*>(buf), len);

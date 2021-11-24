@@ -42,9 +42,9 @@ void Agent::setTimeout(AlicaTime t)
     _timeout = t;
 }
 
-void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
+void Agent::setSuccess(std::optional<std::size_t> parentRpContext, const EntryPoint* entryPoint)
 {
-    _engineData.editSuccessMarks().markSuccessful(plan, entryPoint);
+    _engineData.editSuccessMarks().markSuccessful(parentRpContext, entryPoint);
 }
 
 void Agent::setSuccessMarks(const IdGrp& suceededEps)
