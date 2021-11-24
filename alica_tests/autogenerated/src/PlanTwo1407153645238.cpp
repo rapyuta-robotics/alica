@@ -15,8 +15,8 @@ namespace alica
 //   - DefaultState (1407153656781)
 //   - AttackState (1407153860891)
 //   - DefendState (1407153869754)
-PlanTwo1407153645238::PlanTwo1407153645238()
-        : DomainPlan()
+PlanTwo1407153645238::PlanTwo1407153645238(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1407153645238) ENABLED START*/
     // Add additional options here

@@ -17,8 +17,8 @@ namespace alica
 //   - SecondTaskFirstState (1418825404963)
 //   - FirstTaskSecondState (1418825409988)
 //   - SecondTaskSecondState (1418825411686)
-MasterSyncTransition1418825395939::MasterSyncTransition1418825395939()
-        : DomainPlan()
+MasterSyncTransition1418825395939::MasterSyncTransition1418825395939(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1418825395939) ENABLED START*/
     // Add additional options here
@@ -58,7 +58,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
  *
  * Abstract Plans in FirstTaskFirstState:
  */
-bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418825425833) ENABLED START*/
     AgentId agentID8 = 8;
@@ -85,7 +85,7 @@ bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in SecondTaskFirstState:
  */
-bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418825427469) ENABLED START*/
     AgentId agentID8 = 8;

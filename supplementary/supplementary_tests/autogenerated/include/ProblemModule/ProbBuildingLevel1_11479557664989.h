@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1479557664989) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class ProbBuildingLevel1_11479557664989 : public DomainPlan
 {
 public:
-    ProbBuildingLevel1_11479557664989();
+    ProbBuildingLevel1_11479557664989(IAlicaWorldModel* wm);
     virtual ~ProbBuildingLevel1_11479557664989();
     /*PROTECTED REGION ID(pub1479557664989) ENABLED START*/
     // Add additional public methods here

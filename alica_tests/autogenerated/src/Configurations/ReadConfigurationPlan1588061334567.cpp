@@ -14,8 +14,8 @@ namespace alica
 //   - DecisionState (1588069177860)
 //   - StateA (1588069261047)
 //   - StateB (1588069265377)
-ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567()
-        : DomainPlan()
+ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1588061334567) ENABLED START*/
     // Add additional options here
@@ -52,7 +52,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1588069612659) ENABLED START*/
     std::string value;
@@ -74,7 +74,7 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1588069615552) ENABLED START*/
     std::string value;

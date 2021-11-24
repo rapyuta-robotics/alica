@@ -12,7 +12,7 @@ namespace alica
 namespace
 {
 
-class AlicaSchedulingPlan : public AlicaTestFixture
+class AlicaSchedulingPlan : public AlicaSchedulingTestFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
@@ -20,13 +20,11 @@ protected:
     bool stepEngine() const override { return true; }
     virtual void SetUp() override
     {
-        alica_test::SchedWM::instance().reset();
-        AlicaTestFixture::SetUp();
+        AlicaSchedulingTestFixture::SetUp();
     }
     virtual void TearDown() override
     {
-        AlicaTestFixture::TearDown();
-        alica_test::SchedWM::instance().reset();
+        AlicaSchedulingTestFixture::TearDown();
     }
 };
 
@@ -60,7 +58,8 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
 
     std::string planAInitOrder = "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n";
     std::string planATermOrder = "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n";
@@ -68,35 +67,35 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     std::string planBTermOrder = "BehBAA::Term\nPlanBA::Term\nPlanB::Term\n";
 
     std::string expectedExecOrder = planAInitOrder;
-    wm.execOrderTest = true;
+    wm->execOrderTest = true;
     ac->stepEngine();
-    ASSERT_EQ(expectedExecOrder, wm.execOrder);
+    ASSERT_EQ(expectedExecOrder, wm->execOrder);
 
     for (int i = 0; i < 10; ++i) {
         expectedExecOrder += planATermOrder + planBInitOrder;
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
-        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+        ASSERT_EQ(expectedExecOrder, wm->execOrder);
 
         expectedExecOrder += planBTermOrder + planAInitOrder;
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
-        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+        ASSERT_EQ(expectedExecOrder, wm->execOrder);
     }
 
-    wm.execOrder.clear();
-    wm.execOrder = planAInitOrder;
+    wm->execOrder.clear();
+    wm->execOrder = planAInitOrder;
     for (int i = 0; i < 10; ++i) {
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
     }
-    ASSERT_EQ(expectedExecOrder, wm.execOrder);
+    ASSERT_EQ(expectedExecOrder, wm->execOrder);
 }
 
 TEST_F(AlicaSchedulingPlan, orderedRunCheck)
@@ -104,25 +103,26 @@ TEST_F(AlicaSchedulingPlan, orderedRunCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     for (int i = 0; i < 10; ++i) {
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
 
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
     }
-    ASSERT_TRUE(wm.planARunCalled);
-    ASSERT_FALSE(wm.planARunOutOfOrder);
-    ASSERT_TRUE(wm.behAAARunCalled);
-    ASSERT_FALSE(wm.behAAARunOutOfOrder);
+    ASSERT_TRUE(wm->planARunCalled);
+    ASSERT_FALSE(wm->planARunOutOfOrder);
+    ASSERT_TRUE(wm->behAAARunCalled);
+    ASSERT_FALSE(wm->behAAARunOutOfOrder);
 }
 
 TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
@@ -130,64 +130,65 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInInit);
-    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(wm->behAAASuccessInInit);
+    ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.behAAASetSuccess = true;
+    wm->behAAASetSuccess = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     ASSERT_TRUE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetSuccessFailed);
+    ASSERT_FALSE(wm->behAAASetSuccessFailed);
 
-    wm.behAAASetSuccess = false;
-    wm.behAAASetFailure = true;
+    wm->behAAASetSuccess = false;
+    wm->behAAASetFailure = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_TRUE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetFailureFailed);
+    ASSERT_FALSE(wm->behAAASetFailureFailed);
 
-    wm.planA2PlanB = true;
-    wm.planB2PlanA = false;
+    wm->planA2PlanB = true;
+    wm->planB2PlanA = false;
     ac->stepEngine();
-    wm.behAAASetSuccess = false;
-    wm.behAAASetFailure = false;
+    wm->behAAASetSuccess = false;
+    wm->behAAASetFailure = false;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInTerminate);
-    ASSERT_FALSE(wm.behAAAFailureInTerminate);
+    ASSERT_FALSE(wm->behAAASuccessInTerminate);
+    ASSERT_FALSE(wm->behAAAFailureInTerminate);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.planA2PlanB = false;
-    wm.planB2PlanA = true;
+    wm->planA2PlanB = false;
+    wm->planB2PlanA = true;
     ac->stepEngine();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInInit);
-    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(wm->behAAASuccessInInit);
+    ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.behAAASetSuccess = true;
+    wm->behAAASetSuccess = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     ASSERT_TRUE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetSuccessFailed);
-    wm.behAAABlockRun = true;
+    ASSERT_FALSE(wm->behAAASetSuccessFailed);
+    wm->behAAABlockRun = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    wm.planA2PlanB = true;
-    wm.planB2PlanA = false;
+    wm->planA2PlanB = true;
+    wm->planB2PlanA = false;
     ac->stepEngine();
-    wm.behAAABlockRun = false;
+    wm->behAAABlockRun = false;
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 }
@@ -196,8 +197,10 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 {
     CounterClass::called = -1;
     ae->start();
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     auto behAAA = std::dynamic_pointer_cast<alica::BehAAA>(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0));
@@ -207,8 +210,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         ASSERT_GT(behAAA->runCount, 10);
 
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
 
         ASSERT_EQ(behAAA->runCount, 0);
@@ -216,8 +219,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         ASSERT_GT(behBAA->runCount, 10);
 
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
 
         ASSERT_EQ(behBAA->runCount, 0);

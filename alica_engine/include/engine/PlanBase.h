@@ -33,6 +33,7 @@ class StateCollection;
 class AlicaEngine;
 class PlanType;
 class Plan;
+class IAlicaWorldModel;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -51,7 +52,7 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan);
+    void start(const Plan* masterPlan, const IAlicaWorldModel* wm);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 

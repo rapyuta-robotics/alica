@@ -4,6 +4,7 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "UtilityFunctionCreator.h"
+#include "alica_tests/TestWorldModel.h"
 
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -43,6 +44,7 @@ protected:
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
     ASSERT_NO_SIGNAL
+    // auto& wm = dynamic_cast<const alicaTests::TestWorldModel&>(*(ae->getWorldModel()));
 
     // fake a list of existing robots
     alica::AgentGrp robots;
@@ -93,6 +95,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 TEST_F(TaskAssignmentTest, switchEntryPoints)
 {
     ASSERT_NO_SIGNAL
+    // auto& wm = dynamic_cast<const alicaTests::TestWorldModel&>(*(ae->getWorldModel()));
 
     // fake a list of existing robots
     alica::AgentGrp robots;

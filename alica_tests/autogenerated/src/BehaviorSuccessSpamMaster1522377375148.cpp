@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Normal (1522377375149)
 //   - Dummy (1522377929290)
-BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148()
-        : DomainPlan()
+BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1522377375148) ENABLED START*/
     // Add additional options here
@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
  * Abstract Plans in Normal:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1522377944058) ENABLED START*/
     bool ok = rp->isAnyChildStatus(alica::PlanStatus::Success);
@@ -77,7 +77,7 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Dummy:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1522377945069) ENABLED START*/
     bool ok = rp->isAnyChildStatus(alica::PlanStatus::Success);

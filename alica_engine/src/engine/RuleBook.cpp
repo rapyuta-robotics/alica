@@ -5,6 +5,7 @@
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
@@ -46,6 +47,12 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
 }
 
 RuleBook::~RuleBook() {}
+
+void RuleBook::init(const IAlicaWorldModel* wm)
+{
+    _wm = wm;
+    _ps->setWorldModel(wm);
+}
 
 void RuleBook::reload(const YAML::Node& config)
 {
@@ -433,7 +440,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
         if (t->getSynchronisation() != nullptr)
             continue;
-        if (t->evalCondition(r)) {
+        if (t->evalCondition(r, _wm)) {
             nextState = t->getOutState();
             r.editConstraintStore().addCondition(t->getPreCondition());
             break;
@@ -479,7 +486,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             continue;
         }
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp)) {
+            if (t->evalCondition(rp, _wm)) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 rp.editConstraintStore().addCondition(t->getPreCondition());
@@ -490,7 +497,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->evalCondition(rp));
+            _sm.setSynchronisation(t, t->evalCondition(rp, _wm));
         }
     }
     if (nextState == nullptr) {

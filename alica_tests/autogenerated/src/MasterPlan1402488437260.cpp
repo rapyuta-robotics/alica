@@ -16,8 +16,8 @@ namespace alica
 //   - Goal (1402488470615)
 //   - MidField (1402488477650)
 //   - SucGoalState (1402488536570)
-MasterPlan1402488437260::MasterPlan1402488437260()
-        : DomainPlan()
+MasterPlan1402488437260::MasterPlan1402488437260(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1402488437260) ENABLED START*/
     // Add additional options here
@@ -57,7 +57,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488437260::getUtilityFunctio
  * Abstract Plans in Attack:
  *   - Attack (1402488848841)
  */
-bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402488517667) ENABLED START*/
     return false;
@@ -78,7 +78,7 @@ bool PreCondition1402488519140::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Attack:
  *   - Attack (1402488848841)
  */
-bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1409218318661) ENABLED START*/
     return false;
@@ -99,7 +99,7 @@ bool PreCondition1409218319990::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Goal:
  *   - GoalPlan (1402488870347)
  */
-bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402488557864) ENABLED START*/
     return false;
@@ -122,7 +122,7 @@ bool PreCondition1402488558741::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - DefendMid (1402488730695)
  *   - MidFieldPlayPlan (1402488770050)
  */
-bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402488520968::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402488519757) ENABLED START*/
     return false;

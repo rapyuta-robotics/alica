@@ -26,8 +26,8 @@ namespace alica
  * If using eventTrigger set behaviourTrigger
  * @param name The name of the behaviour
  */
-BasicBehaviour::BasicBehaviour(const std::string& name)
-        : RunnableObject(name)
+BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name)
+        : RunnableObject(wm, name)
         , _behaviour(nullptr)
         , _msDelayedStart(AlicaTime::milliseconds(0))
         , _behResult(BehResult::UNKNOWN)
