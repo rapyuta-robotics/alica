@@ -16,8 +16,8 @@ namespace alica
 // States:
 //   - UpperState (1414403429950)
 //   - LowerState (1414403553717)
-AuthorityTest1414403413451::AuthorityTest1414403413451()
-        : DomainPlan()
+AuthorityTest1414403413451::AuthorityTest1414403413451(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1414403413451) ENABLED START*/
     // Add additional options here

@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - 508968687272454527 (508968687272454527)
 //   - 807253925929611286 (807253925929611286)
-PlanPoolTestMasterPlan1964838032551226161::PlanPoolTestMasterPlan1964838032551226161()
-        : DomainPlan()
+PlanPoolTestMasterPlan1964838032551226161::PlanPoolTestMasterPlan1964838032551226161(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1964838032551226161) ENABLED START*/
     // Add additional options here
@@ -53,10 +53,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1964838032551226161::getUtilityF
  * Abstract Plans in 508968687272454527:
  *   - PlanPoolTestSubPlan (432995127772554364)
  */
-bool PreCondition4238964946542987247::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition4238964946542987247::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(4186311028071767502) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition4238964946542987247();
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->isTransitionCondition4238964946542987247();
     /*PROTECTED REGION END*/
 }
 /**
@@ -74,10 +75,11 @@ bool PreCondition4238964946542987247::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in 807253925929611286:
  *   - PlanPoolTestSubPlan (432995127772554364)
  */
-bool PreCondition4115970455290610262::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition4115970455290610262::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3610919168422994279) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition4115970455290610262();
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->isTransitionCondition4115970455290610262();
     /*PROTECTED REGION END*/
 }
 

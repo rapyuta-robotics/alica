@@ -45,19 +45,20 @@ TEST_F(AlicaEngineTestPlanPool, planPoolInit)
 TEST_F(AlicaEngineTestPlanPoolConfigs, planPoolCheckPlanConfigs)
 {
     ASSERT_NO_SIGNAL
-    alicaTests::TestWorldModel::getOne()->configParameter.clear();
-    alicaTests::TestWorldModel::getOne()->setTransitionCondition4238964946542987247(false);
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
+    wm->configParameter.clear();
+    wm->setTransitionCondition4238964946542987247(false);
 
     ae->start();
     ac->stepEngine();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
-    alicaTests::TestWorldModel::getOne()->setTransitionCondition4238964946542987247(true);
+    wm->setTransitionCondition4238964946542987247(true);
     ac->stepEngine();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
-    ASSERT_EQ(alicaTests::TestWorldModel::getOne()->configParameter[0], "1");
-    ASSERT_EQ(alicaTests::TestWorldModel::getOne()->configParameter[1], "2");
+    ASSERT_EQ(wm->configParameter[0], "1");
+    ASSERT_EQ(wm->configParameter[1], "2");
 }
 
 }

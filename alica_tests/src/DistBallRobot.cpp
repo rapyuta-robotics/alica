@@ -2,6 +2,7 @@
 #include <alica_tests/TestWorldModel.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
+#include <engine/IAlicaWorldModel.h>
 
 namespace alica
 {
@@ -19,7 +20,7 @@ DistBallRobot::~DistBallRobot()
 {
 }
 
-UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss) const
+UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     UtilityInterval ui(0.0, 1.0);
 

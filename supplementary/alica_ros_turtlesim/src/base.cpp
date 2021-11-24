@@ -12,6 +12,7 @@
 #include <ros/ros.h>
 
 #include <alica_ros_turtlesim/base.hpp>
+#include "alica_ros_turtlesim/DummyWorldModel.h"
 
 namespace turtlesim
 {
@@ -25,6 +26,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false));
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+    ac->setWorldModel<DummyWorldModel>();
     ac->addSolver<alica::reasoner::CGSolver>();
 }
 

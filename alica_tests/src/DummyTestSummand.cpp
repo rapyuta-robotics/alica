@@ -24,7 +24,7 @@ DummyTestSummand::DummyTestSummand(double weight)
 
 DummyTestSummand::~DummyTestSummand() {}
 
-UtilityInterval DummyTestSummand::eval(IAssignment ass, const Assignment* oldAss) const
+UtilityInterval DummyTestSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     UtilityInterval ui(0.0, 1.0);
 

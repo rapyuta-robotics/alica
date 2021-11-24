@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-MidFieldStandard::MidFieldStandard()
-        : DomainBehaviour("MidFieldStandard")
+MidFieldStandard::MidFieldStandard(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "MidFieldStandard")
 {
     /*PROTECTED REGION ID(con1402488696205) ENABLED START*/
     // Add additional options here
