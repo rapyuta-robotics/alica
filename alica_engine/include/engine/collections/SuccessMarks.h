@@ -19,19 +19,19 @@ public:
 
     void limitToPlans(const AbstractPlanGrp& active);
     void update(const AlicaEngine* ae, const IdGrp& succeededEps);
-    const std::map<const AbstractPlan*, EntryPointGrp>& getSuccessMarks() const { return _successMarks; }
+    const std::map<std::optional<std::size_t>, const EntryPoint*>& getSuccessMarks() const { return _successMarks; }
 
     void clear();
     const EntryPointGrp* succeededEntryPoints(const AbstractPlan* p) const;
     void removePlan(const AbstractPlan* plan);
-    void markSuccessful(const AbstractPlan* p, const EntryPoint* e);
+    void markSuccessful(std::optional<std::size_t> parentRpContext, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
     bool anyTaskSucceeded(const AbstractPlan* p) const;
-    IdGrp toIdGrp() const;
+    std::vector<std::size_t> toContextGrp() const;
 
 private:
-    std::map<const AbstractPlan*, EntryPointGrp> _successMarks;
+    std::map<std::optional<std::size_t>, const EntryPoint*> _successMarks;
 };
 
 } /* namespace alica */

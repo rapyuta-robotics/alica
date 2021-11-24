@@ -29,6 +29,7 @@
 #include "engine/model/Task.h"
 #include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/util/HashFunctions.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -318,7 +319,7 @@ void RunningPlan::useState(const State* s)
             } else if (s->isSuccessState()) {
                 AgentId mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->editTeamManager().setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
+                _ae->editTeamManager().setSuccess(mid, _parent ? std::optional<std::size_t>(_parent->_contextHash) : std::optional<std::size_t>(), _activeTriple.entryPoint);
             }
         }
     }
@@ -561,6 +562,11 @@ bool RunningPlan::amISuccessfulInAnyChild() const
 void RunningPlan::activate()
 {
     assert(_status.active != PlanActivity::Retired);
+    _contextHash = contextHash(_activeTriple.entryPoint->getDynamicId());
+    _contextHash = contextHashCombine(_contextHash, contextHash(_activeTriple.state->getId()));
+    if (_parent) {
+        _contextHash = contextHashCombine(_contextHash, contextHash(_parent->_contextHash));
+    }
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);

@@ -124,7 +124,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
     pti.dynamicStateIDPairs = msg;
-    pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
+    pti.succeededContexts = _me->getEngineData().getSuccessMarks().toContextGrp();
     _ae->getCommunicator().sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
