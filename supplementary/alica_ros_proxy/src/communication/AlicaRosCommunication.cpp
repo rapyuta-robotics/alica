@@ -159,14 +159,9 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
     alica_msgs::PlanTreeInfo ptis;
     ptis.sender_id = pti.senderID;
 
-    ptis.state_ids.reserve(pti.stateIDs.size());
-    for (int64_t i : pti.stateIDs) {
-        ptis.state_ids.push_back(i);
-    }
-    ptis.succeeded_eps.reserve(pti.succeededEPs.size());
-    for (int64_t i : pti.succeededEPs) {
-        ptis.succeeded_eps.push_back(i);
-    }
+    ptis.dynamic_state_id_pairs = pti.dynamicStateIDPairs;
+    ptis.succeeded_contexts = pti.succeededContexts;
+
     if (_isRunning) {
         _planTreeInfoPublisher.publish(ptis);
     }
