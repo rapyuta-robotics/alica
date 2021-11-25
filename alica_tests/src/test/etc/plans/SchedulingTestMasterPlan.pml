@@ -155,13 +155,6 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitPlan.pml#2773486839180285027",
-          "comment": "",
-          "configuration": null,
-          "id": 2635394503179223242,
-          "name": ""
-        },
-        {
           "abstractPlan": "behaviours/TestBehaviour.beh#55178365253414982",
           "comment": "",
           "configuration": null,
@@ -172,8 +165,8 @@
       "entryPoint": null,
       "id": 1206766322278521913,
       "inTransitions": [
-        3351673290341906102,
-        1773144683253207826
+        1773144683253207826,
+        3351673290341906102
       ],
       "name": "ExecuteBehaviour",
       "outTransitions": [
@@ -373,25 +366,6 @@
     },
     {
       "comment": "",
-      "id": 3351673290341906102,
-      "inState": 1615797271229,
-      "name": "",
-      "outState": 1206766322278521913,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 61978004585920576,
-        "name": "ToExecutePlan",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
       "id": 1773144683253207826,
       "inState": 3802371674214346622,
       "name": "ExecuteBehaviourInSubPlanToExecuteBehaviour",
@@ -403,6 +377,25 @@
         "enabled": true,
         "id": 4165333637052704488,
         "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 3351673290341906102,
+      "inState": 1615797271229,
+      "name": "",
+      "outState": 1206766322278521913,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 61978004585920576,
+        "name": "ToExecutePlan",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

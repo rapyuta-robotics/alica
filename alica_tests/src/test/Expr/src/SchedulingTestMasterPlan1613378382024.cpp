@@ -204,7 +204,6 @@ bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *   - Quantifiers:
  *
  * Abstract Plans in ExecuteBehaviour:
- *   - WaitPlan (2773486839180285027)
  *   - TestBehaviour (55178365253414982)
  */
 bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
