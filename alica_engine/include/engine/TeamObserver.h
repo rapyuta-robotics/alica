@@ -39,7 +39,7 @@ public:
     SuccessCollection createSuccessCollection(const Plan* plan) const;
     void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
-    void notifyRobotLeftPlan(const AbstractPlan* plan) const;
+    void notifyRobotLeftPlan(std::size_t parentContextHash, const AbstractPlan* plan) const;
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 

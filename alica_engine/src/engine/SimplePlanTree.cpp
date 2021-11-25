@@ -5,6 +5,7 @@
 #include "engine/model/Task.h"
 #include "engine/Types.h"
 #include <engine/SimplePlanTree.h>
+#include <engine/util/HashFunctions.h>
 
 namespace alica
 {
@@ -20,17 +21,36 @@ SimplePlanTree::SimplePlanTree()
 
 SimplePlanTree::~SimplePlanTree() {}
 
-bool SimplePlanTree::containsPlan(const AbstractPlan* plan) const
+void SimplePlanTree::computeContextHash()
 {
-    if (_entryPoint->getPlan() == plan) {
+    _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _entryPoint->getDynamicId(), _state->getId());
+}
+
+bool SimplePlanTree::containsContexts(const std::unordered_set<std::size_t>& contextHashes) const
+{
+    if (contextHashes.find(contextHash(_contextHash, _entryPoint->getId(), _entryPoint->getDynamicId())) != contextHashes.end()) {
         return true;
     }
-    for (const std::unique_ptr<SimplePlanTree>& spt : getChildren()) {
-        if (spt->containsPlan(plan)) {
-            return true;
-        }
+    auto found = false;
+    for (auto& child : _children) {
+        found = containsContexts(contextHashes);
     }
-    return false;
+    return found;
+}
+
+bool SimplePlanTree::containsContext(std::size_t parentContextHash, const AbstractPlan* plan) const
+{
+    auto p = dynamic_cast<const Plan*>(plan);
+    if (!p) {
+        return false;
+    }
+
+    std::unordered_set<std::size_t> contextHashes;
+    for (const auto ep : p->getEntryPoints()) {
+        contextHashes.insert(contextHash(parentContextHash, ep->getId(), ep->getDynamicId()));
+    }
+
+    return containsContexts(contextHashes);
 }
 
 void SimplePlanTree::setEntryPoint(const EntryPoint* entryPoint)

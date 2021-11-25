@@ -84,12 +84,18 @@ EntryPointGrp SuccessMarks::succeededEntryPoints(std::size_t parentContextHash, 
 }
 
 /**
- * Remove all marks referring to the specified plan.
- * @param plan An AbstractPlan*
+ * Remove all marks referring to the specified plan
  */
-void SuccessMarks::removePlan(const AbstractPlan* plan)
+void SuccessMarks::removePlan(std::size_t parentContextHash, const AbstractPlan* plan)
 {
-    _successMarks.erase(plan);
+    auto p = dynamic_cast<const Plan*>(plan);
+    if (!p) {
+        return;
+    }
+
+    for (const auto ep : p->getEntryPoints()) {
+        _successMarks.erase(contextHash(parentContextHash, ep->getId(), ep->getDynamicId()));
+    }
 }
 
 /**
