@@ -16,8 +16,8 @@ namespace alica
 //   - Init (1413200842974)
 //   - Start (1413201213955)
 //   - Finished (1413201380359)
-MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973()
-        : DomainPlan()
+MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1413200842973) ENABLED START*/
     // Add additional options here
@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
  *
  * Abstract Plans in Init:
  */
-bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1413201226246) ENABLED START*/
     AgentId agentID8 = 8;
@@ -83,7 +83,7 @@ bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Start:
  *   - MultiAgentTestPlan (1413200862180)
  */
-bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1413201388722) ENABLED START*/
     AgentId agentID8 = 8;

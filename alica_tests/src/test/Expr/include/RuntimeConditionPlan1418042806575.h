@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1418042806575) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class RuntimeConditionPlan1418042806575 : public DomainPlan
 {
 public:
-    RuntimeConditionPlan1418042806575();
+    RuntimeConditionPlan1418042806575(IAlicaWorldModel* wm);
     virtual ~RuntimeConditionPlan1418042806575();
     /*PROTECTED REGION ID(pub1418042806575) ENABLED START*/
     // Add additional public methods here
@@ -42,6 +43,6 @@ class UtilityFunction1418042806575 : public BasicUtilityFunction
 };
 class RunTimeCondition1418042967134 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 } /* namespace alica */

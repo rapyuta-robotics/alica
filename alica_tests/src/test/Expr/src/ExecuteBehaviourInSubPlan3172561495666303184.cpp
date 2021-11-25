@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Suc (3575867719445223184)
 //   - Start (4459593820134418510)
-ExecuteBehaviourInSubPlan3172561495666303184::ExecuteBehaviourInSubPlan3172561495666303184()
-        : DomainPlan()
+ExecuteBehaviourInSubPlan3172561495666303184::ExecuteBehaviourInSubPlan3172561495666303184(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con3172561495666303184) ENABLED START*/
     // Add additional options here
@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction3172561495666303184::getUtilityF
  *   - WaitPlan (2773486839180285027)
  *   - TestBehaviour (55178365253414982)
  */
-bool PreCondition1943478533524176732::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1943478533524176732::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(2330492839242485043) ENABLED START*/
     std::cout << "The PreCondition 1943478533524176732 in Transition '2330492839242485043' is not implement yet!" << std::endl;

@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - QueryState2 (1479718449393)
-QueryPlan21479718449392::QueryPlan21479718449392()
-        : DomainPlan()
+QueryPlan21479718449392::QueryPlan21479718449392(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1479718449392) ENABLED START*/
     // Add additional options here

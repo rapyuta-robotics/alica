@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - MiddleState (1479557690962)
-ProbBuildingLevel1_11479557664989::ProbBuildingLevel1_11479557664989()
-        : DomainPlan()
+ProbBuildingLevel1_11479557664989::ProbBuildingLevel1_11479557664989(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1479557664989) ENABLED START*/
     // Add additional options here

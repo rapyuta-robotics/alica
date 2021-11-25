@@ -8,6 +8,7 @@
 namespace alica
 {
 class BasicBehaviour;
+class IAlicaWorldModel;
 }
 
 namespace alica::test
@@ -28,9 +29,10 @@ public:
      * The default interface, used by the ALICA Engine to retrieve
      * an instance of a behaviour.
      * @param behaviourID Id of the requested behaviour.
+     * @param IAlicaWorldModel WorldModel used by the agent.
      * @return std::shared_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
-    std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID) override;
+    std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID, alica::IAlicaWorldModel* wm) override;
 
     /**
      * Allows you specify the class that should be used to construct the BasicBehaviour

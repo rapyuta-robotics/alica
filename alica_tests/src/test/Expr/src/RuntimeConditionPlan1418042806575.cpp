@@ -16,8 +16,8 @@ namespace alica
 //
 // States:
 //   - RuntimeConditionTest (1418042806576)
-RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575()
-        : DomainPlan()
+RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1418042806575) ENABLED START*/
     // Add additional options here
@@ -35,10 +35,11 @@ RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418042967134) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isRuntimeCondition1418042967134();
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->isRuntimeCondition1418042967134();
     /*PROTECTED REGION END*/
 }
 /**

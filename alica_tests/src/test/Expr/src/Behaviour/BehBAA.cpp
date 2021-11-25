@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1629895911592) ENABLED START*/
 // Add additional includes here
+#include "engine/PlanInterface.h"
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
@@ -12,8 +13,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-BehBAA::BehBAA()
-        : DomainBehaviour("BehBAA")
+BehBAA::BehBAA(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "BehBAA")
 {
     /*PROTECTED REGION ID(con1629895911592) ENABLED START*/
     // Add additional options here
@@ -36,7 +37,8 @@ void BehBAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
-    alica_test::SchedWM::instance().execOrder += "BehBAA::Init\n";
+    _wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
+    _wm->execOrder += "BehBAA::Init\n";
     runCount = 0;
 
     /*PROTECTED REGION END*/
@@ -46,7 +48,7 @@ void BehBAA::initialiseParameters()
 void BehBAA::onTermination()
 {
     runCount = 0;
-    alica_test::SchedWM::instance().execOrder += "BehBAA::Term\n";
+    _wm->execOrder += "BehBAA::Term\n";
 }
 /*PROTECTED REGION END*/
 

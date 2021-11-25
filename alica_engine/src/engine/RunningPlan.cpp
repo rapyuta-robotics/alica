@@ -195,7 +195,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this);
+        return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -224,7 +224,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this);
+        bool ret = runtimeCondition->evaluate(*this, _ae->getWorldModel());
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {

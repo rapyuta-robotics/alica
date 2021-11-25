@@ -11,8 +11,6 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
-#include "EngineRulesSchedulingTestMaster1625610679488.h"
-#include "EngineRulesSchedulingTestPlan1625614640417.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
@@ -190,12 +188,6 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 1614964478264:
         return std::make_shared<UtilityFunction1614964478264>();
-        break;
-    case 1625610679488:
-        return std::make_shared<UtilityFunction1625610679488>();
-        break;
-    case 1625614640417:
-        return std::make_shared<UtilityFunction1625614640417>();
         break;
     case 1626848999740:
         return std::make_shared<UtilityFunction1626848999740>();

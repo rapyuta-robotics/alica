@@ -16,8 +16,8 @@ namespace alica
 //   - MidField (1407152951886)
 //   - Defend (1407152962295)
 //   - Goal (1407152969078)
-MasterPlanTaskAssignment1407152758497::MasterPlanTaskAssignment1407152758497()
-        : DomainPlan()
+MasterPlanTaskAssignment1407152758497::MasterPlanTaskAssignment1407152758497(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1407152758497) ENABLED START*/
     // Add additional options here

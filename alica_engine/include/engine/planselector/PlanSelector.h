@@ -29,6 +29,7 @@ public:
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs, const RunningPlan* oldRp,
             const PlanType* relevantPlanType, double& o_oldUtility);
+    void setWorldModel(const IAlicaWorldModel* wm);
 
 private:
     bool getPlansForStateInternal(RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
@@ -36,6 +37,7 @@ private:
     PartialAssignmentPool _pap;
     AlicaEngine* _ae;
     PlanBase* _pb;
+    const IAlicaWorldModel* _wm;
 };
 
 } /* namespace alica */

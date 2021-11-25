@@ -15,8 +15,8 @@ namespace alica
 std::vector<BBIdent> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 
-ConstraintUsingBehaviour::ConstraintUsingBehaviour()
-        : DomainBehaviour("ConstraintUsingBehaviour")
+ConstraintUsingBehaviour::ConstraintUsingBehaviour(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "ConstraintUsingBehaviour")
 {
     /*PROTECTED REGION ID(con1414068597716) ENABLED START*/
     // Add additional options here
