@@ -65,7 +65,7 @@ private:
     void setSuccess(std::size_t parentContextHash, const EntryPoint* entryPoint);
     void setSuccessMarks(const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
-    const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;
+    EntryPointGrp getSucceededEntryPoints(std::size_t parentContextHash, const AbstractPlan* plan) const;
     bool update();
 };
 

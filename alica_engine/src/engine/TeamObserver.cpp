@@ -173,23 +173,19 @@ void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
  * @param plan a plan
  * @return an int counting successes in plan
  */
-int TeamObserver::successesInPlan(const Plan* plan) const
+int TeamObserver::successesInPlan(std::size_t parentContextHash, const Plan* plan) const
 {
     int ret = 0;
-    const EntryPointGrp* suc = nullptr;
+    EntryPointGrp suc;
     for (const Agent* agent : _tm.getActiveAgents()) {
         {
             lock_guard<mutex> lock(_successMarkMutex);
-            suc = agent->getSucceededEntryPoints(plan);
+            suc = agent->getSucceededEntryPoints(parentContextHash, plan);
         }
-        if (suc != nullptr) {
-            ret += suc->size();
-        }
+        ret += suc.size();
     }
-    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(plan);
-    if (suc != nullptr) {
-        ret += suc->size();
-    }
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
+    ret += suc.size();
     return ret;
 }
 

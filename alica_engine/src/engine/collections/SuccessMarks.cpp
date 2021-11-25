@@ -65,17 +65,22 @@ void SuccessMarks::clear()
 }
 
 /**
- * Get all EntryPoints succeeded in a plan. May return nullptr.
- * @param p An AbstractPlan*
- * @return A shared_ptr<list<EntryPoint*> >
+ * Get all EntryPoints succeeded in the . May return nullptr.
  */
-const EntryPointGrp* SuccessMarks::succeededEntryPoints(const AbstractPlan* p) const
+EntryPointGrp SuccessMarks::succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const
 {
-    auto successMarkEntry = _successMarks.find(p);
-    if (successMarkEntry != _successMarks.end()) {
-        return &successMarkEntry->second;
+    EntryPointGrp successEps;
+    auto plan = dynamic_cast<const Plan*>(p);
+    if (!plan) {
+        return successEps;
     }
-    return nullptr;
+    for (const auto ep : plan->getEntryPoints()) {
+        auto hash = contextHash(parentContextHash, ep->getId(), ep->getDynamicId());
+        if (_successMarks.find(hash) != _successMarks.end()) {
+            successEps.push_back(ep);
+        }
+    }
+    return successEps;
 }
 
 /**
