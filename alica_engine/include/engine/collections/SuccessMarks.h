@@ -21,7 +21,7 @@ public:
     void update(const AlicaEngine* ae, const IdGrp& succeededEps);
 
     void clear();
-    const EntryPointGrp* succeededEntryPoints(const AbstractPlan* p) const;
+    EntryPointGrp succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const;
     void removePlan(const AbstractPlan* plan);
     void markSuccessful(std::size_t parentContextHash, const EntryPoint* e);
 

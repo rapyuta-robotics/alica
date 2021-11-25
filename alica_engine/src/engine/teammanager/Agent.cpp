@@ -57,9 +57,9 @@ const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
     return _engineData.getDomainVariable(sort);
 }
 
-const EntryPointGrp* Agent::getSucceededEntryPoints(const AbstractPlan* plan) const
+EntryPointGrp Agent::getSucceededEntryPoints(std::size_t parentContextHash, const AbstractPlan* plan) const
 {
-    return _engineData.getSuccessMarks().succeededEntryPoints(plan);
+    return _engineData.getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
 }
 
 bool Agent::update()

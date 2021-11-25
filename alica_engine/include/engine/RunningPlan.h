@@ -213,6 +213,8 @@ public:
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
 
+    std::size_t getContextHash() const { return _contextHash; }
+
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;

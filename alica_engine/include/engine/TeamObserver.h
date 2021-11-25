@@ -35,7 +35,7 @@ public:
 
     const std::map<AgentId, std::unique_ptr<SimplePlanTree>>& getTeamPlanTrees() const { return _simplePlanTrees; }
 
-    int successesInPlan(const Plan* plan) const;
+    int successesInPlan(std::size_t parentContextHash, const Plan* plan) const;
     SuccessCollection createSuccessCollection(const Plan* plan) const;
     void updateSuccessCollection(const Plan* p, SuccessCollection& sc);
 
