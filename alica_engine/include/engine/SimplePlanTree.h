@@ -2,6 +2,7 @@
 #include <engine/Types.h>
 
 #include <ostream>
+#include <unordered_set>
 
 namespace alica
 {
@@ -19,6 +20,8 @@ public:
     void setEntryPoint(const EntryPoint* entryPoint);
     const State* getState() const { return _state; }
     void setState(const State* state);
+    // Call after the parent, entry point & state is set
+    void computeContextHash();
     const std::vector<std::unique_ptr<SimplePlanTree>>& getChildren() const { return _children; }
     std::vector<std::unique_ptr<SimplePlanTree>>& editChildren() { return _children; }
     SimplePlanTree* getParent() const { return _parent; }
@@ -31,9 +34,11 @@ public:
     void setReceiveTime(AlicaTime receiveTime);
     const IdGrp& getDynamicStateIDPairs() const { return _dynamicStateIdPairs; }
     void setDynamicStateIDPairs(const IdGrp& dynamicStateIdPairs);
-    bool containsPlan(const AbstractPlan* plan) const;
+    bool containsContext(std::size_t parentContextHash, const AbstractPlan* plan) const;
 
 private:
+    bool containsContexts(const std::unordered_set<std::size_t>& contextHashes) const;
+
     friend std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt);
     /**
      * The parent SimplePlanTree
@@ -55,6 +60,8 @@ private:
      */
     AlicaTime _receiveTime;
     IdGrp _dynamicStateIdPairs;
+
+    std::size_t _contextHash;
 };
 std::ostream& operator<<(std::ostream& out, const SimplePlanTree& spt);
 } /* namespace alica */

@@ -249,14 +249,14 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
  * believed to be left in the plan.
  * @param plan The AbstractPlan left by the robot
  */
-void TeamObserver::notifyRobotLeftPlan(const AbstractPlan* plan) const
+void TeamObserver::notifyRobotLeftPlan(std::size_t parentContextHash, const AbstractPlan* plan) const
 {
     for (const auto& ele : _simplePlanTrees) {
-        if (ele.second->containsPlan(plan)) {
+        if (ele.second->containsContext(parentContextHash, plan)) {
             return;
         }
     }
-    _me->editEngineData().editSuccessMarks().removePlan(plan);
+    _me->editEngineData().editSuccessMarks().removePlan(parentContextHash, plan);
 }
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
@@ -336,6 +336,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
                 ALICA_WARNING_MSG("Unknown State (" << ids[i + 1] << ") received from " << agentId);
                 return nullptr;
             }
+            cur->computeContextHash();
             i += 2;
         }
     }

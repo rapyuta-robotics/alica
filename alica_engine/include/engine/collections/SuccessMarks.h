@@ -22,7 +22,7 @@ public:
 
     void clear();
     EntryPointGrp succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const;
-    void removePlan(const AbstractPlan* plan);
+    void removePlan(std::size_t parentContextHash, const AbstractPlan* plan);
     void markSuccessful(std::size_t parentContextHash, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;

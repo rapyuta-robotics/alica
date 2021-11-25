@@ -478,7 +478,7 @@ void RunningPlan::deactivate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
-        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
+        _ae->getTeamObserver().notifyRobotLeftPlan(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.abstractPlan);
         _ae->editPlanPool().stopPlan(*this);
     }
 }
