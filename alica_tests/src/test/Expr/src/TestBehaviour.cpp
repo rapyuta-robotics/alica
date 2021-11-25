@@ -29,6 +29,10 @@ void TestBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run55178365253414982) ENABLED START*/
     // Add additional options here
+    if (alica_test::SchedWM::instance().executeBehaviourRunCalled) {
+        return;
+    }
+    alica_test::SchedWM::instance().execOrder += "TestBehaviour::Run\n";
     alica_test::SchedWM::instance().executeBehaviourRunCalled = true;
     /*PROTECTED REGION END*/
 }
@@ -36,11 +40,17 @@ void TestBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters55178365253414982) ENABLED START*/
     // Add additional options here
-
+    alica_test::SchedWM::instance().execOrder += "TestBehaviour::Init\n";
+    alica_test::SchedWM::instance().executeBehaviourRunCalled = false;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods55178365253414982) ENABLED START*/
 // Add additional options here
+
+void TestBehaviour::onTermination()
+{
+    alica_test::SchedWM::instance().execOrder += "TestBehaviour::Term\n";
+}
 /*PROTECTED REGION END*/
 
 } /* namespace alica */

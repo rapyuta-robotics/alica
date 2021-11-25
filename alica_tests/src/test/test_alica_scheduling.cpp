@@ -232,27 +232,38 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     auto& wm = alica_test::SchedWM::instance();
     wm.execBehaviourTest = true;
     ac->stepEngine();
-
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     ASSERT_TRUE(wm.executeBehaviourRunCalled);
 
-    alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = true;
+    ac->stepEngine();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    ASSERT_TRUE(wm.executeBehaviourRunCalled);
+    EXPECT_EQ(wm.execOrder, "TestBehaviour::Init\nTestBehaviour::Run\n");
+
+    wm.transitionToExecuteBehaviour = false;
+    wm.transitionToExecuteBehaviourInSubPlan = true;
+    ac->stepEngine();
+    EXPECT_EQ(wm.execOrder, "TestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n");
+
+    std::string execOrderBeforeTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+    std::string execOrderAfterTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
 
     for (int i = 0; i < 10; i++) {
-        alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = false;
-        alica_test::SchedWM::instance().transitionToExecuteBehaviour = true;
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        ASSERT_TRUE(wm.executeBehaviourRunCalled);
+        wm.execOrder = "";
 
-        alica_test::SchedWM::instance().transitionToExecuteBehaviourInSubPlan = true;
-        alica_test::SchedWM::instance().transitionToExecuteBehaviour = false;
+        wm.transitionToExecuteBehaviourInSubPlan = false;
+        wm.transitionToExecuteBehaviour = true;
+        ac->stepEngine();
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        ASSERT_TRUE(wm.executeBehaviourRunCalled);
+        EXPECT_EQ(wm.execOrder, execOrderBeforeTransition);
+
+        wm.transitionToExecuteBehaviour = false;
+        wm.transitionToExecuteBehaviourInSubPlan = true;
+        ac->stepEngine();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        EXPECT_EQ(wm.execOrder, execOrderAfterTransition);
     }
 
-    alica_test::SchedWM::instance().transitionToEndTest = true;
+    wm.transitionToEndTest = true;
 }
 
 } // namespace

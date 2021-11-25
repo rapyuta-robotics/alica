@@ -20,6 +20,7 @@ protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro55178365253414982) ENABLED START*/
     // Add additional protected methods here
+    virtual void onTermination();
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv55178365253414982) ENABLED START*/
