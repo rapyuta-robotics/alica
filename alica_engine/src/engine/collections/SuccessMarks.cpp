@@ -92,9 +92,9 @@ void SuccessMarks::removePlan(const AbstractPlan* plan)
  * @param p An AbstractPlan*
  * @param e An EntryPoint*
  */
-void SuccessMarks::markSuccessful(std::optional<std::size_t> parentRpContext, const EntryPoint* e)
+void SuccessMarks::markSuccessful(std::size_t parentContextHash, const EntryPoint* e)
 {
-    _successMarks[parentRpContext] = e;
+    _successMarks.insert(contextHash(parentContextHash, e->getId(), e->getDynamicId()));
 }
 
 /**
@@ -141,16 +141,7 @@ bool SuccessMarks::anyTaskSucceeded(const AbstractPlan* p) const
  */
 std::vector<std::size_t> SuccessMarks::toContextGrp() const
 {
-    std::vector<std::size_t> succeededContexts;
-    for (const auto& p : _successMarks) {
-        std::size_t hash = contextHash(p.second->getDynamicId());
-        hash = contextHashCombine(hash, p.second->getId());
-        if (p.first.has_value()) {
-            hash = contextHashCombine(hash, *(p.first));
-        }
-        succeededContexts.push_back(hash);
-    }
-    return succeededContexts;
+    return std::vector<std::size_t>(_successMarks.begin(), _successMarks.end());
 }
 
 } /* namespace alica */

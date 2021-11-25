@@ -1,7 +1,7 @@
 #pragma once
 #include "engine/Types.h"
 
-#include <map>
+#include <unordered_set>
 
 namespace alica
 {
@@ -19,19 +19,18 @@ public:
 
     void limitToPlans(const AbstractPlanGrp& active);
     void update(const AlicaEngine* ae, const IdGrp& succeededEps);
-    const std::map<std::optional<std::size_t>, const EntryPoint*>& getSuccessMarks() const { return _successMarks; }
 
     void clear();
     const EntryPointGrp* succeededEntryPoints(const AbstractPlan* p) const;
     void removePlan(const AbstractPlan* plan);
-    void markSuccessful(std::optional<std::size_t> parentRpContext, const EntryPoint* e);
+    void markSuccessful(std::size_t parentContextHash, const EntryPoint* e);
 
     bool succeeded(const AbstractPlan* p, const EntryPoint* e) const;
     bool anyTaskSucceeded(const AbstractPlan* p) const;
     std::vector<std::size_t> toContextGrp() const;
 
 private:
-    std::map<std::optional<std::size_t>, const EntryPoint*> _successMarks;
+    std::unordered_set<std::size_t> _successMarks;
 };
 
 } /* namespace alica */
