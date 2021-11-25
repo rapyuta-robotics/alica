@@ -66,7 +66,7 @@ public:
     bool isAgentIgnored(AgentId agentId) const;
     bool isAgentActive(AgentId agentId) const;
     void setAgentIgnored(AgentId , bool) const;
-    bool setSuccess(AgentId agentId, std::optional<std::size_t> parentRpContext, const EntryPoint* entryPoint);
+    bool setSuccess(AgentId agentId, std::size_t parentContextHash, const EntryPoint* entryPoint);
     bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
