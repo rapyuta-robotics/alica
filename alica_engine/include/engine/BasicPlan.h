@@ -24,7 +24,6 @@ public:
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
 
-    IAlicaTrace* getTrace() { return _trace.get(); };
     void notifyAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents);
 
 protected:
