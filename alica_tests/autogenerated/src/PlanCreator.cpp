@@ -211,14 +211,14 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 432995127772554364:
         return std::make_unique<PlanPoolTestSubPlan432995127772554364>(wm);
         break;
-    case 1964838032551226161:
-        return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
-        break;
     case 691392966514374878:
         return std::make_unique<TestTracingMasterPlan691392966514374878>(wm);
         break;
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
+        break;
+    case 1964838032551226161:
+        return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

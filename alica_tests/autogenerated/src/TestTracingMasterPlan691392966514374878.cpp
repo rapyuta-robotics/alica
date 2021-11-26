@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - 2832176823961443072 (2832176823961443072)
 //   - 3077460522716760463 (3077460522716760463)
-TestTracingMasterPlan691392966514374878::TestTracingMasterPlan691392966514374878()
-        : DomainPlan()
+TestTracingMasterPlan691392966514374878::TestTracingMasterPlan691392966514374878(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con691392966514374878) ENABLED START*/
     // Add additional options here
@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction691392966514374878::getUtilityFu
  * Abstract Plans in 2832176823961443072:
  *   - TestTracingSubPlan (1482512794732634139)
  */
-bool PreCondition1840401110297459509::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1840401110297459509::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3626189722064037094) ENABLED START*/
     return alicaTests::TestWorldModel::getOne()->isPreCondition1840401110297459509();
