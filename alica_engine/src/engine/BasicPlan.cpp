@@ -67,4 +67,24 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
+
+
+void BasicPlan::notifyAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_trace) {
+        _engine->editScheduler().schedule(
+            std::bind(&BasicPlan::traceAssignmentChange, this, newAssignmentName, oldUtility, newUtility, numberOfAgents));
+    }
+}
+
+void BasicPlan::traceAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_trace) {
+        _trace->setLog({"TaskAssignmentChange", newAssignmentName + "\n"
+                                                + "oldUtility: " + std::to_string(oldUtility) + "\n"
+                                                + "newUtility: " + std::to_string(newUtility) + "\n"
+                                                + "numberOfAgents: " + std::to_string(numberOfAgents)});
+    }
+}
+
 } // namespace alica

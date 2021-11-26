@@ -25,6 +25,7 @@ public:
     using RunnableObject::getName;
 
     IAlicaTrace* getTrace() { return _trace.get(); };
+    void notifyAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents);
 
 protected:
     virtual void onInit(){};
@@ -35,5 +36,6 @@ private:
     void doInit() override;
     void doRun(void* msg);
     void doTerminate() override;
+    void traceAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents);
 };
 } // namespace alica
