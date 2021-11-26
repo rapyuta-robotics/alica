@@ -408,7 +408,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         clearChildren();
         addChildren(replacement.getChildren());
         reactivate = true;
-        if (_ae->getTraceFactory() && _basicPlan && _basicPlan->getTraceContext().has_value()) {
+        if (_basicPlan) {
             std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName()
                             + std::to_string(replacement.getActiveEntryPoint()->getId());
             _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());

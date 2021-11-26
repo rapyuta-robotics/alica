@@ -71,7 +71,7 @@ void BasicPlan::doTerminate()
 
 void BasicPlan::notifyAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents)
 {
-    if (_trace) {
+    if (_engine->getTraceFactory()) {
         _engine->editScheduler().schedule(
             std::bind(&BasicPlan::traceAssignmentChange, this, newAssignmentName, oldUtility, newUtility, numberOfAgents));
     }
