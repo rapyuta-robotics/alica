@@ -62,12 +62,14 @@ public:
 private:
     friend EntryPointFactory;
     friend ModelManager;
+    friend Plan;
     void computeReachabilitySet();
     void setTask(Task* task);
     void setPlan(Plan* plan);
     void setState(State* state);
     void setSuccessRequired(bool successRequired);
     void setDynamic(bool dynamic) { _dynamic = dynamic; };
+    void setIndex(int index) { _index = index; }
 
     /**
      * The initial state of this entrypoint's task.

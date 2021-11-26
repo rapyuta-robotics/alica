@@ -15,7 +15,7 @@ class SuccessCollection
 {
 public:
     SuccessCollection();
-    SuccessCollection(const Plan* plan);
+    SuccessCollection(std::size_t parentContextHash, const Plan* plan);
     ~SuccessCollection();
     int getCount() const { return _successData.size(); }
     const EntryPointGrp& getEntryPoints() const { return _plan->getEntryPoints(); }
@@ -36,6 +36,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const SuccessCollection& c);
+    const std::size_t _parentContextHash;
     const Plan* _plan;
     std::vector<AgentGrp> _successData;
 };

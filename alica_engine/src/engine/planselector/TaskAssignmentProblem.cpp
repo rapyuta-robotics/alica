@@ -34,7 +34,7 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, std::size_t parentContextHash, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
         : _agents(paraAgents)
         , _plans(planList)
 #ifdef EXPANSIONEVAL
@@ -52,7 +52,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp&
 
     for (const Plan* curPlan : _plans) {
         // prep successinfo for this plan
-        _successData.push_back(_to.createSuccessCollection(curPlan));
+        _successData.push_back(_to.createSuccessCollection(parentContextHash, curPlan));
         // allow caching of eval data
         curPlan->getUtilityFunction()->cacheEvalData();
         // seed the fringe with a partial assignment

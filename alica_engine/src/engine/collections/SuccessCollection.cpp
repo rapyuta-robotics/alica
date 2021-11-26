@@ -15,8 +15,9 @@ SuccessCollection::SuccessCollection()
 {
 }
 
-SuccessCollection::SuccessCollection(const Plan* plan)
-        : _plan(plan)
+SuccessCollection::SuccessCollection(std::size_t parentContextHash, const Plan* plan)
+        : _parentContextHash(parentContextHash)
+        , _plan(plan)
         , _successData(plan->getEntryPoints().size())
 {
 }
@@ -66,7 +67,7 @@ std::ostream& operator<<(std::ostream& out, const SuccessCollection& c)
                 out << "Success:" << std::endl;
             }
             haveAny = true;
-            out << eps[i]->getId() << " (" << eps[i]->getTask()->getName() << "): ";
+            out << "id: " << eps[i]->getId() << ", dynamic_id: " << eps[i]->getDynamicId() << " (" << eps[i]->getTask()->getName() << "): ";
             for (AgentId r : c._successData[i]) {
                 out << r << " ";
             }

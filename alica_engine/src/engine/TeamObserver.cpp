@@ -189,38 +189,35 @@ int TeamObserver::successesInPlan(std::size_t parentContextHash, const Plan* pla
     return ret;
 }
 
-SuccessCollection TeamObserver::createSuccessCollection(const Plan* plan) const
+SuccessCollection TeamObserver::createSuccessCollection(std::size_t parentContextHash, const Plan* plan) const
 {
-    SuccessCollection ret(plan);
+    SuccessCollection ret(parentContextHash, plan);
 
     for (const Agent* agent : _tm.getActiveAgents()) {
-        const EntryPointGrp* suc = nullptr;
+        EntryPointGrp suc;
         if (_me == agent) {
             continue;
         }
         {
             lock_guard<mutex> lock(_successMarkMutex);
-            suc = agent->getSucceededEntryPoints(plan);
+            suc = agent->getSucceededEntryPoints(parentContextHash, plan);
         }
-        if (suc != nullptr) {
-            for (const EntryPoint* ep : *suc) {
-                ret.setSuccess(agent->getId(), ep);
-            }
+        for (const EntryPoint* ep : suc) {
+            ret.setSuccess(agent->getId(), ep);
         }
     }
-    const EntryPointGrp* suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(plan);
-    if (suc != nullptr) {
-        for (const EntryPoint* ep : *suc) {
-            ret.setSuccess(_me->getId(), ep);
-        }
+    EntryPointGrp suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
+    for (const EntryPoint* ep : suc) {
+        ret.setSuccess(_me->getId(), ep);
     }
+
     return ret;
 }
 
-void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
+void TeamObserver::updateSuccessCollection(std::size_t parentContextHash, const Plan* p, SuccessCollection& sc)
 {
     sc.clear();
-    const EntryPointGrp* suc = nullptr;
+    EntryPointGrp suc;
 
     for (const Agent* agent : _tm.getActiveAgents()) {
         if (agent == _me) {
@@ -228,19 +225,15 @@ void TeamObserver::updateSuccessCollection(const Plan* p, SuccessCollection& sc)
         }
         {
             lock_guard<mutex> lock(_successMarkMutex);
-            suc = agent->getSucceededEntryPoints(p);
+            suc = agent->getSucceededEntryPoints(parentContextHash, p);
         }
-        if (suc != nullptr) {
-            for (const EntryPoint* ep : *suc) {
-                sc.setSuccess(agent->getId(), ep);
-            }
+        for (const EntryPoint* ep : suc) {
+            sc.setSuccess(agent->getId(), ep);
         }
     }
-    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(p);
-    if (suc != nullptr) {
-        for (const EntryPoint* ep : *suc) {
-            sc.setSuccess(_me->getId(), ep);
-        }
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, p);
+    for (const EntryPoint* ep : suc) {
+        sc.setSuccess(_me->getId(), ep);
     }
 }
 

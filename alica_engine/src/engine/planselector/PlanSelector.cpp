@@ -114,7 +114,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         return nullptr;
     }
 
-    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap);
+    TaskAssignmentProblem ta(_ae, planningParent->getContextHash(), newPlanList, robotIDs, _pap);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {

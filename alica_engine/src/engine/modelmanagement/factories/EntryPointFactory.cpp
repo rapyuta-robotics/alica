@@ -42,8 +42,11 @@ std::vector<EntryPoint*> EntryPointFactory::create(const YAML::Node& entryPoints
     std::sort(constructedEntryPoints.begin(), constructedEntryPoints.end(),
             [](const EntryPoint* ep1, const EntryPoint* ep2) { return ep1->getId() < ep2->getId(); });
 
+    int j = 0;
     for (int i = 0; i < static_cast<int>(entryPoints.size()); ++i) {
-        constructedEntryPoints[i]->_index = i;
+        if (!constructedEntryPoints[i]->isDynamic()) {
+            constructedEntryPoints[i]->_index = (++j);
+        }
     }
 
     return constructedEntryPoints;

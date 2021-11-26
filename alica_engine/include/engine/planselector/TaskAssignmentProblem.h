@@ -29,7 +29,7 @@ class TeamObserver;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
+    TaskAssignmentProblem(AlicaEngine* engine, std::size_t parentContextHash, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
