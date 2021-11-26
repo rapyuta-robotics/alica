@@ -52,6 +52,9 @@ public:
     {
         assert(!opName.empty());
         std::unique_ptr<AlicaTestTrace> trace = std::make_unique<AlicaTestTrace>(opName, parent);
+        if (parent.has_value()) {
+            alicaTests::TestWorldModel::getOne()->tracingParents[opName] = *parent;
+        }
         return trace;
     }
 };

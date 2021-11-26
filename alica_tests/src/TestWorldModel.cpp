@@ -48,6 +48,7 @@ void TestWorldModel::reset()
     x = 0;
     tracingLogs.clear();
     tracingTags.clear();
+    tracingParents.clear();
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586() const

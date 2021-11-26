@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace alicaTests
 {
@@ -67,6 +68,7 @@ public:
     std::vector<std::string> configParameter;
     std::vector<std::pair<std::string, std::string>> tracingTags;
     std::vector<std::pair<std::string, std::string>> tracingLogs;
+    std::unordered_map<std::string, std::string> tracingParents;
 
     void reset();
 

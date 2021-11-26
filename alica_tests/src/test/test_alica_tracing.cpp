@@ -76,55 +76,8 @@ TEST_F(AlicaTracingTest, runTracing)
     alicaTests::TestWorldModel::getOne()->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
-    auto logs = alicaTests::TestWorldModel::getOne()->tracingLogs;
-
-    size_t expected_num_of_logs = 9;
-    EXPECT_EQ(logs.size(), expected_num_of_logs);
-
-    auto log = logs.front(); // MasterPlan
-    EXPECT_EQ(log.first, "Plan");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // MasterPlan Init
-    EXPECT_EQ(log.first, "Init");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // SubPlan
-    EXPECT_EQ(log.first, "Plan");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // SubPlan Init
-    EXPECT_EQ(log.first, "Init");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // Behaviour
-    EXPECT_EQ(log.first, "Behaviour");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // Behaviour Init
-    EXPECT_EQ(log.first, "Init");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // Behaviour Run
-    EXPECT_EQ(log.first, "Run");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // Behaviour Terminate
-    EXPECT_EQ(log.first, "Terminate");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
-
-    log = logs.front(); // SubPlan Terminate
-    EXPECT_EQ(log.first, "Terminate");
-    EXPECT_EQ(log.second, "true");
-    logs.erase(logs.begin());
+    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["EmptyBehaviour"], "TestTracingSubPlan");
+    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["TestTracingSubPlan"], "TestTracingMasterPlan");
 }
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
@@ -174,12 +127,12 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     bool foundTaskAssignmentChangeLog = false;
     for (auto log : logs) {
         if (log.first == "TaskAssignmentChange") {
-            EXPECT_EQ(log.second, "AttackTask1414403522424\noldUtility: 0.022727\nnewUtility: 0.022727\nnumberOfAgents: 2");
             foundTaskAssignmentChangeLog = true;
             break;
         }
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
+    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["EmptyBehaviour"], "AuthorityTest");
 }
 } // namespace
 } // namespace alica
