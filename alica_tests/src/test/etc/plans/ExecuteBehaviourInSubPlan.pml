@@ -49,13 +49,6 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "WaitPlan.pml#2773486839180285027",
-          "comment": "",
-          "configuration": null,
-          "id": 1933475273272858624,
-          "name": ""
-        },
-        {
           "abstractPlan": "behaviours/TestBehaviour.beh#55178365253414982",
           "comment": "",
           "configuration": null,

@@ -50,7 +50,6 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
-#include "WaitPlan2773486839180285027.h"
 #include "engine/BasicPlan.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -213,9 +212,6 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
-        break;
-    case 2773486839180285027:
-        return std::make_unique<WaitPlan2773486839180285027>(wm);
         break;
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(wm);

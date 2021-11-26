@@ -50,7 +50,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction3172561495666303184::getUtilityF
  *   - Quantifiers:
  *
  * Abstract Plans in Start:
- *   - WaitPlan (2773486839180285027)
  *   - TestBehaviour (55178365253414982)
  */
 bool PreCondition1943478533524176732::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
