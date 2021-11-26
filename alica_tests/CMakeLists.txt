@@ -46,7 +46,6 @@ if (CATKIN_ENABLE_TESTING)
         src/SwitchEntryPointsSummand.cpp
         src/TestConstantValueSummand.cpp
         src/TestWorldModel.cpp
-        src/TestTracing.cpp
         src/test_alica.cpp
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
