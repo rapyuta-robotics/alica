@@ -237,10 +237,7 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     wm->execBehaviourTest = true;
     ac->stepEngine();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    ASSERT_TRUE(wm->executeBehaviourRunCalled);
 
-    ac->stepEngine();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\n");
 
     wm->transitionToExecuteBehaviour = false;
