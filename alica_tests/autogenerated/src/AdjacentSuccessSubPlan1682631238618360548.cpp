@@ -15,8 +15,8 @@ namespace alica
 //   - 1181007688948643441 (1181007688948643441)
 //   - 496520533178003845 (496520533178003845)
 //   - 656998006978148289 (656998006978148289)
-AdjacentSuccessSubPlan1682631238618360548::AdjacentSuccessSubPlan1682631238618360548()
-        : DomainPlan()
+AdjacentSuccessSubPlan1682631238618360548::AdjacentSuccessSubPlan1682631238618360548(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1682631238618360548) ENABLED START*/
     // Add additional options here
@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityF
  * Abstract Plans in 1181007688948643441:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1390829819585906015) ENABLED START*/
     for (const alica::RunningPlan* child : rp->getChildren()) {
@@ -79,7 +79,7 @@ bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in 656998006978148289:
  */
-bool PreCondition3441061963559991094::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition3441061963559991094::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3143778092687974738) ENABLED START*/
     if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3143778092687974738()) {

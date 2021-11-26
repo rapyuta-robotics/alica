@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - EntryState (338845808462999166)
 //   - SecondState (1114306208475690481)
-AdjacentSuccessMasterPlan3254486013443203397::AdjacentSuccessMasterPlan3254486013443203397()
-        : DomainPlan()
+AdjacentSuccessMasterPlan3254486013443203397::AdjacentSuccessMasterPlan3254486013443203397(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con3254486013443203397) ENABLED START*/
     // Add additional options here
@@ -53,11 +53,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction3254486013443203397::getUtilityF
  * Abstract Plans in EntryState:
  *   - AdjacentSuccessSubPlan (1682631238618360548)
  */
-bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3345031375302716643) ENABLED START*/
     if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3345031375302716643()) {
-        std::cerr << "doTransitionMasterPlan FromEntryToSecond" << std::endl;
         alicaTests::TestWorldModel::getOne()->setTransitionCondition3345031375302716643(false);
         alicaTests::TestWorldModel::getOne()->setTransitionCondition1914245867924544479(false);
         return true;
@@ -80,11 +79,10 @@ bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in SecondState:
  *   - AdjacentSuccessSubPlan (1682631238618360548)
  */
-bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1914245867924544479) ENABLED START*/
     if (alicaTests::TestWorldModel::getOne()->isTransitionCondition1914245867924544479()) {
-        std::cerr << "doTransition MasterPlan FromSecondToEntry" << std::endl;
         alicaTests::TestWorldModel::getOne()->setTransitionCondition3345031375302716643(false);
         alicaTests::TestWorldModel::getOne()->setTransitionCondition1914245867924544479(false);
         return true;

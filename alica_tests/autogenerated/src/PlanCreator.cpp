@@ -212,13 +212,13 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         return std::make_unique<PlanPoolTestSubPlan432995127772554364>(wm);
         break;
     case 1682631238618360548:
-        return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>();
+        return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
         break;
     case 3254486013443203397:
-        return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>();
+        return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;
