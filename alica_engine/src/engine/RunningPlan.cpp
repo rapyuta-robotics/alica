@@ -402,17 +402,17 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
     bool reactivate = false;
 
     if (_activeTriple.state != newState) {
-        if (_ae->getTraceFactory() && _basicPlan && _basicPlan->getTraceContext().has_value()) {
-            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName()
-                            + std::to_string(replacement.getActiveEntryPoint()->getId());
-            _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
-        }
         _status.active = PlanActivity::InActive;
         deactivateChildren();
         revokeAllConstraints();
         clearChildren();
         addChildren(replacement.getChildren());
         reactivate = true;
+        if (_ae->getTraceFactory() && _basicPlan && _basicPlan->getTraceContext().has_value()) {
+            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName()
+                            + std::to_string(replacement.getActiveEntryPoint()->getId());
+            _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+        }
     } else {
         AgentGrp robotsJoined;
         _assignment.getAgentsInState(newState, robotsJoined);
