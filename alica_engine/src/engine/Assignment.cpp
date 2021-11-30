@@ -9,6 +9,7 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
 #include "engine/Types.h"
+#include "engine/util/HashFunctions.h"
 
 #include <assert.h>
 
@@ -50,10 +51,10 @@ Assignment::Assignment()
 {
 }
 
-Assignment::Assignment(const Plan* p)
+Assignment::Assignment(std::size_t parentContextHash, const Plan* p)
         : _plan(p)
         , _assignmentData(p->getEntryPoints().size())
-        , _successData(p)
+        , _successData(parentContextHash, p)
         , _lastUtility(0.0)
 
 {
@@ -78,10 +79,10 @@ Assignment::Assignment(const PartialAssignment& pa)
     }
 }
 
-Assignment::Assignment(const Plan* p, const AllocationAuthorityInfo& aai)
+Assignment::Assignment(std::size_t parentContextHash, const Plan* p, const AllocationAuthorityInfo& aai)
         : _plan(p)
         , _assignmentData(p->getEntryPoints().size())
-        , _successData(p)
+        , _successData(parentContextHash, p)
         , _lastUtility(0.0)
 {
     const int numEps = _plan->getEntryPoints().size();

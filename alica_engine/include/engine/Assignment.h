@@ -74,8 +74,8 @@ class Assignment
 public:
     Assignment();
     Assignment(const PartialAssignment& pa);
-    Assignment(const Plan* p, const AllocationAuthorityInfo& aai);
-    Assignment(const Plan* p);
+    Assignment(std::size_t parentContextHash, const Plan* p, const AllocationAuthorityInfo& aai);
+    Assignment(std::size_t parentContextHash, const Plan* p);
 
     Assignment(const Assignment& o) = default;
     Assignment& operator=(const Assignment& o) = default;
