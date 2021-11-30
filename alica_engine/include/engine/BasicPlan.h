@@ -8,7 +8,7 @@ namespace alica
 class BasicPlan : private RunnableObject
 {
 public:
-    BasicPlan();
+    BasicPlan(IAlicaWorldModel* wm);
     virtual ~BasicPlan() = default;
 
     // Use of private inheritance and explciltly making members public
@@ -21,6 +21,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getWorldModel;
 
 protected:
     virtual void onInit(){};

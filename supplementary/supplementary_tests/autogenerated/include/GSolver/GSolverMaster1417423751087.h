@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1417423751087) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class GSolverMaster1417423751087 : public DomainPlan
 {
 public:
-    GSolverMaster1417423751087();
+    GSolverMaster1417423751087(IAlicaWorldModel* wm);
     virtual ~GSolverMaster1417423751087();
     /*PROTECTED REGION ID(pub1417423751087) ENABLED START*/
     // Add additional public methods here

@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1414068495566) ENABLED START*/
 // Add inlcudes here
@@ -17,7 +18,7 @@ namespace alica
 class ConstraintTestMaster1414068495566 : public DomainPlan
 {
 public:
-    ConstraintTestMaster1414068495566();
+    ConstraintTestMaster1414068495566(IAlicaWorldModel* wm);
     virtual ~ConstraintTestMaster1414068495566();
     /*PROTECTED REGION ID(pub1414068495566) ENABLED START*/
     // Add additional public methods here

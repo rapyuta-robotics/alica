@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - constraintRunner (1414068524246)
-ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245()
-        : DomainPlan()
+ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1414068524245) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
  *	- X (1414068572540)
  *	- Y (1414068576620)
  */
-bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1414068566297) ENABLED START*/
     return true;

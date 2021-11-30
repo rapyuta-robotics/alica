@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - TestState1 (1412252439926)
 //   - TestState2 (1412761855746)
-SimpleTestPlan1412252439925::SimpleTestPlan1412252439925()
-        : DomainPlan()
+SimpleTestPlan1412252439925::SimpleTestPlan1412252439925(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1412252439925) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ SimpleTestPlan1412252439925::~SimpleTestPlan1412252439925()
 /**
  * Available Vars:
  */
-bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1412781707952) ENABLED START*/
     //--> "PreCondition:1412781707952  not implemented";
@@ -45,7 +45,7 @@ bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp)
 /**
  * Available Vars:
  */
-bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1412781693884) ENABLED START*/
     CounterClass::called++;
@@ -79,7 +79,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
  * Abstract Plans in TestState1:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1412761925032) ENABLED START*/
     return rp->isAnyChildStatus(PlanStatus::Success);

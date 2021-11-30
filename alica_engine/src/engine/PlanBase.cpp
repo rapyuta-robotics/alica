@@ -94,8 +94,9 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan)
+void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
 {
+    _ruleBook.init(wm);
     if (!_running) {
         _running = true;
         if (_statusMessage) {

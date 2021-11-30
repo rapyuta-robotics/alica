@@ -14,8 +14,8 @@ namespace alica
 //
 // States:
 //   - InitPlan2 (1613378625757)
-SchedulingTestPlan21613378423610::SchedulingTestPlan21613378423610()
-        : DomainPlan()
+SchedulingTestPlan21613378423610::SchedulingTestPlan21613378423610(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1613378423610) ENABLED START*/
     // Add additional options here

@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - Init (3997532517592149463)
 //   - Move (2405597980801916441)
-Master2425328142973735249::Master2425328142973735249()
-        : DomainPlan()
+Master2425328142973735249::Master2425328142973735249(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con2425328142973735249) ENABLED START*/
     // Add additional options here
@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityF
  * Abstract Plans in Init:
  *   - Go2RandomPosition (4085572422059465423)
  */
-bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3486027875296378577) ENABLED START*/
     return rp->isAnyChildStatus(PlanStatus::Success);
@@ -74,7 +74,7 @@ bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Move:
  *   - Move (1889749086610694100)
  */
-bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(635844345274619238) ENABLED START*/
     return turtlesim::ALICATurtleWorldModel::get()->getInit();
