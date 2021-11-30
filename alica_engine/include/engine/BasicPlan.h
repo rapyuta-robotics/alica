@@ -1,6 +1,8 @@
 #pragma once
 
 #include "engine/RunnableObject.h"
+#include <unordered_set>
+#include <vector>
 
 namespace alica
 {
@@ -27,6 +29,7 @@ protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
+    virtual std::unordered_map<int64_t, std::unordered_set> getApplicationEntrypointContext(vector<int64_t> entryPointIds){};
 
 private:
     void doInit() override;
