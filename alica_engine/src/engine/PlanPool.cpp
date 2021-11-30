@@ -2,7 +2,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
-#include "engine/IPlanAttachmentCreator.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"
@@ -29,7 +28,7 @@ PlanPool::PlanPool(AlicaEngine* ae)
  */
 PlanPool::~PlanPool() = default;
 
-std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, IPlanAttachmentCreator& planAttachmentCreator, const Plan* plan, const Configuration* configuration)
+std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, const Plan* plan, const Configuration* configuration)
 {
     auto basicPlan = planCreator.createPlan(plan->getId());
     if (!basicPlan) {
@@ -40,7 +39,7 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
     // set stuff from plan and configuration in basic plan object
     basicPlan->setConfiguration(configuration);
     basicPlan->setName(plan->getName());
-    basicPlan->createChildAttachments(plan, planAttachmentCreator);
+    basicPlan->createChildAttachments(plan);
     if (plan->getFrequency() < 1) {
         basicPlan->setInterval(0);
     } else {
@@ -56,14 +55,13 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
  * Creates instances of BasicPlan, needed according to the PlanRepository, with the help of the given
  * PlanCreator. If a BasicPlan cannot be instantiated, the Initialisation of the Pool is cancelled.
  * @param planCreator A PlanCreator.
- * @param planAttachmentCreator a PlanAttachmentCreator
  * @return True, if all necessary BasicPlan could be constructed. False, if the Initialisation was cancelled.
  */
-bool PlanPool::init(IPlanCreator& planCreator, IPlanAttachmentCreator& planAttachmentCreator)
+bool PlanPool::init(IPlanCreator& planCreator)
 {
     for (auto plan : _ae->getPlanRepository().getPlans()) {
         if (plan->isMasterPlan()) {
-            _masterPlan = createBasicPlan(planCreator, planAttachmentCreator, plan, nullptr);
+            _masterPlan = createBasicPlan(planCreator, plan, nullptr);
         }
     }
 
@@ -75,7 +73,7 @@ bool PlanPool::init(IPlanCreator& planCreator, IPlanAttachmentCreator& planAttac
                 continue;
             }
 
-            auto basicPlan = createBasicPlan(planCreator, planAttachmentCreator, plan, wrapper->getConfiguration());
+            auto basicPlan = createBasicPlan(planCreator, plan, wrapper->getConfiguration());
             if (basicPlan) {
                 _availablePlans.insert(std::make_pair(wrapper, std::move(basicPlan)));
             }

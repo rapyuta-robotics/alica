@@ -32,7 +32,6 @@ class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
-class IPlanAttachmentCreator;
 
 class AlicaEngine
 {

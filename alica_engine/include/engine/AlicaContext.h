@@ -10,7 +10,6 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/IPlanCreator.h"
-#include "engine/IPlanAttachmentCreator.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
@@ -43,15 +42,14 @@ namespace test {
 struct AlicaCreators
 {
     AlicaCreators(std::unique_ptr<IConditionCreator> cc, std::unique_ptr<IUtilityCreator> uc, std::unique_ptr<IConstraintCreator> crc,
-            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc, std::unique_ptr<IPlanAttachmentCreator> pac)
+            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc)
             : conditionCreator(std::move(cc))
             , utilityCreator(std::move(uc))
             , constraintCreator(std::move(crc))
             , behaviourCreator(std::move(bc))
             , planCreator(std::move(pc))
-            , planAttachmentCreator(std::move(pac))
     {
-        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator && planAttachmentCreator);
+        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator);
     }
 
     std::unique_ptr<IConditionCreator> conditionCreator;
@@ -59,7 +57,6 @@ struct AlicaCreators
     std::unique_ptr<IConstraintCreator> constraintCreator;
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
     std::unique_ptr<IPlanCreator> planCreator;
-    std::unique_ptr<IPlanAttachmentCreator> planAttachmentCreator;
 };
 
 /**

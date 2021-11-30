@@ -7,7 +7,6 @@
 namespace alica
 {
 
-class IPlanAttachmentCreator;
 class Plan;
 
 class BasicPlan : private RunnableObject
@@ -29,7 +28,7 @@ public:
     using RunnableObject::stop;
     using RunnableObject::getBlackBoard;
 
-    void createChildAttachments(const Plan* plan, IPlanAttachmentCreator& planAttachmentCreator);
+    void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
 
     std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) {return _planAttachments.at(id);}
 protected:

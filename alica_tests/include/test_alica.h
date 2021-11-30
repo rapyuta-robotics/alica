@@ -4,7 +4,6 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "PlanCreator.h"
-#include "PlanAttachmentCreator.h"
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <alica_tests/TestWorldModel.h>
 #include "UtilityFunctionCreator.h"
@@ -70,7 +69,7 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>(), std::make_unique<alica::PlanAttachmentCreator>());
+                std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         EXPECT_TRUE(ae->init(creators));
@@ -121,7 +120,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-                std::make_unique<alica::PlanCreator>(), std::make_unique<alica::PlanAttachmentCreator>());
+                std::make_unique<alica::PlanCreator>());
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac = new alica::AlicaContext(

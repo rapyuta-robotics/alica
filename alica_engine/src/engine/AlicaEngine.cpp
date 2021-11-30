@@ -94,7 +94,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _stepCalled = false;
     bool everythingWorked = true;
     everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
-    everythingWorked = everythingWorked && _planPool.init(*creatorCtx.planCreator, *creatorCtx.planAttachmentCreator);
+    everythingWorked = everythingWorked && _planPool.init(*creatorCtx.planCreator);
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);

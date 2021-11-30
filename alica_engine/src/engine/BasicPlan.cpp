@@ -7,7 +7,6 @@
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
-#include "engine/IPlanAttachmentCreator.h"
 
 namespace alica
 {
@@ -70,11 +69,11 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
-void BasicPlan::createChildAttachments(const Plan* plan, IPlanAttachmentCreator& planAttachmentCreator)
+void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
 {
     for(const State* state : plan->getStates()) {
         for(const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
-            _planAttachments.emplace(wrapper->getId(), planAttachmentCreator.createPlanAttachment(wrapper->getId()));
+            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
         }
     }
 }
