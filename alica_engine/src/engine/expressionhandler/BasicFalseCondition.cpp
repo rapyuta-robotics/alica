@@ -14,7 +14,7 @@ BasicFalseCondition::BasicFalseCondition() {}
 
 BasicFalseCondition::~BasicFalseCondition() {}
 
-bool BasicFalseCondition::evaluate(std::shared_ptr<RunningPlan> rp)
+bool BasicFalseCondition::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     return false;
 }

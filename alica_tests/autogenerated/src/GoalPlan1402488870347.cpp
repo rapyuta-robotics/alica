@@ -14,8 +14,8 @@ namespace alica
 //   - Shoot (1402488881799)
 //   - Miss (1402489152217)
 //   - Scored (1402489192198)
-GoalPlan1402488870347::GoalPlan1402488870347()
-        : DomainPlan()
+GoalPlan1402488870347::GoalPlan1402488870347(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1402488870347) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ GoalPlan1402488870347::~GoalPlan1402488870347()
 /**
  * Available Vars:
  */
-bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489131988) ENABLED START*/
     //--> "PreCondition:1402489131988  not implemented";
@@ -46,7 +46,7 @@ bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp)
  * Available Vars:
  *	- test (1403773747758)
  */
-bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1403773741874) ENABLED START*/
     return true;
@@ -57,7 +57,7 @@ bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp)
 /**
  * Available Vars:
  */
-bool PostCondition1402489620773::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PostCondition1402489620773::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489620773) ENABLED START*/
     std::cout << "The PostCondition 1402489620773 in TerminalState Scored is not implement yet!" << std::endl;
@@ -92,7 +92,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
  *
  * Abstract Plans in Shoot:
  */
-bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489173167) ENABLED START*/
     return false;
@@ -112,7 +112,7 @@ bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Miss:
  */
-bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489205153) ENABLED START*/
     return false;
@@ -132,7 +132,7 @@ bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp)
  *
  * Abstract Plans in Miss:
  */
-bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1402489216617) ENABLED START*/
     return false;

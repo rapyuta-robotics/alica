@@ -8,6 +8,7 @@
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/IAlicaWorldModel.h"
 
 #include <algorithm>
 #include <iostream>

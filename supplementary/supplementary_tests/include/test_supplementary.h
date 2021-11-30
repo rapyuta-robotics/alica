@@ -6,6 +6,7 @@
 #include "ConstraintCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
 #include "UtilityFunctionCreator.h"
+#include "SupplementaryWorldModel.h"
 
 #include "communication/AlicaRosCommunication.h"
 #include <clock/AlicaRosTimer.h>
@@ -64,6 +65,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+        ac->setWorldModel<SupplementaryWorldModel>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                                       std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
                                       std::make_unique<alica::PlanCreator>());
@@ -123,6 +125,7 @@ protected:
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(4);
+            ac->setWorldModel<SupplementaryWorldModel>();
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             EXPECT_TRUE(ae->init(creators));

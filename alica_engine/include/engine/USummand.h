@@ -16,6 +16,7 @@ namespace alica
 
 class EntryPoint;
 class IAssignment;
+class IAlicaWorldModel;
 
 /**
  * Abstract super class for domain dependent utility summands.
@@ -51,12 +52,12 @@ public:
      * Evaluates the utilityfunction summand
      * @return The result of the evaluation
      */
-    virtual UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const = 0;
+    virtual UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const = 0;
     /**
      * Cache every data for the current evaluation, to
      * assure consistency over the complete current evaluation.
      */
-    virtual void cacheEvalData(){};
+    virtual void cacheEvalData(const IAlicaWorldModel* wm){};
     // virtual std::pair<std::vector<double>, double>* differentiate(IAssignment* newAss) { return nullptr; }
     void setWeight(double weight) { _weight = weight; }
 

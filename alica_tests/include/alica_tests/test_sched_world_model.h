@@ -3,17 +3,17 @@
 #include <string>
 #include <atomic>
 
+#include <engine/IAlicaWorldModel.h>
+
 namespace alica_test
 {
 
-class SchedWM
+class SchedWM : public alica::IAlicaWorldModel
 {
 public:
-    static SchedWM& instance()
-    {
-        static SchedWM schedwm;
-        return schedwm;
-    }
+    SchedWM() { reset(); }
+    SchedWM(const SchedWM&) = delete;
+    ~SchedWM() = default;
 
     void reset()
     {
@@ -49,9 +49,6 @@ public:
     std::atomic<bool> behAAAFailureInTerminate;
 
 private:
-    SchedWM() { reset(); }
-    SchedWM(const SchedWM&) = delete;
-    ~SchedWM() = default;
 };
 
 }

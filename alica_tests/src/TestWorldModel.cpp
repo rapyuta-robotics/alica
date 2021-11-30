@@ -47,7 +47,7 @@ void TestWorldModel::reset()
     x = 0;
 }
 
-bool TestWorldModel::isTransitionCondition1413201227586()
+bool TestWorldModel::isTransitionCondition1413201227586() const
 {
     return transitionCondition1413201227586;
 }
@@ -57,7 +57,7 @@ void TestWorldModel::setTransitionCondition1413201227586(bool transitionConditio
     this->transitionCondition1413201227586 = transitionCondition1413201227586;
 }
 
-bool TestWorldModel::isTransitionCondition1413201389955()
+bool TestWorldModel::isTransitionCondition1413201389955() const
 {
     return transitionCondition1413201389955;
 }
@@ -67,7 +67,7 @@ void TestWorldModel::setTransitionCondition1413201389955(bool transitionConditio
     this->transitionCondition1413201389955 = transitionCondition1413201389955;
 }
 
-bool TestWorldModel::isTransitionCondition1413201052549()
+bool TestWorldModel::isTransitionCondition1413201052549() const
 {
     return transitionCondition1413201052549;
 }
@@ -77,7 +77,7 @@ void TestWorldModel::setTransitionCondition1413201052549(bool transitionConditio
     this->transitionCondition1413201052549 = transitionCondition1413201052549;
 }
 
-bool TestWorldModel::isTransitionCondition1413201367990()
+bool TestWorldModel::isTransitionCondition1413201367990() const
 {
     return transitionCondition1413201367990;
 }
@@ -87,7 +87,7 @@ void TestWorldModel::setTransitionCondition1413201367990(bool transitionConditio
     this->transitionCondition1413201367990 = transitionCondition1413201367990;
 }
 
-bool TestWorldModel::isTransitionCondition1413201370590()
+bool TestWorldModel::isTransitionCondition1413201370590() const
 {
     return transitionCondition1413201370590;
 }
@@ -97,7 +97,7 @@ void TestWorldModel::setTransitionCondition1413201370590(bool transitionConditio
     this->transitionCondition1413201370590 = transitionCondition1413201370590;
 }
 
-bool TestWorldModel::isTransitionCondition1418825427317()
+bool TestWorldModel::isTransitionCondition1418825427317() const
 {
     return this->transitionCondition1418825427317;
 }
@@ -105,7 +105,7 @@ void TestWorldModel::setTransitionCondition1418825427317(bool transitionConditio
 {
     this->transitionCondition1418825427317 = transitionCondition1418825427317;
 }
-bool TestWorldModel::isTransitionCondition1418825428924()
+bool TestWorldModel::isTransitionCondition1418825428924() const
 {
     return this->transitionCondition1418825428924;
 }
@@ -114,7 +114,7 @@ void TestWorldModel::setTransitionCondition1418825428924(bool transitionConditio
     this->transitionCondition1418825428924 = transitionCondition1418825428924;
 }
 
-bool TestWorldModel::isPreCondition1418042929966()
+bool TestWorldModel::isPreCondition1418042929966() const
 {
     return preCondition1418042929966;
 }
@@ -122,7 +122,7 @@ void TestWorldModel::setPreCondition1418042929966(bool preCondition1418042929966
 {
     this->preCondition1418042929966 = preCondition1418042929966;
 }
-bool TestWorldModel::isRuntimeCondition1418042967134()
+bool TestWorldModel::isRuntimeCondition1418042967134() const
 {
     return runtimeCondition1418042967134;
 }
@@ -131,7 +131,7 @@ void TestWorldModel::setRuntimeCondition1418042967134(bool runtimeCondition14180
     this->runtimeCondition1418042967134 = runtimeCondition1418042967134;
 }
 
-bool TestWorldModel::isTransitionCondition1625614729978()
+bool TestWorldModel::isTransitionCondition1625614729978() const
 {
     return this->transitionCondition1625614729978;
 }
@@ -141,7 +141,7 @@ void TestWorldModel::setTransitionCondition1625614729978(bool transitionConditio
     this->transitionCondition1625614729978 = transitionCondition1625614729978;
 }
 
-bool TestWorldModel::isTransitionCondition1625776897472()
+bool TestWorldModel::isTransitionCondition1625776897472() const
 {
     return this->transitionCondition1625776897472;
 }
@@ -151,7 +151,7 @@ void TestWorldModel::setTransitionCondition1625776897472(bool transitionConditio
     this->transitionCondition1625776897472 = transitionCondition1625776897472;
 }
 
-bool TestWorldModel::isTransitionCondition1625783869825()
+bool TestWorldModel::isTransitionCondition1625783869825() const
 {
     return this->transitionCondition1625783869825;
 }
@@ -161,7 +161,7 @@ void TestWorldModel::setTransitionCondition1625783869825(bool transitionConditio
     this->transitionCondition1625783869825 = transitionCondition1625783869825;
 }
 
-bool TestWorldModel::isTransitionCondition1625783867495()
+bool TestWorldModel::isTransitionCondition1625783867495() const
 {
     return this->transitionCondition1625783867495;
 }
@@ -171,7 +171,7 @@ void TestWorldModel::setTransitionCondition1625783867495(bool transitionConditio
     this->transitionCondition1625783867495 = transitionCondition1625783867495;
 }
 
-bool TestWorldModel::isTransitionCondition1626848015861()
+bool TestWorldModel::isTransitionCondition1626848015861() const
 {
     return this->transitionCondition1626848015861;
 }
@@ -181,7 +181,7 @@ void TestWorldModel::setTransitionCondition1626848015861(bool transitionConditio
     this->transitionCondition1626848015861 = transitionCondition1626848015861;
 }
 
-bool TestWorldModel::isTransitionCondition4238964946542987247()
+bool TestWorldModel::isTransitionCondition4238964946542987247() const
 {
     return this->transitionCondition4238964946542987247;
 }
@@ -191,7 +191,7 @@ void TestWorldModel::setTransitionCondition4238964946542987247(bool transitionCo
     this->transitionCondition4238964946542987247 = transitionCondition4238964946542987247;
 }
 
-bool TestWorldModel::isTransitionCondition4115970455290610262()
+bool TestWorldModel::isTransitionCondition4115970455290610262() const
 {
     return this->transitionCondition4115970455290610262;
 }
@@ -201,7 +201,7 @@ void TestWorldModel::setTransitionCondition4115970455290610262(bool transitionCo
     this->transitionCondition4115970455290610262 = transitionCondition4115970455290610262;
 }
 
-bool TestWorldModel::isSwitchingEntryPoints()
+bool TestWorldModel::isSwitchingEntryPoints() const
 {
     return this->switchEntryPoints;
 }

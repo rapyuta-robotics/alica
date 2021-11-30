@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - QueryState1 (1479556074050)
-QueryPlan11479556074049::QueryPlan11479556074049()
-        : DomainPlan()
+QueryPlan11479556074049::QueryPlan11479556074049(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1479556074049) ENABLED START*/
     // Add additional options here
@@ -33,7 +33,7 @@ QueryPlan11479556074049::~QueryPlan11479556074049()
  *	- QP1X (1479556220234)
  *	- QP1Y (1479556572534)
  */
-bool RunTimeCondition1479556084493::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1479556084493::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1479556084493) ENABLED START*/
     return true;
