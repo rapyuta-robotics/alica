@@ -36,7 +36,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const SuccessCollection& c);
-    const std::size_t _parentContextHash;
+    std::size_t _parentContextHash;
     const Plan* _plan;
     std::vector<AgentGrp> _successData;
 };

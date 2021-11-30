@@ -43,7 +43,7 @@ bool TeamObserver::updateTeamPlanTrees()
             std::unique_ptr<SimplePlanTree> spt = sptFromMessage(msg.first->senderID, msg.first->dynamicStateIDPairs, msg.second);
             if (spt != nullptr) {
                 _tm.setTimeLastMsgReceived(msg.first->senderID, msg.second);
-                _tm.setSuccessMarks(msg.first->senderID, msg.first->succeededEPs);
+                _tm.setSuccessMarks(msg.first->senderID, msg.first->succeededContexts);
 
                 auto sptEntry = _simplePlanTrees.find(spt->getAgentId());
                 if (sptEntry != _simplePlanTrees.end()) {

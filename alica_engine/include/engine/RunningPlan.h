@@ -99,7 +99,7 @@ public:
         mutable EvalStatus runTimeConditionStatus;
     };
     explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, std::size_t parentContextHash, const Plan* plan, const Configuration* configuration);
     RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
     RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);

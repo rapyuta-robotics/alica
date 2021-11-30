@@ -75,11 +75,11 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
+RunningPlan::RunningPlan(AlicaEngine* ae, std::size_t parentContextHash, const Plan* plan, const Configuration* configuration)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
-        , _assignment(plan)
+        , _assignment(parentContextHash, plan)
         , _cycleManagement(ae, this)
         , _basicBehaviour(nullptr)
         , _basicPlan(nullptr)

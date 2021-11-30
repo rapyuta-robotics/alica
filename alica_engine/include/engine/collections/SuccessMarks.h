@@ -18,7 +18,7 @@ public:
     ~SuccessMarks();
 
     void limitToPlans(const AbstractPlanGrp& active);
-    void update(const AlicaEngine* ae, const IdGrp& succeededEps);
+    void update(const AlicaEngine* ae, const std::vector<std::size_t>& succeededContexts);
 
     void clear();
     EntryPointGrp succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const;

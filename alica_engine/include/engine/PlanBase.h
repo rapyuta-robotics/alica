@@ -57,7 +57,7 @@ public:
     bool isWaiting() const { return _isWaiting; }
 
     // factory functions
-    RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(std::size_t parentContextHash, const Plan* plan, const Configuration* configuration);
     RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
     RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
 

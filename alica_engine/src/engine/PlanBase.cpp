@@ -331,9 +331,9 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
     _fpEventWait.notify_all();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(std::size_t parentContextHash, const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_ae, parentContextHash, plan, configuration));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
