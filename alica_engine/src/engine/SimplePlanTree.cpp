@@ -33,7 +33,7 @@ bool SimplePlanTree::containsContexts(const std::unordered_set<std::size_t>& con
     }
     auto found = false;
     for (auto& child : _children) {
-        found = containsContexts(contextHashes);
+        found = child->containsContexts(contextHashes);
     }
     return found;
 }

@@ -17,7 +17,6 @@ public:
     AlicaElement(int64_t id);
     AlicaElement(int64_t id, const std::string& name);
     AlicaElement(int64_t id, const std::string& name, const std::string& comment);
-    AlicaElement(const AlicaElement&) = default;
     virtual ~AlicaElement();
 
     const std::string& getName() const { return _name; }
@@ -27,10 +26,8 @@ public:
 
     virtual std::string toString(std::string indent = "") const;
 
-    AlicaElement(const AlicaElement&) = delete;
-    AlicaElement(AlicaElement&&) = delete;
-    AlicaElement& operator=(const AlicaElement&) = delete;
-    AlicaElement& operator=(AlicaElement&&) = delete;
+    AlicaElement(const AlicaElement&) = default;
+    AlicaElement& operator=(const AlicaElement&) = default;
 
 private:
     friend ModelFactory;
