@@ -30,8 +30,7 @@ inline void hash_combine(std::size_t& seed, const T& value)
 
 std::size_t contextHash(int64_t value)
 {
-    // std::hash is good because in libstdc++ it is implemented using murmurhash2
-    return std::hash<int64_t>{}(value);
+    return CityHash64(reinterpret_cast<const char*>(&value), sizeof(int64_t));
 }
 
 std::size_t contextHashCombine(std::size_t h1, std::size_t h2)
