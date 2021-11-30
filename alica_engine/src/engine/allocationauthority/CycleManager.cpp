@@ -227,7 +227,7 @@ bool CycleManager::applyAssignment()
         const Plan* newPlan = _rp->getPlanType()->getPlanById(_fixedAllocation.planId);
         assert(newPlan != nullptr);
         _rp->usePlan(newPlan);
-        _rp->setAssignment(Assignment(newPlan, _fixedAllocation));
+        _rp->setAssignment(Assignment(_rp->getParent() ? _rp->getParent()->getContextHash() : contextHash(0), newPlan, _fixedAllocation));
         myEntryPoint = _rp->getAssignment().getEntryPointOfAgent(_myID);
         modifiedSelf = true;
     } else {

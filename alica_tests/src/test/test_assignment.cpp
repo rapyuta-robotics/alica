@@ -4,6 +4,7 @@
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
 #include <engine/AlicaContext.h>
+#include <engine/util/HashFunctions.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -41,7 +42,7 @@ TEST(Assignment, RobotsInserted)
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 
-    Assignment as1(stp);
+    Assignment as1(alica::contextHash(0), stp);
     const EntryPoint* ep = stp->getEntryPoints()[0];
     const State* s1 = ep->getState();
     const State* s2 = s1->getOutTransitions()[0]->getOutState();
