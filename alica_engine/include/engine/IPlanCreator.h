@@ -10,16 +10,6 @@ class AlicaEngine;
 class BasicPlan;
 class Configuration;
 
-
-class DefaultPlanAttachment : public PlanAttachment
-{
-bool setParameters(const BlackBoard& parent_bb, BlackBoard& child_bb){
-        std::cerr << "DefaultPlanAttachment: this function should not be called" << std::endl;
-        throw new std::exception();
-        return false;
-}
-};
-
 class IPlanCreator
 {
 public:
