@@ -17,6 +17,7 @@
 #include "engine/scheduler/Scheduler.h"
 #include "engine/scheduler/JobQueue.h"
 #include "engine/Types.h"
+#include "engine/EntryPointStore.h"
 
 #include <list>
 #include <string>
@@ -130,6 +131,8 @@ public:
      */
     void reloadConfig(const YAML::Node& config);
 
+    EntryPointStore* getEntryPointStore() const { return _entryPointStore.get(); }
+
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
@@ -138,6 +141,7 @@ private:
     AlicaContext& _ctx;
     std::unique_ptr<scheduler::JobScheduler> _scheduler;
     PlanRepository _planRepository;
+    std::unique_ptr<EntryPointStore> _entryPointStore;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/

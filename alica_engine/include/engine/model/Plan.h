@@ -76,28 +76,17 @@ private:
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
 
-    const EntryPoint* getEntryPointByIDImpl(int64_t epID) const;
-
-    struct IDHash
-    {
-        std::size_t operator()(std::pair<int64_t, int64_t> p) const
-        {
-            std::size_t seed = std::hash<int64_t>{}(p.first);
-            return seed ^ (std::hash<int64_t>{}(p.second) + 0x9e3779b97f4a7c15LLU + (seed << 12) + (seed >> 4));
-        }
-    };
-
     int _minCardinality;
     int _maxCardinality;
     EntryPointGrp _entryPoints;
     mutable EntryPointGrp _allEntryPoints;
-    mutable LRUCache<std::pair<int64_t, int64_t>, EntryPoint, IDHash> _entryPointCache;
     StateGrp _states;
     SuccessStateGrp _successStates;
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
 
+    AlicaEngine* _ae;
     /**
      * This plan's Utility function
      */
