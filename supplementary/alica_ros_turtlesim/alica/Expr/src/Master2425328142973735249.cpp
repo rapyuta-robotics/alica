@@ -4,8 +4,6 @@
 #include <alica_ros_turtlesim/world_model.hpp>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  Master (2425328142973735249)

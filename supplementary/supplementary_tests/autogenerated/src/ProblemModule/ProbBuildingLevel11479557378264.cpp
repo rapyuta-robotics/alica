@@ -3,8 +3,6 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  ProbBuildingLevel1 (1479557378264)

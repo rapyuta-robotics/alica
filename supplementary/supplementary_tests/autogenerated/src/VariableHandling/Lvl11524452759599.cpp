@@ -4,8 +4,6 @@
 bool vhStartCondition = false;
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  Lvl1 (1524452759599)
