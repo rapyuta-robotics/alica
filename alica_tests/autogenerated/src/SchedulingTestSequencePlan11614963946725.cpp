@@ -4,6 +4,8 @@
 #include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestSequencePlan1 (1614963946725)
@@ -41,6 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1614963946725::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromInitSequencePlan1To InitSequenceSubPlan1 (1614964566530)
  *   - Comment: MISSING_COMMENT
@@ -61,6 +64,7 @@ bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 2;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromInitSequenceSubPlan1To InitSequenceSubPlan2 (1614964572494)
  *   - Comment: MISSING_COMMENT
@@ -82,6 +86,7 @@ bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 3;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromInitSequenceSubPlan2To InitSequenceSubPlan3 (1614964575552)
  *   - Comment: MISSING_COMMENT
@@ -103,6 +108,7 @@ bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return true;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromInitSequenceSubPlan3To TerminateSequenceSubPlan3 (1614964578015)
  *   - Comment: MISSING_COMMENT

@@ -8,7 +8,7 @@ namespace alica
 // Plan:ConstraintTestMaster
 /*
  * Tasks:
- * - EP:1414068495568 : DefaultTask (1225112227903)
+ * - EntryPoint:1414068495568 : DefaultTask (1225112227903)
  *
  * States:
  * - Start (1414068495567)

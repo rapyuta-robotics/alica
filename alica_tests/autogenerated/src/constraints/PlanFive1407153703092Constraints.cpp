@@ -8,10 +8,10 @@ namespace alica
 // Plan:PlanFive
 /*
  * Tasks:
- * - EP:1407153717809 : DefaultTask (1225112227903)
- * - EP:1407153972059 : AttackTask (1407153522080)
- * - EP:1407153973706 : DefendTask (1402488486725)
- * - EP:1407153975075 : MidFieldTask (1407153536219)
+ * - EntryPoint:1407153717809 : DefaultTask (1225112227903)
+ * - EntryPoint:1407153972059 : AttackTask (1407153522080)
+ * - EntryPoint:1407153973706 : DefendTask (1402488486725)
+ * - EntryPoint:1407153975075 : MidFieldTask (1407153536219)
  *
  * States:
  * - DefaultState (1407153717808)

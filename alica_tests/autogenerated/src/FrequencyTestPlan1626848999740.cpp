@@ -3,6 +3,8 @@
 // Add additional options here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  FrequencyTestPlan (1626848999740)

@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  QueryPlan1 (1479556074049)

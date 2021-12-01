@@ -5,6 +5,8 @@
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  PlanB (1629895853508)

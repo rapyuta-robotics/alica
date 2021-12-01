@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  PlanTwo (1407153645238)

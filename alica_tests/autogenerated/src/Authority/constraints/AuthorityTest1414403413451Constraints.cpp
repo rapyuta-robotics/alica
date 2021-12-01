@@ -8,8 +8,8 @@ namespace alica
 // Plan:AuthorityTest
 /*
  * Tasks:
- * - EP:1414403429951 : DefaultTask (1225112227903)
- * - EP:1414403522424 : AttackTask (1407153522080)
+ * - EntryPoint:1414403429951 : DefaultTask (1225112227903)
+ * - EntryPoint:1414403522424 : AttackTask (1407153522080)
  *
  * States:
  * - UpperState (1414403429950)

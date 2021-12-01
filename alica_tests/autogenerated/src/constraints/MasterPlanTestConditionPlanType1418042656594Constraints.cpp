@@ -8,7 +8,7 @@ namespace alica
 // Plan:MasterPlanTestConditionPlanType
 /*
  * Tasks:
- * - EP:1418042656596 : DefaultTask (1225112227903)
+ * - EntryPoint:1418042656596 : DefaultTask (1225112227903)
  *
  * States:
  * - Start (1418042656595)

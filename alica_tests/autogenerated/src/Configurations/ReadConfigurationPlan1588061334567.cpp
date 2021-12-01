@@ -3,6 +3,8 @@
 // Add additional options here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  ReadConfigurationPlan (1588061334567)
@@ -38,6 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1588069612659)
  *   - Comment: MISSING_COMMENT
@@ -60,6 +63,7 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return value.compare("1") == 0;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1588069615552)
  *   - Comment: MISSING_COMMENT

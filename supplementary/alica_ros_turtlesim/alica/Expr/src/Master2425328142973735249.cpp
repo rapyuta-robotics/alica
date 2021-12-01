@@ -4,6 +4,8 @@
 #include <alica_ros_turtlesim/world_model.hpp>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  Master (2425328142973735249)
@@ -38,6 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 3486027875296378577 (3486027875296378577)
  *   - Comment:
@@ -59,6 +62,7 @@ bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, 
     return rp->isAnyChildStatus(PlanStatus::Success);
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 635844345274619238 (635844345274619238)
  *   - Comment:

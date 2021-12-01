@@ -8,7 +8,7 @@ namespace alica
 // Plan:PreConditionPlan
 /*
  * Tasks:
- * - EP:1418042796753 : DefaultTask (1225112227903)
+ * - EntryPoint:1418042796753 : DefaultTask (1225112227903)
  *
  * States:
  * - PreConditionTest (1418042796752)

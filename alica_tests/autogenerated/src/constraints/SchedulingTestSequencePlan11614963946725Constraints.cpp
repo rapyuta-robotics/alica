@@ -8,7 +8,7 @@ namespace alica
 // Plan:SchedulingTestSequencePlan1
 /*
  * Tasks:
- * - EP:1614963977287 : SchedulerTestSubPlanEntrypoint (1613372009777)
+ * - EntryPoint:1614963977287 : SchedulerTestSubPlanEntrypoint (1613372009777)
  *
  * States:
  * - InitSequencePlan1 (1614963979424)

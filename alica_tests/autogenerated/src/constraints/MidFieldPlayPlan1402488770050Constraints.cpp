@@ -8,8 +8,8 @@ namespace alica
 // Plan:MidFieldPlayPlan
 /*
  * Tasks:
- * - EP:1402488787819 : DefaultTask (1225112227903)
- * - EP:1402500828244 : DefaultTask (1225112227903)
+ * - EntryPoint:1402488787819 : DefaultTask (1225112227903)
+ * - EntryPoint:1402500828244 : DefaultTask (1225112227903)
  *
  * States:
  * - Wander (1402488787818)

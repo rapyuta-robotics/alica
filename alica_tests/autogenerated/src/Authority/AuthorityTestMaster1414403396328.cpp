@@ -5,6 +5,8 @@
 using namespace std;
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  AuthorityTestMaster (1414403396328)
@@ -41,6 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1414403840950 (1414403840950)
  *   - Comment:

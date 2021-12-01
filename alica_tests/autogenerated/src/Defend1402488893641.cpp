@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  Defend (1402488893641)
@@ -41,6 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: TackleToGetBall (1402488991762)
  *   - Comment:
@@ -63,6 +66,7 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: TackleToGetBall (1402488990761)
  *   - Comment:
@@ -83,6 +87,7 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: GetBallToTryToDefendGoal (1402489064693)
  *   - Comment:
@@ -103,6 +108,7 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: TryToDefendGoalToGetGoal (1402489071510)
  *   - Comment:

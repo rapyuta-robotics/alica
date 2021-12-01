@@ -5,6 +5,8 @@
 #include <engine/AlicaEngine.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  MasterSyncTransition (1418825395939)
@@ -44,6 +46,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FirstTaskTran (1418825425833)
  *   - Comment:
@@ -71,6 +74,7 @@ bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp, const 
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: SecondTaskTran (1418825427469)
  *   - Comment:

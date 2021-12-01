@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  ConstraintTestMaster (1414068495566)

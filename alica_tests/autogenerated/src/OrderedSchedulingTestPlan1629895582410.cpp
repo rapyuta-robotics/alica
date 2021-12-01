@@ -5,6 +5,8 @@
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  OrderedSchedulingTestPlan (1629895582410)
@@ -39,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895582410::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromPlanATo PlanB (1629895758611)
  *   - Comment: MISSING_COMMENT
@@ -61,6 +64,7 @@ bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return worldModel->planA2PlanB;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromPlanBTo PlanA (1629895768181)
  *   - Comment: MISSING_COMMENT

@@ -4,6 +4,8 @@
 #include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  PlanPoolTestMasterPlan (1964838032551226161)
@@ -38,6 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1964838032551226161::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 4186311028071767502 (4186311028071767502)
  *   - Comment:
@@ -60,6 +63,7 @@ bool PreCondition4238964946542987247::evaluate(std::shared_ptr<RunningPlan> rp, 
     return worldModel->isTransitionCondition4238964946542987247();
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 3610919168422994279 (3610919168422994279)
  *   - Comment:

@@ -7,6 +7,8 @@
 #include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  PreConditionPlan (1418042796751)

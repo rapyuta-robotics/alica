@@ -8,7 +8,7 @@ namespace alica
 // Plan:BehaviourTriggerTestPlan
 /*
  * Tasks:
- * - EP:1428508768574 : DefaultTask (1225112227903)
+ * - EntryPoint:1428508768574 : DefaultTask (1225112227903)
  *
  * States:
  * - NewState (1428508768573)

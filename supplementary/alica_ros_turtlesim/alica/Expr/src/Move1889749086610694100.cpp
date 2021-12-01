@@ -3,6 +3,8 @@
 // Add additional options here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  Move (1889749086610694100)

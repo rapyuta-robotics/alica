@@ -5,6 +5,8 @@
 #include <engine/AlicaEngine.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  MultiAgentTestPlan (1413200862180)
@@ -48,6 +50,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1413201368286 (1413201368286)
  *   - Comment:
@@ -75,6 +78,7 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const 
     }
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1413201050743 (1413201050743)
  *   - Comment:
@@ -102,6 +106,7 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const 
     }
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1413201367062 (1413201367062)
  *   - Comment:

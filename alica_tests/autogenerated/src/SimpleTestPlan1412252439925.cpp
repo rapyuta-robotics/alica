@@ -4,6 +4,8 @@
 #include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SimpleTestPlan (1412252439925)
@@ -64,6 +66,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1412761925032 (1412761925032)
  *   - Comment:

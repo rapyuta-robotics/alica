@@ -8,7 +8,7 @@ namespace alica
 // Plan:GoalPlan
 /*
  * Tasks:
- * - EP:1402488881800 : DefaultTask (1225112227903)
+ * - EntryPoint:1402488881800 : DefaultTask (1225112227903)
  *
  * States:
  * - Shoot (1402488881799)

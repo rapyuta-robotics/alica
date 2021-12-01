@@ -8,7 +8,7 @@ namespace alica
 // Plan:BackForth
 /*
  * Tasks:
- * - EP:1529456584984 : DefaultTask (1225112227903)
+ * - EntryPoint:1529456584984 : DefaultTask (1225112227903)
  *
  * States:
  * - First (1529456584983)

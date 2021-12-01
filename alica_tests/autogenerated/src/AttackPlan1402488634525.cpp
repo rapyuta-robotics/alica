@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  AttackPlan (1402488634525)
@@ -39,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489459382)
  *   - Comment:
@@ -65,6 +68,7 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489460694)
  *   - Comment:

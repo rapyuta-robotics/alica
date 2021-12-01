@@ -8,7 +8,7 @@ namespace alica
 // Plan:AuthorityTestMaster
 /*
  * Tasks:
- * - EP:1414403396331 : DefaultTask (1225112227903)
+ * - EntryPoint:1414403396331 : DefaultTask (1225112227903)
  *
  * States:
  * - testState (1414403396329)

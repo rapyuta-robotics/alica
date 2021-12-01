@@ -5,6 +5,8 @@
 #include <assert.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestPlan1 (1613378406860)
@@ -40,6 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1614960055819)
  *   - Comment: MISSING_COMMENT
@@ -60,6 +63,7 @@ bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 2;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1614960063842)
  *   - Comment: MISSING_COMMENT

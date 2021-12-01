@@ -6,6 +6,8 @@
 #include <alica_tests/DummyTestSummand.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  AuthorityTest (1414403413451)

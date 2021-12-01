@@ -5,6 +5,8 @@
 #include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestSequenceSubPlan3 (1614964478264)

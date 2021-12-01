@@ -8,7 +8,7 @@ namespace alica
 // Plan:FailsOnOne
 /*
  * Tasks:
- * - EP:1530069246105 : DefaultTask (1225112227903)
+ * - EntryPoint:1530069246105 : DefaultTask (1225112227903)
  *
  * States:
  * - NewState (1530069246104)

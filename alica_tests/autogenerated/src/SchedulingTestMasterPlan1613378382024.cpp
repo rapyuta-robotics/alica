@@ -6,6 +6,8 @@
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestMasterPlan (1613378382024)
@@ -43,6 +45,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo EndTest (1613530643879)
  *   - Comment: MISSING_COMMENT
@@ -64,6 +67,7 @@ bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 8;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo InitTest (1615797316170)
  *   - Comment: MISSING_COMMENT
@@ -84,6 +88,7 @@ bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 0;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1615797327076)
  *   - Comment: MISSING_COMMENT
@@ -104,6 +109,7 @@ bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 1;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1629895598464)
  *   - Comment: MISSING_COMMENT
@@ -125,6 +131,7 @@ bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return worldModel->execOrderTest;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo EndTest (1615797365363)
  *   - Comment: MISSING_COMMENT
@@ -146,6 +153,7 @@ bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return CounterClass::called == 4;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo EndTest (1629895607017)
  *   - Comment: MISSING_COMMENT

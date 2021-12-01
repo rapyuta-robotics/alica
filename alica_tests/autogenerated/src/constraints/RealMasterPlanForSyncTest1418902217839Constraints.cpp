@@ -8,7 +8,7 @@ namespace alica
 // Plan:RealMasterPlanForSyncTest
 /*
  * Tasks:
- * - EP:1418902217841 : DefaultTask (1225112227903)
+ * - EntryPoint:1418902217841 : DefaultTask (1225112227903)
  *
  * States:
  * - NewState (1418902217840)

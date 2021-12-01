@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  MasterPlanTestConditionPlanType (1418042656594)
@@ -39,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1418042682960)
  *   - Comment:

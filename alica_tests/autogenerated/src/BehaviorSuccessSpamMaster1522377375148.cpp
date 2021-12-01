@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  BehaviorSuccessSpamMaster (1522377375148)
@@ -39,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1522377944058)
  *   - Comment:
@@ -62,6 +65,7 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return ok;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1522377945069)
  *   - Comment:

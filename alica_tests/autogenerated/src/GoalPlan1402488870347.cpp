@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  GoalPlan (1402488870347)
@@ -78,6 +80,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489173167)
  *   - Comment:
@@ -98,6 +101,7 @@ bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489205153)
  *   - Comment:
@@ -118,6 +122,7 @@ bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489216617)
  *   - Comment:

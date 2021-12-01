@@ -3,6 +3,8 @@
 #include <alica_tests/SwitchEntryPointsSummand.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  MasterPlanTaskAssignment (1407152758497)

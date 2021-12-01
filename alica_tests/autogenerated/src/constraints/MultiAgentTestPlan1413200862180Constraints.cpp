@@ -8,9 +8,9 @@ namespace alica
 // Plan:MultiAgentTestPlan
 /*
  * Tasks:
- * - EP:1413200877337 : AttackTask (1407153522080)
- * - EP:1413200890537 : DefaultTask (1225112227903)
- * - EP:1413807260446 : DefaultTask (1225112227903)
+ * - EntryPoint:1413200877337 : AttackTask (1407153522080)
+ * - EntryPoint:1413200890537 : DefaultTask (1225112227903)
+ * - EntryPoint:1413807260446 : DefaultTask (1225112227903)
  *
  * States:
  * - OtherState (1413200877336)

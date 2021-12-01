@@ -8,7 +8,7 @@ namespace alica
 // Plan:Defend
 /*
  * Tasks:
- * - EP:1402488903550 : DefaultTask (1225112227903)
+ * - EntryPoint:1402488903550 : DefaultTask (1225112227903)
  *
  * States:
  * - Tackle (1402488903549)

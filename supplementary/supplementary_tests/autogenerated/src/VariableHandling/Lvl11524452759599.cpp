@@ -4,6 +4,8 @@
 bool vhStartCondition = false;
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  Lvl1 (1524452759599)
@@ -53,6 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1524453490345)
  *   - Comment: Lvl1 Transition

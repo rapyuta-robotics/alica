@@ -3,6 +3,8 @@
 // Add additional options here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestSequenceSubPlan2 (1614964444419)

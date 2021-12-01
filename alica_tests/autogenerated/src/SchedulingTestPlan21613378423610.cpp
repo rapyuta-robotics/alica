@@ -5,6 +5,8 @@
 #include <assert.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  SchedulingTestPlan2 (1613378423610)

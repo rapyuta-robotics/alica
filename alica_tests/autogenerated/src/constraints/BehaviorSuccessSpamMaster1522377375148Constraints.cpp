@@ -8,7 +8,7 @@ namespace alica
 // Plan:BehaviorSuccessSpamMaster
 /*
  * Tasks:
- * - EP:1522377375150 : DefaultTask (1225112227903)
+ * - EntryPoint:1522377375150 : DefaultTask (1225112227903)
  *
  * States:
  * - Normal (1522377375149)

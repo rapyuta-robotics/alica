@@ -11,7 +11,7 @@ namespace alica
 // Plan:QueryPlan1
 /*
  * Tasks:
- * - EP:1479556074051 : DefaultTask (1225112227903)
+ * - EntryPoint:1479556074051 : DefaultTask (1225112227903)
  *
  * States:
  * - QueryState1 (1479556074050)

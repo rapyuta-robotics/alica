@@ -15,6 +15,7 @@ TEST(Variant, works)
     EXPECT_TRUE(v2.isInt());
     EXPECT_FALSE(v2.isPtr());
     EXPECT_FALSE(v2.isDouble());
+    EXPECT_FALSE(v2.isIdent());
     EXPECT_FALSE(v2.isBool());
     EXPECT_FALSE(v2.isFloat());
 
@@ -25,6 +26,7 @@ TEST(Variant, works)
     EXPECT_FALSE(v1.isInt());
     EXPECT_FALSE(v1.isBool());
     EXPECT_FALSE(v1.isDouble());
+    EXPECT_FALSE(v1.isIdent());
     EXPECT_FALSE(v1.isFloat());
     EXPECT_FALSE(v1.isPtr());
 
@@ -39,6 +41,7 @@ TEST(Variant, works)
     EXPECT_FALSE(v1.isFloat());
     EXPECT_FALSE(v1.isDouble());
     EXPECT_FALSE(v1.isPtr());
+    EXPECT_FALSE(v1.isIdent());
 
     uint8_t arr[Variant::kVariantSize];
 

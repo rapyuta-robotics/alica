@@ -5,6 +5,8 @@
 #include <engine/PlanInterface.h>
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  PlanPoolTestSubPlan (432995127772554364)

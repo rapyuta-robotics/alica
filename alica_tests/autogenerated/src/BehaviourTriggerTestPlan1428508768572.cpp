@@ -3,6 +3,8 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
+#include <memory>
+
 namespace alica
 {
 // Plan:  BehaviourTriggerTestPlan (1428508768572)
@@ -39,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1429017235181)
  *   - Comment:
