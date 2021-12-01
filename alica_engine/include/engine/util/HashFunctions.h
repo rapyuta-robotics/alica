@@ -20,9 +20,9 @@ inline void hash_combine(std::size_t& seed, const T& value)
     // https://github.com/HowardHinnant/hash_append/issues/7
     // Not sure we ever need 32bit, but here it is...
     if constexpr (sizeof(std::size_t) == 4) {
-        seed ^= std::hash<T>{}(value) + 0x9e3779b9U + (seed << 6) + (seed >> 2);
+        seed ^= CityHash32(reinterpret_cast<const char*>(&value), sizeof(size_t)) + 0x9e3779b9U + (seed << 6) + (seed >> 2);
     } else if constexpr (sizeof(std::size_t) == 8) {
-        seed ^= std::hash<T>{}(value) + 0x9e3779b97f4a7c15LLU + (seed << 12) + (seed >> 4);
+        seed ^= CityHash64(reinterpret_cast<const char*>(&value), sizeof(size_t)) + 0x9e3779b97f4a7c15LLU + (seed << 12) + (seed >> 4);
     } else {
         static_assert(dependent_false<T>::value, "hash_combine not implemented");
     }
@@ -30,8 +30,7 @@ inline void hash_combine(std::size_t& seed, const T& value)
 
 std::size_t contextHash(int64_t value)
 {
-    // std::hash is good because in libstdc++ it is implemented using murmurhash2
-    return std::hash<int64_t>{}(value);
+    return CityHash64(reinterpret_cast<const char*>(&value), sizeof(int64_t));
 }
 
 std::size_t contextHashCombine(std::size_t h1, std::size_t h2)
