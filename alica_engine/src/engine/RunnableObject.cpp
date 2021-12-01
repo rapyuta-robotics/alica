@@ -22,6 +22,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
+        , _blackBoard(std::make_shared<BlackBoard>())
         , _wm(wm)
 {
 }
@@ -81,7 +82,7 @@ void RunnableObject::start(RunningPlan* rp)
             parentBlackBoard = rp->getParent()->getBasicPlan()->getBlackBoard();
 
         }
-        auto initCall = [this, parentBlackBoard=parentBlackBoard](){
+        auto initCall = [this, parentBlackBoard=std::move(parentBlackBoard)](){
             // Share blackboard with parent if we have one, or start fresh otherwise
             if(parentBlackBoard) {
                 _blackBoard = parentBlackBoard;
