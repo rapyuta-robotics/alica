@@ -163,7 +163,8 @@ void BasicBehaviour::initJob()
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
-    // since all methods are guarded by isExecutingInContext() which will return false in all such cases.
+    // except for creating a superflous trace, since all other methods are guarded by isExecutingInContext()
+    // which will return false in all such cases.
     // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
     // when the behaviour is terminated
     _execContext = _signalContext.exchange(nullptr);
