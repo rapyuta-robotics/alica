@@ -1,9 +1,10 @@
 #pragma once
 
-#include "engine/blackboard/BlackBoard.h"
 
 namespace alica
 {
+
+class BlackBoard;
 
 class PlanAttachment
 {

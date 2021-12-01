@@ -52,38 +52,45 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    if(rp->getParent() && rp->getParent()->getBasicPlan()) {
+    if(_requiresParameters) {
+        assert(rp->getParent());
+        assert(rp->getParent()->getBasicPlan());
         const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
         auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr){
             return wrapper_ptr->getAbstractPlan()->getName() == _name;
         });
         assert(it != wrappers.end());
 
-        int64_t wrapper_id = (*it)->getId();
+        int64_t wrapperId = (*it)->getId();
 
-        const BlackBoard& parent_bb = rp->getParent()->getBasicPlan()->getBlackBoard();
-        if(_requiresParameters) {
-            auto& plan_attachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapper_id);
-            auto init_call = [&](){
-                _blackBoard.clear();
-                if(!plan_attachment->setParameters(parent_bb, _blackBoard)) {
-                    std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
-                    return;
-                }
-                doInit();
-            };
-            _engine->editScheduler().schedule(init_call);
-        } else {
-            // Simply copy parent blackboard
-            auto init_call = [&](){
-                _blackBoard.clear();
-                _blackBoard = parent_bb;
-                doInit();
-            };
-            _engine->editScheduler().schedule(init_call);
-        }
+        std::shared_ptr<BlackBoard> parentBlackBoard = rp->getParent()->getBasicPlan()->getBlackBoard();
+        auto& planAttachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapperId);
+        auto initCall = [&](){
+            _blackBoard->clear();
+            if(!planAttachment->setParameters(*parentBlackBoard, *_blackBoard)) {
+                std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                return;
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
     } else {
-        _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
+
+        std::shared_ptr<BlackBoard> parentBlackBoard;
+        if(rp->getParent() && rp->getParent()->getBasicPlan()) {
+            parentBlackBoard = rp->getParent()->getBasicPlan()->getBlackBoard();
+
+        }
+        auto initCall = [this, parentBlackBoard=parentBlackBoard](){
+            // Share blackboard with parent if we have one, or start fresh otherwise
+            if(parentBlackBoard) {
+                _blackBoard = parentBlackBoard;
+            } else {
+                _blackBoard = std::make_shared<BlackBoard>();
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
     }
 }
 
