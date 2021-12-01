@@ -63,6 +63,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
         AlicaEngine::abort("Error in parsed plans.");
     }
 
+    _entryPointStore = std::make_unique<EntryPointStore>(_planRepository.getEntryPoints().begin(), _planRepository.getEntryPoints().end());
+
     ALICA_DEBUG_MSG("AE: Constructor finished!");
 }
 
