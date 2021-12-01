@@ -1,8 +1,10 @@
 #pragma once
 #include "engine/Types.h"
+#include "engine/util/HashFunctions.h"
 
 #include <vector>
 #include <utility>
+#include <unordered_map>
 
 namespace alica
 {
@@ -18,19 +20,26 @@ public:
     SuccessMarks();
     ~SuccessMarks();
 
-    void limitToContexts(const std::vector<std::pair<std::size_t, const AbstractPlan*>>& activeContexts);
+    void limitToContexts(const std::vector<std::pair<std::size_t, int64_t>>& activeContexts);
     void fromMsg(const AlicaEngine* ae, const std::vector<std::size_t>& msg);
 
     void clear();
-    EntryPointGrp succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const;
-    void removePlan(std::size_t parentContextHash, const AbstractPlan* plan);
-    void markSuccessful(std::size_t parentContextHash, const EntryPoint* e);
+    EntryPointGrp succeededEntryPoints(std::size_t parentContextHash, int64_t planId) const;
+    void removePlan(std::size_t parentContextHash, int64_t planId);
+    void markSuccessful(std::size_t parentContextHash, const EntryPoint* ep);
 
-    bool succeeded(std::size_t parentContextHash, const EntryPoint* e) const;
-    bool anyTaskSucceeded(std::size_t parentContextHash, const AbstractPlan* p) const;
     std::vector<std::size_t> toMsg() const;
 
 private:
+    struct IDHash
+    {
+        std::size_t operator()(std::pair<std::size_t, int64_t> context)
+        {
+            return hashCombine(context.first, contextHash(context.second));
+        }
+    };
+
+    std::unordered_map<std::pair<std::size_t, int64_t>, EntryPointGrp, IDHash> _successMarks;
 };
 
 } /* namespace alica */
