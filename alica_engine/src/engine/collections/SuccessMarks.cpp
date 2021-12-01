@@ -18,27 +18,34 @@ SuccessMarks::SuccessMarks() {}
 SuccessMarks::~SuccessMarks() {}
 
 /**
- * Update with an IdGrp of EntryPoint ids, as received by a message
+ * Update from the vector which is a flattened list of tuples: <parentContextHash, entrypoint id, dynamic entry point id>
  */
-void SuccessMarks::update(const AlicaEngine* ae, const std::vector<std::size_t>& succeededContexts)
+void SuccessMarks::fromMsg(const AlicaEngine* ae, const std::vector<std::size_t>& msg)
 {
     clear();
-    _successMarks.insert(succeededContexts.begin(), succeededContexts.end());
+    if (msg.size() % 3) {
+        ALICA_WARNING_MSG("Invalid success marks: msg size is not a multiple of 3");
+        return;
+    }
+    for (int i = 0; i < static_cast<int>(msg.size()); i += 3) {
+        auto ep = ae->getEntryPointStore()->get(msg[i + 1], msg[i + 2]);
+        _successMarks[{msg[i], ep->getPlan()->getId()}].emplace_back(ep);
+    }
 }
 
 /**
- * Drop every mark not occurring in plans passed as argument.
+ * Drop every success mark not occurring in the active contexts
  */
-void SuccessMarks::limitToPlans(const AbstractPlanGrp& active)
+void SuccessMarks::limitToContexts(const std::vector<std::pair<std::size_t, int64_t>>& activeContexts)
 {
-    AbstractPlanGrp tr;
-
+    std::vector<std::pair<std::size_t, int64_t>> toRemove;
     for (const auto& successMarkEntry : _successMarks) {
-        if (std::find(active.begin(), active.end(), successMarkEntry.first) == active.end()) {
-            tr.push_back(successMarkEntry.first);
+        auto it = std::find(activeContexts.begin(), activeContexts.end(), successMarkEntry.first);
+        if (it == activeContexts.end()) {
+            toRemove.push_back(successMarkEntry.first);
         }
     }
-    for (const AbstractPlan* p : tr) {
+    for (auto p : toRemove) {
         _successMarks.erase(p);
     }
 }
@@ -52,86 +59,31 @@ void SuccessMarks::clear()
 }
 
 /**
- * Get all EntryPoints succeeded in the . May return nullptr.
+ * Get all EntryPoints succeeded in the given parent context corresponding to the planId
  */
-EntryPointGrp SuccessMarks::succeededEntryPoints(std::size_t parentContextHash, const AbstractPlan* p) const
+EntryPointGrp SuccessMarks::succeededEntryPoints(std::size_t parentContextHash, int64_t planId) const
 {
-    EntryPointGrp successEps;
-    auto plan = dynamic_cast<const Plan*>(p);
-    if (!plan) {
-        return successEps;
+    auto it = _successMarks.find({parentContextHash, planId});
+    if (it == _successMarks.end()) {
+        return EntryPointGrp{};
     }
-    for (const auto ep : plan->getEntryPoints()) {
-        auto hash = contextHash(parentContextHash, ep->getId(), ep->getDynamicId());
-        if (_successMarks.find(hash) != _successMarks.end()) {
-            successEps.push_back(ep);
-        }
-    }
-    return successEps;
+    return it->second;
 }
 
 /**
- * Remove all marks referring to the specified plan
+ * Remove all marks referring to the specified plan in the given parent context
  */
-void SuccessMarks::removePlan(std::size_t parentContextHash, const AbstractPlan* plan)
+void SuccessMarks::removePlan(std::size_t parentContextHash, int64_t planId)
 {
-    auto p = dynamic_cast<const Plan*>(plan);
-    if (!p) {
-        return;
-    }
-
-    for (const auto ep : p->getEntryPoints()) {
-        _successMarks.erase(contextHash(parentContextHash, ep->getId(), ep->getDynamicId()));
-    }
+    _successMarks.erase({parentContextHash, planId});
 }
 
 /**
  * Mark an EntryPoint within a plan as successfully completed
- * @param p An AbstractPlan*
- * @param e An EntryPoint*
  */
-void SuccessMarks::markSuccessful(std::size_t parentContextHash, const EntryPoint* e)
+void SuccessMarks::markSuccessful(std::size_t parentContextHash, const EntryPoint* ep)
 {
-    _successMarks.insert(contextHash(parentContextHash, e->getId(), e->getDynamicId()));
-}
-
-/**
- * Check whether an EntryPoint in a plan was completed.
- * @param p An AbstractPlan*
- * @param e An EntryPoint*
- * @return A bool
- */
-bool SuccessMarks::succeeded(const AbstractPlan* p, const EntryPoint* e) const
-{
-    auto iter = _successMarks.find(p);
-    if (iter != _successMarks.end()) {
-        auto i = find(iter->second.begin(), iter->second.end(), e);
-        return (i != iter->second.end());
-    }
-    return false;
-}
-
-/**
- * Test if at least one task has succeeded within abstract plan p
- * @param p An AbstractPlan*
- * @return A bool
- */
-bool SuccessMarks::anyTaskSucceeded(const AbstractPlan* p) const
-{
-    auto iter = _successMarks.find(p);
-    if (iter != _successMarks.end()) {
-        return (!iter->second.empty());
-    }
-    const PlanType* pt = dynamic_cast<const PlanType*>(p);
-    if (pt != nullptr) {
-        for (const Plan* cp : pt->getPlans()) {
-            auto iter = _successMarks.find(cp);
-            if (iter != _successMarks.end() && !iter->second.empty()) {
-                return true;
-            }
-        }
-    }
-    return false;
+    _successMarks[{parentContextHash, ep->getPlan()->getId()}].emplace_back(ep);
 }
 
 /**
