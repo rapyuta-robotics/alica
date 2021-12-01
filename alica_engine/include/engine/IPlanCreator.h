@@ -8,6 +8,7 @@ namespace alica
     class AlicaEngine;
     class BasicPlan;
     class Configuration;
+    class PlanAttachment;
 
     class IPlanCreator
     {

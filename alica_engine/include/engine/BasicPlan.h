@@ -2,6 +2,7 @@
 
 #include "engine/RunnableObject.h"
 #include "engine/PlanAttachment.h"
+#include "engine/IPlanCreator.h"
 
 #include <unordered_map>
 namespace alica
