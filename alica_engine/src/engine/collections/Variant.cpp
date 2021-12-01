@@ -5,7 +5,7 @@ namespace alica
 
 int variant::serializeTo(uint8_t* arr, const Variant& var)
 {
-    arr[0] = static_cast<uint8_t>(var.index());  // -1 to correct to Type
+    arr[0] = static_cast<uint8_t>(var.index());
     std::visit( [arr](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (!std::is_same_v<std::monostate, T>) {
