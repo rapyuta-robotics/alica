@@ -3,8 +3,6 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  Defend (1402488893641)

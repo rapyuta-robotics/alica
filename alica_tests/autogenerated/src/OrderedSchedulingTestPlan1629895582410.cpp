@@ -5,8 +5,6 @@
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  OrderedSchedulingTestPlan (1629895582410)

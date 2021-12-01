@@ -3,8 +3,6 @@
 #include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  ConfigurationTestPlan (1588060981661)

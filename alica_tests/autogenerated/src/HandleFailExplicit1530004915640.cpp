@@ -4,8 +4,6 @@
 #include <alica_tests/SimpleSwitches.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  HandleFailExplicit (1530004915640)

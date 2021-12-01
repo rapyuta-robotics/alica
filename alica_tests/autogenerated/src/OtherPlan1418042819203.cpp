@@ -6,8 +6,6 @@
 #include <alica_tests/TestConstantValueSummand.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  OtherPlan (1418042819203)

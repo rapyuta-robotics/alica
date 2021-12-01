@@ -3,8 +3,6 @@
 // Add additional using directives here
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  RealMasterPlanForSyncTest (1418902217839)

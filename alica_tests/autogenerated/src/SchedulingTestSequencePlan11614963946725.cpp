@@ -4,8 +4,6 @@
 #include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  SchedulingTestSequencePlan1 (1614963946725)

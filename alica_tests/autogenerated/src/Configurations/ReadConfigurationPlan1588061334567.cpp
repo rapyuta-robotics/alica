@@ -3,8 +3,6 @@
 // Add additional options here
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  ReadConfigurationPlan (1588061334567)

@@ -5,8 +5,6 @@
 #include <engine/AlicaEngine.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  MasterSyncTransition (1418825395939)

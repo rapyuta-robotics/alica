@@ -4,8 +4,6 @@
 #include <alica_tests/SimpleSwitches.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  BackForth (1529456584982)

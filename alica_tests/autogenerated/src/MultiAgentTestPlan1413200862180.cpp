@@ -5,8 +5,6 @@
 #include <engine/AlicaEngine.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  MultiAgentTestPlan (1413200862180)

@@ -4,8 +4,6 @@
 #include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  PlanPoolTestMasterPlan (1964838032551226161)

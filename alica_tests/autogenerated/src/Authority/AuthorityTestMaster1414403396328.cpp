@@ -5,8 +5,6 @@
 using namespace std;
 /*PROTECTED REGION END*/
 
-#include <memory>
-
 namespace alica
 {
 // Plan:  AuthorityTestMaster (1414403396328)
