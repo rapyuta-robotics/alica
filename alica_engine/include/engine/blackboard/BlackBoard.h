@@ -2,6 +2,7 @@
 
 #include <any>
 #include <map>
+#include <mutex>
 #include <string>
 #include <type_traits>
 
@@ -17,19 +18,19 @@ public:
     void registerValue(const char* key, std::any any);
 
     template <typename T> const T& getValue(const std::string& key) const {
+        std::lock_guard<std::mutex> lk(_mtx);
         return std::any_cast<const T&>(vals.at(key));
     }
-    bool hasValue(const std::string& key) const{
-        return vals.count(key);
-    }
-    void removeValue(const std::string& key) { vals.erase(key); }
+    bool hasValue(const std::string& key) const;
+    void removeValue(const std::string& key);
 
-    void clear() { vals.clear(); }
-    bool empty() const { return vals.empty(); }
-    size_t size() const { return vals.size(); }
+    void clear();
+    bool empty() const;
+    size_t size() const;
 
 private:
     std::map<std::string, std::any> vals;
+    mutable std::mutex _mtx;
 };
 
 } // namespace alica
