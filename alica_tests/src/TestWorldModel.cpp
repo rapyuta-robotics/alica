@@ -44,6 +44,8 @@ void TestWorldModel::reset()
     transitionCondition4238964946542987247 = false;
     transitionCondition4115970455290610262 = false;
 
+    transitionCondition4496654201854254411 = false;
+
     x = 0;
 }
 
@@ -209,6 +211,16 @@ bool TestWorldModel::isSwitchingEntryPoints()
 void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
 {
     this->switchEntryPoints = switchEntryPoints;
+}
+
+bool TestWorldModel::isTransitionCondition4496654201854254411() const
+{
+    return transitionCondition4496654201854254411;
+}
+
+void TestWorldModel::setTransitionCondition4496654201854254411(bool new_val)
+{
+    this->transitionCondition4496654201854254411 = new_val;
 }
 
 } // namespace alicaTests

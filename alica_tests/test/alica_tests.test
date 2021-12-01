@@ -8,4 +8,5 @@
          type 'run'. -->
     <param name="rootPath" value ="$(find alica_tests)/src/test" />
     <test name="all_tests" test-name="all_tests" pkg="alica_tests" type="alica_tests-test" time-limit="300.0" launch-prefix="$(arg launch_prefix)"/>
+    <!-- args="- -gtest_filter=AlicaDynamicTaskPlan.testMultipleEntrypoints" -->
 </launch>

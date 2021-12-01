@@ -5,7 +5,7 @@
       "comment": "",
       "id": 3150793708487666867,
       "maxCardinality": 2147483647,
-      "minCardinality": 0,
+      "minCardinality": 2,
       "name": "",
       "plan": 2252865124432942907,
       "positionWeb": {

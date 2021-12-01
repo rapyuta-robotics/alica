@@ -198,7 +198,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(2u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(2u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml Transitions size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
@@ -282,7 +282,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml Transitions size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
@@ -352,7 +352,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(3u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(3u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml Transitions size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
@@ -420,7 +420,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml Transitions size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
