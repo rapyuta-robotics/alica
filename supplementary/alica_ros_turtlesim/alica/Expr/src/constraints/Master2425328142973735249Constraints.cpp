@@ -8,7 +8,7 @@ namespace alica
 // Plan:Master
 /*
  * Tasks:
- * - EntryPoint:2741715629576575326 : DefaultTask (3310236980587704776)
+ * - EP:2741715629576575326 : DefaultTask (3310236980587704776)
  *
  * States:
  * - Init (3997532517592149463)

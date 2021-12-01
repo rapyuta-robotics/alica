@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - AlignCircle (2299237921449867536)
 //   - Move2Center (4158797811607100614)
-Move1889749086610694100::Move1889749086610694100()
-        : DomainPlan()
+Move1889749086610694100::Move1889749086610694100(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1889749086610694100) ENABLED START*/
     // Add additional options here
@@ -32,7 +32,7 @@ Move1889749086610694100::~Move1889749086610694100()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp)
+bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1288817888979746811) ENABLED START*/
     return true;

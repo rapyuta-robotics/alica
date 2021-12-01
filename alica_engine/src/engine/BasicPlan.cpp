@@ -11,8 +11,8 @@
 namespace alica
 {
 
-BasicPlan::BasicPlan()
-        : RunnableObject()
+BasicPlan::BasicPlan(IAlicaWorldModel* wm)
+        : RunnableObject(wm)
 {
 }
 

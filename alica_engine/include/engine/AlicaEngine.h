@@ -112,6 +112,7 @@ public:
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
+    IAlicaWorldModel* getWorldModel() const;
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;

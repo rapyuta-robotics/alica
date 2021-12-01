@@ -8,7 +8,7 @@ namespace alica
 // Plan:ProblemBuildingMaster
 /*
  * Tasks:
- * - EntryPoint:1479556022228 : DefaultTask (1225112227903)
+ * - EP:1479556022228 : DefaultTask (1225112227903)
  *
  * States:
  * - State1 (1479556022227)

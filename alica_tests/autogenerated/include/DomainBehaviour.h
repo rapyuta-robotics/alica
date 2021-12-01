@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/BasicBehaviour.h>
+#include <engine/IAlicaWorldModel.h>
 #include <string>
 /*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/
 // Add additional options here
@@ -11,7 +12,7 @@ namespace alica
 class DomainBehaviour : public BasicBehaviour
 {
 public:
-    DomainBehaviour(std::string name);
+    DomainBehaviour(IAlicaWorldModel* wm, std::string name);
     virtual ~DomainBehaviour();
 
     /*PROTECTED REGION ID(domainBehaviourClassDecl) ENABLED START*/

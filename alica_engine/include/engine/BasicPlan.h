@@ -12,7 +12,7 @@ class Plan;
 class BasicPlan : private RunnableObject
 {
 public:
-    BasicPlan();
+    BasicPlan(IAlicaWorldModel* wm);
     virtual ~BasicPlan() = default;
 
     // Use of private inheritance and explicitly making members public
@@ -27,6 +27,7 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::getBlackBoard;
+    using RunnableObject::getWorldModel;
 
     void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
 

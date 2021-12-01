@@ -12,7 +12,7 @@ namespace alica
 // Plan:GSolverTestPlan
 /*
  * Tasks:
- * - EntryPoint:1417423777546 : DefaultTask (1225112227903)
+ * - EP:1417423777546 : DefaultTask (1225112227903)
  *
  * States:
  * - SolverState (1417423777544)

@@ -16,8 +16,8 @@ namespace alica
 //   - InitPlan1 (1613378543512)
 //   - TerminateSubPlans (1613977406218)
 //   - InitSubPlans (1614960038398)
-SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860()
-        : DomainPlan()
+SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1613378406860) ENABLED START*/
     // Add additional options here
@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
  *
  * Abstract Plans in InitPlan1:
  */
-bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1614960055819) ENABLED START*/
     return CounterClass::called == 2;
@@ -76,7 +76,7 @@ bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp)
  *   - SchedulingTestPlan2 (1613378423610)
  *   - SchedulingTestPlan3 (1613378433623)
  */
-bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1614960063842) ENABLED START*/
     return CounterClass::called == 5;

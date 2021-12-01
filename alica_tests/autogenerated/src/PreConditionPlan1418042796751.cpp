@@ -16,8 +16,8 @@ namespace alica
 //
 // States:
 //   - PreConditionTest (1418042796752)
-PreConditionPlan1418042796751::PreConditionPlan1418042796751()
-        : DomainPlan()
+PreConditionPlan1418042796751::PreConditionPlan1418042796751(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1418042796751) ENABLED START*/
     // Add additional options here
@@ -35,12 +35,13 @@ PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
 /**
  * Available Vars:
  */
-bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
-    return alicaTests::TestWorldModel::getOne()->isPreCondition1418042929966();
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->isPreCondition1418042929966();
     /*PROTECTED REGION END*/
 }
 /**

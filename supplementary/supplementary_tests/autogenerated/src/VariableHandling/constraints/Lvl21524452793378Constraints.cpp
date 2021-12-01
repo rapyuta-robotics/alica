@@ -11,8 +11,8 @@ namespace alica
 // Plan:Lvl2
 /*
  * Tasks:
- * - EntryPoint:1524452793380 : DefaultTask (1225112227903)
- * - EntryPoint:1524453238753 : AttackTask (1407153522080)
+ * - EP:1524452793380 : DefaultTask (1225112227903)
+ * - EP:1524453238753 : AttackTask (1407153522080)
  *
  * States:
  * - NewState (1524452793379)

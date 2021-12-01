@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DomainBehaviour.h"
+#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc4085572422059465423) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -10,7 +11,7 @@ namespace alica
 class Go2RandomPosition : public DomainBehaviour
 {
 public:
-    Go2RandomPosition();
+    Go2RandomPosition(IAlicaWorldModel* wm);
     virtual ~Go2RandomPosition();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub4085572422059465423) ENABLED START*/

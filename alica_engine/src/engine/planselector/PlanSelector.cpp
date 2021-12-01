@@ -112,7 +112,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         return nullptr;
     }
 
-    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap);
+    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap, _wm);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {
@@ -128,7 +128,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
             const Plan* oldPlan = static_cast<const Plan*>(oldRp->getActivePlan());
             ptemp->prepare(oldPlan, &ta);
             oldRp->getAssignment().fillPartial(*ptemp);
-            o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment()).getMax();
+            o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment(), _wm).getMax();
         }
         // dont preassign other robots, because we need a similar assignment (not the same)
         rp = _pb->makeRunningPlan(oldRp->getPlanType(), configuration);
@@ -238,6 +238,11 @@ bool PlanSelector::getPlansForStateInternal(
         }
     }
     return true;
+}
+
+void PlanSelector::setWorldModel(const IAlicaWorldModel* wm)
+{
+    _wm = wm;
 }
 
 } /* namespace alica */

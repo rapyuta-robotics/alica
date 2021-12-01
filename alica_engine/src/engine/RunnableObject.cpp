@@ -10,7 +10,7 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(const std::string& name)
+RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _configuration(nullptr)
@@ -22,6 +22,7 @@ RunnableObject::RunnableObject(const std::string& name)
         , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
+        , _wm(wm)
 {
 }
 

@@ -4,7 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/PlanAttachment.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1524452759599) ENABLED START*/
 // Add inlcudes here
@@ -20,7 +20,7 @@ namespace alica
 class Lvl11524452759599 : public DomainPlan
 {
 public:
-    Lvl11524452759599();
+    Lvl11524452759599(IAlicaWorldModel* wm);
     virtual ~Lvl11524452759599();
     /*PROTECTED REGION ID(pub1524452759599) ENABLED START*/
     // Add additional public methods here
@@ -45,10 +45,10 @@ class UtilityFunction1524452759599 : public BasicUtilityFunction
 };
 class RunTimeCondition1524453470580 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PreCondition1524453491764 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 } /* namespace alica */

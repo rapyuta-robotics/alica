@@ -13,8 +13,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-GoTo::GoTo()
-        : DomainBehaviour("GoTo")
+GoTo::GoTo(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "GoTo")
 {
     /*PROTECTED REGION ID(con4054297592460872311) ENABLED START*/
     // Add additional options here

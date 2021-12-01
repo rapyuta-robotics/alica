@@ -8,7 +8,7 @@ namespace alica
 // Plan:VHMaster
 /*
  * Tasks:
- * - EntryPoint:1524452721454 : DefaultTask (1225112227903)
+ * - EP:1524452721454 : DefaultTask (1225112227903)
  *
  * States:
  * - NewState (1524452721453)

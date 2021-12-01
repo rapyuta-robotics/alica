@@ -13,6 +13,7 @@ class PreCondition;
 class ModelFactory;
 class TransitionFactory;
 class ExpressionHandler;
+class IAlicaWorldModel;
 
 /**
  * Connects two States in a Plan
@@ -28,7 +29,7 @@ public:
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     const PreCondition* getPreCondition() const { return _preCondition; }
 
-    bool evalCondition(const RunningPlan& r) const;
+    bool evalCondition(const RunningPlan& r, const IAlicaWorldModel* wm) const;
 
 private:
     friend ModelFactory;

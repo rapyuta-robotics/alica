@@ -17,6 +17,7 @@ class Configuration;
 class RunningPlan;
 class ThreadSafePlanInterface;
 class AlicaEngine;
+class IAlicaWorldModel;
 
 /**
  * The base class for BasicBehaviour and BasicPlan
@@ -24,7 +25,7 @@ class AlicaEngine;
 class RunnableObject
 {
 protected:
-    RunnableObject(const std::string& name = "");
+    RunnableObject(IAlicaWorldModel* wm, const std::string& name = "");
     virtual ~RunnableObject() = default;
     void setEngine(AlicaEngine* engine) { _engine = engine; };
     void setConfiguration(const Configuration* conf) { _configuration = conf; };
@@ -64,6 +65,7 @@ protected:
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
     BlackBoard _blackBoard;
+    IAlicaWorldModel* _wm;
 
     virtual void doInit() = 0;
     virtual void doTerminate() = 0;
@@ -89,5 +91,6 @@ protected:
     void traceInit(const std::string& type);
     BlackBoard& editBlackBoard() {return _blackBoard;}
     const BlackBoard& getBlackBoard() const {return _blackBoard;}
+    IAlicaWorldModel* getWorldModel() { return _wm; };
 };
 } /* namespace alica */
