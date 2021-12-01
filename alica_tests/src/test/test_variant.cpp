@@ -4,54 +4,32 @@
 
 using alica::Variant;
 
+namespace alica {
+
 TEST(Variant, works)
 {
     int64_t val = 5;
     Variant v1;
     Variant v2(val);
 
-    EXPECT_FALSE(v1.isSet());
-    EXPECT_TRUE(v2.isSet());
-    EXPECT_TRUE(v2.isInt());
-    EXPECT_FALSE(v2.isPtr());
-    EXPECT_FALSE(v2.isDouble());
-    EXPECT_FALSE(v2.isBool());
-    EXPECT_FALSE(v2.isFloat());
+    EXPECT_FALSE(variant::isSet(v1));
+    EXPECT_TRUE(variant::isSet(v2));
 
-    EXPECT_EQ(5, v2.getInt());
-    v2.setInt(6);
-    EXPECT_EQ(6, v2.getInt());
+    uint8_t arr[variant::kVariantSize];
 
-    EXPECT_FALSE(v1.isInt());
-    EXPECT_FALSE(v1.isBool());
-    EXPECT_FALSE(v1.isDouble());
-    EXPECT_FALSE(v1.isFloat());
-    EXPECT_FALSE(v1.isPtr());
-
-    v2.setFloat(2.3f);
-    EXPECT_EQ(2.3f, v2.getFloat());
-
-    v1.setBool(false);
-    EXPECT_TRUE(v1.isSet());
-    EXPECT_TRUE(v1.isBool());
-    EXPECT_FALSE(v1.getBool());
-    EXPECT_FALSE(v1.isInt());
-    EXPECT_FALSE(v1.isFloat());
-    EXPECT_FALSE(v1.isDouble());
-    EXPECT_FALSE(v1.isPtr());
-
-    uint8_t arr[Variant::kVariantSize];
-
-    uint32_t ret = v2.serializeTo(arr);
-    EXPECT_EQ(Variant::kVariantSize, ret);
-    ret = v1.loadFrom(arr);
-    EXPECT_EQ(Variant::kVariantSize, ret);
-    EXPECT_TRUE(v1.isFloat());
-    EXPECT_EQ(2.3f, v2.getFloat());
+    v2 = 2.3f;
+    uint32_t ret = variant::serializeTo(arr, v2);
+    EXPECT_EQ(variant::kVariantSize, ret);
+    ret = variant::loadFrom(arr, v1);
+    EXPECT_EQ(variant::kVariantSize, ret);
+    EXPECT_TRUE(std::holds_alternative<float>(v1));
+    EXPECT_EQ(2.3f, std::get<float>(v2));
 
     Variant v3;
-    v3.serializeTo(arr);
-    v2.loadFrom(arr);
+    variant::serializeTo(arr, v3);
+    variant::loadFrom(arr, v2);
 
-    EXPECT_FALSE(v2.isSet());
+    EXPECT_FALSE(variant::isSet(v2));
 }
+
+} // namespace alica
