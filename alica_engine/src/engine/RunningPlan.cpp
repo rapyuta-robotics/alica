@@ -776,26 +776,19 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
 
 void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const
 {
-    if (isBehaviour() || isRetired()) {
+    if (isBehaviour() || isRetired() || _activeTriple.state == nullptr) {
         return;
     }
-    if (_activeTriple.state != nullptr) {
-        message.push_back(_activeTriple.entryPoint->getDynamicId());
-        message.push_back(_activeTriple.state->getId());
-    } else {
-        return;
-    }
+    message.push_back(_activeTriple.entryPoint->getDynamicId());
+    message.push_back(_activeTriple.state->getId());
     if (curDepth > o_depth) {
         o_depth = curDepth;
         o_deepestNode = this;
     }
-    if (_children.size() > 0) {
-        message.push_back(-1);
-        for (const RunningPlan* r : _children) {
-            r->toMessage(message, o_deepestNode, o_depth, curDepth + 1);
-        }
-        message.push_back(-2);
+    for (const RunningPlan* r : _children) {
+        r->toMessage(message, o_deepestNode, o_depth, curDepth + 1);
     }
+    message.push_back(-1);
 }
 
     AgentId RunningPlan::getOwnID() const
