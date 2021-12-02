@@ -4,21 +4,20 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1402488870347) ENABLED START*/
-// Add inlcudes here
+// Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
 {
 /*PROTECTED REGION ID(meth1402488870347) ENABLED START*/
-// Add other things here
+// Add additional options here
 /*PROTECTED REGION END*/
 class GoalPlan1402488870347 : public DomainPlan
 {
 public:
-    GoalPlan1402488870347(IAlicaWorldModel* wm);
+    GoalPlan1402488870347();
     virtual ~GoalPlan1402488870347();
     /*PROTECTED REGION ID(pub1402488870347) ENABLED START*/
     // Add additional public methods here
@@ -29,7 +28,7 @@ protected:
     // virtual void onInit() override;
     // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1402488870347) ENABLED START*/
-    // Add additional protected methods here
+    // Add/Override protected methods here
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1402488870347) ENABLED START*/
@@ -43,26 +42,26 @@ class UtilityFunction1402488870347 : public BasicUtilityFunction
 };
 class PreCondition1402489131988 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class RunTimeCondition1403773741874 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class PreCondition1402489174338 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class PreCondition1402489206278 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class PreCondition1402489218027 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 class PostCondition1402489620773 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp);
 };
 } /* namespace alica */

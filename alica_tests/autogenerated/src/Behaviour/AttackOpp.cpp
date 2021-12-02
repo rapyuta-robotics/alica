@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-AttackOpp::AttackOpp(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "AttackOpp")
+AttackOpp::AttackOpp()
+        : DomainBehaviour("AttackOpp")
 {
     /*PROTECTED REGION ID(con1402489351885) ENABLED START*/
     // Add additional options here
@@ -38,7 +38,7 @@ void AttackOpp::initialiseParameters()
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1402489351885) ENABLED START*/
-// Add additional methods here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 } /* namespace alica */

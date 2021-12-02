@@ -8,4 +8,5 @@ namespace alica
 {
 class ProblemDescriptor;
 class RunningPlan;
+
 } /* namespace alica */

@@ -1,6 +1,6 @@
 #include "constraints/BehaviourTriggerTestPlan1428508768572Constraints.h"
 /*PROTECTED REGION ID(ch1428508768572) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica

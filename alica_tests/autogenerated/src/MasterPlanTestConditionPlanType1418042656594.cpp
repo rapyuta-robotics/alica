@@ -1,6 +1,6 @@
 #include "MasterPlanTestConditionPlanType1418042656594.h"
 /*PROTECTED REGION ID(eph1418042656594) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Start (1418042656595)
 //   - Plantype (1418042674811)
-MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418042656594) ENABLED START*/
     // Add additional options here
@@ -33,10 +33,8 @@ MasterPlanTestConditionPlanType1418042656594::~MasterPlanTestConditionPlanType14
 std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418042656594) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -53,10 +51,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
  *
  * Abstract Plans in Start:
  */
-bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1418042683692::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1418042682960) ENABLED START*/
-    return true;
+    std::cout << "The PreCondition 1418042683692 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 

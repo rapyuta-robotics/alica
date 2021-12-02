@@ -1,6 +1,6 @@
 #include "constraints/AttackPlan1402488634525Constraints.h"
 /*PROTECTED REGION ID(ch1402488634525) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -41,7 +41,7 @@ namespace alica
 void Constraint1402489460549::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(cc1402489460549) ENABLED START*/
-    // Proteced
+    // Please describe your precondition constraint here
     /*PROTECTED REGION END*/
 }
 // State: Shoot
@@ -60,7 +60,7 @@ void Constraint1402489460549::getConstraint(std::shared_ptr<ProblemDescriptor> c
 void Constraint1402489462088::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(cc1402489462088) ENABLED START*/
-    // Proteced
+    // Please describe your precondition constraint here
     /*PROTECTED REGION END*/
 }
 } // namespace alica

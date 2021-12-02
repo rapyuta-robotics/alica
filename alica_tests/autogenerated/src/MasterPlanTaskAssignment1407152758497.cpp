@@ -1,6 +1,6 @@
 #include "MasterPlanTaskAssignment1407152758497.h"
 /*PROTECTED REGION ID(eph1407152758497) ENABLED START*/
-#include <alica_tests/SwitchEntryPointsSummand.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -16,8 +16,8 @@ namespace alica
 //   - MidField (1407152951886)
 //   - Defend (1407152962295)
 //   - Goal (1407152969078)
-MasterPlanTaskAssignment1407152758497::MasterPlanTaskAssignment1407152758497(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MasterPlanTaskAssignment1407152758497::MasterPlanTaskAssignment1407152758497()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1407152758497) ENABLED START*/
     // Add additional options here
@@ -39,12 +39,8 @@ MasterPlanTaskAssignment1407152758497::~MasterPlanTaskAssignment1407152758497()
 std::shared_ptr<UtilityFunction> UtilityFunction1407152758497::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407152758497) ENABLED START*/
-    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan);
-    SwitchEntryPointsSummand* us = new SwitchEntryPointsSummand(1.0);
-    us->addEntryPoint(plan->getEntryPointByID(1407152894887)); // attack
-    us->addEntryPoint(plan->getEntryPointByID(1407152902493)); // defend
-    function->editUtilSummands().emplace_back(us);
-    return function;
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    return defaultFunction;
     /*PROTECTED REGION END*/
 }
 

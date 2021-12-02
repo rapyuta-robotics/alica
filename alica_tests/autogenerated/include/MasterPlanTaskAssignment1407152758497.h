@@ -4,21 +4,20 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1407152758497) ENABLED START*/
-// Add inlcudes here
+// Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
 {
 /*PROTECTED REGION ID(meth1407152758497) ENABLED START*/
-// Add other things here
+// Add additional options here
 /*PROTECTED REGION END*/
 class MasterPlanTaskAssignment1407152758497 : public DomainPlan
 {
 public:
-    MasterPlanTaskAssignment1407152758497(IAlicaWorldModel* wm);
+    MasterPlanTaskAssignment1407152758497();
     virtual ~MasterPlanTaskAssignment1407152758497();
     /*PROTECTED REGION ID(pub1407152758497) ENABLED START*/
     // Add additional public methods here
@@ -29,7 +28,7 @@ protected:
     // virtual void onInit() override;
     // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1407152758497) ENABLED START*/
-    // Add additional protected methods here
+    // Add/Override protected methods here
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1407152758497) ENABLED START*/

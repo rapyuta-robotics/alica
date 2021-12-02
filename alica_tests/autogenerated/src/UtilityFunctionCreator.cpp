@@ -11,6 +11,8 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "DynamicTaskAssignmentTest2252865124432942907.h"
+#include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
@@ -208,8 +210,14 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 432995127772554364:
         return std::make_shared<UtilityFunction432995127772554364>();
         break;
+    case 1602078208698393838:
+        return std::make_shared<UtilityFunction1602078208698393838>();
+        break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
+        break;
+    case 2252865124432942907:
+        return std::make_shared<UtilityFunction2252865124432942907>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

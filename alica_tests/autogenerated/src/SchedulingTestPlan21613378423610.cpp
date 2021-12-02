@@ -1,8 +1,6 @@
 #include "SchedulingTestPlan21613378423610.h"
 /*PROTECTED REGION ID(eph1613378423610) ENABLED START*/
 // Add additional options here
-#include <alica_tests/CounterClass.h>
-#include <assert.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,8 +12,8 @@ namespace alica
 //
 // States:
 //   - InitPlan2 (1613378625757)
-SchedulingTestPlan21613378423610::SchedulingTestPlan21613378423610(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestPlan21613378423610::SchedulingTestPlan21613378423610()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1613378423610) ENABLED START*/
     // Add additional options here
@@ -41,14 +39,5 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378423610::getUtilityFunctio
 
 /*PROTECTED REGION ID(methods1613378423610) ENABLED START*/
 // Add additional options here
-void SchedulingTestPlan21613378423610::onInit()
-{
-    CounterClass::called += 1;
-}
-
-void SchedulingTestPlan21613378423610::onTerminate()
-{
-    CounterClass::called += 1;
-}
 /*PROTECTED REGION END*/
 } // namespace alica

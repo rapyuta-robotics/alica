@@ -4,7 +4,6 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl432995127772554364) ENABLED START*/
 // Add additional includes here
@@ -18,7 +17,7 @@ namespace alica
 class PlanPoolTestSubPlan432995127772554364 : public DomainPlan
 {
 public:
-    PlanPoolTestSubPlan432995127772554364(IAlicaWorldModel* wm);
+    PlanPoolTestSubPlan432995127772554364();
     virtual ~PlanPoolTestSubPlan432995127772554364();
     /*PROTECTED REGION ID(pub432995127772554364) ENABLED START*/
     // Add additional public methods here
@@ -26,7 +25,7 @@ public:
 protected:
     // Override these methods for your use case
     // virtual void run(void* msg) override;
-    virtual void onInit() override;
+    // virtual void onInit() override;
     // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro432995127772554364) ENABLED START*/
     // Add/Override protected methods here

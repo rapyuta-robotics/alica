@@ -1,6 +1,6 @@
 #include "RealMasterPlanForSyncTest1418902217839.h"
 /*PROTECTED REGION ID(eph1418902217839) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - NewState (1418902217840)
-RealMasterPlanForSyncTest1418902217839::RealMasterPlanForSyncTest1418902217839(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+RealMasterPlanForSyncTest1418902217839::RealMasterPlanForSyncTest1418902217839()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418902217839) ENABLED START*/
     // Add additional options here
@@ -32,10 +32,8 @@ RealMasterPlanForSyncTest1418902217839::~RealMasterPlanForSyncTest1418902217839(
 std::shared_ptr<UtilityFunction> UtilityFunction1418902217839::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418902217839) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

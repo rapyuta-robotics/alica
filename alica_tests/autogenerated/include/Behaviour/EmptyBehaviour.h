@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1625610857563) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -11,7 +10,7 @@ namespace alica
 class EmptyBehaviour : public DomainBehaviour
 {
 public:
-    EmptyBehaviour(IAlicaWorldModel* wm);
+    EmptyBehaviour();
     virtual ~EmptyBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1625610857563) ENABLED START*/

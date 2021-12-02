@@ -1,6 +1,6 @@
 #include "Authority/constraints/AuthorityTestMaster1414403396328Constraints.h"
 /*PROTECTED REGION ID(ch1414403396328) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica

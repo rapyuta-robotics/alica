@@ -1,6 +1,6 @@
 #include "constraints/RealMasterPlanForSyncTest1418902217839Constraints.h"
 /*PROTECTED REGION ID(ch1418902217839) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica

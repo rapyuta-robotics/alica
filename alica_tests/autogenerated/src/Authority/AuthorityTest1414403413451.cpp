@@ -1,9 +1,6 @@
 #include "Authority/AuthorityTest1414403413451.h"
 /*PROTECTED REGION ID(eph1414403413451) ENABLED START*/
-// Add additional using directives here
-#include "engine/USummand.h"
-#include <alica_tests/DistXContourTest.h>
-#include <alica_tests/DummyTestSummand.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -16,8 +13,8 @@ namespace alica
 // States:
 //   - UpperState (1414403429950)
 //   - LowerState (1414403553717)
-AuthorityTest1414403413451::AuthorityTest1414403413451(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AuthorityTest1414403413451::AuthorityTest1414403413451()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414403413451) ENABLED START*/
     // Add additional options here
@@ -37,14 +34,8 @@ AuthorityTest1414403413451::~AuthorityTest1414403413451()
 std::shared_ptr<UtilityFunction> UtilityFunction1414403413451::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414403413451) ENABLED START*/
-    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan);
-    DummyTestSummand* us = new DummyTestSummand(1.0);
-    us->addEntryPoint(plan->getEntryPointByID(1414403522424));
-    us->addEntryPoint(plan->getEntryPointByID(1414403429951));
-
-    function->editUtilSummands().emplace_back(us);
-
-    return function;
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    return defaultFunction;
     /*PROTECTED REGION END*/
 }
 

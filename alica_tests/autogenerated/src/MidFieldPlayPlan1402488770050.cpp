@@ -1,6 +1,6 @@
 #include "MidFieldPlayPlan1402488770050.h"
 /*PROTECTED REGION ID(eph1402488770050) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -16,8 +16,8 @@ namespace alica
 //   - Sync (1402489273401)
 //   - Kill (1402500830885)
 //   - Shoot (1402500833246)
-MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
     // Add additional options here
@@ -35,10 +35,11 @@ MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489260911) ENABLED START*/
-    return true;
+    std::cout << "The RunTimeCondition 1402489260911 in Plan 'MidFieldPlayPlan' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -48,10 +49,8 @@ bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, co
 std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402488770050) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -69,9 +68,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489257607) ENABLED START*/
+    std::cout << "The PreCondition 1402489258509 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -90,9 +90,10 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489276995) ENABLED START*/
+    std::cout << "The PreCondition 1402489278408 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -110,9 +111,10 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Kill:
  */
-bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402500843072) ENABLED START*/
+    std::cout << "The PreCondition 1402500844446 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

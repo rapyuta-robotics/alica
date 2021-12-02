@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1529456643148) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -11,11 +10,11 @@ namespace alica
 class CountIndefinitely : public DomainBehaviour
 {
 public:
-    CountIndefinitely(IAlicaWorldModel* wm);
+    CountIndefinitely();
     virtual ~CountIndefinitely();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1529456643148) ENABLED START*/
-    // Add additional public methods here
+    // Add additional protected methods here
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();

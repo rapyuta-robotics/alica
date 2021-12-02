@@ -1,6 +1,6 @@
 #include "AttackPlan1402488634525.h"
 /*PROTECTED REGION ID(eph1402488634525) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Attack (1402488646220)
 //   - Shoot (1402489396914)
-AttackPlan1402488634525::AttackPlan1402488634525(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AttackPlan1402488634525::AttackPlan1402488634525()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402488634525) ENABLED START*/
     // Add additional options here
@@ -33,10 +33,8 @@ AttackPlan1402488634525::~AttackPlan1402488634525()
 std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402488634525) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -59,9 +57,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
  *   - Tackle (1402489318663)
  *   - AttackOpp (1402489351885)
  */
-bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489459382) ENABLED START*/
+    std::cout << "The PreCondition 1402489460549 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -84,9 +83,10 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Shoot:
  *   - Attack (1402488848841)
  */
-bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489460694) ENABLED START*/
+    std::cout << "The PreCondition 1402489462088 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

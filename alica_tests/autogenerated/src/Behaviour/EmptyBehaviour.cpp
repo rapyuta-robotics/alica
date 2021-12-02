@@ -3,7 +3,6 @@
 
 /*PROTECTED REGION ID(inccpp1625610857563) ENABLED START*/
 // Add additional includes here
-#include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-EmptyBehaviour::EmptyBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "EmptyBehaviour")
+EmptyBehaviour::EmptyBehaviour()
+        : DomainBehaviour("EmptyBehaviour")
 {
     /*PROTECTED REGION ID(con1625610857563) ENABLED START*/
     // Add additional options here
@@ -29,14 +28,12 @@ void EmptyBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run1625610857563) ENABLED START*/
     // Add additional options here
-    ++CounterClass::called;
     /*PROTECTED REGION END*/
 }
 void EmptyBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1625610857563) ENABLED START*/
     // Add additional options here
-    CounterClass::called = 0;
 
     /*PROTECTED REGION END*/
 }

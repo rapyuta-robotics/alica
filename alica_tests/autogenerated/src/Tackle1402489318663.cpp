@@ -1,6 +1,6 @@
 #include "Tackle1402489318663.h"
 /*PROTECTED REGION ID(eph1402489318663) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - AttackOpp (1402489329141)
-Tackle1402489318663::Tackle1402489318663(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Tackle1402489318663::Tackle1402489318663()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402489318663) ENABLED START*/
     // Add additional options here
@@ -32,10 +32,8 @@ Tackle1402489318663::~Tackle1402489318663()
 std::shared_ptr<UtilityFunction> UtilityFunction1402489318663::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402489318663) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

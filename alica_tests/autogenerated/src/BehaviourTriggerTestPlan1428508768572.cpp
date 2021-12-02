@@ -1,6 +1,6 @@
 #include "BehaviourTriggerTestPlan1428508768572.h"
 /*PROTECTED REGION ID(eph1428508768572) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - NewState (1428508768573)
 //   - NewState (1429017227839)
-BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
     // Add additional options here
@@ -33,10 +33,8 @@ BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
 std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1428508768572) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -56,9 +54,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
  *   - TriggerB (1428508316905)
  *   - TriggerC (1428508355209)
  */
-bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1429017235181) ENABLED START*/
+    std::cout << "The PreCondition 1429017236633 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

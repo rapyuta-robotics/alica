@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - Default Name (1626849027475)
-FrequencyTestPlan1626848999740::FrequencyTestPlan1626848999740(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+FrequencyTestPlan1626848999740::FrequencyTestPlan1626848999740()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1626848999740) ENABLED START*/
     // Add additional options here

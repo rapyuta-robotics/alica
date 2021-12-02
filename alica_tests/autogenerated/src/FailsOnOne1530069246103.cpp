@@ -1,7 +1,6 @@
 #include "FailsOnOne1530069246103.h"
 /*PROTECTED REGION ID(eph1530069246103) ENABLED START*/
-// Add additional using directives here
-#include <alica_tests/SimpleSwitches.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +12,8 @@ namespace alica
 //
 // States:
 //   - NewState (1530069246104)
-FailsOnOne1530069246103::FailsOnOne1530069246103(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+FailsOnOne1530069246103::FailsOnOne1530069246103()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1530069246103) ENABLED START*/
     // Add additional options here
@@ -32,10 +31,11 @@ FailsOnOne1530069246103::~FailsOnOne1530069246103()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1530069251117) ENABLED START*/
-    return !SimpleSwitches::isSet(1);
+    std::cout << "The RunTimeCondition 1530069251117 in Plan 'FailsOnOne' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -44,10 +44,8 @@ bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp, co
 std::shared_ptr<UtilityFunction> UtilityFunction1530069246103::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1530069246103) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

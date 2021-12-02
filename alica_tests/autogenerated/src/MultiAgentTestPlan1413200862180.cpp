@@ -1,8 +1,6 @@
 #include "MultiAgentTestPlan1413200862180.h"
 /*PROTECTED REGION ID(eph1413200862180) ENABLED START*/
-// Add additional using directives here
-#include <alica_tests/TestWorldModel.h>
-#include <engine/AlicaEngine.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -20,8 +18,8 @@ namespace alica
 //   - NewSuccessState1 (1413201164999)
 //   - NewSuccessState2 (1413552736921)
 //   - Idle (1413807264574)
-MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1413200862180) ENABLED START*/
     // Add additional options here
@@ -42,10 +40,8 @@ MultiAgentTestPlan1413200862180::~MultiAgentTestPlan1413200862180()
 std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1413200862180) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -63,16 +59,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
  * Abstract Plans in OtherState:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201368286) ENABLED START*/
-    AgentId agentID8 = 8;
-
-    if (rp->getOwnID() == agentID8) {
-        return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201370590();
-    } else {
-        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201370590();
-    }
+    std::cout << "The PreCondition 1413201370590 in Transition '1413201368286' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -90,16 +81,11 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in State1:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201050743) ENABLED START*/
-    AgentId agentID8 = 8;
-
-    if (rp->getOwnID() == agentID8) {
-        return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201052549();
-    } else {
-        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201052549();
-    }
+    std::cout << "The PreCondition 1413201052549 in Transition '1413201050743' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -117,16 +103,11 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in State2:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1413201367062) ENABLED START*/
-    AgentId agentID8 = 8;
-
-    if (rp->getOwnID() == agentID8) {
-        return alicaTests::TestWorldModel::getOne()->isTransitionCondition1413201367990();
-    } else {
-        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition1413201367990();
-    }
+    std::cout << "The PreCondition 1413201367990 in Transition '1413201367062' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 

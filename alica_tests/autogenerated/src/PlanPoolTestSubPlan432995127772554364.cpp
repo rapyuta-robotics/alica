@@ -1,8 +1,6 @@
 #include "PlanPoolTestSubPlan432995127772554364.h"
 /*PROTECTED REGION ID(eph432995127772554364) ENABLED START*/
 // Add additional options here
-#include <alica_tests/TestWorldModel.h>
-#include <engine/PlanInterface.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,8 +12,8 @@ namespace alica
 //
 // States:
 //   - 297850764330117621 (297850764330117621)
-PlanPoolTestSubPlan432995127772554364::PlanPoolTestSubPlan432995127772554364(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PlanPoolTestSubPlan432995127772554364::PlanPoolTestSubPlan432995127772554364()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con432995127772554364) ENABLED START*/
     // Add additional options here
@@ -41,13 +39,5 @@ std::shared_ptr<UtilityFunction> UtilityFunction432995127772554364::getUtilityFu
 
 /*PROTECTED REGION ID(methods432995127772554364) ENABLED START*/
 // Add additional options here
-void PlanPoolTestSubPlan432995127772554364::onInit()
-{
-    // write config parameter "text_value" into world model
-    std::string value;
-    getPlanContext().getRunningPlan()->getParameter("TestValue", value);
-    auto* worldModel = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    worldModel->configParameter.push_back(value);
-}
 /*PROTECTED REGION END*/
 } // namespace alica

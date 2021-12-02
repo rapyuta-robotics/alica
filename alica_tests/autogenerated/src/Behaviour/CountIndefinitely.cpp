@@ -3,7 +3,6 @@
 
 /*PROTECTED REGION ID(inccpp1529456643148) ENABLED START*/
 // Add additional includes here
-#include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-CountIndefinitely::CountIndefinitely(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "CountIndefinitely")
+CountIndefinitely::CountIndefinitely()
+        : DomainBehaviour("CountIndefinitely")
 {
     /*PROTECTED REGION ID(con1529456643148) ENABLED START*/
     // Add additional options here
@@ -29,7 +28,6 @@ void CountIndefinitely::run(void* msg)
 {
     /*PROTECTED REGION ID(run1529456643148) ENABLED START*/
     // Add additional options here
-    ++CounterClass::called;
     /*PROTECTED REGION END*/
 }
 void CountIndefinitely::initialiseParameters()
@@ -40,7 +38,7 @@ void CountIndefinitely::initialiseParameters()
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1529456643148) ENABLED START*/
-// Add additional methods here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 } /* namespace alica */

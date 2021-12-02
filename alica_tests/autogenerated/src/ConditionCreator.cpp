@@ -28,6 +28,9 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "DynamicTaskAssignmentTest2252865124432942907.h"
+#include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
+#include "DynamicTaskBehavior4044546549214673470.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
@@ -268,11 +271,20 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1629895768182:
         return std::make_shared<PreCondition1629895768182>();
         break;
+    case 1078898265232036813:
+        return std::make_shared<PreCondition1078898265232036813>();
+        break;
     case 4115970455290610262:
         return std::make_shared<PreCondition4115970455290610262>();
         break;
     case 4238964946542987247:
         return std::make_shared<PreCondition4238964946542987247>();
+        break;
+    case 4344644064496100420:
+        return std::make_shared<PreCondition4344644064496100420>();
+        break;
+    case 4496654201854254411:
+        return std::make_shared<PreCondition4496654201854254411>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

@@ -1,6 +1,6 @@
 #include "PlanFour1407153683051.h"
 /*PROTECTED REGION ID(eph1407153683051) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - DefaultState (1407153696702)
 //   - AttackState (1407153959299)
-PlanFour1407153683051::PlanFour1407153683051(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PlanFour1407153683051::PlanFour1407153683051()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1407153683051) ENABLED START*/
     // Add additional options here
@@ -34,10 +34,8 @@ PlanFour1407153683051::~PlanFour1407153683051()
 std::shared_ptr<UtilityFunction> UtilityFunction1407153683051::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407153683051) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

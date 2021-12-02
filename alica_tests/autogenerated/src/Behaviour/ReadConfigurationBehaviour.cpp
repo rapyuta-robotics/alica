@@ -2,8 +2,7 @@
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1588061129360) ENABLED START*/
-#include "engine/model/Configuration.h"
-#include "engine/model/Parameter.h"
+// Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-ReadConfigurationBehaviour::ReadConfigurationBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "ReadConfigurationBehaviour")
+ReadConfigurationBehaviour::ReadConfigurationBehaviour()
+        : DomainBehaviour("ReadConfigurationBehaviour")
 {
     /*PROTECTED REGION ID(con1588061129360) ENABLED START*/
     // Add additional options here
@@ -28,13 +27,13 @@ ReadConfigurationBehaviour::~ReadConfigurationBehaviour()
 void ReadConfigurationBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run1588061129360) ENABLED START*/
-    //    std::cout << this->getName() << ": TestValue is " << testValue << std::endl;
+    // Add additional options here
     /*PROTECTED REGION END*/
 }
 void ReadConfigurationBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1588061129360) ENABLED START*/
-    getParameter("TestValue", testValue);
+    // Add additional options here
 
     /*PROTECTED REGION END*/
 }

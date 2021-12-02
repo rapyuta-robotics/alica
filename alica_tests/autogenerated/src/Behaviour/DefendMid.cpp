@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-DefendMid::DefendMid(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "DefendMid")
+DefendMid::DefendMid()
+        : DomainBehaviour("DefendMid")
 {
     /*PROTECTED REGION ID(con1402488730695) ENABLED START*/
     // Add additional options here
@@ -38,7 +38,7 @@ void DefendMid::initialiseParameters()
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1402488730695) ENABLED START*/
-// Add additional methods here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 } /* namespace alica */

@@ -1,8 +1,6 @@
 #include "constraints/ConstraintTestPlan1414068524245Constraints.h"
 /*PROTECTED REGION ID(ch1414068524245) ENABLED START*/
-#include <alica_tests/CounterClass.h>
-#include <iostream>
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -29,9 +27,7 @@ namespace alica
 void Constraint1414068566297::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(cc1414068566297) ENABLED START*/
-    // Proteced
-    std::cout << "#########################################" << std::endl;
-    CounterClass::called++;
+    // Please describe your runtime constraint here
     /*PROTECTED REGION END*/
 }
 

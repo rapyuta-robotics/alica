@@ -1,7 +1,6 @@
 #include "HandleFailExplicit1530004915640.h"
 /*PROTECTED REGION ID(eph1530004915640) ENABLED START*/
-// Add additional using directives here
-#include <alica_tests/SimpleSwitches.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -17,8 +16,8 @@ namespace alica
 //   - C (1530004975275)
 //   - D (1532424087894)
 //   - E (1532424097662)
-HandleFailExplicit1530004915640::HandleFailExplicit1530004915640(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+HandleFailExplicit1530004915640::HandleFailExplicit1530004915640()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1530004915640) ENABLED START*/
     // Add additional options here
@@ -37,10 +36,8 @@ HandleFailExplicit1530004915640::~HandleFailExplicit1530004915640()
 std::shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1530004915640) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -57,10 +54,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunctio
  *
  * Abstract Plans in A:
  */
-bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1530004992551) ENABLED START*/
-    return SimpleSwitches::isSet(0);
+    std::cout << "The PreCondition 1530004993493 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -78,10 +76,11 @@ bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in B:
  *   - FailsOnOne (1530069246103)
  */
-bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1530004993680) ENABLED START*/
-    return rp->isAnyChildStatus(PlanStatus::Failed);
+    std::cout << "The PreCondition 1530004994611 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -98,10 +97,11 @@ bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in C:
  */
-bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1532424092280) ENABLED START*/
-    return SimpleSwitches::isSet(2);
+    std::cout << "The PreCondition 1532424093178 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -119,10 +119,11 @@ bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in D:
  *   - AlwaysFail (1532424188199)
  */
-bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1532424112331) ENABLED START*/
-    return rp->isAnyChildStatus(PlanStatus::Failed);
+    std::cout << "The PreCondition 1532424113475 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 

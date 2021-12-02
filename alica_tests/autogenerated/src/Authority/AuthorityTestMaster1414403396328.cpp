@@ -1,8 +1,6 @@
 #include "Authority/AuthorityTestMaster1414403396328.h"
 /*PROTECTED REGION ID(eph1414403396328) ENABLED START*/
-// Add additional using directives here
-#include <memory>
-using namespace std;
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -15,8 +13,8 @@ namespace alica
 // States:
 //   - testState (1414403396329)
 //   - Init (1414403820806)
-AuthorityTestMaster1414403396328::AuthorityTestMaster1414403396328(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AuthorityTestMaster1414403396328::AuthorityTestMaster1414403396328()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414403396328) ENABLED START*/
     // Add additional options here
@@ -35,10 +33,8 @@ AuthorityTestMaster1414403396328::~AuthorityTestMaster1414403396328()
 std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414403396328) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -55,10 +51,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
  *
  * Abstract Plans in Init:
  */
-bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1414403840950) ENABLED START*/
-    return true;
+    std::cout << "The PreCondition 1414403842622 in Transition '1414403840950' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 

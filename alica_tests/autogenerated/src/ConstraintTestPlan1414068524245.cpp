@@ -1,6 +1,6 @@
 #include "ConstraintTestPlan1414068524245.h"
 /*PROTECTED REGION ID(eph1414068524245) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - constraintRunner (1414068524246)
-ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ConstraintTestPlan1414068524245::ConstraintTestPlan1414068524245()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414068524245) ENABLED START*/
     // Add additional options here
@@ -33,10 +33,11 @@ ConstraintTestPlan1414068524245::~ConstraintTestPlan1414068524245()
  *	- X (1414068572540)
  *	- Y (1414068576620)
  */
-bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1414068566297) ENABLED START*/
-    return true;
+    std::cout << "The RunTimeCondition 1414068566297 in Plan 'ConstraintTestPlan' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -45,10 +46,8 @@ bool RunTimeCondition1414068566297::evaluate(std::shared_ptr<RunningPlan> rp, co
 std::shared_ptr<UtilityFunction> UtilityFunction1414068524245::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414068524245) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

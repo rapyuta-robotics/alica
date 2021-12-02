@@ -1,6 +1,6 @@
 #include "constraints/GoalPlan1402488870347Constraints.h"
 /*PROTECTED REGION ID(ch1402488870347) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -29,7 +29,7 @@ namespace alica
 void Constraint1403773741874::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(cc1403773741874) ENABLED START*/
-    // Proteced
+    // Please describe your runtime constraint here
     /*PROTECTED REGION END*/
 }
 

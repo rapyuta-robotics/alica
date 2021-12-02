@@ -1,6 +1,6 @@
 #include "constraints/MasterSyncTransition1418825395939Constraints.h"
 /*PROTECTED REGION ID(ch1418825395939) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica

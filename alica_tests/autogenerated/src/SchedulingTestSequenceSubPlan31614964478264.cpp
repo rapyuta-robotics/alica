@@ -1,8 +1,6 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 /*PROTECTED REGION ID(eph1614964478264) ENABLED START*/
 // Add additional options here
-#include "engine/RunningPlan.h"
-#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,8 +12,8 @@ namespace alica
 //
 // States:
 //   - InitSequenceSubPlan3 (1614964919973)
-SchedulingTestSequenceSubPlan31614964478264::SchedulingTestSequenceSubPlan31614964478264(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestSequenceSubPlan31614964478264::SchedulingTestSequenceSubPlan31614964478264()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1614964478264) ENABLED START*/
     // Add additional options here

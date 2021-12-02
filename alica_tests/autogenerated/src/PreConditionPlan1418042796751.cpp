@@ -1,10 +1,6 @@
 #include "PreConditionPlan1418042796751.h"
 /*PROTECTED REGION ID(eph1418042796751) ENABLED START*/
-// Add additional using directives here
-#include "engine/USummand.h"
-#include <alica_tests/DistXContourTest.h>
-#include <alica_tests/TestConstantValueSummand.h>
-#include <alica_tests/TestWorldModel.h>
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -16,8 +12,8 @@ namespace alica
 //
 // States:
 //   - PreConditionTest (1418042796752)
-PreConditionPlan1418042796751::PreConditionPlan1418042796751(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PreConditionPlan1418042796751::PreConditionPlan1418042796751()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1418042796751) ENABLED START*/
     // Add additional options here
@@ -35,13 +31,11 @@ PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
 /**
  * Available Vars:
  */
-bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
-    //--> "PreCondition:1418042929966  not implemented";
-    //    	return true;
-    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldModel->isPreCondition1418042929966();
+    std::cout << "The PreCondition 1418042929966 in Plan 'PreConditionPlan' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -50,9 +44,8 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const 
 std::shared_ptr<UtilityFunction> UtilityFunction1418042796751::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418042796751) ENABLED START*/
-    shared_ptr<UtilityFunction> function = make_shared<UtilityFunction>(0.5, 0.1, plan);
-    function->editUtilSummands().emplace_back(new TestConstantValueSummand(0.5, 1.0));
-    return function;
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    return defaultFunction;
     /*PROTECTED REGION END*/
 }
 

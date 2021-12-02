@@ -14,8 +14,8 @@ namespace alica
 //   - DecisionState (1588069177860)
 //   - StateA (1588069261047)
 //   - StateB (1588069265377)
-ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1588061334567) ENABLED START*/
     // Add additional options here
@@ -52,12 +52,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1588069612659) ENABLED START*/
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("1") == 0;
+    std::cout << "The PreCondition 1588069612661 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -74,12 +73,11 @@ bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in DecisionState:
  */
-bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1588069615552) ENABLED START*/
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("2") == 0;
+    std::cout << "The PreCondition 1588069615553 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 

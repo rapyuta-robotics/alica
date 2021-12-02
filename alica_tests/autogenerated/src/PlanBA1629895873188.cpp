@@ -1,8 +1,6 @@
 #include "PlanBA1629895873188.h"
 /*PROTECTED REGION ID(eph1629895873188) ENABLED START*/
 // Add additional options here
-#include "engine/PlanInterface.h"
-#include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,8 +12,8 @@ namespace alica
 //
 // States:
 //   - BehBAA (1629896094706)
-PlanBA1629895873188::PlanBA1629895873188(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PlanBA1629895873188::PlanBA1629895873188()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1629895873188) ENABLED START*/
     // Add additional options here
@@ -41,15 +39,5 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895873188::getUtilityFunctio
 
 /*PROTECTED REGION ID(methods1629895873188) ENABLED START*/
 // Add additional options here
-void PlanBA1629895873188::onInit()
-{
-    _wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
-    _wm->execOrder += "PlanBA::Init\n";
-}
-
-void PlanBA1629895873188::onTerminate()
-{
-    _wm->execOrder += "PlanBA::Term\n";
-}
 /*PROTECTED REGION END*/
 } // namespace alica

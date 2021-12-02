@@ -1,6 +1,6 @@
 #include "ConstraintTestMaster1414068495566.h"
 /*PROTECTED REGION ID(eph1414068495566) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - Start (1414068495567)
-ConstraintTestMaster1414068495566::ConstraintTestMaster1414068495566(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ConstraintTestMaster1414068495566::ConstraintTestMaster1414068495566()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1414068495566) ENABLED START*/
     // Add additional options here
@@ -32,10 +32,8 @@ ConstraintTestMaster1414068495566::~ConstraintTestMaster1414068495566()
 std::shared_ptr<UtilityFunction> UtilityFunction1414068495566::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414068495566) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 

@@ -1,8 +1,6 @@
 #include "SchedulingTestPlan11613378406860.h"
 /*PROTECTED REGION ID(eph1613378406860) ENABLED START*/
 // Add additional options here
-#include <alica_tests/CounterClass.h>
-#include <assert.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -16,8 +14,8 @@ namespace alica
 //   - InitPlan1 (1613378543512)
 //   - TerminateSubPlans (1613977406218)
 //   - InitSubPlans (1614960038398)
-SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1613378406860) ENABLED START*/
     // Add additional options here
@@ -54,10 +52,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
  *
  * Abstract Plans in InitPlan1:
  */
-bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614960055819) ENABLED START*/
-    return CounterClass::called == 2;
+    std::cout << "The PreCondition 1614960055821 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -76,23 +75,15 @@ bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *   - SchedulingTestPlan2 (1613378423610)
  *   - SchedulingTestPlan3 (1613378433623)
  */
-bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614960063842) ENABLED START*/
-    return CounterClass::called == 5;
+    std::cout << "The PreCondition 1614960063843 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 
 /*PROTECTED REGION ID(methods1613378406860) ENABLED START*/
 // Add additional options here
-void SchedulingTestPlan11613378406860::onInit()
-{
-    CounterClass::called = 1;
-}
-
-void SchedulingTestPlan11613378406860::onTerminate()
-{
-    CounterClass::called += 1;
-}
 /*PROTECTED REGION END*/
 } // namespace alica

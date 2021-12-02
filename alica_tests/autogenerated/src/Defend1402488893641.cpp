@@ -1,6 +1,6 @@
 #include "Defend1402488893641.h"
 /*PROTECTED REGION ID(eph1402488893641) ENABLED START*/
-// Add additional using directives here
+// Add additional options here
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -15,8 +15,8 @@ namespace alica
 //   - GetGoal (1402488910751)
 //   - GetBall (1402488959965)
 //   - TryToDefendGoal (1402489037735)
-Defend1402488893641::Defend1402488893641(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Defend1402488893641::Defend1402488893641()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1402488893641) ENABLED START*/
     // Add additional options here
@@ -35,10 +35,8 @@ Defend1402488893641::~Defend1402488893641()
 std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402488893641) ENABLED START*/
-
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-
     /*PROTECTED REGION END*/
 }
 /**
@@ -57,9 +55,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
  *   - Tackle (1402488939130)
  *   - Tackle (1402489318663)
  */
-bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402488991762) ENABLED START*/
+    std::cout << "The PreCondition 1402488993122 in Transition 'TackleToGetBall' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -77,9 +76,10 @@ bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in GetBall:
  */
-bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402488990761) ENABLED START*/
+    std::cout << "The PreCondition 1402488991641 in Transition 'TackleToGetBall' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -97,9 +97,10 @@ bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in GetBall:
  */
-bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489064693) ENABLED START*/
+    std::cout << "The PreCondition 1402489065962 in Transition 'GetBallToTryToDefendGoal' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
@@ -118,9 +119,10 @@ bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in TryToDefendGoal:
  *   - PlanType (1402489564599)
  */
-bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1402489071510) ENABLED START*/
+    std::cout << "The PreCondition 1402489073613 in Transition 'TryToDefendGoalToGetGoal' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

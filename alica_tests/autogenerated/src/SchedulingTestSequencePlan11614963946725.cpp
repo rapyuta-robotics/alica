@@ -1,7 +1,6 @@
 #include "SchedulingTestSequencePlan11614963946725.h"
 /*PROTECTED REGION ID(eph1614963946725) ENABLED START*/
 // Add additional options here
-#include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -17,8 +16,8 @@ namespace alica
 //   - InitSequenceSubPlan2 (1614964541828)
 //   - InitSequenceSubPlan3 (1614964542678)
 //   - TerminateSequenceSubPlan3 (1614964543300)
-SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan11614963946725(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan11614963946725()
+        : DomainPlan()
 {
     /*PROTECTED REGION ID(con1614963946725) ENABLED START*/
     // Add additional options here
@@ -55,10 +54,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1614963946725::getUtilityFunctio
  *
  * Abstract Plans in InitSequencePlan1:
  */
-bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614964566530) ENABLED START*/
-    return CounterClass::called == 2;
+    std::cout << "The PreCondition 1614964566531 in Transition 'FromInitSequencePlan1To InitSequenceSubPlan1' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -76,10 +76,11 @@ bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan1:
  *   - SchedulingTestSequenceSubPlan1 (1614964379654)
  */
-bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614964572494) ENABLED START*/
-    return CounterClass::called == 3;
+    std::cout << "The PreCondition 1614964572495 in Transition 'FromInitSequenceSubPlan1To InitSequenceSubPlan2' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -97,10 +98,11 @@ bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan2:
  *   - SchedulingTestSequenceSubPlan2 (1614964444419)
  */
-bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614964575552) ENABLED START*/
-    return true;
+    std::cout << "The PreCondition 1614964575553 in Transition 'FromInitSequenceSubPlan2To InitSequenceSubPlan3' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 /**
@@ -118,10 +120,11 @@ bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan3:
  *   - SchedulingTestSequenceSubPlan3 (1614964478264)
  */
-bool PreCondition1614964578016::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964578016::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(1614964578015) ENABLED START*/
-    return CounterClass::called == 4;
+    std::cout << "The PreCondition 1614964578016 in Transition 'FromInitSequenceSubPlan3To TerminateSequenceSubPlan3' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 
