@@ -78,7 +78,10 @@ public:
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
-    std::optional<std::string> getTraceContext() const;
+    std::optional<std::string> getTraceContext() const
+    {
+        return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt;
+    }
 
 protected:
     essentials::IdentifierConstPtr getOwnId() const;
@@ -88,8 +91,30 @@ protected:
     void setSuccess();
     void setFailure();
 
-    std::optional<IAlicaTrace*> getTrace() const;
-    void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
+    enum class TracingType : uint8_t
+    {
+        // Use the trace context of the lowest ancestor plan for which tracing is not skipped
+        DEFAULT,
+        // Skip tracing
+        SKIP,
+        // Create a root trace
+        ROOT,
+        // Provide a custom trace context
+        CUSTOM
+    };
+
+    // Set the tracing type for this behaviour. customTraceContextGetter is required for custom tracing
+    // & this method will be called to get the parent trace context before initialiseParameters is called
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
+    {
+        _tracingType = type;
+        _customTraceContextGetter = std::move(customTraceContextGetter);
+    }
+
+    IAlicaTrace* getTrace() const
+    {
+        return _trace ? _trace.get() : nullptr;
+    }
 
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
@@ -148,6 +173,8 @@ private:
         return sc == ec && isActive(sc);
     }
 
+    void startTrace();
+
     /**
      * The name of this behaviour.
      */
@@ -176,23 +203,12 @@ private:
 
     int64_t _activeRunJobId;
     std::atomic<bool> _triggeredJobRunning;
+
+    TracingType _tracingType;
+    std::function<std::optional<std::string>(const BasicBehaviour*)> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
+    bool _runTraced;
 
-    enum class Flags : uint8_t
-    {
-        // For Optimization: The behaviour may skip initialiseParameters if it is already gone out of execution context & this boolean is
-        // used to track this. In such a case we should not be calling onTermination either
-        INIT_EXECUTED = 1u,
-        // Is tracing enabled for this behaviour?
-        TRACING_ENABLED = 1u << 1,
-        // We only want to trace the first run call
-        RUN_TRACED = 1u << 2
-    };
-
-    uint8_t _flags;
-
-    void setFlags(Flags flags) { _flags |= static_cast<uint8_t>(flags); }
-    void clearFlags(Flags flags) { _flags &= ~static_cast<uint8_t>(flags); }
-    bool areFlagsSet(Flags flags) { return (static_cast<uint8_t>(flags) & _flags) == static_cast<uint8_t>(flags); }
+    bool _initExecuted;
 };
 } /* namespace alica */

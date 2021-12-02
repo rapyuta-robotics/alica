@@ -45,6 +45,9 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
         basicPlan->setInterval(1000 / plan->getFrequency());
     }
     basicPlan->setEngine(_ae);
+    if (plan->isMasterPlan()) {
+        basicPlan->setAsMasterPlan();
+    }
 
     return basicPlan;
 }
