@@ -3,50 +3,41 @@
 namespace alica
 {
 
-int variant::serializeTo(uint8_t* arr, const Variant& var)
+void variant::serializeTo(std::string& arr, const Variant& var)
 {
-    arr[0] = static_cast<uint8_t>(var.index());
-    std::visit( [arr](auto&& arg) {
+    arr.clear();
+    arr = arr + std::to_string(var.index()); // type
+
+    std::visit( [&](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
-        if constexpr (!std::is_same_v<std::monostate, T>) {
-            memcpy(arr + 1, &arg, kUnionSize);
+        if constexpr (!(std::is_same_v<std::monostate, T> || std::is_same_v<void*, T>)) {
+            arr = arr + (std::to_string(arg));
         }
     }, var );
-    return static_cast<int>(kVariantSize);
 }
 
-int variant::loadFrom(const uint8_t* arr, Variant& var)
+void variant::loadFrom(const std::string& arr, Variant& var)
 {
-    auto type = static_cast<Type>(arr[0]);
+    auto type = std::stoi(arr.substr(0, 1));
+    std::string data = arr.substr(1);
     if (type == 1) {
-        double data;
-        memcpy(&data, arr + 1, kUnionSize);
-        var = data;
+        var = std::stod(data);
     }
     else if (type == 2) {
-        float data;
-        memcpy(&data, arr + 1, kUnionSize);
-        var = data;
+        var = std::stof(data);
     }
     else if (type == 3) {
-        bool data;
-        memcpy(&data, arr + 1, kUnionSize);
-        var = data;
+        var = (data == "1") ? true : false;
     }
     else if (type == 4) {
-        void* data;
-        memcpy(data, arr + 1, kUnionSize);
-        var = data;
+        var = nullptr;
     }
     else if (type == 5) {
-        int64_t data;
-        memcpy(&data, arr + 1, kUnionSize);
-        var = data;
+        var = std::stol(data);
     }
     else {
         var.emplace<std::monostate>();
     }
-    return static_cast<int>(kVariantSize);
 }
 
 } // namespace alica

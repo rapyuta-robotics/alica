@@ -15,13 +15,11 @@ TEST(Variant, works)
     EXPECT_FALSE(variant::isSet(v1));
     EXPECT_TRUE(variant::isSet(v2));
 
-    uint8_t arr[variant::kVariantSize];
+    std::string arr;
 
     v2 = 2.3f;
-    uint32_t ret = variant::serializeTo(arr, v2);
-    EXPECT_EQ(variant::kVariantSize, ret);
-    ret = variant::loadFrom(arr, v1);
-    EXPECT_EQ(variant::kVariantSize, ret);
+    variant::serializeTo(arr, v2);
+    variant::loadFrom(arr, v1);
     EXPECT_TRUE(std::holds_alternative<float>(v1));
     EXPECT_EQ(2.3f, std::get<float>(v2));
 
