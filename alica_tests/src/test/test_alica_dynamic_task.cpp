@@ -40,7 +40,19 @@ protected:
     {
         return "agent"+std::to_string(agentNumber);
     }
+
+    static void stepBothAgents(std::vector<alica::AlicaContext*> acs) {
+        acs[0]->stepEngine();
+        acs[1]->stepEngine();
+    }
 };
+
+TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
+{
+    // check that multiple EPs are returned
+    // eval is called after cacheEvalData, so cacheEvalData needs to ensure there are already dynamic EPs in the internal variables
+    // check tha "eval"'s assignments have the dynamic EPs
+}
 
 /**
  * Tests whether it is possible to instantiate multiple tasks, dynamically, at runtime
@@ -48,40 +60,41 @@ protected:
 TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
 {
     ASSERT_NO_SIGNAL
+    constexpr long MasterPlanInitStateId = 4467904887554008050;
+    constexpr long MasterPlanStartStateId = 751302000461175045;
+    constexpr long DynamicTaskAssignmentPlanId = 2252865124432942907;
+    constexpr long DynamicTaskBehaviorId = 4044546549214673470;
+
     aes[0]->start();
     aes[1]->start();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    acs[0]->stepEngine();
-    acs[1]->stepEngine();
+    stepBothAgents();
 
-    for (int i = 0; i < 20; i++) {
-        std::cout << "AE1 step " << i << "(" << acs[0]->getLocalAgentId() << ")" << std::endl;
-        acs[0]->stepEngine();
+    // what's happening here? prev state? before transition?
 
-        std::cout << "AE2 step " << i << "(" << acs[1]->getLocalAgentId() << ")" << std::endl;
-        acs[1]->stepEngine();
+    std::cout << "AE1 step " << i << "(" << acs[0]->getLocalAgentId() << ")" << std::endl;
+    std::cout << "AE2 step " << i << "(" << acs[1]->getLocalAgentId() << ")" << std::endl;
 
-        if (i < 10) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 4467904887554008050));
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 4467904887554008050));
-        }
-        if (i == 10) {
-            std::cout << "1--------- Initial State passed ---------" << std::endl;
-            //TODO
-            alicaTests::TestWorldModel::getOne()->setTransitionConditionInitDone(true);
-            alicaTests::TestWorldModel::getTwo()->setTransitionConditionInitDone(true);
-        }
-        if (i > 11 && i < 15) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 751302000461175045));
-            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], 2252865124432942907));
-            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 2252865124432942907));
-        }
-        if (i == 15) {
-            ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(aes[0], 4044546549214673470, 0))->callCounter, 5);
-            ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(aes[1], 4044546549214673470, 0))->callCounter, 5);
-        }
-    }
+    stepBothAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], MasterPlanInitStateId));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], MasterPlanInitStateId));
+
+    stepBothAgents();
+    alicaTests::TestWorldModel::getOne()->setTransitionConditionInitDone(true);
+    alicaTests::TestWorldModel::getTwo()->setTransitionConditionInitDone(true);
+
+    stepBothAgents();
+    // what's happening here? prev state? before transition?
+
+    stepBothAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], MasterPlanStartStateId));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], MasterPlanStartStateId));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], DynamicTaskAssignmentPlanId));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], DynamicTaskAssignmentPlanId));
+
+    stepBothAgents();
+    ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(aes[0], DynamicTaskBehaviorId, 0))->callCounter, 2);
+    ASSERT_GT(std::dynamic_pointer_cast<alica::Attack>(alica::test::Util::getBasicBehaviour(aes[1], DynamicTaskBehaviorId, 0))->callCounter, 2);
 }
 } // namespace
 } // namespace alica

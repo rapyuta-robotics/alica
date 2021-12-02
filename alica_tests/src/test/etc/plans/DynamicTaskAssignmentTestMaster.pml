@@ -5,7 +5,7 @@
       "comment": "",
       "id": 699381937789438517,
       "maxCardinality": 2147483647,
-      "minCardinality": 2,
+      "minCardinality": 0,
       "name": "",
       "plan": 1602078208698393838,
       "positionWeb": {
@@ -104,7 +104,7 @@
         "conditionString": "",
         "enabled": true,
         "id": 4496654201854254411,
-        "name": "",
+        "name": "InitDone",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
