@@ -80,8 +80,9 @@ TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
     ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], MasterPlanInitStateId));
 
     stepBothAgents();
-    alicaTests::TestWorldModel::getOne()->setTransitionConditionInitDone(true);
-    alicaTests::TestWorldModel::getTwo()->setTransitionConditionInitDone(true);
+    // 4496654201854254411
+    alicaTests::TestWorldModel::getOne()->setTransitionCondition4496654201854254411(true);
+    alicaTests::TestWorldModel::getTwo()->setTransitionCondition4496654201854254411(true);
 
     stepBothAgents();
     // what's happening here? prev state? before transition?

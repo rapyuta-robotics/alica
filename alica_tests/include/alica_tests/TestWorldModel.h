@@ -49,6 +49,10 @@ public:
     bool isTransitionCondition1418825428924() const;
     void setTransitionCondition1418825428924(bool transitionCondition1418825428924);
 
+    // DynamicTaskAssignment transitions
+    bool isTransitionCondition4496654201854254411() const;
+    void setTransitionCondition4496654201854254411(bool new_val);
+
     bool isPreCondition1418042929966() const;
     void setPreCondition1418042929966(bool preCondition1418042929966);
     bool isRuntimeCondition1418042967134() const;

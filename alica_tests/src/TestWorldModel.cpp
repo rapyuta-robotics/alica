@@ -211,4 +211,14 @@ void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
     this->switchEntryPoints = switchEntryPoints;
 }
 
+bool TestWorldModel::isTransitionCondition4496654201854254411() const
+{
+    return transitionCondition4496654201854254411;
+}
+
+void TestWorldModel::setTransitionCondition4496654201854254411(bool new_val)
+{
+    this->transitionCondition4496654201854254411 = new_val;
+}
+
 } // namespace alicaTests
