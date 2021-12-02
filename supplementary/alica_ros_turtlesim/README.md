@@ -48,14 +48,12 @@ We need to create a catkin workspace by executing the following steps in an Ubun
 mkdir -p catkin_ws/src
 cd catkin_ws/src
 git clone https://github.com/rapyuta-robotics/alica.git
-git clone https://github.com/rapyuta-robotics/alica-essentials.git
-git clone https://github.com/rapyuta-robotics/alica-supplementary.git
 ```
 
 2. Remove existing turtlesim files. You will reproduce these files (You can jump to step 8. "Build and Run" for testing application before deleting the files):
 
 ```
-cd src/alica-supplementary
+cd src/alica/supplementary
 rm -r alica_ros_turtlesim/alica/Expr
 rm -r alica_ros_turtlesim/alica/etc/plans
 rm -r alica_ros_turtlesim/alica/etc/tasks
@@ -74,7 +72,7 @@ The ALICA plan designer is a user interface to design applications with the ALIC
 
 The Plan Designer is a web application and can be started by using docker-compose.
 
-For starting the Plan Designer, use the docker-compose file placed in alica-supplementary/alica_designer_runtime/
+For starting the Plan Designer, use the docker-compose file placed in alica/supplementary/alica_designer_runtime/
 by navigating into the folder and executing the following command:
 
 ```
@@ -168,10 +166,10 @@ priority to 0.1.
 the file `web_designer_program.zip`.
 2. Extract the archive, open the alica_program folder and place `plans`, `roles` and the `tasks` into your
 alica_ros_turtlesim/alica/etc/ folder.
-3. Navigate into alica-supplementary/alica_designer_runtime and execute generate.sh with
+3. Navigate into alica/supplementary/alica_designer_runtime and execute generate.sh with
 ```./generate.sh ../alica_ros_turtlesim/alica/```
 
-Your generated files will be stored in /alica-supplementary/alica_ros_turtlesim/alica/Expr
+Your generated files will be stored in alica/supplementary/alica_ros_turtlesim/alica/Expr
 
 ## 7. Implement Logics
 
