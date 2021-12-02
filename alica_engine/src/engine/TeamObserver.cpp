@@ -297,41 +297,41 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     SimplePlanTree* curParent = nullptr;
     SimplePlanTree* cur = root.get();
 
+    // start at 2, because we used the first 2 ids for creating the root node
     for (int i = 2; i < static_cast<int>(ids.size()); ) {
-        const int64_t id = ids[i];
-        if (id == -1) {
-            curParent = cur;
-            cur = nullptr;
-            ++i;
-        } else if (id == -2) {
+        const int64_t currentEpId = ids[i];
+        if (currentEpId == -1) {
+            // go up one level
             cur = curParent;
             if (cur == nullptr) {
-                ALICA_WARNING_MSG("TO: Malformed SptMessage from " << agentId);
-                return nullptr;
+                // went up one level from root node, finished parsing
+                break;
             }
             curParent = cur->getParent();
-            ++i;
-        } else {
-            if (i + 1 == static_cast<int>(ids.size())) {
-                ALICA_WARNING_MSG("State id missing in plan tree from " << agentId << " which is executing dynamic entry point with id " << ids[i]);
-                return nullptr;
-            }
-            cur = new SimplePlanTree();
-            cur->setAgentId(agentId);
-            cur->setReceiveTime(time);
-            cur->setParent(curParent);
-            curParent->editChildren().emplace_back(cur);
-            const State* s2 = states.find(ids[i + 1]);
-            if (s2) {
-                cur->setState(s2);
-                cur->setEntryPoint(s2->getEntryPoint(id));
-            } else {
-                ALICA_WARNING_MSG("Unknown State (" << ids[i + 1] << ") received from " << agentId);
-                return nullptr;
-            }
-            cur->computeContextHash();
-            i += 2;
+            continue;
+        }      
+        // Add node as child to old current node
+        const int64_t currentStateId = ids[i + 1];
+        if (i + 1 == static_cast<int>(ids.size())) {
+            ALICA_WARNING_MSG("State id missing in plan tree from " << agentId << " which is executing dynamic entry point with id " << currentEpId);
+            return nullptr;
         }
+        curParent = cur;
+        cur = new SimplePlanTree();
+        cur->setAgentId(agentId);
+        cur->setReceiveTime(time);
+        cur->setParent(curParent);
+        curParent->editChildren().emplace_back(cur);
+        const State* s2 = states.find(currentStateId);
+        if (s2) {
+            cur->setState(s2);
+            cur->setEntryPoint(s2->getEntryPoint(currentEpId));
+        } else {
+            ALICA_WARNING_MSG("Unknown State (" << currentStateId << ") received from " << agentId);
+            return nullptr;
+        }
+        cur->computeContextHash();
+        i += 2;
     }
     return root;
 }
