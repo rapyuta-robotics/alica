@@ -40,17 +40,17 @@ public:
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
-    using RunnableObject::start;
-    using RunnableObject::stop;
     using RunnableObject::getWorldModel;
+    using RunnableObject::getName;
 
+    void stop();
+    void start(RunningPlan* rp);
     virtual void run(void* msg) = 0;
 
     // This method returns true when it is safe to delete the RunningPlan instance that is passed to it
     // Note that for things to work correctly it is assumed that this method is called after start() has finished execution
     // i.e. either on the same thread or via some other synchronization mechanism
     bool isRunningInContext(const RunningPlan* rp) const { return rp == _execContext.load() || rp == _signalContext.load(); };
-    const std::string& getName() const { return _name; }
 
     void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
 
@@ -81,6 +81,16 @@ protected:
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
+    // Set the tracing type for this behaviour. customTraceContextGetter is required for custom tracing
+    // & this method will be called to get the parent trace context before initialiseParameters is called
+    void setTracing(TracingType type, std::function<std::optional<std::string>(BasicBehaviour*)> customTraceContextGetter = {})
+    {
+        _tracingType = type;
+        _customTraceContextGetter = [this, customTraceContextGetter]() {
+            return customTraceContextGetter(this);
+        };
+    }
+
     void setSuccess();
     void setFailure();
 
@@ -105,9 +115,13 @@ private:
         FAILURE
     };
 
-    void runJob(void* msg);
-    void doInit() override;
-    void doTerminate() override;
+    void initJob();
+    void runJob();
+    void terminateJob();
+
+    void onInit_() override;
+    void onRun_() override;
+    void onTerminate_() override;
 
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour

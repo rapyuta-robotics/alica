@@ -11,60 +11,65 @@ namespace alica
 
 BasicPlan::BasicPlan(IAlicaWorldModel* wm)
         : RunnableObject(wm)
+        , _isMasterPlan(false)
 {
 }
 
-void BasicPlan::doInit()
+void BasicPlan::stop()
 {
-    ++_execState;
+    doStop();
+    _engine->editScheduler().schedule(std::bind(&BasicPlan::terminateJob, this));
+}
 
-    if (!isExecutingInContext()) {
-        return;
-    }
-    setFlags(Flags::INIT_EXECUTED);
+void BasicPlan::start(RunningPlan* rp)
+{
+    doStart(rp);
+    _engine->editScheduler().schedule(std::bind(&BasicPlan::initJob, this));
+}
 
-    _execContext = _signalContext.exchange(nullptr);
+void BasicPlan::initJob()
+{
+    doInit();
 
-    initTrace();
-
-    try {
-        traceInit("Plan");
-        onInit();
-    } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
-    }
     // Do not schedule runJob when freq is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
+        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicPlan::runJob, this), getInterval());
     }
 }
 
-void BasicPlan::doRun(void* msg)
+void BasicPlan::runJob()
 {
-    try {
-        traceRun();
-        run(msg);
-    } catch (const std::exception& e) {
-        std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
-        sendLogMessage(4, err);
-    }
+    doRun();
 }
 
-void BasicPlan::doTerminate()
+void BasicPlan::terminateJob()
 {
     if (_activeRunJobId != -1) {
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
-    setTerminatedState();
-    try {
-        traceTermination();
-        onTerminate();
-    } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
-    }
+    doTerminate();
+}
 
-    _execContext.store(nullptr);
+void BasicPlan::onInit_()
+{
+    if (_trace) {
+        _trace->setTag("type", _isMasterPlan ? "master_plan" : "plan");
+        if (_isMasterPlan) {
+            _trace->finish();
+        }
+    }
+    onInit();
+}
+
+void BasicPlan::onRun_()
+{
+    run(nullptr);
+}
+
+void BasicPlan::onTerminate_()
+{
+    onTerminate();
 }
 
 } // namespace alica

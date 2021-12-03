@@ -44,6 +44,18 @@ AgentId BasicBehaviour::getOwnId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
+void BasicBehaviour::stop()
+{
+    doStop();
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::terminateJob, this));
+}
+
+void BasicBehaviour::start(RunningPlan* rp)
+{
+    doStart(rp);
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::initJob, this));
+}
+
 void BasicBehaviour::setFailure()
 {
     if (!isExecutingInContext()) {
@@ -63,47 +75,22 @@ bool BasicBehaviour::isTriggeredRunFinished()
     return !_triggeredJobRunning.load();
 }
 
-void BasicBehaviour::doInit()
+void BasicBehaviour::initJob()
 {
     assert(_behResult.load() == BehResult::UNKNOWN);
-    ++_execState;
 
-    if (!isExecutingInContext()) {
-        return;
-    }
-    setFlags(Flags::INIT_EXECUTED);
-
-    // There is a possible race condition here in the sense that the _execState can be behind the _signalState
-    // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
-    // since all methods are guarded by isExecutingInContext() which will return false in all such cases.
-    // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
-    // when the behaviour is terminated
-    _execContext = _signalContext.exchange(nullptr);
-    initTrace();
-    try {
-        traceInit("Behaviour");
-        initialiseParameters();
-    } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
-    }
+    doInit();
 
     // Do not schedule repeatable run job when behaviour is event driven or when frequency is 0.
     if (!isEventDriven() && _msInterval > AlicaTime::milliseconds(0)) {
         // TODO: account for delayed start
-        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr), getInterval());
+        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this), getInterval());
     }
 }
 
-void BasicBehaviour::runJob(void* msg)
+void BasicBehaviour::runJob()
 {
-    // TODO: get rid of msg
-    try {
-        traceRun();
-        run(msg);
-    } catch (const std::exception& e) {
-        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-        sendLogMessage(4, err);
-    }
+    doRun();
     _triggeredJobRunning = false;
 }
 
@@ -113,30 +100,36 @@ void BasicBehaviour::doTrigger()
         return;
     }
     _triggeredJobRunning = true;
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this));
 }
 
-void BasicBehaviour::doTerminate()
+void BasicBehaviour::terminateJob()
 {
-
     if (_activeRunJobId != -1) {
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
-    setTerminatedState();
+    doTerminate();
+}
 
-    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
-    try {
-        traceTermination();
-        onTermination();
-    } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+void BasicBehaviour::onInit_()
+{
+    if (_trace) {
+        _trace->setTag("type", "behaviour");
     }
+    initialiseParameters();
+}
 
-    // Reset the execution context so that the RunningPlan instance can be deleted
-    _execContext.store(nullptr);
+void BasicBehaviour::onRun_()
+{
+    run(nullptr);
+}
+
+void BasicBehaviour::onTerminate_()
+{
+    onTermination();
 }
 
 bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const

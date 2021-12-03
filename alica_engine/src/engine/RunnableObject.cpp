@@ -10,17 +10,21 @@
 namespace alica
 {
 RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
-        : _name(name)
+        : _wm(wm)
+        , _name(name)
         , _engine(nullptr)
         , _configuration(nullptr)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _activeRunJobId(-1)
+        , _tracingType(TracingType::DEFAULT)
+        , _customTraceContextGetter()
+        , _trace()
+        , _execState(1)
+        , _signalState(1)
         , _signalContext(nullptr)
         , _execContext(nullptr)
-        , _signalState(1)
-        , _execState(1)
-        , _wm(wm)
+        , _initExecuted(false)
+        , _activeRunJobId(-1)
+        , _runTraced(false)
 {
 }
 
@@ -34,70 +38,125 @@ ThreadSafePlanInterface RunnableObject::getPlanContext() const
     return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr);
 }
 
-void RunnableObject::stop()
+void RunnableObject::doStop()
 {
     if (!isActive(_signalState.load())) {
         return;
     }
     ++_signalState;
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doTerminate, this));
 }
 
-void RunnableObject::start(RunningPlan* rp)
+void RunnableObject::doStart(RunningPlan* rp)
 {
     if (isActive(_signalState.load())) {
         return;
     }
     ++_signalState;
     _signalContext.store(rp);
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
 }
 
-void RunnableObject::setTerminatedState()
+void RunnableObject::startTrace()
+{
+    if (!_engine->getTraceFactory()) {
+        return;
+    }
+
+    switch (_tracingType) {
+    case TracingType::DEFAULT: {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
+        break;
+    }
+    case TracingType::SKIP: {
+        break;
+    }
+    case TracingType::ROOT: {
+        _trace = _engine->getTraceFactory()->create(_name);
+        break;
+    }
+    case TracingType::CUSTOM: {
+        if (!_customTraceContextGetter) {
+            ALICA_ERROR_MSG("[RunnableObject] Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+            _tracingType = TracingType::DEFAULT;
+            startTrace();
+            break;
+        }
+        _trace = _engine->getTraceFactory()->create(_name, _customTraceContextGetter());
+        break;
+    }
+    }
+}
+
+void RunnableObject::doInit()
+{
+   ++_execState;
+
+    if (!isExecutingInContext()) {
+        return;
+    }
+    _initExecuted = true;
+
+    // There is a possible race condition here in the sense that the _execState can be behind the _signalState
+    // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
+    // except for creating a superflous trace, since all other methods are guarded by isExecutingInContext()
+    // which will return false in all such cases.
+    // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
+    // when the behaviour is terminated
+    _execContext = _signalContext.exchange(nullptr);
+
+    startTrace();
+
+    try {
+        if (_trace) {
+            _trace->setLog({"status", "initializing"});
+        }
+        onInit_();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[RunnableObject] Exception in: " << getName() << std::endl << e.what());
+    }
+}
+
+void RunnableObject::doRun()
+{
+    // TODO: get rid of msg
+    try {
+        if (_trace && !_runTraced) {
+            _trace->setLog({"status", "running"});
+            _runTraced = true;
+        }
+        onRun_();
+    } catch (const std::exception& e) {
+        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
+        sendLogMessage(4, err);
+    }
+}
+
+void RunnableObject::doTerminate()
 {
     ++_execState;
 
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
+    _runTraced = false;
+    if (!_initExecuted) {
+        // Reset the execution context so that the RunningPlan instance can be deleted
         _execContext.store(nullptr);
         return;
     }
-    clearFlags(Flags::INIT_EXECUTED);
-}
+    _initExecuted = false;
 
-void RunnableObject::traceTermination()
-{
-    if (_trace) {
-        _trace->setLog({"Terminate", "true"});
+    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
+    try {
+        if (_trace) {
+            _trace->setLog({"status", "terminating"});
+        }
+        onTerminate_();
         _trace.reset();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
-}
 
-void RunnableObject::initTrace()
-{
-    // Get closest parent that has a trace
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
-            ;
-        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
-    }
-}
-
-void RunnableObject::traceRun()
-{
-    if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
-        _trace->setLog({"Run", "true"});
-        setFlags(Flags::RUN_TRACED);
-    }
-}
-
-void RunnableObject::traceInit(const std::string& type)
-{
-    if (_trace) {
-        _trace->setLog({type, "true"});
-        _trace->setLog({"Init", "true"});
-    }
+    // Reset the execution context so that the RunningPlan instance can be deleted
+    _execContext.store(nullptr);
 }
 
 } /* namespace alica */

@@ -13,6 +13,8 @@ public:
     virtual void setTag(const std::string& key, const std::string& value) = 0;
     virtual void setLog(std::pair<std::string, std::string> fields) = 0;
     virtual void markError(const std::string& description) = 0;
+    virtual void finish() = 0;
+    // Note: the context should be valid even after finish() is called on the trace
     virtual std::string context() const = 0;
 };
 

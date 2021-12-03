@@ -19,18 +19,37 @@ public:
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
-    using RunnableObject::start;
-    using RunnableObject::stop;
     using RunnableObject::getWorldModel;
+    using RunnableObject::getName;
+
+    void stop();
+    void start(RunningPlan* rp);
+    void setAsMasterPlan() { _isMasterPlan = true; };
 
 protected:
+    // Set the tracing type for this plan. customTraceContextGetter is required for custom tracing
+    // & this method will be called to get the parent trace context before onInit is called
+    void setTracing(TracingType type, std::function<std::optional<std::string>(BasicPlan*)> customTraceContextGetter = {})
+    {
+        _tracingType = type;
+        _customTraceContextGetter = [this, customTraceContextGetter]() {
+            return customTraceContextGetter(this);
+        };
+    }
+
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
 
 private:
-    void doInit() override;
-    void doRun(void* msg);
-    void doTerminate() override;
+    void initJob();
+    void runJob();
+    void terminateJob();
+
+    void onInit_() override;
+    void onRun_() override;
+    void onTerminate_() override;
+
+    bool _isMasterPlan;
 };
 } // namespace alica
