@@ -26,6 +26,7 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
                                                 alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
+        , _worldModel(nullptr)
 {}
 
 AlicaContext::~AlicaContext()
