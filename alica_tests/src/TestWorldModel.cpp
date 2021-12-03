@@ -215,7 +215,7 @@ void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
 
 bool TestWorldModel::isTransitionCondition4496654201854254411() const
 {
-    return transitionCondition4496654201854254411;
+    return this->transitionCondition4496654201854254411;
 }
 
 void TestWorldModel::setTransitionCondition4496654201854254411(bool new_val)
