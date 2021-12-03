@@ -1,6 +1,7 @@
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
 /*PROTECTED REGION ID(eph1602078208698393838) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -55,8 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1602078208698393838::getUtilityF
 bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp)
 {
     /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
-    std::cout << "The PreCondition 4496654201854254411 in Transition '4266666033623620026' is not implement yet!" << std::endl;
-    return false;
+    return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
     /*PROTECTED REGION END*/
 }
 /**

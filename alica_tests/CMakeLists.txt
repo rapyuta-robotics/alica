@@ -52,7 +52,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_behaviourtrigger.cpp
         src/test/test_alica_condition_plan.cpp
         src/test/test_alica_condition_plantype.cpp
-        #src/test/test_alica_dynamic_task.cpp
+        src/test/test_alica_dynamic_task.cpp
         src/test/test_alica_engine_behavior_pool_init.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
