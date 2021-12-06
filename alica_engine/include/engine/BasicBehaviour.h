@@ -6,6 +6,8 @@
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 
+#include <alica_common_config/debug_output.h>
+
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
@@ -86,6 +88,11 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(BasicBehaviour*)> customTraceContextGetter = {})
     {
         _tracingType = type;
+        if (_tracingType == TracingType::CUSTOM && !customTraceContextGetter) {
+            ALICA_ERROR_MSG("[BasicBehaviour] Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+            _tracingType = TracingType::DEFAULT;
+            return;
+        }
         _customTraceContextGetter = [this, customTraceContextGetter]() {
             return customTraceContextGetter(this);
         };

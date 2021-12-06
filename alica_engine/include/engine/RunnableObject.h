@@ -31,7 +31,7 @@ protected:
     void setEngine(AlicaEngine* engine) { _engine = engine; };
     void setConfiguration(const Configuration* conf) { _configuration = conf; };
     void setName(const std::string& name) { _name = name; };
-    std::string getName() { return _name; }
+    const std::string& getName() { return _name; }
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
 

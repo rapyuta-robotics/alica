@@ -14,8 +14,6 @@
 #include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include <assert.h>
 #include <iostream>
 

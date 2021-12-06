@@ -64,7 +64,7 @@ void RunnableObject::startTrace()
     switch (_tracingType) {
     case TracingType::DEFAULT: {
         auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        for (; parent && !parent->getBasicPlan()->getTraceContext().has_value(); parent = parent->getParent());
         _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
         break;
     }
@@ -76,12 +76,6 @@ void RunnableObject::startTrace()
         break;
     }
     case TracingType::CUSTOM: {
-        if (!_customTraceContextGetter) {
-            ALICA_ERROR_MSG("[RunnableObject] Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
-            _tracingType = TracingType::DEFAULT;
-            startTrace();
-            break;
-        }
         _trace = _engine->getTraceFactory()->create(_name, _customTraceContextGetter());
         break;
     }
@@ -113,7 +107,7 @@ void RunnableObject::doInit()
         }
         onInit_();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[RunnableObject] Exception in: " << getName() << std::endl << e.what());
+        ALICA_ERROR_MSG("[RunnableObject] Exception in: " << getName() << "\n" << e.what());
     }
 }
 
@@ -152,7 +146,7 @@ void RunnableObject::doTerminate()
         onTerminate_();
         _trace.reset();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << "\n" << e.what());
     }
 
     // Reset the execution context so that the RunningPlan instance can be deleted

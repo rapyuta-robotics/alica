@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/RunnableObject.h"
+#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -32,6 +33,11 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(BasicPlan*)> customTraceContextGetter = {})
     {
         _tracingType = type;
+        if (_tracingType == TracingType::CUSTOM && !customTraceContextGetter) {
+            ALICA_ERROR_MSG("[BasicPlan] Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+            _tracingType = TracingType::DEFAULT;
+            return;
+        }
         _customTraceContextGetter = [this, customTraceContextGetter]() {
             return customTraceContextGetter(this);
         };
