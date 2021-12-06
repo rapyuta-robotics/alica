@@ -22,7 +22,6 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _execContext(nullptr)
         , _signalState(1)
         , _execState(1)
-        , _blackBoard(std::make_shared<BlackBoard>())
         , _wm(wm)
 {
 }
