@@ -35,7 +35,7 @@ bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::sh
     BlackBoard& bb = getAlicaEngine()->editBlackBoard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
         const std::string& val = getValue(dummyVariable->getId(), calls);
-        bb.registerValue(val, dummyVariable->getId());
+        LockedBlackBoardRW(bb).registerValue(val, dummyVariable->getId());
         results.push_back(dummyVariable->getId());
     }
 
