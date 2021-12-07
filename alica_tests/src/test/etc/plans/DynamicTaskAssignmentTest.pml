@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 3150793708487666867,
+      "isDynamic": true,
       "maxCardinality": 2147483647,
       "minCardinality": 2,
       "name": "",
@@ -23,8 +24,29 @@
   "name": "DynamicTaskAssignmentTest",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 2788356913272296281,
+      "inTransitions": [
+        1813059625501892456
+      ],
+      "name": "DynamicTaskFinished",
+      "outTransitions": [],
+      "parentPlan": 2252865124432942907,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -49,26 +71,6 @@
         "y": 200
       },
       "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 2788356913272296281,
-      "inTransitions": [
-        1813059625501892456
-      ],
-      "name": "DynamicTaskFinished",
-      "outTransitions": [],
-      "parentPlan": 2252865124432942907,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
       "variableBindings": []
     }
   ],

@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 699381937789438517,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
@@ -23,44 +24,9 @@
   "name": "DynamicTaskAssignmentTestMaster",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": 699381937789438517,
-      "id": 4467904887554008050,
-      "inTransitions": [],
-      "name": "Init",
-      "outTransitions": [
-        4266666033623620026
-      ],
-      "parentPlan": 1602078208698393838,
-      "positionWeb": {
-        "x": 428,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 1317277234576050904,
-      "inTransitions": [
-        3712615202042019043
-      ],
-      "name": "Finish",
-      "outTransitions": [],
-      "parentPlan": 1602078208698393838,
-      "positionWeb": {
-        "x": 944,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -88,29 +54,46 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1317277234576050904,
+      "inTransitions": [
+        3712615202042019043
+      ],
+      "name": "Finish",
+      "outTransitions": [],
+      "parentPlan": 1602078208698393838,
+      "positionWeb": {
+        "x": 944,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 699381937789438517,
+      "id": 4467904887554008050,
+      "inTransitions": [],
+      "name": "Init",
+      "outTransitions": [
+        4266666033623620026
+      ],
+      "parentPlan": 1602078208698393838,
+      "positionWeb": {
+        "x": 428,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "id": 4266666033623620026,
-      "inState": 4467904887554008050,
-      "name": "",
-      "outState": 751302000461175045,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 4496654201854254411,
-        "name": "InitDone",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "id": 3712615202042019043,
@@ -124,6 +107,25 @@
         "enabled": true,
         "id": 4344644064496100420,
         "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 4266666033623620026,
+      "inState": 4467904887554008050,
+      "name": "",
+      "outState": 751302000461175045,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4496654201854254411,
+        "name": "InitDone",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

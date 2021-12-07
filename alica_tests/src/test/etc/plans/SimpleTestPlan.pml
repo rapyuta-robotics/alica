@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1412252439927,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1412252439927",
@@ -32,6 +33,7 @@
     "variables": []
   },
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

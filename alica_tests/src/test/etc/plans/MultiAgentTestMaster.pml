@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1413200842975,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1413200842975",
@@ -23,6 +24,7 @@
   "name": "MultiAgentTestMaster",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

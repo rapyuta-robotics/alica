@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1613378541158,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1613378541158",
@@ -23,6 +24,7 @@
   "name": "SchedulingTestPlan1",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1414403396331,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1414403396331",
@@ -23,6 +24,7 @@
   "name": "AuthorityTestMaster",
   "preCondition": null,
   "relativeDirectory": "Authority",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
