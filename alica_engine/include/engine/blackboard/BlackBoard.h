@@ -1,36 +1,131 @@
 #pragma once
 
 #include <any>
-#include <map>
+#include <unordered_map>
 #include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <type_traits>
 
 namespace alica
 {
+class BlackBoardImpl
+{
+    friend class LockedBlackBoardRW;
+    friend class LockedBlackBoardRO;
+
+    template <class... Args> void registerValue(const std::string& key, Args&&... args) { 
+        vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...)); 
+    }
+    
+    template <typename T> const T& get(const std::string& key) const {
+        return std::any_cast<const T&>(vals.at(key));
+    }
+    template <typename T> T& get(const std::string& key) {
+        return std::any_cast<T&>(vals.at(key));
+    }
+
+    bool hasValue(const std::string& key) const {
+        return vals.count(key);
+    }
+    void removeValue(const std::string& key) {
+        vals.erase(key);
+    }
+
+    void clear() {
+        vals.clear();
+    }
+    bool empty() const {
+        return vals.empty();
+    }
+    size_t size() const {
+        return vals.size();
+    }
+
+private:
+    std::unordered_map<std::string, std::any> vals;
+};
 
 class BlackBoard
 {
 public:
     BlackBoard() = default;
+    BlackBoard(BlackBoard&&) = delete;
+    BlackBoard& operator&=(const BlackBoard&) = delete;
+    BlackBoard& operator&=(BlackBoard&&) = delete;
 
-    void registerValue(const std::string& key, std::any any);
-    void registerValue(const char* key, std::any any);
+    std::shared_lock<std::shared_mutex> lockRO() const {return std::shared_lock(_mtx);}
+    std::unique_lock<std::shared_mutex> lockRW() {return std::unique_lock(_mtx);}
 
-    template <typename T> const T getValue(const std::string& key) const {
-        std::lock_guard<std::mutex> lk(_mtx);
-        return std::any_cast<const T&>(vals.at(key));
-    }
-    bool hasValue(const std::string& key) const;
-    void removeValue(const std::string& key);
-
-    void clear();
-    bool empty() const;
-    size_t size() const;
-
+    // Not for public use
+    // TODO: friend
+    BlackBoardImpl& impl() {return _impl;}
+    const BlackBoardImpl& impl() const {return _impl;}
 private:
-    std::unordered_map<std::string, std::any> vals;
-    mutable std::mutex _mtx;
+    BlackBoardImpl _impl;
+    mutable std::shared_mutex _mtx;
+};
+
+class LockedBlackBoardRO
+{
+public:
+    LockedBlackBoardRO(const BlackBoard& bb) : 
+         _lk(bb.lockRO())
+      ,  _impl(&bb.impl())
+    {}
+
+    bool empty() const {
+        return _impl->empty();
+    }
+    size_t size() const {
+        return _impl->size();
+    }
+    template <typename T> const T& get(const std::string& key) {
+        return _impl->get<T>(key);
+    }
+    bool hasValue(const std::string& key) const {
+        return _impl->hasValue(key);
+    }
+private:
+    std::shared_lock<std::shared_mutex> _lk;
+    const BlackBoardImpl* _impl;
+};
+
+class LockedBlackBoardRW
+{
+public:
+    LockedBlackBoardRW(BlackBoard& bb) : 
+         _lk(bb.lockRW())
+      ,  _impl(&bb.impl())
+    {}
+
+    void clear() {
+        _impl->clear();
+    }
+
+    void removeValue(const std::string& key) {
+        _impl->removeValue(key);
+    }
+
+    template <class... Args> void registerValue(const std::string& key, Args&&... args) { 
+        _impl->registerValue(key, std::forward<Args>(args)...);
+    }
+
+    template <typename T> T& get(const std::string& key) {
+        return _impl->get<T>(key);
+    }
+    bool empty() const {
+        return _impl->empty();
+    }
+    size_t size() const {
+        return _impl->size();
+    }
+    bool hasValue(const std::string& key) const {
+        return _impl->hasValue(key);
+    }
+private:
+    std::unique_lock<std::shared_mutex> _lk;
+    BlackBoardImpl* _impl;
 };
 
 } // namespace alica
