@@ -22,6 +22,7 @@ EntryPoint::EntryPoint()
         , _plan(nullptr)
         , _cardinality(0, 0)
         , _index(-1)
+        , _dynamic(false)
 {
 }
 
@@ -33,12 +34,14 @@ EntryPoint::EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s)
         , _plan(p)
         , _cardinality(0, 0)
         , _index(-1)
+        , _dynamic(false)
 {
 }
 
 EntryPoint::EntryPoint(const EntryPoint& ep, int64_t dynamicId)
         : EntryPoint(ep)
 {
+    _dynamic = true;
     _dynamicId = dynamicId;
 }
 

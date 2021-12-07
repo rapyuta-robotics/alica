@@ -54,6 +54,7 @@ public:
     const StateGrp& getReachableStates() const { return _reachableStates; }
     bool isStateReachable(const State* s) const;
     int getIndex() const { return _index; }
+    void setIndex(int index) { _index = index; }
 
     bool isDynamic() const { return _dynamic; };
     int64_t getDynamicId() const { return _dynamicId; };
@@ -69,7 +70,6 @@ private:
     void setState(State* state);
     void setSuccessRequired(bool successRequired);
     void setDynamic(bool dynamic) { _dynamic = dynamic; };
-    void setIndex(int index) { _index = index; }
 
     /**
      * The initial state of this entrypoint's task.
