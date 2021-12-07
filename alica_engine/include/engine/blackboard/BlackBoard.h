@@ -11,9 +11,8 @@ namespace alica
 {
 class BlackBoardImpl
 {
-    friend class LockedBlackBoardRW;
-    friend class LockedBlackBoardRO;
-
+public:
+    // Not for API use, but public to allow modifying without mutex when we know the behavior/plan is not running
     template <class... Args> void registerValue(const std::string& key, Args&&... args) { 
         vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...)); 
     }
@@ -41,8 +40,6 @@ class BlackBoardImpl
     size_t size() const {
         return vals.size();
     }
-
-private:
     std::unordered_map<std::string, std::any> vals;
 };
 
@@ -57,8 +54,7 @@ public:
     std::shared_lock<std::shared_mutex> lockRO() const {return std::shared_lock(_mtx);}
     std::unique_lock<std::shared_mutex> lockRW() {return std::unique_lock(_mtx);}
 
-    // Not for public use
-    // TODO: friend
+    // Not thread safe.  Avoid for public use
     BlackBoardImpl& impl() {return _impl;}
     const BlackBoardImpl& impl() const {return _impl;}
 private:

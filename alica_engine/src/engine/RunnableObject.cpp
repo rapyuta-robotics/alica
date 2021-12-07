@@ -69,7 +69,7 @@ void RunnableObject::start(RunningPlan* rp)
             if(!_blackBoard) {
                 _blackBoard = std::make_shared<BlackBoard>();
             }
-            LockedBlackBoardRW(*_blackBoard).clear();
+            _blackBoard->impl().clear();
             if(!planAttachment->setParameters(*parentBlackBoard, *_blackBoard)) {
                 std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
                 return;
