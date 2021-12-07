@@ -17,7 +17,7 @@ services:
     command: redis-server
 
   alica-backend:
-    image: rrdockerhub/alica_backend:v0.1
+    image: rrdockerhub/alica_backend:v0.2
     environment:
       - POSTGRES_DB=alicadb
       - POSTGRES_USER=postgres
