@@ -47,9 +47,9 @@ void Agent::setSuccess(std::size_t parentContextHash, const EntryPoint* entryPoi
     _engineData.editSuccessMarks().markSuccessful(parentContextHash, entryPoint);
 }
 
-void Agent::setSuccessMarks(const IdGrp& suceededEps)
+void Agent::setSuccessMarks(const std::vector<std::size_t>& suceededContexts)
 {
-    _engineData.updateSuccessMarks(suceededEps);
+    _engineData.updateSuccessMarks(suceededContexts);
 }
 
 const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
@@ -59,7 +59,7 @@ const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
 
 EntryPointGrp Agent::getSucceededEntryPoints(std::size_t parentContextHash, const AbstractPlan* plan) const
 {
-    return _engineData.getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
+    return _engineData.getSuccessMarks().succeededEntryPoints(parentContextHash, plan->getId());
 }
 
 bool Agent::update()

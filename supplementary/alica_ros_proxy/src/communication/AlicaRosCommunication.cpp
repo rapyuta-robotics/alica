@@ -258,11 +258,11 @@ void AlicaRosCommunication::handlePlanTreeInfoRos(alica_msgs::PlanTreeInfoPtr pt
 {
     auto ptiPtr = make_shared<PlanTreeInfo>();
     ptiPtr->senderID = pti->sender_id;
-    for (int64_t i : pti->state_ids) {
-        ptiPtr->stateIDs.push_back(i);
+    for (int64_t i : pti->dynamic_state_id_pairs) {
+        ptiPtr->dynamicStateIDPairs.push_back(i);
     }
-    for (int64_t i : pti->succeeded_eps) {
-        ptiPtr->succeededEPs.push_back(i);
+    for (int64_t i : pti->succeeded_contexts) {
+        ptiPtr->succeededContexts.push_back(i);
     }
 
     if (_isRunning) {

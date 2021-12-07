@@ -215,21 +215,21 @@ void TeamManager::setAgentIgnored(AgentId agentId, const bool ignored) const
     }
 }
 
-bool TeamManager::setSuccess(AgentId agentId, std::optional<std::size_t> parentRpContext, const EntryPoint* entryPoint)
+bool TeamManager::setSuccess(AgentId agentId, std::size_t parentContextHash, const EntryPoint* entryPoint)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
-        agent->setSuccess(parentRpContext, entryPoint);
+        agent->setSuccess(parentContextHash, entryPoint);
         return true;
     }
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentId agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(AgentId agentId, const std::vector<std::size_t>& succeededContexts)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
-        agent->setSuccessMarks(suceededEps);
+        agent->setSuccessMarks(succeededContexts);
         return true;
     }
     return false;

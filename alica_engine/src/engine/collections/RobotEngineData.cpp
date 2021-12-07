@@ -28,9 +28,9 @@ RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentId agentId)
 
 RobotEngineData::~RobotEngineData() {}
 
-void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
+void RobotEngineData::updateSuccessMarks(const std::vector<std::size_t>& succeededContexts)
 {
-    _successMarks.update(_engine, succeededEps);
+    _successMarks.fromMsg(_engine, succeededContexts);
 }
 
 void RobotEngineData::initDomainVariables()

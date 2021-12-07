@@ -33,7 +33,7 @@ public:
 private:
     struct IDHash
     {
-        std::size_t operator()(std::pair<std::size_t, int64_t> context)
+        std::size_t operator()(std::pair<std::size_t, int64_t> context) const
         {
             return hashCombine(context.first, contextHash(context.second));
         }

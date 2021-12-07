@@ -89,9 +89,17 @@ void SuccessMarks::markSuccessful(std::size_t parentContextHash, const EntryPoin
 /**
  * Serialize to a vector of EntryPoint ids.
  */
-std::vector<std::size_t> SuccessMarks::toContextGrp() const
+std::vector<std::size_t> SuccessMarks::toMsg() const
 {
-    return std::vector<std::size_t>(_successMarks.begin(), _successMarks.end());
+    std::vector<std::size_t> msg;
+    for (const auto& successEntry : _successMarks) {
+        for (const auto& ep : successEntry.second) {
+            msg.push_back(successEntry.first.first);
+            msg.push_back(ep->getId());
+            msg.push_back(ep->getDynamicId());
+        }
+    }
+    return msg;
 }
 
 } /* namespace alica */

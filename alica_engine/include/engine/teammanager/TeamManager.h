@@ -67,7 +67,7 @@ public:
     bool isAgentActive(AgentId agentId) const;
     void setAgentIgnored(AgentId , bool) const;
     bool setSuccess(AgentId agentId, std::size_t parentContextHash, const EntryPoint* entryPoint);
-    bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
+    bool setSuccessMarks(AgentId agentId, const std::vector<std::size_t>& succeededContexts);
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);

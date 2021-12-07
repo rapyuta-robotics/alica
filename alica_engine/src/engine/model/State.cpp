@@ -1,5 +1,7 @@
 #include "engine/model/State.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/Plan.h"
+#include "engine/model/EntryPoint.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <sstream>
@@ -52,6 +54,11 @@ void State::setVariableBindings(const VariableBindingGrp& variableBindingGrp)
 void State::setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers)
 {
     _confAbstractPlanWrappers = wrappers;
+}
+
+const EntryPoint* State::getEntryPoint(int64_t dynamicID) const
+{
+    return getInPlan()->getEntryPointByID(_entryPoint->getId(), dynamicID);
 }
 
 std::string State::toString(std::string indent) const

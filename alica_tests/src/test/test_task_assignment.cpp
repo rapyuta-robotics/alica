@@ -79,7 +79,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::RunningPlan* rp = new RunningPlan(ae, alica::contextHash(0), ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
@@ -130,7 +130,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::RunningPlan* rp = new RunningPlan(ae, alica::contextHash(0), ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
