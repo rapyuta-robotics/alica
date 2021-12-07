@@ -179,7 +179,7 @@ TEST_F(AlicaEngineTest, planParser)
                 << "ID not part of testplans!" << endl;
         switch (plan->getId()) {
         case 1402488634525:
-            checkPlan(plan, 1402488634525, "AttackPlan", "", false, 0.1, 0, 2147483647);
+            checkPlan(plan, 1402488634525, "AttackPlan", "", false, 0.1, 0, INT32_MAX);
             cout << "States: " << endl;
             EXPECT_EQ(2u, plan->getStates().size()) << "Number of states didnt fit AttackPlan.pml state size." << endl;
             for (const alica::State* s : plan->getStates()) {
@@ -251,12 +251,12 @@ TEST_F(AlicaEngineTest, planParser)
             EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit AttackPlan.pml EntryPoints size." << endl;
             for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
-                checkEntryPoint(ep, 1402488646221, "MISSING_NAME", "", false, 0, 2147483647, 1402488646220, 1225112227903, "DefaultTask");
+                checkEntryPoint(ep, 1402488646221, "MISSING_NAME", "", false, 0, INT32_MAX, 1402488646220, 1225112227903, "DefaultTask");
             }
             cout << endl;
             break;
         case 1402488893641:
-            checkPlan(plan, 1402488893641, "Defend", "", false, 0.1, 0, 2147483647);
+            checkPlan(plan, 1402488893641, "Defend", "", false, 0.1, 0, INT32_MAX);
             cout << "States: " << endl;
             EXPECT_EQ(4u, plan->getStates().size()) << "Number of states didnt fit Defend.pml state size." << endl;
             for (const alica::State* s : plan->getStates()) {
@@ -309,12 +309,12 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "EntryPoints: " << endl;
-            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
+            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Defend.pml EntryPoints size." << endl;
             for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488903550:
-                    checkEntryPoint(ep, 1402488903550, "MISSING_NAME", "", false, 0, 2147483647, 1402488959965, 1225112227903, "DefaultTask");
+                    checkEntryPoint(ep, 1402488903550, "MISSING_NAME", "", false, 0, INT32_MAX, 1402488959965, 1225112227903, "DefaultTask");
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -325,7 +325,7 @@ TEST_F(AlicaEngineTest, planParser)
             cout << endl;
             break;
         case 1402488870347:
-            checkPlan(plan, 1402488870347, "GoalPlan", "", false, 0.1, 0, 2147483647);
+            checkPlan(plan, 1402488870347, "GoalPlan", "", false, 0.1, 0, INT32_MAX);
             checkPreCondition(plan->getPreCondition(), 1402489131988, "PreCondition", "Test PC", "", "DefaultPlugin", true);
             cout << "States: " << endl;
             EXPECT_EQ(3u, plan->getStates().size()) << "Number of states didnt fit GoalPlan.pml state size." << endl;
@@ -352,7 +352,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(3u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(3u, plan->getTransitions().size()) << "Number of Transitions didnt fit GoalPlan.pml EntryPoints size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
@@ -375,12 +375,12 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "EntryPoints: " << endl;
-            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
+            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit GoalPlan.pml EntryPoints size." << endl;
             for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488881800:
-                    checkEntryPoint(ep, 1402488881800, "MISSING_NAME", "", false, 0, 2147483647, 1402488881799, 1225112227903, "DefaultTask");
+                    checkEntryPoint(ep, 1402488881800, "MISSING_NAME", "", false, 0, INT32_MAX, 1402488881799, 1225112227903, "DefaultTask");
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -391,7 +391,7 @@ TEST_F(AlicaEngineTest, planParser)
             cout << endl;
             break;
         case 1402488437260:
-            checkPlan(plan, 1402488437260, "MasterPlan", "comment", true, 0.1, 0, 2147483647);
+            checkPlan(plan, 1402488437260, "MasterPlan", "comment", true, 0.1, 0, INT32_MAX);
             cout << "States: " << endl;
             EXPECT_EQ(5u, plan->getStates().size()) << "Number of states didnt fit MasterPlan.pml state size." << endl;
             for (const alica::State* s : plan->getStates()) {
@@ -420,7 +420,7 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "Transitions: " << endl;
-            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit AttackPlan.pml EntryPoints size." << endl;
+            EXPECT_EQ(4u, plan->getTransitions().size()) << "Number of Transitions didnt fit MasterPlan.pml EntryPoints size." << endl;
             for (const alica::Transition* t : plan->getTransitions()) {
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
@@ -448,15 +448,15 @@ TEST_F(AlicaEngineTest, planParser)
                 }
             }
             cout << "EntryPoints: " << endl;
-            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
+            EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit MasterPlan.pml EntryPoints size." << endl;
             for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488437263:
-                    checkEntryPoint(ep, 1402488437263, "MISSING_NAME", "", false, 0, 2147483647, 1402488437261, 1225112227903, "DefaultTask");
+                    checkEntryPoint(ep, 1402488437263, "MISSING_NAME", "", false, 0, INT32_MAX, 1402488437261, 1225112227903, "DefaultTask");
                     break;
                 case 1402488484084:
-                    checkEntryPoint(ep, 1402488484084, "MISSING_NAME", "", false, 0, 2147483647, 1402488463437, 1402488486725, "DefendTask");
+                    checkEntryPoint(ep, 1402488484084, "MISSING_NAME", "", false, 0, INT32_MAX, 1402488463437, 1402488486725, "DefendTask");
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -467,7 +467,7 @@ TEST_F(AlicaEngineTest, planParser)
             cout << endl;
             break;
         case 1402488770050:
-            checkPlan(plan, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, 2147483647);
+            checkPlan(plan, 1402488770050, "MidFieldPlayPlan", "", false, 0.1, 3, INT32_MAX);
             checkRuntimeCondition(plan->getRuntimeCondition(), 1402489260911, "NewRuntimeCondition", "Test RC", "", "DefaultPlugin");
             cout << "States: " << endl;
             EXPECT_EQ(5u, plan->getStates().size()) << "Number of states didnt fit MidFieldPlayPlan.pml state size." << endl;
@@ -531,7 +531,7 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
                 switch (ep->getId()) {
                 case 1402488787819:
-                    checkEntryPoint(ep, 1402488787819, "MISSING_NAME", "", true, 0, 2147483647, 1402488787818, 1225112227903, "DefaultTask");
+                    checkEntryPoint(ep, 1402488787819, "MISSING_NAME", "", true, 0, INT32_MAX, 1402488787818, 1225112227903, "DefaultTask");
                     break;
                 case 1402500828244:
                     checkEntryPoint(ep, 1402500828244, "NewEntryPoint", "TestComment", false, 3, 5, 1402500830885, 1225112227903, "DefaultTask");
@@ -547,7 +547,7 @@ TEST_F(AlicaEngineTest, planParser)
             cout << endl;
             break;
         case 1402489318663:
-            checkPlan(plan, 1402489318663, "Tackle", "", false, 0.1, 0, 2147483647);
+            checkPlan(plan, 1402489318663, "Tackle", "", false, 0.1, 0, INT32_MAX);
             cout << "States: " << endl;
             EXPECT_EQ(1u, plan->getStates().size()) << "Number of states didnt fit Tackle.pml state size." << endl;
             for (const alica::State* s : plan->getStates()) {
@@ -558,7 +558,7 @@ TEST_F(AlicaEngineTest, planParser)
             EXPECT_EQ(1u, plan->getEntryPoints().size()) << "Number of EntryPoints didnt fit Tackle.pml EntryPoints size." << endl;
             for (const alica::EntryPoint* ep : plan->getEntryPoints()) {
                 cout << "\t" << ep->getName() << " ID: " << ep->getId() << endl;
-                checkEntryPoint(ep, 1402489329142, "MISSING_NAME", "", false, 0, 2147483647, 1402489329141, 1225112227903, "DefaultTask");
+                checkEntryPoint(ep, 1402489329142, "MISSING_NAME", "", false, 0, INT32_MAX, 1402489329141, 1225112227903, "DefaultTask");
             }
             cout << endl;
             break;

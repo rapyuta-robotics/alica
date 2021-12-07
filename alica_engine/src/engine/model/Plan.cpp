@@ -2,13 +2,13 @@
 
 #include <assert.h>
 
+#include "engine/AlicaEngine.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
-#include "engine/AlicaEngine.h"
 
 //#include <alica_common_config/debug_output.h>
 
@@ -64,6 +64,7 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID, int64_t dynamicID) const
 void Plan::setEntryPoints(const EntryPointGrp& entryPoints)
 {
     _entryPoints = entryPoints;
+    computeDynamicEntryPoints();
 }
 
 void Plan::setFailureStates(const FailureStateGrp& failureStates)

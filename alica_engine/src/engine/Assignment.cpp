@@ -292,7 +292,7 @@ bool Assignment::updateAgent(AgentId agent, const EntryPoint* e, const State* s)
     bool found = false;
     bool inserted = false;
     int i = 0;
-    assert(s == nullptr || s->getEntryPoint() == e);
+    assert(s == nullptr || s->getEntryPoint()->getId() == e->getId());
 
     for (AgentStatePairs& asps : _assignmentData) {
         const bool isTargetEp = e == _plan->getEntryPoints()[i];

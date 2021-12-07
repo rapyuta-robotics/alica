@@ -30,37 +30,29 @@ TEST(Assignment, RobotsInserted)
     alica::AgentId robot2 = 1;
     alica::AgentId robot3 = 3;
 
-    ASSERT_TRUE(robot1 > robot2);
-    ASSERT_TRUE(robot1 < robot3);
-
     alica::AlicaContext *ac = new alica::AlicaContext(
-            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "SimpleTestPlan", true));
 
     PlanRepository repo;
     alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae, path + "/etc/");
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
-
     Assignment as1(alica::contextHash(0), stp);
+    ASSERT_EQ(stp->getEntryPoints().size(), 1);
     const EntryPoint* ep = stp->getEntryPoints()[0];
     const State* s1 = ep->getState();
     const State* s2 = s1->getOutTransitions()[0]->getOutState();
-
     ASSERT_EQ(as1.size(), 0);
 
     as1.addAgent(robot1, ep, s1);
-
     ASSERT_EQ(as1.size(), 1);
 
     as1.addAgent(robot2, ep, s1);
-
     ASSERT_EQ(as1.size(), 2);
-
     ASSERT_EQ(as1.getStateOfAgent(robot1), as1.getStateOfAgent(robot2));
 
     as1.addAgent(robot3, ep, s1);
-
     ASSERT_EQ(as1.size(), 3);
 
     alica::AgentGrp robots;
