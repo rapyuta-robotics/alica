@@ -14,10 +14,9 @@ BasicPlan::BasicPlan(IAlicaWorldModel* wm)
 {
 }
 
-const std::unordered_map<int64_t, std::unordered_set<int64_t>>& BasicPlan::getApplicationEntrypointContext(std::vector<int64_t> entryPointIds)
+bool BasicPlan::getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap)
 {
-    std::unordered_map<int64_t, std::unordered_set<int64_t>> map;
-    return map;
+    return false;
 }
 
 void BasicPlan::doInit()

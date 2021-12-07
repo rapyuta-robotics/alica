@@ -30,7 +30,7 @@ protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
-    virtual const std::unordered_map<int64_t, std::unordered_set<int64_t>>& getApplicationEntrypointContext(std::vector<int64_t> entryPointIds);
+    virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap);
 
 private:
     void doInit() override;
