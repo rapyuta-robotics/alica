@@ -69,6 +69,9 @@ public:
          _lk(bb.lockRO())
       ,  _impl(&bb.impl())
     {}
+    LockedBlackBoardRO& operator&=(const LockedBlackBoardRO&) = delete;
+    LockedBlackBoardRO& operator&=(LockedBlackBoardRO&) = delete;
+    LockedBlackBoardRO(LockedBlackBoardRO&) = delete;
 
     bool empty() const {
         return _impl->empty();
@@ -94,6 +97,9 @@ public:
          _lk(bb.lockRW())
       ,  _impl(&bb.impl())
     {}
+    LockedBlackBoardRW& operator&=(const LockedBlackBoardRW&) = delete;
+    LockedBlackBoardRW& operator&=(LockedBlackBoardRW&) = delete;
+    LockedBlackBoardRW(LockedBlackBoardRW&) = delete;
 
     void clear() {
         _impl->clear();
