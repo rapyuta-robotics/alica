@@ -4,6 +4,7 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl2252865124432942907) ENABLED START*/
 // Add additional includes here
@@ -17,7 +18,7 @@ namespace alica
 class DynamicTaskAssignmentTest2252865124432942907 : public DomainPlan
 {
 public:
-    DynamicTaskAssignmentTest2252865124432942907();
+    DynamicTaskAssignmentTest2252865124432942907(IAlicaWorldModel* wm);
     virtual ~DynamicTaskAssignmentTest2252865124432942907();
     /*PROTECTED REGION ID(pub2252865124432942907) ENABLED START*/
     // Add additional public methods here
@@ -42,6 +43,6 @@ class UtilityFunction2252865124432942907 : public BasicUtilityFunction
 };
 class PreCondition1078898265232036813 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 } /* namespace alica */

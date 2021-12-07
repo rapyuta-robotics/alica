@@ -82,7 +82,7 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         return std::make_shared<BehBAA>(wm);
         break;
     case 4044546549214673470:
-        return std::make_shared<DynamicTaskBehavior>();
+        return std::make_shared<DynamicTaskBehavior>(wm);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

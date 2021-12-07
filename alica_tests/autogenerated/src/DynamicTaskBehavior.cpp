@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-DynamicTaskBehavior::DynamicTaskBehavior()
-        : DomainBehaviour("DynamicTaskBehavior")
+DynamicTaskBehavior::DynamicTaskBehavior(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "DynamicTaskBehavior")
 {
     /*PROTECTED REGION ID(con4044546549214673470) ENABLED START*/
     // Add additional options here
@@ -39,6 +39,7 @@ void DynamicTaskBehavior::initialiseParameters()
     // Add additional options here
     callCounter = 0;
     initCounter++;
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods4044546549214673470) ENABLED START*/

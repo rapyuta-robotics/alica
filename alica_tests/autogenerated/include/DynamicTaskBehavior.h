@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DomainBehaviour.h"
+#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc4044546549214673470) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -10,7 +11,7 @@ namespace alica
 class DynamicTaskBehavior : public DomainBehaviour
 {
 public:
-    DynamicTaskBehavior();
+    DynamicTaskBehavior(IAlicaWorldModel* wm);
     virtual ~DynamicTaskBehavior();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub4044546549214673470) ENABLED START*/

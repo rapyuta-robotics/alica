@@ -15,8 +15,8 @@ namespace alica
 //   - Init (4467904887554008050)
 //   - Finish (1317277234576050904)
 //   - Start (751302000461175045)
-DynamicTaskAssignmentTestMaster1602078208698393838::DynamicTaskAssignmentTestMaster1602078208698393838()
-        : DomainPlan()
+DynamicTaskAssignmentTestMaster1602078208698393838::DynamicTaskAssignmentTestMaster1602078208698393838(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con1602078208698393838) ENABLED START*/
     // Add additional options here
@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1602078208698393838::getUtilityF
  *
  * Abstract Plans in Init:
  */
-bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
     return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
@@ -74,7 +74,7 @@ bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp)
  * Abstract Plans in Start:
  *   - DynamicTaskAssignmentTest (2252865124432942907)
  */
-bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3712615202042019043) ENABLED START*/
     std::cout << "The PreCondition 4344644064496100420 in Transition '3712615202042019043' is not implement yet!" << std::endl;

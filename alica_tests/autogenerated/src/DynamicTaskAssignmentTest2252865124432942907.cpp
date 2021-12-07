@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - DynamicState1 (2800951832651805821)
 //   - DynamicTaskFinished (2788356913272296281)
-DynamicTaskAssignmentTest2252865124432942907::DynamicTaskAssignmentTest2252865124432942907()
-        : DomainPlan()
+DynamicTaskAssignmentTest2252865124432942907::DynamicTaskAssignmentTest2252865124432942907(IAlicaWorldModel* wm)
+        : DomainPlan(wm)
 {
     /*PROTECTED REGION ID(con2252865124432942907) ENABLED START*/
     // Add additional options here
@@ -52,7 +52,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2252865124432942907::getUtilityF
  * Abstract Plans in DynamicState1:
  *   - DynamicTaskBehavior (4044546549214673470)
  */
-bool PreCondition1078898265232036813::evaluate(std::shared_ptr<RunningPlan> rp)
+bool PreCondition1078898265232036813::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1813059625501892456) ENABLED START*/
     std::cout << "The PreCondition 1078898265232036813 in Transition '1813059625501892456' is not implement yet!" << std::endl;
