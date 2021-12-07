@@ -12,9 +12,9 @@ namespace alica
 //   - DynamicTaskTestEP (3903894018484081749) (Entrypoint: 699381937789438517)
 //
 // States:
-//   - Init (4467904887554008050)
-//   - Finish (1317277234576050904)
 //   - Start (751302000461175045)
+//   - Finish (1317277234576050904)
+//   - Init (4467904887554008050)
 DynamicTaskAssignmentTestMaster1602078208698393838::DynamicTaskAssignmentTestMaster1602078208698393838(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -40,26 +40,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1602078208698393838::getUtilityF
     /*PROTECTED REGION END*/
 }
 /**
- * Transition: 4266666033623620026 (4266666033623620026)
- *   - Comment:
- *   - Source2Dest: Init --> Start
- *
- * Precondition: InitDone (4496654201854254411)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Init:
- */
-bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
-    /*PROTECTED REGION END*/
-}
-/**
  * Transition: 3712615202042019043 (3712615202042019043)
  *   - Comment:
  *   - Source2Dest: Start --> Finish
@@ -79,6 +59,26 @@ bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, 
     /*PROTECTED REGION ID(3712615202042019043) ENABLED START*/
     std::cout << "The PreCondition 4344644064496100420 in Transition '3712615202042019043' is not implement yet!" << std::endl;
     return false;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Transition: 4266666033623620026 (4266666033623620026)
+ *   - Comment:
+ *   - Source2Dest: Init --> Start
+ *
+ * Precondition: InitDone (4496654201854254411)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Init:
+ */
+bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
+    return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
     /*PROTECTED REGION END*/
 }
 

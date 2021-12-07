@@ -11,13 +11,13 @@ namespace alica
  * - EP:699381937789438517 : DynamicTaskTestEP (3903894018484081749)
  *
  * States:
- * - Init (4467904887554008050)
- * - Finish (1317277234576050904)
  * - Start (751302000461175045)
+ * - Finish (1317277234576050904)
+ * - Init (4467904887554008050)
  *
  * Vars:
  */
-// State: Init
-// State: Finish
 // State: Start
+// State: Finish
+// State: Init
 } // namespace alica

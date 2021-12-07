@@ -11,8 +11,8 @@ namespace alica
 //   - DynamicTask (1163169622598227531) (Entrypoint: 3150793708487666867)
 //
 // States:
-//   - DynamicState1 (2800951832651805821)
 //   - DynamicTaskFinished (2788356913272296281)
+//   - DynamicState1 (2800951832651805821)
 DynamicTaskAssignmentTest2252865124432942907::DynamicTaskAssignmentTest2252865124432942907(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {

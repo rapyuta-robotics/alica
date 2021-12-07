@@ -11,11 +11,11 @@ namespace alica
  * - EP:3150793708487666867 : DynamicTask (1163169622598227531)
  *
  * States:
- * - DynamicState1 (2800951832651805821)
  * - DynamicTaskFinished (2788356913272296281)
+ * - DynamicState1 (2800951832651805821)
  *
  * Vars:
  */
-// State: DynamicState1
 // State: DynamicTaskFinished
+// State: DynamicState1
 } // namespace alica
