@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/RunnableObject.h"
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -29,7 +30,7 @@ protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
-    virtual std::unordered_map<int64_t, std::unordered_set> getApplicationEntrypointContext(vector<int64_t> entryPointIds){};
+    virtual const std::unordered_map<int64_t, std::unordered_set<int64_t>>& getApplicationEntrypointContext(std::vector<int64_t> entryPointIds);
 
 private:
     void doInit() override;
