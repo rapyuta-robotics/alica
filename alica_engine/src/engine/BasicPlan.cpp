@@ -69,21 +69,21 @@ void BasicPlan::doTerminate()
 
 
 
-void BasicPlan::notifyAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents)
+void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_engine->getTraceFactory()) {
         _engine->editScheduler().schedule(
-            std::bind(&BasicPlan::traceAssignmentChange, this, newAssignmentName, oldUtility, newUtility, numberOfAgents));
+            std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
     }
 }
 
-void BasicPlan::traceAssignmentChange(const std::string& newAssignmentName, double oldUtility, double newUtility, size_t numberOfAgents)
+void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_trace) {
-        _trace->setLog({"TaskAssignmentChange", newAssignmentName + "\n"
-                                                + "oldUtility: " + std::to_string(oldUtility) + "\n"
-                                                + "newUtility: " + std::to_string(newUtility) + "\n"
-                                                + "numberOfAgents: " + std::to_string(numberOfAgents)});
+        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", "
+                                            + "\"new\": " + std::to_string(newUtility) + ", "
+                                            + "\"agents\": " + std::to_string(numberOfAgents) + ", "
+                                            + "\"ep\": \"" + assignedEntryPoint + "\"}"});
     }
 }
 
