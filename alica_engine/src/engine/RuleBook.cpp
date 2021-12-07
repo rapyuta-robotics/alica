@@ -67,6 +67,7 @@ void RuleBook::reload(const YAML::Node& config)
 RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
 {
     ALICA_DEBUG_MSG("RB: Init-Rule called.");
+    masterPlan->computeDynamicEntryPoints();
     if (masterPlan->getEntryPoints().size() != 1) {
         AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
     }
@@ -78,8 +79,8 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
     const EntryPoint* defep = masterPlan->getEntryPoints()[0];
     ActiveAgentIdView agents = _tm.getActiveAgentIds();
     main->editAssignment().setAllToInitialState(agents.begin(), agents.end(), defep);
-    main->activate();
     main->useEntryPoint(defep);
+    main->activate();
     _log.eventOccurred("Init");
     return main;
 }
