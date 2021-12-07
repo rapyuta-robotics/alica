@@ -23,7 +23,7 @@ public:
 
     const SuccessMarks& getSuccessMarks() const { return _successMarks; }
     SuccessMarks& editSuccessMarks() { return _successMarks; }
-    void updateSuccessMarks(const IdGrp& succeededEps);
+    void updateSuccessMarks(const std::vector<std::size_t>& succeededContexts);
     void clearSuccessMarks();
 
     const DomainVariable* getDomainVariable(const Variable* templateVar) const;

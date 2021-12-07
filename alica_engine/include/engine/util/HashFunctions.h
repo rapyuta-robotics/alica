@@ -21,7 +21,7 @@ inline std::size_t hashCombine(std::size_t h1, std::size_t h2)
     return h1;
 }
 
-std::size_t contextHash(int64_t value)
+inline std::size_t contextHash(int64_t value)
 {
     return CityHash64(reinterpret_cast<const char*>(&value), sizeof(int64_t));
 }

@@ -124,7 +124,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
     pti.dynamicStateIDPairs = msg;
-    pti.succeededContexts = _me->getEngineData().getSuccessMarks().toContextGrp();
+    pti.succeededContexts = _me->getEngineData().getSuccessMarks().toMsg();
     _ae->getCommunicator().sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
@@ -136,36 +136,36 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
 void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
 {
     // TODO: clean this up
-    AbstractPlanGrp presentPlans;
-    if (root != nullptr) {
-        std::list<RunningPlan*> q;
-        q.push_front(root);
-        while (q.size() > 0) {
-            RunningPlan* p = q.front();
-            q.pop_front();
-            if (!p->isBehaviour()) {
-                presentPlans.push_back(p->getActivePlan());
-                for (RunningPlan* c : p->getChildren()) {
-                    q.push_back(c);
-                }
-            }
-        }
-    }
-    std::vector<const SimplePlanTree*> queue;
-    for (const auto& pair : _simplePlanTrees) {
-        if (pair.second.operator bool()) {
-            queue.push_back(pair.second.get());
-        }
-    }
-    while (queue.size() > 0) {
-        const SimplePlanTree* spt = queue.back();
-        queue.pop_back();
-        presentPlans.push_back(spt->getState()->getInPlan());
-        for (const std::unique_ptr<SimplePlanTree>& c : spt->getChildren()) {
-            queue.push_back(c.get());
-        }
-    }
-    _me->editEngineData().editSuccessMarks().limitToPlans(presentPlans);
+    // AbstractPlanGrp presentPlans;
+    // if (root != nullptr) {
+    //     std::list<RunningPlan*> q;
+    //     q.push_front(root);
+    //     while (q.size() > 0) {
+    //         RunningPlan* p = q.front();
+    //         q.pop_front();
+    //         if (!p->isBehaviour()) {
+    //             presentPlans.push_back(p->getActivePlan());
+    //             for (RunningPlan* c : p->getChildren()) {
+    //                 q.push_back(c);
+    //             }
+    //         }
+    //     }
+    // }
+    // std::vector<const SimplePlanTree*> queue;
+    // for (const auto& pair : _simplePlanTrees) {
+    //     if (pair.second.operator bool()) {
+    //         queue.push_back(pair.second.get());
+    //     }
+    // }
+    // while (queue.size() > 0) {
+    //     const SimplePlanTree* spt = queue.back();
+    //     queue.pop_back();
+    //     presentPlans.push_back(spt->getState()->getInPlan());
+    //     for (const std::unique_ptr<SimplePlanTree>& c : spt->getChildren()) {
+    //         queue.push_back(c.get());
+    //     }
+    // }
+    // _me->editEngineData().editSuccessMarks().limitToPlans(presentPlans);
 }
 
 /**
@@ -184,7 +184,7 @@ int TeamObserver::successesInPlan(std::size_t parentContextHash, const Plan* pla
         }
         ret += suc.size();
     }
-    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan->getId());
     ret += suc.size();
     return ret;
 }
@@ -206,7 +206,7 @@ SuccessCollection TeamObserver::createSuccessCollection(std::size_t parentContex
             ret.setSuccess(agent->getId(), ep);
         }
     }
-    EntryPointGrp suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan);
+    EntryPointGrp suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, plan->getId());
     for (const EntryPoint* ep : suc) {
         ret.setSuccess(_me->getId(), ep);
     }
@@ -231,7 +231,7 @@ void TeamObserver::updateSuccessCollection(std::size_t parentContextHash, const 
             sc.setSuccess(agent->getId(), ep);
         }
     }
-    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, p);
+    suc = _me->getEngineData().getSuccessMarks().succeededEntryPoints(parentContextHash, p->getId());
     for (const EntryPoint* ep : suc) {
         sc.setSuccess(_me->getId(), ep);
     }
@@ -249,7 +249,7 @@ void TeamObserver::notifyRobotLeftPlan(std::size_t parentContextHash, const Abst
             return;
         }
     }
-    _me->editEngineData().editSuccessMarks().removePlan(parentContextHash, plan);
+    _me->editEngineData().editSuccessMarks().removePlan(parentContextHash, plan->getId());
 }
 
 void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
@@ -312,7 +312,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
             curParent = cur->getParent();
             ++i;
         } else {
-            if (i + 1 == ids.size()) {
+            if (i + 1 == static_cast<int>(ids.size())) {
                 ALICA_WARNING_MSG("State id missing in plan tree from " << agentId << " which is executing dynamic entry point with id " << ids[i]);
                 return nullptr;
             }

@@ -63,7 +63,7 @@ private:
     void setIgnored(const bool ignored) { _ignored = ignored; }
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
     void setSuccess(std::size_t parentContextHash, const EntryPoint* entryPoint);
-    void setSuccessMarks(const IdGrp& suceededEps);
+    void setSuccessMarks(const std::vector<std::size_t>& suceededContexts);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
     EntryPointGrp getSucceededEntryPoints(std::size_t parentContextHash, const AbstractPlan* plan) const;
     bool update();

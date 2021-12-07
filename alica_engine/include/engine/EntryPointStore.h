@@ -15,10 +15,13 @@ class EntryPointStore
 public:
     template <class ForwardIt>
     EntryPointStore(ForwardIt staticEntryPointsFirst, ForwardIt staticEntryPointsLast)
-            : _staticEntryPoints(staticEntryPointsFirst, staticEntryPointsLast)
+            : _staticEntryPoints()
             , _dynamicEntryPoints(1000)
     {
         // TODO: get the LRU cache size from the alica config
+        for (auto it = staticEntryPointsFirst; it != staticEntryPointsLast; ++it) {
+            _staticEntryPoints.insert(std::make_pair((*it)->getId(), *it));
+        }
     }
 
     // Get the entry point with the given staticEntryPointId & dynamicEntryPointId
@@ -51,7 +54,7 @@ private:
         }
     };
 
-    const std::unordered_map<int64_t, const EntryPoint*> _staticEntryPoints;
+    std::unordered_map<int64_t, const EntryPoint*> _staticEntryPoints;
     mutable LRUCache<std::pair<int64_t, int64_t>, EntryPoint, IDHash> _dynamicEntryPoints;
 };
 
