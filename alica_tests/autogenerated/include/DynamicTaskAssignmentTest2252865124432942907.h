@@ -24,6 +24,7 @@ public:
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap) override;
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     // virtual void onInit() override;

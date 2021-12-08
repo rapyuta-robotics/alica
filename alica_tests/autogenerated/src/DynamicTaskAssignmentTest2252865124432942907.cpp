@@ -27,6 +27,14 @@ DynamicTaskAssignmentTest2252865124432942907::~DynamicTaskAssignmentTest22528651
     /*PROTECTED REGION END*/
 }
 
+bool DynamicTaskAssignmentTest2252865124432942907::getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap)
+{
+    /*PROTECTED REGION ID(getApplicationEntrypointContext2252865124432942907) ENABLED START*/
+    // Add additional options here
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /**
  * Task: DynamicTask  -> EntryPoint-ID: 3150793708487666867
  */
