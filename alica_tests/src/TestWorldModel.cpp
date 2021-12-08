@@ -43,6 +43,7 @@ void TestWorldModel::reset()
 
     transitionCondition4238964946542987247 = false;
     transitionCondition4115970455290610262 = false;
+    preCondition1840401110297459509 = false;
 
     x = 0;
 }
@@ -249,6 +250,15 @@ bool TestWorldModel::isTransitionCondition3143778092687974738()
 void TestWorldModel::setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738)
 {
     this->transitionCondition3143778092687974738 = transitionCondition3143778092687974738;
+}
+
+bool TestWorldModel::isPreCondition1840401110297459509()
+{
+    return this->preCondition1840401110297459509;
+}
+void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401110297459509)
+{
+    this->preCondition1840401110297459509 = preCondition1840401110297459509;
 }
 
 } // namespace alicaTests

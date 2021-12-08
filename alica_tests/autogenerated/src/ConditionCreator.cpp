@@ -68,6 +68,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestTracingMasterPlan691392966514374878.h"
+#include "TestTracingSubPlan1482512794732634139.h"
 
 namespace alica
 {
@@ -281,6 +283,8 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 3875618235052823378:
         return std::make_shared<PreCondition3875618235052823378>();
+    case 1840401110297459509:
+        return std::make_shared<PreCondition1840401110297459509>();
         break;
     case 4115970455290610262:
         return std::make_shared<PreCondition4115970455290610262>();
