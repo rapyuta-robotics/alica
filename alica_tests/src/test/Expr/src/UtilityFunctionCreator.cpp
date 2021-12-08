@@ -50,6 +50,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestTracingMasterPlan691392966514374878.h"
+#include "TestTracingSubPlan1482512794732634139.h"
 #include <iostream>
 
 namespace alica
@@ -208,6 +210,12 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 432995127772554364:
         return std::make_shared<UtilityFunction432995127772554364>();
+        break;
+    case 691392966514374878:
+        return std::make_shared<UtilityFunction691392966514374878>();
+        break;
+    case 1482512794732634139:
+        return std::make_shared<UtilityFunction1482512794732634139>();
         break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();

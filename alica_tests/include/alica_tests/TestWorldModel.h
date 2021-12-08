@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <queue>
 
 namespace alicaTests
 {
@@ -54,12 +55,18 @@ public:
     bool isRuntimeCondition1418042967134() const;
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
+    // Test Tracing MasterPlan
+    bool isPreCondition1840401110297459509();
+    void setPreCondition1840401110297459509(bool preCondition1840401110297459509);
+
     bool isSwitchingEntryPoints() const;
     void setSwitchingEntryPoints(bool switchEntryPoints);
 
     std::vector<double> robotsXPos;
     double x;
     std::vector<std::string> configParameter;
+    std::queue<std::pair<std::string, std::string>> tracingTags;
+    std::queue<std::pair<std::string, std::string>> tracingLogs;
 
     void reset();
 
@@ -92,6 +99,8 @@ private:
     //PlanPoolTest transitions
     bool transitionCondition4238964946542987247;
     bool transitionCondition4115970455290610262;
+    //tracing master plan
+    bool preCondition1840401110297459509;
 
     bool switchEntryPoints;
 };
