@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <string>
-#include <queue>
+#include <unordered_map>
 
 namespace alicaTests
 {
@@ -64,9 +64,11 @@ public:
 
     std::vector<double> robotsXPos;
     double x;
+
     std::vector<std::string> configParameter;
-    std::queue<std::pair<std::string, std::string>> tracingTags;
-    std::queue<std::pair<std::string, std::string>> tracingLogs;
+    std::vector<std::pair<std::string, std::string>> tracingTags;
+    std::vector<std::pair<std::string, std::string>> tracingLogs;
+    std::unordered_map<std::string, std::string> tracingParents;
 
     void reset();
 
