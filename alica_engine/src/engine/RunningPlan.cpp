@@ -563,13 +563,12 @@ void RunningPlan::activate()
 {
     assert(_status.active != PlanActivity::Retired);
 
-    _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.entryPoint ? _activeTriple.entryPoint->getDynamicId() : 0,
-            _activeTriple.state ? _activeTriple.state->getId() : 0);
-
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
+        _contextHash = _parent->_contextHash;
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
+        _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.entryPoint->getDynamicId(), _activeTriple.state->getId());
         _ae->editPlanPool().startPlan(*this);
     }
 

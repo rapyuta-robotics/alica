@@ -67,7 +67,7 @@ void RuleBook::reload(const YAML::Node& config)
 RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
 {
     ALICA_DEBUG_MSG("RB: Init-Rule called.");
-    masterPlan->computeDynamicEntryPoints();
+    masterPlan->computeDynamicEntryPoints(nullptr);
     if (masterPlan->getEntryPoints().size() != 1) {
         AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
     }
