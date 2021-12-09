@@ -57,6 +57,7 @@ TEST_F(AlicaEngineTestPlanPoolConfigs, planPoolCheckPlanConfigs)
     ac->stepEngine();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
+    ASSERT_GT(wm->configParameter.size(), 1);
     ASSERT_EQ(wm->configParameter[0], "1");
     ASSERT_EQ(wm->configParameter[1], "2");
 }

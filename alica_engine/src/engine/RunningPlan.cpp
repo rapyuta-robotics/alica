@@ -563,7 +563,8 @@ void RunningPlan::activate()
 {
     assert(_status.active != PlanActivity::Retired);
 
-    _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.entryPoint->getDynamicId(), _activeTriple.state->getId());
+    _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.entryPoint ? _activeTriple.entryPoint->getDynamicId() : 0,
+            _activeTriple.state ? _activeTriple.state->getId() : 0);
 
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
@@ -798,7 +799,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
     }
 }
 
-    AgentId RunningPlan::getOwnID() const
+AgentId RunningPlan::getOwnID() const
 {
     return _ae->getTeamManager().getLocalAgentID();
 }

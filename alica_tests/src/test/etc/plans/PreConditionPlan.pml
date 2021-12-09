@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1418042796753,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -32,6 +33,7 @@
     "variables": []
   },
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
