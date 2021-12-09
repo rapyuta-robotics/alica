@@ -33,6 +33,7 @@ public:
         if (!dynamicEntryPointId) {
             return staticEp;
         }
+
         assert(staticEp->isDynamic());
         return std::addressof(_dynamicEntryPoints.lookup({staticEntryPointId, dynamicEntryPointId}, *staticEp, dynamicEntryPointId));
     }
