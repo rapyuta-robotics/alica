@@ -100,7 +100,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // compute the dynamic entry points before task assignment
-        plan->computeDynamicEntryPoints();
+        plan->computeDynamicEntryPoints(configuration);
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(planningParent->getContextHash(), plan))) {
             ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");

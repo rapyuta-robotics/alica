@@ -61,10 +61,17 @@ const EntryPoint* Plan::getEntryPointByID(int64_t epID, int64_t dynamicID) const
     return ep;
 }
 
-void Plan::setEntryPoints(const EntryPointGrp& entryPoints)
+void Plan::setEntryPoints(const std::vector<EntryPoint*>& entryPoints)
 {
-    _entryPoints = entryPoints;
-    computeDynamicEntryPoints();
+    for (auto ep : entryPoints) {
+        _entryPoints.push_back(ep);
+        if (!ep->isDynamic()) {
+            ep->setIndex(_allEntryPoints.size());
+            _allEntryPoints.push_back(ep);
+        } else {
+            _entryPointMap[ep->getId()];
+        }
+    }
 }
 
 void Plan::setFailureStates(const FailureStateGrp& failureStates)
@@ -107,7 +114,7 @@ void Plan::setTransitions(const TransitionGrp& transitions)
     _transitions = transitions;
 }
 
-void Plan::computeDynamicEntryPoints() const
+void Plan::computeDynamicEntryPoints(const Configuration* configuration) const
 {
     _allEntryPoints.clear();
     for (auto ep : _entryPoints) {
@@ -116,20 +123,16 @@ void Plan::computeDynamicEntryPoints() const
         }
     }
 
-    std::unordered_map<int64_t, std::unordered_set<int64_t>> entryPointMap;
-    for (auto ep : _entryPoints) {
-        if (ep->isDynamic()) {
-            entryPointMap[ep->getId()] = {};
-        }
-    }
-    /*if (getApplicationEntrypointContext(entryPointMap)) {
-        for (auto& static_to_dynamic_pair: entryPointMap) {
+    if (_ae->getPlanPool().getBasicPlan(this, configuration)->getApplicationEntrypointContext(_entryPointMap)) {
+        for (auto& static_to_dynamic_pair : _entryPointMap) {
             for (auto dynamicId : static_to_dynamic_pair.second) {
-                // TODO: set the index of the entry point
-                _allEntryPoints.push_back(_ae->getEntryPointStore()->get(static_to_dynamic_pair.first, dynamicId));
+                auto dep = _ae->getEntryPointStore()->get(static_to_dynamic_pair.first, dynamicId);
+                // TODO: get rid of the const cast
+                const_cast<EntryPoint*>(dep)->setIndex(_allEntryPoints.size());
+                _allEntryPoints.push_back(dep);
             }
         }
-    }*/
+    }
 }
 
 std::string Plan::toString(std::string indent) const

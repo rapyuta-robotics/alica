@@ -26,11 +26,12 @@ public:
     using RunnableObject::stop;
     using RunnableObject::getWorldModel;
 
+    virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap);
+
 protected:
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
-    virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap);
 
 private:
     void doInit() override;
