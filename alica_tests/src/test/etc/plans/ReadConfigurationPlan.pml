@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1588069183324,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1588069183324",
@@ -23,6 +24,7 @@
   "name": "ReadConfigurationPlan",
   "preCondition": null,
   "relativeDirectory": "Configurations",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

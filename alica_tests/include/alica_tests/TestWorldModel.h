@@ -49,6 +49,10 @@ public:
     bool isTransitionCondition1418825428924() const;
     void setTransitionCondition1418825428924(bool transitionCondition1418825428924);
 
+    // DynamicTaskAssignment transitions
+    bool isTransitionCondition4496654201854254411() const;
+    void setTransitionCondition4496654201854254411(bool new_val);
+
     bool isPreCondition1418042929966() const;
     void setPreCondition1418042929966(bool preCondition1418042929966);
     bool isRuntimeCondition1418042967134() const;
@@ -89,9 +93,12 @@ private:
     // master plan final transition
     bool transitionCondition1626848015861;
 
-    //PlanPoolTest transitions
+    // PlanPoolTest transitions
     bool transitionCondition4238964946542987247;
     bool transitionCondition4115970455290610262;
+
+    // DynamicTaskAssignment transitions
+    bool transitionCondition4496654201854254411;
 
     bool switchEntryPoints;
 };

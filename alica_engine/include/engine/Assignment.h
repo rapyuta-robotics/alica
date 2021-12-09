@@ -343,7 +343,7 @@ public:
             : _assignment(a)
             , _state(s)
     {
-        assert(s->getEntryPoint()->getPlan() == a->getPlan());
+        assert(s->getEntryPoint()->getPlan()->getId() == a->getPlan()->getId());
     }
     AgentsInStateIterator begin() const
     {

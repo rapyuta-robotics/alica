@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1418825395941,
+      "isDynamic": false,
       "maxCardinality": 10000,
       "minCardinality": 1,
       "name": "AttackTask",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1418825402617,
+      "isDynamic": false,
       "maxCardinality": 10000,
       "minCardinality": 1,
       "name": "DefaultTask",
@@ -38,6 +40,7 @@
   "name": "MasterSyncTransition",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

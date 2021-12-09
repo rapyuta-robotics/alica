@@ -56,6 +56,7 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
                 maxCard += entryPoints[i]->getCardinality().getMax();
             }
         }
+        plan->computeDynamicEntryPoints();
         plan->setMinCardinality(minCard);
         plan->setMaxCardinality(maxCard);
     }

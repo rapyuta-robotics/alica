@@ -2,6 +2,7 @@
 log/temp/
 
 # binaries and libraries
+supplementary/alica_designer_runtime/codegen/
 bin/
 lib/
 build/
