@@ -29,9 +29,9 @@ public:
     void stopPlan(RunningPlan& rp);
     void stopAll();
     const std::map<const ConfAbstractPlanWrapper*, std::unique_ptr<BasicPlan>>& getAvailablePlans() const { return _availablePlans; }
+    BasicPlan* getBasicPlan(const Plan* plan, const Configuration* configuration) const;
 
 private:
-    BasicPlan* getBasicPlan(const Plan* plan, const Configuration* configuration) const;
     std::unique_ptr<BasicPlan> createBasicPlan(IPlanCreator& planCreator, const Plan* plan, const Configuration* configuration);
     /**
      * Manages plans used by the running ALICA program.

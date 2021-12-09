@@ -44,9 +44,8 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
         // add to plan and summarize min/max cardinality
         int minCard = 0;
         int maxCard = 0;
-        plan->_entryPoints.reserve(entryPoints.size());
+        plan->setEntryPoints(entryPoints);
         for (int i = 0; i < static_cast<int>(entryPoints.size()); ++i) {
-            plan->_entryPoints.push_back(entryPoints[i]);
             minCard += entryPoints[i]->getCardinality().getMin();
             // avoid overflow for maxCard
             long tmpMax = maxCard;
@@ -56,7 +55,6 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
                 maxCard += entryPoints[i]->getCardinality().getMax();
             }
         }
-        plan->computeDynamicEntryPoints();
         plan->setMinCardinality(minCard);
         plan->setMaxCardinality(maxCard);
     }

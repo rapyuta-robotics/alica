@@ -57,13 +57,13 @@ public:
     std::string toString(std::string indent = "") const;
 
     // TODO: get rid of const
-    void computeDynamicEntryPoints() const;
+    void computeDynamicEntryPoints(const Configuration* configuration) const;
 
 private:
     friend ModelFactory;
     friend PlanFactory;
     friend ExpressionHandler; // TODO: get rid of this
-    void setEntryPoints(const EntryPointGrp& entryPoints);
+    void setEntryPoints(const std::vector<EntryPoint*>& entryPoints);
     void setFailureStates(const FailureStateGrp& failurePoints);
     void setSuccessStates(const SuccessStateGrp& succesPoints);
     void setMaxCardinality(int maxCardinality);
@@ -112,6 +112,10 @@ private:
      * The frequency with which this Plan is called.
      */
     int _frequency;
+    /**
+     * The mapping from static to dynamic entry point.
+     */
+    mutable std::unordered_map<int64_t, std::unordered_set<int64_t>> _entryPointMap;
 };
 
 } // namespace alica
