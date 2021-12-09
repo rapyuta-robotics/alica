@@ -33,7 +33,7 @@ TEST(Assignment, RobotsInserted)
 
     // Prepare ALICA for SimpleTestPlan
     alica::AlicaContext *ac = new alica::AlicaContext(
-            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "SimpleTestPlan", true));
+            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
     PlanRepository repo;
     alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae, path + "/etc/");
