@@ -1,52 +1,71 @@
 #include "test_alica.h"
 
-#include "Behaviour/Attack.h"
-#include "Behaviour/MidFieldStandard.h"
-#include <alica_tests/CounterClass.h>
-
+#include "engine/SimplePlanTree.h"
+#include "engine/containers/PlanTreeInfo.h"
 #include <alica/test/Util.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/Assignment.h>
-#include <engine/BasicBehaviour.h>
-#include <engine/BehaviourPool.h>
-#include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/PlanBase.h>
-#include <engine/PlanRepository.h>
-#include <engine/TeamObserver.h>
-#include <engine/model/Behaviour.h>
-#include <engine/model/Plan.h>
-#include <engine/model/RuntimeCondition.h>
-#include <engine/model/State.h>
+#include <engine/RunningPlan.h>
 
 #include <gtest/gtest.h>
 
 namespace alica
 {
-namespace
-{
 
-class AlicaSerialization : public AlicaTestFixture
+class AlicaSerializationTest : public AlicaTestFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SimpleTestPlan"; }
     bool stepEngine() const override { return false; }
+
+    static constexpr long SimpleTestPlanId = 1412252439925;
+    static constexpr long TestState2Id = 1412761855746;
+
+    void waitUntilPlan(long planId)
+    {
+        alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
+        do {
+            ae->getAlicaClock().sleep(sleepTime);
+        } while (!alica::test::Util::isPlanActive(ae, SimpleTestPlanId));
+    }
+
+    // Calls private methods inside TeamObserver
+    std::unique_ptr<SimplePlanTree> serializeAndDeserialize(IdGrp msg_to_send)
+    {
+        // Serialize (see TeamObserver::doBroadCast)
+        PlanTreeInfo pti = ae->getTeamObserver().sptToMessage(msg_to_send);
+
+        // De-serialize (see TeamObserver::updateTeamPlanTrees and TeamObserver::handlePlanTreeInfo)
+        std::unique_ptr<SimplePlanTree> spi = ae->getTeamObserver().sptFromMessage(pti.senderID, pti.dynamicStateIDPairs, ae->getAlicaClock().now());
+        return spi;
+    }
 };
 
 /**
- * Tests whether it is possible to run a behaviour in a primitive plan.
+ * Tests whether plan serialization works fine
  */
-TEST_F(AlicaSerialization, runBehaviourInSimplePlan)
+TEST_F(AlicaSerializationTest, serializeDeserialize)
 {
     ASSERT_NO_SIGNAL
     ae->start();
-    RunningPlan* rpRoot = ae->getPlanBase().getRootNode();
-    IdGrp msg;
-    _deepestNode = _rootNode;
-    _treeDepth = 0;
-    rpRoot->toMessage(msg, rpRoot, 0, 0);
+    waitUntilPlan(SimpleTestPlanId);
+    const RunningPlan* rpRoot = ae->getPlanBase().getRootNode();
+    ASSERT_TRUE(rpRoot);
+
+    // Build current Plan Tree
+    IdGrp msg_to_send;
+    int deepestNode = 0;
+    int treeDepth = 0;
+    rpRoot->toMessage(msg_to_send, rpRoot, deepestNode, treeDepth);
+    ASSERT_EQ(msg_to_send.size(), 3);
+    ASSERT_EQ(msg_to_send.at(0), 0);
+    ASSERT_EQ(msg_to_send.at(1), TestState2Id);
+    ASSERT_EQ(msg_to_send.at(2), -1);
+
+    std::unique_ptr<SimplePlanTree> spi = serializeAndDeserialize(msg_to_send);
+    ASSERT_TRUE(spi);
+
+    IdGrp msg_received = spi->getDynamicStateIDPairs();
+    ASSERT_EQ(msg_to_send, msg_received);
 }
-} // namespace
+
 } // namespace alica

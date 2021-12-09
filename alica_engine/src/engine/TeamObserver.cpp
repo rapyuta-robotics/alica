@@ -121,12 +121,17 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     if (!_ae->maySendMessages()) {
         return;
     }
+    _ae->getCommunicator().sendPlanTreeInfo(sptToMessage(msg));
+    ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
+}
+
+PlanTreeInfo TeamObserver::sptToMessage(const IdGrp& msg) const
+{
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
     pti.dynamicStateIDPairs = msg;
     pti.succeededContexts = _me->getEngineData().getSuccessMarks().toMsg();
-    _ae->getCommunicator().sendPlanTreeInfo(pti);
-    ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
+    return pti;
 }
 
 /**
