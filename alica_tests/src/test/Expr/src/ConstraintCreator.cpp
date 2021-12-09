@@ -29,6 +29,7 @@
 #include "constraints/ConstraintTestMaster1414068495566Constraints.h"
 #include "constraints/ConstraintTestPlan1414068524245Constraints.h"
 #include "constraints/Defend1402488893641Constraints.h"
+#include "constraints/ExecuteBehaviourInSubPlan3172561495666303184Constraints.h"
 #include "constraints/FailsOnOne1530069246103Constraints.h"
 #include "constraints/FrequencyTestPlan1626848999740Constraints.h"
 #include "constraints/GoalPlan1402488870347Constraints.h"
@@ -67,6 +68,7 @@
 #include "constraints/SchedulingTestSequenceSubPlan31614964478264Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
+#include "constraints/TestBehaviour55178365253414982Constraints.h"
 #include "constraints/TestTracingMasterPlan691392966514374878Constraints.h"
 #include "constraints/TestTracingSubPlan1482512794732634139Constraints.h"
 
