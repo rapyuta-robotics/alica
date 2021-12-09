@@ -5,6 +5,7 @@
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/Plan.h"
+#include "engine/model/PlanType.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
 
@@ -74,6 +75,18 @@ bool PlanPool::init(IPlanCreator& planCreator)
             auto basicPlan = createBasicPlan(planCreator, plan, wrapper->getConfiguration());
             if (basicPlan) {
                 _availablePlans.insert(std::make_pair(wrapper, std::move(basicPlan)));
+            }
+        } else if (const PlanType* pt = dynamic_cast<const PlanType*>(wrapper->getAbstractPlan())) {
+            for (auto plan : pt->getPlans()) {
+                if (getBasicPlan(plan, wrapper->getConfiguration())) {
+                    // A BasicPlan representing this combination of Plan and Configuration was created already!
+                    continue;
+                }
+
+                auto basicPlan = createBasicPlan(planCreator, plan, wrapper->getConfiguration());
+                if (basicPlan) {
+                    _availablePlans.insert(std::make_pair(wrapper, std::move(basicPlan)));
+                }
             }
         }
     }
