@@ -25,8 +25,18 @@ public:
     using RunnableObject::getName;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    void setAsMasterPlan() { _isMasterPlan = true; };
 
 protected:
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
+    {
+        if (customTraceContextGetter) {
+            RunnableObject::setTracing(type, [this, &customTraceContextGetter]() { return customTraceContextGetter(this); });
+        } else {
+            RunnableObject::setTracing(type, {});
+        }
+    }
+
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
@@ -36,5 +46,7 @@ private:
     void doRun(void* msg);
     void doTerminate() override;
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+
+    bool _isMasterPlan;
 };
 } // namespace alica

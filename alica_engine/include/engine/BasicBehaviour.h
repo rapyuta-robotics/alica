@@ -81,6 +81,15 @@ protected:
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
+    {
+        if (customTraceContextGetter) {
+            RunnableObject::setTracing(type, [this, &customTraceContextGetter]() { return customTraceContextGetter(this); });
+        } else {
+            RunnableObject::setTracing(type, {});
+        }
+    }
+
     void setSuccess();
     void setFailure();
 

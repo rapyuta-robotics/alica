@@ -11,6 +11,7 @@ namespace alica
 
 BasicPlan::BasicPlan(IAlicaWorldModel* wm)
         : RunnableObject(wm)
+        , _isMasterPlan(false)
 {
 }
 
@@ -21,11 +22,15 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    setFlags(Flags::INIT_EXECUTED);
+    _initExecuted = true;
 
     _execContext = _signalContext.exchange(nullptr);
 
     initTrace();
+    if (_isMasterPlan && _trace) {
+         // Immediately send out the trace for the master plan, otherwise the traces will not be available till the application end
+        _trace->finish();
+    }
 
     try {
         traceInit("Plan");
@@ -56,7 +61,9 @@ void BasicPlan::doTerminate()
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
-    setTerminatedState();
+    if (setTerminatedState()) {
+        return;
+    }
     try {
         traceTermination();
         onTerminate();
