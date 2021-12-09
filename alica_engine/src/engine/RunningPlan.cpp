@@ -395,6 +395,7 @@ void RunningPlan::clearChildren()
  */
 void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 {
+    double oldUtility = _assignment.getLastUtilityValue();
     _assignment.adaptTaskChangesFrom(replacement.getAssignment());
     const State* newState = _assignment.getStateOfAgent(getOwnID());
 
@@ -407,6 +408,11 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         clearChildren();
         addChildren(replacement.getChildren());
         reactivate = true;
+        if (_basicPlan) {
+            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName()
+                            + std::to_string(replacement.getActiveEntryPoint()->getId());
+            _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+        }
     } else {
         AgentGrp robotsJoined;
         _assignment.getAgentsInState(newState, robotsJoined);

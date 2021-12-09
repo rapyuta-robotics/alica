@@ -15,7 +15,7 @@ The dependency to the Codegeneration Module is necessary, because the PCT is als
 The new Plan Designer and the PCT are Maven-based projects and developed with Jetbrains' community-edition of Intellij. Although both generate executable JAR files, we currently find it more convenient to launch them from within Intellij. For setting up Intellij for the new Plan Designer, please consider its Readme.md in the alica-plan-designer-fx repository. In the following, the setup of the PCT is described:
 
 1. Download the community edition of [Intellij](https://www.jetbrains.com/idea/download/).
-2. Open Intellij and choose the [pom.xml](https://github.com/rapyuta-robotics/alica-supplementary/blob/json-plan-format/plan-conversion-tool/pom.xml) file for opening a project
+2. Open Intellij and choose the [pom.xml](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/plan-conversion-tool/pom.xml) file for opening a project
 3. In order to compile the PCT choose Maven window from the right double click on install. 
 
 ![Maven-Menu](./img/Maven-Menu.png)
@@ -24,7 +24,7 @@ Note: For this step, it is required, that you have compiled the new Plan Designe
 
 ## How to use PCT / Step-by-step
 
-At the time of writing this manual, we already converted all plans and auto-generated source code from the [alica_tests](https://github.com/rapyuta-robotics/alica/tree/json-plan-format/alica_tests), [supplementary_tests](https://github.com/rapyuta-robotics/alica-supplementary/tree/rr-devel/supplementary_tests), [alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica-supplementary/tree/json-plan-format/alica_ros_turtlesim), [constraintsolver](https://github.com/rapyuta-robotics/alica-supplementary/tree/json-plan-format/constraintsolver) package in the [alica](https://github.com/rapyuta-robotics/alica) and [alica-supplementary](https://github.com/rapyuta-robotics/alica-supplementary) repository. In the following, our best practise (so far) is described step by step:
+At the time of writing this manual, we already converted all plans and auto-generated source code from the [alica_tests](https://github.com/rapyuta-robotics/alica/tree/json-plan-format/alica_tests), [supplementary_tests](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/supplementary_tests), [alica_ros_turtlesim](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/alica_ros_turtlesim), [constraintsolver](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/constraintsolver) package in the [alica](https://github.com/rapyuta-robotics/alica) repository. In the following, our best practise (so far) is described step by step:
 
 1. Prepare work directories for the conversion process.
 
@@ -50,7 +50,7 @@ At the time of writing this manual, we already converted all plans and auto-gene
    - The absolute path to the directory, that contains the JAR of the Default Plugin for the new Plan Designer's code generation.
    - A '*' for stating that all *.pml files recursively found in the oldetc folder should be converted.
 
-   4.2 Add another run/debug configuration for each role set in the roles folder and replace the '*' with the absolute path to the role set file. For example: /home/emmeda/Work/rrws/src/alica-supplementary/plan-conversion-tool/src/main/test-stuff/oldetc/roles/Roleset.rset
+   4.2 Add another run/debug configuration for each role set in the roles folder and replace the '*' with the absolute path to the role set file. For example: /home/emmeda/Work/rrws/src/alica/supplementary/plan-conversion-tool/src/main/test-stuff/oldetc/roles/Roleset.rset
 
 5. Copy the content of the newgen-backup folder into the newgen folder
 

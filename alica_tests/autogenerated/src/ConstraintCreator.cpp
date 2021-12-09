@@ -67,6 +67,8 @@
 #include "constraints/SchedulingTestSequenceSubPlan31614964478264Constraints.h"
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
+#include "constraints/TestTracingMasterPlan691392966514374878Constraints.h"
+#include "constraints/TestTracingSubPlan1482512794732634139Constraints.h"
 
 #include <iostream>
 

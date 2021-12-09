@@ -29,6 +29,9 @@ public:
     using RunnableObject::stop;
     using RunnableObject::getBlackBoard;
     using RunnableObject::getWorldModel;
+    using RunnableObject::getName;
+
+    void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
     void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
 
@@ -42,6 +45,8 @@ private:
     void doInit() override;
     void doRun(void* msg);
     void doTerminate() override;
+    
+    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
     // Map from ConfAbstractPlanWrapper id to associated attachment
     std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;

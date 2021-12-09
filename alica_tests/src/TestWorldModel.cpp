@@ -43,8 +43,12 @@ void TestWorldModel::reset()
 
     transitionCondition4238964946542987247 = false;
     transitionCondition4115970455290610262 = false;
+    preCondition1840401110297459509 = false;
 
     x = 0;
+    tracingLogs.clear();
+    tracingTags.clear();
+    tracingParents.clear();
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586() const
@@ -209,6 +213,15 @@ bool TestWorldModel::isSwitchingEntryPoints() const
 void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
 {
     this->switchEntryPoints = switchEntryPoints;
+}
+
+bool TestWorldModel::isPreCondition1840401110297459509()
+{
+    return this->preCondition1840401110297459509;
+}
+void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401110297459509)
+{
+    this->preCondition1840401110297459509 = preCondition1840401110297459509;
 }
 
 } // namespace alicaTests

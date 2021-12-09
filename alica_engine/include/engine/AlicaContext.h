@@ -248,13 +248,13 @@ public:
     void setWorldModel(Args&&... args);
 
     /**
-     * Get worldModel being used by this alica instance.
+     * Get worldModel being used by this alica instance. If no worldModel has been set,
+     * the returned value will be a nullptr.
      *
      * @return A pointer to worldModel object being used by context
      */
     IAlicaWorldModel* getWorldModel() const
     {
-        assert(_worldModel.get());
         return _worldModel.get();
     }
 
