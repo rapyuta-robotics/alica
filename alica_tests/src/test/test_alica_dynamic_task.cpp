@@ -18,8 +18,8 @@ namespace alica
 {
 namespace
 {
-// GTEST_FILTER=AlicaDynamicTaskPlan.* catkin run_tests -i alica_tests
-class AlicaDynamicTaskPlan : public AlicaTestMultiAgentFixture
+// GTEST_FILTER=AlicaDynamicTaskPlanTest.* catkin run_tests -i alica_tests
+class AlicaDynamicTaskPlanTest : public AlicaTestMultiAgentFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
@@ -85,7 +85,7 @@ protected:
     static constexpr const char* kDynamicTaskName = "DynamicTask";
 };
 
-TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
+TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
 {
     // Plan initially has no EP
     const Plan* plan[2];
@@ -114,16 +114,14 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
         checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
         EXPECT_EQ(ep->getDynamicId(), 1);
     }
-    // */
 }
 
 /**
  * Tests whether it is possible to instantiate multiple tasks, dynamically, at runtime
  */
-TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
+TEST_F(AlicaDynamicTaskPlanTest, runDynamicTasks)
 {
     ASSERT_NO_SIGNAL
-
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     std::cout << "AE1 (" << acs[0]->getLocalAgentId() << ")" << std::endl;
@@ -148,6 +146,39 @@ TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
                           ->callCounter,
                 1);
     }
+}
+
+/**
+ * Tests whether plan serialization works fine
+ */
+TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
+{
+    // Make agents enter dynamic tasks
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+    enableTransitionCondition();
+    stepAgents();
+
+    // Check that plan now has multiple dynamic EPs
+    IdGrp plan_trees [getAgentCount()];
+    for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
+        ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kMasterPlanStartStateId));
+        ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
+        ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
+
+        const RunningPlan* rpRoot = aes[agent_index]->getPlanBase().getRootNode();
+        ASSERT_TRUE(rpRoot);
+
+        // Build current Plan Tree
+        IdGrp msg_to_send;
+        int deepestNode = 0;
+        int treeDepth = 0;
+        rpRoot->toMessage(msg_to_send, rpRoot, deepestNode, treeDepth);
+        plan_trees[agent_index] = msg_to_send;
+    }
+    //ASSERT_NE(plan_trees[0], plan_trees[1]);
 }
 } // namespace
 } // namespace alica
