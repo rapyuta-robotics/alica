@@ -20,7 +20,7 @@
   ],
   "frequency": 0,
   "id": 1414068524245,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "ConstraintTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
