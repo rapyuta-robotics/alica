@@ -39,6 +39,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1418042682960)
  *   - Comment:

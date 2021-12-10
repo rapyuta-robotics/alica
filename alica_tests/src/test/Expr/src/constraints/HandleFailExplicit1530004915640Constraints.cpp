@@ -8,7 +8,7 @@ namespace alica
 // Plan:HandleFailExplicit
 /*
  * Tasks:
- * - EP:1530004915642 : DefaultTask (1225112227903)
+ * - EntryPoint:1530004915642 : DefaultTask (1225112227903)
  *
  * States:
  * - A (1530004915641)

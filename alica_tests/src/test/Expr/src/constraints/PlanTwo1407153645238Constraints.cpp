@@ -8,9 +8,9 @@ namespace alica
 // Plan:PlanTwo
 /*
  * Tasks:
- * - EP:1407153656782 : DefaultTask (1225112227903)
- * - EP:1407153821287 : AttackTask (1407153522080)
- * - EP:1407153842648 : DefendTask (1402488486725)
+ * - EntryPoint:1407153656782 : DefaultTask (1225112227903)
+ * - EntryPoint:1407153821287 : AttackTask (1407153522080)
+ * - EntryPoint:1407153842648 : DefendTask (1402488486725)
  *
  * States:
  * - DefaultState (1407153656781)

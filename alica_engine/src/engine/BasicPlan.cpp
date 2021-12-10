@@ -2,6 +2,8 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/Plan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
@@ -67,7 +69,14 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
-
+void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
+{
+    for(const State* state : plan->getStates()) {
+        for(const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
+        }
+    }
+}
 
 void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {

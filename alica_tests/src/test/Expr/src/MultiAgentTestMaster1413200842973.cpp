@@ -42,6 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1413201226246 (1413201226246)
  *   - Comment:
@@ -68,6 +69,7 @@ bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp, const 
     }
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1413201388722 (1413201388722)
  *   - Comment:

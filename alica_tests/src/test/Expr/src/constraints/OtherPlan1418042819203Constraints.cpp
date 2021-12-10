@@ -8,7 +8,7 @@ namespace alica
 // Plan:OtherPlan
 /*
  * Tasks:
- * - EP:1418042819206 : DefaultTask (1225112227903)
+ * - EntryPoint:1418042819206 : DefaultTask (1225112227903)
  *
  * States:
  * - OtherPlanTest (1418042819204)

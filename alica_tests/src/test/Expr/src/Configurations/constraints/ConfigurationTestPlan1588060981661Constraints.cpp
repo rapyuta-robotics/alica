@@ -8,7 +8,7 @@ namespace alica
 // Plan:ConfigurationTestPlan
 /*
  * Tasks:
- * - EP:1588061024407 : DefaultTask (1225112227903)
+ * - EntryPoint:1588061024407 : DefaultTask (1225112227903)
  *
  * States:
  * - Default Name (1588060991102)

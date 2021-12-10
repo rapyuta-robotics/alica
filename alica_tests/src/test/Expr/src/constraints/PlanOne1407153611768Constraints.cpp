@@ -8,8 +8,8 @@ namespace alica
 // Plan:PlanOne
 /*
  * Tasks:
- * - EP:1407153636262 : DefaultTask (1225112227903)
- * - EP:1407153791141 : AttackTask (1407153522080)
+ * - EntryPoint:1407153636262 : DefaultTask (1225112227903)
+ * - EntryPoint:1407153791141 : AttackTask (1407153522080)
  *
  * States:
  * - DefaultState (1407153636261)

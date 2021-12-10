@@ -37,6 +37,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: FromDefault NameTo Default Name (1588253347211)
  *   - Comment: MISSING_COMMENT
