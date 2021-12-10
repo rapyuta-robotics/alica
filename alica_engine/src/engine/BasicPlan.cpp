@@ -28,7 +28,7 @@ void BasicPlan::doInit()
 
     initTrace();
     if (_isMasterPlan && _trace) {
-         // Immediately send out the trace for the master plan, otherwise the traces will not be available till the application end
+         // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
         _trace->finish();
     }
 

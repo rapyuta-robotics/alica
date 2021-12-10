@@ -58,7 +58,7 @@ public:
     void markError(const std::string& description) override;
 
     // Explicitly set the trace as finished. Any calls to setTag, setLog & markError after this call leaves
-    // the trace in a valid by unspecified state. Calling context on a finished trace is a valid operation
+    // the trace in a valid but unspecified state. Calling context on a finished trace is a valid operation
     void finish() override;
 
     // Get the context of this trace to propogate across process boundary

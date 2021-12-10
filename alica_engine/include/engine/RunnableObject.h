@@ -6,9 +6,9 @@
 #include <alica_common_config/debug_output.h>
 
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <string>
-#include <functional>
 
 namespace alica
 {
@@ -75,7 +75,9 @@ protected:
     TracingType _tracingType;
     std::function<std::optional<std::string>()> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
+    // True if the behaviour/plan's run method is traced. This ensures we trace the run call once
     bool _runTraced;
+    // True if the behaviour/plan's init method is called. The init could be skipped if we are not in context of the running plan
     bool _initExecuted;
     std::string _name;
     AlicaTime _msInterval;
@@ -102,6 +104,8 @@ protected:
     // If the counter is even then it indicates the behaviour is active i.e it is started, but not stopped yet
     constexpr static bool isActive(Counter cnt) { return !(cnt & 1); };
     ThreadSafePlanInterface getPlanContext() const;
+    // Returns true if termination is complete, i.e. if the execution context is destroyed,
+    // otherwise onTermination should be called & the execution context should to be destroyed by the caller
     bool setTerminatedState();
     void traceTermination();
     void initTrace();
