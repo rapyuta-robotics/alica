@@ -8,7 +8,7 @@ namespace alica
 // Plan:TestTracingMasterPlan
 /*
  * Tasks:
- * - EP:4059536593953041663 : DefaultTask (1225112227903)
+ * - EntryPoint:4059536593953041663 : DefaultTask (1225112227903)
  *
  * States:
  * - 2832176823961443072 (2832176823961443072)

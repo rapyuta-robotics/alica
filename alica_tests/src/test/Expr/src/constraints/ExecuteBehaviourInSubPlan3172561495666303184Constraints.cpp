@@ -8,7 +8,7 @@ namespace alica
 // Plan:ExecuteBehaviourInSubPlan
 /*
  * Tasks:
- * - EP:560547937773733569 : Attack (1222613952469)
+ * - EntryPoint:560547937773733569 : Attack (1222613952469)
  *
  * States:
  * - Suc (3575867719445223184)
