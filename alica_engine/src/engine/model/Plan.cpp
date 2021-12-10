@@ -123,9 +123,6 @@ void Plan::computeDynamicEntryPoints(const Configuration* configuration) const
         }
     }
 
-    auto bp = _ae->getPlanPool().getBasicPlan(this, configuration);
-    std::cerr << "Master: " << isMasterPlan() << " name:" << getName() << std::endl;
-    bp->getApplicationEntrypointContext(_entryPointMap);
     if (_ae->getPlanPool().getBasicPlan(this, configuration)->getApplicationEntrypointContext(_entryPointMap)) {
         for (auto& static_to_dynamic_pair : _entryPointMap) {
             for (auto dynamicId : static_to_dynamic_pair.second) {

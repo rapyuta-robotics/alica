@@ -88,12 +88,13 @@ protected:
 TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
 {
     // Plan initially has no EP
-    const Plan* plan_untouched = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
-    EXPECT_EQ(1u, plan_untouched->getEntryPoints().size())
+    const Plan* plan[2];
+    plan[1] = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
+    plan[2] = aes[1]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
+    EXPECT_EQ(0u, plan[1]->getEntryPoints().size())
             << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
-
-    const alica::EntryPoint* ep = plan_untouched->getEntryPoints().front();
-    checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+    EXPECT_EQ(0u, plan[2]->getEntryPoints().size())
+            << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
 
     // Make agents enter dynamic tasks
     ASSERT_NO_SIGNAL
@@ -103,15 +104,18 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
     enableTransitionCondition();
     stepAgents();
 
-    // Check that plan now has multiple dynamic EPs
+    // Check that plan now has a dynamic EP
     for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kMasterPlanStartStateId));
         ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
 
-        // TODO Get active plan, ensure it now has multiple EPs
-        const Plan* dynamic_plan = aes[agent_index]->getPlanBase().getDeepestNode()->getActivePlanAsPlan();
-        //EXPECT_EQ(1 + getAgentCount(), dynamic_plan->getEntryPoints().size()) << "Number of EntryPoints doesn't match amount of agents!" << std::endl;
+        EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size())
+            << "Number of dynamic EntryPoints should be 1 at this point." << std::endl;
+
+        const alica::EntryPoint* ep = plan[agent_index]->getEntryPoints().front();
+        checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 3150793708487666867, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+        EXPECT_EQ(ep->getDynamicId(), 1);
     }
     // */
 }
