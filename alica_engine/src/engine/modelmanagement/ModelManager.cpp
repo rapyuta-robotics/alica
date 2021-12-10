@@ -17,6 +17,7 @@
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/util/HashFunctions.h"
 
 #include <alica_common_config/debug_output.h>
 #include <essentials/FileSystem.h>

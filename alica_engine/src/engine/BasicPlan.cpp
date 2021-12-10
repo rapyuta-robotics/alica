@@ -2,6 +2,8 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/Plan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
@@ -65,6 +67,33 @@ void BasicPlan::doTerminate()
     }
 
     _execContext.store(nullptr);
+}
+
+void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
+{
+    for(const State* state : plan->getStates()) {
+        for(const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
+        }
+    }
+}
+
+void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_engine->getTraceFactory()) {
+        _engine->editScheduler().schedule(
+            std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
+    }
+}
+
+void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_trace) {
+        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", "
+                                            + "\"new\": " + std::to_string(newUtility) + ", "
+                                            + "\"agents\": " + std::to_string(numberOfAgents) + ", "
+                                            + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+    }
 }
 
 } // namespace alica

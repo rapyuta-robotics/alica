@@ -2,7 +2,7 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTrace.h"
-
+#include "engine/blackboard/Blackboard.h"
 #include <atomic>
 #include <memory>
 #include <string>
@@ -30,8 +30,11 @@ protected:
     void setEngine(AlicaEngine* engine) { _engine = engine; };
     void setConfiguration(const Configuration* conf) { _configuration = conf; };
     void setName(const std::string& name) { _name = name; };
+    const std::string& getName() {return _name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
+    bool getRequiresParameters() const { return _requiresParameters; }
+    void setRequiresParameters(bool requiresParameters) {_requiresParameters = requiresParameters;}
     void disableTracing() { clearFlags(Flags::TRACING_ENABLED); };
     void stop();
     void start(RunningPlan* rp);
@@ -55,12 +58,14 @@ protected:
     std::unique_ptr<IAlicaTrace> _trace;
     std::string _name;
     AlicaTime _msInterval;
+    bool _requiresParameters;
     uint8_t _flags;
     std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
+    std::shared_ptr<Blackboard> _Blackboard;
     IAlicaWorldModel* _wm;
 
     virtual void doInit() = 0;
@@ -85,6 +90,7 @@ protected:
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
+    const std::shared_ptr<Blackboard> getBlackboard() {return _Blackboard;}
     IAlicaWorldModel* getWorldModel() { return _wm; };
 };
 } /* namespace alica */
