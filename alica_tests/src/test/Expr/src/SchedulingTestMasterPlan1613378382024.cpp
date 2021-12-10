@@ -19,6 +19,8 @@ namespace alica
 //   - Default Name (1615797271229)
 //   - Default Name (1615797319003)
 //   - OrderedSchedulingTestPlan (1629895593451)
+//   - ExecuteBehaviour (1206766322278521913)
+//   - ExecuteBehaviourInSubPlan (3802371674214346622)
 SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -131,6 +133,27 @@ bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const 
 }
 
 /**
+ * Transition: 3351673290341906102 (3351673290341906102)
+ *   - Comment:
+ *   - Source2Dest: Default Name --> ExecuteBehaviour
+ *
+ * Precondition: ToExecutePlan (61978004585920576)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Default Name:
+ */
+bool PreCondition61978004585920576::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(3351673290341906102) ENABLED START*/
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    return worldModel->execBehaviourTest;
+    /*PROTECTED REGION END*/
+}
+/**
  * Transition: FromDefault NameTo EndTest (1615797365363)
  *   - Comment: MISSING_COMMENT
  *   - Source2Dest: Default Name --> EndTest
@@ -171,6 +194,80 @@ bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const 
 {
     /*PROTECTED REGION ID(1629895607017) ENABLED START*/
     std::cout << "The PreCondition 1629895607018 in Transition 'FromDefault NameTo EndTest' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Transition: ExecuteBehaviourToExecuteBehaviourInSubPlan (383854659955639601)
+ *   - Comment:
+ *   - Source2Dest: ExecuteBehaviour --> ExecuteBehaviourInSubPlan
+ *
+ * Precondition: ToExecutePlanAsSubPlan (3213510506830850443)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ExecuteBehaviour:
+ *   - TestBehaviour (55178365253414982)
+ */
+bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(383854659955639601) ENABLED START*/
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    if (worldModel->transitionToExecuteBehaviourInSubPlan) {
+        // worldModel->executeBehaviourRunCalled = false;
+        return true;
+    }
+    return false;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Transition: 1506708037135242126 (1506708037135242126)
+ *   - Comment:
+ *   - Source2Dest: ExecuteBehaviourInSubPlan --> EndTest
+ *
+ * Precondition: ToEndTest (68542020926196536)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ExecuteBehaviourInSubPlan:
+ *   - ExecuteBehaviourInSubPlan (3172561495666303184)
+ */
+bool PreCondition68542020926196536::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1506708037135242126) ENABLED START*/
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    return worldModel->transitionToEndTest;
+    /*PROTECTED REGION END*/
+}
+/**
+ * Transition: ExecuteBehaviourInSubPlanToExecuteBehaviour (1773144683253207826)
+ *   - Comment:
+ *   - Source2Dest: ExecuteBehaviourInSubPlan --> ExecuteBehaviour
+ *
+ * Precondition: 4165333637052704488 (4165333637052704488)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ExecuteBehaviourInSubPlan:
+ *   - ExecuteBehaviourInSubPlan (3172561495666303184)
+ */
+bool PreCondition4165333637052704488::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1773144683253207826) ENABLED START*/
+    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
+    if (worldModel->transitionToExecuteBehaviour) {
+        // worldModel->executeBehaviourRunCalled = false;
+        return true;
+    }
     return false;
     /*PROTECTED REGION END*/
 }

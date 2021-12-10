@@ -227,5 +227,45 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
     }
 }
 
+TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
+{
+    CounterClass::called = -1;
+    ae->start();
+
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execBehaviourTest = true;
+    ac->stepEngine();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\n");
+
+    wm->transitionToExecuteBehaviour = false;
+    wm->transitionToExecuteBehaviourInSubPlan = true;
+    ac->stepEngine();
+    EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n");
+
+    std::string execOrderBeforeTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+    std::string execOrderAfterTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+
+    for (int i = 0; i < 10; i++) {
+        wm->execOrder = "";
+
+        wm->transitionToExecuteBehaviourInSubPlan = false;
+        wm->transitionToExecuteBehaviour = true;
+        ac->stepEngine();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        EXPECT_EQ(wm->execOrder, execOrderBeforeTransition);
+
+        wm->transitionToExecuteBehaviour = false;
+        wm->transitionToExecuteBehaviourInSubPlan = true;
+        ac->stepEngine();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        EXPECT_EQ(wm->execOrder, execOrderAfterTransition);
+    }
+
+    wm->transitionToEndTest = true;
+}
+
 } // namespace
 } // namespace alica
