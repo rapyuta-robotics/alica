@@ -78,7 +78,7 @@ protected:
     TracingType _tracingType;
     std::function<std::optional<std::string>()> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
-    // True if the behaviour/plan's run method is traced. This ensures we trace the run call once
+    // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
     // True if the behaviour/plan's init method is called. The init could be skipped if we are not in context of the running plan
     bool _initExecuted;
