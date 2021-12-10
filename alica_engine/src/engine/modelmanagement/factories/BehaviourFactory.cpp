@@ -16,15 +16,11 @@ namespace alica
         Factory::storeElement(behaviour, alica::Strings::behaviour);
         AbstractPlanFactory::setVariables(node, behaviour);
 
-        if (Factory::isValid(node[alica::Strings::frequency])) {
-            behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 30);
-        }
-        if (Factory::isValid(node[alica::Strings::deferring])) {
-            behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
-        }
-        if (Factory::isValid(node[alica::Strings::eventDriven])) {
-            behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
-        }
+        behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
+        behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
+        behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
+        behaviour->_requiresParameters = Factory::getValue<bool>(node, alica::Strings::requiresParameters, false);
+
         if (Factory::isValid(node[alica::Strings::preCondition])) {
             behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
         }

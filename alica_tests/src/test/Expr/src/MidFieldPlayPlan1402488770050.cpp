@@ -54,6 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489257607)
  *   - Comment:
@@ -75,6 +76,7 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402489276995)
  *   - Comment:
@@ -96,6 +98,7 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1402500843072)
  *   - Comment:

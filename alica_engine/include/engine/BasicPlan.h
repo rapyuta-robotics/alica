@@ -1,9 +1,14 @@
 #pragma once
 
 #include "engine/RunnableObject.h"
+#include "engine/PlanAttachment.h"
+#include "engine/IPlanCreator.h"
 
+#include <unordered_map>
 namespace alica
 {
+
+class Plan;
 
 class BasicPlan : private RunnableObject
 {
@@ -11,16 +16,18 @@ public:
     BasicPlan(IAlicaWorldModel* wm);
     virtual ~BasicPlan() = default;
 
-    // Use of private inheritance and explciltly making members public
+    // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
     using RunnableObject::getPlanContext;
     using RunnableObject::getTraceContext;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
+    using RunnableObject::setRequiresParameters;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getBlackboard;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
     using RunnableObject::TracingType;
@@ -28,6 +35,9 @@ public:
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
 
+    void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
+
+    std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) {return _planAttachments.at(id);}
 protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
@@ -46,8 +56,11 @@ private:
     void doInit() override;
     void doRun(void* msg);
     void doTerminate() override;
+
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
     bool _isMasterPlan;
+    // Map from ConfAbstractPlanWrapper id to associated attachment
+    std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;
 };
 } // namespace alica

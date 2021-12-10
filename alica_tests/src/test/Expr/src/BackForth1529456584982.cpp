@@ -40,6 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1529456584982::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1529456609989)
  *   - Comment: Forth
@@ -61,6 +62,7 @@ bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return SimpleSwitches::isSet(0);
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1529456610905)
  *   - Comment: Back

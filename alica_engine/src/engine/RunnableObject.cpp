@@ -1,6 +1,7 @@
 #include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanInterface.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <assert.h>
 #include <iostream>
@@ -15,6 +16,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _runTraced(false)
         , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
+        , _requiresParameters(false)
         , _activeRunJobId(-1)
         , _signalContext(nullptr)
         , _execContext(nullptr)
@@ -50,7 +52,49 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
+    if(_requiresParameters) {
+        assert(rp->getParent());
+        assert(rp->getParent()->getBasicPlan());
+        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+        auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr){
+            return wrapper_ptr->getAbstractPlan()->getName() == _name;
+        });
+        assert(it != wrappers.end());
+
+        int64_t wrapperId = (*it)->getId();
+
+        std::shared_ptr<Blackboard> parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
+        auto& planAttachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapperId);
+        auto initCall = [&](){
+            if(!_Blackboard) {
+                _Blackboard = std::make_shared<Blackboard>();
+            }
+            _Blackboard->impl().clear();
+            if(!planAttachment->setParameters(*parentBlackboard, *_Blackboard)) {
+                std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                return;
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
+    } else {
+
+        std::shared_ptr<Blackboard> parentBlackboard;
+        if(rp->getParent() && rp->getParent()->getBasicPlan()) {
+            parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
+
+        }
+        auto initCall = [this, parentBlackboard=std::move(parentBlackboard)](){
+            // Share Blackboard with parent if we have one, or start fresh otherwise
+            if(parentBlackboard) {
+                _Blackboard = parentBlackboard;
+            } else {
+                _Blackboard = std::make_shared<Blackboard>();
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
+    }
 }
 
 bool RunnableObject::setTerminatedState()

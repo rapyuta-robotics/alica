@@ -43,6 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1530004992551)
  *   - Comment: From A to B, isset(0)
@@ -63,6 +64,7 @@ bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return SimpleSwitches::isSet(0);
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1530004993680)
  *   - Comment: AnyChildFail
@@ -84,6 +86,7 @@ bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return rp->isAnyChildStatus(PlanStatus::Failed);
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1532424092280)
  *   - Comment: C to D, isset(2)
@@ -104,6 +107,7 @@ bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const 
     return SimpleSwitches::isSet(2);
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: MISSING_NAME (1532424112331)
  *   - Comment: AnyChildFail

@@ -8,7 +8,7 @@ namespace alica
 // Plan:RuntimeConditionPlan
 /*
  * Tasks:
- * - EP:1418042806577 : DefaultTask (1225112227903)
+ * - EntryPoint:1418042806577 : DefaultTask (1225112227903)
  *
  * States:
  * - RuntimeConditionTest (1418042806576)

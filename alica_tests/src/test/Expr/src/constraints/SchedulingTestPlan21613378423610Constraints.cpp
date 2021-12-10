@@ -8,7 +8,7 @@ namespace alica
 // Plan:SchedulingTestPlan2
 /*
  * Tasks:
- * - EP:1613378624077 : SchedulerTestSubPlanEntrypoint (1613372009777)
+ * - EntryPoint:1613378624077 : SchedulerTestSubPlanEntrypoint (1613372009777)
  *
  * States:
  * - InitPlan2 (1613378625757)

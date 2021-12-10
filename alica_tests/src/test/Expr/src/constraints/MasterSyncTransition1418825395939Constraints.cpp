@@ -8,8 +8,8 @@ namespace alica
 // Plan:MasterSyncTransition
 /*
  * Tasks:
- * - EP:1418825395941 : AttackTask (1407153522080)
- * - EP:1418825402617 : DefaultTask (1225112227903)
+ * - EntryPoint:1418825395941 : AttackTask (1407153522080)
+ * - EntryPoint:1418825402617 : DefaultTask (1225112227903)
  *
  * States:
  * - FirstTaskFirstState (1418825395940)

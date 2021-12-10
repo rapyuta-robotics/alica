@@ -41,6 +41,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
 
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1414403840950 (1414403840950)
  *   - Comment:
