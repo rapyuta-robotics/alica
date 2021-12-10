@@ -27,7 +27,7 @@ public:
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
-    using RunnableObject::getBlackBoard;
+    using RunnableObject::getBlackboard;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
 

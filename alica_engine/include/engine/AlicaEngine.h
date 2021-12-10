@@ -9,7 +9,7 @@
 #include "engine/TeamObserver.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/blackboard/BlackBoard.h"
+#include "engine/Blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -92,8 +92,8 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const BlackBoard& getBlackBoard() const { return _blackboard; }
-    BlackBoard& editBlackBoard() { return _blackboard; }
+    const Blackboard& getBlackboard() const { return _Blackboard; }
+    Blackboard& editBlackboard() { return _Blackboard; }
 
     scheduler::JobScheduler& editScheduler() { return *_scheduler; }
 
@@ -160,7 +160,7 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    BlackBoard _blackboard;
+    Blackboard _Blackboard;
     bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
     bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/

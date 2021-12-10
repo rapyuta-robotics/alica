@@ -2,7 +2,7 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/blackboard/BlackBoard.h"
+#include "engine/Blackboard/Blackboard.h"
 #include <atomic>
 #include <memory>
 #include <string>
@@ -65,7 +65,7 @@ protected:
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
-    std::shared_ptr<BlackBoard> _blackBoard;
+    std::shared_ptr<Blackboard> _Blackboard;
     IAlicaWorldModel* _wm;
 
     virtual void doInit() = 0;
@@ -90,7 +90,7 @@ protected:
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
-    const std::shared_ptr<BlackBoard> getBlackBoard() {return _blackBoard;}
+    const std::shared_ptr<Blackboard> getBlackboard() {return _Blackboard;}
     IAlicaWorldModel* getWorldModel() { return _wm; };
 };
 } /* namespace alica */

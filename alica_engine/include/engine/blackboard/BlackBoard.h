@@ -9,7 +9,7 @@
 
 namespace alica
 {
-class BlackBoardImpl
+class BlackboardImpl
 {
 public:
     // Not for API use, but public to allow modifying without mutex when we know the behavior/plan is not running
@@ -43,35 +43,35 @@ public:
     std::unordered_map<std::string, std::any> vals;
 };
 
-class BlackBoard
+class Blackboard
 {
 public:
-    BlackBoard() = default;
-    BlackBoard(BlackBoard&&) = delete;
-    BlackBoard& operator&=(const BlackBoard&) = delete;
-    BlackBoard& operator&=(BlackBoard&&) = delete;
+    Blackboard() = default;
+    Blackboard(Blackboard&&) = delete;
+    Blackboard& operator&=(const Blackboard&) = delete;
+    Blackboard& operator&=(Blackboard&&) = delete;
 
     std::shared_lock<std::shared_mutex> lockRO() const {return std::shared_lock(_mtx);}
     std::unique_lock<std::shared_mutex> lockRW() {return std::unique_lock(_mtx);}
 
     // Not thread safe.  Avoid for public use
-    BlackBoardImpl& impl() {return _impl;}
-    const BlackBoardImpl& impl() const {return _impl;}
+    BlackboardImpl& impl() {return _impl;}
+    const BlackboardImpl& impl() const {return _impl;}
 private:
-    BlackBoardImpl _impl;
+    BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };
 
-class LockedBlackBoardRO
+class LockedBlackboardRO
 {
 public:
-    LockedBlackBoardRO(const BlackBoard& bb) : 
+    LockedBlackboardRO(const Blackboard& bb) : 
          _lk(bb.lockRO())
       ,  _impl(&bb.impl())
     {}
-    LockedBlackBoardRO& operator&=(const LockedBlackBoardRO&) = delete;
-    LockedBlackBoardRO& operator&=(LockedBlackBoardRO&) = delete;
-    LockedBlackBoardRO(LockedBlackBoardRO&) = delete;
+    LockedBlackboardRO& operator&=(const LockedBlackboardRO&) = delete;
+    LockedBlackboardRO& operator&=(LockedBlackboardRO&) = delete;
+    LockedBlackboardRO(LockedBlackboardRO&) = delete;
 
     bool empty() const {
         return _impl->empty();
@@ -87,19 +87,19 @@ public:
     }
 private:
     std::shared_lock<std::shared_mutex> _lk;
-    const BlackBoardImpl* _impl;
+    const BlackboardImpl* _impl;
 };
 
-class LockedBlackBoardRW
+class LockedBlackboardRW
 {
 public:
-    LockedBlackBoardRW(BlackBoard& bb) : 
+    LockedBlackboardRW(Blackboard& bb) : 
          _lk(bb.lockRW())
       ,  _impl(&bb.impl())
     {}
-    LockedBlackBoardRW& operator&=(const LockedBlackBoardRW&) = delete;
-    LockedBlackBoardRW& operator&=(LockedBlackBoardRW&) = delete;
-    LockedBlackBoardRW(LockedBlackBoardRW&) = delete;
+    LockedBlackboardRW& operator&=(const LockedBlackboardRW&) = delete;
+    LockedBlackboardRW& operator&=(LockedBlackboardRW&) = delete;
+    LockedBlackboardRW(LockedBlackboardRW&) = delete;
 
     void clear() {
         _impl->clear();
@@ -127,7 +127,7 @@ public:
     }
 private:
     std::unique_lock<std::shared_mutex> _lk;
-    BlackBoardImpl* _impl;
+    BlackboardImpl* _impl;
 };
 
 } // namespace alica

@@ -4,7 +4,7 @@
 #include "alica/reasoner/SimpleVariable.h"
 
 #include <engine/AlicaEngine.h>
-#include <engine/blackboard/BlackBoard.h>
+#include <engine/Blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 
@@ -32,10 +32,10 @@ bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::sh
 
     results.reserve(dc->getVariables().size());
 
-    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    Blackboard& bb = getAlicaEngine()->editBlackboard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
         const std::string& val = getValue(dummyVariable->getId(), calls);
-        LockedBlackBoardRW(bb).registerValue(val, dummyVariable->getId());
+        LockedBlackboardRW(bb).registerValue(val, dummyVariable->getId());
         results.push_back(dummyVariable->getId());
     }
 

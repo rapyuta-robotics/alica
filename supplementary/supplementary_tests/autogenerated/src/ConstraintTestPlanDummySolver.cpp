@@ -3,7 +3,7 @@
 #include <alica_solver_interface/SimpleContext.h>
 #include <alica_solver_interface/SolverVariable.h>
 #include <engine/AlicaEngine.h>
-#include <engine/blackboard/BlackBoard.h>
+#include <engine/Blackboard/Blackboard.h>
 #include <engine/model/Variable.h>
 
 #include <iostream>
@@ -39,11 +39,11 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
 
 bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
-    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    Blackboard& bb = getAlicaEngine()->editBlackboard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
-        LockedBlackBoardRW(bb).registerValue(s, var->getId());
+        LockedBlackboardRW(bb).registerValue(s, var->getId());
         results.push_back(var->getId());
     }
     ++getSolutionCallCounter;
