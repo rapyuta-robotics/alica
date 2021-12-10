@@ -47,12 +47,6 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
         trace->setTag(defaultTag.first, defaultTag.second);
     }
 
-    // used for immediately reporting traces instead of waiting for termination of the master plan
-    // TODO: is this required? & if so find a better way of knowing if the plan is the master plan
-    if (opName == "Master") {
-        trace->finish();
-    }
-
     return trace;
 }
 

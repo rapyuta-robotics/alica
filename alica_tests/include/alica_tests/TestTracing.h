@@ -33,6 +33,9 @@ public:
         alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error", "true"});
         alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error.description", description});
     }
+    void finish()
+    {
+    }
     std::string context() const
     {
         return _opName;

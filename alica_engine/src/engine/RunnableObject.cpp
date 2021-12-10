@@ -3,8 +3,6 @@
 #include "engine/PlanInterface.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include <assert.h>
 #include <iostream>
 
@@ -14,7 +12,9 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _configuration(nullptr)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
+        , _tracingType(TracingType::DEFAULT)
+        , _runTraced(false)
+        , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _requiresParameters(false)
         , _activeRunJobId(-1)
@@ -97,50 +97,67 @@ void RunnableObject::start(RunningPlan* rp)
     }
 }
 
-void RunnableObject::setTerminatedState()
+bool RunnableObject::setTerminatedState()
 {
     ++_execState;
 
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
+    _runTraced = false;
+    if (!_initExecuted) {
         _execContext.store(nullptr);
+        return true;
+    }
+    _initExecuted = false;
+    return false;
+}
+
+void RunnableObject::initTrace()
+{
+    if (!_engine->getTraceFactory()) {
         return;
     }
-    clearFlags(Flags::INIT_EXECUTED);
+
+    switch (_tracingType) {
+    case TracingType::DEFAULT: {
+        auto parent = _execContext.load()->getParent();
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
+        break;
+    }
+    case TracingType::SKIP: {
+        break;
+    }
+    case TracingType::ROOT: {
+        _trace = _engine->getTraceFactory()->create(_name);
+        break;
+    }
+    case TracingType::CUSTOM: {
+        _trace = _engine->getTraceFactory()->create(_name, _customTraceContextGetter());
+        break;
+    }
+    }
 }
 
 void RunnableObject::traceTermination()
 {
     if (_trace) {
-        _trace->setLog({"Terminate", "true"});
+        _trace->setLog({"status", "terminating"});
         _trace.reset();
-    }
-}
-
-void RunnableObject::initTrace()
-{
-    // Get closest parent that has a trace
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
-            ;
-        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
     }
 }
 
 void RunnableObject::traceRun()
 {
-    if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
-        _trace->setLog({"Run", "true"});
-        setFlags(Flags::RUN_TRACED);
+    if (_trace && !_runTraced) {
+        _trace->setLog({"status", "running"});
+        _runTraced = true;
     }
 }
 
 void RunnableObject::traceInit(const std::string& type)
 {
     if (_trace) {
-        _trace->setLog({type, "true"});
-        _trace->setLog({"Init", "true"});
+        _trace->setTag(type, "true");
+        _trace->setLog({"status", "initializing"});
     }
 }
 
