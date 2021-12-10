@@ -47,6 +47,9 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
     }
     basicPlan->setRequiresParameters(plan->getRequiresParameters());
     basicPlan->setEngine(_ae);
+    if (plan->isMasterPlan()) {
+        basicPlan->setAsMasterPlan();
+    }
 
     return basicPlan;
 }
