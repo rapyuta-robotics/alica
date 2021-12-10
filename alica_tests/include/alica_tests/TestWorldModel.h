@@ -56,17 +56,17 @@ public:
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
     // Adjacent plans success test transitions
-    bool isTransitionCondition1914245867924544479();
+    bool isTransitionCondition1914245867924544479() const;
     void setTransitionCondition1914245867924544479(bool transitionCondition1914245867924544479);
-    bool isTransitionCondition3345031375302716643();
+    bool isTransitionCondition3345031375302716643() const;
     void setTransitionCondition3345031375302716643(bool transitionCondition3345031375302716643);
-    bool isTransitionCondition1390829819585906015();
+    bool isTransitionCondition1390829819585906015() const;
     void setTransitionCondition1390829819585906015(bool transitionCondition1390829819585906015);
-    bool isTransitionCondition3143778092687974738();
+    bool isTransitionCondition3143778092687974738() const;
     void setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738);
     
     // Test Tracing MasterPlan
-    bool isPreCondition1840401110297459509();
+    bool isPreCondition1840401110297459509() const;
     void setPreCondition1840401110297459509(bool preCondition1840401110297459509);
 
     bool isSwitchingEntryPoints() const;

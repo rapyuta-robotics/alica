@@ -82,11 +82,8 @@ bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition3441061963559991094::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3143778092687974738) ENABLED START*/
-    if (alicaTests::TestWorldModel::getOne()->isTransitionCondition3143778092687974738()) {
-        alicaTests::TestWorldModel::getOne()->setTransitionCondition3143778092687974738(false);
-        return true;
-    }
-    return false;
+    auto worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->isTransitionCondition3143778092687974738();
     /*PROTECTED REGION END*/
 }
 
