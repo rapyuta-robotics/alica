@@ -10,7 +10,7 @@ services:
 
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=noetic
     - COVERITY_PROJECT=alica
     - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
     - COVERITY_EMAIL=alexander.bolinsky@rapyuta-robotics.com
