@@ -44,6 +44,7 @@ public:
     using RunnableObject::stop;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
+    using RunnableObject::TracingType;
 
     virtual void run(void* msg) = 0;
 

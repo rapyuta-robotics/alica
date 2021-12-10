@@ -23,6 +23,7 @@ public:
     using RunnableObject::stop;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
+    using RunnableObject::TracingType;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
