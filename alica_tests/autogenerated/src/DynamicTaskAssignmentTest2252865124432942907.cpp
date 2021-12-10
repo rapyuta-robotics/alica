@@ -31,7 +31,7 @@ bool DynamicTaskAssignmentTest2252865124432942907::getApplicationEntrypointConte
 {
     /*PROTECTED REGION ID(getApplicationEntrypointContext2252865124432942907) ENABLED START*/
     // Add additional options here
-    return false;
+    return entryPointMap.begin()->second.insert(1).second;
     /*PROTECTED REGION END*/
 }
 

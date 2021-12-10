@@ -20,7 +20,7 @@
   ],
   "frequency": 0,
   "id": 1412252439925,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "SimpleTestPlan",
   "preCondition": {
     "comment": "",

@@ -74,10 +74,10 @@ bool PlanPool::init(IPlanCreator& planCreator)
 
             auto basicPlan = createBasicPlan(planCreator, plan, wrapper->getConfiguration());
             if (basicPlan) {
-                _availablePlans.insert(std::make_pair(wrapper, std::move(basicPlan)));
+                _availablePlans.insert({{plan, wrapper->getConfiguration()}, std::move(basicPlan)});
             }
         } else if (const PlanType* pt = dynamic_cast<const PlanType*>(wrapper->getAbstractPlan())) {
-            for (auto plan : pt->getPlans()) {
+            for (const auto* plan : pt->getPlans()) {
                 if (getBasicPlan(plan, wrapper->getConfiguration())) {
                     // A BasicPlan representing this combination of Plan and Configuration was created already!
                     continue;
@@ -85,7 +85,7 @@ bool PlanPool::init(IPlanCreator& planCreator)
 
                 auto basicPlan = createBasicPlan(planCreator, plan, wrapper->getConfiguration());
                 if (basicPlan) {
-                    _availablePlans.insert(std::make_pair(wrapper, std::move(basicPlan)));
+                    _availablePlans.insert({{plan, wrapper->getConfiguration()}, std::move(basicPlan)});
                 }
             }
         }
@@ -146,10 +146,9 @@ BasicPlan* PlanPool::getBasicPlan(const Plan* plan, const Configuration* configu
     if (plan->isMasterPlan()) {
         return _masterPlan.get();
     }
-    for (const auto& poolEntry : _availablePlans) {
-        if (poolEntry.first->getAbstractPlan() == plan && poolEntry.first->getConfiguration() == configuration) {
-            return poolEntry.second.get();
-        }
+    auto it = _availablePlans.find({plan, configuration});
+    if (it != _availablePlans.end()) {
+        return it->second.get();
     }
     return nullptr;
 }
