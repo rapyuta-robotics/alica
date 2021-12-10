@@ -28,10 +28,10 @@ install:
     apt-get upgrade -y &&
     apt-get install -y
         build-essential
-        python-catkin-pkg
-        python-rosdep
-        python-wstool
-        python-catkin-tools
+        python3-catkin-pkg
+        python3-rosdep
+        python3-wstool
+        python3-catkin-tools
         ros-$ROS_DISTRO-catkin
         ros-$ROS_DISTRO-rostest
         libyaml-cpp-dev
@@ -77,7 +77,7 @@ script:
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
 
         tar xvz &&
-        python /travis/generate_coverity-analysis_script.py . &&
+        python3 /travis/generate_coverity-analysis_script.py . &&
         chmod +x coverity-analysis.sh &&
         ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh &&
         tar czvf cs.tgz cov-int &&
