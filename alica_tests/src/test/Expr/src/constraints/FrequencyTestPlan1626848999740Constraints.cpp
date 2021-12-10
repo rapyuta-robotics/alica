@@ -8,7 +8,7 @@ namespace alica
 // Plan:FrequencyTestPlan
 /*
  * Tasks:
- * - EP:1626849024805 : DefaultTask (1225112227903)
+ * - EntryPoint:1626849024805 : DefaultTask (1225112227903)
  *
  * States:
  * - Default Name (1626849027475)

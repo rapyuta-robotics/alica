@@ -8,7 +8,7 @@ namespace alica
 // Plan:MultiAgentTestMaster
 /*
  * Tasks:
- * - EP:1413200842975 : DefaultTask (1225112227903)
+ * - EntryPoint:1413200842975 : DefaultTask (1225112227903)
  *
  * States:
  * - Init (1413200842974)

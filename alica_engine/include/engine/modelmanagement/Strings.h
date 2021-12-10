@@ -66,6 +66,7 @@ namespace alica {
         static const std::string syncTimeout = "syncTimeout";
         static const std::string talkTimeout = "talkTimeout";
         static const std::string frequency = "frequency";
+        static const std::string requiresParameters = "requiresParameters";
         static const std::string deferring = "deferring";
         static const std::string eventDriven = "eventDriven";
         static const std::string tasks = "tasks";

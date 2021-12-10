@@ -4,7 +4,7 @@
 #include "alica/reasoner/SimpleVariable.h"
 
 #include <engine/AlicaEngine.h>
-#include <engine/blackboard/BlackBoard.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 
@@ -26,17 +26,17 @@ bool SimpleSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std:
     return true;
 }
 
-bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
     SimpleContext<SimpleVariable>* dc = static_cast<SimpleContext<SimpleVariable>*>(ctx);
 
     results.reserve(dc->getVariables().size());
 
-    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    Blackboard& bb = getAlicaEngine()->editBlackboard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
         const std::string& val = getValue(dummyVariable->getId(), calls);
-        BBIdent bid = bb.registerValue(val.c_str(), val.size());
-        results.push_back(bid);
+        LockedBlackboardRW(bb).registerValue(val, dummyVariable->getId());
+        results.push_back(dummyVariable->getId());
     }
 
     return true;
@@ -48,7 +48,7 @@ SolverVariable* SimpleSolver::createVariable(int64_t representingVariableID, Sol
 }
 std::unique_ptr<SolverContext> SimpleSolver::createSolverContext()
 {
-    return std::unique_ptr<SolverContext>(new SimpleContext<BBIdent>());
+    return std::unique_ptr<SolverContext>(new SimpleContext<int64_t>());
 }
 
 const std::string& SimpleSolver::getValue(int64_t id, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) const

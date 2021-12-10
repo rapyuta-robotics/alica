@@ -8,10 +8,10 @@ namespace alica
 // Plan:MasterPlanTaskAssignment
 /*
  * Tasks:
- * - EP:1407152758499 : DefaultTask (1225112227903)
- * - EP:1407152894887 : AttackTask (1407153522080)
- * - EP:1407152900425 : MidFieldTask (1407153536219)
- * - EP:1407152902493 : DefendTask (1402488486725)
+ * - EntryPoint:1407152758499 : DefaultTask (1225112227903)
+ * - EntryPoint:1407152894887 : AttackTask (1407153522080)
+ * - EntryPoint:1407152900425 : MidFieldTask (1407153536219)
+ * - EntryPoint:1407152902493 : DefendTask (1402488486725)
  *
  * States:
  * - AttackFirst (1407152758498)

@@ -8,7 +8,7 @@ namespace alica
 // Plan:PlanPoolTestMasterPlan
 /*
  * Tasks:
- * - EP:4019498150183138248 : Attack (1222613952469)
+ * - EntryPoint:4019498150183138248 : Attack (1222613952469)
  *
  * States:
  * - 508968687272454527 (508968687272454527)

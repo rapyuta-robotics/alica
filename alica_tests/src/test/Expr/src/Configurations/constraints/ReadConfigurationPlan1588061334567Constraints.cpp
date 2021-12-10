@@ -8,7 +8,7 @@ namespace alica
 // Plan:ReadConfigurationPlan
 /*
  * Tasks:
- * - EP:1588069183324 : DefaultTask (1225112227903)
+ * - EntryPoint:1588069183324 : DefaultTask (1225112227903)
  *
  * States:
  * - DecisionState (1588069177860)

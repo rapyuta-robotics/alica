@@ -8,7 +8,7 @@ namespace alica
 // Plan:SimpleTestPlan
 /*
  * Tasks:
- * - EP:1412252439927 : DefaultTask (1225112227903)
+ * - EntryPoint:1412252439927 : DefaultTask (1225112227903)
  *
  * States:
  * - TestState1 (1412252439926)

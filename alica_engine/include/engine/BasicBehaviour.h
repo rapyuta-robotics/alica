@@ -39,9 +39,11 @@ public:
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
+    using RunnableObject::setRequiresParameters;
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
+    using RunnableObject::getBlackboard;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
 

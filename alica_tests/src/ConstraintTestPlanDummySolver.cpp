@@ -3,7 +3,7 @@
 #include <alica_solver_interface/SimpleContext.h>
 #include <alica_solver_interface/SolverVariable.h>
 #include <engine/AlicaEngine.h>
-#include <engine/blackboard/BlackBoard.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/model/Variable.h>
 
 #include <iostream>
@@ -37,13 +37,14 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
     return false;
 }
 
-bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<BBIdent>& results)
+bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
-    BlackBoard& bb = getAlicaEngine()->editBlackBoard();
+    Blackboard& bb = getAlicaEngine()->editBlackboard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
-        results.push_back(bb.registerValue(s.c_str(), static_cast<int>(s.size())));
+        LockedBlackboardRW(bb).registerValue(s, var->getId());
+        results.push_back(var->getId());
     }
     ++s_getSolutionCallCounter;
     // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << s_getSolutionCallCounter << " times!"
