@@ -4,7 +4,7 @@
 #include "alica/reasoner/SimpleVariable.h"
 
 #include <engine/AlicaEngine.h>
-#include <engine/Blackboard/Blackboard.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
 

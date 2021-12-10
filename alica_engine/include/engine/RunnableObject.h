@@ -2,7 +2,7 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/Blackboard/Blackboard.h"
+#include "engine/blackboard/Blackboard.h"
 #include <atomic>
 #include <memory>
 #include <string>

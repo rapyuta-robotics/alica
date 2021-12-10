@@ -9,7 +9,7 @@
 #include "engine/TeamObserver.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/Blackboard/Blackboard.h"
+#include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/syncmodule/SyncModule.h"
