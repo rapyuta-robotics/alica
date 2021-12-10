@@ -79,7 +79,7 @@ public:
     size_t size() const {
         return _impl->size();
     }
-    template <typename T> const T& get(const std::string& key) {
+    template <typename T> const T& get(const std::string& key) const {
         return _impl->get<T>(key);
     }
     bool hasValue(const std::string& key) const {
