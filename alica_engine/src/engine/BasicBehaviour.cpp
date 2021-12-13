@@ -71,7 +71,7 @@ void BasicBehaviour::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    setFlags(Flags::INIT_EXECUTED);
+    _initExecuted = true;
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
@@ -125,7 +125,9 @@ void BasicBehaviour::doTerminate()
     }
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
-    setTerminatedState();
+    if (setTerminatedState()) {
+        return;
+    }
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
