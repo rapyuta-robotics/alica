@@ -10,9 +10,9 @@
 namespace autodiff
 {
 ConstPower::ConstPower(TermPtr baseTerm, double exponent, TermHolder* owner)
-    : Term(owner)
-    , _base(baseTerm)
-    , _exponent(exponent)
+        : Term(owner)
+        , _base(baseTerm)
+        , _exponent(exponent)
 {
 }
 

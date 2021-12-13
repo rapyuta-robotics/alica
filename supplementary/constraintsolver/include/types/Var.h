@@ -21,7 +21,7 @@ class Watcher;
 
 class Var
 {
-  public:
+public:
     Var(int index, bool prefSign = true);
     ~Var();
 
@@ -74,7 +74,7 @@ class Var
         }
     }
 
-  private:
+private:
     std::shared_ptr<Clause> reason;
 };
 

@@ -2,13 +2,13 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/Types.h"
 
 #include <alica_common_config/debug_output.h>
 

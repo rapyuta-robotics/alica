@@ -1,7 +1,7 @@
 #pragma once
 
-#include <engine/model/Variable.h>
 #include <engine/Types.h>
+#include <engine/model/Variable.h>
 
 namespace alica
 {

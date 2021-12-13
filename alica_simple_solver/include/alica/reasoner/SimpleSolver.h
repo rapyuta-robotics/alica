@@ -18,7 +18,7 @@ namespace reasoner
 
 class SimpleSolver : public alica::ISolver<SimpleSolver, int64_t>
 {
-  public:
+public:
     SimpleSolver(AlicaEngine* ae);
     virtual ~SimpleSolver();
 
@@ -27,7 +27,7 @@ class SimpleSolver : public alica::ISolver<SimpleSolver, int64_t>
     virtual SolverVariable* createVariable(int64_t representingVariableId, SolverContext* ctx) override;
     virtual std::unique_ptr<SolverContext> createSolverContext() override;
 
-  private:
+private:
     const std::string& getValue(int64_t id, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls) const;
 };
 } /* namespace reasoner */

@@ -1,11 +1,11 @@
-#include <alica_tests/CounterClass.h>
-#include "test_alica.h"
 #include "Behaviour/BehAAA.h"
 #include "Behaviour/BehBAA.h"
+#include "test_alica.h"
+#include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>
-#include <gtest/gtest.h>
 #include <alica_tests/test_sched_world_model.h>
+#include <gtest/gtest.h>
 
 namespace alica
 {
@@ -18,14 +18,8 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
     bool stepEngine() const override { return true; }
-    virtual void SetUp() override
-    {
-        AlicaSchedulingTestFixture::SetUp();
-    }
-    virtual void TearDown() override
-    {
-        AlicaSchedulingTestFixture::TearDown();
-    }
+    virtual void SetUp() override { AlicaSchedulingTestFixture::SetUp(); }
+    virtual void TearDown() override { AlicaSchedulingTestFixture::TearDown(); }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)
@@ -246,7 +240,8 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n");
 
     std::string execOrderBeforeTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
-    std::string execOrderAfterTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+    std::string execOrderAfterTransition =
+            "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
 
     for (int i = 0; i < 10; i++) {
         wm->execOrder = "";

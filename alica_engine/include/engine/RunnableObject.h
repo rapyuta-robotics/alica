@@ -34,11 +34,11 @@ protected:
     void setEngine(AlicaEngine* engine) { _engine = engine; };
     void setConfiguration(const Configuration* conf) { _configuration = conf; };
     void setName(const std::string& name) { _name = name; };
-    const std::string& getName() {return _name; };
+    const std::string& getName() { return _name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
     bool getRequiresParameters() const { return _requiresParameters; }
-    void setRequiresParameters(bool requiresParameters) {_requiresParameters = requiresParameters;}
+    void setRequiresParameters(bool requiresParameters) { _requiresParameters = requiresParameters; }
     void stop();
     void start(RunningPlan* rp);
 
@@ -116,7 +116,7 @@ protected:
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
-    const std::shared_ptr<Blackboard> getBlackboard() {return _Blackboard;}
+    const std::shared_ptr<Blackboard> getBlackboard() { return _Blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
 };
 } /* namespace alica */

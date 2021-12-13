@@ -1,7 +1,7 @@
 #include "Behaviour/Attack.h"
 #include "Behaviour/ConstraintUsingBehaviour.h"
-#include <alica_tests/CounterClass.h>
 #include "test_alica.h"
+#include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>

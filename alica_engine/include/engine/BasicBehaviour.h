@@ -34,18 +34,18 @@ public:
 
     // Use of private inheritance and explciltly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
+    using RunnableObject::getBlackboard;
+    using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTraceContext;
+    using RunnableObject::getWorldModel;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
-    using RunnableObject::setRequiresParameters;
     using RunnableObject::setName;
+    using RunnableObject::setRequiresParameters;
     using RunnableObject::start;
     using RunnableObject::stop;
-    using RunnableObject::getBlackboard;
-    using RunnableObject::getWorldModel;
-    using RunnableObject::getName;
     using RunnableObject::TracingType;
 
     virtual void run(void* msg) = 0;
@@ -87,7 +87,8 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
-            RunnableObject::setTracing(type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
+            RunnableObject::setTracing(
+                    type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
         } else {
             RunnableObject::setTracing(type, {});
         }

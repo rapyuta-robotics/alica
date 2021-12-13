@@ -13,6 +13,7 @@
 #include <alica_tests/TestWorldModel.h>
 
 #include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
@@ -23,17 +24,16 @@
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
 #include <engine/TeamObserver.h>
+#include <engine/UtilityFunction.h>
+#include <engine/allocationauthority/AllocationDifference.h>
+#include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Behaviour.h>
 #include <engine/model/Plan.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/State.h>
-#include <engine/UtilityFunction.h>
-#include <engine/teammanager/TeamManager.h>
-#include <engine/allocationauthority/AllocationDifference.h>
-#include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
 #include <engine/modelmanagement/factories/TaskFactory.h>
-#include <communication/AlicaDummyCommunication.h>
+#include <engine/teammanager/TeamManager.h>
 
 #include <gtest/gtest.h>
 

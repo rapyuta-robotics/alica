@@ -36,7 +36,7 @@ const std::string syncTalkTopic = "/AlicaEngine/SyncTalk";
 const std::string solverResultTopic = "/AlicaEngine/SolverResult";
 const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
-}
+} // namespace
 
 AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
         : AlicaRosCommunication(ae, 0, false)

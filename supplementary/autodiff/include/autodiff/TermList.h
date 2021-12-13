@@ -9,12 +9,12 @@ namespace autodiff
 
 class TermList
 {
-  public:
+public:
     class TermListIter
     {
-      public:
+    public:
         TermListIter(TermPtr t)
-            : _t(t)
+                : _t(t)
         {
         }
         TermPtr operator*() const { return _t; }
@@ -27,14 +27,14 @@ class TermList
             return *this;
         }
 
-      private:
+    private:
         TermPtr _t;
     };
 
     TermList()
-        : _first(nullptr)
-        , _last(nullptr)
-        , _size(0)
+            : _first(nullptr)
+            , _last(nullptr)
+            , _size(0)
     {
     }
 
@@ -54,7 +54,7 @@ class TermList
     int size() const { return _size; }
     bool empty() const { return _size == 0; }
 
-  private:
+private:
     TermPtr _first;
     TermPtr _last;
     int _size;

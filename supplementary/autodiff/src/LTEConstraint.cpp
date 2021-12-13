@@ -11,8 +11,8 @@
 namespace autodiff
 {
 LTEConstraint::LTEConstraint(TermPtr x, TermPtr y, TermHolder* owner)
-    : BinaryFunction(x, y, owner)
-    , _negatedForm(nullptr)
+        : BinaryFunction(x, y, owner)
+        , _negatedForm(nullptr)
 {
 }
 

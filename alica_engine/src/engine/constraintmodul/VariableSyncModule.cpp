@@ -1,11 +1,11 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaTimer.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaTimer.h"
 #include <algorithm>
 #include <cmath>
 
@@ -25,9 +25,7 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
 {
 }
 
-VariableSyncModule::~VariableSyncModule()
-{
-}
+VariableSyncModule::~VariableSyncModule() {}
 
 void VariableSyncModule::init()
 {

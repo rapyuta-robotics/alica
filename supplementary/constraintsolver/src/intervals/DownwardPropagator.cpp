@@ -25,8 +25,8 @@ namespace intervalpropagation
 using namespace autodiff;
 
 DownwardPropagator::DownwardPropagator()
-    : _changed(nullptr)
-    , _up(nullptr)
+        : _changed(nullptr)
+        , _up(nullptr)
 {
 }
 

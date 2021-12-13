@@ -7,7 +7,7 @@ namespace autodiff
 
 class LinSigmoid : public UnaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -20,7 +20,7 @@ class LinSigmoid : public UnaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     LinSigmoid(TermPtr arg, TermHolder* owner);
 };

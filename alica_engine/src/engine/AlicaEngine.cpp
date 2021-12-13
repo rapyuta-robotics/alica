@@ -2,6 +2,7 @@
 
 #include "engine/IRoleAssignment.h"
 #include "engine/StaticRoleAssignment.h"
+#include "engine/Types.h"
 #include "engine/UtilityFunction.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
@@ -10,12 +11,11 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/Types.h"
 
-#include <alica_common_config/debug_output.h>
-#include <functional>
 #include <algorithm>
+#include <alica_common_config/debug_output.h>
 #include <chrono>
+#include <functional>
 #include <random>
 #include <stdlib.h>
 
@@ -34,9 +34,8 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath,
-                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const AgentId agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+        const AgentId agentID)
         : _ctx(ctx)
         , _scheduler()
         , _stepCalled(false)
@@ -231,9 +230,10 @@ void AlicaEngine::stepNotify()
  * @return The ID
  */
 
-AgentId AlicaEngine::generateID() {
+AgentId AlicaEngine::generateID()
+{
     std::random_device device;
-    std::uniform_int_distribution<int32_t> distribution(1,std::numeric_limits<int32_t>::max());
+    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
     uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
     id = (id << 32) | (distribution(device));
     return id;

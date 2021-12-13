@@ -16,7 +16,7 @@
 namespace autodiff
 {
 ConstraintUtility::ConstraintUtility(TermPtr constraint, TermPtr utility, TermHolder* owner)
-    : BinaryFunction(constraint, utility, owner)
+        : BinaryFunction(constraint, utility, owner)
 
 {
 }

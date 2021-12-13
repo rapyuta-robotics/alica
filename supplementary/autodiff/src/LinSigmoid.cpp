@@ -10,7 +10,7 @@
 namespace autodiff
 {
 LinSigmoid::LinSigmoid(TermPtr arg, TermHolder* owner)
-    : UnaryFunction(arg, owner)
+        : UnaryFunction(arg, owner)
 {
 }
 
