@@ -16,6 +16,7 @@ env:
     - COVERITY_EMAIL=abhishek.sharma@rapyuta-robotics.com
     - BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
     - BASE_BRANCH=$TRAVIS_BRANCH
+    - CI_SOURCE_PATH=$(pwd)
 
 ################################################################################
 jobs:
