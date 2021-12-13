@@ -46,6 +46,7 @@ public:
     using RunnableObject::getBlackboard;
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
+    using RunnableObject::TracingType;
 
     virtual void run(void* msg) = 0;
 
@@ -82,6 +83,15 @@ public:
 protected:
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
+
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
+    {
+        if (customTraceContextGetter) {
+            RunnableObject::setTracing(type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
+        } else {
+            RunnableObject::setTracing(type, {});
+        }
+    }
 
     void setSuccess();
     void setFailure();
