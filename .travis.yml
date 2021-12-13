@@ -22,7 +22,7 @@ jobs:
   include:
   - name: lint
     install:
-      - apt install clang-format-6.0
+      - sudo apt install clang-format-6.0
     script:
       - source check_clang_format.sh
   - name: build
