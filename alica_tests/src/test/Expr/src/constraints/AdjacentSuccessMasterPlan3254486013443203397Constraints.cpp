@@ -8,7 +8,7 @@ namespace alica
 // Plan:AdjacentSuccessMasterPlan
 /*
  * Tasks:
- * - EP:177437342277134781 : DefaultTask (1225112227903)
+ * - EntryPoint:177437342277134781 : DefaultTask (1225112227903)
  *
  * States:
  * - EntryState (338845808462999166)

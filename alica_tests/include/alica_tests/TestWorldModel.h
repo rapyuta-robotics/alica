@@ -56,14 +56,10 @@ public:
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
     // Adjacent plans success test transitions
-    bool isTransitionCondition1914245867924544479() const;
-    void setTransitionCondition1914245867924544479(bool transitionCondition1914245867924544479);
-    bool isTransitionCondition3345031375302716643() const;
-    void setTransitionCondition3345031375302716643(bool transitionCondition3345031375302716643);
-    bool isTransitionCondition1390829819585906015() const;
-    void setTransitionCondition1390829819585906015(bool transitionCondition1390829819585906015);
-    bool isTransitionCondition3143778092687974738() const;
-    void setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738);
+    bool isTransitionCondition1747408236004727286() const;
+    void setTransitionCondition1747408236004727286(bool transitionCondition1747408236004727286);
+    bool isTransitionCondition1067314038887345208() const;
+    void setTransitionCondition1067314038887345208(bool transitionCondition1067314038887345208);
     
     // Test Tracing MasterPlan
     bool isPreCondition1840401110297459509() const;
@@ -116,11 +112,13 @@ private:
     //tracing master plan
     bool preCondition1840401110297459509;
 
-    // Adjacent plans success test
-    bool transitionCondition1914245867924544479;
-    bool transitionCondition3345031375302716643;
-    bool transitionCondition1390829819585906015;
-    bool transitionCondition3143778092687974738;
+    // Adjacent plans success test  
+    bool transitionCondition1747408236004727286;
+    bool transitionCondition1067314038887345208;
+    // bool transitionCondition1914245867924544479;
+    // bool transitionCondition3345031375302716643;
+    // bool transitionCondition1390829819585906015;
+    // bool transitionCondition3143778092687974738;
 
     bool switchEntryPoints;
     bool wait;

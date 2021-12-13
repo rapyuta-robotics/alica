@@ -4,9 +4,10 @@
     {
       "comment": "",
       "id": 3470417373268048093,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
-      "name": "",
+      "name": "EntryPoint",
       "plan": 1682631238618360548,
       "positionWeb": {
         "x": 200,
@@ -23,45 +24,18 @@
   "name": "AdjacentSuccessSubPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
-          "comment": "",
-          "configuration": null,
-          "id": 3080693630052187961,
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 1181007688948643441,
-      "inTransitions": [
-        3143778092687974738
-      ],
-      "name": "",
-      "outTransitions": [
-        1390829819585906015
-      ],
-      "parentPlan": 1682631238618360548,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": null,
       "id": 496520533178003845,
       "inTransitions": [
-        1390829819585906015
+        4079672912751513705
       ],
-      "name": "",
+      "name": "SucState",
       "outTransitions": [],
       "parentPlan": 1682631238618360548,
       "positionWeb": {
@@ -79,13 +53,33 @@
       "entryPoint": 3470417373268048093,
       "id": 656998006978148289,
       "inTransitions": [],
-      "name": "",
+      "name": "EntryState",
       "outTransitions": [
-        3143778092687974738
+        1747408236004727286
       ],
       "parentPlan": 1682631238618360548,
       "positionWeb": {
         "x": 428,
+        "y": 199.11812179016874
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 235276470945876557,
+      "inTransitions": [
+        1747408236004727286
+      ],
+      "name": "WaitState",
+      "outTransitions": [
+        4079672912751513705
+      ],
+      "parentPlan": 1682631238618360548,
+      "positionWeb": {
+        "x": 686,
         "y": 200
       },
       "type": "State",
@@ -96,16 +90,16 @@
   "transitions": [
     {
       "comment": "",
-      "id": 3143778092687974738,
-      "inState": 656998006978148289,
+      "id": 4079672912751513705,
+      "inState": 235276470945876557,
       "name": "",
-      "outState": 1181007688948643441,
+      "outState": 496520533178003845,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3441061963559991094,
+        "id": 1067314038887345208,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -115,16 +109,16 @@
     },
     {
       "comment": "",
-      "id": 1390829819585906015,
-      "inState": 1181007688948643441,
+      "id": 1747408236004727286,
+      "inState": 656998006978148289,
       "name": "",
-      "outState": 496520533178003845,
+      "outState": 235276470945876557,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 3875618235052823378,
+        "id": 597347780541336226,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

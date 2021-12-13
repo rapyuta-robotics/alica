@@ -29,33 +29,29 @@ protected:
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
     auto worldModel = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
-    worldModel->setTransitionCondition3143778092687974738(false);
-    worldModel->setTransitionCondition3345031375302716643(false);
-    worldModel->setTransitionCondition1914245867924544479(false);
 
     ae->start();
     auto successSpamBehaviour = alica::test::Util::getBasicBehaviour(ae, 1522377401286, 0);
 
-    worldModel->setTransitionCondition3143778092687974738(true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(50)); // wait for setSuccessCall
-    EXPECT_FALSE(successSpamBehaviour->isSuccess() && alica::test::Util::isPlanActive(ae, 656998006978148289));
-
     for(int i = 0; i < 10; i++) {
+        // go into WaitState of subPlan before evaluating
+        worldModel->setTransitionCondition1067314038887345208(false); // do not transition from WaitState to SucState in subPlan
+        worldModel->setTransitionCondition1747408236004727286(true); // transition from EntryState to WaitState in subPlan
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
         if (i % 2 == 0) {
-            worldModel->setTransitionCondition1914245867924544479(false);
-            worldModel->setTransitionCondition3345031375302716643(true);
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 338845808462999166)); // is in EntryState
         } else {
-            worldModel->setTransitionCondition3345031375302716643(false);
-            worldModel->setTransitionCondition1914245867924544479(true);
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1114306208475690481)); // is in SecondState
         }
 
-        // allow transition to state with SuccessSpam behaviour in AdjacentSuccessSubPlan
-        worldModel->setTransitionCondition3143778092687974738(true);
+        EXPECT_FALSE(alica::test::Util::hasPlanSucceeded(ae, 1682631238618360548)); // subPlan has not succeeded yet
+
+        // go into SucState of subPlan, triggers transition in MasterPlan
+        worldModel->setTransitionCondition1747408236004727286(false); // do not transition from EntryState to WaitState in subPlan
+        worldModel->setTransitionCondition1067314038887345208(true); // transition from WaitState to SucState in subPlan
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        // make sure the plan never succeeds after a transition, success from behaviour does not carry
-        // over to sibling plan.
-        EXPECT_FALSE(successSpamBehaviour->isSuccess() && alica::test::Util::isPlanActive(ae, 656998006978148289));
     }
     
 }

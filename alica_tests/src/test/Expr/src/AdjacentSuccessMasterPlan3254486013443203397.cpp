@@ -38,6 +38,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction3254486013443203397::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 3345031375302716643 (3345031375302716643)
  *   - Comment:
@@ -56,10 +57,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction3254486013443203397::getUtilityF
 bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3345031375302716643) ENABLED START*/
-    auto worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldModel->isTransitionCondition3345031375302716643();
+    return rp->isAnyChildTaskSuccessful();
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1914245867924544479 (1914245867924544479)
  *   - Comment:
@@ -78,8 +79,7 @@ bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp, c
 bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1914245867924544479) ENABLED START*/
-    auto worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldModel->isTransitionCondition1914245867924544479();
+    return rp->isAnyChildTaskSuccessful();
     /*PROTECTED REGION END*/
 }
 

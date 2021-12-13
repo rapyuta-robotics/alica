@@ -8,16 +8,16 @@ namespace alica
 // Plan:AdjacentSuccessSubPlan
 /*
  * Tasks:
- * - EP:3470417373268048093 : DefaultTask (1225112227903)
+ * - EntryPoint:3470417373268048093 : DefaultTask (1225112227903)
  *
  * States:
- * - 1181007688948643441 (1181007688948643441)
- * - 496520533178003845 (496520533178003845)
- * - 656998006978148289 (656998006978148289)
+ * - SucState (496520533178003845)
+ * - EntryState (656998006978148289)
+ * - WaitState (235276470945876557)
  *
  * Vars:
  */
-// State: 1181007688948643441
-// State: 496520533178003845
-// State: 656998006978148289
+// State: SucState
+// State: EntryState
+// State: WaitState
 } // namespace alica

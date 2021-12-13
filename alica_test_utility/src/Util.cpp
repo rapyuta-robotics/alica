@@ -68,6 +68,30 @@ bool Util::isPlanActiveHelper(const RunningPlan* rp, int64_t id)
     return false;
 }
 
+bool Util::hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id)
+{
+    return hasPlanSucceededHelper(ae->getPlanBase().getRootNode(), id);
+}
+
+bool Util::hasPlanSucceededHelper(const RunningPlan* rp, int64_t id)
+{
+    if (!rp) {
+        return false;
+    }
+
+    const AbstractPlan* abstractPlan = rp->getActivePlan();
+    if (abstractPlan && abstractPlan->getId() == id && rp->amISuccessful()) {
+        return true;
+    }
+    const std::vector<RunningPlan*>& children = rp->getChildren();
+    for (int i = 0; i < static_cast<int>(children.size()); i++) {
+        if (hasPlanSucceededHelper(children[i], id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 const alica::Agent* Util::getLocalAgent(alica::AlicaEngine* ae)
 {
     return ae->getTeamManager().getLocalAgent();

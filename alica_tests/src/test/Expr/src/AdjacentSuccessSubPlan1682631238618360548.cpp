@@ -12,9 +12,9 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 3470417373268048093)
 //
 // States:
-//   - 1181007688948643441 (1181007688948643441)
-//   - 496520533178003845 (496520533178003845)
-//   - 656998006978148289 (656998006978148289)
+//   - SucState (496520533178003845)
+//   - EntryState (656998006978148289)
+//   - WaitState (235276470945876557)
 AdjacentSuccessSubPlan1682631238618360548::AdjacentSuccessSubPlan1682631238618360548(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -39,51 +39,48 @@ std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
- * Transition: 1390829819585906015 (1390829819585906015)
+ * Transition: 1747408236004727286 (1747408236004727286)
  *   - Comment:
- *   - Source2Dest: 1181007688948643441 --> 496520533178003845
+ *   - Source2Dest: EntryState --> WaitState
  *
- * Precondition: 3875618235052823378 (3875618235052823378)
+ * Precondition: 597347780541336226 (597347780541336226)
  *   - Enabled: true
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in 1181007688948643441:
- *   - SuccessSpam (1522377401286)
+ * Abstract Plans in EntryState:
  */
-bool PreCondition3875618235052823378::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition597347780541336226::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(1390829819585906015) ENABLED START*/
-    for (const alica::RunningPlan* child : rp->getChildren()) {
-        if (child->getStatus() == alica::PlanStatus::Success) {
-            return true;
-        }
-    }
-    return false;
+    /*PROTECTED REGION ID(1747408236004727286) ENABLED START*/
+    auto worldmodel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldmodel->isTransitionCondition1747408236004727286();
     /*PROTECTED REGION END*/
 }
+
 /**
- * Transition: 3143778092687974738 (3143778092687974738)
+ * Transition: 4079672912751513705 (4079672912751513705)
  *   - Comment:
- *   - Source2Dest: 656998006978148289 --> 1181007688948643441
+ *   - Source2Dest: WaitState --> SucState
  *
- * Precondition: 3441061963559991094 (3441061963559991094)
+ * Precondition: 1067314038887345208 (1067314038887345208)
  *   - Enabled: true
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in 656998006978148289:
+ * Abstract Plans in WaitState:
  */
-bool PreCondition3441061963559991094::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1067314038887345208::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(3143778092687974738) ENABLED START*/
-    auto worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldModel->isTransitionCondition3143778092687974738();
+    /*PROTECTED REGION ID(4079672912751513705) ENABLED START*/
+    auto worldmodel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldmodel->isTransitionCondition1067314038887345208();
     /*PROTECTED REGION END*/
 }
 

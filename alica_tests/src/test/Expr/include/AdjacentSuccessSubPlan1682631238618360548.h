@@ -5,6 +5,7 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaWorldModel.h>
+#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1682631238618360548) ENABLED START*/
 // Add additional includes here
@@ -24,10 +25,6 @@ public:
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
-    // Override these methods for your use case
-    // virtual void run(void* msg) override;
-    // virtual void onInit() override;
-    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro1682631238618360548) ENABLED START*/
     // Add/Override protected methods here
     /*PROTECTED REGION END*/
@@ -41,11 +38,11 @@ class UtilityFunction1682631238618360548 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
-class PreCondition3875618235052823378 : public DomainCondition
+class PreCondition597347780541336226 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition3441061963559991094 : public DomainCondition
+class PreCondition1067314038887345208 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };

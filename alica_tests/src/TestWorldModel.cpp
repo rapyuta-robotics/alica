@@ -215,44 +215,22 @@ void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
     this->switchEntryPoints = switchEntryPoints;
 }
 
-bool TestWorldModel::isTransitionCondition1914245867924544479() const
+bool TestWorldModel::isTransitionCondition1747408236004727286() const
 {
-    return this->transitionCondition1914245867924544479;
+    return this->transitionCondition1747408236004727286;
+}
+void TestWorldModel::setTransitionCondition1747408236004727286(bool transitionCondition1747408236004727286)
+{
+    this->transitionCondition1747408236004727286 = transitionCondition1747408236004727286;
 }
 
-void TestWorldModel::setTransitionCondition1914245867924544479(bool transitionCondition1914245867924544479)
+bool TestWorldModel::isTransitionCondition1067314038887345208() const
 {
-    this->transitionCondition1914245867924544479 = transitionCondition1914245867924544479;
+    return this->transitionCondition1067314038887345208;
 }
-
-bool TestWorldModel::isTransitionCondition3345031375302716643() const
+void TestWorldModel::setTransitionCondition1067314038887345208(bool transitionCondition1067314038887345208)
 {
-    return this->transitionCondition3345031375302716643;
-}
-
-void TestWorldModel::setTransitionCondition3345031375302716643(bool transitionCondition3345031375302716643)
-{
-    this->transitionCondition3345031375302716643 = transitionCondition3345031375302716643;
-}
-
-bool TestWorldModel::isTransitionCondition1390829819585906015() const
-{
-    return this->transitionCondition1390829819585906015;
-}
-
-void TestWorldModel::setTransitionCondition1390829819585906015(bool transitionCondition1390829819585906015)
-{
-    this->transitionCondition1390829819585906015 = transitionCondition1390829819585906015;
-}
-
-bool TestWorldModel::isTransitionCondition3143778092687974738() const
-{
-    return this->transitionCondition3143778092687974738;
-}
-
-void TestWorldModel::setTransitionCondition3143778092687974738(bool transitionCondition3143778092687974738)
-{
-    this->transitionCondition3143778092687974738 = transitionCondition3143778092687974738;
+    this->transitionCondition1067314038887345208 = transitionCondition1067314038887345208;
 }
 
 bool TestWorldModel::isPreCondition1840401110297459509() const

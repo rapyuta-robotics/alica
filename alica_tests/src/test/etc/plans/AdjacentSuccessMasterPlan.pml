@@ -4,9 +4,10 @@
     {
       "comment": "",
       "id": 177437342277134781,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
-      "name": "",
+      "name": "EntryPoint",
       "plan": 3254486013443203397,
       "positionWeb": {
         "x": 267,
@@ -23,6 +24,7 @@
   "name": "AdjacentSuccessMasterPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -48,7 +50,7 @@
       "parentPlan": 3254486013443203397,
       "positionWeb": {
         "x": 726,
-        "y": 249
+        "y": 247.23917828319884
       },
       "type": "State",
       "variableBindings": []
@@ -90,7 +92,12 @@
       "inState": 1114306208475690481,
       "name": "",
       "outState": 338845808462999166,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 930.6830520909759,
+          "y": 301.56859867938374
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -109,7 +116,12 @@
       "inState": 338845808462999166,
       "name": "",
       "outState": 1114306208475690481,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 932.4438738077771,
+          "y": 214.40792369772558
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

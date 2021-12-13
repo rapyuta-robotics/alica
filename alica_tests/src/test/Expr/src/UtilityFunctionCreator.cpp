@@ -213,23 +213,23 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 432995127772554364:
         return std::make_shared<UtilityFunction432995127772554364>();
         break;
-    case 1682631238618360548:
-        return std::make_shared<UtilityFunction1682631238618360548>();
-        break;
     case 691392966514374878:
         return std::make_shared<UtilityFunction691392966514374878>();
         break;
     case 1482512794732634139:
         return std::make_shared<UtilityFunction1482512794732634139>();
         break;
+    case 1682631238618360548:
+        return std::make_shared<UtilityFunction1682631238618360548>();
+        break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
         break;
-    case 3254486013443203397:
-        return std::make_shared<UtilityFunction3254486013443203397>();
-        break;
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
+        break;
+    case 3254486013443203397:
+        return std::make_shared<UtilityFunction3254486013443203397>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
