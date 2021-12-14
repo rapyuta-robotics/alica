@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1733191353578191428,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "",
@@ -23,6 +24,7 @@
   "name": "TestTracingSubPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

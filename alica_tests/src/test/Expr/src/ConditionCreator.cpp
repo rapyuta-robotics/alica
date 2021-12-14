@@ -68,6 +68,9 @@
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "TestBehaviour55178365253414982.h"
+#include "TestParameterPassing1692837668719979457.h"
+#include "TestParameterPassingBehaviour831400441334251602.h"
+#include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
 #include "TestTracingSubPlan1482512794732634139.h"
 

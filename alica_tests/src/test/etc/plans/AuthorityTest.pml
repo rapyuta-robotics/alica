@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1414403429951,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "1414403429951",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1414403522424,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "AttackTask",
@@ -38,6 +40,7 @@
   "name": "AuthorityTest",
   "preCondition": null,
   "relativeDirectory": "Authority",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

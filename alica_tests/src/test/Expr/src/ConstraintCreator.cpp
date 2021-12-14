@@ -69,6 +69,9 @@
 #include "constraints/SimpleTestPlan1412252439925Constraints.h"
 #include "constraints/Tackle1402489318663Constraints.h"
 #include "constraints/TestBehaviour55178365253414982Constraints.h"
+#include "constraints/TestParameterPassing1692837668719979457Constraints.h"
+#include "constraints/TestParameterPassingBehaviour831400441334251602Constraints.h"
+#include "constraints/TestParameterPassingMaster1179066429431332055Constraints.h"
 #include "constraints/TestTracingMasterPlan691392966514374878Constraints.h"
 #include "constraints/TestTracingSubPlan1482512794732634139Constraints.h"
 

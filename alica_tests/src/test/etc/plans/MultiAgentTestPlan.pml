@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1413200877337,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "AttackTask",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1413200890537,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "DefaultTask",
@@ -34,6 +36,7 @@
     {
       "comment": "",
       "id": 1413807260446,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "NewEntryPoint",
@@ -53,6 +56,7 @@
   "name": "MultiAgentTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

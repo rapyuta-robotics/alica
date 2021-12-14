@@ -1,5 +1,3 @@
-
-
 #include "DomainCondition.h"
 /*PROTECTED REGION ID(incBC1629895901559) ENABLED START*/
 // Add additional includes here
