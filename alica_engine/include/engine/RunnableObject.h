@@ -112,7 +112,6 @@ protected:
     // Returns true if termination is complete, i.e. if the execution context is destroyed,
     // otherwise onTermination should be called & the execution context should to be destroyed by the caller
     bool setTerminatedState();
-    void traceTermination();
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
