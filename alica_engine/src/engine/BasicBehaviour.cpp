@@ -131,8 +131,11 @@ void BasicBehaviour::doTerminate()
 
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
-        traceTermination();
+        if (_trace) {
+            _trace->setLog({"status", "terminating"});
+        }
         onTermination();
+        _trace.reset();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
