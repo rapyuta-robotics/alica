@@ -47,7 +47,6 @@ public:
     using RunnableObject::getWorldModel;
     using RunnableObject::getName;
     using RunnableObject::TracingType;
-    using RunnableObject::getTrace;
 
     virtual void run(void* msg) = 0;
 
@@ -82,6 +81,8 @@ public:
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
 protected:
+    using RunnableObject::getTrace;
+
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 
