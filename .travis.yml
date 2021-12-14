@@ -10,7 +10,7 @@ services:
 
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=noetic
     - COVERITY_PROJECT=alica
     - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
     - COVERITY_EMAIL=alexander.bolinsky@rapyuta-robotics.com
@@ -20,7 +20,7 @@ env:
 ################################################################################
 
 before_install:
-  - docker run -e BASE_BRANCH -e BRANCH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-bionic tail -f /dev/null
+  - docker run -e BASE_BRANCH -e BRANCH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-focal tail -f /dev/null
 
 install:
   - docker exec -t alica-test bash -c "
@@ -28,10 +28,10 @@ install:
     apt-get upgrade -y &&
     apt-get install -y
         build-essential
-        python-catkin-pkg
-        python-rosdep
-        python-wstool
-        python-catkin-tools
+        python3-catkin-pkg
+        python3-rosdep
+        python3-wstool
+        python3-catkin-tools
         ros-$ROS_DISTRO-catkin
         ros-$ROS_DISTRO-rostest
         libyaml-cpp-dev
@@ -77,7 +77,7 @@ script:
             --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
 
         tar xvz &&
-        python /travis/generate_coverity-analysis_script.py . &&
+        python3 /travis/generate_coverity-analysis_script.py . &&
         chmod +x coverity-analysis.sh &&
         ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh &&
         tar czvf cs.tgz cov-int &&
