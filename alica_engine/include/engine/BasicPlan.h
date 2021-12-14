@@ -39,6 +39,8 @@ public:
 
     std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) {return _planAttachments.at(id);}
 protected:
+    using RunnableObject::getTrace;
+    
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
