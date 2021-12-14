@@ -137,14 +137,6 @@ void RunnableObject::initTrace()
     }
 }
 
-void RunnableObject::traceTermination()
-{
-    if (_trace) {
-        _trace->setLog({"status", "terminating"});
-        _trace.reset();
-    }
-}
-
 void RunnableObject::traceRun()
 {
     if (_trace && !_runTraced) {
