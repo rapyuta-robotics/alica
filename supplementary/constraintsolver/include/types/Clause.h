@@ -17,7 +17,7 @@ class Watcher;
 
 class Clause
 {
-  public:
+public:
     Clause();
     ~Clause();
 

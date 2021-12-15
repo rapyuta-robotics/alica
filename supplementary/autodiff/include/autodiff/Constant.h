@@ -7,7 +7,7 @@ namespace autodiff
 
 class Constant : public Term
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -24,7 +24,7 @@ class Constant : public Term
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
     virtual void fillParameters(Parameter* params) const override { params[0].asDouble = _value; }
 
-  private:
+private:
     friend TermHolder;
     Constant(double value, TermHolder* owner);
     double _value;

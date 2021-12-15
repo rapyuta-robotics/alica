@@ -33,10 +33,10 @@ Lit::Lit(const std::shared_ptr<Var>& v, Assignment ass)
 }
 
 Lit::Lit(autodiff::TermPtr t, Assignment ass, bool temp)
-    : _atom(t)
-    , isTemporary(temp)
-    , sign(ass)
-    , variableCount(-1)
+        : _atom(t)
+        , isTemporary(temp)
+        , sign(ass)
+        , variableCount(-1)
 {
 }
 

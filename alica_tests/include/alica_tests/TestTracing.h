@@ -1,10 +1,10 @@
 #pragma once
 
+#include <cassert>
 #include <engine/IAlicaTrace.h>
+#include <optional>
 #include <string>
 #include <unordered_map>
-#include <optional>
-#include <cassert>
 
 namespace alicaTestTracing
 {
@@ -12,18 +12,15 @@ class AlicaTestTrace : public alica::IAlicaTrace
 {
 public:
     AlicaTestTrace(const std::string& opName, std::optional<const std::string> parent)
-        : _opName(opName)
+            : _opName(opName)
     {
         if (parent) {
             _parent = *parent;
         }
     }
-    ~AlicaTestTrace() {};
+    ~AlicaTestTrace(){};
 
-    void setTag(const std::string& key, const std::string& value)
-    {
-        alicaTests::TestWorldModel::getOne()->tracingTags.push_back({key, value});
-    }
+    void setTag(const std::string& key, const std::string& value) { alicaTests::TestWorldModel::getOne()->tracingTags.push_back({key, value}); }
     void setLog(std::pair<std::string, std::string> logEntry)
     {
         alicaTests::TestWorldModel::getOne()->tracingLogs.push_back({logEntry.first, logEntry.second});
@@ -33,13 +30,8 @@ public:
         alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error", "true"});
         alicaTests::TestWorldModel::getOne()->tracingTags.push_back({"error.description", description});
     }
-    void finish()
-    {
-    }
-    std::string context() const
-    {
-        return _opName;
-    }
+    void finish() {}
+    std::string context() const { return _opName; }
 
     std::string _opName;
     std::string _parent;
@@ -61,4 +53,4 @@ public:
         return trace;
     }
 };
-} // namespace alicaDummyTracing
+} // namespace alicaTestTracing

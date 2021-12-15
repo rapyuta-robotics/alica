@@ -7,7 +7,7 @@ namespace autodiff
 
 class Atan2 : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -19,7 +19,7 @@ class Atan2 : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Atan2(TermPtr left, TermPtr right, TermHolder* owner);
 };

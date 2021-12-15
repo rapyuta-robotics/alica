@@ -1,6 +1,6 @@
 #pragma once
-#include "engine/Types.h"
 #include "SolverVar.h"
+#include "engine/Types.h"
 
 #include <vector>
 

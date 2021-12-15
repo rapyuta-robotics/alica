@@ -1,8 +1,8 @@
 #include <alica_tests/DistBallRobot.h>
 #include <alica_tests/TestWorldModel.h>
+#include <engine/IAlicaWorldModel.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
-#include <engine/IAlicaWorldModel.h>
 
 namespace alica
 {
@@ -16,9 +16,7 @@ DistBallRobot::DistBallRobot(double weight)
 {
 }
 
-DistBallRobot::~DistBallRobot()
-{
-}
+DistBallRobot::~DistBallRobot() {}
 
 UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {

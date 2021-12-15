@@ -7,7 +7,7 @@ namespace autodiff
 
 class Product : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -20,7 +20,7 @@ class Product : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Product(TermPtr left, TermPtr right, TermHolder* owner);
 };

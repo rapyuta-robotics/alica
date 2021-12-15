@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/containers/SyncData.h"
 #include "engine/Types.h"
+#include "engine/containers/SyncData.h"
 
 #include <tuple>
 #include <vector>

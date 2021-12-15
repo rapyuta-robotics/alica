@@ -6,7 +6,7 @@ namespace autodiff
 
 class Abs : public UnaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -19,7 +19,7 @@ class Abs : public UnaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Abs(TermPtr arg, TermHolder* owner);
 };

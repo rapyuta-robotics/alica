@@ -4,8 +4,8 @@
 #include <Behaviour/TriggerA.h>
 #include <Behaviour/TriggerB.h>
 #include <Behaviour/TriggerC.h>
-#include <alica_tests/TestWorldModel.h>
 #include <alica/test/Util.h>
+#include <alica_tests/TestWorldModel.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/BehaviourPool.h>
 #include <engine/IAlicaCommunication.h>

@@ -28,7 +28,7 @@ enum OrType
 
 class Term : public alica::SolverTerm
 {
-  public:
+public:
     virtual ~Term();
 
     /**
@@ -70,7 +70,7 @@ class Term : public alica::SolverTerm
     const std::vector<TermPtr>& getParents() const { return _parents; }
     std::vector<TermPtr>& editParents() { return _parents; }
 
-  protected:
+protected:
     static constexpr double EPSILON = 1e-10;
     static constexpr double CONSTRAINTSTEEPNESS = 0.01;
     friend TermList;
@@ -88,7 +88,7 @@ class Term : public alica::SolverTerm
     // Interval values
     alica::Interval<double> _localRange;
 
-  private:
+private:
     static OrType _orop;
     static AndType _andop;
 };

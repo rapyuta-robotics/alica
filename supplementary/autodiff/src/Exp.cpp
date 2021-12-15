@@ -17,7 +17,7 @@ namespace autodiff
 {
 
 Exp::Exp(TermPtr arg, TermHolder* owner)
-    : UnaryFunction(arg, owner)
+        : UnaryFunction(arg, owner)
 {
 }
 

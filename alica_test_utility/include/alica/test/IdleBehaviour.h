@@ -4,7 +4,7 @@
 
 namespace alica
 {
-    class IAlicaWorldModel;
+class IAlicaWorldModel;
 }
 
 namespace alica::test
@@ -16,4 +16,4 @@ public:
             : BasicBehaviour(wm, "IdleBehaviour"){};
     void run(void* msg) override;
 };
-} // namespace alica::mockups
+} // namespace alica::test

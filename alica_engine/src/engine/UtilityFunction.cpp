@@ -3,6 +3,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/TaskRoleStruct.h"
@@ -14,7 +15,6 @@
 #include "engine/model/RoleSet.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
-#include "engine/IAlicaWorldModel.h"
 
 #include <alica_common_config/debug_output.h>
 

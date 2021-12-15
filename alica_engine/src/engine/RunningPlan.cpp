@@ -409,8 +409,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         addChildren(replacement.getChildren());
         reactivate = true;
         if (_basicPlan) {
-            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName()
-                            + std::to_string(replacement.getActiveEntryPoint()->getId());
+            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId());
             _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
         }
     } else {
@@ -799,7 +798,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
     }
 }
 
-    AgentId RunningPlan::getOwnID() const
+AgentId RunningPlan::getOwnID() const
 {
     return _ae->getTeamManager().getLocalAgentID();
 }

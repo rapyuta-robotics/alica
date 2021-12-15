@@ -17,7 +17,7 @@ namespace intervalpropagation
 
 class RecursivePropagate : public autodiff::ITermVisitor
 {
-  public:
+public:
     RecursivePropagate();
     virtual ~RecursivePropagate();
 
@@ -47,7 +47,7 @@ class RecursivePropagate : public autodiff::ITermVisitor
     int visit(autodiff::TermPower* power);
     int visit(autodiff::Variable* var);
 
-  protected:
+protected:
     autodiff::TermList _changed;
 
     DownwardPropagator _dp;

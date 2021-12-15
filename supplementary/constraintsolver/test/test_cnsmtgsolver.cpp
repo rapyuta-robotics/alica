@@ -28,7 +28,7 @@ const double delta = 0.01;
 
 class SolverStats
 {
-  public:
+public:
     int solved = 0;
     double n = 0;
     double mean = 0;

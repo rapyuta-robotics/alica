@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/IAlicaTimer.h"
 #include "engine/AlicaClock.h"
+#include "engine/IAlicaTimer.h"
 
 #include <condition_variable>
 #include <functional>
@@ -19,6 +19,7 @@ template <class CallbackQ>
 class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>
 {
     using Base = std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>;
+
 public:
     using TimerCb = std::function<void()>;
 
@@ -101,6 +102,7 @@ template <class CallbackQ>
 class SyncStopTimerRos : public alica::IAlicaTimer
 {
     using Impl = SyncStopTimerRosImpl<CallbackQ>;
+
 public:
     using TimerCb = std::function<void()>;
 
@@ -110,10 +112,7 @@ public:
         _impl->start();
     }
 
-    ~SyncStopTimerRos()
-    {
-        _impl->stop();
-    }
+    ~SyncStopTimerRos() { _impl->stop(); }
 
 private:
     // ROS timer's can be destroyed while the timerCb is still in progress so we use shared & weak ptr to
@@ -173,4 +172,4 @@ private:
 
 using AlicaRosTimerFactory = TimerFactory<SyncStopTimerRos, ros::CallbackQueue, ThreadPoolRos>;
 
-} // namespace alica
+} // namespace alicaRosTimer

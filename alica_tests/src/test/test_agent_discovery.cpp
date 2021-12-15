@@ -1,5 +1,5 @@
-#include <alica_tests/TestWorldModel.h>
 #include "test_alica.h"
+#include <alica_tests/TestWorldModel.h>
 
 #include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>

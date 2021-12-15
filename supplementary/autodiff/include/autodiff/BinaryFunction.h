@@ -6,7 +6,7 @@ namespace autodiff
 
 class BinaryFunction : public Term
 {
-  public:
+public:
     virtual void fillParameters(Parameter* params) const override
     {
         params[0].asIdx = _left->getTapeIdx();
@@ -15,11 +15,11 @@ class BinaryFunction : public Term
     TermPtr getLeft() const { return _left; }
     TermPtr getRight() const { return _right; }
 
-  protected:
+protected:
     BinaryFunction(TermPtr left, TermPtr right, TermHolder* owner)
-        : Term(owner)
-        , _left(left)
-        , _right(right)
+            : Term(owner)
+            , _left(left)
+            , _right(right)
     {
     }
 

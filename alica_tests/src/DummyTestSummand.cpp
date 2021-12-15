@@ -5,9 +5,9 @@
  *      Author: Stefan Jakob
  */
 
-#include <alica_tests/DummyTestSummand.h>
 #include "engine/model/EntryPoint.h"
 #include "engine/planselector/IAssignment.h"
+#include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
 
 namespace alica
