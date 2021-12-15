@@ -213,10 +213,11 @@ protected:
         ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
-        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
         const YAML::Node& config = ac->getConfig();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);

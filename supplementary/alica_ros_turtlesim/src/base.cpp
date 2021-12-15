@@ -27,7 +27,6 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->setWorldModel<DummyWorldModel>();
     ac->addSolver<alica::reasoner::CGSolver>();
 }
 
