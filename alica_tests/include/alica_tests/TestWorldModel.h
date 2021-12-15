@@ -115,10 +115,6 @@ private:
     // Adjacent plans success test
     bool transitionCondition1747408236004727286;
     bool transitionCondition1067314038887345208;
-    // bool transitionCondition1914245867924544479;
-    // bool transitionCondition3345031375302716643;
-    // bool transitionCondition1390829819585906015;
-    // bool transitionCondition3143778092687974738;
 
     bool switchEntryPoints;
     bool wait;
