@@ -62,14 +62,14 @@ void RunnableObject::start(RunningPlan* rp)
 
         int64_t wrapperId = (*it)->getId();
 
-        std::shared_ptr<Blackboard> parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
-        auto& planAttachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapperId);
-        auto initCall = [&]() {
+        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+        auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
+        auto initCall = [&, parentPlan=parentPlan]() {
             if (!_Blackboard) {
                 _Blackboard = std::make_shared<Blackboard>();
             }
             _Blackboard->impl().clear();
-            if (!planAttachment->setParameters(*parentBlackboard, *_Blackboard)) {
+            if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_Blackboard)) {
                 std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
                 return;
             }
@@ -78,14 +78,14 @@ void RunnableObject::start(RunningPlan* rp)
         _engine->editScheduler().schedule(initCall);
     } else {
 
-        std::shared_ptr<Blackboard> parentBlackboard;
+        BasicPlan* parentPlan = nullptr;
         if (rp->getParent() && rp->getParent()->getBasicPlan()) {
-            parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
+            parentPlan = rp->getParent()->getBasicPlan();
         }
-        auto initCall = [this, parentBlackboard = std::move(parentBlackboard)]() {
+        auto initCall = [this, parentPlan=parentPlan]() {
             // Share Blackboard with parent if we have one, or start fresh otherwise
-            if (parentBlackboard) {
-                _Blackboard = parentBlackboard;
+            if (parentPlan) {
+                _Blackboard = parentPlan->getBlackboard();
             } else {
                 _Blackboard = std::make_shared<Blackboard>();
             }
