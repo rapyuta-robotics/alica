@@ -43,17 +43,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction1179066429431332055::getUtilityF
 bool PlanAttachment105160539449888459::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
 {
     /*PROTECTED REGION ID(105160539449888459) ENABLED START*/
-    std::cerr << "Calling setParameter in MasterPlan!" << std::endl;
-    // auto locked = child_bb.lockRW();
-    std::cerr << "locked ressource" << std::endl;
-    LockedBlackboardRO parent = LockedBlackboardRO(parent_bb);
     LockedBlackboardRW bb = LockedBlackboardRW(child_bb);
-    std::cerr << "get locked instance of blackboard" << std::endl;
     bb.registerValue("behaviourParameter", 1);
-    std::cerr << "registered value" << std::endl;
     bb.registerValue("planParameter", 2);
-    std::cerr << "registered value" << std::endl;
-    std::cerr << "registered parameters, returning" << std::endl;
     return true;
     /*PROTECTED REGION END*/
 }

@@ -1,6 +1,7 @@
 #include "TestParameterPassing1692837668719979457.h"
 /*PROTECTED REGION ID(eph1692837668719979457) ENABLED START*/
 // Add additional options here
+#include "alica_tests/TestWorldModel.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -43,16 +44,20 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
 bool PlanAttachment445396005944825225::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
 {
     /*PROTECTED REGION ID(445396005944825225) ENABLED START*/
-    std::cerr << "Calling setParameter in SubPlan!" << std::endl;
     LockedBlackboardRO parent = LockedBlackboardRO(parent_bb);
     LockedBlackboardRW child = LockedBlackboardRW(child_bb);
     child.registerValue("behaviourParameter", parent.get<int>("behaviourParameter"));
-    std::cerr << "registered parameters, returning" << std::endl;
     return true;
     /*PROTECTED REGION END*/
 }
 
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
 // Add additional options here
+void TestParameterPassing1692837668719979457::onInit()
+{
+    LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+    wm->passedParameters["planParameter"] = bb.get<int>("planParameter");
+}
 /*PROTECTED REGION END*/
 } // namespace alica

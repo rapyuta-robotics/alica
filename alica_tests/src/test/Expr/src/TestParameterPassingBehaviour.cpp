@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp831400441334251602) ENABLED START*/
 // Add additional includes here
+#include "alica_tests/TestWorldModel.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -28,20 +29,15 @@ void TestParameterPassingBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run831400441334251602) ENABLED START*/
     // Add additional options here
-    auto blackboard = getBlackboard();
-    blackboard->lockRO();
-
-    // getBlackboard()->lockRO();
-    LockedBlackboardRO bb = *blackboard;
-    int param = bb.get<int>("behaviourParameter");
-    std::cerr << "BehParam: " << param << std::endl;
     /*PROTECTED REGION END*/
 }
 void TestParameterPassingBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251602) ENABLED START*/
     // Add additional options here
-
+    LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+    wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods831400441334251602) ENABLED START*/
