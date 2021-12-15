@@ -11,6 +11,7 @@ class Util
 {
 public:
     static std::shared_ptr<BasicBehaviour> getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID);
+    static BasicPlan* getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId);
     static bool isStateActive(alica::AlicaEngine* ae, int64_t id);
     static bool isPlanActive(alica::AlicaEngine* ae, int64_t id);
     static const alica::Agent* getLocalAgent(alica::AlicaEngine* ae);

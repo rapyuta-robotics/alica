@@ -20,6 +20,20 @@ std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, 
     return behaviour;
 }
 
+BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId)
+{
+    BasicPlan* plan = nullptr;
+    for (auto& planEntry : ae->getPlanPool().getAvailablePlans()) {
+        if (planEntry.first->getAbstractPlan()->getId() == planId &&
+                (configurationId == 0 ? planEntry.first->getConfiguration() == nullptr
+                                      : planEntry.first->getConfiguration()->getId() == configurationId)) {
+            plan = planEntry.second.get();
+            break;
+        }
+    }
+    return plan;
+}
+
 bool Util::isStateActive(alica::AlicaEngine* ae, int64_t id)
 {
     return isStateActiveHelper(ae->getPlanBase().getRootNode(), id);
