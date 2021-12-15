@@ -4,7 +4,8 @@
 
 using alica::Variant;
 
-namespace alica {
+namespace alica
+{
 
 TEST(Variant, works)
 {
