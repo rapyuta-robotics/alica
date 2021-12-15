@@ -81,6 +81,8 @@ public:
     bool isEventDriven() const { return _behaviour->isEventDriven(); }
 
 protected:
+    using RunnableObject::getTrace;
+
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
 

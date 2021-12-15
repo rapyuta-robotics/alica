@@ -10,7 +10,7 @@ services:
 
 env:
   global:
-    - ROS_DISTRO=melodic
+    - ROS_DISTRO=noetic
     - COVERITY_PROJECT=alica
     - COVERITY_TOKEN=o6qYj0vj-t-K1PKQj5ugyg
     - COVERITY_EMAIL=abhishek.sharma@rapyuta-robotics.com
@@ -26,18 +26,17 @@ jobs:
       - source check_clang_format.sh
   - name: build
     before_install:
-      - docker run -e BASE_BRANCH -e BRANCH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-bionic tail -f /dev/null
-
+      - docker run -e BASE_BRANCH -e BRANCH -e COVERITY_EMAIL -e COVERITY_TOKEN -e COVERITY_PROJECT -e $TRAVIS_BRANCH -e ROS_DISTRO -d --name alica-test -v $TRAVIS_BUILD_DIR:/travis ros:$ROS_DISTRO-ros-core-focal tail -f /dev/null
     install:
       - docker exec -t alica-test bash -c "
         apt-get update &&
         apt-get upgrade -y &&
         apt-get install -y
             build-essential
-            python-catkin-pkg
-            python-rosdep
-            python-wstool
-            python-catkin-tools
+            python3-catkin-pkg
+            python3-rosdep
+            python3-wstool
+            python3-catkin-tools
             ros-$ROS_DISTRO-catkin
             ros-$ROS_DISTRO-rostest
             libyaml-cpp-dev
@@ -59,7 +58,6 @@ jobs:
     # Install all dependencies, using wstool first and rosdep second.
     # wstool looks for a ROSINSTALL_FILE defined in the environment variables.
     before_script: ./travis_scripts/before_script.sh $BRANCH $BASE_BRANCH
-
     # Compile and test (mark the build as failed if any step fails). If the
     # CATKIN_OPTIONS file exists, use it as an argument to catkin_make, for example
     # to blacklist certain packages.
@@ -81,9 +79,8 @@ jobs:
         if [ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ] || [ \"$TRAVIS_EVENT_TYPE\" = \"cron\" ] ; then
             wget -qO- https://scan.coverity.com/download/cxx/linux64
                 --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
-
             tar xvz &&
-            python /travis/generate_coverity-analysis_script.py . &&
+            python3 /travis/generate_coverity-analysis_script.py . &&
             chmod +x coverity-analysis.sh &&
             ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh &&
             tar czvf cs.tgz cov-int &&

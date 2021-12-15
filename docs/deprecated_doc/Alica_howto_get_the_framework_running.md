@@ -27,7 +27,7 @@
 	rosdep update
 	echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
 	. ~/.bashrc
-	sudo apt-get install python-rosinstall
+	sudo apt-get install python3-rosinstall
 	```
 
 4. Create your own ROS catkin workspace (you can choose the place and name of your workspace as you like)
