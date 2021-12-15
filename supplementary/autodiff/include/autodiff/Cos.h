@@ -7,7 +7,7 @@ namespace autodiff
 
 class Cos : public UnaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -20,7 +20,7 @@ class Cos : public UnaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Cos(TermPtr arg, TermHolder* owner);
 };

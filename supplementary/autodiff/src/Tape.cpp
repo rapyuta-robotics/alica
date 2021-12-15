@@ -14,22 +14,22 @@ namespace autodiff
 constexpr int Tape::MAXARITY;
 
 Tape::Tape()
-    : _values(nullptr)
-    , _params(nullptr)
-    , _functions(nullptr)
-    , _base(nullptr)
-    , _tapeWidth(0)
-    , _tapeLength(0)
+        : _values(nullptr)
+        , _params(nullptr)
+        , _functions(nullptr)
+        , _base(nullptr)
+        , _tapeWidth(0)
+        , _tapeLength(0)
 {
 }
 
 Tape::Tape(Tape&& o)
-    : _values(o._values)
-    , _params(o._params)
-    , _functions(o._functions)
-    , _base(o._base)
-    , _tapeWidth(o._tapeWidth)
-    , _tapeLength(o._tapeLength)
+        : _values(o._values)
+        , _params(o._params)
+        , _functions(o._functions)
+        , _base(o._base)
+        , _tapeWidth(o._tapeWidth)
+        , _tapeLength(o._tapeLength)
 {
     o._base = nullptr;
 }

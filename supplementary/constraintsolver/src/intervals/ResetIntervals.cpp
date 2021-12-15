@@ -54,7 +54,7 @@ int ResetIntervals::visit(autodiff::ConstPower* intPower)
         return true;
     }
     double e = std::round(intPower->getExponent());
-    if (intPower->getExponent() == e && ((int)e) % 2 == 0) {
+    if (intPower->getExponent() == e && ((int) e) % 2 == 0) {
         updateInterval(intPower, 0, numeric_limits<double>::infinity());
         return true;
     }

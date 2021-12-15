@@ -6,4 +6,4 @@ void IdleBehaviour::run(void* msg)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
-} // namespace alica::mockups
+} // namespace alica::test

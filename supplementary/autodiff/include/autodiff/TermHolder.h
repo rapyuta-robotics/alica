@@ -15,7 +15,7 @@ namespace autodiff
 
 class TermHolder : public alica::SolverContext
 {
-  public:
+public:
     TermHolder();
     virtual ~TermHolder();
     TermHolder(const TermHolder&) = delete;
@@ -78,7 +78,7 @@ class TermHolder : public alica::SolverContext
     int getDim() const { return static_cast<int>(_vars.size()); }
     virtual void clear() override;
 
-  private:
+private:
     template <typename TermType, typename... Args>
     TermPtr createTerm(Args... args)
     {

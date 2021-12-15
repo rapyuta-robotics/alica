@@ -8,7 +8,7 @@ namespace autodiff
 {
 class Variable : public Term, public alica::SolverVariable
 {
-  public:
+public:
     static constexpr double maxExpressibleValue = std::numeric_limits<double>::max() / 2;
     static constexpr double minExpressibleValue = std::numeric_limits<double>::lowest() / 2;
 
@@ -30,7 +30,7 @@ class Variable : public Term, public alica::SolverVariable
     alica::Interval<double> getRange() const { return _globalRange; }
     alica::Interval<double>& editRange() { return _globalRange; }
 
-  private:
+private:
     friend TermHolder;
     Variable(TermHolder* owner, int64_t id);
     alica::Interval<double> _globalRange;

@@ -139,7 +139,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     std::vector<alica::RunningPlan*> o_plans;
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
-//    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
+    //    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
 
     uint64_t harryId = 8;
     EXPECT_TRUE(ok);
@@ -150,7 +150,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     // calculate again, this time with old assignment available
     RunningPlan* rpSwitched = ps->getBestSimilarAssignment(*(o_plans[0]));
-//    std::cout << "1st Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
+    //    std::cout << "1st Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
 
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
     // Harry has to be inside Defend state, although he has an attacker role
@@ -162,7 +162,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
     // Harry has to be inside MidField state again
     EXPECT_EQ((rpSwitched->getAssignment().getAgentsInState(1407152951886).begin()).operator*(), harryId);
-//    std::cout << "2nd Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
+    //    std::cout << "2nd Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
 }
 } // namespace
 } // namespace alica

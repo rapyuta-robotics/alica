@@ -12,7 +12,7 @@ namespace intervalpropagation
 
 class SetParents : public autodiff::ITermVisitor
 {
-  public:
+public:
     SetParents();
     virtual ~SetParents();
 

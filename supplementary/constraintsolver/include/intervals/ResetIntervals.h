@@ -21,7 +21,7 @@ namespace intervalpropagation
 
 class ResetIntervals : public autodiff::ITermVisitor
 {
-  public:
+public:
     ResetIntervals();
 
     int visit(autodiff::Abs* abs);
@@ -47,7 +47,7 @@ class ResetIntervals : public autodiff::ITermVisitor
     int visit(autodiff::TermPower* power);
     int visit(autodiff::Variable* var);
 
-  private:
+private:
     void updateInterval(autodiff::TermPtr t, double min, double max);
 };
 

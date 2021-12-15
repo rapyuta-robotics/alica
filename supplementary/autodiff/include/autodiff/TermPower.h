@@ -6,7 +6,7 @@ namespace autodiff
 
 class TermPower : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -19,7 +19,7 @@ class TermPower : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     TermPower(TermPtr baseTerm, TermPtr exponent, TermHolder* owner);
 };

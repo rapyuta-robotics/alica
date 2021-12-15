@@ -5,8 +5,8 @@ namespace alica
 
 class IAlicaWorldModel
 {
-    public:
-        virtual ~IAlicaWorldModel() = default;
+public:
+    virtual ~IAlicaWorldModel() = default;
 };
 
 } /* namespace alica */

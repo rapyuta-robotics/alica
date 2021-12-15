@@ -23,7 +23,7 @@ class Lit;
 
 class Watcher : public enable_shared_from_this<Watcher>
 {
-  public:
+public:
     Watcher(shared_ptr<Lit> l, shared_ptr<Clause> parent);
     virtual ~Watcher();
 

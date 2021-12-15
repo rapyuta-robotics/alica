@@ -2,9 +2,9 @@
 
 #include <engine/IAlicaWorldModel.h>
 
-#include <vector>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace alicaTests
 {
@@ -109,7 +109,7 @@ private:
     // PlanPoolTest transitions
     bool transitionCondition4238964946542987247;
     bool transitionCondition4115970455290610262;
-    //tracing master plan
+    // tracing master plan
     bool preCondition1840401110297459509;
 
     // Adjacent plans success test  

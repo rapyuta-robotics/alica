@@ -7,7 +7,7 @@ namespace autodiff
 
 class ConstPower : public Term
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -28,7 +28,7 @@ class ConstPower : public Term
     double getExponent() const { return _exponent; }
     TermPtr getBase() const { return _base; }
 
-  private:
+private:
     friend TermHolder;
     ConstPower(TermPtr baseTerm, double exponent, TermHolder* owner);
 

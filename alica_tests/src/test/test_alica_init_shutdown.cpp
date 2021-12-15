@@ -1,5 +1,5 @@
-#include <engine/DefaultUtilityFunction.h>
 #include <engine/AlicaClock.h>
+#include <engine/DefaultUtilityFunction.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
@@ -24,5 +24,5 @@ TEST_F(AlicaEngineTestInit, initAndShutdown)
     ASSERT_NO_SIGNAL
     EXPECT_NE(ac, nullptr);
 }
-}
-}
+} // namespace
+} // namespace alica

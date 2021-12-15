@@ -22,7 +22,7 @@ class GSolver;
 
 class CGSolver : public ISolver<CGSolver, double>
 {
-  public:
+public:
     CGSolver(AlicaEngine* ae);
     virtual ~CGSolver();
 
@@ -32,7 +32,7 @@ class CGSolver : public ISolver<CGSolver, double>
     virtual SolverVariable* createVariable(int64_t id, alica::SolverContext* context) override;
     virtual std::unique_ptr<SolverContext> createSolverContext() override;
 
-  private:
+private:
     GSolver _gs;
     GSolver _sgs;
 

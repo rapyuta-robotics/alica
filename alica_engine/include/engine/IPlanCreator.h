@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
 #include "engine/IAlicaWorldModel.h"
 #include "engine/PlanAttachment.h"
+#include <memory>
 
 namespace alica
 {

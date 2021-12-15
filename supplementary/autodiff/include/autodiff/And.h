@@ -7,7 +7,7 @@ namespace autodiff
 
 class And : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -21,7 +21,7 @@ class And : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     And(TermPtr left, TermPtr right, TermHolder* owner);
 };

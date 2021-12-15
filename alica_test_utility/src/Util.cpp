@@ -1,8 +1,8 @@
 #include "alica/test/Util.h"
 
+#include <engine/Types.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
-#include <engine/Types.h>
 
 namespace alica::test
 {

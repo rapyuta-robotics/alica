@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "engine/util/ConfigPathParser.h"
+#include <gtest/gtest.h>
 
 TEST(PathParserTest, parsePath)
 {

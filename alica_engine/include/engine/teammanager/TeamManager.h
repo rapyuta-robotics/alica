@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <engine/AlicaClock.h>
 #include <engine/containers/AgentAnnouncement.h>
 #include <engine/teammanager/Agent.h>
@@ -8,8 +7,8 @@
 #include <list>
 #include <map>
 #include <memory>
-#include <string>
 #include <mutex>
+#include <string>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -30,7 +29,7 @@ struct AgentQuery;
 class AgentsCache
 {
 public:
-    using AgentMap = std::map<AgentId , Agent*>;
+    using AgentMap = std::map<AgentId, Agent*>;
 
     AgentsCache();
     ~AgentsCache();
@@ -65,7 +64,7 @@ public:
     void setTimeLastMsgReceived(AgentId agendId, AlicaTime timeLastMsgReceived);
     bool isAgentIgnored(AgentId agentId) const;
     bool isAgentActive(AgentId agentId) const;
-    void setAgentIgnored(AgentId , bool) const;
+    void setAgentIgnored(AgentId, bool) const;
     bool setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
     bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;

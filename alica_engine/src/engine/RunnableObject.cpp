@@ -52,25 +52,24 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    if(_requiresParameters) {
+    if (_requiresParameters) {
         assert(rp->getParent());
         assert(rp->getParent()->getBasicPlan());
         const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-        auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr){
-            return wrapper_ptr->getAbstractPlan()->getName() == _name;
-        });
+        auto it =
+                std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
         assert(it != wrappers.end());
 
         int64_t wrapperId = (*it)->getId();
 
         std::shared_ptr<Blackboard> parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
         auto& planAttachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapperId);
-        auto initCall = [&](){
-            if(!_Blackboard) {
+        auto initCall = [&]() {
+            if (!_Blackboard) {
                 _Blackboard = std::make_shared<Blackboard>();
             }
             _Blackboard->impl().clear();
-            if(!planAttachment->setParameters(*parentBlackboard, *_Blackboard)) {
+            if (!planAttachment->setParameters(*parentBlackboard, *_Blackboard)) {
                 std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
                 return;
             }
@@ -80,13 +79,12 @@ void RunnableObject::start(RunningPlan* rp)
     } else {
 
         std::shared_ptr<Blackboard> parentBlackboard;
-        if(rp->getParent() && rp->getParent()->getBasicPlan()) {
+        if (rp->getParent() && rp->getParent()->getBasicPlan()) {
             parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
-
         }
-        auto initCall = [this, parentBlackboard=std::move(parentBlackboard)](){
+        auto initCall = [this, parentBlackboard = std::move(parentBlackboard)]() {
             // Share Blackboard with parent if we have one, or start fresh otherwise
-            if(parentBlackboard) {
+            if (parentBlackboard) {
                 _Blackboard = parentBlackboard;
             } else {
                 _Blackboard = std::make_shared<Blackboard>();
@@ -119,7 +117,8 @@ void RunnableObject::initTrace()
     switch (_tracingType) {
     case TracingType::DEFAULT: {
         auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent());
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
+            ;
         _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
         break;
     }

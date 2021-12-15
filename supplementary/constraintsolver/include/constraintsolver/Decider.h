@@ -25,7 +25,7 @@ class Var;
 
 class Decider
 {
-  public:
+public:
     static shared_ptr<Var> decideRangeBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static shared_ptr<Var> decideActivityBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);
     static shared_ptr<Var> decideVariableCountBased(shared_ptr<vector<shared_ptr<Var>>> variables, CNSat& solver);

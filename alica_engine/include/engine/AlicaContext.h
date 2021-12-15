@@ -5,17 +5,17 @@
 
 #pragma once
 
+#include "engine/IAlicaTimer.h"
+#include "engine/IAlicaTrace.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
-#include "engine/IUtilityCreator.h"
 #include "engine/IPlanCreator.h"
-#include "engine/constraintmodul/ISolver.h"
-#include "engine/IAlicaTimer.h"
-#include "engine/util/ConfigPathParser.h"
-#include "engine/IAlicaTrace.h"
-#include "engine/IAlicaWorldModel.h"
+#include "engine/IUtilityCreator.h"
 #include "engine/Types.h"
+#include "engine/constraintmodul/ISolver.h"
+#include "engine/util/ConfigPathParser.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -33,8 +33,9 @@ class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
 
-namespace test {
-    class TestContext;
+namespace test
+{
+class TestContext;
 }
 
 /**
@@ -78,19 +79,16 @@ struct AlicaContextParams
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
-    AlicaContextParams(const std::string& agentName,
-                       const std::string& configPath,
-                       const std::string& roleSetName,
-                       const std::string& masterPlanName,
-                       bool stepEngine = false,
-                       const AgentId agentID = InvalidAgentID)
-                       : agentName(agentName)
-                       , configPath(configPath)
-                       , roleSetName(roleSetName)
-                       , masterPlanName(masterPlanName)
-                       , stepEngine(stepEngine)
-                       , agentID(agentID)
-    {}
+    AlicaContextParams(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPath(configPath)
+            , roleSetName(roleSetName)
+            , masterPlanName(masterPlanName)
+            , stepEngine(stepEngine)
+            , agentID(agentID)
+    {
+    }
 
     /**
      * @param agentName Name of the local agent.
@@ -102,16 +100,15 @@ struct AlicaContextParams
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
-    AlicaContextParams(const std::string& agentName,
-                       const std::string& configPath,
-                       const AgentId agentID = InvalidAgentID)
-                       : agentName(agentName)
-                       , configPath(configPath)
-                       , roleSetName("RoleSet")
-                       , masterPlanName("MasterPlan")
-                       , stepEngine(false)
-                       , agentID(agentID)
-    {}
+    AlicaContextParams(const std::string& agentName, const std::string& configPath, const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPath(configPath)
+            , roleSetName("RoleSet")
+            , masterPlanName("MasterPlan")
+            , stepEngine(false)
+            , agentID(agentID)
+    {
+    }
 
     std::string agentName;
     std::string configPath;
@@ -253,10 +250,7 @@ public:
      *
      * @return A pointer to worldModel object being used by context
      */
-    IAlicaWorldModel* getWorldModel() const
-    {
-        return _worldModel.get();
-    }
+    IAlicaWorldModel* getWorldModel() const { return _worldModel.get(); }
 
     /**
      * Add a solver to be used by this alica instance.
@@ -288,7 +282,6 @@ public:
      */
     template <class SolverType>
     bool existSolver() const;
-
 
     /**
      * Set timer factory to be used by this alica framework instance.
@@ -330,10 +323,7 @@ public:
      *
      * @return A reference to trace factory object being used by context
      */
-    IAlicaTraceFactory* getTraceFactory() const
-    {
-        return _traceFactory.get();
-    }
+    IAlicaTraceFactory* getTraceFactory() const { return _traceFactory.get(); }
 
     /**
      * Check whether object is a valid AlicaContext.
@@ -359,10 +349,7 @@ public:
      *
      * @return const YAML::Node& containing the agents configuration.
      */
-    const YAML::Node& getConfig() const
-    {
-        return _configRootNode;
-    };
+    const YAML::Node& getConfig() const { return _configRootNode; };
 
     /**
      * Set config values for the agent.
@@ -376,7 +363,7 @@ public:
      *
      * @return True if value was set correctly. False otherwise.
      */
-    template<class T>
+    template <class T>
     bool setOption(const std::string& path, const T& value, bool reload = true) noexcept;
 
     /**
@@ -392,7 +379,7 @@ public:
      *
      * @return True if values were set correctly. False otherwise.
      */
-    template<class T>
+    template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
 private:
@@ -547,14 +534,14 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         return false;
     }
     ConfigPathParser configPathParser;
-    std::vector <std::pair<std::string, T>> oldKeyValuePairs;
+    std::vector<std::pair<std::string, T>> oldKeyValuePairs;
 
     try {
-        for (const auto &keyValuePair : keyValuePairs) {
-            std::vector <std::string> params = configPathParser.getParams('.', keyValuePair.first);
+        for (const auto& keyValuePair : keyValuePairs) {
+            std::vector<std::string> params = configPathParser.getParams('.', keyValuePair.first);
             YAML::Node currentNode(_configRootNode);
 
-            for (const std::string &param : params) {
+            for (const std::string& param : params) {
                 currentNode.reset(currentNode[param]);
             }
 
@@ -566,8 +553,8 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
     } catch (const YAML::Exception& e) {
         ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
-        //revert changes
-        for (const auto &keyValuePair : oldKeyValuePairs) {
+        // revert changes
+        for (const auto& keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);
         }
         return false;

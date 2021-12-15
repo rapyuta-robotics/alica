@@ -66,8 +66,8 @@ void CNSat::readFromCNFFile(string path)
 }
 
 CNSat::CNSat()
-    : cnsmtGSolver(nullptr)
-    , learntNum(0)
+        : cnsmtGSolver(nullptr)
+        , learntNum(0)
 {
     this->useIntervalProp = true;
     this->decisionLevelNull = make_shared<DecisionLevel>(0);
@@ -454,12 +454,12 @@ void CNSat::reduceDB(int num)
     for (int i = num; i < static_cast<int>(satClauses->size()); i++) {
         {
             auto iter = find(satClauses->at(i)->watcher->at(0)->lit->var->watchList->begin(), satClauses->at(i)->watcher->at(0)->lit->var->watchList->end(),
-                             satClauses->at(i)->watcher->at(0));
+                    satClauses->at(i)->watcher->at(0));
             satClauses->at(i)->watcher->at(0)->lit->var->watchList->erase(iter);
         }
         {
             auto iter = find(satClauses->at(i)->watcher->at(1)->lit->var->watchList->begin(), satClauses->at(i)->watcher->at(1)->lit->var->watchList->end(),
-                             satClauses->at(i)->watcher->at(1));
+                    satClauses->at(i)->watcher->at(1));
             satClauses->at(i)->watcher->at(1)->lit->var->watchList->erase(iter);
         }
         // shared_ptr<Lit> l = satClauses->at(i)->literals[satClauses->at(i)->literals->size()-1];

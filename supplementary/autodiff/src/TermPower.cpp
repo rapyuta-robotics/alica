@@ -18,7 +18,7 @@
 namespace autodiff
 {
 TermPower::TermPower(TermPtr baseTerm, TermPtr exponent, TermHolder* owner)
-    : BinaryFunction(baseTerm, exponent, owner)
+        : BinaryFunction(baseTerm, exponent, owner)
 {
 }
 

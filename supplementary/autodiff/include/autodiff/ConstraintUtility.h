@@ -7,7 +7,7 @@ namespace autodiff
 
 class ConstraintUtility : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -24,7 +24,7 @@ class ConstraintUtility : public BinaryFunction
     TermPtr getConstraint() const { return _left; }
     TermPtr getUtility() const { return _right; }
 
-  private:
+private:
     friend TermHolder;
     ConstraintUtility(TermPtr constraint, TermPtr utility, TermHolder* owner);
 };

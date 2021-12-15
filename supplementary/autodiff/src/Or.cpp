@@ -16,7 +16,7 @@
 namespace autodiff
 {
 Or::Or(TermPtr left, TermPtr right, TermHolder* owner)
-    : BinaryFunction(left, right, owner)
+        : BinaryFunction(left, right, owner)
 {
 }
 

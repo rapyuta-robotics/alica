@@ -1,7 +1,7 @@
 #pragma once
 
-#include <optional>
 #include <memory>
+#include <optional>
 
 namespace alica
 {
@@ -26,4 +26,4 @@ public:
     virtual ~IAlicaTraceFactory() = default;
 };
 
-}
+} // namespace alica
