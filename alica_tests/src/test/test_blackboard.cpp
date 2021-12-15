@@ -1,5 +1,5 @@
-#include "test_alica.h"
 #include "alica_tests/TestWorldModel.h"
+#include "test_alica.h"
 #include <alica/test/Util.h>
 
 namespace alica
@@ -114,5 +114,5 @@ TEST_F(TestBlackBoard, testReadOnlyAccess)
     EXPECT_EQ(readOnlyBlackboard.get<std::string>("param3"), "24");
     EXPECT_TRUE(readOnlyBlackboard.get<bool>("param4"));
 }
-}
+} // namespace
 } // namespace alica
