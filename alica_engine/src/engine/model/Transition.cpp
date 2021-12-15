@@ -1,8 +1,8 @@
 #include "engine/model/Transition.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
-#include "engine/IAlicaWorldModel.h"
 
 namespace alica
 {
@@ -40,7 +40,7 @@ void Transition::setOutState(State* outState)
     _outState = outState;
 }
 
-void Transition::setSynchronisation(Synchronisation *synchronisation)
+void Transition::setSynchronisation(Synchronisation* synchronisation)
 {
     _synchronisation = synchronisation;
 }

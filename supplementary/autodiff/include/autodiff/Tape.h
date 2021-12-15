@@ -9,7 +9,7 @@ class Tape;
 
 class Tape : public ITermVisitor
 {
-  public:
+public:
     static constexpr int MAXARITY = 2;
     Tape();
     Tape(const Tape&) = delete;
@@ -58,7 +58,7 @@ class Tape : public ITermVisitor
         return _values + (idx * _tapeWidth);
     }
 
-  private:
+private:
     int visitTerm(Term* t);
     void prepTerms(TermPtr top, const std::vector<VarPtr>& vars);
     double* _values;

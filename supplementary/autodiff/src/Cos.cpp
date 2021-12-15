@@ -17,7 +17,7 @@
 namespace autodiff
 {
 Cos::Cos(TermPtr arg, TermHolder* owner)
-    : UnaryFunction(arg, owner)
+        : UnaryFunction(arg, owner)
 {
 }
 

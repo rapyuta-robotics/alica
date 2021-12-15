@@ -18,7 +18,7 @@ class Var;
 
 class Lit : public autodiff::ITermVisitor
 {
-  public:
+public:
     Lit(const std::shared_ptr<Var>& v, Assignment ass = Assignment::TRUE);
     Lit(autodiff::TermPtr t, Assignment ass, bool temp);
     virtual ~Lit();

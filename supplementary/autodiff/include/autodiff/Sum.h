@@ -7,7 +7,7 @@ namespace autodiff
 
 class Sum : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -20,7 +20,7 @@ class Sum : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Sum(TermPtr first, TermPtr second, TermHolder* owner);
 };

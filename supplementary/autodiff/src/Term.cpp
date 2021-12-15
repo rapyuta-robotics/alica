@@ -19,10 +19,10 @@ OrType Term::_orop = OrType::MAX;
 AndType Term::_andop = AndType::MIN;
 
 Term::Term(TermHolder* owner)
-    : _owner(owner)
-    , _next(nullptr)
-    , _localRange(Variable::minExpressibleValue, Variable::maxExpressibleValue)
-    , _tapeIdx(-1)
+        : _owner(owner)
+        , _next(nullptr)
+        , _localRange(Variable::minExpressibleValue, Variable::maxExpressibleValue)
+        , _tapeIdx(-1)
 {
 }
 

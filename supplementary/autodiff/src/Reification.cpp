@@ -6,7 +6,7 @@
 namespace autodiff
 {
 Reification::Reification(TermPtr condition, TermHolder* owner)
-    : BinaryFunction(condition, condition->negate(), owner)
+        : BinaryFunction(condition, condition->negate(), owner)
 {
 }
 

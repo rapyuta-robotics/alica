@@ -30,8 +30,7 @@ class IAlicaWorldModel;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool
-            , const IAlicaWorldModel* wm);
+    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
@@ -77,6 +76,5 @@ private:
 #endif
 };
 std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap);
-
 
 } /* namespace alica */

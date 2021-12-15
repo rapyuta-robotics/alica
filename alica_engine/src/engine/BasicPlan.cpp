@@ -1,9 +1,9 @@
 #include "engine/BasicPlan.h"
 
 #include "engine/AlicaEngine.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Plan.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
@@ -30,7 +30,7 @@ void BasicPlan::doInit()
 
     initTrace();
     if (_isMasterPlan && _trace) {
-         // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
+        // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
         _trace->finish();
     }
 
@@ -81,8 +81,8 @@ void BasicPlan::doTerminate()
 
 void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
 {
-    for(const State* state : plan->getStates()) {
-        for(const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+    for (const State* state : plan->getStates()) {
+        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
             _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
         }
     }
@@ -91,18 +91,15 @@ void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreat
 void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_engine->getTraceFactory()) {
-        _engine->editScheduler().schedule(
-            std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
+        _engine->editScheduler().schedule(std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
     }
 }
 
 void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_trace) {
-        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", "
-                                            + "\"new\": " + std::to_string(newUtility) + ", "
-                                            + "\"agents\": " + std::to_string(numberOfAgents) + ", "
-                                            + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
+                                                        "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
     }
 }
 

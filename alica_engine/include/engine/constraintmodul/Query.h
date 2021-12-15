@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/PlanInterface.h"
 #include "engine/TeamObserver.h"
+#include "engine/Types.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/constraintmodul/ProblemDescriptor.h"
@@ -12,10 +13,9 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
-#include "engine/model/VariableBinding.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
-# include "engine/Types.h"
+#include "engine/model/VariableBinding.h"
 
 #include <alica_solver_interface/SolverContext.h>
 
@@ -76,8 +76,8 @@ public:
 
     void addStaticVariable(const alica::Variable* v);
     void addDomainVariable(const DomainVariable* domainVariable);
-    [[deprecated("use addDomainVariable(const DomainVariable* domainVariable) instead")]]
-    void addDomainVariable(AgentId robot, const std::string& ident, const AlicaEngine* ae);
+    [[deprecated("use addDomainVariable(const DomainVariable* domainVariable) instead")]] void addDomainVariable(
+            AgentId robot, const std::string& ident, const AlicaEngine* ae);
     void clearDomainVariables();
     void clearStaticVariables();
 
@@ -145,7 +145,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
         return false;
     }
 
-    //std::cout << "Query: " << _uniqueVarStore << std::endl;
+    // std::cout << "Query: " << _uniqueVarStore << std::endl;
 
     // TODO: get rid of the interrim vector (see below how)
     std::vector<ResultType> solverResult;

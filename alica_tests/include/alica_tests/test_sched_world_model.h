@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <atomic>
+#include <string>
 
 #include <engine/IAlicaWorldModel.h>
 
@@ -27,8 +27,7 @@ public:
         behAAABlockRun = false;
         behAAASuccessInInit = behAAAFailureInInit = behAAASuccessInTerminate = behAAAFailureInTerminate = false;
 
-        executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan
-                = transitionToEndTest = transitionToExecuteBehaviour = false;
+        executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan = transitionToEndTest = transitionToExecuteBehaviour = false;
     }
 
     bool execOrderTest;
@@ -60,4 +59,4 @@ public:
 private:
 };
 
-}
+} // namespace alica_test

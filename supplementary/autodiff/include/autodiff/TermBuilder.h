@@ -8,7 +8,7 @@ namespace autodiff
 
 class TermBuilder
 {
-  public:
+public:
     static TermPtr quadform(const TermPtr x1, const TermPtr x2, const TermPtr a11, const TermPtr a12, const TermPtr a21, const TermPtr a22);
 
     template <int DIM>

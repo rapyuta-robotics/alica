@@ -6,8 +6,8 @@
 
 #include <alica_solver_interface/Interval.h>
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace alica
 {

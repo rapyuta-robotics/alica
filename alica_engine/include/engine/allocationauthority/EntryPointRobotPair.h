@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/model/EntryPoint.h"
 #include "engine/Types.h"
+#include "engine/model/EntryPoint.h"
 
 #include <boost/functional/hash.hpp>
 #include <memory>
@@ -38,6 +38,9 @@ struct hash<alica::EntryPointRobotPair>
     typedef alica::EntryPointRobotPair argument_type;
     typedef std::size_t value_type;
 
-    value_type operator()(argument_type& eprp) const { return std::hash<long int>()(eprp.getEntryPoint()->getId()) + std::hash<alica::AgentId>()(eprp.getRobot()); }
+    value_type operator()(argument_type& eprp) const
+    {
+        return std::hash<long int>()(eprp.getEntryPoint()->getId()) + std::hash<alica::AgentId>()(eprp.getRobot());
+    }
 };
 } // namespace std

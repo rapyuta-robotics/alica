@@ -55,6 +55,6 @@ using VariableGrp = std::vector<const Variable*>;
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 
-constexpr  auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
+constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 
 } // namespace alica

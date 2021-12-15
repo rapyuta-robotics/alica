@@ -39,7 +39,8 @@ void Query::addDomainVariable(AgentId agent, const std::string& ident, const Ali
     _queriedDomainVariables.push_back(ae->getTeamManager().getDomainVariable(agent, ident));
 }
 
-void Query::addDomainVariable(const DomainVariable* domainVariable) {
+void Query::addDomainVariable(const DomainVariable* domainVariable)
+{
     _queriedDomainVariables.push_back(domainVariable);
 }
 

@@ -3,13 +3,13 @@
 #include "engine/IAlicaTimer.h"
 #include "engine/scheduler/JobQueue.h"
 
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <atomic>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -78,10 +78,7 @@ public:
     {
         // Should be called by the scheduler thread
         if (!_repeatableJobs.erase(jobId)) {
-            _jobQueue.erase({jobId, nullptr, std::nullopt},
-                            [](const Job& job, const Job& otherJob) {
-                        return std::get<0>(job) == std::get<0>(otherJob);
-                    });
+            _jobQueue.erase({jobId, nullptr, std::nullopt}, [](const Job& job, const Job& otherJob) { return std::get<0>(job) == std::get<0>(otherJob); });
         }
     }
 

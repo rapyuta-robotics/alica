@@ -15,7 +15,7 @@ class UpwardPropagator;
 
 class DownwardPropagator : public autodiff::ITermVisitor
 {
-  public:
+public:
     DownwardPropagator();
 
     int visit(autodiff::Abs* abs) override;
@@ -42,7 +42,7 @@ class DownwardPropagator : public autodiff::ITermVisitor
     int visit(autodiff::Variable* var) override;
     void setTermQueue(autodiff::TermList* q) { _changed = q; }
 
-  private:
+private:
     void addChanged(autodiff::TermPtr t);
     void outputChange(autodiff::TermPtr t, Interval<double> old) const;
     bool updateInterval(autodiff::TermPtr t, Interval<double> limit) const;

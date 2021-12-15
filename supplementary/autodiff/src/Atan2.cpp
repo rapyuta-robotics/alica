@@ -11,7 +11,7 @@
 namespace autodiff
 {
 Atan2::Atan2(TermPtr left, TermPtr right, TermHolder* owner)
-    : BinaryFunction(left, right, owner)
+        : BinaryFunction(left, right, owner)
 {
 }
 

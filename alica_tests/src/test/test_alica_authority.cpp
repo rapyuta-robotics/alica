@@ -4,9 +4,9 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "PlanCreator.h"
+#include "UtilityFunctionCreator.h"
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
-#include "UtilityFunctionCreator.h"
 
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
@@ -16,6 +16,8 @@
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
 
+#include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
@@ -23,11 +25,8 @@
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
 #include <engine/modelmanagement/factories/TaskFactory.h>
-#include <alica/test/Util.h>
-#include <communication/AlicaDummyCommunication.h>
 
 #include <gtest/gtest.h>
-
 
 namespace alica
 {
@@ -114,7 +113,7 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     aes[1]->start();
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    
+
     auto* wmOne = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
     auto* wmTwo = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
 
@@ -139,5 +138,5 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         }
     }
 }
-}
-}
+} // namespace
+} // namespace alica

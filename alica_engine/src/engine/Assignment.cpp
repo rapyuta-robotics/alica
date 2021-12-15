@@ -1,5 +1,6 @@
 #include "engine/Assignment.h"
 
+#include "engine/Types.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 #include "engine/model/EntryPoint.h"
@@ -8,7 +9,6 @@
 #include "engine/model/Task.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
-#include "engine/Types.h"
 
 #include <assert.h>
 

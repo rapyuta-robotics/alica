@@ -13,16 +13,16 @@ namespace autodiff
 {
 
 Sigmoid::Sigmoid(TermPtr arg, TermHolder* owner)
-    : Term(owner)
-    , _arg(arg)
-    , _steepness(1.0)
+        : Term(owner)
+        , _arg(arg)
+        , _steepness(1.0)
 {
 }
 
 Sigmoid::Sigmoid(TermPtr arg, double steepness, TermHolder* owner)
-    : Term(owner)
-    , _arg(arg)
-    , _steepness(steepness)
+        : Term(owner)
+        , _arg(arg)
+        , _steepness(steepness)
 {
 }
 

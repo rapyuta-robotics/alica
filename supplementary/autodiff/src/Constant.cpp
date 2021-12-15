@@ -9,8 +9,8 @@ namespace autodiff
 {
 
 Constant::Constant(double value, TermHolder* owner)
-    : Term(owner)
-    , _value(value)
+        : Term(owner)
+        , _value(value)
 {
 }
 

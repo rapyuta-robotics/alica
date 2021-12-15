@@ -2,9 +2,11 @@
 #include <geometry_msgs/Twist.h>
 #include <turtlesim/TeleportAbsolute.h>
 
-namespace turtlesim {
+namespace turtlesim
+{
 
-ALICATurtle::ALICATurtle(ros::NodeHandle& priv_nh) {
+ALICATurtle::ALICATurtle(ros::NodeHandle& priv_nh)
+{
     priv_nh.getParam("name", _name);
 
     // initialize publisher, subscriber and service client.
@@ -13,7 +15,8 @@ ALICATurtle::ALICATurtle(ros::NodeHandle& priv_nh) {
     _teleport_client = priv_nh.serviceClient<TeleportAbsolute>("teleport_absolute");
 }
 
-void ALICATurtle::teleport(float x, float y) {
+void ALICATurtle::teleport(float x, float y)
+{
     TeleportAbsolute srv;
     srv.request.x = x;
     srv.request.y = y;
@@ -24,16 +27,19 @@ void ALICATurtle::teleport(float x, float y) {
     }
 }
 
-void ALICATurtle::pose_sub_callback(const PoseConstPtr& msg) {
+void ALICATurtle::pose_sub_callback(const PoseConstPtr& msg)
+{
     _current = *msg;
 }
 
-bool ALICATurtle::move_toward_goal(float x, float y) {
+bool ALICATurtle::move_toward_goal(float x, float y)
+{
     _goal.x = x;
     _goal.y = y;
     return move_toward_goal();
 }
-bool ALICATurtle::move_toward_goal() const {
+bool ALICATurtle::move_toward_goal() const
+{
     // Transform goal position into coordinates of turtle body frame
     float cos_theta = std::cos(_current.theta);
     float sin_theta = std::sin(_current.theta);
@@ -69,4 +75,4 @@ bool ALICATurtle::move_toward_goal() const {
     return is_reachGoal;
 }
 
-}  // namespace turtlesim
+} // namespace turtlesim

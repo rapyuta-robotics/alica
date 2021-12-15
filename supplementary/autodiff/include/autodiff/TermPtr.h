@@ -6,23 +6,23 @@ class Term;
 class TermHolder;
 class TermPtr
 {
-  public:
+public:
     TermPtr()
-        : _ptr(nullptr)
+            : _ptr(nullptr)
     {
     }
     TermPtr(std::nullptr_t)
-        : TermPtr()
+            : TermPtr()
     {
     }
 
     TermPtr(Term* t)
-        : _ptr(t)
+            : _ptr(t)
     {
     }
     // Somewhat hacky trick for the moment:
     TermPtr(const Term* t)
-        : _ptr(const_cast<Term*>(t))
+            : _ptr(const_cast<Term*>(t))
     {
     }
 
@@ -40,7 +40,7 @@ class TermPtr
 
     TermPtr& operator&=(const TermPtr rhs);
 
-  private:
+private:
     friend TermHolder;
     Term* _ptr;
 };
