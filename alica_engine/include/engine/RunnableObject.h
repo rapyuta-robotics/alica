@@ -91,7 +91,7 @@ protected:
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
-    std::shared_ptr<Blackboard> _Blackboard;
+    std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
 
     virtual void doInit() = 0;
@@ -115,7 +115,7 @@ protected:
     void initTrace();
     void traceRun();
     void traceInit(const std::string& type);
-    const std::shared_ptr<Blackboard> getBlackboard() { return _Blackboard; }
+    const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
 };
 } /* namespace alica */
