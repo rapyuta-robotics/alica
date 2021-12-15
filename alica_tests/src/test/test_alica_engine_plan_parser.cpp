@@ -66,7 +66,7 @@ protected:
     {
         checkAlicaElement(s, id, name, comment);
         if (entryPointID != 0) {
-            EXPECT_EQ(entryPointID, s->getEntryPoint()->getId()) << "Wrong EntryPoint for state!" << endl;
+            EXPECT_EQ(entryPointID, s->getEntryPoint(0)->getId()) << "Wrong EntryPoint for state!" << endl;
         }
         EXPECT_EQ(absPlanIDs.size(), s->getConfAbstractPlanWrappers().size()) << "Number of abstractPlans didnt fit plans size." << endl;
         for (const ConfAbstractPlanWrapper* wrapper : s->getConfAbstractPlanWrappers()) {
@@ -78,7 +78,7 @@ protected:
                 EXPECT_TRUE(find(inTransitions.begin(), inTransitions.end(), t->getId()) != inTransitions.end()) << "Unknown id for InTransition!" << endl;
             }
         } else {
-            EXPECT_NE(nullptr, s->getEntryPoint()) << "Isolated state found!";
+            EXPECT_NE(nullptr, s->getEntryPoint(0)) << "Isolated state found!";
         }
         if (outTransitions.size() != 0) {
             for (const alica::Transition* t : s->getOutTransitions()) {

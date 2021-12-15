@@ -97,8 +97,8 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     // Harry has to be inside MidField state
     uint64_t harryId = 8;
-    ASSERT_FALSE(o_plans[0]->getAssignment().getAgentsInState(MidFieldStateId).empty());
-    EXPECT_EQ(*(o_plans[0]->getAssignment().getAgentsInState(MidFieldStateId).begin()), harryId);
+    ASSERT_FALSE(o_plans[0]->getAssignment().getAgentsInState(0, MidFieldStateId).empty());
+    EXPECT_EQ(*(o_plans[0]->getAssignment().getAgentsInState(0, MidFieldStateId).begin()), harryId);
 
     // calculate again, this time with old assignment available
     RunningPlan* rpSwitched = ps->getBestSimilarAssignment(*(o_plans[0]));
@@ -106,16 +106,16 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
     // Harry has to be inside Defend state, although he has an attacker role
-    ASSERT_FALSE(rpSwitched->getAssignment().getAgentsInState(DefendStateId).empty());
-    EXPECT_EQ(*(rpSwitched->getAssignment().getAgentsInState(DefendStateId).begin()), harryId);
+    ASSERT_FALSE(rpSwitched->getAssignment().getAgentsInState(0, DefendStateId).empty());
+    EXPECT_EQ(*(rpSwitched->getAssignment().getAgentsInState(0, DefendStateId).begin()), harryId);
 
     // calculate again, this time with next old assignment
     rpSwitched = ps->getBestSimilarAssignment(*rpSwitched);
 
     EXPECT_TRUE(rpSwitched->getAssignment().isValid());
     // Harry has to be inside MidField state again
-    ASSERT_FALSE(rpSwitched->getAssignment().getAgentsInState(MidFieldStateId).empty());
-    EXPECT_EQ(*(rpSwitched->getAssignment().getAgentsInState(MidFieldStateId).begin()), harryId);
+    ASSERT_FALSE(rpSwitched->getAssignment().getAgentsInState(0, MidFieldStateId).empty());
+    EXPECT_EQ(*(rpSwitched->getAssignment().getAgentsInState(0, MidFieldStateId).begin()), harryId);
     // std::cout << "2nd Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
 }
 } // namespace

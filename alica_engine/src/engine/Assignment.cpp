@@ -228,9 +228,10 @@ void Assignment::getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_a
     }
 }
 
-void Assignment::getAgentsInState(const State* s, AgentGrp& o_agents) const
+void Assignment::getAgentsInState(int64_t dynamicEpId, const State* s, AgentGrp& o_agents) const
 {
-    const EntryPoint* ep = s->getEntryPoint();
+    const EntryPoint* ep = s->getEntryPoint(dynamicEpId);
+    assert(ep->isDynamic() == (dynamicEpId > 0));
     for (AgentStatePair asp : _assignmentData[ep->getIndex()]) {
         if (asp.second == s) {
             o_agents.push_back(asp.first);
@@ -263,15 +264,15 @@ AllAgentsView Assignment::getAllAgents() const
 {
     return AllAgentsView(this);
 }
-AgentsInStateView Assignment::getAgentsInState(const State* s) const
+AgentsInStateView Assignment::getAgentsInState(int64_t dynamicEpId, const State* s) const
 {
-    return AgentsInStateView(this, s);
+    return AgentsInStateView(this, dynamicEpId, s);
 }
 
-AgentsInStateView Assignment::getAgentsInState(int64_t sid) const
+AgentsInStateView Assignment::getAgentsInState(int64_t dynamicEpId, int64_t sid) const
 {
     const State* s = _plan->getStateByID(sid);
-    return s ? AgentsInStateView(this, s) : AgentsInStateView();
+    return s ? AgentsInStateView(this, dynamicEpId, s) : AgentsInStateView();
 }
 
 void Assignment::clear()
@@ -292,7 +293,7 @@ bool Assignment::updateAgent(AgentId agent, const EntryPoint* e, const State* s)
     bool found = false;
     bool inserted = false;
     int i = 0;
-    assert(s == nullptr || s->getEntryPoint()->getId() == e->getId());
+    assert(s == nullptr || s->getEntryPoint(e->getDynamicId())->getId() == e->getId());
 
     for (AgentStatePairs& asps : _assignmentData) {
         const bool isTargetEp = e == _plan->getEntryPoints()[i];
@@ -329,8 +330,8 @@ bool Assignment::updateAgent(AgentId agent, const EntryPoint* e, const State* s)
 
 void Assignment::moveAllFromTo(const EntryPoint* scope, const State* from, const State* to)
 {
-    assert(from->getEntryPoint() == scope);
-    assert(to->getEntryPoint() == scope);
+    assert(from->getEntryPoint(scope->getDynamicId()) == scope);
+    assert(to->getEntryPoint(scope->getDynamicId()) == scope);
     for (int i = 0; i < static_cast<int>(_assignmentData.size()); ++i) {
         if (scope == _plan->getEntryPoints()[i]) {
             for (AgentStatePair& asp : _assignmentData[i]) {

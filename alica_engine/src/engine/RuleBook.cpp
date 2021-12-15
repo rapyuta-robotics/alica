@@ -165,7 +165,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     const RunningPlan* parent = r.getParent();
 
     AgentGrp robots;
-    parent->getAssignment().getAgentsInState(parent->getActiveState(), robots);
+    parent->getAssignment().getAgentsInState(parent->getActiveEntryPoint()->getDynamicId(), parent->getActiveState(), robots);
     double curUtil = 0.0;
     RunningPlan* newr = _ps->getBestSimilarAssignment(r, robots, curUtil);
 
@@ -362,7 +362,7 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     rp.setAllocationNeeded(false);
 
     AgentGrp agents;
-    rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
+    rp.getAssignment().getAgentsInState(rp.getActiveEntryPoint()->getDynamicId(), rp.getActiveState(), agents);
 
     ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
 
