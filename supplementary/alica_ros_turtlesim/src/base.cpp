@@ -17,7 +17,8 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const std::string& roleset, const std::string& master_plan,
-        const std::string& path) : spinner(0)
+        const std::string& path)
+        : spinner(0)
 {
     // create world model
     ALICATurtleWorldModel::init(nh, priv_nh);
@@ -33,8 +34,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 void Base::start()
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(),
-            std::make_unique<alica::PlanCreator>());
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(creators);

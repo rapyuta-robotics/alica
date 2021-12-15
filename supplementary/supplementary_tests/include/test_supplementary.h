@@ -128,7 +128,8 @@ protected:
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             alica::AlicaContext* ac =
                     new alica::AlicaContext(AlicaContextParams(getHostName(i), path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
-            alica::AlicaContext* ac = new alica::AlicaContext(AlicaContextParams(getHostName(i),path+ "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            alica::AlicaContext* ac =
+                    new alica::AlicaContext(AlicaContextParams(getHostName(i), path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(*cbQueues.back());
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
@@ -151,7 +152,6 @@ protected:
             delete ac;
         }
     }
-
 };
 } // namespace supplementary
 extern std::jmp_buf restore_point;

@@ -19,6 +19,7 @@ template <class CallbackQ>
 class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>
 {
     using Base = std::enable_shared_from_this<SyncStopTimerRosImpl<CallbackQ>>;
+
 public:
     using TimerCb = std::function<void()>;
 
@@ -101,6 +102,7 @@ template <class CallbackQ>
 class SyncStopTimerRos : public alica::IAlicaTimer
 {
     using Impl = SyncStopTimerRosImpl<CallbackQ>;
+
 public:
     using TimerCb = std::function<void()>;
 
@@ -128,7 +130,8 @@ public:
 
     TimerFactory(CallbackQ& callback_queue = *ros::getGlobalCallbackQueue())
             : _cbQ(callback_queue)
-    {}
+    {
+    }
 
     TimerFactory(const TimerFactory&) = delete;
     TimerFactory(TimerFactory&&) = delete;

@@ -157,7 +157,6 @@ protected:
             delete ac;
         }
     }
-
 };
 
 class AlicaTestNotInitializedFixture : public AlicaTestFixtureBase
