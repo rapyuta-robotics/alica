@@ -89,11 +89,11 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
 {
     // Plan initially has no EP
     const Plan* plan[2];
-    plan[1] = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
-    plan[2] = aes[1]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
-    EXPECT_EQ(0u, plan[1]->getEntryPoints().size())
+    plan[0] = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
+    plan[1] = aes[1]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
+    EXPECT_EQ(0u, plan[0]->getEntryPoints().size())
             << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
-    EXPECT_EQ(0u, plan[2]->getEntryPoints().size())
+    EXPECT_EQ(0u, plan[1]->getEntryPoints().size())
             << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
 
     // Make agents enter dynamic tasks

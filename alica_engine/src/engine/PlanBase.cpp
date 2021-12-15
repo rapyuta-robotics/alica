@@ -230,7 +230,7 @@ void PlanBase::run(const Plan* masterPlan)
                 }
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
-                    _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
+                    _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveEntryPoint()->getDynamicId(), _deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
                 } else {
                     _statusMessage->currentState = "NONE";
                 }

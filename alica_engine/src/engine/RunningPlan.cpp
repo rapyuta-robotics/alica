@@ -401,7 +401,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 
     bool reactivate = false;
 
-    if (_activeTriple.state != newState) {
+    if (_activeTriple.state != newState || _activeTriple.entryPoint->getDynamicId() != _activeTriple.entryPoint->getDynamicId()) {
         _status.active = PlanActivity::InActive;
         deactivateChildren();
         revokeAllConstraints();
@@ -410,7 +410,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         reactivate = true;
     } else {
         AgentGrp robotsJoined;
-        _assignment.getAgentsInState(newState, robotsJoined);
+        _assignment.getAgentsInState(replacement.getActiveEntryPoint()->getDynamicId(), newState, robotsJoined);
         for (RunningPlan* c : _children) {
             c->limitToRobots(robotsJoined);
         }
@@ -735,7 +735,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
     if (!auth) {
-        AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveState());
+        AgentsInStateView agentsJoined = _assignment.getAgentsInState(getActiveEntryPoint()->getDynamicId(), getActiveState());
         for (auto iter = availableAgents.begin(); iter != availableAgents.end();) {
             if (std::find(agentsJoined.begin(), agentsJoined.end(), *iter) == agentsJoined.end()) {
                 iter = availableAgents.erase(iter);

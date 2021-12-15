@@ -98,7 +98,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
 
     case STATESCOPE:
         if (p.getActivePlan() == getScopedState()->getInPlan()) {
-            for (AgentId id : p.getAssignment().getAgentsInState(getScopedState())) {
+            for (AgentId id : p.getAssignment().getAgentsInState(p.getActiveEntryPoint()->getDynamicId(), getScopedState())) {
                 Result r = TryAddId(id, io_agentVarsInScope, tm);
                 addedAgent = addedAgent || r == ADDED;
                 changedAgent = changedAgent || r == MODIFIED;

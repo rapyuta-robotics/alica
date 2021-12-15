@@ -113,15 +113,15 @@ public:
 
     AssignmentSuccessView getAgentsWorkingAndFinished(const EntryPoint* ep) const;
     AllAgentsView getAllAgents() const;
-    AgentsInStateView getAgentsInState(const State* s) const;
-    AgentsInStateView getAgentsInState(int64_t sid) const;
+    AgentsInStateView getAgentsInState(int64_t dynamicEpId, const State* s) const;
+    AgentsInStateView getAgentsInState(int64_t dynamicEpId, int64_t sid) const;
 
     void getAgentsWorking(const EntryPoint* ep, AgentGrp& o_agents) const;
     void getAgentsWorking(int idx, AgentGrp& o_agents) const;
     void getAgentsWorkingAndFinished(const EntryPoint* ep, AgentGrp& o_agents) const;
     double getLastUtilityValue() const { return _lastUtility; }
 
-    void getAgentsInState(const State* s, AgentGrp& o_agents) const;
+    void getAgentsInState(int64_t dynamicEpId, const State* s, AgentGrp& o_agents) const;
 
     bool updateAgent(AgentId agent, const EntryPoint* e);
     bool updateAgent(AgentId agent, const EntryPoint* e, const State* s);
@@ -336,18 +336,20 @@ class AgentsInStateView
 public:
     AgentsInStateView()
             : _assignment(nullptr)
+            , _dynamicEpId(0)
             , _state(nullptr)
     {
     }
-    AgentsInStateView(const Assignment* a, const State* s)
+    AgentsInStateView(const Assignment* a, int64_t dynamicEpId, const State* s)
             : _assignment(a)
+            , _dynamicEpId(dynamicEpId)
             , _state(s)
     {
-        assert(s->getEntryPoint()->getPlan()->getId() == a->getPlan()->getId());
+        assert(s->getEntryPoint(_dynamicEpId)->getPlan()->getId() == a->getPlan()->getId());
     }
     AgentsInStateIterator begin() const
     {
-        return _assignment ? AgentsInStateIterator(0, _state, &_assignment->getAgentStates(_state->getEntryPoint()->getIndex()))
+        return _assignment ? AgentsInStateIterator(0, _state, &_assignment->getAgentStates(_state->getEntryPoint(_dynamicEpId)->getIndex()))
                            : AgentsInStateIterator(0, _state, nullptr);
     }
     AgentsInStateIterator end() const
@@ -355,7 +357,7 @@ public:
         if (!_assignment) {
             return AgentsInStateIterator(0, _state, nullptr);
         }
-        const AgentStatePairs* asp = &_assignment->getAgentStates(_state->getEntryPoint()->getIndex());
+        const AgentStatePairs* asp = &_assignment->getAgentStates(_state->getEntryPoint(_dynamicEpId)->getIndex());
         return AgentsInStateIterator(asp->size(), _state, asp);
     }
 
@@ -363,6 +365,7 @@ public:
 
 private:
     const Assignment* _assignment;
+    const int64_t _dynamicEpId;
     const State* _state;
 };
 

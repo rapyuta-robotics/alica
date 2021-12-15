@@ -255,7 +255,7 @@ bool CycleManager::applyAssignment()
     } else {
         if (_rp->getActiveState() != nullptr) {
             AgentGrp robotsJoined;
-            _rp->getAssignment().getAgentsInState(_rp->getActiveState(), robotsJoined);
+            _rp->getAssignment().getAgentsInState(_rp->getActiveEntryPoint()->getDynamicId(), _rp->getActiveState(), robotsJoined);
             for (RunningPlan* c : _rp->getChildren()) {
                 c->limitToRobots(robotsJoined);
             }
