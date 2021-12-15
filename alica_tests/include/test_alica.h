@@ -216,12 +216,13 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        spinner->start();
         EXPECT_TRUE(ae->init(creators));
     }
 
