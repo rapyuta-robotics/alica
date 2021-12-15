@@ -41,7 +41,7 @@ public:
 
 protected:
     using RunnableObject::getTrace;
-    
+
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
