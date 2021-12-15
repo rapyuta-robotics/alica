@@ -68,7 +68,7 @@ bool CGSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::sha
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
     std::transform(serial_seeds.begin(), serial_seeds.end(), std::back_inserter(seeds),
-            [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
+            [](Variant v) -> double { return std::holds_alternative<double>(v) ? std::get<double>(v) : std::numeric_limits<double>::quiet_NaN(); });
 
     return _sgs.solveSimple(constraint, *holder, ranges, seeds);
 }
@@ -129,7 +129,7 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
     std::transform(serial_seeds.begin(), serial_seeds.end(), std::back_inserter(seeds),
-            [](Variant v) -> double { return v.isDouble() ? v.getDouble() : std::numeric_limits<double>::quiet_NaN(); });
+            [](Variant v) -> double { return std::holds_alternative<double>(v) ? std::get<double>(v) : std::numeric_limits<double>::quiet_NaN(); });
 
 #ifdef CGSolver_DEBUG
     for (int i = 0; i < seeds.size(); i += dim) {
