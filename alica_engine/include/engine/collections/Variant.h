@@ -7,7 +7,7 @@
 namespace alica
 {
 
-using Variant = std::variant<std::monostate, double, float, bool, void*, int64_t>;
+using Variant = std::variant<std::monostate, double, float, bool, int64_t>;
 
 namespace variant{
 
