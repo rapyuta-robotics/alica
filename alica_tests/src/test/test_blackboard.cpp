@@ -27,7 +27,6 @@ TEST_F(TestBlackBoard, testParameterPassing)
 TEST_F(TestBlackBoard, testRequiresParameters)
 {
     ae->start();
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
     // Behaviour has requiresParameters set to true
     EXPECT_TRUE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602, 0)->getRequiresParameters());
     // SubPlan has requiresParameters set to true
