@@ -6,20 +6,25 @@ namespace alica
 void variant::serializeTo(std::string& arr, const Variant& var)
 {
     arr.clear();
-    arr = arr + std::to_string(var.index()); // type
+    arr += std::to_string(var.index()); // type
 
     std::visit( [&](auto&& arg) {
         using T = std::decay_t<decltype(arg)>;
         if constexpr (!(std::is_same_v<std::monostate, T> || std::is_same_v<void*, T>)) {
-            arr = arr + (std::to_string(arg));
+            arr += (std::to_string(arg));
         }
     }, var );
 }
 
 void variant::loadFrom(const std::string& arr, Variant& var)
 {
-    auto type = std::stoi(arr.substr(0, 1));
-    std::string data = arr.substr(1);
+    if (arr.size() < 2) { // should atleast contain once char for type and one char for the data
+        var.emplace<std::monostate>();
+        return;
+    }
+
+    auto type = std::stoi(arr.substr(0, 1)); // get type of the data
+    std::string data = arr.substr(1); // get the data
     if (type == 1) {
         var = std::stod(data);
     }
@@ -27,7 +32,7 @@ void variant::loadFrom(const std::string& arr, Variant& var)
         var = std::stof(data);
     }
     else if (type == 3) {
-        var = (data == "1") ? true : false;
+        var = (data == "1");
     }
     else if (type == 4) {
         var = nullptr;
