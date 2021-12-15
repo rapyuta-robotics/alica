@@ -29,9 +29,7 @@ protected:
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
     auto worldModel = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
-
     ae->start();
-    auto successSpamBehaviour = alica::test::Util::getBasicBehaviour(ae, 1522377401286, 0);
 
     for(int i = 0; i < 10; i++) {
         // go into WaitState of subPlan before evaluating
