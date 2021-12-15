@@ -64,7 +64,7 @@ void RunnableObject::start(RunningPlan* rp)
 
         BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
         auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
-        auto initCall = [&, parentPlan = parentPlan]() {
+        auto initCall = [this, parentPlan = parentPlan]() {
             if (!_blackboard) {
                 _blackboard = std::make_shared<Blackboard>();
             }
