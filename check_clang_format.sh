@@ -1,6 +1,6 @@
 # Install Dependencies
 sudo apt-get update
-sudo apt-get -qq install -y clang-format-6.0
+sudo apt-get -qq install -y clang-format-10
 
 # Change to source directory.
 cd $CI_SOURCE_PATH
