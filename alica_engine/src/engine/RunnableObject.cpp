@@ -78,10 +78,7 @@ void RunnableObject::start(RunningPlan* rp)
         _engine->editScheduler().schedule(initCall);
     } else {
 
-        BasicPlan* parentPlan = nullptr;
-        if (rp->getParent() && rp->getParent()->getBasicPlan()) {
-            parentPlan = rp->getParent()->getBasicPlan();
-        }
+        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
         auto initCall = [this, parentPlan = parentPlan]() {
             // Share Blackboard with parent if we have one, or start fresh otherwise
             if (parentPlan) {
