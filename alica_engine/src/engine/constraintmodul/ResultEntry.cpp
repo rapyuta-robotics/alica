@@ -64,7 +64,7 @@ void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<Solve
         if (p.second._lastUpdate > earliest) {
             SolverVar sv;
             sv.id = p.first;
-            p.second._val.serializeTo(sv.value);
+            variant::serializeTo(sv.value, p.second._val);
             o_result.push_back(std::move(sv));
         }
     }
