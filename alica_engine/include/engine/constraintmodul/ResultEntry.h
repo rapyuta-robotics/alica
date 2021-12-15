@@ -61,7 +61,7 @@ bool ResultEntry::getValues(const std::vector<VarType*>& query, AlicaTime earlie
     int invalids = 0;
     for (const VarType* v : query) {
         o_values[i] = getValue(v->getId(), earliest);
-        if (!o_values[i].isSet()) {
+        if (!variant::isSet(o_values[i])) {
             ++invalids;
         }
         ++i;
