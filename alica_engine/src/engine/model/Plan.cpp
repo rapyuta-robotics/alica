@@ -66,6 +66,7 @@ void Plan::setEntryPoints(const std::vector<EntryPoint*>& entryPoints)
     for (auto ep : entryPoints) {
         _entryPoints.push_back(ep);
         if (!ep->isDynamic()) {
+            ++_numStaticEps;
             ep->setIndex(_allEntryPoints.size());
             _allEntryPoints.push_back(ep);
         } else {
@@ -116,14 +117,8 @@ void Plan::setTransitions(const TransitionGrp& transitions)
 
 void Plan::computeDynamicEntryPoints(const Configuration* configuration) const
 {
-    _allEntryPoints.clear();
-    for (auto ep : _entryPoints) {
-        if (!ep->isDynamic()) {
-            _allEntryPoints.push_back(ep);
-        }
-    }
-
     if (_ae->getPlanPool().getBasicPlan(this, configuration)->getApplicationEntrypointContext(_entryPointMap)) {
+        _allEntryPoints.erase(_allEntryPoints.begin() + _numStaticEps, _allEntryPoints.end());
         for (auto& static_to_dynamic_pair : _entryPointMap) {
             for (auto dynamicId : static_to_dynamic_pair.second) {
                 auto dep = _ae->getEntryPointStore()->get(static_to_dynamic_pair.first, dynamicId);

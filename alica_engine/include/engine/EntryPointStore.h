@@ -27,7 +27,7 @@ public:
     // Get the entry point with the given staticEntryPointId & dynamicEntryPointId
     // If dynamicEntryPointId > 0 the entry point should be dynamic
     // If the dynamic entry point does not exist, it is dynamically created
-    const EntryPoint* get(int64_t staticEntryPointId, int64_t dynamicEntryPointId = 0) const
+    const EntryPoint* get(int64_t staticEntryPointId, int64_t dynamicEntryPointId) const
     {
         auto staticEp = getStaticEp(staticEntryPointId);
         assert(staticEp);
