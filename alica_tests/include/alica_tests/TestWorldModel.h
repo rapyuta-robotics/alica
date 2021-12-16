@@ -2,8 +2,8 @@
 
 #include <engine/IAlicaWorldModel.h>
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace alicaTests
 {

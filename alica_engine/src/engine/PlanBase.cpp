@@ -18,8 +18,8 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-#include <math.h>
 #include <functional>
+#include <math.h>
 
 namespace alica
 {
@@ -230,7 +230,8 @@ void PlanBase::run(const Plan* masterPlan)
                 }
                 if (_deepestNode->getActiveState() != nullptr) {
                     _statusMessage->currentState = _deepestNode->getActiveState()->getName();
-                    _deepestNode->getAssignment().getAgentsInState(_deepestNode->getActiveEntryPoint()->getDynamicId(), _deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
+                    _deepestNode->getAssignment().getAgentsInState(
+                            _deepestNode->getActiveEntryPoint()->getDynamicId(), _deepestNode->getActiveState(), _statusMessage->robotIDsWithMe);
                 } else {
                     _statusMessage->currentState = "NONE";
                 }
@@ -245,7 +246,7 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 
-        //log.iterationEnds(_rootNode);
+        // log.iterationEnds(_rootNode);
 
         _ae->iterationComplete();
 

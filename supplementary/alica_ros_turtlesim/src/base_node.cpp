@@ -1,14 +1,15 @@
-#include <ros/ros.h>
 #include <chrono>
-#include <thread>
+#include <ros/ros.h>
 #include <signal.h>
+#include <thread>
 
-#include <turtlesim/Spawn.h>
-#include <turtlesim/Kill.h>
-#include <alica_ros_turtlesim/world_model.hpp>
 #include <alica_ros_turtlesim/base.hpp>
+#include <alica_ros_turtlesim/world_model.hpp>
+#include <turtlesim/Kill.h>
+#include <turtlesim/Spawn.h>
 
-void killMyTurtle(const std::string& name, ros::NodeHandle& nh) {
+void killMyTurtle(const std::string& name, ros::NodeHandle& nh)
+{
     ros::ServiceClient kill_client = nh.serviceClient<turtlesim::Kill>("/kill");
     turtlesim::Kill kill_srv;
     kill_srv.request.name = name;
@@ -19,7 +20,8 @@ void killMyTurtle(const std::string& name, ros::NodeHandle& nh) {
     }
 }
 
-bool spawnMyTurtle(const std::string& name, ros::NodeHandle& nh) {
+bool spawnMyTurtle(const std::string& name, ros::NodeHandle& nh)
+{
     ros::ServiceClient spawn_client = nh.serviceClient<turtlesim::Spawn>("/spawn");
     turtlesim::Spawn spawn_srv;
     spawn_srv.request.x = 1;
@@ -36,7 +38,8 @@ bool spawnMyTurtle(const std::string& name, ros::NodeHandle& nh) {
     return true;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     ros::init(argc, argv, "alica_turtle_base_node");
     ROS_INFO("Started Turtle Base Node.");
     std::string name, roleset, master_plan, alica_path;
@@ -61,7 +64,7 @@ int main(int argc, char** argv) {
     killMyTurtle(name, priv_nh);
 
     // spawn turtle in sim
-    if(!spawnMyTurtle(name, priv_nh))
+    if (!spawnMyTurtle(name, priv_nh))
         return 1;
 
     ROS_INFO("Creating ALICA turtle Base.......");
@@ -75,7 +78,7 @@ int main(int argc, char** argv) {
     sigemptyset(&signal_set);
     sigaddset(&signal_set, SIGINT);
     int sig_number;
-    if(sigwait(&signal_set, &sig_number) != 0) {
+    if (sigwait(&signal_set, &sig_number) != 0) {
         ROS_ERROR_STREAM("<main> Error sigwait()");
         exit(1);
     }

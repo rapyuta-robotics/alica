@@ -1,20 +1,22 @@
-#include <gtest/gtest.h>
-#include <ros/ros.h>
-#include <clock/AlicaRosTimer.h>
-#include <mutex>
-#include <condition_variable>
 #include <atomic>
+#include <clock/AlicaRosTimer.h>
+#include <condition_variable>
+#include <gtest/gtest.h>
+#include <mutex>
+#include <ros/ros.h>
 
 TEST(SyncStopTimerRosTest, FireImmediatelyOnStart)
 {
     alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
     ros::Time timerCbTime;
     ros::Time timerStartTime = ros::Time::now();
-    auto timer = timerFactory.createTimer([&timerCbTime]() {
-        if (timerCbTime.isZero()) {
-            timerCbTime = ros::Time::now();
-        }
-    }, alica::AlicaTime::seconds(1));
+    auto timer = timerFactory.createTimer(
+            [&timerCbTime]() {
+                if (timerCbTime.isZero()) {
+                    timerCbTime = ros::Time::now();
+                }
+            },
+            alica::AlicaTime::seconds(1));
     ros::Duration(0.1).sleep();
     timer.reset();
     ASSERT_TRUE(!timerCbTime.isZero());
@@ -27,17 +29,19 @@ TEST(SyncStopTimerRosTest, SequentialCbExecution)
     std::atomic<bool> cbActive(false);
     std::atomic<bool> multipleCbsWereActive(false);
     std::atomic<bool> firstCall(true);
-    auto timer = timerFactory.createTimer([&cbActive, &multipleCbsWereActive, &firstCall]() {
-        if (cbActive) {
-            multipleCbsWereActive = true;
-        }
-        cbActive = true;
-        if (!firstCall) {
-            ros::Duration(1.0).sleep();
-            firstCall = false;
-        }
-        cbActive = false;
-    }, alica::AlicaTime::milliseconds(10));
+    auto timer = timerFactory.createTimer(
+            [&cbActive, &multipleCbsWereActive, &firstCall]() {
+                if (cbActive) {
+                    multipleCbsWereActive = true;
+                }
+                cbActive = true;
+                if (!firstCall) {
+                    ros::Duration(1.0).sleep();
+                    firstCall = false;
+                }
+                cbActive = false;
+            },
+            alica::AlicaTime::milliseconds(10));
     ros::Duration(2).sleep();
     timer.reset();
     ASSERT_FALSE(multipleCbsWereActive);
@@ -58,21 +62,25 @@ TEST(SyncStopTimerRosTest, CbFrequencyCheck)
         ros::Time lastCbTime;
         bool freqLess = false, freqMore = false;
         int cnt = 0;
-        auto timer = timerFactory.createTimer([&]() {
-            ++cnt;
-            auto now = ros::Time::now();
-            if (!lastCbTime.isZero()) {
-                freqMore = now - lastCbTime > ros::Duration(periodUpperLimit);
-                freqLess = now - lastCbTime < ros::Duration(periodLowerLimit);
-            }
-            lastCbTime = ros::Time::now();
-        }, alica::AlicaTime::seconds(period));
+        auto timer = timerFactory.createTimer(
+                [&]() {
+                    ++cnt;
+                    auto now = ros::Time::now();
+                    if (!lastCbTime.isZero()) {
+                        freqMore = now - lastCbTime > ros::Duration(periodUpperLimit);
+                        freqLess = now - lastCbTime < ros::Duration(periodLowerLimit);
+                    }
+                    lastCbTime = ros::Time::now();
+                },
+                alica::AlicaTime::seconds(period));
 
         ros::Duration(totDuration + sleepBuffer).sleep();
         timer.reset();
 
         std::ostringstream oss;
-        oss << "period: " << period << ", totDuration: " << totDuration << ", sleepBuffer: " << sleepBuffer << ", expCbCnt: " << expCbCnt << ", periodUpperLimit: " << periodUpperLimit << ", periodLowerLimit: " << periodLowerLimit << ", freqMore: " << freqMore << ", freqLess: " << freqLess << ", cnt: " << cnt << std::endl;
+        oss << "period: " << period << ", totDuration: " << totDuration << ", sleepBuffer: " << sleepBuffer << ", expCbCnt: " << expCbCnt
+            << ", periodUpperLimit: " << periodUpperLimit << ", periodLowerLimit: " << periodLowerLimit << ", freqMore: " << freqMore
+            << ", freqLess: " << freqLess << ", cnt: " << cnt << std::endl;
 
         ASSERT_FALSE(freqLess) << oss.str();
         ASSERT_FALSE(freqMore) << oss.str();
@@ -84,20 +92,20 @@ TEST(SyncStopTimerRosTest, StopChecks)
 {
     alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
     ros::Time beforeStopTime = ros::Time::now();
-    auto timer = timerFactory.createTimer([]() {
-        ros::Duration(1).sleep();
-    }, alica::AlicaTime::milliseconds(10));
+    auto timer = timerFactory.createTimer([]() { ros::Duration(1).sleep(); }, alica::AlicaTime::milliseconds(10));
     timer.reset();
     ASSERT_TRUE(ros::Time::now() - beforeStopTime > ros::Duration(0.7));
 
     bool firstCall = true;
-    timer = timerFactory.createTimer([&firstCall]() {
-        if (firstCall) {
-            firstCall = false;
-            return;
-        }
-        ros::Duration(1).sleep();
-    }, alica::AlicaTime::milliseconds(5));
+    timer = timerFactory.createTimer(
+            [&firstCall]() {
+                if (firstCall) {
+                    firstCall = false;
+                    return;
+                }
+                ros::Duration(1).sleep();
+            },
+            alica::AlicaTime::milliseconds(5));
     ros::Duration(0.15).sleep();
     beforeStopTime = ros::Time::now();
     timer.reset();
@@ -109,12 +117,14 @@ TEST(SyncStopTimerRosTest, SpamStartStopTest)
     alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
     int cnt = 0;
     for (int i = 0; i < 10000; ++i) {
-        auto timer = timerFactory.createTimer([&cnt]() {
-            ++cnt;
-            if (cnt & 1) {
-                ros::Duration{0, 10}.sleep();
-            }
-        }, alica::AlicaTime::nanoseconds(10));
+        auto timer = timerFactory.createTimer(
+                [&cnt]() {
+                    ++cnt;
+                    if (cnt & 1) {
+                        ros::Duration{0, 10}.sleep();
+                    }
+                },
+                alica::AlicaTime::nanoseconds(10));
         if (i & 1) {
             ros::Duration{0, 10}.sleep();
         }

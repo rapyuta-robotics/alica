@@ -30,8 +30,8 @@ namespace intervalpropagation
 using std::numeric_limits;
 
 UpwardPropagator::UpwardPropagator()
-    : _changed(nullptr)
-    , _dp(nullptr)
+        : _changed(nullptr)
+        , _dp(nullptr)
 {
 }
 
@@ -43,7 +43,7 @@ int UpwardPropagator::visit(autodiff::Abs* abs)
         c = updateInterval(abs, 0, std::max(std::abs(abs->getArg()->getMin()), std::abs(abs->getArg()->getMax())));
     else
         c = updateInterval(abs, std::min(std::abs(abs->getArg()->getMin()), std::abs(abs->getArg()->getMax())),
-                           std::max(std::abs(abs->getArg()->getMin()), std::abs(abs->getArg()->getMax())));
+                std::max(std::abs(abs->getArg()->getMin()), std::abs(abs->getArg()->getMax())));
     if (c)
         addChanged(abs);
     return c;
@@ -138,8 +138,8 @@ int UpwardPropagator::visit(autodiff::Cos* cos)
         double b = std::cos(cos->getArg()->getMin());
         double x = ceil(cos->getArg()->getMin() / M_PI);
         double y = floor(cos->getArg()->getMax() / M_PI);
-        if (x == y) {                // single extrema
-            if (((int)x) % 2 == 0) { // maxima
+        if (x == y) {                 // single extrema
+            if (((int) x) % 2 == 0) { // maxima
                 c = updateInterval(cos, std::min(a, b), 1);
             } else { // minima
                 c = updateInterval(cos, -1, std::max(a, b));
@@ -292,8 +292,8 @@ int UpwardPropagator::visit(autodiff::Sin* sin)
         double halfPI = M_PI / 2;
         double x = ceil((sin->getArg()->getMin() - halfPI) / M_PI);
         double y = floor((sin->getArg()->getMax() - halfPI) / M_PI);
-        if (x == y) {                // single extrema
-            if (((int)x) % 2 == 0) { // maxima
+        if (x == y) {                 // single extrema
+            if (((int) x) % 2 == 0) { // maxima
                 c = updateInterval(sin, std::min(a, b), 1);
             } else { // minima
                 c = updateInterval(sin, -1, std::max(a, b));

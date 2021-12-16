@@ -4,9 +4,9 @@
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Plan.h"
+#include <alica_tests/TestWorldModel.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <alica_tests/TestWorldModel.h>
 #include <gtest/gtest.h>
 #include <test_alica.h>
 
@@ -62,5 +62,5 @@ TEST_F(AlicaEngineTestPlanPoolConfigs, planPoolCheckPlanConfigs)
     ASSERT_EQ(wm->configParameter[1], "2");
 }
 
-}
-}
+} // namespace
+} // namespace alica

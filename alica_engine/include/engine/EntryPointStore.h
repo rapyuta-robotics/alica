@@ -1,9 +1,9 @@
 #pragma once
 
-#include <engine/util/LRUCache.h>
-#include <engine/util/HashFunctions.h>
-#include <unordered_map>
 #include <cassert>
+#include <engine/util/HashFunctions.h>
+#include <engine/util/LRUCache.h>
+#include <unordered_map>
 
 namespace alica
 {
@@ -48,10 +48,7 @@ private:
 
     struct IDHash
     {
-        std::size_t operator()(std::pair<int64_t, int64_t> p) const
-        {
-            return hashCombine(contextHash(p.first), contextHash(p.second));
-        }
+        std::size_t operator()(std::pair<int64_t, int64_t> p) const { return hashCombine(contextHash(p.first), contextHash(p.second)); }
     };
 
     std::unordered_map<int64_t, const EntryPoint*> _staticEntryPoints;

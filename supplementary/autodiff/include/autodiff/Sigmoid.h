@@ -7,7 +7,7 @@ namespace autodiff
 
 class Sigmoid : public Term
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -27,7 +27,7 @@ class Sigmoid : public Term
     }
     TermPtr getArg() const { return _arg; }
 
-  private:
+private:
     friend TermHolder;
     Sigmoid(TermPtr arg, TermHolder* owner);
     Sigmoid(TermPtr arg, double steepness, TermHolder* owner);

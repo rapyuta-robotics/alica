@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <atomic>
+#include <string>
 
 #include <engine/IAlicaWorldModel.h>
 
@@ -51,4 +51,4 @@ public:
 private:
 };
 
-}
+} // namespace alica_test

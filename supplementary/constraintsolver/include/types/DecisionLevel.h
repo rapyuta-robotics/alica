@@ -17,7 +17,7 @@ namespace cnsat
 
 class DecisionLevel
 {
-  public:
+public:
     DecisionLevel(int level);
     virtual ~DecisionLevel();
 

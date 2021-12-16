@@ -20,6 +20,7 @@ class TraceFactory;
 class Trace : public alica::IAlicaTrace
 {
     friend TraceFactory;
+
 public:
     // Create partial trace instance with optional reference to the parent.
     // Trace without parent will be reported as root of the trace and can have further children.

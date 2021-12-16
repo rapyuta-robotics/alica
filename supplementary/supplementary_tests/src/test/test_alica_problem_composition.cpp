@@ -1,13 +1,13 @@
 #include <ProblemModule/QueryBehaviour1.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
-#include <test_supplementary.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
+#include <test_supplementary.h>
 
+#include <chrono>
 #include <string>
 #include <vector>
-#include <chrono>
 
 namespace supplementary
 {
@@ -50,5 +50,5 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
         // cout << "Test: '" << rep->getName() << "'" << endl;
     }
 }
-}
-}
+} // namespace
+} // namespace supplementary

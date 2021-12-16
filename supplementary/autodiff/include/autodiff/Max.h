@@ -7,7 +7,7 @@ namespace autodiff
 
 class Max : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -21,7 +21,7 @@ class Max : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     Max(TermPtr left, TermPtr right, TermHolder* owner);
 };

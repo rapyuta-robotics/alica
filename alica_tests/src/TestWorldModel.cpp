@@ -20,9 +20,7 @@ TestWorldModel::TestWorldModel()
     reset();
 }
 
-TestWorldModel::~TestWorldModel()
-{
-}
+TestWorldModel::~TestWorldModel() {}
 
 void TestWorldModel::reset()
 {

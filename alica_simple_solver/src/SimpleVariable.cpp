@@ -8,7 +8,7 @@ namespace reasoner
 std::string SimpleVariable::NO_VALUE = "<NO-VALUE>";
 
 SimpleVariable::SimpleVariable(int64_t representingVariableID)
-    : alica::SolverVariable(representingVariableID)
+        : alica::SolverVariable(representingVariableID)
 {
 }
 

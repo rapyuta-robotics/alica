@@ -1,9 +1,9 @@
+#include <engine/AlicaContext.h>
 #include <engine/Assignment.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
-#include <engine/AlicaContext.h>
 #include <engine/util/HashFunctions.h>
 
 #include <gtest/gtest.h>

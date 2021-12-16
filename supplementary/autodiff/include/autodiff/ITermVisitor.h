@@ -27,7 +27,7 @@ class Variable;
 
 class ITermVisitor
 {
-  public:
+public:
     virtual ~ITermVisitor() {}
 
     virtual int visit(Abs* elem) = 0;

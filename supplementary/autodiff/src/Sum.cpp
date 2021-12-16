@@ -11,7 +11,7 @@ namespace autodiff
 {
 
 Sum::Sum(TermPtr first, TermPtr second, TermHolder* owner)
-    : BinaryFunction(first, second, owner)
+        : BinaryFunction(first, second, owner)
 {
 }
 

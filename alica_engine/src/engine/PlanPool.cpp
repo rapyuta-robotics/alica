@@ -4,10 +4,10 @@
 #include "engine/IPlanCreator.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
-#include "engine/model/Plan.h"
-#include "engine/model/PlanType.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/Plan.h"
+#include "engine/model/PlanType.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -109,7 +109,7 @@ void PlanPool::startPlan(RunningPlan& rp)
     }
 
     ALICA_ERROR_MSG("PP::startPlan(): Cannot start Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
-                                                                                                     << " Plan Id: " << rp.getActivePlan()->getId());
+                                                                                           << " Plan Id: " << rp.getActivePlan()->getId());
 }
 
 /**
@@ -118,14 +118,14 @@ void PlanPool::startPlan(RunningPlan& rp)
  */
 void PlanPool::stopPlan(RunningPlan& rp)
 {
-   if (const auto* plan = dynamic_cast<const Plan*>(rp.getActivePlan())) {
-       if (auto basicPlan = getBasicPlan(plan, rp.getConfiguration())) {
-           basicPlan->stop();
-       }
-   } else {
-       ALICA_ERROR_MSG("PP::stopPlan(): Cannot stop Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
-                                                                                                      << " Plan Id: " << rp.getActivePlan()->getId());
-   }
+    if (const auto* plan = dynamic_cast<const Plan*>(rp.getActivePlan())) {
+        if (auto basicPlan = getBasicPlan(plan, rp.getConfiguration())) {
+            basicPlan->stop();
+        }
+    } else {
+        ALICA_ERROR_MSG("PP::stopPlan(): Cannot stop Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
+                                                                                             << " Plan Id: " << rp.getActivePlan()->getId());
+    }
 }
 
 /**

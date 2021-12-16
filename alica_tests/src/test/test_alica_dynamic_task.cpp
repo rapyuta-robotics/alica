@@ -91,10 +91,8 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
     const Plan* plan[2];
     plan[0] = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
     plan[1] = aes[1]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
-    EXPECT_EQ(0u, plan[0]->getEntryPoints().size())
-            << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
-    EXPECT_EQ(0u, plan[1]->getEntryPoints().size())
-            << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
+    EXPECT_EQ(0u, plan[0]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
+    EXPECT_EQ(0u, plan[1]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
 
     // Make agents enter dynamic tasks
     ASSERT_NO_SIGNAL
@@ -110,8 +108,7 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
         ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
 
-        EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size())
-            << "Number of dynamic EntryPoints should be 1 at this point." << std::endl;
+        EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be 1 at this point." << std::endl;
 
         const alica::EntryPoint* ep = plan[agent_index]->getEntryPoints().front();
         checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
@@ -146,7 +143,7 @@ TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
 
         ASSERT_EQ(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getId(), kDynamicTaskEntrypointId);
         // TODO ensure new dynamic EP is different from 0
-        //ASSERT_NE(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getDynamicId(), 0);
+        // ASSERT_NE(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getDynamicId(), 0);
         ASSERT_EQ(std::dynamic_pointer_cast<alica::DynamicTaskBehavior>(alica::test::Util::getBasicBehaviour(aes[agent_index], kDynamicTaskBehaviorId, 0))
                           ->callCounter,
                 1);

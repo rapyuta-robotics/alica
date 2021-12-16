@@ -18,13 +18,13 @@ public:
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
     using RunnableObject::getPlanContext;
     using RunnableObject::getTraceContext;
+    using RunnableObject::getWorldModel;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
-    using RunnableObject::getWorldModel;
 
     virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap);
 

@@ -11,7 +11,7 @@
 namespace autodiff
 {
 Sin::Sin(TermPtr arg, TermHolder* owner)
-    : UnaryFunction(arg, owner)
+        : UnaryFunction(arg, owner)
 {
 }
 

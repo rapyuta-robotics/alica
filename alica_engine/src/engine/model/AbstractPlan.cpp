@@ -1,15 +1,15 @@
 #include "engine/model/AbstractPlan.h"
-#include "engine/model/Variable.h"
 #include "engine/AlicaEngine.h"
+#include "engine/model/Variable.h"
 
-#include <yaml-cpp/yaml.h>
-#include <sstream>
 #include <functional>
+#include <sstream>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
 
-AbstractPlan::AbstractPlan(AlicaEngine *ae)
+AbstractPlan::AbstractPlan(AlicaEngine* ae)
         : AlicaElement()
 
 {
@@ -18,7 +18,7 @@ AbstractPlan::AbstractPlan(AlicaEngine *ae)
     reload(ae->getConfig());
 }
 
-AbstractPlan::AbstractPlan(AlicaEngine *ae, int64_t id)
+AbstractPlan::AbstractPlan(AlicaEngine* ae, int64_t id)
         : AlicaElement(id)
 {
     auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);

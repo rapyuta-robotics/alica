@@ -4,8 +4,8 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
-#include <alica_tests/TestWorldModel.h>
 #include "UtilityFunctionCreator.h"
+#include <alica_tests/TestWorldModel.h>
 
 #include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
@@ -93,14 +93,16 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i == 16) {
             // State2
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201030936) || alica::test::Util::isStateActive(aes[0], 1413201030936))
-                                        << std::endl
-                                        << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
-                                        << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << std::endl;
+                    << std::endl
+                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
+                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << std::endl;
             // Idle
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
-                                        << std::endl
-                                        << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
-                                        << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << std::endl;
+                    << std::endl
+                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
+                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << std::endl;
             alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
             std::cout << "3--------- Passed transitions in subplan passed ---------" << std::endl;
@@ -108,9 +110,11 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i >= 17 && i <= 18) {
             // State2
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201030936) || alica::test::Util::isStateActive(aes[0], 1413201030936))
-                                        << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
-                                        << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << std::endl;
-            if (i==18){
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << std::endl;
+            if (i == 18) {
                 // TCS[1] is in OtherState (1413200877336). WHY!
                 ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574));
                 ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413807264574));
@@ -118,8 +122,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
 
             // Idle
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
-                                        << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
-                                        << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << std::endl;
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << std::endl;
             if (i == 18) {
                 std::cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << std::endl;
                 // Start > Finished
@@ -130,8 +136,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i == 19) {
             // Finished
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201380359) && alica::test::Util::isStateActive(aes[0], 1413201380359))
-                                        << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << " "
-                                        << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << std::endl;
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive")
+                    << std::endl;
         }
     }
 }

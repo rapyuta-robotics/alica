@@ -1,9 +1,9 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
+#include "engine/Types.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
-#include "engine/Types.h"
 
 #include <list>
 #include <memory>

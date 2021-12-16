@@ -107,7 +107,7 @@ shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>>
 
     CNSMTGSolver* cnsmtGSolver = solver.cnsmtGSolver;
     int vars = variables->size();
-    int init = ((double)rand() / RAND_MAX) * vars;
+    int init = ((double) rand() / RAND_MAX) * vars;
     shared_ptr<Var> v = nullptr, next = nullptr;
     int maxActivity = 0;
     // Search Lit with highest Activity
@@ -133,18 +133,18 @@ shared_ptr<Var> Decider::decideActivityBased(shared_ptr<vector<shared_ptr<Var>>>
 
             double rel = next->positiveAppearance + next->negativeAppearance;
             if (rel != 0)
-                rel = ((double)next->positiveAppearance) / rel;
+                rel = ((double) next->positiveAppearance) / rel;
             else
                 rel = 0.5;
 
-            next->assignment = ((double)rand() / RAND_MAX < rel) ? Assignment::TRUE : Assignment::FALSE;
+            next->assignment = ((double) rand() / RAND_MAX < rel) ? Assignment::TRUE : Assignment::FALSE;
             solver.decisions->push_back(next);
             next->setReason(nullptr);
             next->decisionLevel = d;
             return next;
         }
     } else {
-        init = ((double)rand() / RAND_MAX) * solver.clauses->size();
+        init = ((double) rand() / RAND_MAX) * solver.clauses->size();
         for (int i = 0; i < static_cast<int>(solver.clauses->size()); i++) {
             shared_ptr<Clause> c = solver.clauses->at((i + init) % solver.clauses->size());
             if (!c->satisfied && c->literals->size() > 1) {

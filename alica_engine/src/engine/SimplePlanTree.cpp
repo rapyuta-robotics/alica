@@ -1,9 +1,9 @@
 
+#include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
-#include "engine/Types.h"
 #include <engine/SimplePlanTree.h>
 #include <engine/util/HashFunctions.h>
 

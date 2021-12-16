@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include <list>
+#include <unordered_map>
 
 namespace alica
 {
@@ -10,7 +10,10 @@ template <class Key, class Value, class Hasher = std::hash<Value>>
 class LRUCache
 {
 public:
-    LRUCache(std::size_t lruSize) : _lruSize(lruSize) {}
+    LRUCache(std::size_t lruSize)
+            : _lruSize(lruSize)
+    {
+    }
 
     template <class... Args>
     Value& lookup(const Key& key, Args&&... args)
@@ -36,4 +39,4 @@ private:
     std::unordered_map<Key, typename std::list<Value>::iterator, Hasher> _lookupTable;
 };
 
-}
+} // namespace alica

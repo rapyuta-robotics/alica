@@ -13,14 +13,14 @@ class TVec
 {
     static_assert(DIM > 0, "Vector dimensionality must be positive.");
 
-  public:
+public:
     TVec(const std::array<TermPtr, DIM>& terms)
-        : _terms(terms)
+            : _terms(terms)
     {
     }
     template <class... Args>
     TVec(Args... args)
-        : _terms{{args...}}
+            : _terms{{args...}}
     {
     }
 
@@ -45,7 +45,7 @@ class TVec
     TermPtr operator[](int index) const { return _terms[index]; }
     TermPtr& operator[](int index) { return _terms[index]; }
 
-  private:
+private:
     std::array<TermPtr, DIM> _terms;
 };
 // Operators:

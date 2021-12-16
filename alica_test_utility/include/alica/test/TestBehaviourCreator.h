@@ -9,7 +9,7 @@ namespace alica
 {
 class BasicBehaviour;
 class IAlicaWorldModel;
-}
+} // namespace alica
 
 namespace alica::test
 {
