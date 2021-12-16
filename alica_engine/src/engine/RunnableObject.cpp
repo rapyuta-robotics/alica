@@ -62,14 +62,14 @@ void RunnableObject::start(RunningPlan* rp)
 
         int64_t wrapperId = (*it)->getId();
 
-        std::shared_ptr<Blackboard> parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
-        auto& planAttachment = rp->getParent()->getBasicPlan()->getPlanAttachment(wrapperId);
-        auto initCall = [&]() {
-            if (!_Blackboard) {
-                _Blackboard = std::make_shared<Blackboard>();
+        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+        auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
+        auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
+            if (!_blackboard) {
+                _blackboard = std::make_shared<Blackboard>();
             }
-            _Blackboard->impl().clear();
-            if (!planAttachment->setParameters(*parentBlackboard, *_Blackboard)) {
+            _blackboard->impl().clear();
+            if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
                 std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
                 return;
             }
@@ -78,16 +78,13 @@ void RunnableObject::start(RunningPlan* rp)
         _engine->editScheduler().schedule(initCall);
     } else {
 
-        std::shared_ptr<Blackboard> parentBlackboard;
-        if (rp->getParent() && rp->getParent()->getBasicPlan()) {
-            parentBlackboard = rp->getParent()->getBasicPlan()->getBlackboard();
-        }
-        auto initCall = [this, parentBlackboard = std::move(parentBlackboard)]() {
+        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
+        auto initCall = [this, parentPlan = parentPlan]() {
             // Share Blackboard with parent if we have one, or start fresh otherwise
-            if (parentBlackboard) {
-                _Blackboard = parentBlackboard;
+            if (parentPlan) {
+                _blackboard = parentPlan->getBlackboard();
             } else {
-                _Blackboard = std::make_shared<Blackboard>();
+                _blackboard = std::make_shared<Blackboard>();
             }
             doInit();
         };
