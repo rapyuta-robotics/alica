@@ -1,6 +1,7 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaTimer.h"
 #include "engine/TeamObserver.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/model/Variable.h"
@@ -24,10 +25,7 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
 {
 }
 
-VariableSyncModule::~VariableSyncModule()
-{
-    delete _timer;
-}
+VariableSyncModule::~VariableSyncModule() {}
 
 void VariableSyncModule::init()
 {
@@ -51,7 +49,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
     _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
     _distThreshold = config["Alica"]["CSPSolving"]["SeedMergingThreshold"].as<double>();
 
-    essentials::IdentifierConstPtr ownId = _ae->getTeamManager().getLocalAgentID();
+    AgentId ownId = _ae->getTeamManager().getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));
@@ -64,9 +62,8 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = new essentials::NotifyTimer<VariableSyncModule>(std::chrono::milliseconds(interval.inMilliseconds()), std::chrono::milliseconds (0), &VariableSyncModule::publishContent, this);
+            _timer = _ae->getTimerFactory().createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
         }
-        _timer->start();
     }
 }
 
@@ -74,7 +71,7 @@ void VariableSyncModule::close()
 {
     _running = false;
     if (_timer) {
-        _timer->stop();
+        _timer.reset();
     }
 }
 
@@ -93,7 +90,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
 
     ResultEntry* re = nullptr;
     for (std::unique_ptr<ResultEntry>& r : _store) {
-        if (*(r->getId()) == *(msg.senderID)) {
+        if ((r->getId()) == (msg.senderID)) {
             re = r.get();
             break;
         }
@@ -111,7 +108,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
     AlicaTime now = _ae->getAlicaClock().now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
-        v.loadFrom(sv.value);
+        variant::loadFrom(sv.value, v);
         re->addValue(sv.id, v, now);
     }
 }
@@ -147,7 +144,7 @@ VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
 {
     assert(_values.size() == _supporterCount.size());
     for (const Variant& v : _values) {
-        if (v.isSet()) {
+        if (variant::isSet(v)) {
             ++_totalSupCount;
         }
     }
@@ -177,11 +174,11 @@ bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, co
     double distSqr = 0;
 
     for (int i = 0; i < dim; ++i) {
-        if (v[i].isDouble()) {
-            if (_values[i].isDouble()) {
-                double d = v[i].getDouble();
+        if (std::holds_alternative<double>(v[i])) {
+            if (std::holds_alternative<double>(_values[i])) {
+                double d = std::get<double>(v[i]);
                 if (!std::isnan(d)) {
-                    double cur = _values[i].getDouble();
+                    double cur = std::get<double>(_values[i]);
                     double dist = (d - cur) * (d - cur);
                     double size = limits[i].size();
                     if (size > 0.0) {
@@ -202,17 +199,17 @@ bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, co
     }
     if (distSqr / (dim - nans) < distThreshold) { // merge
         for (int i = 0; i < dim; ++i) {
-            if (v[i].isDouble()) {
-                double d = v[i].getDouble();
+            if (std::holds_alternative<double>(v[i])) {
+                double d = std::get<double>(v[i]);
                 if (!std::isnan(d)) {
-                    if (_values[i].isDouble()) {
-                        double nv = _values[i].getDouble() * _supporterCount[i] + d;
+                    if (std::holds_alternative<double>(_values[i])) {
+                        double nv = std::get<double>(_values[i]) * _supporterCount[i] + d;
                         ++_supporterCount[i];
                         nv /= _supporterCount[i];
-                        _values[i].setDouble(nv);
+                        _values[i] = nv;
                     } else {
                         _supporterCount[i] = 1;
-                        _values[i].setDouble(d);
+                        _values[i] = d;
                     }
                     ++_totalSupCount;
                 }
@@ -221,8 +218,8 @@ bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, co
         // recalc hash:
         _hash = 0;
         for (const Variant v : _values) {
-            if (v.isDouble()) {
-                _hash += v.getDouble();
+            if (std::holds_alternative<double>(v)) {
+                _hash += std::get<double>(v);
             }
         }
         return true;

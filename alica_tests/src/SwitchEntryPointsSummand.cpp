@@ -1,5 +1,6 @@
 #include <alica_tests/SwitchEntryPointsSummand.h>
-#include "engine/planselector/IAssignment.h"
+#include <engine/IAlicaWorldModel.h>
+#include <engine/planselector/IAssignment.h>
 
 namespace alica
 {
@@ -11,7 +12,7 @@ SwitchEntryPointsSummand::SwitchEntryPointsSummand(double weight)
 
 SwitchEntryPointsSummand::~SwitchEntryPointsSummand() {}
 
-UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss) const
+UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     if (!oldAss) {
         UtilityInterval ui(0.0, 1.0);
@@ -23,7 +24,7 @@ UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment
 
     bool found = false;
     for (const auto& agentStatePair : firstAgentStatePairs) {
-        for (essentials::IdentifierConstPtr agentId : ass.getAgentsWorking(_relevantEntryPoints[1])) {
+        for (AgentId agentId : ass.getAgentsWorking(_relevantEntryPoints[1])) {
             if (agentId == agentStatePair.first) {
                 found = true;
             }
@@ -34,7 +35,7 @@ UtilityInterval SwitchEntryPointsSummand::eval(IAssignment ass, const Assignment
         found = false;
     }
     for (const auto& agentStatePair : secondAgentStatePairs) {
-        for (essentials::IdentifierConstPtr agentId : ass.getAgentsWorking(_relevantEntryPoints[0])) {
+        for (AgentId agentId : ass.getAgentsWorking(_relevantEntryPoints[0])) {
             if (agentId == agentStatePair.first) {
                 found = true;
             }

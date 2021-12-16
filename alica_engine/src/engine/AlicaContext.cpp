@@ -1,8 +1,8 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
 
 #include <essentials/FileSystem.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -18,16 +18,13 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _engine(std::make_unique<AlicaEngine>(*this,
-                                                alicaContextParams.configPath,
-                                                alicaContextParams.roleSetName,
-                                                alicaContextParams.masterPlanName,
-                                                alicaContextParams.stepEngine,
-                                                alicaContextParams.agentID))
+        , _engine(std::make_unique<AlicaEngine>(*this, alicaContextParams.configPath, alicaContextParams.roleSetName, alicaContextParams.masterPlanName,
+                  alicaContextParams.stepEngine, alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
-        , _idManager(std::make_unique<essentials::IDManager>())
-{}
+        , _worldModel(nullptr)
+{
+}
 
 AlicaContext::~AlicaContext()
 {
@@ -77,7 +74,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
+AgentId AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }

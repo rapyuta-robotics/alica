@@ -55,11 +55,11 @@ TEST_F(VariableSyncModuleTest, GetOwnSeed)
     int num = vsm.getSeeds(vs, limits, seeds);
     EXPECT_EQ(num, 1);
     EXPECT_EQ(seeds.size(), 2u);
-    EXPECT_TRUE(seeds[0].isDouble());
-    EXPECT_TRUE(seeds[1].isDouble());
+    EXPECT_TRUE(std::holds_alternative<double>(seeds[0]));
+    EXPECT_TRUE(std::holds_alternative<double>(seeds[1]));
 
-    EXPECT_EQ(1.23, seeds[0].getDouble());
-    EXPECT_EQ(-10.0, seeds[1].getDouble());
+    EXPECT_EQ(1.23, std::get<double>(seeds[0]));
+    EXPECT_EQ(-10.0, std::get<double>(seeds[1]));
 }
-}
-}
+} // namespace
+} // namespace alica

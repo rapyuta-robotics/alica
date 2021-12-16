@@ -1,66 +1,70 @@
 #pragma once
 
-#include "engine/AlicaClock.h"
-#include <string>
-#include <atomic>
+#include "engine/IPlanCreator.h"
+#include "engine/PlanAttachment.h"
+#include "engine/RunnableObject.h"
 
+#include <unordered_map>
 namespace alica
 {
 
-class RunningPlan;
-class Configuration;
-class AlicaEngine;
-class ThreadSafePlanInterface;
+class Plan;
 
-class BasicPlan
+class BasicPlan : private RunnableObject
 {
 public:
-    BasicPlan();
+    BasicPlan(IAlicaWorldModel* wm);
     virtual ~BasicPlan() = default;
 
-    void start(RunningPlan* rp);
-    void stop();
+    // Use of private inheritance and explicitly making members public
+    // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
+    using RunnableObject::getBlackboard;
+    using RunnableObject::getName;
+    using RunnableObject::getPlanContext;
+    using RunnableObject::getTraceContext;
+    using RunnableObject::getWorldModel;
+    using RunnableObject::setConfiguration;
+    using RunnableObject::setEngine;
+    using RunnableObject::setInterval;
+    using RunnableObject::setName;
+    using RunnableObject::setRequiresParameters;
+    using RunnableObject::start;
+    using RunnableObject::stop;
+    using RunnableObject::TracingType;
 
-    void setEngine(AlicaEngine* engine) { _ae = engine; }
-    void setRunningPlan(RunningPlan* rp) { _context = rp; }
-    void setConfiguration(const Configuration* conf) { _configuration = conf; }
+    void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    void setAsMasterPlan() { _isMasterPlan = true; };
 
-    AlicaTime getInterval() { return _msInterval; }
-    void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); }
+    void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
+
+    std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) { return _planAttachments.at(id); }
 
 protected:
-    ThreadSafePlanInterface getPlanContext() const;
+    using RunnableObject::getTrace;
+
+    void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
+    {
+        if (customTraceContextGetter) {
+            RunnableObject::setTracing(
+                    type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
+        } else {
+            RunnableObject::setTracing(type, {});
+        }
+    }
 
     virtual void onInit(){};
     virtual void run(void* msg){};
     virtual void onTerminate(){};
 
 private:
-    using Counter = uint64_t;
-
-    void doInit();
+    void doInit() override;
     void doRun(void* msg);
-    void doTerminate();
+    void doTerminate() override;
 
-    void sendLogMessage(int level, const std::string& message) const;
+    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
-    // See BasicBehaviour.h for explanation of the logic used
-    static constexpr bool isActive(Counter cnt) { return !(cnt & 1); }
-    bool isExecutingInContext() const
-    {
-        Counter sc = _signalState.load(), ec = _execState.load();
-        return sc == ec && isActive(sc);
-    }
-
-    static constexpr int DEFAULT_MS_INTERVAL = 100;
-
-    alica::AlicaEngine* _ae;
-    const Configuration* _configuration;
-    AlicaTime _msInterval;
-    int64_t _activeRunJobId;
-
-    std::atomic<RunningPlan*> _context;
-    std::atomic<Counter> _signalState;
-    std::atomic<Counter> _execState;
+    bool _isMasterPlan;
+    // Map from ConfAbstractPlanWrapper id to associated attachment
+    std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;
 };
 } // namespace alica

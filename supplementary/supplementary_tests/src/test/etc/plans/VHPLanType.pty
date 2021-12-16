@@ -1,0 +1,47 @@
+{
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1524452814225,
+      "name": "AnnotatedLvl2",
+      "plan": "Lvl2.pml#1524452793378"
+    }
+  ],
+  "comment": "",
+  "id": 1524452770528,
+  "name": "VHPLanType",
+  "relativeDirectory": "VariableHandling",
+  "variableBindings": [
+    {
+      "comment": "",
+      "id": 1524453451463,
+      "name": "MISSING_NAME",
+      "subPlan": "Lvl2.pml#1524452793378",
+      "subVariable": "Lvl2.pml#1524453150187",
+      "variable": 1524453433443
+    },
+    {
+      "comment": "",
+      "id": 1524453454461,
+      "name": "MISSING_NAME",
+      "subPlan": "Lvl2.pml#1524452793378",
+      "subVariable": "Lvl2.pml#1524453155043",
+      "variable": 1524453441020
+    }
+  ],
+  "variables": [
+    {
+      "comment": "",
+      "id": 1524453433443,
+      "name": "PTA",
+      "variableType": ""
+    },
+    {
+      "comment": "",
+      "id": 1524453441020,
+      "name": "PTB",
+      "variableType": ""
+    }
+  ]
+}

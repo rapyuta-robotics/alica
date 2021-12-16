@@ -1,4 +1,5 @@
 
+#include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -9,7 +10,7 @@ namespace alica
 {
 
 SimplePlanTree::SimplePlanTree()
-        : _agentId(nullptr)
+        : _agentId(InvalidAgentID)
         , _parent(nullptr)
         , _state(nullptr)
         , _entryPoint(nullptr)

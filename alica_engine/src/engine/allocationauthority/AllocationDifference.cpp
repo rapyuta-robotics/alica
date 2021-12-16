@@ -89,11 +89,11 @@ std::ostream& operator<<(std::ostream& o, const AllocationDifference& dif)
 {
     o << "Additions: ";
     for (const EntryPointRobotPair& erp : dif.getAdditions()) {
-        o << "+ " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+        o << "+ " << (erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
     o << "\nSubstractions: ";
     for (const EntryPointRobotPair& erp : dif.getSubtractions()) {
-        o << "- " << *(erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
+        o << "- " << (erp.getRobot()) << " (" << erp.getEntryPoint()->getId() << ")";
     }
     o << "\nReason:" << AllocationDifference::getReasonString(dif.getReason()) << std::endl;
     return o;

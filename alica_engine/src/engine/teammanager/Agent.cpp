@@ -8,8 +8,6 @@
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 namespace alica
 {
 

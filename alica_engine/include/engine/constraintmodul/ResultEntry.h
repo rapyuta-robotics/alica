@@ -1,11 +1,8 @@
 #pragma once
 
-
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 #include "engine/collections/Variant.h"
-
-#include <essentials/IdentifierConstPtr.h>
 
 #include <mutex>
 #include <unordered_map>
@@ -21,9 +18,9 @@ class ResultEntry
 {
 public:
     ResultEntry();
-    ResultEntry(essentials::IdentifierConstPtr robotId);
+    ResultEntry(AgentId robotId);
 
-    essentials::IdentifierConstPtr getId() const { return _id; }
+    AgentId getId() const { return _id; }
 
     ResultEntry(const ResultEntry&) = delete;
     ResultEntry& operator=(const ResultEntry&) = delete;
@@ -53,7 +50,7 @@ private:
     };
     std::unordered_map<int64_t, VarValue> _values;
     mutable std::mutex _valueLock;
-    essentials::IdentifierConstPtr _id;
+    AgentId _id;
 };
 
 template <typename VarType>
@@ -64,7 +61,7 @@ bool ResultEntry::getValues(const std::vector<VarType*>& query, AlicaTime earlie
     int invalids = 0;
     for (const VarType* v : query) {
         o_values[i] = getValue(v->getId(), earliest);
-        if (!o_values[i].isSet()) {
+        if (!variant::isSet(o_values[i])) {
             ++invalids;
         }
         ++i;

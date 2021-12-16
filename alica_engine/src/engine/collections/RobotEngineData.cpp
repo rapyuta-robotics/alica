@@ -8,6 +8,7 @@
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
 #include "engine/modelmanagement/ModelManager.h"
+#include "engine/util/HashFunctions.h"
 
 #include <assert.h>
 #include <typeinfo>
@@ -18,7 +19,7 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine* engine, essentials::IdentifierConstPtr agentId)
+RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentId agentId)
         : _engine(engine)
         , _agentId(agentId)
         , _successMarks()
@@ -36,7 +37,7 @@ void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
 void RobotEngineData::initDomainVariables()
 {
     std::stringstream ss;
-    ss << *_agentId << ".";
+    ss << _agentId << ".";
     std::string agentIdString = ss.str();
     for (const Quantifier* quantifier : _engine->getPlanRepository().getQuantifiers()) {
         for (const Variable* tv : quantifier->getTemplateVariables()) {
@@ -64,7 +65,7 @@ const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
-    int64_t ret = static_cast<int64_t>(essentials::IdentifierHash{}(_agentId.get()) + std::hash<std::string>()(s));
+    int64_t ret = static_cast<int64_t>(std::hash<AgentId>()(_agentId) + std::hash<std::string>()(s));
     assert(!_engine->getModelManager().idExists(ret));
     return ret;
 }

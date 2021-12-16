@@ -7,7 +7,7 @@ BasicTrueCondition::BasicTrueCondition() {}
 
 BasicTrueCondition::~BasicTrueCondition() {}
 
-bool BasicTrueCondition::evaluate(std::shared_ptr<RunningPlan> rp)
+bool BasicTrueCondition::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     return true;
 }

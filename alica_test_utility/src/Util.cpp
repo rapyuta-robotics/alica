@@ -1,5 +1,6 @@
 #include "alica/test/Util.h"
 
+#include <engine/Types.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
 
@@ -77,7 +78,7 @@ int Util::getTeamSize(alica::AlicaEngine* ae)
     return ae->getTeamManager().getTeamSize();
 }
 
-const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, essentials::IdentifierConstPtr agentID)
+const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, alica::AgentId agentID)
 {
     return ae->getTeamManager().getAgentByID(agentID);
 }

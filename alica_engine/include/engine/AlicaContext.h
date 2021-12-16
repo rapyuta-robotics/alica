@@ -5,16 +5,18 @@
 
 #pragma once
 
+#include "engine/IAlicaTimer.h"
+#include "engine/IAlicaTrace.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
-#include "engine/IUtilityCreator.h"
 #include "engine/IPlanCreator.h"
+#include "engine/IUtilityCreator.h"
+#include "engine/Types.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "engine/IAlicaTimer.h"
 #include "engine/util/ConfigPathParser.h"
 
-#include <essentials/IDManager.h>
 #include <alica_common_config/debug_output.h>
 
 #include <cassert>
@@ -24,11 +26,6 @@
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
-namespace essentials
-{
-class IdentifierConstPtr;
-} // namespace essentials
-
 namespace alica
 {
 
@@ -36,8 +33,9 @@ class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
 
-namespace test {
-    class TestContext;
+namespace test
+{
+class TestContext;
 }
 
 /**
@@ -81,19 +79,16 @@ struct AlicaContextParams
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
-    AlicaContextParams(const std::string& agentName,
-                       const std::string& configPath,
-                       const std::string& roleSetName,
-                       const std::string& masterPlanName,
-                       bool stepEngine = false,
-                       const essentials::Identifier& agentID = essentials::Identifier())
-                       : agentName(agentName)
-                       , configPath(configPath)
-                       , roleSetName(roleSetName)
-                       , masterPlanName(masterPlanName)
-                       , stepEngine(stepEngine)
-                       , agentID(agentID)
-    {}
+    AlicaContextParams(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPath(configPath)
+            , roleSetName(roleSetName)
+            , masterPlanName(masterPlanName)
+            , stepEngine(stepEngine)
+            , agentID(agentID)
+    {
+    }
 
     /**
      * @param agentName Name of the local agent.
@@ -105,23 +100,22 @@ struct AlicaContextParams
      *
      * @note The configPath is the path containing the plans, roles and tasks folder.
      */
-    AlicaContextParams(const std::string& agentName,
-                       const std::string& configPath,
-                       const essentials::Identifier& agentID = essentials::Identifier())
-                       : agentName(agentName)
-                       , configPath(configPath)
-                       , roleSetName("RoleSet")
-                       , masterPlanName("MasterPlan")
-                       , stepEngine(false)
-                       , agentID(agentID)
-    {}
+    AlicaContextParams(const std::string& agentName, const std::string& configPath, const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPath(configPath)
+            , roleSetName("RoleSet")
+            , masterPlanName("MasterPlan")
+            , stepEngine(false)
+            , agentID(agentID)
+    {
+    }
 
     std::string agentName;
     std::string configPath;
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
-    essentials::Identifier agentID;
+    AgentId agentID;
 };
 
 /*
@@ -239,28 +233,24 @@ public:
     }
 
     /**
-     * Set id manager to be used by this alica framework instance.
-     * Example usage: setIDManager<essentials::IDManager>();
+     * Set world model to be used by this alica framework instance.
+     * Example usage: setWorldModel<alicaDummyProxy::alicaDummyWorldModel>();
      *
-     * @note Currently, the only implementation is essentials::IDManager
+     * @note WorldModelType must be a derived class of IAlicaWorldModel
      * @note This must be called before initializing context
      *
-     * @param args Arguments to be forwarded to constructor of communicator. Might be empty.
+     * @param args Arguments to be forwarded to constructor of world model. Might be empty.
      */
-    template <class IDManagerType, class... Args>
-    void setIDManager(Args&&... args);
+    template <class WorldModelType, class... Args>
+    void setWorldModel(Args&&... args);
 
     /**
-     * Get id manager being used by this alica instance.
+     * Get worldModel being used by this alica instance. If no worldModel has been set,
+     * the returned value will be a nullptr.
      *
-     * @note Currently, the only implementation is essentials::IDManager
-     * @return A reference to id manager object being used by context
+     * @return A pointer to worldModel object being used by context
      */
-    essentials::IDManager& getIDManager() const
-    {
-        assert(_idManager.get());
-        return *_idManager;
-    }
+    IAlicaWorldModel* getWorldModel() const { return _worldModel.get(); }
 
     /**
      * Add a solver to be used by this alica instance.
@@ -293,7 +283,6 @@ public:
     template <class SolverType>
     bool existSolver() const;
 
-
     /**
      * Set timer factory to be used by this alica framework instance.
      * Example usage: setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
@@ -318,6 +307,25 @@ public:
     }
 
     /**
+     * Set trace factory to be used by this alica framework instance.
+     * Example usage: setTraceFactory<amr_tracing::TraceFactory>();
+     *
+     * @note TraceFactoryType must be a derived class of IAlicaTraceFactory
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of trace factory. Might be empty.
+     */
+    template <class TraceFactoryType, class... Args>
+    void setTraceFactory(Args&&... args);
+
+    /**
+     * Get trace factory being used by this alica instance.
+     *
+     * @return A reference to trace factory object being used by context
+     */
+    IAlicaTraceFactory* getTraceFactory() const { return _traceFactory.get(); }
+
+    /**
      * Check whether object is a valid AlicaContext.
      *
      * @return True if object is a valid context, false otherwise
@@ -329,7 +337,7 @@ public:
      *
      * @return Object representing id of local agent.
      */
-    essentials::IdentifierConstPtr getLocalAgentId() const;
+    AgentId getLocalAgentId() const;
 
     /**
      * Execute one step of engine synchronously
@@ -341,10 +349,7 @@ public:
      *
      * @return const YAML::Node& containing the agents configuration.
      */
-    const YAML::Node& getConfig() const
-    {
-        return _configRootNode;
-    };
+    const YAML::Node& getConfig() const { return _configRootNode; };
 
     /**
      * Set config values for the agent.
@@ -358,7 +363,7 @@ public:
      *
      * @return True if value was set correctly. False otherwise.
      */
-    template<class T>
+    template <class T>
     bool setOption(const std::string& path, const T& value, bool reload = true) noexcept;
 
     /**
@@ -374,7 +379,7 @@ public:
      *
      * @return True if values were set correctly. False otherwise.
      */
-    template<class T>
+    template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
 private:
@@ -389,10 +394,11 @@ private:
     // Please do not change the declaration order of members.
     std::unique_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
-    std::unique_ptr<essentials::IDManager> _idManager;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
+    std::unique_ptr<IAlicaTraceFactory> _traceFactory;
+    std::unique_ptr<IAlicaWorldModel> _worldModel;
 
     bool _initialized = false;
 
@@ -435,16 +441,6 @@ void AlicaContext::setCommunicator(Args&&... args)
 #endif
 }
 
-template <class IDManagerType, class... Args>
-void AlicaContext::setIDManager(Args&&... args)
-{
-#if (defined __cplusplus && __cplusplus >= 201402L)
-    _idManager = std::make_unique<IDManagerType>(std::forward<Args>(args)...);
-#else
-    _idManager = std::unique_ptr<IDManagerType>(new IDManagerType(std::forward<Args>(args)...));
-#endif
-}
-
 template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
@@ -482,6 +478,28 @@ void AlicaContext::setTimerFactory(Args&&... args)
 #endif
 }
 
+template <class TraceFactoryType, class... Args>
+void AlicaContext::setTraceFactory(Args&&... args)
+{
+    static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
+#else
+    _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
+#endif
+}
+
+template <class WorldModelType, class... Args>
+void AlicaContext::setWorldModel(Args&&... args)
+{
+    static_assert(std::is_base_of<IAlicaWorldModel, WorldModelType>::value, "Must be derived from IAlicaWorldModel");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);
+#else
+    _worldModel = std::unique_ptr<WorldModelType>(new WorldModelType(std::forward<Args>(args)...));
+#endif
+}
+
 template <class T>
 bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
 {
@@ -516,14 +534,14 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         return false;
     }
     ConfigPathParser configPathParser;
-    std::vector <std::pair<std::string, T>> oldKeyValuePairs;
+    std::vector<std::pair<std::string, T>> oldKeyValuePairs;
 
     try {
-        for (const auto &keyValuePair : keyValuePairs) {
-            std::vector <std::string> params = configPathParser.getParams('.', keyValuePair.first);
+        for (const auto& keyValuePair : keyValuePairs) {
+            std::vector<std::string> params = configPathParser.getParams('.', keyValuePair.first);
             YAML::Node currentNode(_configRootNode);
 
-            for (const std::string &param : params) {
+            for (const std::string& param : params) {
                 currentNode.reset(currentNode[param]);
             }
 
@@ -535,8 +553,8 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
     } catch (const YAML::Exception& e) {
         ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
-        //revert changes
-        for (const auto &keyValuePair : oldKeyValuePairs) {
+        // revert changes
+        for (const auto& keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);
         }
         return false;

@@ -1,11 +1,9 @@
+#include <engine/AlicaContext.h>
 #include <engine/Assignment.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
 #include <engine/model/Transition.h>
 #include <engine/modelmanagement/ModelManager.h>
-#include <engine/AlicaContext.h>
-
-#include <essentials/IDManager.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -27,25 +25,17 @@ TEST(Assignment, RobotsInserted)
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
-    essentials::IDManager idManager;
-    int b1 = 2;
-    int b2 = 1;
-    int b3 = 3;
-    essentials::IdentifierConstPtr robot1 = idManager.getID<int>(b1);
-    essentials::IdentifierConstPtr robot2 = idManager.getID<int>(b2);
-    essentials::IdentifierConstPtr robot3 = idManager.getID<int>(b3);
+    alica::AgentId robot1 = 2;
+    alica::AgentId robot2 = 1;
+    alica::AgentId robot3 = 3;
 
-    ASSERT_EQ(robot2->getRaw()[0], 0x1);
-    ASSERT_EQ(robot1->getRaw()[0], 0x2);
+    ASSERT_TRUE(robot1 > robot2);
+    ASSERT_TRUE(robot1 < robot3);
 
-    ASSERT_TRUE(*robot1 > *robot2);
-    ASSERT_TRUE(*robot1 < *robot3);
-
-    alica::AlicaContext *ac = new alica::AlicaContext(
-            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+    alica::AlicaContext* ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
 
     PlanRepository repo;
-    alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
+    alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae, path + "/etc/");
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
@@ -89,7 +79,7 @@ TEST(Assignment, RobotsInserted)
 
     int i = 0;
 
-    for (essentials::IdentifierConstPtr id : as1.getAgentsInState(s1)) {
+    for (alica::AgentId id : as1.getAgentsInState(s1)) {
         EXPECT_TRUE(bool(id));
         ++i;
     }

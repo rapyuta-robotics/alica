@@ -3,10 +3,9 @@
 #include "BehaviourCreator.h"
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
+#include "UtilityFunctionCreator.h"
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
-#include <alica_tests/TestWorldModel.h>
-#include "UtilityFunctionCreator.h"
 
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
@@ -17,10 +16,10 @@
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
 
+#include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
-#include <alica/test/Util.h>
 
 #include <gtest/gtest.h>
 
@@ -58,10 +57,10 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     for (int i = 0; i < 20; i++) {
-        std::cout << i << "AE ----------------------------------------------- " << *(acs[0]->getLocalAgentId()) << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << acs[0]->getLocalAgentId() << std::endl;
         acs[0]->stepEngine();
 
-        std::cout << i << "AE ----------------------------------------------- " << *(acs[1]->getLocalAgentId()) << std::endl;
+        std::cout << i << "AE ----------------------------------------------- " << acs[1]->getLocalAgentId() << std::endl;
         acs[1]->stepEngine();
 
         if (i == 2) {
@@ -77,11 +76,11 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825404963));
         }
         if (i == 5) {
-//            std::cout << "TEST Iteration " << i << std::endl;
+            //            std::cout << "TEST Iteration " << i << std::endl;
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1418825409988));
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825411686));
         }
     }
 }
-}
-}
+} // namespace
+} // namespace alica

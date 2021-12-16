@@ -1,0 +1,26 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1417424455986,
+  "name": "SolverTestBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "GSolver",
+  "runtimeCondition": null,
+  "variables": [
+    {
+      "comment": "",
+      "id": 1417444707321,
+      "name": "X",
+      "variableType": ""
+    },
+    {
+      "comment": "",
+      "id": 1417444710642,
+      "name": "Y",
+      "variableType": ""
+    }
+  ]
+}

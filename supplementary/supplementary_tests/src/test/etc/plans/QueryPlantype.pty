@@ -1,0 +1,47 @@
+{
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1479557419939,
+      "name": "AnnotatedQueryPlan1",
+      "plan": "QueryPlan1.pml#1479556074049"
+    }
+  ],
+  "comment": "",
+  "id": 1479557395790,
+  "name": "QueryPlantype",
+  "relativeDirectory": "ProblemModule",
+  "variableBindings": [
+    {
+      "comment": "",
+      "id": 1479557481371,
+      "name": "MISSING_NAME",
+      "subPlan": "QueryPlan1.pml#1479556074049",
+      "subVariable": "QueryPlan1.pml#1479556572534",
+      "variable": 1479557473424
+    },
+    {
+      "comment": "",
+      "id": 1479557489088,
+      "name": "MISSING_NAME",
+      "subPlan": "QueryPlan1.pml#1479556074049",
+      "subVariable": "QueryPlan1.pml#1479556220234",
+      "variable": 1479557463468
+    }
+  ],
+  "variables": [
+    {
+      "comment": "",
+      "id": 1479557463468,
+      "name": "PTX",
+      "variableType": ""
+    },
+    {
+      "comment": "",
+      "id": 1479557473424,
+      "name": "PTY",
+      "variableType": ""
+    }
+  ]
+}

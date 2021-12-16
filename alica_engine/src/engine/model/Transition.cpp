@@ -1,4 +1,5 @@
 #include "engine/model/Transition.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/PreCondition.h"
@@ -16,12 +17,12 @@ Transition::Transition()
 
 Transition::~Transition() {}
 
-bool Transition::evalCondition(const RunningPlan& r) const
+bool Transition::evalCondition(const RunningPlan& r, const IAlicaWorldModel* wm) const
 {
     if (!_preCondition) {
         std::cerr << "Transition " << this->getId() << " has no precondition attached!" << std::endl;
     }
-    return _preCondition && _preCondition->evaluate(r);
+    return _preCondition && _preCondition->evaluate(r, wm);
 }
 
 void Transition::setPreCondition(PreCondition* preCondition)
@@ -39,7 +40,7 @@ void Transition::setOutState(State* outState)
     _outState = outState;
 }
 
-void Transition::setSynchronisation(Synchronisation *synchronisation)
+void Transition::setSynchronisation(Synchronisation* synchronisation)
 {
     _synchronisation = synchronisation;
 }

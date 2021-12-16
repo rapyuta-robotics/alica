@@ -18,8 +18,8 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
-#include <math.h>
 #include <functional>
+#include <math.h>
 
 namespace alica
 {
@@ -94,8 +94,9 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan)
+void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
 {
+    _ruleBook.init(wm);
     if (!_running) {
         _running = true;
         if (_statusMessage) {
@@ -308,6 +309,11 @@ void PlanBase::stop()
         _mainThread->join();
         delete _mainThread;
     }
+
+    if (_rootNode) {
+        _rootNode->deactivate();
+    }
+
     _mainThread = nullptr;
 }
 
