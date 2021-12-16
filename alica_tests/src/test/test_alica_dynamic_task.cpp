@@ -114,7 +114,7 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
             << "Number of dynamic EntryPoints should be 1 at this point." << std::endl;
 
         const alica::EntryPoint* ep = plan[agent_index]->getEntryPoints().front();
-        checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 3150793708487666867, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+        checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
         EXPECT_EQ(ep->getDynamicId(), 1);
     }
     // */
