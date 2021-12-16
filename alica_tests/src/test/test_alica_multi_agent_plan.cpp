@@ -97,7 +97,6 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
                     << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
                     << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
                     << std::endl;
-            // Idle
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
                     << std::endl
                     << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
@@ -114,13 +113,6 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
                     << " "
                     << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
                     << std::endl;
-            if (i == 18) {
-                // TCS[1] is in OtherState (1413200877336). WHY!
-                ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574));
-                ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413807264574));
-            }
-
-            // Idle
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
                     << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
                     << " "

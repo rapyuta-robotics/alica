@@ -1,3 +1,5 @@
+#pragma once
+
 #include <engine/AlicaClock.h>
 #include <engine/Types.h>
 

@@ -219,8 +219,7 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const
     for (const SolverVar& sv : sr.vars) {
         alica_msgs::SolverVar svs;
         svs.id = sv.id;
-        svs.value = std::vector<uint8_t>(sv.value, sv.value + sizeof(sv.value) / sizeof(sv.value[0]));
-        srs.vars.push_back(std::move(svs));
+        svs.value = sv.value;
     }
 
     if (_isRunning) {
@@ -308,7 +307,7 @@ void AlicaRosCommunication::handleSolverResult(const alica_msgs::SolverResult& s
     for (const auto& sv : sr.vars) {
         SolverVar svs;
         svs.id = sv.id;
-        std::copy(sv.value.begin(), sv.value.end(), svs.value);
+        svs.value = sv.value;
         osr.vars.push_back(std::move(svs));
     }
 

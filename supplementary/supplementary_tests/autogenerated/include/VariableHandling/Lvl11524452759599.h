@@ -5,6 +5,7 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaWorldModel.h>
+#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1524452759599) ENABLED START*/
 // Add inlcudes here
@@ -26,11 +27,11 @@ public:
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
+    /*PROTECTED REGION ID(pro1524452759599) ENABLED START*/
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     // virtual void onInit() override;
     // virtual void onTerminate() override;
-    /*PROTECTED REGION ID(pro1524452759599) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:

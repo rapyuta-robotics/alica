@@ -26,4 +26,13 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     }
 }
+
+std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
+{
+    switch (attachmentWrapperConfId) {
+    default:
+        // Lookups will occur even if the child does not require parameters, but the function will never be called
+        return nullptr;
+    }
+}
 } // namespace alica
