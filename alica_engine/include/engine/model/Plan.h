@@ -116,6 +116,10 @@ private:
      * The mapping from static to dynamic entry point.
      */
     mutable std::unordered_map<int64_t, std::unordered_set<int64_t>> _entryPointMap;
+    /**
+     * The number of static entrypoints in this plan
+     */
+    int _numStaticEps = 0;
 };
 
 } // namespace alica

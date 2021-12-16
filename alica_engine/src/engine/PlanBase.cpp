@@ -245,7 +245,7 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 
-        log.iterationEnds(_rootNode);
+        //log.iterationEnds(_rootNode);
 
         _ae->iterationComplete();
 

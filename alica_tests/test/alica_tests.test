@@ -1,5 +1,5 @@
 <launch>
-    <arg name="use_gdb" default="true"/>
+    <arg name="use_gdb" default="false"/>
     <arg name="launch_prefix" value="xterm -fa 'Monospace' -fs 14 -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
 
