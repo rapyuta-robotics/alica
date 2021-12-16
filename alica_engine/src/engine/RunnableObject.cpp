@@ -1,8 +1,7 @@
 #include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
 #include "engine/PlanInterface.h"
-
-#include <alica_common_config/debug_output.h>
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <assert.h>
 #include <iostream>
@@ -13,8 +12,11 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _configuration(nullptr)
-        , _flags(static_cast<uint8_t>(Flags::TRACING_ENABLED))
+        , _tracingType(TracingType::DEFAULT)
+        , _runTraced(false)
+        , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
+        , _requiresParameters(false)
         , _activeRunJobId(-1)
         , _signalContext(nullptr)
         , _execContext(nullptr)
@@ -50,53 +52,100 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doInit, this));
+    if (_requiresParameters) {
+        assert(rp->getParent());
+        assert(rp->getParent()->getBasicPlan());
+        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+        auto it =
+                std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+        assert(it != wrappers.end());
+
+        int64_t wrapperId = (*it)->getId();
+
+        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+        auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
+        auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
+            if (!_blackboard) {
+                _blackboard = std::make_shared<Blackboard>();
+            }
+            _blackboard->impl().clear();
+            if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
+                std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                return;
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
+    } else {
+
+        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
+        auto initCall = [this, parentPlan = parentPlan]() {
+            // Share Blackboard with parent if we have one, or start fresh otherwise
+            if (parentPlan) {
+                _blackboard = parentPlan->getBlackboard();
+            } else {
+                _blackboard = std::make_shared<Blackboard>();
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
+    }
 }
 
-void RunnableObject::setTerminatedState()
+bool RunnableObject::setTerminatedState()
 {
     ++_execState;
 
-    clearFlags(Flags::RUN_TRACED);
-    if (!areFlagsSet(Flags::INIT_EXECUTED)) {
+    _runTraced = false;
+    if (!_initExecuted) {
         _execContext.store(nullptr);
-        return;
+        return true;
     }
-    clearFlags(Flags::INIT_EXECUTED);
-}
-
-void RunnableObject::traceTermination()
-{
-    if (_trace) {
-        _trace->setLog({"Terminate", "true"});
-        _trace.reset();
-    }
+    _initExecuted = false;
+    return false;
 }
 
 void RunnableObject::initTrace()
 {
-    // Get closest parent that has a trace
-    if (areFlagsSet(Flags::TRACING_ENABLED) && _engine->getTraceFactory()) {
+    if (!_engine->getTraceFactory()) {
+        return;
+    }
+
+    switch (_tracingType) {
+    case TracingType::DEFAULT: {
         auto parent = _execContext.load()->getParent();
         for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
             ;
         _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
+        break;
+    }
+    case TracingType::SKIP: {
+        break;
+    }
+    case TracingType::ROOT: {
+        _trace = _engine->getTraceFactory()->create(_name);
+        break;
+    }
+    case TracingType::CUSTOM: {
+        _trace = _engine->getTraceFactory()->create(_name, _customTraceContextGetter());
+        break;
+    }
     }
 }
 
 void RunnableObject::traceRun()
 {
-    if (_trace && !areFlagsSet(Flags::RUN_TRACED)) {
-        _trace->setLog({"Run", "true"});
-        setFlags(Flags::RUN_TRACED);
+    if (_trace && !_runTraced) {
+        _trace->setLog({"status", "running"});
+        _runTraced = true;
     }
 }
 
 void RunnableObject::traceInit(const std::string& type)
 {
     if (_trace) {
-        _trace->setLog({type, "true"});
-        _trace->setLog({"Init", "true"});
+        _trace->setTag(type, "true");
+        _trace->setLog({"status", "initializing"});
     }
 }
 

@@ -60,6 +60,7 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
             } else {
                 basicBeh->setInterval(1000 / behaviour->getFrequency());
             }
+            basicBeh->setRequiresParameters(behaviour->getRequiresParameters());
             basicBeh->setEngine(_ae);
             basicBeh->init();
             _availableBehaviours.insert(std::make_pair(wrapper, basicBeh));

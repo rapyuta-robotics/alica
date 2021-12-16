@@ -1,7 +1,9 @@
 #include "engine/BasicPlan.h"
 
 #include "engine/AlicaEngine.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
+#include "engine/model/Plan.h"
 #include "engine/scheduler/Scheduler.h"
 
 #include "engine/PlanInterface.h"
@@ -11,6 +13,7 @@ namespace alica
 
 BasicPlan::BasicPlan(IAlicaWorldModel* wm)
         : RunnableObject(wm)
+        , _isMasterPlan(false)
 {
 }
 
@@ -26,11 +29,15 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    setFlags(Flags::INIT_EXECUTED);
+    _initExecuted = true;
 
     _execContext = _signalContext.exchange(nullptr);
 
     initTrace();
+    if (_isMasterPlan && _trace) {
+        // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
+        _trace->finish();
+    }
 
     try {
         traceInit("Plan");
@@ -61,15 +68,44 @@ void BasicPlan::doTerminate()
         _engine->editScheduler().cancelJob(_activeRunJobId);
         _activeRunJobId = -1;
     }
-    setTerminatedState();
+    if (setTerminatedState()) {
+        return;
+    }
     try {
-        traceTermination();
+        if (_trace) {
+            _trace->setLog({"status", "terminating"});
+        }
         onTerminate();
+        _trace.reset();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
 
     _execContext.store(nullptr);
+}
+
+void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
+{
+    for (const State* state : plan->getStates()) {
+        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
+        }
+    }
+}
+
+void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_engine->getTraceFactory()) {
+        _engine->editScheduler().schedule(std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
+    }
+}
+
+void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
+{
+    if (_trace) {
+        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
+                                                        "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+    }
 }
 
 } // namespace alica

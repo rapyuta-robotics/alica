@@ -33,11 +33,13 @@ TEST(Assignment, RobotsInserted)
     alica::AgentId robot2 = 1;
     alica::AgentId robot3 = 3;
 
-    // Prepare ALICA for SimpleTestPlan
-    alica::AlicaContext *ac = new alica::AlicaContext(
-            alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+    ASSERT_TRUE(robot1 > robot2);
+    ASSERT_TRUE(robot1 < robot3);
+
+    alica::AlicaContext* ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+
     PlanRepository repo;
-    alica::AlicaEngine *ae = alica::AlicaTestsEngineGetter::getEngine(ac);
+    alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae, path + "/etc/");
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
     Assignment as1(alica::contextHash(0), stp);
