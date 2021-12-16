@@ -7,7 +7,7 @@ namespace autodiff
 class LTConstraint;
 class LTEConstraint : public BinaryFunction
 {
-  public:
+public:
     void setNegation(const LTConstraint* negation) const { _negatedForm = negation; }
 
     int accept(ITermVisitor* visitor) override;
@@ -23,7 +23,7 @@ class LTEConstraint : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     LTEConstraint(TermPtr x, TermPtr y, TermHolder* owner);
 

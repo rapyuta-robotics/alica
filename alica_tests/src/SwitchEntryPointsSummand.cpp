@@ -1,6 +1,6 @@
 #include <alica_tests/SwitchEntryPointsSummand.h>
-#include <engine/planselector/IAssignment.h>
 #include <engine/IAlicaWorldModel.h>
+#include <engine/planselector/IAssignment.h>
 
 namespace alica
 {

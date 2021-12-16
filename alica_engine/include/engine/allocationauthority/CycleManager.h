@@ -2,9 +2,9 @@
 //#define CM_DEBUG
 
 #include "engine/AlicaClock.h"
+#include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
-#include "engine/Types.h"
 
 #include <mutex>
 #include <thread>

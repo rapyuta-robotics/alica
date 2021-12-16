@@ -17,7 +17,7 @@ namespace cnsat
 
 class TermEquality
 {
-  public:
+public:
     TermEquality();
     virtual ~TermEquality();
 };

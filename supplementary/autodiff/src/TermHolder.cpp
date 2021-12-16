@@ -30,19 +30,19 @@ namespace autodiff
 {
 
 TermHolder::TermHolder()
-    : _true(new Constant(1.0, this))
-    , _zero(new Constant(0.0, this))
-    , _false(new Constant(std::numeric_limits<double>::min(), this))
+        : _true(new Constant(1.0, this))
+        , _zero(new Constant(0.0, this))
+        , _false(new Constant(std::numeric_limits<double>::min(), this))
 {
 }
 
 TermHolder::TermHolder(TermHolder&& o)
-    : _true(std::move(o._true))
-    , _zero(std::move(o._zero))
-    , _false(std::move(o._false))
-    , _vars(std::move(o._vars))
-    , _terms(std::move(o._terms))
-    , _tape(std::move(o._tape))
+        : _true(std::move(o._true))
+        , _zero(std::move(o._zero))
+        , _false(std::move(o._false))
+        , _vars(std::move(o._vars))
+        , _terms(std::move(o._terms))
+        , _tape(std::move(o._tape))
 {
     for (std::unique_ptr<Term>& t : _terms) {
         t->_owner = this;

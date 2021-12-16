@@ -2,9 +2,9 @@
 #include "engine/Types.h"
 #include "engine/util/HashFunctions.h"
 
-#include <vector>
-#include <utility>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace alica
 {
@@ -33,10 +33,7 @@ public:
 private:
     struct IDHash
     {
-        std::size_t operator()(std::pair<std::size_t, int64_t> context) const
-        {
-            return hashCombine(context.first, contextHash(context.second));
-        }
+        std::size_t operator()(std::pair<std::size_t, int64_t> context) const { return hashCombine(context.first, contextHash(context.second)); }
     };
 
     std::unordered_map<std::pair<std::size_t, int64_t>, EntryPointGrp, IDHash> _successMarks;

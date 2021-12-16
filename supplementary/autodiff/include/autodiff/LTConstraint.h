@@ -7,7 +7,7 @@ class LTEConstraint;
 
 class LTConstraint : public BinaryFunction
 {
-  public:
+public:
     int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
@@ -22,7 +22,7 @@ class LTConstraint : public BinaryFunction
 
     virtual EvalFunction getEvalFunction() const override { return &Eval; }
 
-  private:
+private:
     friend TermHolder;
     LTConstraint(TermPtr x, TermPtr y, TermHolder* owner);
 

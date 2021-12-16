@@ -122,8 +122,8 @@ void FormulaTransform::doTransform(std::shared_ptr<std::list<std::shared_ptr<Cla
     }
 }
 
-void FormulaTransform::performStep(std::shared_ptr<Clause>& c, std::shared_ptr<Lit>& lit, std::shared_ptr<Clause>& newClause1,
-                                   std::shared_ptr<Clause>& newClause2)
+void FormulaTransform::performStep(
+        std::shared_ptr<Clause>& c, std::shared_ptr<Lit>& lit, std::shared_ptr<Clause>& newClause1, std::shared_ptr<Clause>& newClause2)
 {
     TermPtr formula = lit->_atom;
     autodiff::Max* asMax = dynamic_cast<autodiff::Max*>(formula.get());

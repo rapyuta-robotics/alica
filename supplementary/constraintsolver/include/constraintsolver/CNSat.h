@@ -29,7 +29,7 @@ class Var;
 
 class CNSat
 {
-  public:
+public:
     CNSat();
     virtual ~CNSat();
 
@@ -68,7 +68,7 @@ class CNSat
     CNSMTGSolver* cnsmtGSolver;
     int unitDecissions;
 
-  protected:
+protected:
     void emptyClauseList(std::shared_ptr<std::vector<std::shared_ptr<Clause>>> list);
     bool solutionInsideRange(std::shared_ptr<std::vector<double>> solution, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> range);
     bool varAssignmentInsideRange(std::shared_ptr<Var> v, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> range);

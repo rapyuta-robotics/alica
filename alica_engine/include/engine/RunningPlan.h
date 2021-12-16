@@ -2,13 +2,13 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/PlanChange.h"
 #include "engine/PlanStatus.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaWorldModel.h"
 
 #include <algorithm>
 #include <iostream>

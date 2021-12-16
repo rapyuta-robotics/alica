@@ -11,7 +11,7 @@ namespace autodiff
 {
 
 Product::Product(TermPtr left, TermPtr right, TermHolder* owner)
-    : BinaryFunction(left, right, owner)
+        : BinaryFunction(left, right, owner)
 {
 }
 

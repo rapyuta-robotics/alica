@@ -1,12 +1,12 @@
-#include <clock/AlicaROSClock.h>
 #include "ros/time.h"
+#include <clock/AlicaROSClock.h>
 
 namespace alicaRosProxy
 {
 
 AlicaROSClock::AlicaROSClock()
 {
-    if(!ros::Time::isValid()) {
+    if (!ros::Time::isValid()) {
         ros::Time::init();
     }
 }

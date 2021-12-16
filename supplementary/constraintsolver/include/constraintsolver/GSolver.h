@@ -25,15 +25,15 @@ class GSolver
 {
     class RpropResult;
 
-  public:
+public:
     GSolver(YAML::Node config);
     ~GSolver();
     bool solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, double& out_util,
-               std::vector<double>& o_solution);
+            std::vector<double>& o_solution);
     bool solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits);
 
     bool solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, const std::vector<double>& seeds,
-               double sufficientUtility, double& out_util, std::vector<double>& o_solution);
+            double sufficientUtility, double& out_util, std::vector<double>& o_solution);
 
     bool solveSimple(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, const std::vector<double>& seeds);
 
@@ -44,15 +44,15 @@ class GSolver
     void setRPropConvergenceStepSize(double rPropConvergenceStepSize) { _rPropConvergenceStepSize = rPropConvergenceStepSize; }
     void setUtilitySignificanceThreshold(double utilitySignificanceThreshold) { _utilityThreshold = utilitySignificanceThreshold; }
 
-  private:
+private:
     class ResultView
     {
-      public:
+    public:
         // resulting point, value and status info
         constexpr static int getRequiredSize(int dim) { return dim + 2; }
         ResultView(double* mem_loc, int dim)
-            : _location(mem_loc)
-            , _size(getRequiredSize(dim))
+                : _location(mem_loc)
+                , _size(getRequiredSize(dim))
         {
         }
         double getUtil() const { return _location[_size - 2]; }
@@ -66,7 +66,7 @@ class GSolver
         int size() const { return _size; }
         int dim() const { return _size - 2; }
 
-      private:
+    private:
         double* _location;
         int _size;
     };
@@ -82,15 +82,15 @@ class GSolver
     ResultView getResultView(int count, int dim);
     void writeSolution(ResultView result, std::vector<double>& o_solution) const;
 
-    void initialPointFromSeed(const autodiff::Tape& tape, const double* seed, ResultView o_res, const std::vector<Interval<double>>& limits,
-                              double* o_value) const;
+    void initialPointFromSeed(
+            const autodiff::Tape& tape, const double* seed, ResultView o_res, const std::vector<Interval<double>>& limits, double* o_value) const;
     void initialPoint(const autodiff::Tape& tape, ResultView o_res, const std::vector<Interval<double>>& limits, double* o_value);
 
     void rPropLoop(const autodiff::Tape& tape, const double* seed, const std::vector<Interval<double>>& limits, ResultView o_result);
     void rPropLoop(const autodiff::Tape& tape, const double* seed, const std::vector<Interval<double>>& limits, ResultView o_result, bool precise);
 
-    int movePoint(int dim, double minStep, double* pointBuffer, const double* curGradient, const double* oldGradient,
-                  const std::vector<Interval<double>>& limits);
+    int movePoint(
+            int dim, double minStep, double* pointBuffer, const double* curGradient, const double* oldGradient, const std::vector<Interval<double>>& limits);
     void initialStepSize(int dim, const std::vector<Interval<double>>& limits);
     bool evalResults(int numResults, int dim, const std::vector<Interval<double>>& limits);
 

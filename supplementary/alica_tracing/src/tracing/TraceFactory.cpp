@@ -9,7 +9,7 @@ namespace alicaTracing
 {
 
 TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, RawTraceValue>& defaultTags)
-    : _defaultTags(defaultTags)
+        : _defaultTags(defaultTags)
 {
     ROS_INFO_STREAM_NAMED(__func__, "Initializing tracing for service " << serviceName);
     _serviceName = serviceName;

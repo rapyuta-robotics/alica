@@ -36,13 +36,13 @@ public:
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObject::getPlanContext;
     using RunnableObject::getTraceContext;
+    using RunnableObject::getWorldModel;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
-    using RunnableObject::getWorldModel;
 
     virtual void run(void* msg) = 0;
 

@@ -34,7 +34,8 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, std::size_t parentContextHash, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, std::size_t parentContextHash, const PlanGrp& planList, const AgentGrp& paraAgents,
+        PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
         , _wm(wm)
@@ -159,7 +160,6 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, cons
     }
     return haveToRevalute;
 }
-
 
 std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
 {

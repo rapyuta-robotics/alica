@@ -25,22 +25,22 @@ class ResetIntervals;
 
 class IntervalPropagator
 {
-  public:
+public:
     IntervalPropagator();
     virtual ~IntervalPropagator(){};
 
     static int updates;
     static int visits;
 
-    void setGlobalRanges(autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges,
-                         std::shared_ptr<cnsat::CNSat> solver);
+    void setGlobalRanges(
+            autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges, std::shared_ptr<cnsat::CNSat> solver);
     bool propagate(std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>> decisions,
-                   std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>>& completeRanges,
-                   std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>>& offenders);
+            std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>>& completeRanges,
+            std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>>& offenders);
     bool prePropagate(std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>> vars);
     bool propagate(autodiff::TermPtr term);
 
-  private:
+private:
     ResetIntervals _ri;
     RecursivePropagate _rp;
 

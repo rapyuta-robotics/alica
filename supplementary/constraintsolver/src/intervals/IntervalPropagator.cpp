@@ -28,12 +28,12 @@ int IntervalPropagator::updates = 0;
 int IntervalPropagator::visits = 0;
 
 IntervalPropagator::IntervalPropagator()
-    : dim(0)
+        : dim(0)
 {
 }
 
-void IntervalPropagator::setGlobalRanges(autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges,
-                                         std::shared_ptr<cnsat::CNSat> solver)
+void IntervalPropagator::setGlobalRanges(
+        autodiff::TermHolder& holder, std::shared_ptr<std::vector<std::shared_ptr<std::vector<double>>>> ranges, std::shared_ptr<cnsat::CNSat> solver)
 {
     for (int i = 0; i < static_cast<int>(holder.getVariables().size()); ++i) {
         holder.getVariables()[i]->editRange().setMin(ranges->at(i)->at(0));
@@ -48,8 +48,7 @@ void IntervalPropagator::setGlobalRanges(autodiff::TermHolder& holder, std::shar
 }
 
 bool IntervalPropagator::propagate(std::shared_ptr<std::vector<std::shared_ptr<cnsat::Var>>> decisions,
-                                   shared_ptr<std::vector<shared_ptr<vector<double>>>>& completeRanges,
-                                   shared_ptr<std::vector<shared_ptr<cnsat::Var>>>& offenders)
+        shared_ptr<std::vector<shared_ptr<vector<double>>>>& completeRanges, shared_ptr<std::vector<shared_ptr<cnsat::Var>>>& offenders)
 {
 #ifdef DEBUG_INTERVALPROP
     std::cout << "IntervalPropagator::propagate" << std::endl;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "engine/IAlicaWorldModel.h"
+#include <memory>
 
 namespace alica
 {

@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
 #include "engine/containers/AgentAnnouncement.h"
 #include "engine/containers/AgentQuery.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
@@ -13,7 +14,6 @@
 #include "engine/containers/SolverResult.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/Types.h"
 
 namespace alicaDummyProxy
 {

@@ -17,7 +17,7 @@ class TermList;
 
 class UpwardPropagator : public autodiff::ITermVisitor
 {
-  public:
+public:
     UpwardPropagator();
 
     int visit(autodiff::Abs* abs);
@@ -45,7 +45,7 @@ class UpwardPropagator : public autodiff::ITermVisitor
 
     void setTermQueue(autodiff::TermList* q) { _changed = q; }
 
-  private:
+private:
     void addChanged(autodiff::TermPtr t);
     // TODO: unify common functions with downward propagator
     void outputChange(autodiff::TermPtr t, Interval<double> old) const;

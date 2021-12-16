@@ -297,7 +297,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     SimplePlanTree* curParent = nullptr;
     SimplePlanTree* cur = root.get();
 
-    for (int i = 2; i < static_cast<int>(ids.size()); ) {
+    for (int i = 2; i < static_cast<int>(ids.size());) {
         const int64_t id = ids[i];
         if (id == -1) {
             curParent = cur;
