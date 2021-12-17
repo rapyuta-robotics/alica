@@ -15,6 +15,7 @@ public:
     void start();
 
 private:
+    ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
 };
 
