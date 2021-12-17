@@ -38,23 +38,13 @@ const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 } // namespace
 
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae)
-        : AlicaRosCommunication(ae, 0, false)
-{
-}
-
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCount, bool privateQueue)
+AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, ros::CallbackQueue& cb_queue)
         : IAlicaCommunication(ae)
+        , _callbackQueue(cb_queue)
 {
     _isRunning = false;
     _rosNode = new ros::NodeHandle();
-
-    if (privateQueue) {
-        _callbackQueue = new ros::CallbackQueue;
-        _spinner = new ros::AsyncSpinner(threadCount, _callbackQueue);
-    } else {
-        _spinner = new ros::AsyncSpinner(threadCount);
-    }
+    _rosNode->setCallbackQueue(&_callbackQueue);
 
     _allocationAuthorityInfoPublisher = _rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
     _allocationAuthorityInfoSubscriber =
@@ -85,11 +75,6 @@ AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, uint16_t threadCou
 
 AlicaRosCommunication::~AlicaRosCommunication()
 {
-    if (_isRunning) {
-        _spinner->stop();
-    }
-    delete _spinner;
-
     _allocationAuthorityInfoSubscriber.shutdown();
     _roleSwitchPublisher.shutdown();
     _planTreeInfoSubscriber.shutdown();
@@ -410,12 +395,10 @@ void AlicaRosCommunication::sendLogMessage(int level, const string& message) con
 void AlicaRosCommunication::startCommunication()
 {
     _isRunning = true;
-    _spinner->start();
 }
 void AlicaRosCommunication::stopCommunication()
 {
     _isRunning = false;
-    _spinner->stop();
 }
 
 } /* namespace alicaRosProxy */
