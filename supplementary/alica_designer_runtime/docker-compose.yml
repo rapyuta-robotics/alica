@@ -49,7 +49,7 @@ services:
       - 7890
 
   alica-frontend:
-    image: rrdockerhub/alica_frontend:v0.3
+    image: rrdockerhub/alica_frontend:dev
     ports:
       - 3030:80
     environment:
