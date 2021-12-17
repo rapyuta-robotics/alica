@@ -1,4 +1,6 @@
 #include "UtilityFunctionCreator.h"
+#include "AdjacentSuccessMasterPlan3254486013443203397.h"
+#include "AdjacentSuccessSubPlan1682631238618360548.h"
 #include "AttackPlan1402488634525.h"
 #include "Authority/AuthorityTest1414403413451.h"
 #include "Authority/AuthorityTestMaster1414403396328.h"
@@ -217,11 +219,17 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 1482512794732634139:
         return std::make_shared<UtilityFunction1482512794732634139>();
         break;
+    case 1682631238618360548:
+        return std::make_shared<UtilityFunction1682631238618360548>();
+        break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
         break;
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
+        break;
+    case 3254486013443203397:
+        return std::make_shared<UtilityFunction3254486013443203397>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
