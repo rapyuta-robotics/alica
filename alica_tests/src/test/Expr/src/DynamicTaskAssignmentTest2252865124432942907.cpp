@@ -27,7 +27,7 @@ DynamicTaskAssignmentTest2252865124432942907::~DynamicTaskAssignmentTest22528651
     /*PROTECTED REGION END*/
 }
 
-bool DynamicTaskAssignmentTest2252865124432942907::getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap)
+bool DynamicTaskAssignmentTest2252865124432942907::getApplicationEntrypointContext(const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, std::shared_ptr<UtilityFunction> function)
 {
     /*PROTECTED REGION ID(getApplicationEntrypointContext2252865124432942907) ENABLED START*/
     // Add additional options here

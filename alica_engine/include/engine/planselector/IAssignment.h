@@ -97,6 +97,7 @@ public:
     PartialAssignmentIterator begin() const { return PartialAssignmentIterator(0, _epIdx, _pas); }
     PartialAssignmentIterator end() const { return PartialAssignmentIterator(_pas->getTotalAgentCount(), _epIdx, _pas); }
     int size() const { return std::distance(begin(), end()); }
+    bool empty() const { return size() == 0; }
 
 private:
     const PartialAssignment* _pas;

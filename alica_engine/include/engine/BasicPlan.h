@@ -12,6 +12,7 @@ namespace alica
 {
 
 class Plan;
+class UtilityFunction;
 
 class BasicPlan : private RunnableObject
 {
@@ -35,7 +36,7 @@ public:
     using RunnableObject::stop;
     using RunnableObject::TracingType;
 
-    virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap);
+    virtual bool getApplicationEntrypointContext(const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, std::shared_ptr<UtilityFunction> function);
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
