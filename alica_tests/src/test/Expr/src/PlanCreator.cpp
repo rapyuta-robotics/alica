@@ -1,4 +1,6 @@
 #include "PlanCreator.h"
+#include "AdjacentSuccessMasterPlan3254486013443203397.h"
+#include "AdjacentSuccessSubPlan1682631238618360548.h"
 #include "AttackPlan1402488634525.h"
 #include "Authority/AuthorityTest1414403413451.h"
 #include "Authority/AuthorityTestMaster1414403396328.h"
@@ -218,11 +220,17 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
         break;
+    case 1682631238618360548:
+        return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
+        break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
         break;
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(wm);
+        break;
+    case 3254486013443203397:
+        return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

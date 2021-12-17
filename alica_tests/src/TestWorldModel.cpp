@@ -213,7 +213,25 @@ void TestWorldModel::setSwitchingEntryPoints(bool switchEntryPoints)
     this->switchEntryPoints = switchEntryPoints;
 }
 
-bool TestWorldModel::isPreCondition1840401110297459509()
+bool TestWorldModel::isTransitionCondition1747408236004727286() const
+{
+    return this->transitionCondition1747408236004727286;
+}
+void TestWorldModel::setTransitionCondition1747408236004727286(bool transitionCondition1747408236004727286)
+{
+    this->transitionCondition1747408236004727286 = transitionCondition1747408236004727286;
+}
+
+bool TestWorldModel::isTransitionCondition1067314038887345208() const
+{
+    return this->transitionCondition1067314038887345208;
+}
+void TestWorldModel::setTransitionCondition1067314038887345208(bool transitionCondition1067314038887345208)
+{
+    this->transitionCondition1067314038887345208 = transitionCondition1067314038887345208;
+}
+
+bool TestWorldModel::isPreCondition1840401110297459509() const
 {
     return this->preCondition1840401110297459509;
 }
