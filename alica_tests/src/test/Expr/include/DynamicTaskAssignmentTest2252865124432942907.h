@@ -24,7 +24,8 @@ public:
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
-    virtual bool getApplicationEntrypointContext(const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, std::shared_ptr<UtilityFunction> function) override;
+    virtual bool generateDynamicEntrypointsAndUtility(
+            const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, UtilityFunction& function) override;
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     // virtual void onInit() override;

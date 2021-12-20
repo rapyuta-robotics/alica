@@ -118,7 +118,7 @@ void Plan::setTransitions(const TransitionGrp& transitions)
 
 void Plan::computeDynamicEntryPoints(const Configuration* configuration) const
 {
-    if (_ae->getPlanPool().getBasicPlan(this, configuration)->getApplicationEntrypointContext(this, _entryPointMap, _utilityFunction)) {
+    if (_ae->getPlanPool().getBasicPlan(this, configuration)->generateDynamicEntrypointsAndUtility(this, _entryPointMap, *_utilityFunction)) {
         _allEntryPoints.erase(_allEntryPoints.begin() + _numStaticEps, _allEntryPoints.end());
         for (auto& static_to_dynamic_pair : _entryPointMap) {
             for (auto dynamicId : static_to_dynamic_pair.second) {

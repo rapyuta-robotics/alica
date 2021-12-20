@@ -17,7 +17,8 @@ BasicPlan::BasicPlan(IAlicaWorldModel* wm)
 {
 }
 
-bool BasicPlan::getApplicationEntrypointContext(const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, std::shared_ptr<UtilityFunction> function)
+bool BasicPlan::generateDynamicEntrypointsAndUtility(
+        const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, UtilityFunction& function)
 {
     return false;
 }

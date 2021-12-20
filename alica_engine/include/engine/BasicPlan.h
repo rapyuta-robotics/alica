@@ -36,7 +36,8 @@ public:
     using RunnableObject::stop;
     using RunnableObject::TracingType;
 
-    virtual bool getApplicationEntrypointContext(const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, std::shared_ptr<UtilityFunction> function);
+    virtual bool generateDynamicEntrypointsAndUtility(
+            const Plan* plan, std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap, UtilityFunction& function);
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
