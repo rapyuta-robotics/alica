@@ -17,7 +17,7 @@ services:
     command: redis-server
 
   alica-backend:
-    image: rrdockerhub/alica_backend:v0.2
+    image: rrdockerhub/alica_backend:dev
     environment:
       - POSTGRES_DB=alicadb
       - POSTGRES_USER=postgres
@@ -42,14 +42,14 @@ services:
       - redis
 
   alica-debug-tree:
-    image: rrdockerhub/alica_backend:interface_v0.2  # TODO: move to separate repo
+    image: rrdockerhub/alica_backend:interface_dev  # TODO: move to separate repo
     command: roslaunch alica_interface alica_interface.launch demo:=false
     network_mode: host
     expose:
       - 7890
 
   alica-frontend:
-    image: rrdockerhub/alica_frontend:v0.3
+    image: rrdockerhub/alica_frontend:dev
     ports:
       - 3030:80
     environment:
