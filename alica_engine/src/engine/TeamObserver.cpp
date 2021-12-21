@@ -313,14 +313,16 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
                 break;
             }
             curParent = cur->getParent();
+            ++i;
             continue;
         }      
         // Add node as child to old current node
-        const int64_t currentStateId = ids[i + 1];
         if (i + 1 == static_cast<int>(ids.size())) {
             ALICA_WARNING_MSG("State id missing in plan tree from " << agentId << " which is executing dynamic entry point with id " << currentEpId);
             return nullptr;
         }
+        
+        const int64_t currentStateId = ids[i + 1];
         curParent = cur;
         cur = new SimplePlanTree();
         cur->setAgentId(agentId);
