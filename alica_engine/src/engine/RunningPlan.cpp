@@ -765,7 +765,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
         }
         std::vector<const SimplePlanTree*> newcspts;
         for (const SimplePlanTree* spt : spts) {
-            if (spt->getState() == _activeTriple.state) {
+            if (spt->getEntryPoint()->getDynamicId() == _activeTriple.entryPoint->getDynamicId() && spt->getState() == _activeTriple.state) {
                 for (const std::unique_ptr<SimplePlanTree>& cspt : spt->getChildren()) {
                     if (cspt->getState()->getInPlan() == r->getActivePlan()) {
                         newcspts.push_back(cspt.get());
