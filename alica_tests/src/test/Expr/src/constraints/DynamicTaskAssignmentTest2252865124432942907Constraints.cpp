@@ -8,7 +8,7 @@ namespace alica
 // Plan:DynamicTaskAssignmentTest
 /*
  * Tasks:
- * - EP:3150793708487666867 : DynamicTask (1163169622598227531)
+ * - EntryPoint:3150793708487666867 : DynamicTask (1163169622598227531)
  *
  * States:
  * - DynamicTaskFinished (2788356913272296281)

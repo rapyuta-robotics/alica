@@ -3,25 +3,25 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 1733191353578191428,
+      "id": 3603519261566578758,
       "isDynamic": false,
-      "maxCardinality": 1,
-      "minCardinality": 1,
-      "name": "",
-      "plan": 1482512794732634139,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
+      "name": "SerializationAEP",
+      "plan": 1433931143598606082,
       "positionWeb": {
-        "x": 231,
-        "y": 357
+        "x": 200,
+        "y": 412
       },
-      "state": 3860426216975738,
+      "state": 1059656669948994292,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1482512794732634139,
+  "id": 1433931143598606082,
   "masterPlan": false,
-  "name": "TestTracingSubPlan",
+  "name": "SerializationSubPlanA",
   "preCondition": null,
   "relativeDirectory": "",
   "requiresParameters": false,
@@ -31,22 +31,22 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/EmptyBehaviour.beh#1625610857563",
+          "abstractPlan": "EmptyPlan.pml#984284423749038756",
           "comment": "",
           "configuration": null,
-          "id": 626074692772114453,
+          "id": 977241310735221519,
           "name": ""
         }
       ],
-      "entryPoint": 1733191353578191428,
-      "id": 3860426216975738,
+      "entryPoint": 3603519261566578758,
+      "id": 1059656669948994292,
       "inTransitions": [],
-      "name": "",
+      "name": "EntryState",
       "outTransitions": [],
-      "parentPlan": 1482512794732634139,
+      "parentPlan": 1433931143598606082,
       "positionWeb": {
-        "x": 620,
-        "y": 368
+        "x": 428,
+        "y": 400
       },
       "type": "State",
       "variableBindings": []

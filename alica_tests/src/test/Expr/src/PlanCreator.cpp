@@ -13,6 +13,7 @@
 #include "Defend1402488893641.h"
 #include "DynamicTaskAssignmentTest2252865124432942907.h"
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
+#include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
@@ -50,6 +51,11 @@
 #include "SchedulingTestSequenceSubPlan11614964379654.h"
 #include "SchedulingTestSequenceSubPlan21614964444419.h"
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
+#include "SerializationMasterPlan373109241446504968.h"
+#include "SerializationSubPlanA1433931143598606082.h"
+#include "SerializationSubPlanB230205985761632608.h"
+#include "SerializationSubPlanC2359124678252958039.h"
+#include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "TestTracingMasterPlan691392966514374878.h"
@@ -211,23 +217,41 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1629895873188:
         return std::make_unique<PlanBA1629895873188>(wm);
         break;
+    case 230205985761632608:
+        return std::make_unique<SerializationSubPlanB230205985761632608>(wm);
+        break;
+    case 373109241446504968:
+        return std::make_unique<SerializationMasterPlan373109241446504968>(wm);
+        break;
     case 432995127772554364:
         return std::make_unique<PlanPoolTestSubPlan432995127772554364>(wm);
-        break;
-    case 1602078208698393838:
-        return std::make_unique<DynamicTaskAssignmentTestMaster1602078208698393838>(wm);
         break;
     case 691392966514374878:
         return std::make_unique<TestTracingMasterPlan691392966514374878>(wm);
         break;
+    case 984284423749038756:
+        return std::make_unique<EmptyPlan984284423749038756>(wm);
+        break;
+    case 1433931143598606082:
+        return std::make_unique<SerializationSubPlanA1433931143598606082>(wm);
+        break;
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
+        break;
+    case 1602078208698393838:
+        return std::make_unique<DynamicTaskAssignmentTestMaster1602078208698393838>(wm);
+        break;
+    case 1781630225028158279:
+        return std::make_unique<SerializationSubPlanD1781630225028158279>(wm);
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
         break;
     case 2252865124432942907:
         return std::make_unique<DynamicTaskAssignmentTest2252865124432942907>(wm);
+        break;
+    case 2359124678252958039:
+        return std::make_unique<SerializationSubPlanC2359124678252958039>(wm);
         break;
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(wm);

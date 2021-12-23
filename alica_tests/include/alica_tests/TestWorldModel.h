@@ -74,6 +74,11 @@ public:
     std::vector<std::pair<std::string, std::string>> tracingLogs;
     std::unordered_map<std::string, std::string> tracingParents;
 
+    bool serializationTestA;
+    bool serializationTestB;
+    bool serializationTestC;
+    bool serializationTestD;
+
     void reset();
 
 private:

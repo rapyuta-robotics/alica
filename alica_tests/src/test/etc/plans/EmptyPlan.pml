@@ -3,25 +3,25 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 1733191353578191428,
+      "id": 816950277819536587,
       "isDynamic": false,
-      "maxCardinality": 1,
-      "minCardinality": 1,
+      "maxCardinality": 2147483647,
+      "minCardinality": 0,
       "name": "",
-      "plan": 1482512794732634139,
+      "plan": 984284423749038756,
       "positionWeb": {
-        "x": 231,
-        "y": 357
+        "x": 200,
+        "y": 212
       },
-      "state": 3860426216975738,
+      "state": 3164334534532883889,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1482512794732634139,
+  "id": 984284423749038756,
   "masterPlan": false,
-  "name": "TestTracingSubPlan",
+  "name": "EmptyPlan",
   "preCondition": null,
   "relativeDirectory": "",
   "requiresParameters": false,
@@ -29,24 +29,16 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "behaviours/EmptyBehaviour.beh#1625610857563",
-          "comment": "",
-          "configuration": null,
-          "id": 626074692772114453,
-          "name": ""
-        }
-      ],
-      "entryPoint": 1733191353578191428,
-      "id": 3860426216975738,
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 816950277819536587,
+      "id": 3164334534532883889,
       "inTransitions": [],
       "name": "",
       "outTransitions": [],
-      "parentPlan": 1482512794732634139,
+      "parentPlan": 984284423749038756,
       "positionWeb": {
-        "x": 620,
-        "y": 368
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []

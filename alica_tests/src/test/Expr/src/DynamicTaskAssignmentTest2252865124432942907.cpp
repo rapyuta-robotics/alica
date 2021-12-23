@@ -45,6 +45,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2252865124432942907::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 1813059625501892456 (1813059625501892456)
  *   - Comment:

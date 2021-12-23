@@ -13,6 +13,7 @@
 #include "Defend1402488893641.h"
 #include "DynamicTaskAssignmentTest2252865124432942907.h"
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
+#include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
 #include "FrequencyTestPlan1626848999740.h"
@@ -50,6 +51,11 @@
 #include "SchedulingTestSequenceSubPlan11614964379654.h"
 #include "SchedulingTestSequenceSubPlan21614964444419.h"
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
+#include "SerializationMasterPlan373109241446504968.h"
+#include "SerializationSubPlanA1433931143598606082.h"
+#include "SerializationSubPlanB230205985761632608.h"
+#include "SerializationSubPlanC2359124678252958039.h"
+#include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "TestTracingMasterPlan691392966514374878.h"
@@ -210,23 +216,41 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 1629895873188:
         return std::make_shared<UtilityFunction1629895873188>();
         break;
+    case 230205985761632608:
+        return std::make_shared<UtilityFunction230205985761632608>();
+        break;
+    case 373109241446504968:
+        return std::make_shared<UtilityFunction373109241446504968>();
+        break;
     case 432995127772554364:
         return std::make_shared<UtilityFunction432995127772554364>();
-        break;
-    case 1602078208698393838:
-        return std::make_shared<UtilityFunction1602078208698393838>();
         break;
     case 691392966514374878:
         return std::make_shared<UtilityFunction691392966514374878>();
         break;
+    case 984284423749038756:
+        return std::make_shared<UtilityFunction984284423749038756>();
+        break;
+    case 1433931143598606082:
+        return std::make_shared<UtilityFunction1433931143598606082>();
+        break;
     case 1482512794732634139:
         return std::make_shared<UtilityFunction1482512794732634139>();
+        break;
+    case 1602078208698393838:
+        return std::make_shared<UtilityFunction1602078208698393838>();
+        break;
+    case 1781630225028158279:
+        return std::make_shared<UtilityFunction1781630225028158279>();
         break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
         break;
     case 2252865124432942907:
         return std::make_shared<UtilityFunction2252865124432942907>();
+        break;
+    case 2359124678252958039:
+        return std::make_shared<UtilityFunction2359124678252958039>();
         break;
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
