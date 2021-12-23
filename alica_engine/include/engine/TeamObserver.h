@@ -43,6 +43,7 @@ public:
     void notifyRobotLeftPlan(std::size_t parentContextHash, const AbstractPlan* plan) const;
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
+
 private:
     friend class ::alica::AlicaSerializationTest;
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;

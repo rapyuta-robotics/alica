@@ -303,7 +303,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     SimplePlanTree* cur = root.get();
 
     // start at 2, because we used the first 2 ids for creating the root node
-    for (int i = 2; i < static_cast<int>(ids.size()); ) {
+    for (int i = 2; i < static_cast<int>(ids.size());) {
         const int64_t currentEpId = ids[i];
         if (currentEpId == -1) {
             // go up one level

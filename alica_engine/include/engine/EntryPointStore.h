@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cassert>
+#include <engine/model/EntryPoint.h>
 #include <engine/util/HashFunctions.h>
 #include <engine/util/LRUCache.h>
 #include <unordered_map>
-#include <engine/model/EntryPoint.h>
 
 namespace alica
 {

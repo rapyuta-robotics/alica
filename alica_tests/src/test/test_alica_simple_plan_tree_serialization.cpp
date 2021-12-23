@@ -1,8 +1,8 @@
 #include "test_alica.h"
 
+#include "alica_tests/TestWorldModel.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/containers/PlanTreeInfo.h"
-#include "alica_tests/TestWorldModel.h"
 #include <alica/test/Util.h>
 #include <engine/RunningPlan.h>
 
@@ -237,6 +237,5 @@ TEST_F(AlicaSerializationTest, serializeDeserializeD)
     IdGrp msg_received = spi->getDynamicStateIDPairs();
     ASSERT_EQ(msg_to_send, msg_received);
 }
-
 
 } // namespace alica

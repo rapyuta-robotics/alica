@@ -162,7 +162,7 @@ TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
     stepAgents();
 
     // Check that plan now has multiple dynamic EPs
-    IdGrp plan_trees [getAgentCount()];
+    IdGrp plan_trees[getAgentCount()];
     for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
 
