@@ -31,79 +31,6 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "EmptyPlan.pml#984284423749038756",
-          "comment": "",
-          "configuration": null,
-          "id": 1984835195334359468,
-          "name": ""
-        },
-        {
-          "abstractPlan": "SerializationSubPlanD.pml#1781630225028158279",
-          "comment": "",
-          "configuration": null,
-          "id": 162647391651889891,
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 837657643540052235,
-      "inTransitions": [
-        1491726255888784762
-      ],
-      "name": "PlanD",
-      "outTransitions": [],
-      "parentPlan": 373109241446504968,
-      "positionWeb": {
-        "x": 686,
-        "y": 1000
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "SerializationSubPlanA.pml#1433931143598606082",
-          "comment": "",
-          "configuration": null,
-          "id": 747074121811963922,
-          "name": ""
-        },
-        {
-          "abstractPlan": "EmptyPlan.pml#984284423749038756",
-          "comment": "",
-          "configuration": null,
-          "id": 3779615517995020859,
-          "name": ""
-        },
-        {
-          "abstractPlan": "EmptyPlan.pml#984284423749038756",
-          "comment": "",
-          "configuration": null,
-          "id": 2012988928861934803,
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 4556827380180239242,
-      "inTransitions": [
-        2057783493960201520
-      ],
-      "name": "PlanA",
-      "outTransitions": [],
-      "parentPlan": 373109241446504968,
-      "positionWeb": {
-        "x": 686,
-        "y": 400
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
           "abstractPlan": "SerializationSubPlanB.pml#230205985761632608",
           "comment": "",
           "configuration": null,
@@ -122,27 +49,6 @@
       "positionWeb": {
         "x": 736.8072353921411,
         "y": 632.5646401118099
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": 125037907796569874,
-      "id": 1886795261620096590,
-      "inTransitions": [],
-      "name": "EntryState",
-      "outTransitions": [
-        2057783493960201520,
-        1491726255888784762,
-        2606234571502403331,
-        3214980101932259560
-      ],
-      "parentPlan": 373109241446504968,
-      "positionWeb": {
-        "x": 428,
-        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -172,29 +78,104 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SerializationSubPlanD.pml#1781630225028158279",
+          "comment": "",
+          "configuration": null,
+          "id": 162647391651889891,
+          "name": ""
+        },
+        {
+          "abstractPlan": "EmptyPlan.pml#984284423749038756",
+          "comment": "",
+          "configuration": null,
+          "id": 1984835195334359468,
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 837657643540052235,
+      "inTransitions": [
+        1491726255888784762
+      ],
+      "name": "PlanD",
+      "outTransitions": [],
+      "parentPlan": 373109241446504968,
+      "positionWeb": {
+        "x": 686,
+        "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 125037907796569874,
+      "id": 1886795261620096590,
+      "inTransitions": [],
+      "name": "EntryState",
+      "outTransitions": [
+        1491726255888784762,
+        2057783493960201520,
+        2606234571502403331,
+        3214980101932259560
+      ],
+      "parentPlan": 373109241446504968,
+      "positionWeb": {
+        "x": 428,
+        "y": 800
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SerializationSubPlanA.pml#1433931143598606082",
+          "comment": "",
+          "configuration": null,
+          "id": 747074121811963922,
+          "name": ""
+        },
+        {
+          "abstractPlan": "EmptyPlan.pml#984284423749038756",
+          "comment": "",
+          "configuration": null,
+          "id": 2012988928861934803,
+          "name": ""
+        },
+        {
+          "abstractPlan": "EmptyPlan.pml#984284423749038756",
+          "comment": "",
+          "configuration": null,
+          "id": 3779615517995020859,
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 4556827380180239242,
+      "inTransitions": [
+        2057783493960201520
+      ],
+      "name": "PlanA",
+      "outTransitions": [],
+      "parentPlan": 373109241446504968,
+      "positionWeb": {
+        "x": 686,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "id": 2057783493960201520,
-      "inState": 1886795261620096590,
-      "name": "",
-      "outState": 4556827380180239242,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3932287302905544988,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "id": 1491726255888784762,
@@ -207,6 +188,25 @@
         "conditionString": "",
         "enabled": true,
         "id": 1693256954385338259,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 2057783493960201520,
+      "inState": 1886795261620096590,
+      "name": "",
+      "outState": 4556827380180239242,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3932287302905544988,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
