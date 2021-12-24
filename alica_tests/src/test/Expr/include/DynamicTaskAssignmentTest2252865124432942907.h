@@ -5,6 +5,7 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaWorldModel.h>
+#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl2252865124432942907) ENABLED START*/
 // Add additional includes here
@@ -25,10 +26,6 @@ public:
     /*PROTECTED REGION END*/
 protected:
     virtual bool getApplicationEntrypointContext(std::unordered_map<int64_t, std::unordered_set<int64_t>>& entryPointMap) override;
-    // Override these methods for your use case
-    // virtual void run(void* msg) override;
-    // virtual void onInit() override;
-    // virtual void onTerminate() override;
     /*PROTECTED REGION ID(pro2252865124432942907) ENABLED START*/
     // Add/Override protected methods here
     /*PROTECTED REGION END*/

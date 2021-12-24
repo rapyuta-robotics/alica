@@ -11,14 +11,15 @@
 namespace alica
 {
 
-class Logger;
+class Agent;
 class AlicaEngine;
+class AlicaSerializationTest;
+class Logger;
+class PlanTreeInfo;
+class SimplePlanTree;
 class SuccessCollection;
 class TeamManager;
-class Agent;
-class PlanTreeInfo;
 class RunningPlan;
-class SimplePlanTree;
 
 /**
  * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
@@ -44,9 +45,12 @@ public:
     void close();
 
 private:
+    friend class ::alica::AlicaSerializationTest;
+    std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
+    PlanTreeInfo sptToMessage(const IdGrp& msg) const;
+
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
-    std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
 
     AlicaEngine* _ae;
     TeamManager& _tm;

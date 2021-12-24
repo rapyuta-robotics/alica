@@ -39,6 +39,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1602078208698393838::getUtilityF
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 3712615202042019043 (3712615202042019043)
  *   - Comment:
@@ -61,6 +62,7 @@ bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, 
     return false;
     /*PROTECTED REGION END*/
 }
+
 /**
  * Transition: 4266666033623620026 (4266666033623620026)
  *   - Comment:

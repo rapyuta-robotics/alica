@@ -8,7 +8,7 @@ namespace alica
 // Plan:DynamicTaskAssignmentTestMaster
 /*
  * Tasks:
- * - EP:699381937789438517 : DynamicTaskTestEP (3903894018484081749)
+ * - EntryPoint:699381937789438517 : DynamicTaskTestEP (3903894018484081749)
  *
  * States:
  * - Start (751302000461175045)
