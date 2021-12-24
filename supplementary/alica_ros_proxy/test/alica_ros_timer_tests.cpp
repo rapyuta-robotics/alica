@@ -7,7 +7,9 @@
 
 TEST(SyncStopTimerRosTest, FireImmediatelyOnStart)
 {
-    alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    alicaRosTimer::AlicaRosTimerFactory timerFactory;
     ros::Time timerCbTime;
     ros::Time timerStartTime = ros::Time::now();
     auto timer = timerFactory.createTimer(
@@ -25,7 +27,9 @@ TEST(SyncStopTimerRosTest, FireImmediatelyOnStart)
 
 TEST(SyncStopTimerRosTest, SequentialCbExecution)
 {
-    alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    alicaRosTimer::AlicaRosTimerFactory timerFactory;
     std::atomic<bool> cbActive(false);
     std::atomic<bool> multipleCbsWereActive(false);
     std::atomic<bool> firstCall(true);
@@ -49,7 +53,9 @@ TEST(SyncStopTimerRosTest, SequentialCbExecution)
 
 TEST(SyncStopTimerRosTest, CbFrequencyCheck)
 {
-    alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    alicaRosTimer::AlicaRosTimerFactory timerFactory;
     const int NUM = 100;
 
     // Times are not accurate for <30milliseconds
@@ -90,7 +96,9 @@ TEST(SyncStopTimerRosTest, CbFrequencyCheck)
 
 TEST(SyncStopTimerRosTest, StopChecks)
 {
-    alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    alicaRosTimer::AlicaRosTimerFactory timerFactory;
     ros::Time beforeStopTime = ros::Time::now();
     auto timer = timerFactory.createTimer([]() { ros::Duration(1).sleep(); }, alica::AlicaTime::milliseconds(10));
     timer.reset();
@@ -114,7 +122,9 @@ TEST(SyncStopTimerRosTest, StopChecks)
 
 TEST(SyncStopTimerRosTest, SpamStartStopTest)
 {
-    alicaRosTimer::AlicaRosTimerFactory timerFactory(2);
+    ros::AsyncSpinner spinner(2);
+    spinner.start();
+    alicaRosTimer::AlicaRosTimerFactory timerFactory;
     int cnt = 0;
     for (int i = 0; i < 10000; ++i) {
         auto timer = timerFactory.createTimer(

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.10)
 project(alica_tests)
 
 add_compile_options(-std=c++17)
@@ -74,6 +74,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
         src/test/test_alica_engine_plan_pool.cpp
+        src/test/test_adjacent_plans_success.cpp
         src/test/test_alica_tracing.cpp
         src/test/test_blackboard.cpp
     )

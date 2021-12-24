@@ -48,9 +48,9 @@ bool Util::isStateActiveHelper(const RunningPlan* rp, int64_t id)
     if (activeState && activeState->getId() == id) {
         return true;
     }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isStateActiveHelper(children[i], id)) {
+
+    for (const auto& child : rp->getChildren()) {
+        if (isStateActiveHelper(child, id)) {
             return true;
         }
     }
@@ -72,9 +72,33 @@ bool Util::isPlanActiveHelper(const RunningPlan* rp, int64_t id)
     if (abstractPlan && abstractPlan->getId() == id) {
         return true;
     }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isPlanActiveHelper(children[i], id)) {
+
+    for (const auto& child : rp->getChildren()) {
+        if (isPlanActiveHelper(child, id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Util::hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id)
+{
+    return hasPlanSucceededHelper(ae->getPlanBase().getRootNode(), id);
+}
+
+bool Util::hasPlanSucceededHelper(const RunningPlan* rp, int64_t id)
+{
+    if (!rp) {
+        return false;
+    }
+
+    const AbstractPlan* abstractPlan = rp->getActivePlan();
+    if (abstractPlan && abstractPlan->getId() == id) {
+        return rp->amISuccessful();
+    }
+
+    for (const auto& child : rp->getChildren()) {
+        if (hasPlanSucceededHelper(child, id)) {
             return true;
         }
     }
