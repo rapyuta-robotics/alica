@@ -31,6 +31,13 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "EmptyPlan.pml#984284423749038756",
+          "comment": "",
+          "configuration": null,
+          "id": 1693312522770780390,
+          "name": ""
+        },
+        {
           "abstractPlan": "SerializationSubPlanB.pml#230205985761632608",
           "comment": "",
           "configuration": null,
@@ -42,13 +49,6 @@
           "comment": "",
           "configuration": null,
           "id": 4188959909879260613,
-          "name": ""
-        },
-        {
-          "abstractPlan": "EmptyPlan.pml#984284423749038756",
-          "comment": "",
-          "configuration": null,
-          "id": 1693312522770780390,
           "name": ""
         }
       ],
