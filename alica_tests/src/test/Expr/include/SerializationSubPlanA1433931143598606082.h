@@ -7,39 +7,38 @@
 #include <engine/IAlicaWorldModel.h>
 #include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
-/*PROTECTED REGION ID(incl432995127772554364) ENABLED START*/
+/*PROTECTED REGION ID(incl1433931143598606082) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(meth432995127772554364) ENABLED START*/
+/*PROTECTED REGION ID(meth1433931143598606082) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class PlanPoolTestSubPlan432995127772554364 : public DomainPlan
+class SerializationSubPlanA1433931143598606082 : public DomainPlan
 {
 public:
-    PlanPoolTestSubPlan432995127772554364(IAlicaWorldModel* wm);
-    virtual ~PlanPoolTestSubPlan432995127772554364();
-    /*PROTECTED REGION ID(pub432995127772554364) ENABLED START*/
+    SerializationSubPlanA1433931143598606082(IAlicaWorldModel* wm);
+    virtual ~SerializationSubPlanA1433931143598606082();
+    /*PROTECTED REGION ID(pub1433931143598606082) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
 protected:
-    /*PROTECTED REGION ID(pro432995127772554364) ENABLED START*/
+    /*PROTECTED REGION ID(pro1433931143598606082) ENABLED START*/
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     // virtual void onInit() override;
     // virtual void onTerminate() override;
-    // Add/Override protected methods here
-    virtual void onInit() override;
+    // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
-    /*PROTECTED REGION ID(prv432995127772554364) ENABLED START*/
+    /*PROTECTED REGION ID(prv1433931143598606082) ENABLED START*/
     // Add additional private methods here
     /*PROTECTED REGION END*/
 };
 
-class UtilityFunction432995127772554364 : public BasicUtilityFunction
+class UtilityFunction1433931143598606082 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };

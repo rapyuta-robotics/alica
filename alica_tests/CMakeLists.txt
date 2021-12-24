@@ -58,6 +58,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_init_shutdown.cpp
         src/test/test_alica_multi_agent_plan.cpp
         src/test/test_alica_simple_plan.cpp
+        src/test/test_alica_simple_plan_tree_serialization.cpp
         src/test/test_alica_sync_transition.cpp
         src/test/test_alica_time.cpp
         src/test/test_assignment.cpp

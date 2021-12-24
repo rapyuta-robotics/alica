@@ -18,8 +18,8 @@ namespace alica
 {
 namespace
 {
-// GTEST_FILTER=AlicaDynamicTaskPlan.* catkin run_tests -i alica_tests
-class AlicaDynamicTaskPlan : public AlicaTestMultiAgentFixture
+// GTEST_FILTER=AlicaDynamicTaskPlanTest.* catkin run_tests -i alica_tests
+class AlicaDynamicTaskPlanTest : public AlicaTestMultiAgentFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
@@ -57,42 +57,42 @@ protected:
         alicaTests::TestWorldModel::getTwo()->setTransitionCondition4496654201854254411(true);
     }
 
-    static void checkAlicaElement(const alica::AlicaElement* ae, long id, std::string name)
+    static void checkAlicaElement(const alica::AlicaElement* alicaElement, long id, std::string name)
     {
-        EXPECT_EQ(id, ae->getId()) << "Wrong ID!" << std::endl;
-        EXPECT_STREQ(name.c_str(), ae->getName().c_str()) << "Wrong Name for AlicaElement" << std::endl;
+        EXPECT_EQ(id, alicaElement->getId());
+        EXPECT_STREQ(name.c_str(), alicaElement->getName().c_str());
     }
 
     static void checkEntryPoint(const alica::EntryPoint* ep, long id, std::string name, bool successRequired, int minCardinality, int maxCardinality,
             long stateID, long taskID, std::string taskName)
     {
         checkAlicaElement(ep, id, name);
-        EXPECT_EQ(successRequired, ep->isSuccessRequired()) << "SuccesRequired true instead of false!" << std::endl;
-        EXPECT_EQ(minCardinality, ep->getMinCardinality()) << "Wrong minCardinality ID!" << std::endl;
-        EXPECT_EQ(maxCardinality, ep->getMaxCardinality()) << "Wrong maxCardinality ID!" << std::endl;
-        EXPECT_EQ(stateID, ep->getState()->getId()) << "Wrong stateId for EntryPoint!" << std::endl;
-        EXPECT_EQ(taskID, ep->getTask()->getId()) << "Wrong TaskId for EntryPoint!" << std::endl;
-        EXPECT_STREQ(taskName.c_str(), ep->getTask()->getName().c_str()) << "Wrong taskName!" << std::endl;
+        EXPECT_EQ(successRequired, ep->isSuccessRequired());
+        EXPECT_EQ(minCardinality, ep->getMinCardinality());
+        EXPECT_EQ(maxCardinality, ep->getMaxCardinality());
+        EXPECT_EQ(stateID, ep->getState()->getId());
+        EXPECT_EQ(taskID, ep->getTask()->getId());
+        EXPECT_STREQ(taskName.c_str(), ep->getTask()->getName().c_str());
     }
 
-    static constexpr long kMasterPlanInitStateId = 4467904887554008050;
-    static constexpr long kMasterPlanStartStateId = 751302000461175045;
-    static constexpr long kDynamicState1Id = 2800951832651805821;
-    static constexpr long kDynamicTaskAssignmentPlanId = 2252865124432942907;
-    static constexpr long kDynamicTaskBehaviorId = 4044546549214673470;
-    static constexpr long kDynamicTaskEntrypointId = 3150793708487666867;
-    static constexpr long kDynamicTaskId = 1163169622598227531;
+    static constexpr int64_t kMasterPlanInitStateId = 4467904887554008050;
+    static constexpr int64_t kMasterPlanStartStateId = 751302000461175045;
+    static constexpr int64_t kDynamicState1Id = 2800951832651805821;
+    static constexpr int64_t kDynamicTaskAssignmentPlanId = 2252865124432942907;
+    static constexpr int64_t kDynamicTaskBehaviorId = 4044546549214673470;
+    static constexpr int64_t kDynamicTaskEntrypointId = 3150793708487666867;
+    static constexpr int64_t kDynamicTaskId = 1163169622598227531;
     static constexpr const char* kDynamicTaskName = "DynamicTask";
 };
 
-TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
+TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
 {
     // Plan initially has no EP
     const Plan* plan[2];
     plan[0] = aes[0]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
     plan[1] = aes[1]->getPlanRepository().getPlans().find(kDynamicTaskAssignmentPlanId);
-    EXPECT_EQ(0u, plan[0]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
-    EXPECT_EQ(0u, plan[1]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be empty at this point." << std::endl;
+    EXPECT_EQ(0u, plan[0]->getEntryPoints().size()) << "Number of dynamic EntryPoints should still be empty.";
+    EXPECT_EQ(0u, plan[1]->getEntryPoints().size()) << "Number of dynamic EntryPoints should still be empty.";
 
     // Make agents enter dynamic tasks
     ASSERT_NO_SIGNAL
@@ -108,22 +108,20 @@ TEST_F(AlicaDynamicTaskPlan, testMultipleEntrypoints)
         ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
 
-        EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size()) << "Number of dynamic EntryPoints should be 1 at this point." << std::endl;
+        EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size()) << "A single dynamic EntryPoint should have been created by this point";
 
         const alica::EntryPoint* ep = plan[agent_index]->getEntryPoints().front();
         checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
         EXPECT_EQ(ep->getDynamicId(), 1);
     }
-    // */
 }
 
 /**
  * Tests whether it is possible to instantiate multiple tasks, dynamically, at runtime
  */
-TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
+TEST_F(AlicaDynamicTaskPlanTest, runDynamicTasks)
 {
     ASSERT_NO_SIGNAL
-
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     std::cout << "AE1 (" << acs[0]->getLocalAgentId() << ")" << std::endl;
@@ -148,6 +146,38 @@ TEST_F(AlicaDynamicTaskPlan, runDynamicTasks)
                           ->callCounter,
                 1);
     }
+}
+
+/**
+ * Tests whether plan serialization works fine
+ */
+TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
+{
+    // Make agents enter dynamic tasks
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+    enableTransitionCondition();
+    stepAgents();
+
+    // Check that plan now has multiple dynamic EPs
+    IdGrp plan_trees[getAgentCount()];
+    for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
+        ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
+
+        const RunningPlan* rpRoot = aes[agent_index]->getPlanBase().getRootNode();
+        ASSERT_TRUE(rpRoot);
+
+        // Build current Plan Tree
+        IdGrp msg_to_send;
+        int deepestNode = 0;
+        int treeDepth = 0;
+        rpRoot->toMessage(msg_to_send, rpRoot, deepestNode, treeDepth);
+        plan_trees[agent_index] = msg_to_send;
+    }
+    // TODO
+    // ASSERT_NE(plan_trees[0], plan_trees[1]);
 }
 } // namespace
 } // namespace alica
