@@ -22,11 +22,11 @@ TEST_F(PlanContextTest, testPlanContextIsValid)
 
     auto rp = ae->getPlanBase().getRootNode();
     EXPECT_TRUE(rp != nullptr);
-    
+
     ThreadSafePlanInterface invalid = ThreadSafePlanInterface(nullptr);
     ThreadSafePlanInterface valid = ThreadSafePlanInterface(rp);
     EXPECT_FALSE(invalid.isValid());
     EXPECT_TRUE(valid.isValid());
 }
-}
-}
+} // namespace
+} // namespace alica
