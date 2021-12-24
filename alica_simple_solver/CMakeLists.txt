@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.10)
 project(alica_simple_solver)
 
 add_compile_options(-std=c++17)
