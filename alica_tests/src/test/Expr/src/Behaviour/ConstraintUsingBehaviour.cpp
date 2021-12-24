@@ -34,7 +34,9 @@ void ConstraintUsingBehaviour::run(void* msg)
     /*PROTECTED REGION ID(run1414068597716) ENABLED START*/
     // Add additional options here
     ++_callCounter;
-
+    if (result.size() > 0) {
+        return;
+    }
     _query.getSolution<reasoner::ConstraintTestPlanDummySolver, int64_t>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
