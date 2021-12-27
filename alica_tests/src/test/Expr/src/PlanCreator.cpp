@@ -13,6 +13,9 @@
 #include "Defend1402488893641.h"
 #include "DynamicTaskAssignmentTest2252865124432942907.h"
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
+#include "DynamicTaskLA3337489358878214836.h"
+#include "DynamicTaskLB4316676367342780557.h"
+#include "DynamicTaskLC2140075868731779222.h"
 #include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
@@ -247,6 +250,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
         break;
+    case 2140075868731779222:
+        return std::make_unique<DynamicTaskLC2140075868731779222>(wm);
+        break;
     case 2252865124432942907:
         return std::make_unique<DynamicTaskAssignmentTest2252865124432942907>(wm);
         break;
@@ -255,6 +261,12 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(wm);
+        break;
+    case 3337489358878214836:
+        return std::make_unique<DynamicTaskLA3337489358878214836>(wm);
+        break;
+    case 4316676367342780557:
+        return std::make_unique<DynamicTaskLB4316676367342780557>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

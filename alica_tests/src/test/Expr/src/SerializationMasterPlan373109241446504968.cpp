@@ -12,11 +12,11 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 125037907796569874)
 //
 // States:
-//   - PlanD (837657643540052235)
-//   - PlanA (4556827380180239242)
 //   - PlanB (174185769149002104)
-//   - EntryState (1886795261620096590)
 //   - PlanC (458399185905834888)
+//   - PlanD (837657643540052235)
+//   - EntryState (1886795261620096590)
+//   - PlanA (4556827380180239242)
 SerializationMasterPlan373109241446504968::SerializationMasterPlan373109241446504968(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -43,28 +43,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction373109241446504968::getUtilityFu
 }
 
 /**
- * Transition: 2057783493960201520 (2057783493960201520)
- *   - Comment:
- *   - Source2Dest: EntryState --> PlanA
- *
- * Precondition: 3932287302905544988 (3932287302905544988)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in EntryState:
- */
-bool PreCondition3932287302905544988::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(2057783493960201520) ENABLED START*/
-    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldModel->serializationTestA;
-    /*PROTECTED REGION END*/
-}
-
-/**
  * Transition: 1491726255888784762 (1491726255888784762)
  *   - Comment:
  *   - Source2Dest: EntryState --> PlanD
@@ -83,6 +61,28 @@ bool PreCondition1693256954385338259::evaluate(std::shared_ptr<RunningPlan> rp, 
     /*PROTECTED REGION ID(1491726255888784762) ENABLED START*/
     auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
     return worldModel->serializationTestD;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 2057783493960201520 (2057783493960201520)
+ *   - Comment:
+ *   - Source2Dest: EntryState --> PlanA
+ *
+ * Precondition: 3932287302905544988 (3932287302905544988)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in EntryState:
+ */
+bool PreCondition3932287302905544988::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(2057783493960201520) ENABLED START*/
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    return worldModel->serializationTestA;
     /*PROTECTED REGION END*/
 }
 
