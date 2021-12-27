@@ -13,6 +13,9 @@
 #include "Defend1402488893641.h"
 #include "DynamicTaskAssignmentTest2252865124432942907.h"
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
+#include "DynamicTaskLA3337489358878214836.h"
+#include "DynamicTaskLB4316676367342780557.h"
+#include "DynamicTaskLC2140075868731779222.h"
 #include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
@@ -246,6 +249,9 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
         break;
+    case 2140075868731779222:
+        return std::make_shared<UtilityFunction2140075868731779222>();
+        break;
     case 2252865124432942907:
         return std::make_shared<UtilityFunction2252865124432942907>();
         break;
@@ -254,6 +260,12 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
+        break;
+    case 3337489358878214836:
+        return std::make_shared<UtilityFunction3337489358878214836>();
+        break;
+    case 4316676367342780557:
+        return std::make_shared<UtilityFunction4316676367342780557>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

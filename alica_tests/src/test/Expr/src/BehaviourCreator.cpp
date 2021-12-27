@@ -17,6 +17,7 @@
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
 #include "DynamicTaskBehavior.h"
+#include "DynamicTaskBehaviourLD.h"
 #include "TestBehaviour.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
@@ -81,6 +82,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 1629895911592:
         return std::make_shared<BehBAA>(wm);
+        break;
+    case 19516698765703926:
+        return std::make_shared<DynamicTaskBehaviourLD>(wm);
         break;
     case 55178365253414982:
         return std::make_shared<TestBehaviour>(wm);
