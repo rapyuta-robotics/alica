@@ -8,7 +8,7 @@ namespace alica
 // Plan:  DynamicTaskLB (4316676367342780557)
 //
 // Tasks:
-//   - DynamicTask (2312168092927339124) (Entrypoint: 1022894855310263692)
+//   - DynamicTask (1163169622598227531) (Entrypoint: 1022894855310263692)
 //
 // States:
 //   - LC (2765772942388464345)
@@ -30,8 +30,7 @@ bool DynamicTaskLB4316676367342780557::getApplicationEntrypointContext(std::unor
 {
     /*PROTECTED REGION ID(getApplicationEntrypointContext4316676367342780557) ENABLED START*/
     // Add additional options here
-    std::cout << "The method getApplicationEntrypointContext in Plan 'DynamicTaskLB' is not implement yet!" << std::endl;
-    return false;
+    return entryPointMap.begin()->second.insert(3).second;
     /*PROTECTED REGION END*/
 }
 
