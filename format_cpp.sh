@@ -9,10 +9,3 @@ find . \
     -not \( -path "*/install/*" -prune \) \
     \( -name *.h -o -name *.hpp -o -name *.c -o -name *.cc -o -name *.cpp \) \
     | xargs clang-format-10 -style=file -i
-
-find . \
-    -not \( -path "*/devel/*" -prune \) \
-    -not \( -path "*/build/*" -prune \) \
-    -not \( -path "*/install/*" -prune \) \
-    \( -name \*.h -o -name \*.hpp -o -name \*.c -o -name \*.cc -o -name \*.cpp \) \
-   -print0 | xargs -0  sed -i '$a\'
