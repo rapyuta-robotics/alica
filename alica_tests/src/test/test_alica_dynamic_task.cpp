@@ -82,6 +82,10 @@ protected:
     static constexpr int64_t kDynamicTaskBehaviorId = 4044546549214673470;
     static constexpr int64_t kDynamicTaskEntrypointId = 3150793708487666867;
     static constexpr int64_t kDynamicTaskId = 1163169622598227531;
+
+    static constexpr int64_t kDynamicTaskLCEntrypointId = 3626583666892196532;
+    static constexpr int64_t kDynamicTaskBehaviourLDStateId = 3534468625273851172;
+
     static constexpr const char* kDynamicTaskName = "DynamicTask";
 };
 
@@ -139,9 +143,7 @@ TEST_F(AlicaDynamicTaskPlanTest, runDynamicTasks)
         ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
 
-        ASSERT_EQ(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getId(), kDynamicTaskEntrypointId);
-        // TODO ensure new dynamic EP is different from 0
-        // ASSERT_NE(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getDynamicId(), 0);
+        ASSERT_EQ(aes[agent_index]->getPlanBase().getDeepestNode()->getActiveEntryPoint()->getId(), kDynamicTaskLCEntrypointId);
         ASSERT_EQ(std::dynamic_pointer_cast<alica::DynamicTaskBehavior>(alica::test::Util::getBasicBehaviour(aes[agent_index], kDynamicTaskBehaviorId, 0))
                           ->callCounter,
                 1);
@@ -151,7 +153,7 @@ TEST_F(AlicaDynamicTaskPlanTest, runDynamicTasks)
 /**
  * Tests whether plan serialization works fine
  */
-TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
+TEST_F(AlicaDynamicTaskPlanTest, serialize)
 {
     // Make agents enter dynamic tasks
     ASSERT_NO_SIGNAL
@@ -165,6 +167,7 @@ TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
     IdGrp plan_trees[getAgentCount()];
     for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
+        ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicTaskBehaviourLDStateId));
 
         const RunningPlan* rpRoot = aes[agent_index]->getPlanBase().getRootNode();
         ASSERT_TRUE(rpRoot);
@@ -176,8 +179,10 @@ TEST_F(AlicaDynamicTaskPlanTest, serializeDeserialize)
         rpRoot->toMessage(msg_to_send, rpRoot, deepestNode, treeDepth);
         plan_trees[agent_index] = msg_to_send;
     }
-    // TODO
-    // ASSERT_NE(plan_trees[0], plan_trees[1]);
+    std::vector<int64_t> expectedTree = {
+            0, 751302000461175045, 1, 2800951832651805821, -1, 2, 1633421497783210879, 3, 2765772942388464345, 0, 3534468625273851172, -1, -1, -1, -1};
+    ASSERT_EQ(plan_trees[0], expectedTree);
+    ASSERT_EQ(plan_trees[1], expectedTree);
 }
 } // namespace
 } // namespace alica
