@@ -163,7 +163,7 @@ TEST_F(AlicaDynamicTaskPlanTest, serialize)
     enableTransitionCondition();
     stepAgents();
 
-    // Check that plan now has multiple dynamic EPs
+    // Verify the simple plan tree serialization
     IdGrp plan_trees[getAgentCount()];
     for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kDynamicState1Id));
@@ -184,5 +184,32 @@ TEST_F(AlicaDynamicTaskPlanTest, serialize)
     ASSERT_EQ(plan_trees[0], expectedTree);
     ASSERT_EQ(plan_trees[1], expectedTree);
 }
+
+/**
+ * Tests whether plan deserialization works fine
+ */
+TEST_F(AlicaDynamicTaskPlanTest, deserialize)
+{
+    // Make agents enter dynamic tasks
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+    enableTransitionCondition();
+    stepAgents();
+
+    auto ep0 = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().getEntryPointOfAgent(acs[0]->getLocalAgentId());
+    ASSERT_TRUE(ep0);
+    checkEntryPoint(ep0, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+    ASSERT_TRUE(ep0->isDynamic());
+    ASSERT_EQ(ep0->getDynamicId(), 1);
+
+    auto ep1 = aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().getEntryPointOfAgent(acs[1]->getLocalAgentId());
+    ASSERT_TRUE(ep1);
+    checkEntryPoint(ep1, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+    ASSERT_TRUE(ep1->isDynamic());
+    ASSERT_EQ(ep1->getDynamicId(), 1);
+}
+
 } // namespace
 } // namespace alica
