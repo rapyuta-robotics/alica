@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "engine/AlicaEngine.h"
+#include "engine/UtilityFunction.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
@@ -129,6 +130,7 @@ void Plan::computeDynamicEntryPoints(const Configuration* configuration) const
             }
         }
     }
+    _utilityFunction->init(_ae);
 }
 
 std::string Plan::toString(std::string indent) const

@@ -36,6 +36,7 @@
 #include "constraints/DynamicTaskLA3337489358878214836Constraints.h"
 #include "constraints/DynamicTaskLB4316676367342780557Constraints.h"
 #include "constraints/DynamicTaskLC2140075868731779222Constraints.h"
+#include "constraints/DynamicTaskTogether1338298120374694644Constraints.h"
 #include "constraints/EmptyPlan984284423749038756Constraints.h"
 #include "constraints/ExecuteBehaviourInSubPlan3172561495666303184Constraints.h"
 #include "constraints/FailsOnOne1530069246103Constraints.h"

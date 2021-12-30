@@ -13,7 +13,9 @@
       "name": "Attacker",
       "roleSet": 1402500951766,
       "taskPriorities": {
-        "taskrepository.tsk#1225112227903": 0.5
+        "taskrepository.tsk#1225112227903": 0.5,
+        "taskrepository.tsk#4026821563126910189": 1.0,
+        "taskrepository.tsk#4028411332434222682": 0.0
       }
     },
     {
@@ -23,7 +25,9 @@
       "name": "Defender",
       "roleSet": 1402500951766,
       "taskPriorities": {
-        "taskrepository.tsk#1225112227903": 0.5
+        "taskrepository.tsk#1225112227903": 0.5,
+        "taskrepository.tsk#4026821563126910189": 0.0,
+        "taskrepository.tsk#4028411332434222682": 1.0
       }
     },
     {

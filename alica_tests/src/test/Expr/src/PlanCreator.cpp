@@ -16,6 +16,7 @@
 #include "DynamicTaskLA3337489358878214836.h"
 #include "DynamicTaskLB4316676367342780557.h"
 #include "DynamicTaskLC2140075868731779222.h"
+#include "DynamicTaskTogether1338298120374694644.h"
 #include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
@@ -234,6 +235,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     case 984284423749038756:
         return std::make_unique<EmptyPlan984284423749038756>(wm);
+        break;
+    case 1338298120374694644:
+        return std::make_unique<DynamicTaskTogether1338298120374694644>(wm);
         break;
     case 1433931143598606082:
         return std::make_unique<SerializationSubPlanA1433931143598606082>(wm);

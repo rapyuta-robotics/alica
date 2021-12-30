@@ -93,7 +93,7 @@ private:
      * This plan's Utility function
      */
     // TODO: change shared to unique ptr (this requires a change to autogeneration templates)
-    std::shared_ptr<UtilityFunction> _utilityFunction;
+    mutable std::shared_ptr<UtilityFunction> _utilityFunction;
     /**
      * The utility threshold, the higher, the less likely dynamic changes are.
      */

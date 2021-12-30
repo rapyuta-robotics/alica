@@ -57,6 +57,18 @@ protected:
         alicaTests::TestWorldModel::getTwo()->setTransitionCondition4496654201854254411(true);
     }
 
+    void enableTransitionConditionToTogetherPlan(int agentNo)
+    {
+        if (agentNo == 1) {
+            alicaTests::TestWorldModel::curAgent(1);
+            alicaTests::TestWorldModel::getOne()->setTransitionCondition3126176581533900616(true);
+        } else {
+            assert(agentNo == 2);
+            alicaTests::TestWorldModel::curAgent(2);
+            alicaTests::TestWorldModel::getTwo()->setTransitionCondition3126176581533900616(true);
+        }
+    }
+
     static void checkAlicaElement(const alica::AlicaElement* alicaElement, long id, std::string name)
     {
         EXPECT_EQ(id, alicaElement->getId());
@@ -115,7 +127,7 @@ TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
         EXPECT_EQ(1u, plan[agent_index]->getEntryPoints().size()) << "A single dynamic EntryPoint should have been created by this point";
 
         const alica::EntryPoint* ep = plan[agent_index]->getEntryPoints().front();
-        checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+        checkEntryPoint(ep, kDynamicTaskEntrypointId, "", false, 0, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
         EXPECT_EQ(ep->getDynamicId(), 1);
     }
 }
@@ -180,7 +192,7 @@ TEST_F(AlicaDynamicTaskPlanTest, serialize)
         plan_trees[agent_index] = msg_to_send;
     }
     std::vector<int64_t> expectedTree = {
-            0, 751302000461175045, 1, 2800951832651805821, -1, 2, 1633421497783210879, 3, 2765772942388464345, 0, 3534468625273851172, -1, -1, -1, -1};
+            0, 751302000461175045, 2, 1633421497783210879, 3, 2765772942388464345, 0, 3534468625273851172, -1, -1, -1, 1, 2800951832651805821, -1, -1};
     ASSERT_EQ(plan_trees[0], expectedTree);
     ASSERT_EQ(plan_trees[1], expectedTree);
 }
@@ -198,17 +210,53 @@ TEST_F(AlicaDynamicTaskPlanTest, deserialize)
     enableTransitionCondition();
     stepAgents();
 
-    auto ep0 = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().getEntryPointOfAgent(acs[0]->getLocalAgentId());
+    auto ep0 = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->getAssignment().getEntryPointOfAgent(acs[0]->getLocalAgentId());
     ASSERT_TRUE(ep0);
-    checkEntryPoint(ep0, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+    checkEntryPoint(ep0, kDynamicTaskEntrypointId, "", false, 0, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
     ASSERT_TRUE(ep0->isDynamic());
     ASSERT_EQ(ep0->getDynamicId(), 1);
 
-    auto ep1 = aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().getEntryPointOfAgent(acs[1]->getLocalAgentId());
+    auto ep1 = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->getAssignment().getEntryPointOfAgent(acs[1]->getLocalAgentId());
     ASSERT_TRUE(ep1);
-    checkEntryPoint(ep1, kDynamicTaskEntrypointId, "", false, 2, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
+    checkEntryPoint(ep1, kDynamicTaskEntrypointId, "", false, 0, INT_MAX, kDynamicState1Id, kDynamicTaskId, kDynamicTaskName);
     ASSERT_TRUE(ep1->isDynamic());
     ASSERT_EQ(ep1->getDynamicId(), 1);
+}
+
+/**
+ * Tests whether plan serialization works fine for multiple entrypoint plans
+ */
+TEST_F(AlicaDynamicTaskPlanTest, serializeMultipleEntryPoint)
+{
+    // Make agents enter dynamic tasks
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+    enableTransitionConditionToTogetherPlan(1);
+    stepAgents();
+    enableTransitionConditionToTogetherPlan(2);
+    stepAgents();
+
+    // Verify the simple plan tree serialization
+    IdGrp plan_trees[getAgentCount()];
+    for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
+
+        const RunningPlan* rpRoot = aes[agent_index]->getPlanBase().getRootNode();
+        ASSERT_TRUE(rpRoot);
+
+        // Build current Plan Tree
+        IdGrp msg_to_send;
+        int deepestNode = 0;
+        int treeDepth = 0;
+        rpRoot->toMessage(msg_to_send, rpRoot, deepestNode, treeDepth);
+        plan_trees[agent_index] = msg_to_send;
+    }
+    std::vector<int64_t> expectedTree0 = {
+            0, 3235149896384117046, 11, 2564904534754645793, 2, 1633421497783210879, 3, 2765772942388464345, 0, 3534468625273851172, -1, -1, -1, -1, -1};
+    std::vector<int64_t> expectedTree1 = {0, 3235149896384117046, 22, 2362235348110947949, 1, 2800951832651805821, -1, -1, -1};
+    ASSERT_EQ(plan_trees[0], expectedTree0);
+    ASSERT_EQ(plan_trees[1], expectedTree1);
 }
 
 } // namespace

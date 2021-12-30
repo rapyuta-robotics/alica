@@ -6,12 +6,12 @@
       "id": 3150793708487666867,
       "isDynamic": true,
       "maxCardinality": 2147483647,
-      "minCardinality": 2,
+      "minCardinality": 0,
       "name": "",
       "plan": 2252865124432942907,
       "positionWeb": {
         "x": 200,
-        "y": 212
+        "y": 212.61958041958042
       },
       "state": 2800951832651805821,
       "successRequired": false,
