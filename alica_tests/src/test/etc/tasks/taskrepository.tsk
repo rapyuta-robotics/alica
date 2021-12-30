@@ -399,6 +399,18 @@
       "id": 3903894018484081749,
       "name": "DynamicTaskTestEP",
       "taskRepository": 1226672409680
+    },
+    {
+      "comment": "",
+      "id": 4026821563126910189,
+      "name": "DynamicTaskForAttacker",
+      "taskRepository": 1226672409680
+    },
+    {
+      "comment": "",
+      "id": 4028411332434222682,
+      "name": "DynamicTaskForDefender",
+      "taskRepository": 1226672409680
     }
   ]
 }

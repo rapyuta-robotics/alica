@@ -3,6 +3,8 @@
 namespace alicaTests
 {
 
+int TestWorldModel::_curAgentNo;
+
 TestWorldModel* TestWorldModel::getOne()
 {
     static TestWorldModel instance;
@@ -223,6 +225,16 @@ bool TestWorldModel::isTransitionCondition4496654201854254411() const
 void TestWorldModel::setTransitionCondition4496654201854254411(bool new_val)
 {
     this->transitionCondition4496654201854254411 = new_val;
+}
+
+bool TestWorldModel::isTransitionCondition3126176581533900616() const
+{
+    return transitionCondition3126176581533900616;
+}
+
+void TestWorldModel::setTransitionCondition3126176581533900616(bool val)
+{
+    transitionCondition3126176581533900616 = val;
 }
 
 bool TestWorldModel::isPreCondition1840401110297459509()

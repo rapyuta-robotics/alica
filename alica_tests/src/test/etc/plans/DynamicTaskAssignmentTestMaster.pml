@@ -31,17 +31,17 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "DynamicTaskAssignmentTest.pml#2252865124432942907",
-          "comment": "",
-          "configuration": null,
-          "id": 3876183027210268413,
-          "name": ""
-        },
-        {
           "abstractPlan": "DynamicTaskLA.pml#3337489358878214836",
           "comment": "",
           "configuration": null,
           "id": 1297767483691202648,
+          "name": ""
+        },
+        {
+          "abstractPlan": "DynamicTaskAssignmentTest.pml#2252865124432942907",
+          "comment": "",
+          "configuration": null,
+          "id": 3876183027210268413,
           "name": ""
         }
       ],
@@ -68,7 +68,8 @@
       "entryPoint": null,
       "id": 1317277234576050904,
       "inTransitions": [
-        3712615202042019043
+        3712615202042019043,
+        1967586736681651770
       ],
       "name": "Finish",
       "outTransitions": [],
@@ -88,12 +89,41 @@
       "inTransitions": [],
       "name": "Init",
       "outTransitions": [
-        4266666033623620026
+        4266666033623620026,
+        1127748231963620498
       ],
       "parentPlan": 1602078208698393838,
       "positionWeb": {
         "x": 428,
         "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "DynamicTaskTogether.pml#1338298120374694644",
+          "comment": "",
+          "configuration": null,
+          "id": 1811241250052311220,
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3235149896384117046,
+      "inTransitions": [
+        1127748231963620498
+      ],
+      "name": "",
+      "outTransitions": [
+        1967586736681651770
+      ],
+      "parentPlan": 1602078208698393838,
+      "positionWeb": {
+        "x": 692.8000000000001,
+        "y": 376.8
       },
       "type": "State",
       "variableBindings": []
@@ -133,6 +163,44 @@
         "enabled": true,
         "id": 4496654201854254411,
         "name": "InitDone",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 1127748231963620498,
+      "inState": 4467904887554008050,
+      "name": "",
+      "outState": 3235149896384117046,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3126176581533900616,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 1967586736681651770,
+      "inState": 3235149896384117046,
+      "name": "",
+      "outState": 1317277234576050904,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2132248203469102498,
+        "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

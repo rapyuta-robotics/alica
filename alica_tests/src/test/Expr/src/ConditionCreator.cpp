@@ -35,6 +35,7 @@
 #include "DynamicTaskLA3337489358878214836.h"
 #include "DynamicTaskLB4316676367342780557.h"
 #include "DynamicTaskLC2140075868731779222.h"
+#include "DynamicTaskTogether1338298120374694644.h"
 #include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
@@ -303,8 +304,14 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1943478533524176732:
         return std::make_shared<PreCondition1943478533524176732>();
         break;
+    case 2132248203469102498:
+        return std::make_shared<PreCondition2132248203469102498>();
+        break;
     case 2915681556800498724:
         return std::make_shared<PreCondition2915681556800498724>();
+        break;
+    case 3126176581533900616:
+        return std::make_shared<PreCondition3126176581533900616>();
         break;
     case 3213510506830850443:
         return std::make_shared<PreCondition3213510506830850443>();

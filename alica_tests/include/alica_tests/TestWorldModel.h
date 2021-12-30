@@ -53,6 +53,8 @@ public:
     // DynamicTaskAssignment transitions
     bool isTransitionCondition4496654201854254411() const;
     void setTransitionCondition4496654201854254411(bool new_val);
+    bool isTransitionCondition3126176581533900616() const;
+    void setTransitionCondition3126176581533900616(bool val);
 
     bool isPreCondition1418042929966() const;
     void setPreCondition1418042929966(bool preCondition1418042929966);
@@ -80,6 +82,9 @@ public:
     bool serializationTestD;
 
     void reset();
+
+    static void curAgent(int agentNo) { _curAgentNo = agentNo; };
+    static int getCurAgent() { return _curAgentNo; }
 
 private:
     bool transitionCondition1413201227586;
@@ -115,8 +120,11 @@ private:
 
     // DynamicTaskAssignment transitions
     bool transitionCondition4496654201854254411;
+    bool transitionCondition3126176581533900616;
 
     bool switchEntryPoints;
+
+    static int _curAgentNo;
 };
 
 } // namespace alicaTests

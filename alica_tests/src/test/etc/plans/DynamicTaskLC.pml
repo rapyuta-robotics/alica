@@ -45,7 +45,7 @@
       "outTransitions": [],
       "parentPlan": 2140075868731779222,
       "positionWeb": {
-        "x": 688,
+        "x": 688.5221238938053,
         "y": 395
       },
       "type": "State",
