@@ -16,6 +16,7 @@
 #include "engine/Types.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/ConfigPathParser.h"
+#include "engine/syncmodule/SyncModule.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -435,7 +436,11 @@ void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
+    _communicator = std::make_unique<CommunicatorType>(
+        _engine.get(),
+        std::bind(&SyncModule::onSyncTalk, _engine.get()->editSyncModul(), std::placeholders::_1),
+        std::forward<Args>(args)...
+    );
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
 #endif

@@ -38,8 +38,8 @@ const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 } // namespace
 
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, ros::CallbackQueue& cb_queue)
-        : IAlicaCommunication(ae)
+AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler, ros::CallbackQueue& cb_queue)
+        : IAlicaCommunication(ae, onSyncTalkHandler)
         , _callbackQueue(cb_queue)
 {
     _isRunning = false;

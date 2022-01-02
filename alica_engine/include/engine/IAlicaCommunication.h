@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <functional>
 
 namespace alica
 {
@@ -20,8 +21,10 @@ class RoleSwitch;
 class IAlicaCommunication
 {
 public:
-    IAlicaCommunication(AlicaEngine* ae)
-            : ae(ae){};
+    IAlicaCommunication(AlicaEngine* ae, std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler)
+            : ae(ae)
+            , _onSyncTalkHandler(onSyncTalkHandler)
+    {};
     virtual ~IAlicaCommunication() {}
 
     virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const = 0;
@@ -50,6 +53,7 @@ public:
 
 protected:
     AlicaEngine* ae;
+    std::function<void(std::shared_ptr<SyncTalk>)> _onSyncTalkHandler;
 };
 
 } /* namespace alica */

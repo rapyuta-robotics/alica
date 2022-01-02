@@ -18,7 +18,7 @@ namespace alica
 {
 void IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {
-    ae->editSyncModul().onSyncTalk(st);
+    _onSyncTalkHandler(st);
 }
 
 void IAlicaCommunication::onSyncReadyReceived(shared_ptr<SyncReady> sr)
