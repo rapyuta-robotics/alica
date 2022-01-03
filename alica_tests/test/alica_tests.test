@@ -3,7 +3,7 @@
     <arg name="launch_prefix" value="xterm -fa 'Monospace' -fs 14 -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
     <arg name="time_limit"    value="100000" if="$(arg use_gdb)" />
-    <arg name="time_limit"    value="300" unless="$(arg use_gdb)" />
+    <arg name="time_limit"    value="600" unless="$(arg use_gdb)" />
 
     <!-- In order to make gdb forward all exceptions, including stack-traces, to you, you need
          to type 'run <minus><minus>gtest_catch_exceptions=0' in the window, that pops up. Otherwise, just
