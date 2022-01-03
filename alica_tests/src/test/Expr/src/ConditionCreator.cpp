@@ -1,4 +1,6 @@
 #include "ConditionCreator.h"
+#include "AdjacentSuccessMasterPlan3254486013443203397.h"
+#include "AdjacentSuccessSubPlan1682631238618360548.h"
 #include "AttackPlan1402488634525.h"
 #include "Authority/AuthorityTest1414403413451.h"
 #include "Authority/AuthorityTestMaster1414403396328.h"
@@ -297,6 +299,17 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1693256954385338259:
         return std::make_shared<PreCondition1693256954385338259>();
+    case 289358204208851392:
+        return std::make_shared<PreCondition289358204208851392>();
+        break;
+    case 597347780541336226:
+        return std::make_shared<PreCondition597347780541336226>();
+        break;
+    case 807250359520655888:
+        return std::make_shared<PreCondition807250359520655888>();
+        break;
+    case 1067314038887345208:
+        return std::make_shared<PreCondition1067314038887345208>();
         break;
     case 1840401110297459509:
         return std::make_shared<PreCondition1840401110297459509>();
