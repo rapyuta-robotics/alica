@@ -120,23 +120,7 @@ private:
     std::shared_ptr<Impl> _impl;
 };
 
-template <class CallbackQ>
-class ThreadPoolRos
-{
-public:
-    ThreadPoolRos(CallbackQ& cbQ, uint32_t numThreads)
-            : _asyncSpinner(numThreads, std::addressof(cbQ))
-    {
-    }
-
-    void start() { _asyncSpinner.start(); }
-    void stop() { _asyncSpinner.stop(); }
-
-private:
-    ros::AsyncSpinner _asyncSpinner;
-};
-
-template <template <class> class Timer, class CallbackQ, template <class> class ThreadPool>
+template <template <class> class Timer, class CallbackQ>
 class TimerFactory : public alica::IAlicaTimerFactory
 {
     using TimerCb = typename Timer<CallbackQ>::TimerCb;
@@ -144,11 +128,9 @@ class TimerFactory : public alica::IAlicaTimerFactory
 public:
     using TimerType = Timer<CallbackQ>;
 
-    TimerFactory(uint32_t numThreads)
-            : _cbQ()
-            , _threadPool(_cbQ, numThreads)
+    TimerFactory(CallbackQ& callback_queue = *ros::getGlobalCallbackQueue())
+            : _cbQ(callback_queue)
     {
-        _threadPool.start();
     }
 
     TimerFactory(const TimerFactory&) = delete;
@@ -166,10 +148,9 @@ public:
     }
 
 private:
-    CallbackQ _cbQ;
-    ThreadPool<CallbackQ> _threadPool;
+    CallbackQ& _cbQ;
 };
 
-using AlicaRosTimerFactory = TimerFactory<SyncStopTimerRos, ros::CallbackQueue, ThreadPoolRos>;
+using AlicaRosTimerFactory = TimerFactory<SyncStopTimerRos, ros::CallbackQueue>;
 
 } // namespace alicaRosTimer

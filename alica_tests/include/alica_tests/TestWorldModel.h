@@ -61,8 +61,14 @@ public:
     bool isRuntimeCondition1418042967134() const;
     void setRuntimeCondition1418042967134(bool runtimeCondition1418042967134);
 
+    // Adjacent plans success test transitions
+    bool isTransitionCondition1747408236004727286() const;
+    void setTransitionCondition1747408236004727286(bool transitionCondition1747408236004727286);
+    bool isTransitionCondition1067314038887345208() const;
+    void setTransitionCondition1067314038887345208(bool transitionCondition1067314038887345208);
+
     // Test Tracing MasterPlan
-    bool isPreCondition1840401110297459509();
+    bool isPreCondition1840401110297459509() const;
     void setPreCondition1840401110297459509(bool preCondition1840401110297459509);
 
     bool isSwitchingEntryPoints() const;
@@ -121,6 +127,9 @@ private:
     // DynamicTaskAssignment transitions
     bool transitionCondition4496654201854254411;
     bool transitionCondition3126176581533900616;
+    // Adjacent plans success test
+    bool transitionCondition1747408236004727286;
+    bool transitionCondition1067314038887345208;
 
     bool switchEntryPoints;
 

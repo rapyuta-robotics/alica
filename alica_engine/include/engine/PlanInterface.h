@@ -90,6 +90,8 @@ public:
 
     const AbstractPlan* getActivePlan() const;
 
+    bool isValid() const { return _rp != nullptr; }
+
 private:
     const RunningPlan* _rp;
 };
