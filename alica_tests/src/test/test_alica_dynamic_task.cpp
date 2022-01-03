@@ -259,5 +259,75 @@ TEST_F(AlicaDynamicTaskPlanTest, serializeMultipleEntryPoint)
     ASSERT_EQ(plan_trees[1], expectedTree1);
 }
 
+/**
+ * Tests whether plan deserialization works fine
+ */
+TEST_F(AlicaDynamicTaskPlanTest, deserializeMultiTask)
+{
+    // Make agents enter dynamic tasks
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+    enableTransitionConditionToTogetherPlan(1);
+    stepAgents();
+    enableTransitionConditionToTogetherPlan(2);
+    stepAgents();
+
+    // agentId: 0 -> nase (defender), 1 -> hairy (attacker)
+    auto defId = acs[0]->getLocalAgentId();
+    auto attId = acs[1]->getLocalAgentId();
+
+    const auto& defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment();
+    const auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment();
+
+    auto defEpId = 2665027307523422046;
+    auto defDynamicEpId = 11;
+    auto defStateId = 2564904534754645793;
+    auto attEpId = 2633712961224790694;
+    auto attDynamicEpId = 22;
+    auto attStateId = 2362235348110947949;
+
+    auto epOfAttAsPerDef = defAssignment.getEntryPointOfAgent(attId);
+    ASSERT_TRUE(epOfAttAsPerDef);
+    ASSERT_EQ(epOfAttAsPerDef->getId(), attEpId);
+    ASSERT_TRUE(epOfAttAsPerDef->isDynamic());
+    ASSERT_EQ(epOfAttAsPerDef->getDynamicId(), attDynamicEpId);
+
+    auto epOfDefAsPerAtt = attAssignment.getEntryPointOfAgent(defId);
+    ASSERT_TRUE(epOfDefAsPerAtt);
+    ASSERT_EQ(epOfDefAsPerAtt->getId(), defEpId);
+    ASSERT_TRUE(epOfDefAsPerAtt->isDynamic());
+    ASSERT_EQ(epOfDefAsPerAtt->getDynamicId(), defDynamicEpId);
+
+    auto epOfDefAsPerDef = defAssignment.getEntryPointOfAgent(defId);
+    ASSERT_TRUE(epOfDefAsPerDef);
+    ASSERT_EQ(epOfDefAsPerDef->getId(), defEpId);
+    ASSERT_TRUE(epOfDefAsPerDef->isDynamic());
+    ASSERT_EQ(epOfDefAsPerDef->getDynamicId(), defDynamicEpId);
+
+    auto epOfAttAsPerAtt = attAssignment.getEntryPointOfAgent(attId);
+    ASSERT_TRUE(epOfAttAsPerAtt);
+    ASSERT_EQ(epOfAttAsPerAtt->getId(), attEpId);
+    ASSERT_TRUE(epOfAttAsPerAtt->isDynamic());
+    ASSERT_EQ(epOfAttAsPerAtt->getDynamicId(), attDynamicEpId);
+
+    auto stateOfAttAsPerDef = defAssignment.getStateOfAgent(attId);
+    ASSERT_TRUE(stateOfAttAsPerDef);
+    ASSERT_EQ(stateOfAttAsPerDef->getId(), attStateId);
+
+    auto stateOfDefAsPerAtt = attAssignment.getStateOfAgent(defId);
+    ASSERT_TRUE(stateOfDefAsPerAtt);
+    ASSERT_EQ(stateOfDefAsPerAtt->getId(), defStateId);
+
+    auto stateOfDefAsPerDef = defAssignment.getStateOfAgent(defId);
+    ASSERT_TRUE(stateOfDefAsPerDef);
+    ASSERT_EQ(stateOfDefAsPerDef->getId(), defStateId);
+
+    auto stateOfAttAsPerAtt = attAssignment.getStateOfAgent(attId);
+    ASSERT_TRUE(stateOfAttAsPerAtt);
+    ASSERT_EQ(stateOfAttAsPerAtt->getId(), attStateId);
+}
+
 } // namespace
 } // namespace alica
