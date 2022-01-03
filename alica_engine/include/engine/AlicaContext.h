@@ -17,6 +17,10 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/ConfigPathParser.h"
 #include "engine/syncmodule/SyncModule.h"
+#include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/TeamObserver.h"
+#include "engine/teammanager/TeamManager.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -437,8 +441,13 @@ void AlicaContext::setCommunicator(Args&&... args)
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _communicator = std::make_unique<CommunicatorType>(
-        _engine.get(),
         std::bind(&SyncModule::onSyncTalk, _engine.get()->editSyncModul(), std::placeholders::_1),
+        std::bind(&SyncModule::onSyncReady, _engine.get()->editSyncModul(), std::placeholders::_1),
+        std::bind(&AuthorityManager::handleIncomingAuthorityMessage, _engine.get()->editAuth(), std::placeholders::_1),
+        std::bind(&TeamObserver::handlePlanTreeInfo, _engine.get()->editTeamObserver(), std::placeholders::_1),
+        std::bind(&VariableSyncModule::onSolverResult, _engine.get()->editResultStore(), std::placeholders::_1),
+        std::bind(&TeamManager::handleAgentQuery, _engine.get()->getTeamManager(), std::placeholders::_1),
+        std::bind(&TeamManager::handleAgentAnnouncement, _engine.get()->editTeamManager(), std::placeholders::_1),
         std::forward<Args>(args)...
     );
 #else

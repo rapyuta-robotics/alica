@@ -23,31 +23,31 @@ void IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 
 void IAlicaCommunication::onSyncReadyReceived(shared_ptr<SyncReady> sr)
 {
-    ae->editSyncModul().onSyncReady(sr);
+    _onSyncReadyHandler(sr);
 }
 
 void IAlicaCommunication::onAuthorityInfoReceived(const AllocationAuthorityInfo& aai)
 {
-    ae->editAuth().handleIncomingAuthorityMessage(aai);
+    _incomingAuthorityMessageHandler(aai);
 }
 
 void IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti)
 {
-    ae->editTeamObserver().handlePlanTreeInfo(pti);
+    _planTreeInfohandler(pti);
 }
 
 void IAlicaCommunication::onSolverResult(const SolverResult& sr)
 {
-    ae->editResultStore().onSolverResult(sr);
+    _onSolverResultHandler(sr);
 }
 
 void IAlicaCommunication::onAgentQuery(const AgentQuery& pq)
 {
-    ae->getTeamManager().handleAgentQuery(pq);
+    _agentQueryHandler(pq);
 }
 
 void IAlicaCommunication::onAgentAnnouncement(const AgentAnnouncement& pa)
 {
-    ae->editTeamManager().handleAgentAnnouncement(pa);
+    _agentAnnouncementHandler(pa);
 }
 } // namespace alica

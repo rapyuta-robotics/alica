@@ -1,5 +1,5 @@
+#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
-
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/TeamObserver.h"

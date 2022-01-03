@@ -38,8 +38,24 @@ const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 } // namespace
 
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler, ros::CallbackQueue& cb_queue)
-        : IAlicaCommunication(ae, onSyncTalkHandler)
+AlicaRosCommunication::AlicaRosCommunication(
+    std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler,
+    std::function<void(std::shared_ptr<SyncReady>)> onSyncReadyHandler,
+    std::function<void(const AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
+    std::function<void(std::shared_ptr<PlanTreeInfo>)> planTreeInfohandler,
+    std::function<void(const SolverResult&)> onSolverResultHandler,
+    std::function<void(const AgentQuery&)> agentQueryHandler,
+    std::function<void(const AgentAnnouncement&)> agentAnnouncementHandler,
+    ros::CallbackQueue& cb_queue
+)
+        : IAlicaCommunication(
+            onSyncTalkHandler,
+            onSyncReadyHandler,
+            incomingAuthorityMessageHandler,
+            planTreeInfohandler,
+            onSolverResultHandler,
+            agentQueryHandler,
+            agentAnnouncementHandler)
         , _callbackQueue(cb_queue)
 {
     _isRunning = false;
@@ -162,8 +178,7 @@ void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    auto agentID = ae->getTeamManager().getLocalAgentID();
-    rss.sender_id = agentID;
+    rss.sender_id = rs.senderID;
 
     if (_isRunning) {
         _roleSwitchPublisher.publish(rss);

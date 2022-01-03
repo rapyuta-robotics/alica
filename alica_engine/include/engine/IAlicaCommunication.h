@@ -21,9 +21,22 @@ class RoleSwitch;
 class IAlicaCommunication
 {
 public:
-    IAlicaCommunication(AlicaEngine* ae, std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler)
-            : ae(ae)
-            , _onSyncTalkHandler(onSyncTalkHandler)
+    IAlicaCommunication(
+        std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler,
+        std::function<void(std::shared_ptr<SyncReady>)> onSyncReadyHandler,
+        std::function<void(const AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
+        std::function<void(std::shared_ptr<PlanTreeInfo>)> planTreeInfohandler,
+        std::function<void(const SolverResult&)> onSolverResultHandler,
+        std::function<void(const AgentQuery&)> agentQueryHandler,
+        std::function<void(const AgentAnnouncement&)> agentAnnouncementHandler
+    )
+            : _onSyncTalkHandler(onSyncTalkHandler)
+            , _onSyncReadyHandler(onSyncReadyHandler)
+            , _incomingAuthorityMessageHandler(incomingAuthorityMessageHandler)
+            , _planTreeInfohandler(planTreeInfohandler)
+            , _onSolverResultHandler(onSolverResultHandler)
+            , _agentQueryHandler(agentQueryHandler)
+            , _agentAnnouncementHandler(agentAnnouncementHandler)
     {};
     virtual ~IAlicaCommunication() {}
 
@@ -52,8 +65,13 @@ public:
     virtual void stopCommunication() = 0;
 
 protected:
-    AlicaEngine* ae;
     std::function<void(std::shared_ptr<SyncTalk>)> _onSyncTalkHandler;
+    std::function<void(std::shared_ptr<SyncReady>)> _onSyncReadyHandler;
+    std::function<void(const AllocationAuthorityInfo&)> _incomingAuthorityMessageHandler;
+    std::function<void(std::shared_ptr<PlanTreeInfo>)> _planTreeInfohandler;
+    std::function<void(const SolverResult&)> _onSolverResultHandler;
+    std::function<void(const AgentQuery&)> _agentQueryHandler;
+    std::function<void(const AgentAnnouncement&)> _agentAnnouncementHandler;
 };
 
 } /* namespace alica */
