@@ -8,6 +8,7 @@
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "ProblemModule",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": [
     {
