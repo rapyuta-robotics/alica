@@ -214,6 +214,7 @@ void AlicaRosCommunication::sendSolverResult(const SolverResult& sr) const
         alica_msgs::SolverVar svs;
         svs.id = sv.id;
         svs.value = sv.value;
+        srs.vars.push_back(std::move(svs));
     }
 
     if (_isRunning) {
