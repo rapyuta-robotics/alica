@@ -13,13 +13,8 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IPlanCreator.h"
 #include "engine/IUtilityCreator.h"
-#include "engine/TeamObserver.h"
 #include "engine/Types.h"
-#include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/constraintmodul/ISolver.h"
-#include "engine/constraintmodul/VariableSyncModule.h"
-#include "engine/syncmodule/SyncModule.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/util/ConfigPathParser.h"
 
 #include <alica_common_config/debug_output.h>
@@ -37,6 +32,13 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
+struct SyncTalk;
+struct SyncReady;
+struct AllocationAuthorityInfo;
+struct PlanTreeInfo;
+struct SolverResult;
+struct AgentQuery;
+struct AgentAnnouncement;
 
 namespace test
 {
@@ -422,6 +424,17 @@ private:
      * @note Is called when setOption or setOptions is successfully called.
      */
     void reloadConfig();
+
+    /*
+    Communication Handlers
+    */
+    void handleOnSyncTalk(std::shared_ptr<SyncTalk> st);
+    void handleOnSyncReady(std::shared_ptr<SyncReady> sr);
+    void handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai);
+    void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> st);
+    void handleOnSolverResult(const SolverResult& sr);
+    void handleAgentQuery(const AgentQuery& pq);
+    void handleAgentAnnouncement(const AgentAnnouncement& pa);
 };
 
 template <class ClockType, class... Args>
@@ -440,13 +453,13 @@ void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _communicator = std::make_unique<CommunicatorType>(std::bind(&SyncModule::onSyncTalk, _engine.get()->editSyncModul(), std::placeholders::_1),
-            std::bind(&SyncModule::onSyncReady, _engine.get()->editSyncModul(), std::placeholders::_1),
-            std::bind(&AuthorityManager::handleIncomingAuthorityMessage, _engine.get()->editAuth(), std::placeholders::_1),
-            std::bind(&TeamObserver::handlePlanTreeInfo, _engine.get()->editTeamObserver(), std::placeholders::_1),
-            std::bind(&VariableSyncModule::onSolverResult, _engine.get()->editResultStore(), std::placeholders::_1),
-            std::bind(&TeamManager::handleAgentQuery, _engine.get()->getTeamManager(), std::placeholders::_1),
-            std::bind(&TeamManager::handleAgentAnnouncement, _engine.get()->editTeamManager(), std::placeholders::_1), std::forward<Args>(args)...);
+    _communicator = std::make_unique<CommunicatorType>(std::bind(&AlicaContext::handleOnSyncTalk, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleOnSyncReady, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleIncomingAuthorityMessage, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handlePlanTreeInfo, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleOnSolverResult, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleAgentQuery, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleAgentAnnouncement, this, std::placeholders::_1), std::forward<Args>(args)...);
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
 #endif

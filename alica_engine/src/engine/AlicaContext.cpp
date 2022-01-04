@@ -124,4 +124,39 @@ void AlicaContext::reloadConfig()
     _engine->reloadConfig(_configRootNode);
 }
 
+void AlicaContext::handleOnSyncTalk(std::shared_ptr<SyncTalk> st)
+{
+    _engine.get()->editSyncModul().onSyncTalk(st);
+}
+
+void AlicaContext::handleOnSyncReady(std::shared_ptr<SyncReady> sr)
+{
+    _engine.get()->editSyncModul().onSyncReady(sr);
+}
+
+void AlicaContext::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
+{
+    _engine.get()->editAuth().handleIncomingAuthorityMessage(aai);
+}
+
+void AlicaContext::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> st)
+{
+    _engine.get()->editTeamObserver().handlePlanTreeInfo(st);
+}
+
+void AlicaContext::handleOnSolverResult(const SolverResult& sr)
+{
+    _engine.get()->editResultStore().onSolverResult(sr);
+}
+
+void AlicaContext::handleAgentQuery(const AgentQuery& pq)
+{
+    _engine.get()->getTeamManager().handleAgentQuery(pq);
+}
+
+void AlicaContext::handleAgentAnnouncement(const AgentAnnouncement& pa)
+{
+    _engine.get()->editTeamManager().handleAgentAnnouncement(pa);
+}
+
 } // namespace alica
