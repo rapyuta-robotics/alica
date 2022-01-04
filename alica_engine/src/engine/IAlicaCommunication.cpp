@@ -1,14 +1,4 @@
 #include "engine/IAlicaCommunication.h"
-#include <engine/syncmodule/SyncModule.h>
-
-#include "engine/AlicaEngine.h"
-#include "engine/TeamObserver.h"
-#include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/constraintmodul/VariableSyncModule.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/SyncReady.h"
-#include "engine/containers/SyncTalk.h"
-#include "engine/teammanager/TeamManager.h"
 
 #include <iostream>
 
