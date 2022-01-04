@@ -1,5 +1,6 @@
 #pragma once
 //#define RS_DEBUG
+#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 
@@ -7,7 +8,6 @@
 
 #include <memory>
 #include <vector>
-#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
