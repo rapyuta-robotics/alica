@@ -11,7 +11,12 @@ struct Queues;
 class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaDummyCommunication(alica::AlicaEngine* ae);
+    AlicaDummyCommunication(std::function<void(std::shared_ptr<alica::SyncTalk>)> onSyncTalkHandler,
+            std::function<void(std::shared_ptr<alica::SyncReady>)> onSyncReadyHandler,
+            std::function<void(const alica::AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
+            std::function<void(std::shared_ptr<alica::PlanTreeInfo>)> planTreeInfohandler,
+            std::function<void(const alica::SolverResult&)> onSolverResultHandler, std::function<void(const alica::AgentQuery&)> agentQueryHandler,
+            std::function<void(const alica::AgentAnnouncement&)> agentAnnouncementHandler);
     virtual ~AlicaDummyCommunication();
 
     void tick() override;
@@ -28,7 +33,6 @@ public:
 
     void startCommunication() override;
     void stopCommunication() override;
-    alica::AlicaEngine* getEngine() const { return ae; }
 
 private:
     bool _isRunning;
