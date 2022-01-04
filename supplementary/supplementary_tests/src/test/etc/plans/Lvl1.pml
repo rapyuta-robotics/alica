@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1524452759601,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -23,6 +24,7 @@
   "name": "Lvl1",
   "preCondition": null,
   "relativeDirectory": "VariableHandling",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "Lvl1 Runtime Condition",

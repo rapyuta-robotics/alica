@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1417423751089,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,10 +20,11 @@
   ],
   "frequency": 0,
   "id": 1417423751087,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "GSolverMaster",
   "preCondition": null,
   "relativeDirectory": "GSolver",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
