@@ -461,7 +461,13 @@ void AlicaContext::setCommunicator(Args&&... args)
             std::bind(&AlicaContext::handleAgentQuery, this, std::placeholders::_1),
             std::bind(&AlicaContext::handleAgentAnnouncement, this, std::placeholders::_1), std::forward<Args>(args)...);
 #else
-    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(std::bind(&AlicaContext::handleOnSyncTalk, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleOnSyncReady, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleIncomingAuthorityMessage, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handlePlanTreeInfo, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleOnSolverResult, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleAgentQuery, this, std::placeholders::_1),
+            std::bind(&AlicaContext::handleAgentAnnouncement, this, std::placeholders::_1), std::forward<Args>(args)...));
 #endif
 }
 
