@@ -1,6 +1,7 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Types.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <essentials/FileSystem.h>
 
