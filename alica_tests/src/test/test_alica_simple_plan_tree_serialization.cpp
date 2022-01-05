@@ -36,10 +36,13 @@ protected:
 
     void waitUntilPlan(long planId)
     {
-        alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
-        do {
-            ae->getAlicaClock().sleep(sleepTime);
-        } while (!alica::test::Util::isPlanActive(ae, planId));
+        // Wait 5 seconds max
+        for (int i = 0; i < 5; i++) {
+            ae->getAlicaClock().sleep(alica::AlicaTime::seconds(1));
+            if (alica::test::Util::isPlanActive(ae, planId)) {
+                break;
+            }
+        }
     }
 
     // Calls private methods inside TeamObserver
