@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1479556074051,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -23,6 +24,7 @@
   "name": "QueryPlan1",
   "preCondition": null,
   "relativeDirectory": "ProblemModule",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

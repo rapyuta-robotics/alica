@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1479556022228,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,10 +20,11 @@
   ],
   "frequency": 0,
   "id": 1479556022226,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "ProblemBuildingMaster",
   "preCondition": null,
   "relativeDirectory": "ProblemModule",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
