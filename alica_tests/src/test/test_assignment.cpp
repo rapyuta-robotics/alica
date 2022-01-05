@@ -21,8 +21,6 @@ using alica::State;
 
 TEST(Assignment, RobotsInserted)
 {
-    // TODO: fix up this test case
-    /*
     // determine the path to the test config
     ros::NodeHandle nh;
     std::string path;
@@ -36,7 +34,7 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(robot1 > robot2);
     ASSERT_TRUE(robot1 < robot3);
 
-    alica::AlicaContext* ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+    alica::AlicaContext* ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "SimpleTestPlan", true));
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
@@ -60,9 +58,9 @@ TEST(Assignment, RobotsInserted)
 
     // Check which agents are in which states (all three in State1)
     alica::AgentGrp robots;
-    as1.getAgentsInState(s2, robots);
+    as1.getAgentsInState(0, s2, robots);
     ASSERT_TRUE(robots.empty());
-    as1.getAgentsInState(s1, robots);
+    as1.getAgentsInState(0, s1, robots);
     ASSERT_EQ(robots.size(), 3u);
     ASSERT_EQ(robots[0], robot1);
     ASSERT_EQ(robots[1], robot2);
@@ -76,10 +74,9 @@ TEST(Assignment, RobotsInserted)
 
     // Check that only 2 agents are in State1 now
     int i = 0;
-    for (alica::AgentId id : as1.getAgentsInState(s1)) {
+    for (alica::AgentId id : as1.getAgentsInState(0, s1)) {
         EXPECT_TRUE(bool(id));
         ++i;
     }
     ASSERT_EQ(i, 2);
-    */
 }
