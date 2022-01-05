@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1417423777546,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -23,6 +24,7 @@
   "name": "GSolverTestPlan",
   "preCondition": null,
   "relativeDirectory": "GSolver",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",
