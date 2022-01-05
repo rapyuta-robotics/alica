@@ -218,6 +218,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
+    void computeContextHash();
     bool evalRuntimeCondition() const;
     // Status Information
     PlanStateTriple _activeTriple;

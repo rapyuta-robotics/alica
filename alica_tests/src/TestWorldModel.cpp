@@ -3,7 +3,7 @@
 namespace alicaTests
 {
 
-int TestWorldModel::_curAgentNo;
+std::atomic<int> TestWorldModel::_curAgentNo;
 
 TestWorldModel* TestWorldModel::getOne()
 {
@@ -46,6 +46,9 @@ void TestWorldModel::reset()
     preCondition1840401110297459509 = false;
 
     transitionCondition4496654201854254411 = false;
+    transitionCondition3126176581533900616 = false;
+
+    _curAgentNo = -1;
 
     x = 0;
     tracingLogs.clear();
@@ -225,6 +228,16 @@ bool TestWorldModel::isTransitionCondition4496654201854254411() const
 void TestWorldModel::setTransitionCondition4496654201854254411(bool new_val)
 {
     this->transitionCondition4496654201854254411 = new_val;
+}
+
+bool TestWorldModel::isTransitionCondition1078898265232036813() const
+{
+    return transitionCondition1078898265232036813;
+}
+
+void TestWorldModel::setTransitionCondition1078898265232036813(bool val)
+{
+    transitionCondition1078898265232036813 = val;
 }
 
 bool TestWorldModel::isTransitionCondition3126176581533900616() const

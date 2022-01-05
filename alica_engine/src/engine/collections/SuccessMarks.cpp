@@ -87,7 +87,7 @@ void SuccessMarks::markSuccessful(std::size_t parentContextHash, const EntryPoin
 }
 
 /**
- * Serialize to a vector of EntryPoint ids.
+ * Serialize to a vector of tuples: <parentContextHash, entrypoint id, dynamic entry point id>
  */
 std::vector<std::size_t> SuccessMarks::toMsg() const
 {

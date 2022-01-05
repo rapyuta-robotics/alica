@@ -11,6 +11,7 @@
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
 #include <engine/model/Task.h>
+#include <engine/util/HashFunctions.h>
 
 #include <gtest/gtest.h>
 
@@ -50,22 +51,42 @@ protected:
         }
     }
 
-    void enableTransitionCondition()
+    void enableTransitionConditionToStart(int agentIdx)
     {
-        // do we need to GetOne and GetTwo? :O
-        alicaTests::TestWorldModel::getOne()->setTransitionCondition4496654201854254411(true);
-        alicaTests::TestWorldModel::getTwo()->setTransitionCondition4496654201854254411(true);
+        if (agentIdx == 0) {
+            alicaTests::TestWorldModel::curAgent(acs[0]->getLocalAgentId());
+            alicaTests::TestWorldModel::getOne()->setTransitionCondition4496654201854254411(true);
+        } else if (agentIdx == 1) {
+            alicaTests::TestWorldModel::curAgent(acs[1]->getLocalAgentId());
+            alicaTests::TestWorldModel::getTwo()->setTransitionCondition4496654201854254411(true);
+        } else {
+            ASSERT_FALSE(true) << "Invalid agentIdx";
+        }
     }
 
-    void enableTransitionConditionToTogetherPlan(int agentNo)
+    void enableTransitionConditionToTogetherPlan(int agentIdx)
     {
-        if (agentNo == 1) {
-            alicaTests::TestWorldModel::curAgent(1);
+        if (agentIdx == 0) {
+            alicaTests::TestWorldModel::curAgent(acs[0]->getLocalAgentId());
             alicaTests::TestWorldModel::getOne()->setTransitionCondition3126176581533900616(true);
-        } else {
-            assert(agentNo == 2);
-            alicaTests::TestWorldModel::curAgent(2);
+        } else if (agentIdx == 1) {
+            alicaTests::TestWorldModel::curAgent(acs[1]->getLocalAgentId());
             alicaTests::TestWorldModel::getTwo()->setTransitionCondition3126176581533900616(true);
+        } else {
+            ASSERT_FALSE(true) << "Invalid agentIdx";
+        }
+    }
+
+    void enableTransitionConditionToSuccess(int agentIdx)
+    {
+        if (agentIdx == 0) {
+            alicaTests::TestWorldModel::curAgent(acs[0]->getLocalAgentId());
+            alicaTests::TestWorldModel::getOne()->setTransitionCondition1078898265232036813(true);
+        } else if (agentIdx == 1) {
+            alicaTests::TestWorldModel::curAgent(acs[1]->getLocalAgentId());
+            alicaTests::TestWorldModel::getTwo()->setTransitionCondition1078898265232036813(true);
+        } else {
+            ASSERT_FALSE(true) << "Invalid agentIdx";
         }
     }
 
@@ -115,7 +136,9 @@ TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
-    enableTransitionCondition();
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    enableTransitionConditionToStart(1);
     stepAgents();
 
     // Check that plan now has a dynamic EP
@@ -148,8 +171,11 @@ TEST_F(AlicaDynamicTaskPlanTest, runDynamicTasks)
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kMasterPlanInitStateId));
     }
 
-    enableTransitionCondition();
+    enableTransitionConditionToStart(0);
     stepAgents();
+    enableTransitionConditionToStart(1);
+    stepAgents();
+
     for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
         ASSERT_TRUE(alica::test::Util::isStateActive(aes[agent_index], kMasterPlanStartStateId));
         ASSERT_TRUE(alica::test::Util::isPlanActive(aes[agent_index], kDynamicTaskAssignmentPlanId));
@@ -172,7 +198,9 @@ TEST_F(AlicaDynamicTaskPlanTest, serialize)
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
-    enableTransitionCondition();
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    enableTransitionConditionToStart(1);
     stepAgents();
 
     // Verify the simple plan tree serialization
@@ -207,7 +235,9 @@ TEST_F(AlicaDynamicTaskPlanTest, deserialize)
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
-    enableTransitionCondition();
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    enableTransitionConditionToStart(1);
     stepAgents();
 
     auto ep0 = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->getAssignment().getEntryPointOfAgent(acs[0]->getLocalAgentId());
@@ -233,9 +263,9 @@ TEST_F(AlicaDynamicTaskPlanTest, serializeMultipleEntryPoint)
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
-    enableTransitionConditionToTogetherPlan(1);
+    enableTransitionConditionToTogetherPlan(0);
     stepAgents();
-    enableTransitionConditionToTogetherPlan(2);
+    enableTransitionConditionToTogetherPlan(1);
     stepAgents();
 
     // Verify the simple plan tree serialization
@@ -269,9 +299,9 @@ TEST_F(AlicaDynamicTaskPlanTest, deserializeMultiTask)
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
-    enableTransitionConditionToTogetherPlan(1);
+    enableTransitionConditionToTogetherPlan(0);
     stepAgents();
-    enableTransitionConditionToTogetherPlan(2);
+    enableTransitionConditionToTogetherPlan(1);
     stepAgents();
 
     // agentId: 0 -> nase (defender), 1 -> hairy (attacker)
@@ -327,6 +357,62 @@ TEST_F(AlicaDynamicTaskPlanTest, deserializeMultiTask)
     auto stateOfAttAsPerAtt = attAssignment.getStateOfAgent(attId);
     ASSERT_TRUE(stateOfAttAsPerAtt);
     ASSERT_EQ(stateOfAttAsPerAtt->getId(), attStateId);
+}
+
+/**
+ * Tests whether the success marks are sent out correctly
+ */
+TEST_F(AlicaDynamicTaskPlanTest, successMarkOuput)
+{
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+
+    // Execute DynamicTaskAssignmentTestPlan in different branches
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
+
+    enableTransitionConditionToTogetherPlan(1);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
+
+    // Initially nothing has succeeded
+    auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    auto successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+
+    ASSERT_TRUE(successMarks0.empty());
+    ASSERT_TRUE(successMarks1.empty());
+
+    uint64_t epId = 3150793708487666867;
+    uint64_t epDynamicId = 1;
+
+    uint64_t naseParentDynamicEpId = 0;
+    uint64_t naseParentStateId = 751302000461175045;
+
+    // Nase succeeds
+    enableTransitionConditionToSuccess(0);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    decltype(successMarks0) expectedMarks0 = {
+            hashCombine(contextHash(0), hashCombine(contextHash(naseParentDynamicEpId), contextHash(naseParentStateId))), epId, epDynamicId};
+    ASSERT_EQ(successMarks0, expectedMarks0);
+
+    uint64_t hairyGrandParentDynamicEpId = naseParentDynamicEpId;
+    uint64_t hairyGrandParentStateId = 3235149896384117046;
+    uint64_t hairyParentDynamicEpId = 22;
+    uint64_t hairyParentStateId = 2362235348110947949;
+
+    // Hairy succeeds
+    enableTransitionConditionToSuccess(1);
+    stepAgents();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    decltype(successMarks1) expectedMarks1 = {
+            hashCombine(hashCombine(contextHash(0), hashCombine(contextHash(hairyGrandParentDynamicEpId), contextHash(hairyGrandParentStateId))),
+                    hashCombine(contextHash(hairyParentDynamicEpId), contextHash(hairyParentStateId))),
+            epId, epDynamicId};
+    ASSERT_EQ(successMarks1, expectedMarks1);
 }
 
 } // namespace
