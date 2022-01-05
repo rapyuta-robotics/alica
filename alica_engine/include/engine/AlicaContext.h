@@ -429,7 +429,7 @@ private:
     /*
      * Get communication Handlers
      */
-    AlicaCommunicationHandlers getCommunicationHandlers();
+    std::shared_ptr<AlicaCommunicationHandlers> getCommunicationHandlers();
 };
 
 template <class ClockType, class... Args>

@@ -32,7 +32,7 @@ struct AlicaCommunicationHandlers
 class IAlicaCommunication
 {
 public:
-    IAlicaCommunication(AlicaCommunicationHandlers callbacks)
+    IAlicaCommunication(std::shared_ptr<AlicaCommunicationHandlers> callbacks)
             : _callbacks(callbacks){};
     virtual ~IAlicaCommunication() {}
 
@@ -61,7 +61,7 @@ public:
     virtual void stopCommunication() = 0;
 
 protected:
-    AlicaCommunicationHandlers _callbacks;
+    std::shared_ptr<AlicaCommunicationHandlers> _callbacks;
 };
 
 } /* namespace alica */
