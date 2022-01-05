@@ -90,6 +90,17 @@ protected:
         }
     }
 
+    void enableTransitionConditionToFinish(int agentIdx)
+    {
+        if (agentIdx == 0) {
+            alicaTests::TestWorldModel::curAgent(acs[0]->getLocalAgentId());
+            alicaTests::TestWorldModel::getOne()->setTransitionCondition4344644064496100420(true);
+        } else {
+            alicaTests::TestWorldModel::curAgent(acs[1]->getLocalAgentId());
+            alicaTests::TestWorldModel::getTwo()->setTransitionCondition4344644064496100420(true);
+        }
+    }
+
     static void checkAlicaElement(const alica::AlicaElement* alicaElement, long id, std::string name)
     {
         EXPECT_EQ(id, alicaElement->getId());
@@ -413,6 +424,67 @@ TEST_F(AlicaDynamicTaskPlanTest, successMarkOuput)
                     hashCombine(contextHash(hairyParentDynamicEpId), contextHash(hairyParentStateId))),
             epId, epDynamicId};
     ASSERT_EQ(successMarks1, expectedMarks1);
+}
+
+/**
+ * Test
+ */
+TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlan)
+{
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+
+    // Execute DynamicTaskAssignmentTestPlan in different branches
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
+
+    enableTransitionConditionToTogetherPlan(1);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
+
+    // Initially nothing has succeeded
+    auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    auto successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+
+    ASSERT_TRUE(successMarks0.empty());
+    ASSERT_TRUE(successMarks1.empty());
+
+    // nase succeeds
+    enableTransitionConditionToSuccess(0);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    ASSERT_TRUE(successMarks1.empty());
+
+    // hairy succeeds
+    enableTransitionConditionToSuccess(1);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    EXPECT_GT(successMarks1.size(), 0u);
+
+    // nase transitions to finish, successmarks are maintained
+    enableTransitionConditionToFinish(0);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    EXPECT_GT(successMarks1.size(), 0u);
+
+    // hairy transitions to finish, successmarks are cleared
+    enableTransitionConditionToFinish(1);
+    stepAgents();
+    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
+
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    ASSERT_TRUE(successMarks0.empty());
+    ASSERT_TRUE(successMarks1.empty());
 }
 
 } // namespace
