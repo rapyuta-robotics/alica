@@ -213,13 +213,8 @@ typedef struct Queues
 CommModuleContainer AlicaDummyCommunication::s_modContainer;
 Queues AlicaDummyCommunication::s_qctx(s_modContainer);
 
-AlicaDummyCommunication::AlicaDummyCommunication(std::function<void(std::shared_ptr<alica::SyncTalk>)> onSyncTalkHandler,
-        std::function<void(std::shared_ptr<alica::SyncReady>)> onSyncReadyHandler,
-        std::function<void(const alica::AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
-        std::function<void(std::shared_ptr<alica::PlanTreeInfo>)> planTreeInfohandler, std::function<void(const alica::SolverResult&)> onSolverResultHandler,
-        std::function<void(const alica::AgentQuery&)> agentQueryHandler, std::function<void(const alica::AgentAnnouncement&)> agentAnnouncementHandler)
-        : alica::IAlicaCommunication(onSyncTalkHandler, onSyncReadyHandler, incomingAuthorityMessageHandler, planTreeInfohandler, onSolverResultHandler,
-                  agentQueryHandler, agentAnnouncementHandler)
+AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaCommunicationHandlers callbacks)
+        : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
     s_modContainer.registerModule(this);

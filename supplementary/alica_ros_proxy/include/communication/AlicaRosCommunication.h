@@ -23,11 +23,7 @@ namespace alicaRosProxy
 class AlicaRosCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaRosCommunication(std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler, std::function<void(std::shared_ptr<SyncReady>)> onSyncReadyHandler,
-            std::function<void(const AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
-            std::function<void(std::shared_ptr<PlanTreeInfo>)> planTreeInfohandler, std::function<void(const SolverResult&)> onSolverResultHandler,
-            std::function<void(const AgentQuery&)> agentQueryHandler, std::function<void(const AgentAnnouncement&)> agentAnnouncementHandler,
-            ros::CallbackQueue& cb_queue = *ros::getGlobalCallbackQueue());
+    AlicaRosCommunication(AlicaCommunicationHandlers callbacks, ros::CallbackQueue& cb_queue = *ros::getGlobalCallbackQueue());
     virtual ~AlicaRosCommunication();
 
     void tick();

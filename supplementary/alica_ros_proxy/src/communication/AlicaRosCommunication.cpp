@@ -38,13 +38,8 @@ const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 } // namespace
 
-AlicaRosCommunication::AlicaRosCommunication(std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler,
-        std::function<void(std::shared_ptr<SyncReady>)> onSyncReadyHandler, std::function<void(const AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
-        std::function<void(std::shared_ptr<PlanTreeInfo>)> planTreeInfohandler, std::function<void(const SolverResult&)> onSolverResultHandler,
-        std::function<void(const AgentQuery&)> agentQueryHandler, std::function<void(const AgentAnnouncement&)> agentAnnouncementHandler,
-        ros::CallbackQueue& cb_queue)
-        : IAlicaCommunication(onSyncTalkHandler, onSyncReadyHandler, incomingAuthorityMessageHandler, planTreeInfohandler, onSolverResultHandler,
-                  agentQueryHandler, agentAnnouncementHandler)
+AlicaRosCommunication::AlicaRosCommunication(AlicaCommunicationHandlers callbacks, ros::CallbackQueue& cb_queue)
+        : IAlicaCommunication(callbacks)
         , _callbackQueue(cb_queue)
 {
     _isRunning = false;

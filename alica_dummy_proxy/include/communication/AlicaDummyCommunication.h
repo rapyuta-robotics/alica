@@ -11,12 +11,7 @@ struct Queues;
 class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaDummyCommunication(std::function<void(std::shared_ptr<alica::SyncTalk>)> onSyncTalkHandler,
-            std::function<void(std::shared_ptr<alica::SyncReady>)> onSyncReadyHandler,
-            std::function<void(const alica::AllocationAuthorityInfo&)> incomingAuthorityMessageHandler,
-            std::function<void(std::shared_ptr<alica::PlanTreeInfo>)> planTreeInfohandler,
-            std::function<void(const alica::SolverResult&)> onSolverResultHandler, std::function<void(const alica::AgentQuery&)> agentQueryHandler,
-            std::function<void(const alica::AgentAnnouncement&)> agentAnnouncementHandler);
+    AlicaDummyCommunication(alica::AlicaCommunicationHandlers callbacks);
     virtual ~AlicaDummyCommunication();
 
     void tick() override;
