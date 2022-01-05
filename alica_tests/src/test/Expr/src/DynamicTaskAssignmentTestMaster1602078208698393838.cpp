@@ -82,11 +82,15 @@ bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
-    if (alicaTests::TestWorldModel::getCurAgent() == 1) {
+    if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
+        return false;
+    }
+    if (alicaTests::TestWorldModel::getCurAgent() == 9) {
         return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
-    } else {
+    } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
         return alicaTests::TestWorldModel::getTwo()->isTransitionCondition4496654201854254411();
     }
+    return false;
     /*PROTECTED REGION END*/
 }
 
@@ -107,7 +111,15 @@ bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition3126176581533900616::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1127748231963620498) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isTransitionCondition3126176581533900616();
+    if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
+        return false;
+    }
+    if (alicaTests::TestWorldModel::getCurAgent() == 9) {
+        return alicaTests::TestWorldModel::getOne()->isTransitionCondition3126176581533900616();
+    } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
+        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition3126176581533900616();
+    }
+    return false;
     /*PROTECTED REGION END*/
 }
 

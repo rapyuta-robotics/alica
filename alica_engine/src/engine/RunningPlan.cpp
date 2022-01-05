@@ -303,6 +303,8 @@ void RunningPlan::useEntryPoint(const EntryPoint* value)
         if (value != nullptr) {
             useState(value->getState());
             _assignment.addAgent(mid, _activeTriple.entryPoint, _activeTriple.state);
+        } else {
+            computeContextHash();
         }
     }
 }
@@ -313,6 +315,7 @@ void RunningPlan::useState(const State* s)
         ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
         _status.stateStartTime = _ae->getAlicaClock().now();
+        computeContextHash();
         if (s != nullptr) {
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
@@ -570,10 +573,8 @@ void RunningPlan::activate()
 
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
-        _contextHash = _parent->_contextHash;
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
-        _contextHash = contextHash(_parent ? _parent->_contextHash : contextHash(0), _activeTriple.entryPoint->getDynamicId(), _activeTriple.state->getId());
         _ae->editPlanPool().startPlan(*this);
     }
 
@@ -873,6 +874,18 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << std::endl << "CycleManagement - Assignment Overridden: " << (r._cycleManagement.isOverridden() ? "true" : "false") << std::endl;
     out << std::endl << "########## ENDRP ###########" << std::endl;
     return out;
+}
+
+void RunningPlan::computeContextHash()
+{
+    if (isBehaviour()) {
+        _contextHash = _parent->getContextHash();
+    } else if (!_activeTriple.entryPoint || !_activeTriple.state) {
+        _contextHash = 0;
+    } else {
+        _contextHash =
+                contextHash(_parent ? _parent->getContextHash() : contextHash(0), _activeTriple.entryPoint->getDynamicId(), _activeTriple.state->getId());
+    }
 }
 
 } /* namespace alica */

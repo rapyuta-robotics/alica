@@ -2,6 +2,7 @@
 
 #include <engine/IAlicaWorldModel.h>
 
+#include <atomic>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -55,6 +56,8 @@ public:
     void setTransitionCondition4496654201854254411(bool new_val);
     bool isTransitionCondition3126176581533900616() const;
     void setTransitionCondition3126176581533900616(bool val);
+    bool isTransitionCondition1078898265232036813() const;
+    void setTransitionCondition1078898265232036813(bool val);
 
     bool isPreCondition1418042929966() const;
     void setPreCondition1418042929966(bool preCondition1418042929966);
@@ -127,13 +130,14 @@ private:
     // DynamicTaskAssignment transitions
     bool transitionCondition4496654201854254411;
     bool transitionCondition3126176581533900616;
+    bool transitionCondition1078898265232036813;
     // Adjacent plans success test
     bool transitionCondition1747408236004727286;
     bool transitionCondition1067314038887345208;
 
     bool switchEntryPoints;
 
-    static int _curAgentNo;
+    static std::atomic<int> _curAgentNo;
 };
 
 } // namespace alicaTests
