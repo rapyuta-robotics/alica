@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/Types.h"
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -39,7 +41,7 @@ public:
     virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const = 0;
     virtual void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const = 0;
     virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const = 0;
-    virtual void sendRoleSwitch(const RoleSwitch& rs) const = 0;
+    virtual void sendRoleSwitch(const RoleSwitch& rs, const AgentId agentID) const = 0;
     virtual void sendSyncReady(const SyncReady& sr) const = 0;
     virtual void sendSyncTalk(const SyncTalk& st) const = 0;
     virtual void sendSolverResult(const SolverResult& sr) const = 0;

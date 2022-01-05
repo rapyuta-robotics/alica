@@ -157,12 +157,12 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
     }
 }
 
-void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
+void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs, const AgentId agentID) const
 {
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    rss.sender_id = rs.senderID;
+    rss.sender_id = agentID;
 
     if (_isRunning) {
         _roleSwitchPublisher.publish(rss);

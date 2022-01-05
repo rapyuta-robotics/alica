@@ -31,7 +31,7 @@ public:
     void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const override;
     void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const override;
     void sendPlanTreeInfo(const PlanTreeInfo& pti) const override;
-    void sendRoleSwitch(const RoleSwitch& rs) const override;
+    void sendRoleSwitch(const RoleSwitch& rs, const AgentId agentID) const override;
     void sendSyncReady(const SyncReady& sr) const override;
     void sendSyncTalk(const SyncTalk& st) const override;
     void sendSolverResult(const SolverResult& sr) const override;

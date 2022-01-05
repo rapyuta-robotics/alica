@@ -293,6 +293,6 @@ void AlicaDummyCommunication::stopCommunication()
 }
 
 void AlicaDummyCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInfo& /*ai*/) const {}
-void AlicaDummyCommunication::sendRoleSwitch(const alica::RoleSwitch& /*rs*/) const {}
+void AlicaDummyCommunication::sendRoleSwitch(const alica::RoleSwitch& /*rs*/, const alica::AgentId /*agentID*/) const {}
 
 } // namespace alicaDummyProxy
