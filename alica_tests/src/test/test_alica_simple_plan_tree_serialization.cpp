@@ -43,6 +43,7 @@ protected:
                 break;
             }
         }
+        ASSERT_TRUE(alica::test::Util::isPlanActive(ae, planId)) << "Agent is not in plan with id " << planId;
     }
 
     // Calls private methods inside TeamObserver
