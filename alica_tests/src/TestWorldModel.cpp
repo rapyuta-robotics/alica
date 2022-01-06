@@ -3,7 +3,7 @@
 namespace alicaTests
 {
 
-std::atomic<int> TestWorldModel::_curAgentNo;
+std::atomic<uint64_t> TestWorldModel::_curAgentNo;
 
 TestWorldModel* TestWorldModel::getOne()
 {
@@ -48,12 +48,17 @@ void TestWorldModel::reset()
     transitionCondition4496654201854254411 = false;
     transitionCondition3126176581533900616 = false;
 
-    _curAgentNo = -1;
+    _curAgentNo = 111111111111111;
 
     x = 0;
     tracingLogs.clear();
     tracingTags.clear();
     tracingParents.clear();
+
+    serializationTestA = false;
+    serializationTestB = false;
+    serializationTestC = false;
+    serializationTestD = false;
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586() const

@@ -93,8 +93,8 @@ public:
 
     void reset();
 
-    static void curAgent(int agentNo) { _curAgentNo = agentNo; };
-    static int getCurAgent() { return _curAgentNo; }
+    static void curAgent(uint64_t agentNo) { _curAgentNo = agentNo; };
+    static uint64_t getCurAgent() { return _curAgentNo; }
 
 private:
     bool transitionCondition1413201227586;
@@ -138,7 +138,7 @@ private:
 
     bool switchEntryPoints;
 
-    static std::atomic<int> _curAgentNo;
+    static std::atomic<uint64_t> _curAgentNo;
 };
 
 } // namespace alicaTests
