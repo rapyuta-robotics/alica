@@ -1,0 +1,14 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 831400441334251602,
+  "name": "TestParameterPassingBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "requiresParameters": true,
+  "runtimeCondition": null,
+  "variables": []
+}

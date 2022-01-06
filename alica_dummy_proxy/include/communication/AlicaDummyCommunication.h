@@ -11,7 +11,7 @@ struct Queues;
 class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaDummyCommunication(alica::AlicaEngine* ae);
+    AlicaDummyCommunication(const alica::AlicaCommunicationHandlers& callbacks);
     virtual ~AlicaDummyCommunication();
 
     void tick() override;
@@ -19,7 +19,7 @@ public:
     void sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const override;
     void sendAlicaEngineInfo(const alica::AlicaEngineInfo& bi) const override;
     void sendPlanTreeInfo(const alica::PlanTreeInfo& pti) const override;
-    void sendRoleSwitch(const alica::RoleSwitch& rs) const override;
+    void sendRoleSwitch(const alica::RoleSwitch& rs, alica::AgentId agentID) const override;
     void sendSyncReady(const alica::SyncReady& sr) const override;
     void sendSyncTalk(const alica::SyncTalk& st) const override;
     void sendSolverResult(const alica::SolverResult& sr) const override;
@@ -28,7 +28,6 @@ public:
 
     void startCommunication() override;
     void stopCommunication() override;
-    alica::AlicaEngine* getEngine() const { return ae; }
 
 private:
     bool _isRunning;

@@ -38,8 +38,8 @@ const std::string presenceQueryTopic = "/AlicaEngine/AgentQuery";
 const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 } // namespace
 
-AlicaRosCommunication::AlicaRosCommunication(AlicaEngine* ae, ros::CallbackQueue& cb_queue)
-        : IAlicaCommunication(ae)
+AlicaRosCommunication::AlicaRosCommunication(const AlicaCommunicationHandlers& callbacks, ros::CallbackQueue& cb_queue)
+        : IAlicaCommunication(callbacks)
         , _callbackQueue(cb_queue)
 {
     _isRunning = false;
@@ -152,12 +152,11 @@ void AlicaRosCommunication::sendPlanTreeInfo(const PlanTreeInfo& pti) const
     }
 }
 
-void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs) const
+void AlicaRosCommunication::sendRoleSwitch(const RoleSwitch& rs, AgentId agentID) const
 {
     alica_msgs::RoleSwitch rss;
 
     rss.role_id = rs.roleID;
-    auto agentID = ae->getTeamManager().getLocalAgentID();
     rss.sender_id = agentID;
 
     if (_isRunning) {

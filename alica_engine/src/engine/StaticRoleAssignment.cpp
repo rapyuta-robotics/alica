@@ -76,7 +76,7 @@ void StaticRoleAssignment::calculateRoles()
                     // TODO: fix this take context
                     RoleSwitch rs;
                     rs.roleID = role->getId();
-                    _ae->getCommunicator().sendRoleSwitch(rs);
+                    _ae->getCommunicator().sendRoleSwitch(rs, _ae->getTeamManager().getLocalAgentID());
                 }
                 roleIsAssigned = true;
                 break;

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "engine/Types.h"
+
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -17,17 +20,28 @@ struct AgentAnnouncement;
 class AlicaEngine;
 class RoleSwitch;
 
+struct AlicaCommunicationHandlers
+{
+    std::function<void(std::shared_ptr<SyncTalk>)> onSyncTalkHandler;
+    std::function<void(std::shared_ptr<SyncReady>)> onSyncReadyHandler;
+    std::function<void(const AllocationAuthorityInfo&)> incomingAuthorityMessageHandler;
+    std::function<void(std::shared_ptr<PlanTreeInfo>)> planTreeInfohandler;
+    std::function<void(const SolverResult&)> onSolverResultHandler;
+    std::function<void(const AgentQuery&)> agentQueryHandler;
+    std::function<void(const AgentAnnouncement&)> agentAnnouncementHandler;
+};
+
 class IAlicaCommunication
 {
 public:
-    IAlicaCommunication(AlicaEngine* ae)
-            : ae(ae){};
+    IAlicaCommunication(const AlicaCommunicationHandlers& callbacks)
+            : _callbacks(callbacks){};
     virtual ~IAlicaCommunication() {}
 
     virtual void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const = 0;
     virtual void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const = 0;
     virtual void sendPlanTreeInfo(const PlanTreeInfo& pti) const = 0;
-    virtual void sendRoleSwitch(const RoleSwitch& rs) const = 0;
+    virtual void sendRoleSwitch(const RoleSwitch& rs, AgentId agentID) const = 0;
     virtual void sendSyncReady(const SyncReady& sr) const = 0;
     virtual void sendSyncTalk(const SyncTalk& st) const = 0;
     virtual void sendSolverResult(const SolverResult& sr) const = 0;
@@ -49,7 +63,7 @@ public:
     virtual void stopCommunication() = 0;
 
 protected:
-    AlicaEngine* ae;
+    AlicaCommunicationHandlers _callbacks;
 };
 
 } /* namespace alica */

@@ -64,6 +64,8 @@
 #include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestParameterPassing1692837668719979457.h"
+#include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
 #include "TestTracingSubPlan1482512794732634139.h"
 #include "engine/BasicPlan.h"
@@ -244,6 +246,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1433931143598606082:
         return std::make_unique<SerializationSubPlanA1433931143598606082>(wm);
         break;
+    case 1179066429431332055:
+        return std::make_unique<TestParameterPassingMaster1179066429431332055>(wm);
+        break;
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
         break;
@@ -252,6 +257,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     case 1781630225028158279:
         return std::make_unique<SerializationSubPlanD1781630225028158279>(wm);
+        break;
+    case 1692837668719979457:
+        return std::make_unique<TestParameterPassing1692837668719979457>(wm);
         break;
     case 1682631238618360548:
         return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
@@ -290,6 +298,10 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
 std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
 {
     switch (attachmentWrapperConfId) {
+    case 105160539449888459:
+        return std::make_unique<PlanAttachment105160539449888459>();
+    case 445396005944825225:
+        return std::make_unique<PlanAttachment445396005944825225>();
     default:
         // Lookups will occur even if the child does not require parameters, but the function will never be called
         return nullptr;
