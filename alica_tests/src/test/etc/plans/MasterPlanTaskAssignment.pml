@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1407152758499,
+      "isDynamic": false,
       "maxCardinality": 5,
       "minCardinality": 2,
       "name": "1407152758499",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1407152894887,
+      "isDynamic": false,
       "maxCardinality": 1000,
       "minCardinality": 0,
       "name": "1407152894887",
@@ -34,6 +36,7 @@
     {
       "comment": "",
       "id": 1407152900425,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1407152900425",
@@ -49,6 +52,7 @@
     {
       "comment": "",
       "id": 1407152902493,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "DefendTask",
@@ -68,6 +72,7 @@
   "name": "MasterPlanTaskAssignment",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

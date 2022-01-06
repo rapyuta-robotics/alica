@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1629896015785,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1629896015785",
@@ -23,6 +24,7 @@
   "name": "PlanAA",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

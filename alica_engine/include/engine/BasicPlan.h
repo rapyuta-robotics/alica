@@ -21,6 +21,7 @@ public:
     using RunnableObject::getBlackboard;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
+    using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
     using RunnableObject::setConfiguration;

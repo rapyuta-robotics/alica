@@ -52,6 +52,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestParameterPassing1692837668719979457.h"
+#include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
 #include "TestTracingSubPlan1482512794732634139.h"
 #include <iostream>
@@ -216,8 +218,14 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 691392966514374878:
         return std::make_shared<UtilityFunction691392966514374878>();
         break;
+    case 1179066429431332055:
+        return std::make_shared<UtilityFunction1179066429431332055>();
+        break;
     case 1482512794732634139:
         return std::make_shared<UtilityFunction1482512794732634139>();
+        break;
+    case 1692837668719979457:
+        return std::make_shared<UtilityFunction1692837668719979457>();
         break;
     case 1682631238618360548:
         return std::make_shared<UtilityFunction1682631238618360548>();

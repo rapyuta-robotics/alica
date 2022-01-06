@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1402488787819,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1402500828244,
+      "isDynamic": false,
       "maxCardinality": 5,
       "minCardinality": 3,
       "name": "NewEntryPoint",
@@ -38,6 +40,7 @@
   "name": "MidFieldPlayPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

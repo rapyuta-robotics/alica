@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1407153656782,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1407153656782",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1407153821287,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "AttackTask",
@@ -34,6 +36,7 @@
     {
       "comment": "",
       "id": 1407153842648,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "DefendTask",
@@ -53,6 +56,7 @@
   "name": "PlanTwo",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

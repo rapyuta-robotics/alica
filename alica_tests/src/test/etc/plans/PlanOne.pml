@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1407153636262,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1407153636262",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1407153791141,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "AttackTask",
@@ -38,6 +40,7 @@
   "name": "PlanOne",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
