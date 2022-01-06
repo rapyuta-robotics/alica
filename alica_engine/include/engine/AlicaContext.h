@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
 #include "engine/IAlicaWorldModel.h"
@@ -32,6 +33,13 @@ namespace alica
 class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
+struct SyncTalk;
+struct SyncReady;
+struct AllocationAuthorityInfo;
+struct PlanTreeInfo;
+struct SolverResult;
+struct AgentQuery;
+struct AgentAnnouncement;
 
 namespace test
 {
@@ -417,6 +425,11 @@ private:
      * @note Is called when setOption or setOptions is successfully called.
      */
     void reloadConfig();
+
+    /*
+     * Get communication Handlers
+     */
+    AlicaCommunicationHandlers getCommunicationHandlers();
 };
 
 template <class ClockType, class... Args>
@@ -434,10 +447,11 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
+    AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _communicator = std::make_unique<CommunicatorType>(_engine.get(), std::forward<Args>(args)...);
+    _communicator = std::make_unique<CommunicatorType>(callbacks, std::forward<Args>(args)...);
 #else
-    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(_engine.get(), std::forward<Args>(args)...));
+    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
 }
 
