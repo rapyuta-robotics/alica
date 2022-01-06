@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1626849024805,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1626849024805",
@@ -23,6 +24,7 @@
   "name": "FrequencyTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
