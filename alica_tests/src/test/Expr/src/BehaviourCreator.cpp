@@ -19,6 +19,7 @@
 #include "DynamicTaskBehavior.h"
 #include "DynamicTaskBehaviourLD.h"
 #include "TestBehaviour.h"
+#include "TestParameterPassingBehaviour.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -91,6 +92,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 4044546549214673470:
         return std::make_shared<DynamicTaskBehavior>(wm);
+        break;
+    case 831400441334251602:
+        return std::make_shared<TestParameterPassingBehaviour>(wm);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

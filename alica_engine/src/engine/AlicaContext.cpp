@@ -1,6 +1,7 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Types.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <essentials/FileSystem.h>
 
@@ -122,6 +123,17 @@ int AlicaContext::getVersion()
 void AlicaContext::reloadConfig()
 {
     _engine->reloadConfig(_configRootNode);
+}
+
+AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
+{
+    return AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) { _engine->editSyncModul().onSyncTalk(st); },
+            [this](std::shared_ptr<SyncReady> sr) { _engine->editSyncModul().onSyncReady(sr); },
+            [this](const AllocationAuthorityInfo& aai) { _engine->editAuth().handleIncomingAuthorityMessage(aai); },
+            [this](std::shared_ptr<PlanTreeInfo> st) { _engine->editTeamObserver().handlePlanTreeInfo(st); },
+            [this](const SolverResult& sr) { _engine->editResultStore().onSolverResult(sr); },
+            [this](const AgentQuery& pq) { _engine->getTeamManager().handleAgentQuery(pq); },
+            [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
 } // namespace alica

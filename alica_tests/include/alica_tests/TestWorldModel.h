@@ -80,6 +80,7 @@ public:
     std::vector<double> robotsXPos;
     double x;
 
+    std::unordered_map<std::string, int> passedParameters;
     std::vector<std::string> configParameter;
     std::vector<std::pair<std::string, std::string>> tracingTags;
     std::vector<std::pair<std::string, std::string>> tracingLogs;
