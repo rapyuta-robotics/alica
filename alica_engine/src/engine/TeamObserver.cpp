@@ -140,37 +140,37 @@ PlanTreeInfo TeamObserver::sptToMessage(const IdGrp& msg) const
  */
 void TeamObserver::cleanOwnSuccessMarks(RunningPlan* root)
 {
-    // TODO: clean this up
-    // AbstractPlanGrp presentPlans;
-    // if (root != nullptr) {
-    //     std::list<RunningPlan*> q;
-    //     q.push_front(root);
-    //     while (q.size() > 0) {
-    //         RunningPlan* p = q.front();
-    //         q.pop_front();
-    //         if (!p->isBehaviour()) {
-    //             presentPlans.push_back(p->getActivePlan());
-    //             for (RunningPlan* c : p->getChildren()) {
-    //                 q.push_back(c);
-    //             }
-    //         }
-    //     }
-    // }
-    // std::vector<const SimplePlanTree*> queue;
-    // for (const auto& pair : _simplePlanTrees) {
-    //     if (pair.second.operator bool()) {
-    //         queue.push_back(pair.second.get());
-    //     }
-    // }
-    // while (queue.size() > 0) {
-    //     const SimplePlanTree* spt = queue.back();
-    //     queue.pop_back();
-    //     presentPlans.push_back(spt->getState()->getInPlan());
-    //     for (const std::unique_ptr<SimplePlanTree>& c : spt->getChildren()) {
-    //         queue.push_back(c.get());
-    //     }
-    // }
-    // _me->editEngineData().editSuccessMarks().limitToPlans(presentPlans);
+    std::set<std::pair<std::size_t, int64_t>> activeContexts;
+    if (root) {
+        std::queue<RunningPlan*> q;
+        q.push(root);
+        while (!q.empty()) {
+            auto p = q.front();
+            q.pop();
+            if (!p->isBehaviour()) {
+                activeContexts.insert({p->getParent() ? p->getParent()->getContextHash() : contextHash(0), p->getActivePlan()->getId()});
+                for (auto c : p->getChildren()) {
+                    q.push(c);
+                }
+            }
+        }
+    }
+
+    std::queue<const SimplePlanTree*> q;
+    for (const auto& pair : _simplePlanTrees) {
+        if (pair.second) {
+            q.push(pair.second.get());
+        }
+    }
+    while (!q.empty()) {
+        auto spt = q.front();
+        q.pop();
+        activeContexts.insert({spt->getParent() ? spt->getParent()->getContextHash() : contextHash(0), spt->getEntryPoint()->getPlan()->getId()});
+        for (const auto& c : spt->getChildren()) {
+            q.push(c.get());
+        }
+    }
+    _me->editEngineData().editSuccessMarks().limitToContexts({activeContexts.begin(), activeContexts.end()});
 }
 
 /**
