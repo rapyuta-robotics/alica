@@ -213,7 +213,7 @@ typedef struct Queues
 CommModuleContainer AlicaDummyCommunication::s_modContainer;
 Queues AlicaDummyCommunication::s_qctx(s_modContainer);
 
-AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaCommunicationHandlers& callbacks)
+AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunicationHandlers& callbacks)
         : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
@@ -293,6 +293,6 @@ void AlicaDummyCommunication::stopCommunication()
 }
 
 void AlicaDummyCommunication::sendAlicaEngineInfo(const alica::AlicaEngineInfo& /*ai*/) const {}
-void AlicaDummyCommunication::sendRoleSwitch(const alica::RoleSwitch& /*rs*/, const alica::AgentId /*agentID*/) const {}
+void AlicaDummyCommunication::sendRoleSwitch(const alica::RoleSwitch& /*rs*/, alica::AgentId /*agentID*/) const {}
 
 } // namespace alicaDummyProxy
