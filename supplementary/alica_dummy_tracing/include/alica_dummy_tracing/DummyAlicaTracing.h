@@ -1,10 +1,8 @@
 #pragma once
 
-#include <cassert>
 #include <engine/IAlicaTrace.h>
 #include <optional>
 #include <string>
-#include <unordered_map>
 
 namespace alicaTestTracing
 {
