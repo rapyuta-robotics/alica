@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1629896091322,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1629896091322",
@@ -23,6 +24,7 @@
   "name": "PlanBA",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

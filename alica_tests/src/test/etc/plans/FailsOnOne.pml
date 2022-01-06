@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1530069246105,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -23,6 +24,7 @@
   "name": "FailsOnOne",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "Is not set 1",
     "conditionString": "",

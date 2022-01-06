@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 4059536593953041663,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "",
@@ -23,6 +24,7 @@
   "name": "TestTracingMasterPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

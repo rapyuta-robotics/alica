@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 4019498150183138248,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "",
@@ -23,6 +24,7 @@
   "name": "PlanPoolTestMasterPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
