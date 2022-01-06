@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1414068524247,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1414068524247",
@@ -23,6 +24,7 @@
   "name": "ConstraintTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1407153675525,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1407153675525",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1407153896585,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MidFieldTask",
@@ -34,6 +36,7 @@
     {
       "comment": "",
       "id": 1407153899241,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "DefendTask",
@@ -53,6 +56,7 @@
   "name": "PlanThree",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

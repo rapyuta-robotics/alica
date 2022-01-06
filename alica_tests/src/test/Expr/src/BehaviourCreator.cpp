@@ -17,6 +17,7 @@
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
 #include "TestBehaviour.h"
+#include "TestParameterPassingBehaviour.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -83,6 +84,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 55178365253414982:
         return std::make_shared<TestBehaviour>(wm);
+        break;
+    case 831400441334251602:
+        return std::make_shared<TestParameterPassingBehaviour>(wm);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;
