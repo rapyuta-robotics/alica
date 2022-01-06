@@ -1,14 +1,4 @@
 #include "engine/IAlicaCommunication.h"
-#include <engine/syncmodule/SyncModule.h>
-
-#include "engine/AlicaEngine.h"
-#include "engine/TeamObserver.h"
-#include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/constraintmodul/VariableSyncModule.h"
-#include "engine/containers/PlanTreeInfo.h"
-#include "engine/containers/SyncReady.h"
-#include "engine/containers/SyncTalk.h"
-#include "engine/teammanager/TeamManager.h"
 
 #include <iostream>
 
@@ -18,36 +8,36 @@ namespace alica
 {
 void IAlicaCommunication::onSyncTalkReceived(shared_ptr<SyncTalk> st)
 {
-    ae->editSyncModul().onSyncTalk(st);
+    _callbacks.onSyncTalkHandler(st);
 }
 
 void IAlicaCommunication::onSyncReadyReceived(shared_ptr<SyncReady> sr)
 {
-    ae->editSyncModul().onSyncReady(sr);
+    _callbacks.onSyncReadyHandler(sr);
 }
 
 void IAlicaCommunication::onAuthorityInfoReceived(const AllocationAuthorityInfo& aai)
 {
-    ae->editAuth().handleIncomingAuthorityMessage(aai);
+    _callbacks.incomingAuthorityMessageHandler(aai);
 }
 
 void IAlicaCommunication::onPlanTreeInfoReceived(shared_ptr<PlanTreeInfo> pti)
 {
-    ae->editTeamObserver().handlePlanTreeInfo(pti);
+    _callbacks.planTreeInfohandler(pti);
 }
 
 void IAlicaCommunication::onSolverResult(const SolverResult& sr)
 {
-    ae->editResultStore().onSolverResult(sr);
+    _callbacks.onSolverResultHandler(sr);
 }
 
 void IAlicaCommunication::onAgentQuery(const AgentQuery& pq)
 {
-    ae->getTeamManager().handleAgentQuery(pq);
+    _callbacks.agentQueryHandler(pq);
 }
 
 void IAlicaCommunication::onAgentAnnouncement(const AgentAnnouncement& pa)
 {
-    ae->editTeamManager().handleAgentAnnouncement(pa);
+    _callbacks.agentAnnouncementHandler(pa);
 }
 } // namespace alica
