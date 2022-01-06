@@ -429,7 +429,7 @@ private:
     /*
      * Get communication Handlers
      */
-    std::shared_ptr<AlicaCommunicationHandlers> getCommunicationHandlers();
+    AlicaCommunicationHandlers getCommunicationHandlers();
 };
 
 template <class ClockType, class... Args>
@@ -447,10 +447,11 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
+    AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _communicator = std::make_unique<CommunicatorType>(getCommunicationHandlers(), std::forward<Args>(args)...);
+    _communicator = std::make_unique<CommunicatorType>(callbacks, std::forward<Args>(args)...);
 #else
-    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(getCommunicationHandlers(), std::forward<Args>(args)...));
+    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
 }
 

@@ -125,16 +125,15 @@ void AlicaContext::reloadConfig()
     _engine->reloadConfig(_configRootNode);
 }
 
-std::shared_ptr<AlicaCommunicationHandlers> AlicaContext::getCommunicationHandlers()
+AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
 {
-    return std::make_shared<AlicaCommunicationHandlers>(
-            AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) { _engine.get()->editSyncModul().onSyncTalk(st); },
-                    [this](std::shared_ptr<SyncReady> sr) { _engine.get()->editSyncModul().onSyncReady(sr); },
-                    [this](const AllocationAuthorityInfo& aai) { _engine.get()->editAuth().handleIncomingAuthorityMessage(aai); },
-                    [this](std::shared_ptr<PlanTreeInfo> st) { _engine.get()->editTeamObserver().handlePlanTreeInfo(st); },
-                    [this](const SolverResult& sr) { _engine.get()->editResultStore().onSolverResult(sr); },
-                    [this](const AgentQuery& pq) { _engine.get()->getTeamManager().handleAgentQuery(pq); },
-                    [this](const AgentAnnouncement& pa) { _engine.get()->editTeamManager().handleAgentAnnouncement(pa); }});
+    return AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) { _engine->editSyncModul().onSyncTalk(st); },
+            [this](std::shared_ptr<SyncReady> sr) { _engine->editSyncModul().onSyncReady(sr); },
+            [this](const AllocationAuthorityInfo& aai) { _engine->editAuth().handleIncomingAuthorityMessage(aai); },
+            [this](std::shared_ptr<PlanTreeInfo> st) { _engine->editTeamObserver().handlePlanTreeInfo(st); },
+            [this](const SolverResult& sr) { _engine->editResultStore().onSolverResult(sr); },
+            [this](const AgentQuery& pq) { _engine->getTeamManager().handleAgentQuery(pq); },
+            [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
 } // namespace alica

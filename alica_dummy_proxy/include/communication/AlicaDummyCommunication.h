@@ -11,7 +11,7 @@ struct Queues;
 class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
 public:
-    AlicaDummyCommunication(std::shared_ptr<alica::AlicaCommunicationHandlers> callbacks);
+    AlicaDummyCommunication(alica::AlicaCommunicationHandlers& callbacks);
     virtual ~AlicaDummyCommunication();
 
     void tick() override;

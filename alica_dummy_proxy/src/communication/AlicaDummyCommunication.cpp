@@ -213,7 +213,7 @@ typedef struct Queues
 CommModuleContainer AlicaDummyCommunication::s_modContainer;
 Queues AlicaDummyCommunication::s_qctx(s_modContainer);
 
-AlicaDummyCommunication::AlicaDummyCommunication(std::shared_ptr<alica::AlicaCommunicationHandlers> callbacks)
+AlicaDummyCommunication::AlicaDummyCommunication(alica::AlicaCommunicationHandlers& callbacks)
         : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
