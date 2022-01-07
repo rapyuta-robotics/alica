@@ -24,6 +24,7 @@ public:
     using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
+    using RunnableObject::initExecuted;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
@@ -32,7 +33,6 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
-    using RunnableObject::initExecuted;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };

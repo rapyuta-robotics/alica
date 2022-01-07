@@ -435,8 +435,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     const State* nextState = nullptr;
 
-    assert(r.getBasicPlan());
-    if (!r.getBasicPlan()->initExecuted()) {
+    if (!r.getBasicPlan() || !r.getBasicPlan()->initExecuted()) {
         return PlanChange::NoChange;
     }
 
