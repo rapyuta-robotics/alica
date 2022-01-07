@@ -41,6 +41,7 @@ protected:
     void setRequiresParameters(bool requiresParameters) { _requiresParameters = requiresParameters; }
     void stop();
     void start(RunningPlan* rp);
+    bool initExecuted() const { return _initExecuted; }
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
     std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
