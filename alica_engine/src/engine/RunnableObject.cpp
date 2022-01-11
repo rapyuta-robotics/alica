@@ -97,11 +97,11 @@ bool RunnableObject::setTerminatedState()
     ++_execState;
 
     _runTraced = false;
-    if (!_initExecuted) {
+    if (!_initExecuted.load()) {
         _execContext.store(nullptr);
         return true;
     }
-    _initExecuted = false;
+    _initExecuted.store(false);
     return false;
 }
 

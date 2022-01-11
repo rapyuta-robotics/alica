@@ -71,7 +71,6 @@ void BasicBehaviour::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
 
     // There is a possible race condition here in the sense that the _execState can be behind the _signalState
     // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
@@ -86,6 +85,8 @@ void BasicBehaviour::doInit()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
+
+    _initExecuted.store(true);
 
     // Do not schedule repeatable run job when behaviour is event driven or when frequency is 0.
     if (!isEventDriven() && _msInterval > AlicaTime::milliseconds(0)) {
