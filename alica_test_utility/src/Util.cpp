@@ -24,8 +24,8 @@ BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t co
 {
     BasicPlan* plan = nullptr;
     for (auto& planEntry : ae->getPlanPool().getAvailablePlans()) {
-        if (planEntry.first->getAbstractPlan()->getId() == planId &&
-                (configurationId == 0 ? planEntry.first->getConfiguration() == nullptr : planEntry.first->getConfiguration()->getId() == configurationId)) {
+        if (planEntry.first.first->getId() == planId &&
+                (configurationId == 0 ? planEntry.first.second == nullptr : planEntry.first.second->getId() == configurationId)) {
             plan = planEntry.second.get();
             break;
         }
