@@ -3,7 +3,29 @@
 #include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
 
+#include <chrono>
 #include <memory>
+
+#define STEP_UNTIL(condition)                                                                                                                                  \
+    do {                                                                                                                                                       \
+        for (int i = 0; i < 10; ++i) {                                                                                                                         \
+            ac->stepEngine();                                                                                                                                  \
+            if (condition) {                                                                                                                                   \
+                break;                                                                                                                                         \
+            }                                                                                                                                                  \
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                        \
+        }                                                                                                                                                      \
+    } while (0)
+
+#define SLEEP_UNTIL(condition)                                                                                                                                 \
+    do {                                                                                                                                                       \
+        for (int i = 0; i < 100; ++i) {                                                                                                                        \
+            if (condition) {                                                                                                                                   \
+                break;                                                                                                                                         \
+            }                                                                                                                                                  \
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                        \
+        }                                                                                                                                                      \
+    } while (0)
 
 namespace alica::test
 {

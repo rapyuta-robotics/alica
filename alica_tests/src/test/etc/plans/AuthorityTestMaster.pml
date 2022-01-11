@@ -20,7 +20,7 @@
   ],
   "frequency": 0,
   "id": 1414403396328,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "AuthorityTestMaster",
   "preCondition": null,
   "relativeDirectory": "Authority",
