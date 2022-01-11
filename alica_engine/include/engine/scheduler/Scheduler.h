@@ -94,6 +94,7 @@ private:
     {
         while (_running) {
             std::cerr << "still running" << std::endl;
+            
             auto job = _jobQueue.pop();
             if (!job) {
                 std::cerr << "try to get mutex" << std::endl;
