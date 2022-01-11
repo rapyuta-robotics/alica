@@ -10,6 +10,7 @@ namespace alica
 {
 class EntryPoint;
 class Plan;
+class AlicaDynamicTaskPlanTest;
 
 class SuccessCollection
 {
@@ -36,6 +37,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const SuccessCollection& c);
+    friend class ::alica::AlicaDynamicTaskPlanTest;
     std::size_t _parentContextHash;
     const Plan* _plan;
     std::vector<AgentGrp> _successData;

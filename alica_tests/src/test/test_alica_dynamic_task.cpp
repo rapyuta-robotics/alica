@@ -487,5 +487,44 @@ TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlan)
     ASSERT_TRUE(successMarks1.empty());
 }
 
+/**
+ * Tests wether successMarks from other agents are read correctly
+ */
+TEST_F(AlicaDynamicTaskPlanTest, receiveSuccessMarks)
+{
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+
+    // Execute DynamicTaskAssignmentTestPlan in different branches
+    enableTransitionConditionToStart(0);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
+
+    enableTransitionConditionToTogetherPlan(1);
+    stepAgents();
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
+
+    // Initially nothing has succeeded
+    auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    auto successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+
+    ASSERT_TRUE(successMarks0.empty());
+    ASSERT_TRUE(successMarks1.empty());
+
+    // nase succeeds
+    enableTransitionConditionToSuccess(0);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    ASSERT_TRUE(successMarks1.empty());
+
+    const auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment();
+    EXPECT_NE(attAssignment._successData._parentContextHash, hashCombine(hashCombine(contextHash(0), hashCombine(contextHash(hairyGrandParentDynamicEpId), contextHash(hairyGrandParentStateId))),
+                    hashCombine(contextHash(hairyParentDynamicEpId), contextHash(hairyParentStateId))));
+}
+
 } // namespace
 } // namespace alica
