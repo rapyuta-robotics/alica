@@ -41,6 +41,7 @@ protected:
     void setRequiresParameters(bool requiresParameters) { _requiresParameters = requiresParameters; }
     void stop();
     void start(RunningPlan* rp);
+    bool initExecuted() const { return isExecutingInContext() ? _initExecuted.load() : false; }
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
     std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
@@ -81,7 +82,7 @@ protected:
     // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
     // True if the behaviour/plan's init method is called. The init could be skipped if we are not in context of the running plan
-    bool _initExecuted;
+    std::atomic<bool> _initExecuted;
     std::string _name;
     AlicaTime _msInterval;
     bool _requiresParameters;

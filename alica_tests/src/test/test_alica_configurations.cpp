@@ -46,7 +46,8 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
     CounterClass::called = 0;
     // START ENGINE
     ae->start();
-    ac->stepEngine();
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1588246134801));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1588069261047));
 
     // CHECK PLANTYPE
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1588246134801)) << "Agent is not in state 'ConfA' of the plan ReadConfInPlantype!";
@@ -61,7 +62,8 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
 
     // set counter that is checked in the transition of the master plan
     CounterClass::called = 1;
-    ac->stepEngine();
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1588246136647));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1588069265377));
 
     // CHECK PLANTYPE
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1588246136647)) << "Agent is not in state 'ConfB' of the plan ReadConfInPlantype!";

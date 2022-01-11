@@ -435,6 +435,10 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     const State* nextState = nullptr;
 
+    if (!r.getBasicPlan() || !r.getBasicPlan()->initExecuted()) {
+        return PlanChange::NoChange;
+    }
+
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
         if (t->getSynchronisation() != nullptr)
             continue;

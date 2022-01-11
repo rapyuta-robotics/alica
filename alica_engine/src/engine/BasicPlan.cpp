@@ -24,7 +24,6 @@ void BasicPlan::doInit()
     if (!isExecutingInContext()) {
         return;
     }
-    _initExecuted = true;
 
     _execContext = _signalContext.exchange(nullptr);
 
@@ -40,6 +39,9 @@ void BasicPlan::doInit()
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
     }
+
+    _initExecuted.store(true);
+
     // Do not schedule runJob when freq is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
         _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());

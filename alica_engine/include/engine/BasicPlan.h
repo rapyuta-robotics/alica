@@ -24,6 +24,7 @@ public:
     using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
+    using RunnableObject::initExecuted;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
