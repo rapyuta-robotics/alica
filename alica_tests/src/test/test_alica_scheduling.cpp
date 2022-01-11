@@ -203,6 +203,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
     auto behBAA = std::dynamic_pointer_cast<alica::BehBAA>(alica::test::Util::getBasicBehaviour(ae, 1629895911592, 0));
 
     for (int i = 0; i < 10; ++i) {
+
+        STEP_UNTIL(behAAA->runCount >= 1);
         SLEEP_UNTIL(behAAA->runCount >= 10);
         ASSERT_GE(behAAA->runCount, 10);
 
@@ -212,6 +214,7 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 
         ASSERT_EQ(behAAA->runCount, 0);
 
+        STEP_UNTIL(behAAA->runCount >= 1);
         SLEEP_UNTIL(behAAA->runCount >= 10);
         ASSERT_GE(behBAA->runCount, 10);
 
