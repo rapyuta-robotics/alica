@@ -66,7 +66,10 @@ public:
 
     void terminate()
     {
-        _running = false;
+        {
+            std::unique_lock<std::mutex> lock(_mutex);
+            _running = false;
+        }
 
         _cv.notify_one();
         _thread.join();
