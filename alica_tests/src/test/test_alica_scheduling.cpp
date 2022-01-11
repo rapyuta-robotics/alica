@@ -204,7 +204,7 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 
     for (int i = 0; i < 10; ++i) {
         SLEEP_UNTIL(behAAA->runCount >= 10);
-        ASSERT_GT(behAAA->runCount, 10);
+        ASSERT_GE(behAAA->runCount, 10);
 
         wm->planA2PlanB = true;
         wm->planB2PlanA = false;
@@ -213,7 +213,7 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
         ASSERT_EQ(behAAA->runCount, 0);
 
         SLEEP_UNTIL(behAAA->runCount >= 10);
-        ASSERT_GT(behBAA->runCount, 10);
+        ASSERT_GE(behBAA->runCount, 10);
 
         wm->planA2PlanB = false;
         wm->planB2PlanA = true;
