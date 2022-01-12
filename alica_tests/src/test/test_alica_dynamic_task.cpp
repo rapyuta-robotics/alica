@@ -488,9 +488,9 @@ TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlan)
 }
 
 /**
- * Tests wether successMarks from other agents are read correctly
+ * Tests wether own successMarks are correctly added to assignments
  */
-TEST_F(AlicaDynamicTaskPlanTest, receiveSuccessMarks)
+TEST_F(AlicaDynamicTaskPlanTest, ownSuccessMarksInAssignments)
 {
     ASSERT_NO_SIGNAL
     startAgents();
@@ -521,9 +521,101 @@ TEST_F(AlicaDynamicTaskPlanTest, receiveSuccessMarks)
     EXPECT_GT(successMarks0.size(), 0u);
     ASSERT_TRUE(successMarks1.empty());
 
-    const auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment();
-    EXPECT_NE(attAssignment._successData._parentContextHash, hashCombine(hashCombine(contextHash(0), hashCombine(contextHash(hairyGrandParentDynamicEpId), contextHash(hairyGrandParentStateId))),
-                    hashCombine(contextHash(hairyParentDynamicEpId), contextHash(hairyParentStateId))));
+    auto& defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+    auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getChildren()[0]->editAssignment();
+
+    // Assignment of nase has success stored
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+    // Assignment of hairy has no success stored because it is in another parentContext
+    EXPECT_FALSE(attAssignment.isAnyTaskSuccessful());
+
+    // hairy succeeds
+    enableTransitionConditionToSuccess(1);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    EXPECT_GT(successMarks1.size(), 0u);
+
+    defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+    attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getChildren()[0]->editAssignment();
+    // Assignment of nase has success stored
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+    // Assignment of hairy now has success stored because it succeeded in another parentContext
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
+
+    enableTransitionConditionToFinish(1);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+}
+
+/**
+ * Tests wether successMarks of other agents are correctly added to assignments
+ */
+TEST_F(AlicaDynamicTaskPlanTest, otherSuccessMarksInAssignments)
+{
+    ASSERT_NO_SIGNAL
+    startAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    stepAgents();
+
+    // Execute DynamicTaskAssignmentTestPlan in different branches
+    enableTransitionConditionToStart(0);
+    stepAgents();
+
+    enableTransitionConditionToStart(1);
+    stepAgents();
+
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 751302000461175045));
+
+    // enableTransitionConditionToTogetherPlan(1);
+    // stepAgents();
+    // ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
+
+    // Initially nothing has succeeded
+    auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    auto successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+
+    ASSERT_TRUE(successMarks0.empty());
+    ASSERT_TRUE(successMarks1.empty());
+
+    // nase succeeds
+    enableTransitionConditionToSuccess(0);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    ASSERT_TRUE(successMarks1.empty());
+
+    auto& defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+    auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+
+    // Assignment of nase has success stored
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+    // Assignment of hairy has no success stored because it is in another parentContext
+    EXPECT_FALSE(attAssignment.isAnyTaskSuccessful());
+
+    // hairy succeeds
+    enableTransitionConditionToSuccess(1);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    EXPECT_GT(successMarks0.size(), 0u);
+    EXPECT_GT(successMarks1.size(), 0u);
+
+    defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+    attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+    // Assignment of nase has success stored
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+    // Assignment of hairy now has success stored because it succeeded in another parentContext
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
+
+    enableTransitionConditionToFinish(1);
+    stepAgents();
+    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
 }
 
 } // namespace
