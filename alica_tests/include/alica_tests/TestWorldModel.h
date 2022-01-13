@@ -58,8 +58,8 @@ public:
     void setTransitionCondition3126176581533900616(bool val);
     bool isTransitionCondition1078898265232036813() const;
     void setTransitionCondition1078898265232036813(bool val);
-    bool isTransitionCondition4344644064496100420() const;
-    void setTransitionCondition4344644064496100420(bool val);
+    bool isTransitionToFinish() const;
+    void setTransitionToFinish(bool val);
 
     bool isPreCondition1418042929966() const;
     void setPreCondition1418042929966(bool preCondition1418042929966);
@@ -134,7 +134,7 @@ private:
     bool transitionCondition4496654201854254411;
     bool transitionCondition3126176581533900616;
     bool transitionCondition1078898265232036813;
-    bool transitionCondition4344644064496100420;
+    bool transitionToFinish;
     // Adjacent plans success test
     bool transitionCondition1747408236004727286;
     bool transitionCondition1067314038887345208;

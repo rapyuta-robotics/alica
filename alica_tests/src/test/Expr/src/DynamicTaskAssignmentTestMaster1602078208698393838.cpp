@@ -60,7 +60,14 @@ std::shared_ptr<UtilityFunction> UtilityFunction1602078208698393838::getUtilityF
 bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3712615202042019043) ENABLED START*/
-    std::cout << "The PreCondition 4344644064496100420 in Transition '3712615202042019043' is not implement yet!" << std::endl;
+    if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
+        return false;
+    }
+    if (alicaTests::TestWorldModel::getCurAgent() == 9) {
+        return alicaTests::TestWorldModel::getOne()->isTransitionToFinish();
+    } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
+        return alicaTests::TestWorldModel::getTwo()->isTransitionToFinish();
+    }
     return false;
     /*PROTECTED REGION END*/
 }
@@ -141,7 +148,14 @@ bool PreCondition3126176581533900616::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition2132248203469102498::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1967586736681651770) ENABLED START*/
-    std::cout << "The PreCondition 2132248203469102498 in Transition '1967586736681651770' is not implement yet!" << std::endl;
+    if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
+        return false;
+    }
+    if (alicaTests::TestWorldModel::getCurAgent() == 9) {
+        return alicaTests::TestWorldModel::getOne()->isTransitionToFinish();
+    } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
+        return alicaTests::TestWorldModel::getTwo()->isTransitionToFinish();
+    }
     return false;
     /*PROTECTED REGION END*/
 }

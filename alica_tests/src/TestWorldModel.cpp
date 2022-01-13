@@ -48,7 +48,7 @@ void TestWorldModel::reset()
     transitionCondition4496654201854254411 = false;
     transitionCondition3126176581533900616 = false;
     transitionCondition1078898265232036813 = false;
-    transitionCondition4344644064496100420 = false;
+    transitionToFinish = false;
 
     _curAgentNo = 111111111111111;
 
@@ -285,14 +285,14 @@ void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401
     this->preCondition1840401110297459509 = preCondition1840401110297459509;
 }
 
-bool TestWorldModel::isTransitionCondition4344644064496100420() const
+bool TestWorldModel::isTransitionToFinish() const
 {
-    return this->transitionCondition4344644064496100420;
+    return this->transitionToFinish;
 }
 
-void TestWorldModel::setTransitionCondition4344644064496100420(bool transitionCondition4344644064496100420)
+void TestWorldModel::setTransitionToFinish(bool transitionToFinish)
 {
-    this->transitionCondition4344644064496100420 = transitionCondition4344644064496100420;
+    this->transitionToFinish = transitionToFinish;
 }
 
 } // namespace alicaTests
