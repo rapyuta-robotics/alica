@@ -481,6 +481,7 @@ TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlanContext)
     auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
 
     // hairy should be the only agent with a success in this context, nases success should have been cleared
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0].size(), 1u);
     EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
 }
 
