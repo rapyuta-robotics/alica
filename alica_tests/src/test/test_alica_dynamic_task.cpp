@@ -94,10 +94,10 @@ protected:
     {
         if (agentIdx == 0) {
             alicaTests::TestWorldModel::curAgent(acs[0]->getLocalAgentId());
-            alicaTests::TestWorldModel::getOne()->setTransitionCondition4344644064496100420(true);
+            alicaTests::TestWorldModel::getOne()->setTransitionToFinish(true);
         } else {
             alicaTests::TestWorldModel::curAgent(acs[1]->getLocalAgentId());
-            alicaTests::TestWorldModel::getTwo()->setTransitionCondition4344644064496100420(true);
+            alicaTests::TestWorldModel::getTwo()->setTransitionToFinish(true);
         }
     }
 
@@ -427,23 +427,18 @@ TEST_F(AlicaDynamicTaskPlanTest, successMarkOuput)
 }
 
 /**
- * Test
+ * Test wether successMarks are cleared when a parentContext has no active agents in it
  */
-TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlan)
+TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlanContext)
 {
     ASSERT_NO_SIGNAL
     startAgents();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     stepAgents();
 
-    // Execute DynamicTaskAssignmentTestPlan in different branches
+    // Execute DynamicTaskAssignmentTestPlan in one branch
     enableTransitionConditionToStart(0);
     stepAgents();
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
-
-    enableTransitionConditionToTogetherPlan(1);
-    stepAgents();
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
 
     // Initially nothing has succeeded
     auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
@@ -460,31 +455,33 @@ TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlan)
     EXPECT_GT(successMarks0.size(), 0u);
     ASSERT_TRUE(successMarks1.empty());
 
-    // hairy succeeds
-    enableTransitionConditionToSuccess(1);
-    stepAgents();
-    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
-    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
-    EXPECT_GT(successMarks0.size(), 0u);
-    EXPECT_GT(successMarks1.size(), 0u);
+    auto& defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
 
-    // nase transitions to finish, successmarks are maintained
+
+    // Assignment of nase has success stored
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+
+    // nase leaves planContext, successMarks should be cleared, because planContext is empty now
     enableTransitionConditionToFinish(0);
     stepAgents();
-    successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
-    successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
-    EXPECT_GT(successMarks0.size(), 0u);
-    EXPECT_GT(successMarks1.size(), 0u);
-
-    // hairy transitions to finish, successmarks are cleared
-    enableTransitionConditionToFinish(1);
-    stepAgents();
-    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
     successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     ASSERT_TRUE(successMarks0.empty());
     ASSERT_TRUE(successMarks1.empty());
+
+    // Execute DynamicTaskAssignmentTestPlan in the same branch
+    enableTransitionConditionToStart(1);
+    stepAgents();
+
+    // hairy succeeds
+    enableTransitionConditionToSuccess(1);
+    stepAgents();
+
+    auto& attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
+
+    // hairy should be the only agent with a success in this context, nases success should have been cleared
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
 }
 
 /**
@@ -570,10 +567,6 @@ TEST_F(AlicaDynamicTaskPlanTest, otherSuccessMarksInAssignments)
     ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 751302000461175045));
     ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 751302000461175045));
 
-    // enableTransitionConditionToTogetherPlan(1);
-    // stepAgents();
-    // ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 3235149896384117046));
-
     // Initially nothing has succeeded
     auto successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     auto successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
@@ -594,28 +587,32 @@ TEST_F(AlicaDynamicTaskPlanTest, otherSuccessMarksInAssignments)
 
     // Assignment of nase has success stored
     EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
-    // Assignment of hairy has no success stored because it is in another parentContext
-    EXPECT_FALSE(attAssignment.isAnyTaskSuccessful());
+    // Assignment of hairy has success stored because it is in the same parentContext
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
 
     // hairy succeeds
     enableTransitionConditionToSuccess(1);
     stepAgents();
+    aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     EXPECT_GT(successMarks0.size(), 0u);
     EXPECT_GT(successMarks1.size(), 0u);
 
-    defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
     attAssignment = aes[1]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
-    // Assignment of nase has success stored
-    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
-    // Assignment of hairy now has success stored because it succeeded in another parentContext
-    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
+
+    // Assignment of hairy has the success of both agents stored
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
+    EXPECT_EQ(attAssignment.editSuccessData().getRaw()[0][1], aes[1]->getTeamManager().getLocalAgentID());
 
     enableTransitionConditionToFinish(1);
     stepAgents();
     successMarks0 = aes[0]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
     successMarks1 = aes[1]->getTeamManager().getLocalAgent()->getEngineData().getSuccessMarks().toMsg();
+
+    // successMarks will not be cleared, because nase is still in the parentContext
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][1], aes[0]->getTeamManager().getLocalAgentID());
+    EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[1]->getTeamManager().getLocalAgentID());
 }
 
 } // namespace
