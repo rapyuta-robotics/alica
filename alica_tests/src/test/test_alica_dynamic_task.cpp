@@ -457,7 +457,6 @@ TEST_F(AlicaDynamicTaskPlanTest, clearSuccessMarkOnEmptyPlanContext)
 
     auto& defAssignment = aes[0]->getPlanBase().getRootNode()->getChildren()[1]->editAssignment();
 
-
     // Assignment of nase has success stored
     EXPECT_EQ(defAssignment.editSuccessData().getRaw()[0][0], aes[0]->getTeamManager().getLocalAgentID());
 
