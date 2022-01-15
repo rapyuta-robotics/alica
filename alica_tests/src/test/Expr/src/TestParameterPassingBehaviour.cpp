@@ -38,6 +38,7 @@ void TestParameterPassingBehaviour::initialiseParameters()
     LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
     wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
+    wm->passedParameters["testKey"] = bb.get<int>("testKey");
 
     /*PROTECTED REGION END*/
 }

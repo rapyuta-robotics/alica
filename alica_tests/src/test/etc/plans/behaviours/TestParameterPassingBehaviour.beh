@@ -10,5 +10,22 @@
   "relativeDirectory": "",
   "requiresParameters": true,
   "runtimeCondition": null,
-  "variables": []
+  "variables": [],
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "testKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "secondTestKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
 }

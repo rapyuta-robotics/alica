@@ -15,6 +15,17 @@ protected:
     bool stepEngine() const override { return false; }
 };
 
+/**
+ * Test if it is possible to read configured blackboards in a behavior.
+ */
+TEST_F(TestBlackBoard, testJsonBlackBoard)
+{
+    ae->start();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    EXPECT_EQ(wm->passedParameters["testKey"], 1);
+}
+
 TEST_F(TestBlackBoard, testParameterPassing)
 {
     ae->start();
