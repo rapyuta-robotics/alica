@@ -12,7 +12,7 @@ std::unique_ptr<Blackboard> BlackboardFactory::create(const YAML::Node& node)
     auto blackboard = std::make_unique<Blackboard>();
     auto& blackboardInternal = blackboard->impl();
     for (const auto& entry : node) {
-        auto key = getValue<std::string>(entry, "key");
+        auto key = getValue<std::string>(entry, Strings::key);
         blackboardInternal.registerValue(key);
     }
     return blackboard;

@@ -25,6 +25,7 @@ public:
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
     using RunnableObject::initExecuted;
+    using RunnableObject::setBlackboard;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInheritBlackboard;

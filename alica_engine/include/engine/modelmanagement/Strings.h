@@ -89,5 +89,7 @@ static const std::string terminalStateType = "TerminalState";
 static const std::string normalStateType = "State";
 static const std::string isSuccessState = "success";
 static const std::string inheritBlackboard = "inheritBlackboard";
+static const std::string key = "key";
+static const std::string defaultValue = "defaultValue";
 } // namespace Strings
 } // namespace alica
