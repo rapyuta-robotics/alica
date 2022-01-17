@@ -3,6 +3,7 @@
 #include "engine/model/Behaviour.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
+#include "engine/modelmanagement/factories/BlackboardFactory.h"
 #include "engine/modelmanagement/factories/PostConditionFactory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
@@ -19,7 +20,7 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
-    behaviour->_requiresParameters = Factory::getValue<bool>(node, alica::Strings::requiresParameters, false);
+    behaviour->_inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, false);
 
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
@@ -29,6 +30,12 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     }
     if (Factory::isValid(node[alica::Strings::postCondition])) {
         behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
+    }
+    if (Factory::isValid(node[alica::Strings::inheritBlackboard])) {
+        auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard);
+        if (!inheritBlackboard && Factory::isValid(node[alica::Strings::blackboard])) {
+            behaviour->_blackboard = std::move(BlackboardFactory::create(node[alica::Strings::blackboard]));
+        }
     }
 
     return behaviour;

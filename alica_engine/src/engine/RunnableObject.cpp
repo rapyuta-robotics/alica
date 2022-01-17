@@ -16,7 +16,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _runTraced(false)
         , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _requiresParameters(false)
+        , _inheritBlackboard(false)
         , _activeRunJobId(-1)
         , _signalContext(nullptr)
         , _execContext(nullptr)
@@ -52,43 +52,42 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    if (_requiresParameters) {
-        assert(rp->getParent());
-        assert(rp->getParent()->getBasicPlan());
-        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-        auto it =
-                std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
-        assert(it != wrappers.end());
+    if (rp->getParent()) {
+        if (!_inheritBlackboard) {
+            assert(rp->getParent()->getBasicPlan());
+            const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+            auto it = std::find_if(
+                    wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+            assert(it != wrappers.end());
 
-        int64_t wrapperId = (*it)->getId();
+            int64_t wrapperId = (*it)->getId();
 
-        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-        auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
-        auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
-            if (!_blackboard) {
-                _blackboard = std::make_shared<Blackboard>();
-            }
-            _blackboard->impl().clear();
-            if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
-                std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
-                return;
-            }
-            doInit();
-        };
-        _engine->editScheduler().schedule(initCall);
-    } else {
-
-        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
-        auto initCall = [this, parentPlan = parentPlan]() {
-            // Share Blackboard with parent if we have one, or start fresh otherwise
-            if (parentPlan) {
-                _blackboard = parentPlan->getBlackboard();
-            } else {
-                _blackboard = std::make_shared<Blackboard>();
-            }
-            doInit();
-        };
-        _engine->editScheduler().schedule(initCall);
+            BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+            auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
+            auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
+                if (!_blackboard) {
+                    _blackboard = std::make_shared<Blackboard>();
+                }
+                if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
+                    std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                    return;
+                }
+                doInit();
+            };
+            _engine->editScheduler().schedule(initCall);
+        } else {
+            BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
+            auto initCall = [this, parentPlan = parentPlan]() {
+                // Share Blackboard with parent if we have one, or start fresh otherwise
+                if (parentPlan) {
+                    _blackboard = parentPlan->getBlackboard();
+                } else {
+                    _blackboard = std::make_shared<Blackboard>();
+                }
+                doInit();
+            };
+            _engine->editScheduler().schedule(initCall);
+        }
     }
 }
 
@@ -149,4 +148,8 @@ void RunnableObject::traceInit(const std::string& type)
     }
 }
 
+void RunnableObject::setBlackboard(std::shared_ptr<Blackboard> blackboard)
+{
+    _blackboard = blackboard;
+}
 } /* namespace alica */

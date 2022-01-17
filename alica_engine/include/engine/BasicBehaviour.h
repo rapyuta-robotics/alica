@@ -32,19 +32,20 @@ public:
     BasicBehaviour(IAlicaWorldModel* wm, const std::string& name);
     virtual ~BasicBehaviour(){};
 
-    // Use of private inheritance and explciltly making members public
+    // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObject::getBlackboard;
+    using RunnableObject::getInheritBlackboard;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
-    using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
+    using RunnableObject::setBlackboard;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
+    using RunnableObject::setInheritBlackboard;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
-    using RunnableObject::setRequiresParameters;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;

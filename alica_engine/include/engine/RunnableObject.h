@@ -37,8 +37,9 @@ protected:
     const std::string& getName() { return _name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
-    bool getRequiresParameters() const { return _requiresParameters; }
-    void setRequiresParameters(bool requiresParameters) { _requiresParameters = requiresParameters; }
+    bool getInheritBlackboard() const { return _inheritBlackboard; }
+    void setInheritBlackboard(bool inheritBlackboard) { _inheritBlackboard = inheritBlackboard; }
+    void setBlackboard(std::shared_ptr<Blackboard> blackboard);
     void stop();
     void start(RunningPlan* rp);
     bool initExecuted() const { return isExecutingInContext() ? _initExecuted.load() : false; }
@@ -85,7 +86,7 @@ protected:
     std::atomic<bool> _initExecuted;
     std::string _name;
     AlicaTime _msInterval;
-    bool _requiresParameters;
+    bool _inheritBlackboard;
     uint8_t _flags;
     std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls

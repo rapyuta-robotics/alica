@@ -32,6 +32,7 @@ static const std::string variableBinding = "variableBinding";
 static const std::string roleset = "roleset";
 static const std::string roleset_extension = ".rst";
 static const std::string role = "role";
+static const std::string blackboard = "blackboard";
 
 static const std::string id = "id";
 static const std::string name = "name";
@@ -68,7 +69,6 @@ static const std::string failOnSyncTimeout = "failOnSyncTimeout";
 static const std::string syncTimeout = "syncTimeout";
 static const std::string talkTimeout = "talkTimeout";
 static const std::string frequency = "frequency";
-static const std::string requiresParameters = "requiresParameters";
 static const std::string deferring = "deferring";
 static const std::string eventDriven = "eventDriven";
 static const std::string tasks = "tasks";
@@ -88,5 +88,6 @@ static const std::string stateType = "type";
 static const std::string terminalStateType = "TerminalState";
 static const std::string normalStateType = "State";
 static const std::string isSuccessState = "success";
+static const std::string inheritBlackboard = "inheritBlackboard";
 } // namespace Strings
 } // namespace alica

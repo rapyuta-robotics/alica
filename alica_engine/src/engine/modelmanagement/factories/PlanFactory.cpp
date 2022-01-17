@@ -99,7 +99,7 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
         }
     }
 
-    plan->_requiresParameters = Factory::getValue<bool>(node, alica::Strings::requiresParameters, false);
+    plan->_inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, false);
 
     return plan;
 }
