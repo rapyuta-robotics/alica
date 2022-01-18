@@ -52,6 +52,8 @@
 #include "SchedulingTestSequenceSubPlan31614964478264.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TestInheritBlackboard1692837668719979400.h"
+#include "TestInheritBlackboardMaster1179066429431332056.h"
 #include "TestParameterPassing1692837668719979457.h"
 #include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
@@ -222,14 +224,20 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1179066429431332055:
         return std::make_unique<TestParameterPassingMaster1179066429431332055>(wm);
         break;
+    case 1179066429431332056:
+        return std::make_unique<TestInheritBlackboardMaster1179066429431332056>(wm);
+        break;
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
         break;
-    case 1692837668719979457:
-        return std::make_unique<TestParameterPassing1692837668719979457>(wm);
-        break;
     case 1682631238618360548:
         return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
+        break;
+    case 1692837668719979400:
+        return std::make_unique<TestInheritBlackboard1692837668719979400>(wm);
+        break;
+    case 1692837668719979457:
+        return std::make_unique<TestParameterPassing1692837668719979457>(wm);
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
@@ -250,8 +258,8 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
 std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
 {
     switch (attachmentWrapperConfId) {
-    case 105160539449888459:
-        return std::make_unique<PlanAttachment105160539449888459>();
+    case 445396005944825200:
+        return std::make_unique<PlanAttachment445396005944825200>();
     case 445396005944825225:
         return std::make_unique<PlanAttachment445396005944825225>();
     default:
