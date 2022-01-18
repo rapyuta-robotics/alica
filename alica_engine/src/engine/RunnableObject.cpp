@@ -65,13 +65,8 @@ void RunnableObject::start(RunningPlan* rp)
             BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
             auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
             auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
-                if (!_blackboard) {
-                    _blackboard = std::make_shared<Blackboard>();
-                }
-                if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
-                    std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
-                    return;
-                }
+                // Copy parameters here
+                assert(_blackboard);
                 doInit();
             };
             _engine->editScheduler().schedule(initCall);
@@ -89,7 +84,7 @@ void RunnableObject::start(RunningPlan* rp)
             _engine->editScheduler().schedule(initCall);
         }
     }
-}
+} // namespace alica
 
 bool RunnableObject::setTerminatedState()
 {

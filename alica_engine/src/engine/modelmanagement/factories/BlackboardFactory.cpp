@@ -18,4 +18,9 @@ std::unique_ptr<Blackboard> BlackboardFactory::create(const YAML::Node& node)
     return blackboard;
 }
 
+std::unique_ptr<Blackboard> BlackboardFactory::createEmpty()
+{
+    return std::make_unique<Blackboard>();
+}
+
 } // namespace alica

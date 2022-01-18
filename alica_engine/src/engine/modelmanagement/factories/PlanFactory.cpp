@@ -102,10 +102,11 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
 
     plan->_inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, false);
 
-    if (Factory::isValid(node[alica::Strings::inheritBlackboard])) {
-        auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard);
-        if (!inheritBlackboard && Factory::isValid(node[alica::Strings::blackboard])) {
+    if (!plan->_inheritBlackboard) {
+        if (Factory::isValid(node[alica::Strings::blackboard])) {
             plan->_blackboard = std::move(BlackboardFactory::create(node[alica::Strings::blackboard]));
+        } else {
+            plan->_blackboard = std::move(BlackboardFactory::createEmpty());
         }
     }
     return plan;

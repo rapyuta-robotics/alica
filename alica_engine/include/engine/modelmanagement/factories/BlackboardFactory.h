@@ -11,6 +11,7 @@ class BlackboardFactory : public Factory
 {
 public:
     static std::unique_ptr<Blackboard> create(const YAML::Node& node);
+    static std::unique_ptr<Blackboard> createEmpty();
 
 private:
     BlackboardFactory() = delete;

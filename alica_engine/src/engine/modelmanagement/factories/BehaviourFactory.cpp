@@ -31,13 +31,13 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::postCondition])) {
         behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
     }
-    if (Factory::isValid(node[alica::Strings::inheritBlackboard])) {
-        auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard);
-        if (!inheritBlackboard && Factory::isValid(node[alica::Strings::blackboard])) {
+    if (!behaviour->_inheritBlackboard) {
+        if (Factory::isValid(node[alica::Strings::blackboard])) {
             behaviour->_blackboard = std::move(BlackboardFactory::create(node[alica::Strings::blackboard]));
+        } else {
+            behaviour->_blackboard = BlackboardFactory::createEmpty();
         }
     }
-
     return behaviour;
 }
 
