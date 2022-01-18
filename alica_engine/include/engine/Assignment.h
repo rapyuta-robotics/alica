@@ -30,6 +30,8 @@ class AgentsInStateView;
 class AssignmentSuccessIterator;
 class AssignmentSuccessView;
 
+class AlicaDynamicTaskPlanTest;
+
 class AgentStatePairs
 {
 public:
@@ -143,6 +145,7 @@ public:
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const Assignment& a);
+    friend class ::alica::AlicaDynamicTaskPlanTest;
     const Plan* _plan;
     std::vector<AgentStatePairs> _assignmentData;
     SuccessCollection _successData;
