@@ -29,6 +29,7 @@ public:
     {
         return std::any_cast<T&>(vals.at(key));
     }
+    void set(const std::string& key, const std::any& value) { vals.at(key) = value; }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
@@ -112,6 +113,8 @@ public:
     {
         return _impl->get<T>(key);
     }
+    void set(const std::string& key, const std::any& value) { _impl->set(key, value); }
+
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
