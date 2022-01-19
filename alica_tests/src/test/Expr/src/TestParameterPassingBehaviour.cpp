@@ -35,10 +35,22 @@ void TestParameterPassingBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251602) ENABLED START*/
     // Add additional options here
-    LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
+    std::cerr << "start" << std::endl;
+    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
-    wm->passedParameters["testKey"] = bb.get<int>("testKey");
+    // wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
+
+    std::cerr << "has behaviorKey " << bb.hasValue("behaviorKey") << std::endl;
+    bb.set("behaviorKey", 2);
+    wm->passedParameters["behaviorKey"] = bb.get<int>("behaviorKey");
+
+    std::cerr << "has behaviorInputKey " << bb.hasValue("behaviorInputKey") << std::endl;
+    wm->passedParameters["behaviorInputKey"] = bb.get<int>("behaviorInputKey");
+
+    std::cerr << "has behaviorOutputKey " << bb.hasValue("behaviorOutputKey") << std::endl;
+    bb.set("behaviorOutputKey", 6);
+
+    std::cerr << "end" << std::endl;
 
     /*PROTECTED REGION END*/
 }

@@ -55,5 +55,6 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "inheritBlackboard" : false
 }

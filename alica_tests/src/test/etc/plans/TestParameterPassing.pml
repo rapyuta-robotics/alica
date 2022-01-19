@@ -35,7 +35,24 @@
           "comment": "",
           "configuration": null,
           "id": 445396005944825225,
-          "name": ""
+          "name": "",
+          keyMapping : 
+          {
+            "input" : 
+            [
+              {
+                "parent" : "planOutputKey",
+                "child" : "behaviorInputKey"
+              }
+            ],
+            "output" :
+            [
+              {
+                "parent" : "behaviorOutputKey",
+                "child" : "planInputKey"
+              }
+            ]
+          }
         }
       ],
       "entryPoint": 58084702421574748,
@@ -55,5 +72,29 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "planOutputKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planInputKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+  ]
 }

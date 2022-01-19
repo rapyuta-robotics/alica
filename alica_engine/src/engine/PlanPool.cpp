@@ -40,7 +40,7 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
     // set stuff from plan and configuration in basic plan object
     basicPlan->setConfiguration(configuration);
     basicPlan->setName(plan->getName());
-    basicPlan->createChildAttachments(plan, planCreator);
+    basicPlan->addKeyMappings(plan);
     if (plan->getFrequency() < 1) {
         basicPlan->setInterval(0);
     } else {

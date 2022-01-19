@@ -255,16 +255,4 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     }
 }
 
-std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
-{
-    switch (attachmentWrapperConfId) {
-    case 445396005944825200:
-        return std::make_unique<PlanAttachment445396005944825200>();
-    case 445396005944825225:
-        return std::make_unique<PlanAttachment445396005944825225>();
-    default:
-        // Lookups will occur even if the child does not require parameters, but the function will never be called
-        return nullptr;
-    }
-}
 } // namespace alica

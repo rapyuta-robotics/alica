@@ -33,6 +33,11 @@ static const std::string roleset = "roleset";
 static const std::string roleset_extension = ".rst";
 static const std::string role = "role";
 static const std::string blackboard = "blackboard";
+static const std::string keyMapping = "keyMapping";
+static const std::string input = "input";
+static const std::string output = "output";
+static const std::string parent = "parent";
+static const std::string child = "child";
 
 static const std::string id = "id";
 static const std::string name = "name";

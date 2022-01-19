@@ -38,26 +38,24 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-/**
- * Set parameters for child abstract plan TestParameterPassingBehaviour831400441334251602 of state ParameterPassingRunBehaviour1092447442809556626
- */
-bool PlanAttachment445396005944825225::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
-{
-    /*PROTECTED REGION ID(445396005944825225) ENABLED START*/
-    LockedBlackboardRO parent = LockedBlackboardRO(parent_bb);
-    LockedBlackboardRW child = LockedBlackboardRW(child_bb);
-    child.registerValue("behaviourParameter", parent.get<int>("behaviourParameter"));
-    return true;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
 // Add additional options here
 void TestParameterPassing1692837668719979457::onInit()
 {
+    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+    // wm->passedParameters["planParameter"] = bb.get<int>("planParameter");
+    std::cerr << "hasValue " << bb.hasValue("planKey") << std::endl;
+    bb.set("planKey", 1);
+    wm->passedParameters["planKey"] = bb.get<int>("planKey");
+    bb.set("planOutputKey", 5);
+}
+
+void TestParameterPassing1692837668719979457::onTerminate()
+{
     LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    wm->passedParameters["planParameter"] = bb.get<int>("planParameter");
+    wm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
 }
 /*PROTECTED REGION END*/
 } // namespace alica

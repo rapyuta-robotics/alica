@@ -1,10 +1,11 @@
 #pragma once
 
 #include "engine/IPlanCreator.h"
-#include "engine/PlanAttachment.h"
 #include "engine/RunnableObject.h"
+#include "engine/blackboard/KeyMapping.h"
 
 #include <unordered_map>
+
 namespace alica
 {
 
@@ -38,9 +39,9 @@ public:
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
 
-    void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
+    void addKeyMappings(const Plan* plan);
 
-    std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) { return _planAttachments.at(id); }
+    KeyMapping getKeyMapping(int64_t id) { return _keyMappings.at(id); }
 
 protected:
     using RunnableObject::getTrace;
@@ -68,6 +69,6 @@ private:
 
     bool _isMasterPlan;
     // Map from ConfAbstractPlanWrapper id to associated attachment
-    std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;
+    std::unordered_map<int64_t, KeyMapping> _keyMappings;
 };
 } // namespace alica

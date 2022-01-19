@@ -29,7 +29,7 @@ protected:
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     virtual void onInit() override;
-    // virtual void onTerminate() override;
+    virtual void onTerminate() override;
     // Add/Override protected methods here
     /*PROTECTED REGION END*/
 private:
@@ -38,10 +38,6 @@ private:
     /*PROTECTED REGION END*/
 };
 
-class PlanAttachment445396005944825225 : public PlanAttachment
-{
-    bool setParameters(const Blackboard& parent_bb, Blackboard& child_bb);
-};
 class UtilityFunction1692837668719979457 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);

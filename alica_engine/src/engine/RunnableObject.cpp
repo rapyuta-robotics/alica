@@ -63,10 +63,10 @@ void RunnableObject::start(RunningPlan* rp)
             int64_t wrapperId = (*it)->getId();
 
             BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-            auto& planAttachment = parentPlan->getPlanAttachment(wrapperId);
-            auto initCall = [this, &planAttachment, parentPlan = parentPlan]() {
-                // Copy parameters here
+            const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
+            auto initCall = [this, keyMapping, parentPlan = parentPlan]() {
                 assert(_blackboard);
+                keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
                 doInit();
             };
             _engine->editScheduler().schedule(initCall);

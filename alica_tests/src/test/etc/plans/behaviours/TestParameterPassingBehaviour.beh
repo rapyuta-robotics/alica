@@ -14,18 +14,25 @@
   "inheritBlackboard" : false,
   "blackboard" : [
     {
-      "key" : "testKey",
+      "key" : "behaviorKey",
       "type" : "std::any",
       "access" : "protected",
       "defaultValue" : null,
       "comment" : "This is a blackboard entry for testing"
     },
     {
-      "key" : "secondTestKey",
+      "key" : "behaviorInputKey",
       "type" : "std::any",
-      "access" : "protected",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "behaviorOutputKey",
+      "type" : "std::any",
+      "access" : "output",
       "defaultValue" : null,
       "comment" : "This is a blackboard entry for testing"
     }
-  ]
+  ],
 }

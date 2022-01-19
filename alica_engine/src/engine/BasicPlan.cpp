@@ -81,11 +81,11 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
-void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
+void BasicPlan::addKeyMappings(const Plan* plan)
 {
     for (const State* state : plan->getStates()) {
         for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
-            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
+            _keyMappings.emplace(wrapper->getId(), wrapper->getKeyMapping());
         }
     }
 }

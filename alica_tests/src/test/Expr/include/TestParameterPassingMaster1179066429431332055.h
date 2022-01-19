@@ -34,10 +34,6 @@ private:
     /*PROTECTED REGION END*/
 };
 
-class PlanAttachment105160539449888459 : public PlanAttachment
-{
-    bool setParameters(const Blackboard& parent_bb, Blackboard& child_bb);
-};
 class UtilityFunction1179066429431332055 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);

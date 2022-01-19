@@ -37,17 +37,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979400::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-/**
- * Set parameters for child abstract plan TestInheritBlackboardBehaviour831400441334251600 of state InheritBlackboardRunBehaviour1092447442809556600
- */
-bool PlanAttachment445396005944825200::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
-{
-    /*PROTECTED REGION ID(445396005944825200) ENABLED START*/
-    std::cout << "The Parameter setter 445396005944825200 in is not implemented yet!" << std::endl;
-    return false;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1692837668719979400) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
