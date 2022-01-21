@@ -29,6 +29,9 @@ public:
     {
         return std::any_cast<T&>(vals.at(key));
     }
+    std::any& get(const std::string& key) { return vals.at(key); }
+    const std::any& get(const std::string& key) const { return vals.at(key); }
+
     void set(const std::string& key, const std::any& value) { vals.at(key) = value; }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
@@ -79,6 +82,7 @@ public:
     {
         return _impl->get<T>(key);
     }
+    const std::any& get(const std::string& key) const { return _impl->get(key); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -113,6 +117,8 @@ public:
     {
         return _impl->get<T>(key);
     }
+    std::any& get(const std::string& key) { return _impl->get(key); }
+
     void set(const std::string& key, const std::any& value) { _impl->set(key, value); }
 
     bool empty() const { return _impl->empty(); }
