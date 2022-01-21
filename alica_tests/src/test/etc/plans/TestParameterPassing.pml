@@ -36,7 +36,7 @@
           "configuration": null,
           "id": 445396005944825225,
           "name": "",
-          keyMapping : 
+          "keyMapping" : 
           {
             "input" : 
             [
@@ -48,8 +48,8 @@
             "output" :
             [
               {
-                "parent" : "behaviorOutputKey",
-                "child" : "planInputKey"
+                "parent" : "planInputKey",
+                "child" : "behaviorOutputKey"
               }
             ]
           }
@@ -59,7 +59,7 @@
       "id": 1092447442809556626,
       "inTransitions": [],
       "name": "ParameterPassingRunBehaviour",
-      "outTransitions": [],
+      "outTransitions": [ 1129456609900 ],
       "parentPlan": 1692837668719979457,
       "positionWeb": {
         "x": 735,
@@ -67,10 +67,49 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 1529456591400,
+      "inTransitions": [
+        1129456609900
+      ],
+      "name": "Second",
+      "outTransitions": [],
+      "parentPlan": 1692837668719979457,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
     }
+
   ],
   "synchronisations": [],
-  "transitions": [],
+  "transitions": [
+    {
+      "comment": "Forth",
+      "id": 1129456609900,
+      "inState": 1529456591400,
+      "name": "MISSING_NAME",
+      "outState": 1092447442809556626,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1529456610600,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    }
+  ],
   "utilityThreshold": 0.0,
   "variables": [],
   "inheritBlackboard" : false,
@@ -95,6 +134,6 @@
       "access" : "protected",
       "defaultValue" : null,
       "comment" : "This is a blackboard entry for testing"
-    },
+    }
   ]
 }

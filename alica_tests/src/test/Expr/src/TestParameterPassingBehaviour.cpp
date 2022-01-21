@@ -29,6 +29,8 @@ void TestParameterPassingBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run831400441334251602) ENABLED START*/
     // Add additional options here
+    std::cerr << "Running behavior" << std::endl;
+    setSuccess();
     /*PROTECTED REGION END*/
 }
 void TestParameterPassingBehaviour::initialiseParameters()
