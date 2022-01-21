@@ -42,7 +42,37 @@ void RunnableObject::stop()
         return;
     }
     ++_signalState;
-    _engine->editScheduler().schedule(std::bind(&RunnableObject::doTerminate, this));
+    _engine->editScheduler().schedule([this]() { doTerminate(); });
+}
+
+void RunnableObject::stop(RunningPlan* rp)
+{
+    if (!isActive(_signalState.load())) {
+        return;
+    }
+    ++_signalState;
+    if (rp->getParent()) {
+        if (!_inheritBlackboard) {
+            assert(rp->getParent()->getBasicPlan());
+            const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+            auto it = std::find_if(
+                    wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+            assert(it != wrappers.end());
+
+            int64_t wrapperId = (*it)->getId();
+
+            BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+            const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
+            auto terminateCall = [this, keyMapping, parentPlan = parentPlan]() {
+                assert(_blackboard);
+                keyMapping.setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
+                doTerminate();
+            };
+            _engine->editScheduler().schedule(terminateCall);
+        }
+    } else {
+        _engine->editScheduler().schedule([this]() { doTerminate(); });
+    }
 }
 
 void RunnableObject::start(RunningPlan* rp)
@@ -83,8 +113,10 @@ void RunnableObject::start(RunningPlan* rp)
             };
             _engine->editScheduler().schedule(initCall);
         }
+    } else {
+        _engine->editScheduler().schedule([this]() { doInit(); });
     }
-} // namespace alica
+}
 
 bool RunnableObject::setTerminatedState()
 {

@@ -10,16 +10,21 @@ namespace alica
 
 void KeyMapping::setInput(const Blackboard* parent_bb, Blackboard* child_bb) const
 {
+    const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
+    auto lockedChildBb = LockedBlackboardRW(*child_bb);
     for (const auto& [parentKey, childKey] : inputMapping) {
-        child_bb->impl().set(childKey, parent_bb->impl().vals.at(parentKey));
-        std::cerr << "passing " << parentKey << " into " << childKey << " value " << parent_bb->impl().get<int>(parentKey) << std::endl;
+        lockedChildBb.set(childKey, lockedParentBb.get(parentKey));
+        std::cerr << "passing " << parentKey << " into " << childKey << std::endl;
     }
 }
 
 void KeyMapping::setOutput(Blackboard* parent_bb, const Blackboard* child_bb) const
 {
+    auto lockedParentBb = LockedBlackboardRW(*parent_bb);
+    const auto lockedChildBb = LockedBlackboardRO(*child_bb);
     for (const auto& [parentKey, childKey] : outputMapping) {
-        parent_bb->impl().set(parentKey, child_bb->impl().vals.at(childKey));
+        lockedParentBb.set(parentKey, lockedChildBb.get(childKey));
+        std::cerr << "passing " << childKey << " into " << parentKey << std::endl;
     }
 }
 

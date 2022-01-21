@@ -28,7 +28,6 @@ public:
     void startBehaviour(RunningPlan& rp);
     void stopBehaviour(RunningPlan& rp);
     void stopAll();
-    void terminateAll();
     bool isBehaviourRunningInContext(const RunningPlan& rp) const;
     const std::map<const ConfAbstractPlanWrapper*, std::shared_ptr<BasicBehaviour>>& getAvailableBehaviours() const { return _availableBehaviours; }
 

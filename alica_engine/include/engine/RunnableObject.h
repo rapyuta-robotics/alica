@@ -40,7 +40,8 @@ protected:
     bool getInheritBlackboard() const { return _inheritBlackboard; }
     void setInheritBlackboard(bool inheritBlackboard) { _inheritBlackboard = inheritBlackboard; }
     void setBlackboard(std::shared_ptr<Blackboard> blackboard);
-    void stop();
+    void stop(RunningPlan* rp);
+    void stop(); // Use only when shutdown engine
     void start(RunningPlan* rp);
     bool initExecuted() const { return isExecutingInContext() ? _initExecuted.load() : false; }
 

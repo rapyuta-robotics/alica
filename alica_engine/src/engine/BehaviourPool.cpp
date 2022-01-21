@@ -81,16 +81,6 @@ void BehaviourPool::stopAll()
 }
 
 /**
- * Calls terminate on all BasicBehaviours.
- */
-void BehaviourPool::terminateAll()
-{
-    for (auto& beh_pair : _availableBehaviours) {
-        beh_pair.second->terminate();
-    }
-}
-
-/**
  * Enables the thread of the BasicBehaviour in the given RunningPlan.
  * @param rp A RunningPlan, which should represent a BehaviourConfiguration.
  */
@@ -117,7 +107,7 @@ void BehaviourPool::stopBehaviour(RunningPlan& rp)
 {
     if (const auto* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
-            bb->stop();
+            bb->stop(&rp);
         }
     } else {
         ALICA_ERROR_MSG("BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()

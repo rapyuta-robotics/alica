@@ -10,7 +10,7 @@ class AbstractPlan;
 class Configuration;
 class ConfAbstractPlanWrapperFactory;
 
-class KeyMaclass ConfAbstractPlanWrapper : public AlicaElement
+class ConfAbstractPlanWrapper : public AlicaElement
 {
 public:
     ConfAbstractPlanWrapper();
