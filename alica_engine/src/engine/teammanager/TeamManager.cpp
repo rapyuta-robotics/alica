@@ -314,6 +314,11 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
         }
     }
 
+    if (agentRole == "") {
+        // Agent is in different roleset, ignore agentAnnouncement
+        return;
+    }
+
     agentInfo = new Agent(_engine, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_engine->getAlicaClock().now());
     _engine->editLog().eventOccurred("New Agent(", aa.senderID, ")");
