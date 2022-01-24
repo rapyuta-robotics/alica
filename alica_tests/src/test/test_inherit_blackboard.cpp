@@ -26,5 +26,14 @@ TEST_F(TestInheritBlackboard, testInheritBlackboard)
     EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], false);
 }
 
+TEST_F(TestInheritBlackboard, testInheritBlackboardFlag)
+{
+    ae->start();
+    // Behaviour has inheritBlackboard set to false
+    EXPECT_TRUE(alica::test::Util::getBasicBehaviour(ae, 831400441334251600, 0)->getInheritBlackboard());
+    // Plan has inheritBlackboard set to false
+    EXPECT_TRUE(alica::test::Util::getBasicPlan(ae, 1692837668719979400, 0)->getInheritBlackboard());
+}
+
 } // namespace
 } // namespace alica

@@ -58,24 +58,13 @@ TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
     EXPECT_EQ(wm->passedParameters["testKey"], 2);
 }
 
-// Old test can be removed
-TEST_F(TestBlackBoard, testParameterPassing)
+TEST_F(TestBlackBoard, testNotInheritBlackboardFlag)
 {
     ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
-    EXPECT_EQ(wm->passedParameters["behaviourParameter"], 1);
-    EXPECT_EQ(wm->passedParameters["planParameter"], 2);
-}
-
-// Old test can be removed
-TEST_F(TestBlackBoard, testRequiresParameters)
-{
-    ae->start();
-    // Behaviour has requiresParameters set to true
-    // EXPECT_TRUE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602, 0)->getRequiresParameters());
-    // SubPlan has requiresParameters set to true
-    // EXPECT_TRUE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getRequiresParameters());
+    // Behaviour has inheritBlackboard set to false
+    EXPECT_FALSE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602, 0)->getInheritBlackboard());
+    // Plan has inheritBlackboard set to false
+    EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getInheritBlackboard());
 }
 
 TEST_F(TestBlackBoard, testRegisterRemoveValue)
