@@ -176,6 +176,13 @@
       "access" : "protected",
       "defaultValue" : null,
       "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planInputFromMaster",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
     }
   ]
 }

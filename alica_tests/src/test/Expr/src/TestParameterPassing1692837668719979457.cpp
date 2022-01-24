@@ -100,6 +100,7 @@ void TestParameterPassing1692837668719979457::onInit()
     bb.set("planOutputKey", 5);
     bb.set("planSecondOutputKey", 7);
     bb.set("planInputKey", 1);
+    wm->passedParameters["planInputFromMaster"] = bb.get<int>("planInputFromMaster");
     std::cerr << "plan init done" << std::endl;
 }
 

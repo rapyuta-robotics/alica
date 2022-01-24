@@ -35,7 +35,17 @@
           "comment": "",
           "configuration": null,
           "id": 105160539449888459,
-          "name": ""
+          "name": "",
+          "keyMapping" : 
+          {
+            "input" : 
+            [
+              {
+                "parent" : "masterKey",
+                "child" : "planInputFromMaster"
+              }
+            ]
+          }
         }
       ],
       "entryPoint": 4058387577648167302,
@@ -56,5 +66,14 @@
   "transitions": [],
   "utilityThreshold": 0.0,
   "variables": [],
-  "inheritBlackboard" : false
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "masterKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
 }

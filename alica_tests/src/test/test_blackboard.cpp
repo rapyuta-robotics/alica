@@ -28,6 +28,10 @@ TEST_F(TestBlackBoard, testJsonTwoBehaviorKeyMapping)
 TEST_F(TestBlackBoard, testJsonPlanKeyMapping)
 {
     // Pass values of mapped keys form a plan into another plan
+    ae->start();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    EXPECT_EQ(wm->passedParameters["planInputFromMaster"], 8);
 }
 
 TEST_F(TestBlackBoard, testJsonBehaviorKeyMapping)
