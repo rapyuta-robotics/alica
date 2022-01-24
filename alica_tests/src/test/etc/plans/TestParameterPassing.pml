@@ -57,9 +57,9 @@
       ],
       "entryPoint": 58084702421574748,
       "id": 1092447442809556626,
-      "inTransitions": [],
-      "name": "ParameterPassingRunBehaviour",
-      "outTransitions": [ 1129456609900 ],
+      "inTransitions": [2229456609900],
+      "name": "FirstCall",
+      "outTransitions": [1129456609900],
       "parentPlan": 1692837668719979457,
       "positionWeb": {
         "x": 735,
@@ -70,14 +70,30 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/TestParameterPassingBehaviour.beh#831400441334251602",
+          "comment": "",
+          "configuration": null,
+          "id": 445396005944825226,
+          "name": "",
+          "keyMapping" : 
+          {
+            "input" : 
+            [
+              {
+                "parent" : "planSecondOutputKey",
+                "child" : "behaviorInputKey"
+              }
+            ]
+          }
+        }
+      ],
       "entryPoint": null,
       "id": 1529456591400,
-      "inTransitions": [
-        1129456609900
-      ],
-      "name": "Second",
-      "outTransitions": [],
+      "inTransitions": [1129456609900],
+      "name": "SecondCall",
+      "outTransitions": [2229456609900],
       "parentPlan": 1692837668719979457,
       "positionWeb": {
         "x": 686,
@@ -93,15 +109,34 @@
     {
       "comment": "Forth",
       "id": 1129456609900,
-      "inState": 1529456591400,
+      "inState": 1092447442809556626,
       "name": "MISSING_NAME",
-      "outState": 1092447442809556626,
+      "outState": 1529456591400,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
         "id": 1529456610600,
+        "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "Back",
+      "id": 2229456609900,
+      "inState": 1529456591400,
+      "name": "MISSING_NAME",
+      "outState":1092447442809556626 ,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2529456610600,
         "name": "MISSING_NAME",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -123,6 +158,13 @@
     },
     {
       "key" : "planInputKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planSecondOutputKey",
       "type" : "std::any",
       "access" : "protected",
       "defaultValue" : null,

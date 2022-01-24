@@ -78,7 +78,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_tracing.cpp
         src/test/test_blackboard.cpp
         src/test/test_alica_plan_context.cpp
-        src/test/test_inheritBlackboard.cpp
+        src/test/test_inherit_blackboard.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

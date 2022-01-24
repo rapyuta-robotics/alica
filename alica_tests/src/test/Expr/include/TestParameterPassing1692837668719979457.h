@@ -33,7 +33,6 @@ protected:
     // Override these methods for your use case
     // virtual void run(void* msg) override;
     virtual void onInit() override;
-    virtual void onTerminate() override;
     // Add/Override protected methods here
     /*PROTECTED REGION END*/
 private:
@@ -47,6 +46,10 @@ class UtilityFunction1692837668719979457 : public BasicUtilityFunction
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 class PreCondition1529456610600 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition2529456610600 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };

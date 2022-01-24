@@ -15,8 +15,24 @@ protected:
     bool stepEngine() const override { return false; }
 };
 
-TEST_F(TestBlackBoard, testJsonKeyMapping)
+TEST_F(TestBlackBoard, testJsonTwoBehaviorKeyMapping)
 {
+    // Two parent values mapped to same behavior input value to differentiate call contexts
+    ae->start();
+    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
+    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5);       // Value set in first behavior call
+    EXPECT_EQ(wm->passedParameters["behaviorSecondInputKey"], 7); // Value set in second behavior call
+}
+
+TEST_F(TestBlackBoard, testJsonPlanKeyMapping)
+{
+    // Pass values of mapped keys form a plan into another plan
+}
+
+TEST_F(TestBlackBoard, testJsonBehaviorKeyMapping)
+{
+    // Pass values of mapped keys form a plan into a behavior and out of a bahavior into a plan
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
@@ -42,6 +58,7 @@ TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
     EXPECT_EQ(wm->passedParameters["testKey"], 2);
 }
 
+// Old test can be removed
 TEST_F(TestBlackBoard, testParameterPassing)
 {
     ae->start();
@@ -51,6 +68,7 @@ TEST_F(TestBlackBoard, testParameterPassing)
     EXPECT_EQ(wm->passedParameters["planParameter"], 2);
 }
 
+// Old test can be removed
 TEST_F(TestBlackBoard, testRequiresParameters)
 {
     ae->start();

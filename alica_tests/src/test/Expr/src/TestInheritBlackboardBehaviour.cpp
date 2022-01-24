@@ -45,6 +45,7 @@ void TestInheritBlackboardBehaviour::initialiseParameters()
     wm->passedParameters["hasBehaviorKey"] = bb.hasValue("behaviorKey");
 
     std::cerr << "end" << std::endl;
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods831400441334251600) ENABLED START*/

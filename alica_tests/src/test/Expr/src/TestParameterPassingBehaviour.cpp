@@ -42,14 +42,16 @@ void TestParameterPassingBehaviour::initialiseParameters()
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
     // wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
 
-    std::cerr << "has behaviorKey " << bb.hasValue("behaviorKey") << std::endl;
     bb.set("behaviorKey", 2);
     wm->passedParameters["behaviorKey"] = bb.get<int>("behaviorKey");
 
-    std::cerr << "has behaviorInputKey " << bb.hasValue("behaviorInputKey") << std::endl;
-    wm->passedParameters["behaviorInputKey"] = bb.get<int>("behaviorInputKey");
+    auto value = bb.get<int>("behaviorInputKey");
+    if (value == 5) {
+        wm->passedParameters["behaviorInputKey"] = value;
+    } else if (value == 7) {
+        wm->passedParameters["behaviorSecondInputKey"] = value;
+    }
 
-    std::cerr << "has behaviorOutputKey " << bb.hasValue("behaviorOutputKey") << std::endl;
     bb.set("behaviorOutputKey", 6);
 
     std::cerr << "end" << std::endl;

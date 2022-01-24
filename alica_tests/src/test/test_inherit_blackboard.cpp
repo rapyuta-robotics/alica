@@ -17,6 +17,8 @@ protected:
 
 TEST_F(TestInheritBlackboard, testInheritBlackboard)
 {
+    // Use inherited blackboards and check if keys are accessible
+    // Todo check if modified values are available
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
