@@ -33,18 +33,15 @@ void TestInheritBlackboardBehaviour::run(void* msg)
 void TestInheritBlackboardBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251600) ENABLED START*/
-    std::cerr << "start" << std::endl;
     LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    // wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
-    std::cerr << "has masterKey " << bb.hasValue("masterKey") << std::endl;
     bb.set("masterKey", 3);
-    wm->passedParameters["masterKey"] = bb.get<int>("masterKey");
-
-    std::cerr << "has behaviorKey " << bb.hasValue("behaviorKey") << std::endl;
-    wm->passedParameters["hasBehaviorKey"] = bb.hasValue("behaviorKey");
-
-    std::cerr << "end" << std::endl;
+    wm->passedParameters["masterKeyInBehavior"] = bb.get<int>("masterKey");
+    if (bb.hasValue("behaviorKey")) {
+        wm->passedParameters["hasBehaviorKey"] = 3;
+    } else {
+        wm->passedParameters["hasBehaviorKey"] = 4;
+    }
 
     /*PROTECTED REGION END*/
 }

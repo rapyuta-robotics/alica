@@ -22,8 +22,8 @@ TEST_F(TestInheritBlackboard, testInheritBlackboard)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
-    EXPECT_EQ(wm->passedParameters["masterKey"], 3);
-    EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], false);
+    EXPECT_EQ(wm->passedParameters["masterKeyInBehavior"], 3);
+    EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], 4);
 }
 
 TEST_F(TestInheritBlackboard, testInheritBlackboardFlag)
