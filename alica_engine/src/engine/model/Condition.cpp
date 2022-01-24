@@ -40,7 +40,9 @@ bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) cons
             // TODO: fix const cast below
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), wm);
         } catch (const std::exception& e) {
-            ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());
+            ALICA_ERROR_MSG("Condition: Exception during evaluation caught: "
+                            << "\n"
+                            << e.what());
         }
         return ret;
     }
