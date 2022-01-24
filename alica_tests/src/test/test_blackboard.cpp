@@ -50,7 +50,7 @@ TEST_F(TestBlackBoard, testJsonBlackboardPlan)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
-    EXPECT_EQ(wm->passedParameters["planTestKey"], 1);
+    EXPECT_EQ(wm->passedParameters["planKey"], 1);
 }
 
 TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
@@ -59,7 +59,7 @@ TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
-    EXPECT_EQ(wm->passedParameters["testKey"], 2);
+    EXPECT_EQ(wm->passedParameters["behaviorKey"], 2);
 }
 
 TEST_F(TestBlackBoard, testNotInheritBlackboardFlag)

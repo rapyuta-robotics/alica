@@ -40,8 +40,6 @@ void TestParameterPassingBehaviour::initialiseParameters()
     std::cerr << "start" << std::endl;
     LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    // wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
-
     bb.set("behaviorKey", 2);
     wm->passedParameters["behaviorKey"] = bb.get<int>("behaviorKey");
 
