@@ -69,10 +69,10 @@ void RunnableObject::stop(RunningPlan* rp)
                 doTerminate();
             };
             _engine->editScheduler().schedule(terminateCall);
+            return;
         }
-    } else {
-        _engine->editScheduler().schedule([this]() { doTerminate(); });
     }
+    _engine->editScheduler().schedule([this]() { doTerminate(); });
 }
 
 void RunnableObject::start(RunningPlan* rp)
