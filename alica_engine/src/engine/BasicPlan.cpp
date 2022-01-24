@@ -37,7 +37,7 @@ void BasicPlan::doInit()
         traceInit("Plan");
         onInit();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT of: " << getName() << "\n" << e.what());
     }
 
     _initExecuted.store(true);
@@ -56,6 +56,7 @@ void BasicPlan::doRun(void* msg)
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
         sendLogMessage(4, err);
+        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-RUN of: " << getName() << "\n" << e.what());
     }
 }
 
@@ -75,7 +76,7 @@ void BasicPlan::doTerminate()
         onTerminate();
         _trace.reset();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE of: " << getName() << "\n" << e.what());
     }
 
     _execContext.store(nullptr);

@@ -197,7 +197,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in precondition: " << e.what());
+        ALICA_ERROR_MSG("Exception in precondition " << preCondition->getId() << ": " << e.what());
         return false;
     }
 }

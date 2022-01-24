@@ -108,7 +108,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
-        ALICA_INFO_MSG("MM: " << beh->toString());
+        ALICA_DEBUG_MSG("MM: " << beh->toString());
     }
 
     return masterPlan;
@@ -127,7 +127,7 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 
     RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
     RoleSetFactory::attachReferences();
-    ALICA_INFO_MSG("MM: Parsed the following role set: \n" << roleSet->toString());
+    ALICA_DEBUG_MSG("MM: Parsed the following role set: \n" << roleSet->toString());
     return roleSet;
 }
 

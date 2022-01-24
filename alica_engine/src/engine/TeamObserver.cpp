@@ -108,7 +108,7 @@ void TeamObserver::tick(RunningPlan* root)
 
 void TeamObserver::close()
 {
-    ALICA_INFO_MSG("TO: Closed Team Observer");
+    ALICA_DEBUG_MSG("TO: Closed Team Observer");
 }
 
 /**

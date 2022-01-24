@@ -83,7 +83,7 @@ void BasicBehaviour::doInit()
         traceInit("Behaviour");
         initialiseParameters();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << "\n" << e.what());
     }
 
     _initExecuted.store(true);
@@ -103,6 +103,7 @@ void BasicBehaviour::runJob(void* msg)
         run(msg);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-RUN of: " << getName() << "\n" << e.what());
         sendLogMessage(4, err);
     }
     _triggeredJobRunning = false;
@@ -138,7 +139,7 @@ void BasicBehaviour::doTerminate()
         onTermination();
         _trace.reset();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << "\n" << e.what());
     }
 
     // Reset the execution context so that the RunningPlan instance can be deleted
