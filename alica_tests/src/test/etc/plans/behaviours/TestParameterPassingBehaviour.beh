@@ -7,7 +7,7 @@
   "name": "TestParameterPassingBehaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
+  "relativeDirectory": "Behaviour",
   "requiresParameters": true,
   "runtimeCondition": null,
   "variables": [],

@@ -7,7 +7,7 @@
   "name": "TestInheritBlackboardBehaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
+  "relativeDirectory": "Behaviour",
   "requiresParameters": true,
   "runtimeCondition": null,
   "variables": [],

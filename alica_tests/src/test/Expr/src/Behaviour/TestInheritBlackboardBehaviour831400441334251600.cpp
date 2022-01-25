@@ -1,4 +1,4 @@
-#include "TestInheritBlackboardBehaviour831400441334251600.h"
+#include "Behaviour/TestInheritBlackboardBehaviour831400441334251600.h"
 #include <memory>
 
 /*PROTECTED REGION ID(inccppBC831400441334251600) ENABLED START*/
