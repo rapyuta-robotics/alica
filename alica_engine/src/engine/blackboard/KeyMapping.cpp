@@ -1,9 +1,11 @@
 #include <algorithm>
+#include <alica_common_config/debug_output.h>
 #include <any>
 #include <assert.h>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/blackboard/KeyMapping.h>
 #include <iostream>
+#include <sstream>
 
 namespace alica
 {
@@ -14,17 +16,16 @@ void KeyMapping::setInput(const Blackboard* parent_bb, Blackboard* child_bb) con
     auto lockedChildBb = LockedBlackboardRW(*child_bb);
     for (const auto& [parentKey, childKey] : inputMapping) {
         lockedChildBb.set(childKey, lockedParentBb.get(parentKey));
-        std::cerr << "passing " << parentKey << " into " << childKey << std::endl;
+        ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
     }
 }
-
 void KeyMapping::setOutput(Blackboard* parent_bb, const Blackboard* child_bb) const
 {
     auto lockedParentBb = LockedBlackboardRW(*parent_bb);
     const auto lockedChildBb = LockedBlackboardRO(*child_bb);
     for (const auto& [parentKey, childKey] : outputMapping) {
         lockedParentBb.set(parentKey, lockedChildBb.get(childKey));
-        std::cerr << "passing " << childKey << " into " << parentKey << std::endl;
+        ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
     }
 }
 

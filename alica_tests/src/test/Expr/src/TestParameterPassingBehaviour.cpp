@@ -29,15 +29,12 @@ void TestParameterPassingBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run831400441334251602) ENABLED START*/
     // Add additional options here
-    std::cerr << "Running behavior" << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }
 void TestParameterPassingBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251602) ENABLED START*/
-    // Add additional options here
-    std::cerr << "start" << std::endl;
     LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
     bb.set("behaviorKey", 2);
@@ -51,9 +48,6 @@ void TestParameterPassingBehaviour::initialiseParameters()
     }
 
     bb.set("behaviorOutputKey", 6);
-
-    std::cerr << "end" << std::endl;
-
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods831400441334251602) ENABLED START*/

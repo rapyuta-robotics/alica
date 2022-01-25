@@ -5,7 +5,6 @@
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
-#include "engine/blackboard/Blackboard.h"
 
 namespace alica
 {

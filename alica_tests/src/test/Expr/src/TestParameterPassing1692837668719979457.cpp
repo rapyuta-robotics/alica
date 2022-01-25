@@ -57,7 +57,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
 bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1129456609900) ENABLED START*/
-    std::cerr << "condition end " << rp->isAnyChildStatus(PlanStatus::Success) << std::endl;
     return rp->isAnyChildStatus(PlanStatus::Success);
     /*PROTECTED REGION END*/
 }
@@ -88,21 +87,16 @@ bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const 
 }
 
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
-// Add additional options here
 void TestParameterPassing1692837668719979457::onInit()
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    // wm->passedParameters["planParameter"] = bb.get<int>("planParameter");
-    std::cerr << "hasValue " << bb.hasValue("planKey") << std::endl;
     bb.set("planKey", 1);
     wm->passedParameters["planKey"] = bb.get<int>("planKey");
     bb.set("planOutputKey", 5);
     bb.set("planSecondOutputKey", 7);
     bb.set("planInputKey", 1);
     wm->passedParameters["planInputFromMaster"] = bb.get<int>("planInputFromMaster");
-    std::cerr << "plan init done" << std::endl;
 }
-
 /*PROTECTED REGION END*/
 } // namespace alica
