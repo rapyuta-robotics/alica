@@ -82,39 +82,37 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
-    if (rp->getParent()) {
-        if (!_inheritBlackboard) {
-            assert(rp->getParent()->getBasicPlan());
-            const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-            auto it = std::find_if(
-                    wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
-            assert(it != wrappers.end());
-
-            int64_t wrapperId = (*it)->getId();
-
-            BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-            const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
-            auto initCall = [this, keyMapping, parentPlan = parentPlan]() {
-                assert(_blackboard);
-                keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
-                doInit();
-            };
-            _engine->editScheduler().schedule(initCall);
-        } else {
-            BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
-            auto initCall = [this, parentPlan = parentPlan]() {
-                // Share Blackboard with parent if we have one, or start fresh otherwise
-                if (parentPlan) {
-                    _blackboard = parentPlan->getBlackboard();
-                } else {
-                    _blackboard = std::make_shared<Blackboard>();
-                }
-                doInit();
-            };
-            _engine->editScheduler().schedule(initCall);
-        }
-    } else {
+    if (!rp->getParent()) {
         _engine->editScheduler().schedule([this]() { doInit(); });
+    } else if (!_inheritBlackboard) {
+        assert(rp->getParent()->getBasicPlan());
+        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+        auto it =
+                std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+        assert(it != wrappers.end());
+
+        int64_t wrapperId = (*it)->getId();
+
+        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+        const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
+        auto initCall = [this, keyMapping, parentPlan = parentPlan]() {
+            assert(_blackboard);
+            keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
+    } else if (_inheritBlackboard) {
+        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
+        auto initCall = [this, parentPlan = parentPlan]() {
+            // Share Blackboard with parent if we have one, or start fresh otherwise
+            if (parentPlan) {
+                _blackboard = parentPlan->getBlackboard();
+            } else {
+                _blackboard = std::make_shared<Blackboard>();
+            }
+            doInit();
+        };
+        _engine->editScheduler().schedule(initCall);
     }
 }
 
