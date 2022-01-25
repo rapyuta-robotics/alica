@@ -1,1 +1,0 @@
-// Delete this file after code generation has been adjusted to not generate the include of this file

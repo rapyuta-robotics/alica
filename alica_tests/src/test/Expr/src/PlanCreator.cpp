@@ -254,5 +254,4 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         break;
     }
 }
-
 } // namespace alica

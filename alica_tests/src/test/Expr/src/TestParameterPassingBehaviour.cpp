@@ -48,6 +48,7 @@ void TestParameterPassingBehaviour::initialiseParameters()
     }
 
     bb.set("behaviorOutputKey", 6);
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods831400441334251602) ENABLED START*/
