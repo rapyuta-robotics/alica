@@ -21,8 +21,8 @@ TEST_F(TestInheritBlackboard, testInheritBlackboard)
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
-    EXPECT_EQ(wm->passedParameters["masterKeyInBehavior"], 3);
-    EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], 4);
+    EXPECT_EQ(wm->passedParameters["masterKeyInBehavior"], 3); // Read a key defined in the master plan inside the behavior
+    EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], 4);      // Check that a key defined in the behavior is not available in the master plan
 }
 
 TEST_F(TestInheritBlackboard, testInheritBlackboardFlag)
