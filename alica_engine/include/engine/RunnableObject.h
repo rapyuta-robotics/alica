@@ -7,6 +7,7 @@
 
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
+#include "engine/blackboard/KeyMapping.h"
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -23,6 +24,7 @@ class RunningPlan;
 class ThreadSafePlanInterface;
 class AlicaEngine;
 class IAlicaWorldModel;
+class BasicPlan;
 
 /**
  * The base class for BasicBehaviour and BasicPlan
@@ -122,5 +124,6 @@ protected:
     void traceInit(const std::string& type);
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
+    std::pair<BasicPlan*, KeyMapping> getParentPlanAndKeyMapping(RunningPlan* rp) const;
 };
 } /* namespace alica */

@@ -46,6 +46,18 @@ void RunnableObject::stop()
     _engine->editScheduler().schedule([this]() { doTerminate(); });
 }
 
+std::pair<BasicPlan*, KeyMapping> RunnableObject::getParentPlanAndKeyMapping(RunningPlan* rp) const
+{
+    assert(rp->getParent()->getBasicPlan());
+    BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+    const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+    assert(it != wrappers.end());
+    int64_t wrapperId = (*it)->getId();
+    const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
+    return {parentPlan, keyMapping};
+}
+
 void RunnableObject::stop(RunningPlan* rp)
 {
     if (!isActive(_signalState.load())) {
@@ -54,17 +66,8 @@ void RunnableObject::stop(RunningPlan* rp)
     ++_signalState;
     if (rp->getParent()) {
         if (!_inheritBlackboard) {
-            assert(rp->getParent()->getBasicPlan());
-            const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-            auto it = std::find_if(
-                    wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
-            assert(it != wrappers.end());
-
-            int64_t wrapperId = (*it)->getId();
-
-            BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-            const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
-            auto terminateCall = [this, keyMapping, parentPlan = parentPlan]() {
+            auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
+            auto terminateCall = [this, parentPlan, keyMapping]() {
                 assert(_blackboard);
                 keyMapping.setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
                 doTerminate();
@@ -92,18 +95,8 @@ void RunnableObject::start(RunningPlan* rp)
             doInit();
         };
     } else if (!_inheritBlackboard) {
-        assert(rp->getParent()->getBasicPlan());
-        const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-        auto it =
-                std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
-        assert(it != wrappers.end());
-
-        int64_t wrapperId = (*it)->getId();
-
-        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-        const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
-
-        initCall = [this, keyMapping, parentPlan]() {
+        auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
+        initCall = [this, parentPlan, keyMapping]() {
             _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
             keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
             doInit();
