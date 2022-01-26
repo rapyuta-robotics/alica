@@ -23,7 +23,7 @@ struct AgentAnnouncement
     uint32_t token;
     std::string senderName;
     uint32_t senderSdk;
-    uint32_t planHash;
+    uint64_t planHash;
     int64_t roleId;
     // Agent capabilities
     std::vector<CapabilityPair> capabilities;

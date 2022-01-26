@@ -113,8 +113,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
     _localAnnouncement.token = rd();
     _localAnnouncement.senderName = localAgentName;
     _localAnnouncement.senderSdk = _engine->getVersion();
-    // TODO: add plan hash
-    _localAnnouncement.planHash = 0;
+    _localAnnouncement.planHash = _engine->getMasterPlanId();
 
     const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();
@@ -312,11 +311,6 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
         if (role->getId() == aa.roleId) {
             agentRole = role->getName();
         }
-    }
-
-    if (agentRole == "") {
-        // Agent is in different roleset, ignore agentAnnouncement
-        return;
     }
 
     agentInfo = new Agent(_engine, _teamTimeOut, agentRole, aa);
