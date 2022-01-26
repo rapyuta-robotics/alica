@@ -23,6 +23,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _signalState(1)
         , _execState(1)
         , _wm(wm)
+        , _blackboard(nullptr)
 {
 }
 
@@ -82,8 +83,14 @@ void RunnableObject::start(RunningPlan* rp)
     }
     ++_signalState;
     _signalContext.store(rp);
+    std::function<void()> initCall;
     if (!rp->getParent()) {
-        _engine->editScheduler().schedule([this]() { doInit(); });
+        initCall = [this]() {
+            if (!_blackboard) {
+                _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+            }
+            doInit();
+        };
     } else if (!_inheritBlackboard) {
         assert(rp->getParent()->getBasicPlan());
         const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
@@ -95,25 +102,26 @@ void RunnableObject::start(RunningPlan* rp)
 
         BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
         const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
-        auto initCall = [this, keyMapping, parentPlan = parentPlan]() {
-            assert(_blackboard);
+
+        initCall = [this, keyMapping, parentPlan]() {
+            _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
             keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
             doInit();
         };
-        _engine->editScheduler().schedule(initCall);
     } else if (_inheritBlackboard) {
-        BasicPlan* parentPlan = rp->getParent() ? rp->getParent()->getBasicPlan() : nullptr;
-        auto initCall = [this, parentPlan = parentPlan]() {
-            // Share Blackboard with parent if we have one, or start fresh otherwise
+        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
+        initCall = [this, parentPlan]() {
             if (parentPlan) {
                 _blackboard = parentPlan->getBlackboard();
             } else {
-                _blackboard = std::make_shared<Blackboard>();
+                if (!_blackboard) {
+                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+                }
             }
             doInit();
         };
-        _engine->editScheduler().schedule(initCall);
     }
+    _engine->editScheduler().schedule(initCall);
 }
 
 bool RunnableObject::setTerminatedState()
@@ -173,8 +181,8 @@ void RunnableObject::traceInit(const std::string& type)
     }
 }
 
-void RunnableObject::setBlackboard(std::shared_ptr<Blackboard> blackboard)
+void RunnableObject::setBlackboardBlueprint(const BlackboardBlueprint& blackboard)
 {
-    _blackboard = blackboard;
+    _blackboardBlueprint = blackboard;
 }
 } /* namespace alica */

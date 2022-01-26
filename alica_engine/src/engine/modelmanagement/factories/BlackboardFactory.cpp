@@ -1,26 +1,25 @@
 #include "engine/modelmanagement/factories/BlackboardFactory.h"
 
-#include "engine/blackboard/Blackboard.h"
+#include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/modelmanagement/Strings.h"
 #include <any>
 
 namespace alica
 {
-std::unique_ptr<Blackboard> BlackboardFactory::create(const YAML::Node& node)
+BlackboardBlueprint BlackboardFactory::create(const YAML::Node& node)
 {
 
-    auto blackboard = std::make_unique<Blackboard>();
-    auto& blackboardInternal = blackboard->impl();
+    BlackboardBlueprint blackboard;
     for (const auto& entry : node) {
         auto key = getValue<std::string>(entry, Strings::key);
-        blackboardInternal.registerValue(key);
+        blackboard.registerValue(key);
     }
     return blackboard;
 }
 
-std::unique_ptr<Blackboard> BlackboardFactory::createEmpty()
+BlackboardBlueprint BlackboardFactory::createEmpty()
 {
-    return std::make_unique<Blackboard>();
+    return BlackboardBlueprint();
 }
 
 } // namespace alica

@@ -61,7 +61,7 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
                 basicBeh->setInterval(1000 / behaviour->getFrequency());
             }
             basicBeh->setInheritBlackboard(behaviour->getInheritBlackboard());
-            basicBeh->setBlackboard(behaviour->getBlackboard());
+            basicBeh->setBlackboardBlueprint(behaviour->getBlackboardBlueprint());
             basicBeh->setEngine(_ae);
             basicBeh->init();
             _availableBehaviours.insert(std::make_pair(wrapper, basicBeh));

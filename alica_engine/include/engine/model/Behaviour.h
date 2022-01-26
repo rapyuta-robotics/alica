@@ -5,6 +5,7 @@
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
+#include "engine/blackboard/BlackboardBlueprint.h"
 
 namespace alica
 {
@@ -20,7 +21,6 @@ class PreCondition;
 class RuntimeCondition;
 class PostCondition;
 class AlicaEngine;
-class Blackboard;
 
 /**
  * Represents a Behaviour within the plan tree
@@ -40,7 +40,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
-    std::shared_ptr<Blackboard> getBlackboard() const { return _blackboard; }
+    BlackboardBlueprint getBlackboardBlueprint() const { return _blackboardBlueprint; }
 
 private:
     friend ModelFactory;
@@ -83,7 +83,7 @@ private:
      */
     PostCondition* _postCondition;
 
-    std::shared_ptr<Blackboard> _blackboard;
+    BlackboardBlueprint _blackboardBlueprint;
 };
 
 } // namespace alica

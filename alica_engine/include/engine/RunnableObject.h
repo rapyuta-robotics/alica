@@ -6,6 +6,7 @@
 #include <alica_common_config/debug_output.h>
 
 #include "engine/blackboard/Blackboard.h"
+#include "engine/blackboard/BlackboardBlueprint.h"
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -39,7 +40,7 @@ protected:
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
     bool getInheritBlackboard() const { return _inheritBlackboard; }
     void setInheritBlackboard(bool inheritBlackboard) { _inheritBlackboard = inheritBlackboard; }
-    void setBlackboard(std::shared_ptr<Blackboard> blackboard);
+    void setBlackboardBlueprint(const BlackboardBlueprint& blackboard);
     void stop(RunningPlan* rp);
     void stop(); // Use only when shutdown engine
     void start(RunningPlan* rp);
@@ -94,6 +95,7 @@ protected:
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
+    BlackboardBlueprint _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
 

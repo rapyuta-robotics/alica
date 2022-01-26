@@ -19,7 +19,6 @@ class PlanFactory;
 class PreCondition;
 class RuntimeCondition;
 class AlicaEngine;
-class Blackboard;
 
 /**
  * An ALICA plan
@@ -56,7 +55,7 @@ public:
     int getFrequency() const { return _frequency; }
 
     bool getInheritBlackboard() const { return _inheritBlackboard; }
-    std::shared_ptr<Blackboard> getBlackboard() const { return _blackboard; }
+    BlackboardBlueprint getBlackboardBlueprint() const { return _blackboardBlueprint; }
 
     std::string toString(std::string indent = "") const;
 
@@ -86,7 +85,7 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    std::shared_ptr<Blackboard> _blackboard;
+    BlackboardBlueprint _blackboardBlueprint;
     // TODO: move to plan pool once it is implemented
     std::unique_ptr<BasicPlan> _basicPlan;
 

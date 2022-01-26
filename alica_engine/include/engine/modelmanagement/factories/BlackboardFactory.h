@@ -6,12 +6,12 @@
 
 namespace alica
 {
-class Blackboard;
+class BlackboardBlueprint;
 class BlackboardFactory : public Factory
 {
 public:
-    static std::unique_ptr<Blackboard> create(const YAML::Node& node);
-    static std::unique_ptr<Blackboard> createEmpty();
+    static BlackboardBlueprint create(const YAML::Node& node);
+    static BlackboardBlueprint createEmpty();
 
 private:
     BlackboardFactory() = delete;
