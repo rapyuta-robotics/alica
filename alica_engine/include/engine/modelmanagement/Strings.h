@@ -36,8 +36,8 @@ static const std::string blackboard = "blackboard";
 static const std::string keyMapping = "keyMapping";
 static const std::string input = "input";
 static const std::string output = "output";
-static const std::string parent = "parent";
-static const std::string child = "child";
+static const std::string parentKey = "parentKey";
+static const std::string childKey = "childKey";
 
 static const std::string id = "id";
 static const std::string name = "name";

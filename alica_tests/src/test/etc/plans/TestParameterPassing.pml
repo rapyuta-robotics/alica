@@ -41,15 +41,15 @@
             "input" : 
             [
               {
-                "parent" : "planOutputKey",
-                "child" : "behaviorInputKey"
+                "parentKey" : "planOutputKey",
+                "childKey" : "behaviorInputKey"
               }
             ],
             "output" :
             [
               {
-                "parent" : "planInputKey",
-                "child" : "behaviorOutputKey"
+                "parentKey" : "planInputKey",
+                "childKey" : "behaviorOutputKey"
               }
             ]
           }
@@ -82,8 +82,8 @@
             "input" : 
             [
               {
-                "parent" : "planSecondOutputKey",
-                "child" : "behaviorInputKey"
+                "parentKey" : "planSecondOutputKey",
+                "childKey" : "behaviorInputKey"
               }
             ]
           }

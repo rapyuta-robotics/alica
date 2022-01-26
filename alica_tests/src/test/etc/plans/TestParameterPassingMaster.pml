@@ -41,8 +41,8 @@
             "input" : 
             [
               {
-                "parent" : "masterKey",
-                "child" : "planInputFromMaster"
+                "parentKey" : "masterKey",
+                "childKey" : "planInputFromMaster"
               }
             ]
           }
