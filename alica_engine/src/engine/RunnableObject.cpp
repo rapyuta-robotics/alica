@@ -84,7 +84,7 @@ void RunnableObject::start(RunningPlan* rp)
     ++_signalState;
     _signalContext.store(rp);
     std::function<void()> initCall;
-    if (!rp->getParent()) {
+    if (!rp->getParent() || !rp->getParent()->getBasicPlan()) {
         initCall = [this]() {
             if (!_blackboard) {
                 _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
@@ -111,13 +111,7 @@ void RunnableObject::start(RunningPlan* rp)
     } else if (_inheritBlackboard) {
         BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
         initCall = [this, parentPlan]() {
-            if (parentPlan) {
-                _blackboard = parentPlan->getBlackboard();
-            } else {
-                if (!_blackboard) {
-                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
-                }
-            }
+            _blackboard = parentPlan->getBlackboard();
             doInit();
         };
     }
