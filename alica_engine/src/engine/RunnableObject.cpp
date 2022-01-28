@@ -71,7 +71,7 @@ void RunnableObject::start(RunningPlan* rp)
             _blackboard->impl().clear();
             try {
                 if (!planAttachment->setParameters(*parentPlan->getBlackboard(), *_blackboard)) {
-                    std::cerr << "Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled" << std::endl;
+                    ALICA_ERROR_MSG("Setting parameters failed, supposedly as the context has already changed.  Plan will not be scheduled");
                     return;
                 }
             } catch (const std::exception& e) {
