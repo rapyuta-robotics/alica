@@ -123,5 +123,7 @@ protected:
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
     std::pair<BasicPlan*, const KeyMapping*> getParentPlanAndKeyMapping(RunningPlan* rp) const;
+    void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
+    void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
 };
 } /* namespace alica */

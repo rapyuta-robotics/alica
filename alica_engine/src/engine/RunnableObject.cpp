@@ -69,7 +69,7 @@ void RunnableObject::stop(RunningPlan* rp)
             auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
             auto terminateCall = [this, parentPlan, keyMapping]() {
                 assert(_blackboard);
-                keyMapping->setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
+                setOutput(parentPlan->getBlackboard().get(), keyMapping);
                 doTerminate();
             };
             _engine->editScheduler().schedule(terminateCall);
@@ -102,7 +102,7 @@ void RunnableObject::start(RunningPlan* rp)
         auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
         initCall = [this, parentPlan, keyMapping]() {
             _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-            keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get());
+            setInput(parentPlan->getBlackboard().get(), keyMapping);
             doInit();
         };
     } else if (getInheritBlackboard()) {
@@ -175,5 +175,25 @@ void RunnableObject::traceInit(const std::string& type)
 void RunnableObject::setBlackboardBlueprint(const BlackboardBlueprint* blackboard)
 {
     _blackboardBlueprint = blackboard;
+}
+
+void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
+{
+    const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
+    auto& childBb = _blackboard->impl(); // Child not started yet, no other user exists, dont' use lock
+    for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
+        childBb.set(childKey, lockedParentBb.get(parentKey));
+        ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
+    }
+}
+
+void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const
+{
+    auto lockedParentBb = LockedBlackboardRW(*parent_bb);
+    const auto& childBb = _blackboard->impl(); // Child is terminated, no other users exists, don't use lock
+    for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
+        lockedParentBb.set(parentKey, childBb.get(childKey));
+        ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
+    }
 }
 } /* namespace alica */

@@ -11,16 +11,17 @@ class Blackboard;
 class KeyMapping
 {
 public:
+    using KeyMappingList = std::vector<std::pair<std::string, std::string>>;
     KeyMapping() = default;
     virtual ~KeyMapping() = default;
-    void setInput(const Blackboard* parent_bb, Blackboard* child_bb) const;
-    void setOutput(Blackboard* parent_bb, const Blackboard* child_bb) const;
+    KeyMappingList getInputMapping() const;
+    KeyMappingList getOutputMapping() const;
     void addInputMapping(const std::string& parentKey, const std::string& childKey);
     void addOutputMapping(const std::string& parentKey, const std::string& childKey);
 
 private:
-    std::vector<std::pair<std::string, std::string>> inputMapping;
-    std::vector<std::pair<std::string, std::string>> outputMapping;
+    KeyMappingList _inputMapping;
+    KeyMappingList _outputMapping;
 };
 
 } /* namespace alica */
