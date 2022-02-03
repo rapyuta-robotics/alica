@@ -77,7 +77,7 @@ private:
      */
     PostCondition* _postCondition;
     /**
-     * If nullptr it will simply receive a copy of its parents Blackboard
+     * If nullptr it will simply receive a reference to it's parents Blackboard
      * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
      */
     const BlackboardBlueprint* _blackboardBlueprint;

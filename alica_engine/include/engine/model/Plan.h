@@ -113,7 +113,7 @@ private:
      */
     int _frequency;
     /**
-     * If nullptr, it will simply receive a copy of its parents Blackboard
+     * If nullptr, it will simply receive a reference to its parents Blackboard
      * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
      */
     const BlackboardBlueprint* _blackboardBlueprint;
