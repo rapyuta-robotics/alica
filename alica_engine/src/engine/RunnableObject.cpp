@@ -91,7 +91,7 @@ void RunnableObject::start(RunningPlan* rp)
         initCall = [this]() {
             if (!_blackboard) {
                 if (_blackboardBlueprint) {
-                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
                 } else {
                     _blackboard = std::make_shared<Blackboard>();
                 }
@@ -101,7 +101,7 @@ void RunnableObject::start(RunningPlan* rp)
     } else if (!getInheritBlackboard()) {
         auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
         initCall = [this, parentPlan, keyMapping]() {
-            _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+            _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
             keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get());
             doInit();
         };
