@@ -13,18 +13,18 @@ namespace alica
 void KeyMapping::setInput(const Blackboard* parent_bb, Blackboard* child_bb) const
 {
     const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
-    auto lockedChildBb = LockedBlackboardRW(*child_bb);
+    auto& childBb = child_bb->impl(); // Child not started yet, no other user exists, dont' use lock
     for (const auto& [parentKey, childKey] : inputMapping) {
-        lockedChildBb.set(childKey, lockedParentBb.get(parentKey));
+        childBb.set(childKey, lockedParentBb.get(parentKey));
         ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
     }
 }
 void KeyMapping::setOutput(Blackboard* parent_bb, const Blackboard* child_bb) const
 {
     auto lockedParentBb = LockedBlackboardRW(*parent_bb);
-    const auto lockedChildBb = LockedBlackboardRO(*child_bb);
+    const auto& childBb = child_bb->impl(); // Child is terminated, no other users exists, don't use lock
     for (const auto& [parentKey, childKey] : outputMapping) {
-        lockedParentBb.set(parentKey, lockedChildBb.get(childKey));
+        lockedParentBb.set(parentKey, childBb.get(childKey));
         ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
     }
 }
