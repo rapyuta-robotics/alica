@@ -62,8 +62,6 @@ public:
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
-    void terminate(RunningPlan* rp) { stop(rp); };
-
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
 
     bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
