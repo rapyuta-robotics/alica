@@ -122,6 +122,6 @@ protected:
     void traceInit(const std::string& type);
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
-    std::pair<BasicPlan*, KeyMapping> getParentPlanAndKeyMapping(RunningPlan* rp) const;
+    std::pair<BasicPlan*, const KeyMapping*> getParentPlanAndKeyMapping(RunningPlan* rp) const;
 };
 } /* namespace alica */

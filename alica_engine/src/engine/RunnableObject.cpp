@@ -46,7 +46,7 @@ void RunnableObject::stop()
     _engine->editScheduler().schedule([this]() { doTerminate(); });
 }
 
-std::pair<BasicPlan*, KeyMapping> RunnableObject::getParentPlanAndKeyMapping(RunningPlan* rp) const
+std::pair<BasicPlan*, const KeyMapping*> RunnableObject::getParentPlanAndKeyMapping(RunningPlan* rp) const
 {
     assert(rp->getParent()->getBasicPlan());
     BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
@@ -69,7 +69,7 @@ void RunnableObject::stop(RunningPlan* rp)
             auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
             auto terminateCall = [this, parentPlan, keyMapping]() {
                 assert(_blackboard);
-                keyMapping.setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
+                keyMapping->setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
                 doTerminate();
             };
             _engine->editScheduler().schedule(terminateCall);
@@ -102,7 +102,7 @@ void RunnableObject::start(RunningPlan* rp)
         auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
         initCall = [this, parentPlan, keyMapping]() {
             _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
-            keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
+            keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get());
             doInit();
         };
     } else if (getInheritBlackboard()) {

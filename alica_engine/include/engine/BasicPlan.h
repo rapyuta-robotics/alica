@@ -40,7 +40,7 @@ public:
 
     void addKeyMappings(const Plan* plan);
 
-    KeyMapping getKeyMapping(int64_t id) { return _keyMappings.at(id); }
+    const KeyMapping* getKeyMapping(int64_t id) { return _keyMappings.at(id); }
 
 protected:
     using RunnableObject::getTrace;
@@ -68,6 +68,6 @@ private:
 
     bool _isMasterPlan;
     // Map from ConfAbstractPlanWrapper id to associated attachment
-    std::unordered_map<int64_t, KeyMapping> _keyMappings;
+    std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
 };
 } // namespace alica

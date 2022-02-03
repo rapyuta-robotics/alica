@@ -12,7 +12,7 @@ class KeyMapping;
 class KeyMappingFactory : public Factory
 {
 public:
-    static KeyMapping create(const YAML::Node& node);
+    static const KeyMapping* create(const YAML::Node& node);
 
 private:
     KeyMappingFactory() = delete;
