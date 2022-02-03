@@ -16,8 +16,8 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _runTraced(false)
         , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _inheritBlackboard(false)
         , _activeRunJobId(-1)
+        , _blackboardBlueprint(nullptr)
         , _signalContext(nullptr)
         , _execContext(nullptr)
         , _signalState(1)
@@ -65,7 +65,7 @@ void RunnableObject::stop(RunningPlan* rp)
     }
     ++_signalState;
     if (rp->getParent()) {
-        if (!_inheritBlackboard) {
+        if (!getInheritBlackboard()) {
             auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
             auto terminateCall = [this, parentPlan, keyMapping]() {
                 assert(_blackboard);
@@ -90,18 +90,22 @@ void RunnableObject::start(RunningPlan* rp)
     if (!rp->getParent() || !rp->getParent()->getBasicPlan()) {
         initCall = [this]() {
             if (!_blackboard) {
-                _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+                if (_blackboardBlueprint) {
+                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
+                } else {
+                    _blackboard = std::make_shared<Blackboard>();
+                }
             }
             doInit();
         };
-    } else if (!_inheritBlackboard) {
+    } else if (!getInheritBlackboard()) {
         auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
         initCall = [this, parentPlan, keyMapping]() {
             _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint);
             keyMapping.setInput(parentPlan->getBlackboard().get(), _blackboard.get());
             doInit();
         };
-    } else if (_inheritBlackboard) {
+    } else if (getInheritBlackboard()) {
         BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
         initCall = [this, parentPlan]() {
             _blackboard = parentPlan->getBlackboard();
@@ -168,7 +172,7 @@ void RunnableObject::traceInit(const std::string& type)
     }
 }
 
-void RunnableObject::setBlackboardBlueprint(const BlackboardBlueprint& blackboard)
+void RunnableObject::setBlackboardBlueprint(const BlackboardBlueprint* blackboard)
 {
     _blackboardBlueprint = blackboard;
 }

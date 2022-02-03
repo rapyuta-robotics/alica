@@ -54,8 +54,7 @@ public:
 
     int getFrequency() const { return _frequency; }
 
-    bool getInheritBlackboard() const { return _inheritBlackboard; }
-    BlackboardBlueprint getBlackboardBlueprint() const { return _blackboardBlueprint; }
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint; }
 
     std::string toString(std::string indent = "") const;
 
@@ -85,7 +84,6 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    BlackboardBlueprint _blackboardBlueprint;
     // TODO: move to plan pool once it is implemented
     std::unique_ptr<BasicPlan> _basicPlan;
 
@@ -115,11 +113,10 @@ private:
      */
     int _frequency;
     /**
-     * Specifies whether this plan inherits its parents Blackboard.
-     * If so, it will simply receive a copy of its parents Blackboard
+     * If nullptr, it will simply receive a copy of its parents Blackboard
      * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
      */
-    bool _inheritBlackboard;
+    const BlackboardBlueprint* _blackboardBlueprint;
 };
 
 } // namespace alica

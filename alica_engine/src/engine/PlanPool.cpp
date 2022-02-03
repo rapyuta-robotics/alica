@@ -46,7 +46,6 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
     } else {
         basicPlan->setInterval(1000 / plan->getFrequency());
     }
-    basicPlan->setInheritBlackboard(plan->getInheritBlackboard());
     basicPlan->setBlackboardBlueprint(plan->getBlackboardBlueprint());
 
     basicPlan->setEngine(_ae);

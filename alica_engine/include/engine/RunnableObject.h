@@ -40,9 +40,8 @@ protected:
     const std::string& getName() { return _name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
-    bool getInheritBlackboard() const { return _inheritBlackboard; }
-    void setInheritBlackboard(bool inheritBlackboard) { _inheritBlackboard = inheritBlackboard; }
-    void setBlackboardBlueprint(const BlackboardBlueprint& blackboard);
+    bool getInheritBlackboard() const { return _blackboardBlueprint == nullptr; };
+    void setBlackboardBlueprint(const BlackboardBlueprint* blackboard);
     void stop(RunningPlan* rp);
     void stop(); // Use only when shutdown engine
     void start(RunningPlan* rp);
@@ -90,14 +89,13 @@ protected:
     std::atomic<bool> _initExecuted;
     std::string _name;
     AlicaTime _msInterval;
-    bool _inheritBlackboard;
     uint8_t _flags;
     std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
-    BlackboardBlueprint _blackboardBlueprint;
+    const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
 

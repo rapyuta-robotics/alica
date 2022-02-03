@@ -3,7 +3,7 @@
 #include "engine/model/Behaviour.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
-#include "engine/modelmanagement/factories/BlackboardFactory.h"
+#include "engine/modelmanagement/factories/BlackboardBlueprintFactory.h"
 #include "engine/modelmanagement/factories/PostConditionFactory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/RuntimeConditionFactory.h"
@@ -20,7 +20,6 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
-    behaviour->_inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
 
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
@@ -31,12 +30,15 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::postCondition])) {
         behaviour->_postCondition = PostConditionFactory::create(node[alica::Strings::postCondition], behaviour);
     }
-    if (!behaviour->_inheritBlackboard) {
+    auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
+    if (!inheritBlackboard) {
         if (Factory::isValid(node[alica::Strings::blackboard])) {
-            behaviour->_blackboardBlueprint = BlackboardFactory::create(node[alica::Strings::blackboard]);
+            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]);
         } else {
-            behaviour->_blackboardBlueprint = BlackboardFactory::createEmpty();
+            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
         }
+    } else {
+        behaviour->_blackboardBlueprint = nullptr;
     }
     return behaviour;
 }

@@ -51,7 +51,7 @@ public:
     Blackboard(Blackboard&&) = delete;
     Blackboard& operator&=(const Blackboard&) = delete;
     Blackboard& operator&=(Blackboard&&) = delete;
-    Blackboard(const BlackboardBlueprint& blueprint) { _impl.vals = blueprint.vals; }
+    Blackboard(const BlackboardBlueprint* blueprint) { _impl.vals = blueprint->vals; };
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }

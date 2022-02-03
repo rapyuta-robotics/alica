@@ -35,12 +35,11 @@ public:
 
     int getDeferring() const { return _deferring; }
     bool isEventDriven() const { return _eventDriven; }
-    bool getInheritBlackboard() const { return _inheritBlackboard; }
     int getFrequency() const { return _frequency; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
-    BlackboardBlueprint getBlackboardBlueprint() const { return _blackboardBlueprint; }
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint; }
 
 private:
     friend ModelFactory;
@@ -64,12 +63,7 @@ private:
      * state. Has only effect for Behaviours not running in EventDriven mode.
      */
     int _deferring;
-    /**
-     * Specifies whether this behavior uses its parents' blackboard.
-     * If so, it will simply receive a copy of its parents Blackboard
-     * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
-     */
-    bool _inheritBlackboard;
+
     /**
      * This behaviour's runtime condition.
      */
@@ -82,8 +76,11 @@ private:
      * This behaviour's postcondition
      */
     PostCondition* _postCondition;
-
-    BlackboardBlueprint _blackboardBlueprint;
+    /**
+     * If nullptr it will simply receive a copy of its parents Blackboard
+     * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
+     */
+    const BlackboardBlueprint* _blackboardBlueprint;
 };
 
 } // namespace alica

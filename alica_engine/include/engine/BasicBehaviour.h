@@ -43,7 +43,6 @@ public:
     using RunnableObject::setBlackboardBlueprint;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
-    using RunnableObject::setInheritBlackboard;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
     using RunnableObject::start;
