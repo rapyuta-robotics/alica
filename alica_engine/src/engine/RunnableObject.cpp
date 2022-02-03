@@ -64,19 +64,17 @@ void RunnableObject::stop(RunningPlan* rp)
         return;
     }
     ++_signalState;
-    if (rp->getParent()) {
-        if (!getInheritBlackboard()) {
-            auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
-            auto terminateCall = [this, parentPlan, keyMapping]() {
-                assert(_blackboard);
-                setOutput(parentPlan->getBlackboard().get(), keyMapping);
-                doTerminate();
-            };
-            _engine->editScheduler().schedule(terminateCall);
-            return;
-        }
+    if (rp->getParent() && !getInheritBlackboard()) {
+        auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
+        auto terminateCall = [this, parentPlan, keyMapping]() {
+            assert(_blackboard);
+            setOutput(parentPlan->getBlackboard().get(), keyMapping);
+            doTerminate();
+        };
+        _engine->editScheduler().schedule(terminateCall);
+    } else {
+        _engine->editScheduler().schedule([this]() { doTerminate(); });
     }
-    _engine->editScheduler().schedule([this]() { doTerminate(); });
 }
 
 void RunnableObject::start(RunningPlan* rp)
@@ -105,7 +103,8 @@ void RunnableObject::start(RunningPlan* rp)
             setInput(parentPlan->getBlackboard().get(), keyMapping);
             doInit();
         };
-    } else if (getInheritBlackboard()) {
+    } else {
+        // Inherit blackboard
         BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
         initCall = [this, parentPlan]() {
             _blackboard = parentPlan->getBlackboard();
