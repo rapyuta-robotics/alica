@@ -181,8 +181,12 @@ void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* key
     const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
     auto& childBb = _blackboard->impl(); // Child not started yet, no other user exists, dont' use lock
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
-        childBb.set(childKey, lockedParentBb.get(parentKey));
-        ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
+        try {
+            childBb.set(childKey, lockedParentBb.get(parentKey));
+            ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
+        } catch (std::exception& e) {
+            ALICA_WARNING_MSG("Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what());
+        }
     }
 }
 
@@ -191,8 +195,12 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
     auto lockedParentBb = LockedBlackboardRW(*parent_bb);
     const auto& childBb = _blackboard->impl(); // Child is terminated, no other users exists, don't use lock
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
-        lockedParentBb.set(parentKey, childBb.get(childKey));
-        ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
+        try {
+            lockedParentBb.set(parentKey, childBb.get(childKey));
+            ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
+        } catch (std::exception& e) {
+            ALICA_WARNING_MSG("Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what());
+        }
     }
 }
 } /* namespace alica */
