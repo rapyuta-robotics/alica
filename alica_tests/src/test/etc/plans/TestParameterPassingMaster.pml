@@ -43,6 +43,14 @@
               {
                 "parentKey" : "masterKey",
                 "childKey" : "planInputFromMaster"
+              },
+              {
+                "parentKey" : "nonExistingKey",
+                "childKey" : "planInputFromMaster"
+              },
+              {
+                "parentKey" : "masterKey",
+                "childKey" : "nonExistingKey"
               }
             ]
           }
