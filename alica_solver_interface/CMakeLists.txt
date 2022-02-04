@@ -52,7 +52,6 @@ if(CATKIN_ENABLE_TESTING)
     if(TARGET ${PROJECT_NAME}-test)
     target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
     endif()
-else(CATKIN_ENABLE_TESTING)
     find_package(GTest REQUIRED)
     include_directories(BEFORE
     ${GTEST_INCLUDE_DIRS}
