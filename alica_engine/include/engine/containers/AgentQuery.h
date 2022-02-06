@@ -14,6 +14,6 @@ struct AgentQuery
     }
     AgentId senderID;
     uint32_t senderSdk;
-    uint32_t planHash;
+    uint64_t planHash;
 };
 } // namespace alica
