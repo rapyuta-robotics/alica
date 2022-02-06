@@ -113,8 +113,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
     _localAnnouncement.token = rd();
     _localAnnouncement.senderName = localAgentName;
     _localAnnouncement.senderSdk = _engine->getVersion();
-    // TODO: add plan hash
-    _localAnnouncement.planHash = 0;
+    _localAnnouncement.planHash = _engine->getMasterPlanId();
 
     const std::string myRole = config["Local"]["DefaultRole"].as<std::string>();
     const PlanRepository::Accessor<Role>& roles = _engine->getPlanRepository().getRoles();

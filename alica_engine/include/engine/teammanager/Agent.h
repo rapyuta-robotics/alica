@@ -36,7 +36,7 @@ public:
     const RobotEngineData& getEngineData() const { return _engineData; }
     uint32_t getToken() const { return _token; }
     uint32_t getSdk() const { return _sdk; }
-    uint32_t getPlanHash() const { return _planHash; }
+    uint64_t getPlanHash() const { return _planHash; }
     RobotEngineData& editEngineData() { return _engineData; }
     bool isActive() const { return _active; }
     bool isIgnored() const { return _ignored; }
@@ -57,7 +57,7 @@ private:
     std::string _name;
     uint32_t _token;
     uint32_t _sdk;
-    uint32_t _planHash;
+    uint64_t _planHash;
 
     void setLocal(bool local);
     void setIgnored(const bool ignored) { _ignored = ignored; }
