@@ -50,7 +50,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     alica::AgentGrp robots;
 
     alica::AgentAnnouncement aa;
-    aa.planHash = 0;
+    aa.planHash = 1407152758497;
     aa.senderSdk = ac->getVersion();
     aa.token = 55;
     for (int agentId = 8; agentId <= 11; ++agentId) {
@@ -101,7 +101,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     alica::AgentGrp robots;
 
     alica::AgentAnnouncement aa;
-    aa.planHash = 0;
+    aa.planHash = 1407152758497;
     aa.senderSdk = ac->getVersion();
     aa.token = 55;
     for (int agentId = 8; agentId <= 11; ++agentId) {
