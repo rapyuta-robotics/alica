@@ -46,16 +46,18 @@ void RunnableObject::stop()
     _engine->editScheduler().schedule([this]() { doTerminate(); });
 }
 
-std::pair<BasicPlan*, const KeyMapping*> RunnableObject::getParentPlanAndKeyMapping(RunningPlan* rp) const
+int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
 {
-    assert(rp->getParent()->getBasicPlan());
-    BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
     const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
     auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
     assert(it != wrappers.end());
     int64_t wrapperId = (*it)->getId();
-    const auto keyMapping = parentPlan->getKeyMapping(wrapperId);
-    return {parentPlan, keyMapping};
+    return wrapperId;
+}
+
+void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
+{
+    _keyMappings.emplace(wrapperId, keyMapping);
 }
 
 void RunnableObject::stop(RunningPlan* rp)
@@ -65,7 +67,9 @@ void RunnableObject::stop(RunningPlan* rp)
     }
     ++_signalState;
     if (rp->getParent() && !getInheritBlackboard()) {
-        auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
+
+        auto parentPlan = rp->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
         auto terminateCall = [this, parentPlan, keyMapping]() {
             assert(_blackboard);
             setOutput(parentPlan->getBlackboard().get(), keyMapping);
@@ -97,7 +101,8 @@ void RunnableObject::start(RunningPlan* rp)
             doInit();
         };
     } else if (!getInheritBlackboard()) {
-        auto [parentPlan, keyMapping] = getParentPlanAndKeyMapping(rp);
+        auto parentPlan = rp->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
         initCall = [this, parentPlan, keyMapping]() {
             _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
             setInput(parentPlan->getBlackboard().get(), keyMapping);

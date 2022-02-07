@@ -137,6 +137,8 @@ public:
     Assignment& editAssignment() { return _assignment; }
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
     BasicPlan* getBasicPlan() const { return _basicPlan; }
+    std::shared_ptr<Blackboard> getBlackboard() const;
+    const KeyMapping* getKeyMapping(int64_t wrapperId) const;
 
     void printRecursive() const;
 

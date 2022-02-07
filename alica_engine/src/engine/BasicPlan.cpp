@@ -81,15 +81,6 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
-void BasicPlan::addKeyMappings(const Plan* plan)
-{
-    for (const State* state : plan->getStates()) {
-        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
-            _keyMappings.emplace(wrapper->getId(), wrapper->getKeyMapping());
-        }
-    }
-}
-
 void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_engine->getTraceFactory()) {

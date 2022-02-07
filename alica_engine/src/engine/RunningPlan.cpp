@@ -876,4 +876,19 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     return out;
 }
 
+std::shared_ptr<Blackboard> RunningPlan::getBlackboard() const
+{
+    if (isBehaviour()) {
+        return _basicBehaviour->getBlackboard();
+    } else {
+        return _basicPlan->getBlackboard();
+    }
+}
+
+const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
+{
+    assert(!isBehaviour());
+    return _basicPlan->getKeyMapping(wrapperId);
+}
+
 } /* namespace alica */

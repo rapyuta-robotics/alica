@@ -24,7 +24,6 @@ class RunningPlan;
 class ThreadSafePlanInterface;
 class AlicaEngine;
 class IAlicaWorldModel;
-class BasicPlan;
 
 /**
  * The base class for BasicBehaviour and BasicPlan
@@ -46,6 +45,7 @@ protected:
     void stop(); // Use only when shutdown engine
     void start(RunningPlan* rp);
     bool initExecuted() const { return isExecutingInContext() ? _initExecuted.load() : false; }
+    void addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping);
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
     std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
@@ -98,6 +98,8 @@ protected:
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
+    // Map from ConfAbstractPlanWrapper id to associated attachment
+    std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
 
     virtual void doInit() = 0;
     virtual void doTerminate() = 0;
@@ -122,8 +124,9 @@ protected:
     void traceInit(const std::string& type);
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
-    std::pair<BasicPlan*, const KeyMapping*> getParentPlanAndKeyMapping(RunningPlan* rp) const;
     void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
     void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
+    int64_t getParentWrapperId(RunningPlan* rt) const;
+    const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
 };
 } /* namespace alica */
