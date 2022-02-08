@@ -77,7 +77,7 @@ private:
      */
     PostCondition* _postCondition;
     /**
-     * If nullptr it will simply receive a reference to it's parents Blackboard
+     * If nullptr it will simply receive a reference to its parent's Blackboard
      * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
