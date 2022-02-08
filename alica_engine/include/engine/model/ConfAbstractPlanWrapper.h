@@ -19,13 +19,13 @@ public:
     const AbstractPlan* getAbstractPlan() const { return _abstractPlan; }
     void setAbstractPlan(const AbstractPlan* abstractPlan) { _abstractPlan = abstractPlan; }
     const Configuration* getConfiguration() const { return _configuration; }
-    const KeyMapping* getKeyMapping() const { return _keyMapping; }
+    const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
 
 private:
     friend ConfAbstractPlanWrapperFactory;
 
     const AbstractPlan* _abstractPlan;
     const Configuration* _configuration;
-    const KeyMapping* _keyMapping;
+    std::unique_ptr<KeyMapping> _keyMapping;
 };
 } // namespace alica

@@ -54,7 +54,7 @@ public:
 
     int getFrequency() const { return _frequency; }
 
-    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint; }
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 
     std::string toString(std::string indent = "") const;
 
@@ -116,7 +116,7 @@ private:
      * If nullptr, it will simply receive a reference to its parents Blackboard
      * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
      */
-    const BlackboardBlueprint* _blackboardBlueprint;
+    std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };
 
 } // namespace alica

@@ -10,8 +10,8 @@ class BlackboardBlueprint;
 class BlackboardBlueprintFactory : public Factory
 {
 public:
-    static const BlackboardBlueprint* create(const YAML::Node& node);
-    static const BlackboardBlueprint* createEmpty();
+    static std::unique_ptr<BlackboardBlueprint> create(const YAML::Node& node);
+    static std::unique_ptr<BlackboardBlueprint> createEmpty();
 
 private:
     BlackboardBlueprintFactory() = delete;

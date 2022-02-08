@@ -6,10 +6,10 @@
 
 namespace alica
 {
-const BlackboardBlueprint* BlackboardBlueprintFactory::create(const YAML::Node& node)
+std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::create(const YAML::Node& node)
 {
 
-    auto blackboard = new BlackboardBlueprint();
+    auto blackboard = std::make_unique<BlackboardBlueprint>();
     for (const auto& entry : node) {
         auto key = getValue<std::string>(entry, Strings::key);
         blackboard->registerValue(key);
@@ -17,9 +17,9 @@ const BlackboardBlueprint* BlackboardBlueprintFactory::create(const YAML::Node& 
     return blackboard;
 }
 
-const BlackboardBlueprint* BlackboardBlueprintFactory::createEmpty()
+std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::createEmpty()
 {
-    return new BlackboardBlueprint();
+    return std::make_unique<BlackboardBlueprint>();
 }
 
 } // namespace alica

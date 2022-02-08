@@ -5,10 +5,10 @@
 
 namespace alica
 {
-const KeyMapping* KeyMappingFactory::create(const YAML::Node& node)
+std::unique_ptr<KeyMapping> KeyMappingFactory::create(const YAML::Node& node)
 {
 
-    auto keyMapping = new KeyMapping();
+    auto keyMapping = std::make_unique<KeyMapping>();
     if (Factory::isValid(node[alica::Strings::input])) {
         const auto& inputList = node[alica::Strings::input];
         for (const auto& entry : inputList) {

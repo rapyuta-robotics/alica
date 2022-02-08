@@ -39,7 +39,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
-    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint; }
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 
 private:
     friend ModelFactory;
@@ -80,7 +80,7 @@ private:
      * If nullptr it will simply receive a reference to it's parents Blackboard
      * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
      */
-    const BlackboardBlueprint* _blackboardBlueprint;
+    std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };
 
 } // namespace alica
