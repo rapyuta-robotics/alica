@@ -10,12 +10,12 @@
 namespace alica
 {
 
-KeyMapping::KeyMappingList KeyMapping::getInputMapping() const
+const KeyMapping::KeyMappingList& KeyMapping::getInputMapping() const
 {
     return _inputMapping;
 }
 
-KeyMapping::KeyMappingList KeyMapping::getOutputMapping() const
+const KeyMapping::KeyMappingList& KeyMapping::getOutputMapping() const
 {
     return _outputMapping;
 }

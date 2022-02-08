@@ -14,8 +14,8 @@ public:
     using KeyMappingList = std::vector<std::pair<std::string, std::string>>;
     KeyMapping() = default;
     virtual ~KeyMapping() = default;
-    KeyMappingList getInputMapping() const;
-    KeyMappingList getOutputMapping() const;
+    const KeyMappingList& getInputMapping() const;
+    const KeyMappingList& getOutputMapping() const;
     void addInputMapping(const std::string& parentKey, const std::string& childKey);
     void addOutputMapping(const std::string& parentKey, const std::string& childKey);
 
