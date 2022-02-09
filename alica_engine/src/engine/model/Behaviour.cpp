@@ -15,9 +15,9 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _postCondition(nullptr)
         , _frequency(1)
         , _deferring(0)
-        , _requiresParameters(false)
         , _eventDriven(false)
         , AbstractPlan(ae)
+        , _blackboardBlueprint(nullptr)
 {
 }
 
@@ -30,7 +30,6 @@ std::string Behaviour::toString(std::string indent) const
     ss << indent << "\teventDriven: " << (_eventDriven ? "true" : "false") << std::endl;
     ss << indent << "\tfrequency: " << _frequency << std::endl;
     ss << indent << "\tdeferring: " << _deferring << std::endl;
-    ss << indent << "\trequiresParameters: " << _requiresParameters << std::endl;
     if (this->_preCondition != nullptr) {
         ss << this->_preCondition->toString(indent + "\t");
     }

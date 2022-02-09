@@ -40,13 +40,20 @@ std::unique_ptr<BasicPlan> PlanPool::createBasicPlan(IPlanCreator& planCreator, 
     // set stuff from plan and configuration in basic plan object
     basicPlan->setConfiguration(configuration);
     basicPlan->setName(plan->getName());
-    basicPlan->createChildAttachments(plan, planCreator);
+
+    for (const State* state : plan->getStates()) {
+        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            basicPlan->addKeyMapping(wrapper->getId(), wrapper->getKeyMapping());
+        }
+    }
+    basicPlan->setBlackboardBlueprint(plan->getBlackboardBlueprint());
+
     if (plan->getFrequency() < 1) {
         basicPlan->setInterval(0);
     } else {
         basicPlan->setInterval(1000 / plan->getFrequency());
     }
-    basicPlan->setRequiresParameters(plan->getRequiresParameters());
+
     basicPlan->setEngine(_ae);
     if (plan->isMasterPlan()) {
         basicPlan->setAsMasterPlan();

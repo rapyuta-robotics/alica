@@ -24,7 +24,7 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _preCondition(nullptr)
         , _basicPlan(nullptr)
         , _frequency(0)
-        , _requiresParameters(false)
+        , _blackboardBlueprint(nullptr)
 {
 }
 
@@ -119,7 +119,6 @@ std::string Plan::toString(std::string indent) const
     ss << indent << "\tIsMasterPlan: " << this->_masterPlan << std::endl;
     ss << indent << "\tUtility Threshold: " << this->_utilityThreshold << std::endl;
     ss << indent << "\tfrequency: " << _frequency << std::endl;
-    ss << indent << "\trequiresParameters: " << _requiresParameters << std::endl;
     if (this->_preCondition != nullptr) {
         ss << this->_preCondition->toString(indent);
     }

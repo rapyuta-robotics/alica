@@ -1,0 +1,24 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 831400441334251600,
+  "name": "TestInheritBlackboardBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "requiresParameters": true,
+  "runtimeCondition": null,
+  "variables": [],
+  "inheritBlackboard" : true,
+  "blackboard" : [
+    {
+      "key" : "behaviorKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
+}

@@ -5,7 +5,6 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaWorldModel.h>
-#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl3254486013443203397) ENABLED START*/
 // Add additional includes here

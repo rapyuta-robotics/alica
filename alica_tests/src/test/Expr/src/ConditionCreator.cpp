@@ -20,6 +20,8 @@
 #include "Behaviour/ReadConfigurationBehaviour1588061129360.h"
 #include "Behaviour/SuccessSpam1522377401286.h"
 #include "Behaviour/Tackle1402488939130.h"
+#include "Behaviour/TestInheritBlackboardBehaviour831400441334251600.h"
+#include "Behaviour/TestParameterPassingBehaviour831400441334251602.h"
 #include "Behaviour/TriggerA1428508297492.h"
 #include "Behaviour/TriggerB1428508316905.h"
 #include "Behaviour/TriggerC1428508355209.h"
@@ -70,8 +72,9 @@
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
 #include "TestBehaviour55178365253414982.h"
+#include "TestInheritBlackboard1692837668719979400.h"
+#include "TestInheritBlackboardMaster1179066429431332056.h"
 #include "TestParameterPassing1692837668719979457.h"
-#include "TestParameterPassingBehaviour831400441334251602.h"
 #include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
 #include "TestTracingSubPlan1482512794732634139.h"
@@ -199,6 +202,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1522377946607:
         return std::make_shared<PreCondition1522377946607>();
         break;
+    case 1529456610600:
+        return std::make_shared<PreCondition1529456610600>();
+        break;
     case 1529456610697:
         return std::make_shared<PreCondition1529456610697>();
         break;
@@ -276,6 +282,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1629895768182:
         return std::make_shared<PreCondition1629895768182>();
+        break;
+    case 2529456610600:
+        return std::make_shared<PreCondition2529456610600>();
         break;
     case 61978004585920576:
         return std::make_shared<PreCondition61978004585920576>();

@@ -35,7 +35,25 @@
           "comment": "",
           "configuration": null,
           "id": 105160539449888459,
-          "name": ""
+          "name": "",
+          "keyMapping" : 
+          {
+            "input" : 
+            [
+              {
+                "parentKey" : "masterKey",
+                "childKey" : "planInputFromMaster"
+              },
+              {
+                "parentKey" : "nonExistingKey",
+                "childKey" : "planInputFromMaster"
+              },
+              {
+                "parentKey" : "masterKey",
+                "childKey" : "nonExistingKey"
+              }
+            ]
+          }
         }
       ],
       "entryPoint": 4058387577648167302,
@@ -55,5 +73,15 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "masterKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
 }

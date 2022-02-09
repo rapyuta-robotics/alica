@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/IAlicaWorldModel.h"
-#include "engine/PlanAttachment.h"
 #include <memory>
 
 namespace alica
@@ -14,7 +13,6 @@ class IPlanCreator
 {
 public:
     virtual ~IPlanCreator() {}
-    virtual std::unique_ptr<PlanAttachment> createPlanAttachment(int64_t attachmentWrapperConfId) = 0;
     virtual std::unique_ptr<BasicPlan> createPlan(int64_t planId, IAlicaWorldModel* wm) = 0;
 };
 

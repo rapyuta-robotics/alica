@@ -37,20 +37,12 @@ std::shared_ptr<UtilityFunction> UtilityFunction1179066429431332055::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-/**
- * Set parameters for child abstract plan TestParameterPassing1692837668719979457 of state ParameterPassingRunSubPlan2069338196796962570
- */
-bool PlanAttachment105160539449888459::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
-{
-    /*PROTECTED REGION ID(105160539449888459) ENABLED START*/
-    LockedBlackboardRW bb = LockedBlackboardRW(child_bb);
-    bb.registerValue("behaviourParameter", 1);
-    bb.registerValue("planParameter", 2);
-    return true;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1179066429431332055) ENABLED START*/
+void TestParameterPassingMaster1179066429431332055::onInit()
+{
+    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
+    bb.set("masterKey", 8);
+}
 // Add additional options here
 /*PROTECTED REGION END*/
 } // namespace alica
