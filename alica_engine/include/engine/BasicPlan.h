@@ -1,10 +1,11 @@
 #pragma once
 
 #include "engine/IPlanCreator.h"
-#include "engine/PlanAttachment.h"
 #include "engine/RunnableObject.h"
+#include "engine/blackboard/KeyMapping.h"
 
 #include <unordered_map>
+
 namespace alica
 {
 
@@ -18,28 +19,26 @@ public:
 
     // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
+    using RunnableObject::addKeyMapping;
     using RunnableObject::getBlackboard;
+    using RunnableObject::getInheritBlackboard;
+    using RunnableObject::getKeyMapping;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
-    using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
     using RunnableObject::initExecuted;
+    using RunnableObject::setBlackboardBlueprint;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
-    using RunnableObject::setRequiresParameters;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     void setAsMasterPlan() { _isMasterPlan = true; };
-
-    void createChildAttachments(const Plan* plan, IPlanCreator& planCreator);
-
-    std::unique_ptr<PlanAttachment>& getPlanAttachment(int64_t id) { return _planAttachments.at(id); }
 
 protected:
     using RunnableObject::getTrace;
@@ -66,7 +65,5 @@ private:
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
     bool _isMasterPlan;
-    // Map from ConfAbstractPlanWrapper id to associated attachment
-    std::unordered_map<int64_t, std::unique_ptr<PlanAttachment>> _planAttachments;
 };
 } // namespace alica

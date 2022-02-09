@@ -32,19 +32,19 @@ public:
     BasicBehaviour(IAlicaWorldModel* wm, const std::string& name);
     virtual ~BasicBehaviour(){};
 
-    // Use of private inheritance and explciltly making members public
+    // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObject::getBlackboard;
+    using RunnableObject::getInheritBlackboard;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
-    using RunnableObject::getRequiresParameters;
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
+    using RunnableObject::setBlackboardBlueprint;
     using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
-    using RunnableObject::setRequiresParameters;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
@@ -60,8 +60,6 @@ public:
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
-
-    void terminate() { stop(); };
 
     void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
 

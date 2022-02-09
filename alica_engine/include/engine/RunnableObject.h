@@ -6,6 +6,8 @@
 #include <alica_common_config/debug_output.h>
 
 #include "engine/blackboard/Blackboard.h"
+#include "engine/blackboard/BlackboardBlueprint.h"
+#include "engine/blackboard/KeyMapping.h"
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -37,11 +39,13 @@ protected:
     const std::string& getName() { return _name; };
     AlicaTime getInterval() const { return _msInterval; };
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
-    bool getRequiresParameters() const { return _requiresParameters; }
-    void setRequiresParameters(bool requiresParameters) { _requiresParameters = requiresParameters; }
-    void stop();
+    bool getInheritBlackboard() const { return _blackboardBlueprint == nullptr; };
+    void setBlackboardBlueprint(const BlackboardBlueprint* blackboard);
+    void stop(RunningPlan* rp);
+    void stop(); // Use only when shutdown engine
     void start(RunningPlan* rp);
     bool initExecuted() const { return isExecutingInContext() ? _initExecuted.load() : false; }
+    void addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping);
 
     // This is not thread safe. Should only be called by the scheduler thread. TODO: make this private
     std::optional<std::string> getTraceContext() const { return _trace ? std::optional<std::string>(_trace->context()) : std::nullopt; };
@@ -85,15 +89,17 @@ protected:
     std::atomic<bool> _initExecuted;
     std::string _name;
     AlicaTime _msInterval;
-    bool _requiresParameters;
     uint8_t _flags;
     std::atomic<Counter> _execState;          // Tracks the actual executate state of the behaviour by the scheduler thread
     std::atomic<Counter> _signalState;        // Tracks the signal state from the alica main engine thread i.e. tracks start() & stop() calls
     std::atomic<RunningPlan*> _signalContext; // The running plan context when start() is called
     std::atomic<RunningPlan*> _execContext;   // The running plan context under which the behaviour is executing
     int64_t _activeRunJobId;
+    const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
+    // Map from ConfAbstractPlanWrapper id to associated attachment
+    std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
 
     virtual void doInit() = 0;
     virtual void doTerminate() = 0;
@@ -118,5 +124,9 @@ protected:
     void traceInit(const std::string& type);
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
+    void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
+    void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
+    int64_t getParentWrapperId(RunningPlan* rt) const;
+    const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
 };
 } /* namespace alica */

@@ -1,4 +1,4 @@
-#include "TestParameterPassingBehaviour.h"
+#include "Behaviour/TestParameterPassingBehaviour.h"
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp831400441334251602) ENABLED START*/
@@ -29,15 +29,25 @@ void TestParameterPassingBehaviour::run(void* msg)
 {
     /*PROTECTED REGION ID(run831400441334251602) ENABLED START*/
     // Add additional options here
+    setSuccess();
     /*PROTECTED REGION END*/
 }
 void TestParameterPassingBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251602) ENABLED START*/
-    // Add additional options here
-    LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
+    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    wm->passedParameters["behaviourParameter"] = bb.get<int>("behaviourParameter");
+    bb.set("behaviorKey", 2);
+    wm->passedParameters["behaviorKey"] = bb.get<int>("behaviorKey");
+
+    auto value = bb.get<int>("behaviorInputKey");
+    if (value == 5) {
+        wm->passedParameters["behaviorInputKey"] = value;
+    } else if (value == 7) {
+        wm->passedParameters["behaviorSecondInputKey"] = value;
+    }
+
+    bb.set("behaviorOutputKey", 6);
 
     /*PROTECTED REGION END*/
 }

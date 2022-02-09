@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BlackboardBlueprint.h"
 #include <any>
 #include <mutex>
 #include <shared_mutex>
@@ -29,6 +30,10 @@ public:
     {
         return std::any_cast<T&>(vals.at(key));
     }
+    std::any& get(const std::string& key) { return vals.at(key); }
+    const std::any& get(const std::string& key) const { return vals.at(key); }
+
+    void set(const std::string& key, const std::any& value) { vals.at(key) = value; }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
@@ -46,6 +51,7 @@ public:
     Blackboard(Blackboard&&) = delete;
     Blackboard& operator&=(const Blackboard&) = delete;
     Blackboard& operator&=(Blackboard&&) = delete;
+    Blackboard(const BlackboardBlueprint* blueprint) { _impl.vals = blueprint->vals; };
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
@@ -78,6 +84,7 @@ public:
     {
         return _impl->get<T>(key);
     }
+    const std::any& get(const std::string& key) const { return _impl->get(key); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -112,6 +119,10 @@ public:
     {
         return _impl->get<T>(key);
     }
+    std::any& get(const std::string& key) { return _impl->get(key); }
+
+    void set(const std::string& key, const std::any& value) { _impl->set(key, value); }
+
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }

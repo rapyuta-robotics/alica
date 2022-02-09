@@ -7,6 +7,7 @@
 #include "engine/model/Transition.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/AbstractPlanFactory.h"
+#include "engine/modelmanagement/factories/BlackboardBlueprintFactory.h"
 #include "engine/modelmanagement/factories/EntryPointFactory.h"
 #include "engine/modelmanagement/factories/Factory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
@@ -99,8 +100,17 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
         }
     }
 
-    plan->_requiresParameters = Factory::getValue<bool>(node, alica::Strings::requiresParameters, false);
+    auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
 
+    if (!inheritBlackboard) {
+        if (Factory::isValid(node[alica::Strings::blackboard])) {
+            plan->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]));
+        } else {
+            plan->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
+        }
+    } else {
+        plan->_blackboardBlueprint = nullptr;
+    }
     return plan;
 }
 
