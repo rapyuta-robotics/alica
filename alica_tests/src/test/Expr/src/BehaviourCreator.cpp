@@ -13,11 +13,12 @@
 #include "Behaviour/ReadConfigurationBehaviour.h"
 #include "Behaviour/SuccessSpam.h"
 #include "Behaviour/Tackle.h"
+#include "Behaviour/TestInheritBlackboardBehaviour.h"
+#include "Behaviour/TestParameterPassingBehaviour.h"
 #include "Behaviour/TriggerA.h"
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
 #include "TestBehaviour.h"
-#include "TestParameterPassingBehaviour.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -84,6 +85,9 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 55178365253414982:
         return std::make_shared<TestBehaviour>(wm);
+        break;
+    case 831400441334251600:
+        return std::make_shared<TestInheritBlackboardBehaviour>(wm);
         break;
     case 831400441334251602:
         return std::make_shared<TestParameterPassingBehaviour>(wm);

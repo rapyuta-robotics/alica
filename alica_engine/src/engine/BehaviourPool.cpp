@@ -60,7 +60,7 @@ bool BehaviourPool::init(IBehaviourCreator& bc)
             } else {
                 basicBeh->setInterval(1000 / behaviour->getFrequency());
             }
-            basicBeh->setRequiresParameters(behaviour->getRequiresParameters());
+            basicBeh->setBlackboardBlueprint(behaviour->getBlackboardBlueprint());
             basicBeh->setEngine(_ae);
             basicBeh->init();
             _availableBehaviours.insert(std::make_pair(wrapper, basicBeh));
@@ -76,16 +76,6 @@ void BehaviourPool::stopAll()
 {
     for (auto& beh_pair : _availableBehaviours) {
         beh_pair.second->stop();
-    }
-}
-
-/**
- * Calls terminate on all BasicBehaviours.
- */
-void BehaviourPool::terminateAll()
-{
-    for (auto& beh_pair : _availableBehaviours) {
-        beh_pair.second->terminate();
     }
 }
 
@@ -116,7 +106,7 @@ void BehaviourPool::stopBehaviour(RunningPlan& rp)
 {
     if (const auto* beh = dynamic_cast<const Behaviour*>(rp.getActivePlan())) {
         if (auto& bb = getBasicBehaviour(beh, rp.getConfiguration())) {
-            bb->stop();
+            bb->stop(&rp);
         }
     } else {
         ALICA_ERROR_MSG("BP::stopBehaviour(): Cannot stop Behaviour of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()

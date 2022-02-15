@@ -5,7 +5,6 @@
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaWorldModel.h>
-#include <engine/PlanAttachment.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1179066429431332055) ENABLED START*/
 // Add additional includes here
@@ -30,14 +29,10 @@ protected:
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1179066429431332055) ENABLED START*/
-    // Add additional private methods here
+    virtual void onInit() override;
     /*PROTECTED REGION END*/
 };
 
-class PlanAttachment105160539449888459 : public PlanAttachment
-{
-    bool setParameters(const Blackboard& parent_bb, Blackboard& child_bb);
-};
 class UtilityFunction1179066429431332055 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);

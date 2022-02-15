@@ -81,15 +81,6 @@ void BasicPlan::doTerminate()
     _execContext.store(nullptr);
 }
 
-void BasicPlan::createChildAttachments(const Plan* plan, IPlanCreator& planCreator)
-{
-    for (const State* state : plan->getStates()) {
-        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
-            _planAttachments.emplace(wrapper->getId(), planCreator.createPlanAttachment(wrapper->getId()));
-        }
-    }
-}
-
 void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
     if (_engine->getTraceFactory()) {

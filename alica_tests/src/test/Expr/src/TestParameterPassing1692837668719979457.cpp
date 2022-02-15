@@ -12,7 +12,8 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 58084702421574748)
 //
 // States:
-//   - ParameterPassingRunBehaviour (1092447442809556626)
+//   - FirstCall (1092447442809556626)
+//   - SecondCall (1529456591400)
 TestParameterPassing1692837668719979457::TestParameterPassing1692837668719979457(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -39,25 +40,63 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
 }
 
 /**
- * Set parameters for child abstract plan TestParameterPassingBehaviour831400441334251602 of state ParameterPassingRunBehaviour1092447442809556626
+ * Transition: MISSING_NAME (1129456609900)
+ *   - Comment: Forth
+ *   - Source2Dest: FirstCall --> SecondCall
+ *
+ * Precondition: MISSING_NAME (1529456610600)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in FirstCall:
+ *   - TestParameterPassingBehaviour (831400441334251602)
  */
-bool PlanAttachment445396005944825225::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
+bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(445396005944825225) ENABLED START*/
-    LockedBlackboardRO parent = LockedBlackboardRO(parent_bb);
-    LockedBlackboardRW child = LockedBlackboardRW(child_bb);
-    child.registerValue("behaviourParameter", parent.get<int>("behaviourParameter"));
-    return true;
+    /*PROTECTED REGION ID(1129456609900) ENABLED START*/
+    return rp->isAnyChildStatus(PlanStatus::Success);
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (2229456609900)
+ *   - Comment: Back
+ *   - Source2Dest: SecondCall --> FirstCall
+ *
+ * Precondition: MISSING_NAME (2529456610600)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in SecondCall:
+ *   - TestParameterPassingBehaviour (831400441334251602)
+ */
+bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(2229456609900) ENABLED START*/
+    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
+    auto testWm = const_cast<alicaTests::TestWorldModel*>(dynamic_cast<const alicaTests::TestWorldModel*>(wm));
+    testWm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
+    return false;
     /*PROTECTED REGION END*/
 }
 
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
-// Add additional options here
 void TestParameterPassing1692837668719979457::onInit()
 {
-    LockedBlackboardRO bb = LockedBlackboardRO(*(getBlackboard()));
+    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    wm->passedParameters["planParameter"] = bb.get<int>("planParameter");
+    bb.set("planKey", 1);
+    wm->passedParameters["planKey"] = bb.get<int>("planKey");
+    bb.set("planOutputKey", 5);
+    bb.set("planSecondOutputKey", 7);
+    bb.set("planInputKey", 1);
+    wm->passedParameters["planInputFromMaster"] = bb.get<int>("planInputFromMaster");
 }
 /*PROTECTED REGION END*/
 } // namespace alica
