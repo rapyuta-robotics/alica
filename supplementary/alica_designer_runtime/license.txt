@@ -1,0 +1,125 @@
+LICENSES
+
+
+ALICA is open-sourced, available under the MIT License
+ALICA Software runtime, created by Rapyuta Robotics Co, Ltd is licensed under the Rapyuta Robotics License Version 1.0 (RRL v1.)
+
+Source code in this repository is covered by the Rapyuta Robotics License Version 1.0
+
+
+Rapyuta Robotics License Version 1.0 (RRL v1)
+
+
+This Rapyuta Robotics version 1.0 (RRSAL v1.0)  (the “Agreement”) sets forth the terms on which Rapyuta Robotics, Co, Ltd (“Rapyuta Robotics”) makes available certain software made available by Rapyuta Robotics under this Agreement (the “Software”). BY INSTALLING, DOWNLOADING, ACCESSING, USING, OR DISTRIBUTING ANY OF THE SOFTWARE, YOU AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO SUCH TERMS AND CONDITIONS, YOU MUST NOT USE THE SOFTWARE. IF YOU ARE RECEIVING THE SOFTWARE ON BEHALF OF A LEGAL ENTITY, YOU REPRESENT AND WARRANT THAT YOU HAVE THE ACTUAL AUTHORITY TO AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT ON BEHALF OF SUCH ENTITY. “Licensee” means you, an individual, or the entity on whose behalf you are receiving the Software.
+
+
+LICENSE GRANT AND CONDITIONS.
+
+1.1 License. Subject to the terms and conditions of this Agreement, Rapyuta Robotics hereby grants to Licensee a non-exclusive, worldwide, non-transferable, non-sublicensable license during the term of this Agreement to (a) use the Software; (b) distribute the Software (including without limitation in source code or object code form); (d) reproduce copies of the Software; and (e) not alter, remove, or obscure any licensing, copyright, or other notices of the licensor in the software. Any use of the licensor’s trademarks is subject to applicable law (the “License”). Licensee is not granted the right to, and Licensee shall not, exercise the License for an Excluded Purpose.
+
+
+For purposes of this Agreement, “Excluded Purpose” means
+
+making available any/all portions of the Software (in source code form or in any other form) as a software-as-a-service, platform-as-a-service, infrastructure-as-a-service, another similar online service that competes with the Software; and
+Use the source code of the Software either to develop a competing software or modify any portions of the software or in any other portion of competing software.
+
+1.2 Conditions. In consideration of the License, the Licensee’s usage and distribution of the Software is subject to the following conditions:
+
+
+a. The Licensee may not copy, translate, create a derivative work of, reverse engineer, reverse assemble, disassemble, or decompile the Software or any part thereof or otherwise attempt to discover any source code or modify the Software;
+
+b. On each Software copy, the Licensee shall reproduce and not remove or alter Rapyuta Robotics or third-party copyright or other proprietary notices contained in the Software, and Licensee must provide the notice below with each copy.
+
+
+“This software is made available by Rapyuta Robotics, Co, Ltd, under the terms of the Rapyuta Robotics License version 1.0 (RRL v1.)  located at https://www.rapyuta-robotics.com/rapyuta license. BY INSTALLING, DOWNLOADING, ACCESSING, USING, OR DISTRIBUTING ANY OF THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT.”
+
+
+1.3 Licensee Modifications. Licensee can add its own copright notice or different license terms, conditions of use to any workproduct developed using the software. While redistributing the Software or modifications thereof, Licensee may choose to offer, for a fee or free of charge, support, warranty, indemnity to the work-product developed using the Software or other obligations. Licensee, and not Rapyuta Robotics, will be responsible for any such obligations. Licensee is excluded from charging a fee for the Software itself as defined in the “Excluded Purpose”
+
+
+1.4 No Sublicensing. The License does not include the right to sublicense the Software, however, each recipient to which Licensee provides the Software may exercise the Licenses so long as such recipient agrees to the terms and conditions of this Agreement.
+
+
+TERM AND TERMINATION.
+
+This Agreement will continue unless and until earlier terminated as set forth herein. If Licensee breaches any of its conditions or obligations under this Agreement, this Agreement will terminate automatically and the License will terminate automatically and permanently.
+
+
+INTELLECTUAL PROPERTY.
+
+As between the parties, Rapyuta Robotics will retain all rights, titles, and interest in the Software, and all intellectual property rights therein. Rapyuta Robotics hereby reserves all rights not expressly granted to Licensee in this Agreement. Rapyuta Robotics hereby reserves all rights in its patents, trademarks, and service marks, and no licenses therein are granted in this Agreement.
+
+
+DISCLAIMER OF WARRANTY, LIMITS OF LIABILITY AND INDEMNITY
+
+THE INFORMATION, PRODUCTS, SERVICE AND SOLUTIONS OFFERED ON OR THROUGH the Software or www.rapyuta-robotics.com or console.rapyuta.io ARE PROVIDED "AS IS" AND WITHOUT WARRANTIES OF ANY KIND EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, INCLUDING ANY IMPLIED WARRANTY OF TITLE. WE DO NOT WARRANT THAT THE Software or www.rapyuta-robotics.com or console.rapyuta.io OR ANY OF FUNCTIONS THEREOF WILL BE UNINTERRUPTED OR ERROR-FREE, THAT DEFECTS WILL BE CORRECTED, OR THAT ANY PART OF THE SERVICE IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS. RAPYUTA ROBOTICS IS NOT LIABLE TO YOU FOR ANY LOSS YOU SUFFER IN CONNECTION WITH YOUR ACCESS OR USE OF THE SERVICE, ANY THIRD-PARTY PRODUCTS OR ANY SOFTWARE, OR ANY THIRD-PARTY REPOSITORY AVAILABLE THEREFROM.
+
+IN NO EVENT SHALL RAPYUTA ROBOTICS, ITS SERVICE PROVIDERS, AFFILIATES, ASSOCIATES, DIRECTORS, OFFICERS, EMPLOYEES OR AGENTS BE LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES, INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OF PROFITS, DATA OR OTHER INTANGIBLES; OR OTHER INCIDENTAL OR CONSEQUENTIAL DAMAGES EVEN IF RAPYUTA ROBOTICS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, ARISING FROM THE USE OR THE INABILITY TO USE SERVICE OR THE THIRD PARTY PRODUCTS. FURTHERMORE, YOU ACKNOWLEDGE THAT RAPYUTA ROBOTICS IS NOT LIABLE FOR THE DEFAMATORY, OFFENSIVE OR ILLEGAL CONDUCT OF ANY OTHER PARTIES AND THAT THE RISK OF INJURY FROM THE FOREGOING RESTS ENTIRELY WITH YOU. SOME JURISDICTIONS DO NOT ALLOW THE LIMITATION OR EXCLUSION OF INCIDENTAL, CONSEQUENTIAL OR OTHER TYPES OF DAMAGES; THEREFORE, SOME OF THE ABOVE LIMITATIONS MAY NOT APPLY TO YOU.
+
+
+GENERAL.
+
+6.1  Governing Law. The validity, construction, and enforceability of the Agreement shall be governed by and construed in accordance with the laws of Japan without giving effect to the choice of law rules. Any claim or dispute between you and Rapyuta Robotics that arises in whole or in part from the Service or out of or in relation to the Agreement shall irrevocably and unconditionally be submitted to the exclusive jurisdiction of the Tokyo District Court and appellate courts thereof.
+
+
+6.2.  Assignment. Licensee is not authorized to assign its rights under this Agreement to any third party. Rapyuta Robotics may freely assign its rights under this Agreement to any third party.
+
+
+6.3. Anti-Social Forces
+
+6.3.1 You represent and warrant that you:
+
+(1) are not the Anti-Social Forces (defined below);
+
+(2) are not a member of the Anti-Social Forces; or
+
+(3) do not have any socially criticized relationship with the Anti-Social Forces such as providing funding, other support, or business transactions.
+
+6.3.2 “Anti-Social Forces” shall mean an organized crime group, a corporate racketeer or any other similar organization.
+
+6.3.3 Rapyuta Robotics shall be entitled to terminate the Terms of Use without prior notice if you breach any of such representations and warranties in 6.3.1.
+
+
+
+6.4 Jurisdictional Issues
+
+Some or all of the Software may not be eligible for solicitation in your jurisdiction. If you are accessing the Software from such a jurisdiction, you should not consider anything on the Software as an offer to sell or as a solicitation to the public to purchase any products or services from Rapyuta Robotics. The Software is for use only by persons residing in jurisdictions where such products and services may legally be sold or offered.
+
+
+Rapyuta Robotics makes no representation that any of the materials contained in the Software are appropriate or available for use in other locations or jurisdictions. Those who choose to access this site from other locations do so on their own initiative and are responsible for compliance with local laws, if and to the extent local laws are applicable.
+
+
+6.5 Indemnity
+
+You agree to fully indemnify and hold harmless Rapyuta Robotics, and all our personnel and agents from and against all damages, losses, expenses, and costs, including reasonable legal fees, resulting from any violation of the Agreement, or any circumstances related to your negligence or wrongful conduct when using the Software.
+
+
+6.6 Compliance with Laws
+
+You shall abide by all local, provincial, national, and foreign, laws, treaties, and regulations in connection with your use of the Software, including those related to privacy.
+
+
+6.7 Confidentiality
+
+“Confidential Information” means any information provided to us by you in connection with the Software, which includes any information provided or created and stored in connection with the Software (such as video recordings or live streamed information). Rapyuta Robotics will not divulge Confidential Information to any Third Party and keep it confidential.
+
+
+6.8 User Information
+
+Rapyuta Robotics’ use of your personal information (“User Information”), which includes any information provided or created and stored in connection with the Software (such as video recordings or live streaming information), is subject to the Rapyuta Robotics Privacy Policy. You are responsible for the accuracy and quality of the User Information. You are responsible for the legality of the User Information, and you agree that you are solely responsible for complying with any applicable laws, including those related to privacy and intellectual property rights or ownership, in respect of any disclosure to us or use of the User Information in connection with the Software.
+
+
+Rapyuta Robotics is not responsible for any deletion, alteration, damage, loss, destruction, misdirection, or failure to store any User Information. Rapyuta Robotics may at its discretion discard or destroy any of the User Information in the event that the Agreement is terminated or the User violates the Terms of Use.
+
+
+6.9 Telemetry data
+
+User authorizes Rapyuta Robotics to collect telemetry data related to the use of the Software for testing, improving the performance and user experience related to the Software.
+
+
+6.10 Other.  This Agreement is the entire agreement between the parties regarding the subject matter hereof. No amendment or modification of this Agreement will be valid or binding upon the parties unless made in writing and signed by the duly authorized representatives of both parties. In the event that any provision, including without limitation any condition, of this Agreement, is held to be unenforceable, this Agreement and all licenses and rights granted hereunder will immediately terminate. A waiver by Rapyuta Robotics of a breach of any provision of this Agreement or the failure by Rapyuta Robotics to exercise any right hereunder will not be construed as a waiver of any subsequent breach of that right or as a waiver of any other right.
+
+
+6.11 No Other Rights
+
+These terms do not imply any licenses other than those expressly granted in these terms.

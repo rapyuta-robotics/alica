@@ -23,6 +23,7 @@ class UtilityFunction;
 class AlicaEngine;
 class TeamObserver;
 class TeamManager;
+class IAlicaWorldModel;
 
 /**
  * Defines the operational semantics of the used ALICA dialect.
@@ -39,6 +40,7 @@ public:
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
     void reload(const YAML::Node& config);
+    void init(const IAlicaWorldModel* wm);
 
 private:
     const TeamManager& _tm;
@@ -48,6 +50,7 @@ private:
     Logger& _log;
     int _maxConsecutiveChanges;
     bool _changeOccurred;
+    const IAlicaWorldModel* _wm;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);

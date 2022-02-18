@@ -5,8 +5,8 @@
 #include "engine/containers/SolverResult.h"
 
 #include <alica_solver_interface/Interval.h>
-#include <essentials/NotifyTimer.hpp>
 
+#include <memory>
 #include <vector>
 
 namespace alica
@@ -15,6 +15,7 @@ class Variable;
 class ResultEntry;
 class IAlicaCommunication;
 class AlicaEngine;
+class IAlicaTimer;
 
 class VariableSyncModule
 {
@@ -63,7 +64,7 @@ private:
     AlicaEngine* _ae;
     bool _running;
     double _distThreshold;
-    essentials::NotifyTimer<VariableSyncModule>* _timer;
+    std::unique_ptr<IAlicaTimer> _timer;
     mutable std::mutex _mutex;
 };
 

@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1412252439927,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1412252439927",
@@ -19,7 +20,7 @@
   ],
   "frequency": 0,
   "id": 1412252439925,
-  "masterPlan": false,
+  "masterPlan": true,
   "name": "SimpleTestPlan",
   "preCondition": {
     "comment": "",
@@ -32,6 +33,7 @@
     "variables": []
   },
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",

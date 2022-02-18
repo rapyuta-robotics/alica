@@ -27,7 +27,7 @@ public:
     bool isValid() const;
     bool isGoal() const;
     const Plan* getPlan() const { return _plan; }
-    bool addIfAlreadyAssigned(const SimplePlanTree* spt, essentials::IdentifierConstPtr agent, int idx);
+    bool addIfAlreadyAssigned(const SimplePlanTree* spt, AgentId agent, int idx);
     bool assignUnassignedAgent(int agentIdx, int epIdx);
     UtilityInterval getUtility() const { return _utility; }
     const TaskAssignmentProblem* getProblem() const { return _problem; }
@@ -38,8 +38,8 @@ public:
     int getEntryPointCount() const { return _cardinalities.size(); }
     const SuccessCollection* getSuccessData() const;
 
-    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old);
-    void evaluate(const Assignment* old) { _utility = _plan->getUtilityFunction()->eval(this, old); }
+    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const IAlicaWorldModel* wm);
+    void evaluate(const Assignment* old, const IAlicaWorldModel* wm) { _utility = _plan->getUtilityFunction()->eval(this, old, wm); }
     static bool compare(const PartialAssignment* a, const PartialAssignment* b);
 
     static void allowIdling(bool allowed) { s_allowIdling = allowed; }

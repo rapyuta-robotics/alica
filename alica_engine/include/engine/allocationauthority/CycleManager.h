@@ -2,6 +2,7 @@
 //#define CM_DEBUG
 
 #include "engine/AlicaClock.h"
+#include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/AllocationAuthorityInfo.h"
 
@@ -52,7 +53,7 @@ private:
     int _newestAllocationDifference;
     int _maxAllocationCycles;
     bool _enabled;
-    essentials::IdentifierConstPtr _myID;
+    AgentId _myID;
     AlicaTime _overrideTimestamp;
     double _intervalIncFactor;
     double _intervalDecFactor;

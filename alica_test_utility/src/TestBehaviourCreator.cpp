@@ -7,11 +7,11 @@ TestBehaviourCreator::TestBehaviourCreator(std::unique_ptr<IBehaviourCreator> de
 {
 }
 
-std::shared_ptr<alica::BasicBehaviour> TestBehaviourCreator::createBehaviour(int64_t behaviourID)
+std::shared_ptr<alica::BasicBehaviour> TestBehaviourCreator::createBehaviour(int64_t behaviourID, IAlicaWorldModel* wm)
 {
     auto behaviourIter = _behaviourCreateFunctions.find(behaviourID);
     if (behaviourIter == _behaviourCreateFunctions.end()) {
-        return _defaultBehaviourCreator->createBehaviour(behaviourID);
+        return _defaultBehaviourCreator->createBehaviour(behaviourID, wm);
     } else {
         return behaviourIter->second();
     }

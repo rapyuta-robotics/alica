@@ -1,23 +1,22 @@
 #include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaWorldModel.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/UtilityFunction.h"
 #include "engine/allocationauthority/CycleManager.h"
+#include "engine/constraintmodul/ConditionStore.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
 #include "engine/planselector/PlanSelector.h"
-#include "engine/teammanager/TeamManager.h"
 #include "engine/syncmodule/SyncModule.h"
-#include "engine/constraintmodul/ConditionStore.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
-
-
+#include "engine/teammanager/TeamManager.h"
 
 //#define ALICA_DEBUG_LEVEL_ALL
 #include <alica_common_config/debug_output.h>
@@ -46,6 +45,12 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
 }
 
 RuleBook::~RuleBook() {}
+
+void RuleBook::init(const IAlicaWorldModel* wm)
+{
+    _wm = wm;
+    _ps->setWorldModel(wm);
+}
 
 void RuleBook::reload(const YAML::Node& config)
 {
@@ -430,10 +435,14 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     const State* nextState = nullptr;
 
+    if (!r.getBasicPlan() || !r.getBasicPlan()->initExecuted()) {
+        return PlanChange::NoChange;
+    }
+
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
         if (t->getSynchronisation() != nullptr)
             continue;
-        if (t->evalCondition(r)) {
+        if (t->evalCondition(r, _wm)) {
             nextState = t->getOutState();
             r.editConstraintStore().addCondition(t->getPreCondition());
             break;
@@ -479,7 +488,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             continue;
         }
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp)) {
+            if (t->evalCondition(rp, _wm)) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 rp.editConstraintStore().addCondition(t->getPreCondition());
@@ -490,7 +499,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->evalCondition(rp));
+            _sm.setSynchronisation(t, t->evalCondition(rp, _wm));
         }
     }
     if (nextState == nullptr) {

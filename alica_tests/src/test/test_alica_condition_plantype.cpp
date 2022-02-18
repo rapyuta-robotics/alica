@@ -51,6 +51,8 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     ASSERT_NE(dbrRun, nullptr);
     dbrRun->robotId = ac->getLocalAgentId();
     ae->start();
+    auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
+
     for (int i = 0; i < 21; i++) {
         ac->stepEngine();
 
@@ -67,21 +69,21 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
             EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
         }
         if (i == 5) {
-            alicaTests::TestWorldModel::getOne()->setRuntimeCondition1418042967134(true);
+            wm->setRuntimeCondition1418042967134(true);
         }
         if (i == 6) {
             // Should be RunTimeCondition --> State
             EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
         }
         if (i == 10) {
-            alicaTests::TestWorldModel::getOne()->setRuntimeCondition1418042967134(false);
+            wm->setRuntimeCondition1418042967134(false);
         }
         if (i == 12) {
             // Should be OtherPlan --> State
             EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
         }
         if (i == 13) {
-            alicaTests::TestWorldModel::getOne()->setPreCondition1418042929966(true);
+            wm->setPreCondition1418042929966(true);
         }
         if (i > 14) {
             // Should be PreCondition --> State

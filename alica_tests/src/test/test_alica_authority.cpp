@@ -4,9 +4,9 @@
 #include "ConditionCreator.h"
 #include "ConstraintCreator.h"
 #include "PlanCreator.h"
+#include "UtilityFunctionCreator.h"
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
-#include "UtilityFunctionCreator.h"
 
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
@@ -16,6 +16,8 @@
 #include <engine/model/State.h>
 #include <engine/teammanager/TeamManager.h>
 
+#include <alica/test/Util.h>
+#include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IAlicaCommunication.h>
@@ -23,11 +25,8 @@
 #include <engine/allocationauthority/EntryPointRobotPair.h>
 #include <engine/model/Task.h>
 #include <engine/modelmanagement/factories/TaskFactory.h>
-#include <alica/test/Util.h>
-#include <communication/AlicaDummyCommunication.h>
 
 #include <gtest/gtest.h>
-
 
 namespace alica
 {
@@ -65,11 +64,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 
-    essentials::IDManager idManager;
-    int idA1 = 1;
-    int idA2 = 2;
-    essentials::IdentifierConstPtr a1 = idManager.getID<int>(idA1);
-    essentials::IdentifierConstPtr a2 = idManager.getID<int>(idA2);
+    AgentId a1 = 1;
+    AgentId a2 = 2;
 
     alica::EntryPointRobotPair aTot1(&e1, a1);
     alica::EntryPointRobotPair bTot1(&e1, a2);
@@ -109,19 +105,23 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     alica::DummyTestSummand* dbr2 = dynamic_cast<alica::DummyTestSummand*>(uSummandAe2);
     dbr2->robotId = acs[1]->getLocalAgentId();
 
-    essentials::IdentifierConstPtr id1 = acs[0]->getLocalAgentId();
-    essentials::IdentifierConstPtr id2 = acs[1]->getLocalAgentId();
+    AgentId id1 = acs[0]->getLocalAgentId();
+    AgentId id2 = acs[1]->getLocalAgentId();
     ASSERT_NE(id1, id2) << "Agents use the same ID.";
 
     aes[0]->start();
     aes[1]->start();
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
 
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(2000);
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
+    auto* wmOne = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto* wmTwo = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+
+    wmOne->robotsXPos.push_back(0);
+    wmOne->robotsXPos.push_back(2000);
+
+    wmTwo->robotsXPos.push_back(2000);
+    wmTwo->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
         acs[0]->stepEngine();
@@ -138,5 +138,5 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         }
     }
 }
-}
-}
+} // namespace
+} // namespace alica

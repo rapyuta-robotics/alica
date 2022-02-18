@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>fsystem</name>
+  <version>0.0.0</version>
+  <description>The fsystem package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <author email="opfer@vs.uni-kassel.de">Stephan Opfer</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

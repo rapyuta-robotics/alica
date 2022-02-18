@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>supplementary_tests</name>
+  <version>0.0.1</version>
+  <description>The supplementary_tests package</description>
+
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <depend>alica_engine</depend>
+  <depend>alica_common_config</depend>
+  <depend>roscpp</depend>
+  <depend>alica_dummy_proxy</depend>
+  <depend>alica_simple_solver</depend>
+  <depend>alica_solver_interface</depend>
+  <depend>alica_test_utility</depend>
+  <depend>constraintsolver</depend>
+  <depend>autodiff</depend>
+  <depend>alica_ros_proxy</depend>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <test_depend>rostest</test_depend>
+  <test_depend>gtest</test_depend>
+  <export>
+  </export>
+</package>

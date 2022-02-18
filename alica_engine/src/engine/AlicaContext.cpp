@@ -1,8 +1,9 @@
 #include "engine/AlicaContext.h"
 #include "engine/AlicaEngine.h"
+#include "engine/Types.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 
 #include <essentials/FileSystem.h>
-#include <essentials/IdentifierConstPtr.h>
 
 namespace alica
 {
@@ -18,16 +19,13 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _engine(std::make_unique<AlicaEngine>(*this,
-                                                alicaContextParams.configPath,
-                                                alicaContextParams.roleSetName,
-                                                alicaContextParams.masterPlanName,
-                                                alicaContextParams.stepEngine,
-                                                alicaContextParams.agentID))
+        , _engine(std::make_unique<AlicaEngine>(*this, alicaContextParams.configPath, alicaContextParams.roleSetName, alicaContextParams.masterPlanName,
+                  alicaContextParams.stepEngine, alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
-        , _idManager(std::make_unique<essentials::IDManager>())
-{}
+        , _worldModel(nullptr)
+{
+}
 
 AlicaContext::~AlicaContext()
 {
@@ -77,7 +75,7 @@ void AlicaContext::stepEngine()
     } while (!_engine->getPlanBase().isWaiting());
 }
 
-essentials::IdentifierConstPtr AlicaContext::getLocalAgentId() const
+AgentId AlicaContext::getLocalAgentId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
 }
@@ -125,6 +123,17 @@ int AlicaContext::getVersion()
 void AlicaContext::reloadConfig()
 {
     _engine->reloadConfig(_configRootNode);
+}
+
+AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
+{
+    return AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) { _engine->editSyncModul().onSyncTalk(st); },
+            [this](std::shared_ptr<SyncReady> sr) { _engine->editSyncModul().onSyncReady(sr); },
+            [this](const AllocationAuthorityInfo& aai) { _engine->editAuth().handleIncomingAuthorityMessage(aai); },
+            [this](std::shared_ptr<PlanTreeInfo> st) { _engine->editTeamObserver().handlePlanTreeInfo(st); },
+            [this](const SolverResult& sr) { _engine->editResultStore().onSolverResult(sr); },
+            [this](const AgentQuery& pq) { _engine->getTeamManager().handleAgentQuery(pq); },
+            [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
 } // namespace alica

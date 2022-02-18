@@ -195,7 +195,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this);
+        return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -224,7 +224,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this);
+        bool ret = runtimeCondition->evaluate(*this, _ae->getWorldModel());
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
@@ -296,7 +296,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
 void RunningPlan::useEntryPoint(const EntryPoint* value)
 {
     if (_activeTriple.entryPoint != value) {
-        essentials::IdentifierConstPtr mid = getOwnID();
+        AgentId mid = getOwnID();
         _assignment.removeAgent(mid);
         _activeTriple.entryPoint = value;
         if (value != nullptr) {
@@ -316,7 +316,7 @@ void RunningPlan::useState(const State* s)
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
-                essentials::IdentifierConstPtr mid = getOwnID();
+                AgentId mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
                 _ae->editTeamManager().setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
@@ -395,6 +395,7 @@ void RunningPlan::clearChildren()
  */
 void RunningPlan::adaptAssignment(const RunningPlan& replacement)
 {
+    double oldUtility = _assignment.getLastUtilityValue();
     _assignment.adaptTaskChangesFrom(replacement.getAssignment());
     const State* newState = _assignment.getStateOfAgent(getOwnID());
 
@@ -407,6 +408,10 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         clearChildren();
         addChildren(replacement.getChildren());
         reactivate = true;
+        if (_basicPlan) {
+            std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId());
+            _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+        }
     } else {
         AgentGrp robotsJoined;
         _assignment.getAgentsInState(newState, robotsJoined);
@@ -478,7 +483,7 @@ void RunningPlan::deactivate()
         _ae->editBehaviourPool().stopBehaviour(*this);
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
-        _basicPlan->stop();
+        _ae->editPlanPool().stopPlan(*this);
     }
 }
 
@@ -565,9 +570,7 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
-        _basicPlan = static_cast<const Plan*>(_activeTriple.abstractPlan)->getBasicPlan();
-        _basicPlan->setConfiguration(getConfiguration());
-        _basicPlan->start(this);
+        _ae->editPlanPool().startPlan(*this);
     }
 
     attachPlanConstraints();
@@ -630,7 +633,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     bool ret = false;
     AllocationDifference& aldif = _cycleManagement.editNextDifference();
     for (const SimplePlanTree* spt : spts) {
-        essentials::IdentifierConstPtr id = spt->getAgentId();
+        AgentId id = spt->getAgentId();
         const bool freezeAgent = keepState && _assignment.getStateOfAgent(id) == getActiveState();
         if (freezeAgent) {
             continue;
@@ -674,12 +677,12 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     if (!keepTask) { // remove any robot no longer available in the spts (auth flag obey here, as robot might be
                      // unavailable)
         // EntryPoint[] eps = this.Assignment.GetEntryPoints();
-        essentials::IdentifierConstPtr ownId = getOwnID();
+        AgentId ownId = getOwnID();
         for (int i = 0; i < _assignment.getEntryPointCount(); ++i) {
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (essentials::IdentifierConstPtr rob : robs) {
+            for (AgentId rob : robs) {
                 if (rob == ownId) {
                     continue;
                 }
@@ -714,7 +717,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
             const EntryPoint* ep = _assignment.getEntryPoint(i);
             rem.clear();
             AssignmentView robs = _assignment.getAgentsWorking(i);
-            for (essentials::IdentifierConstPtr rob : robs) {
+            for (AgentId rob : robs) {
                 if (std::find(availableAgents.begin(), availableAgents.end(), rob) == availableAgents.end()) {
                     rem.push_back(rob);
                     aldif.editSubtractions().emplace_back(ep, rob);
@@ -795,7 +798,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
     }
 }
 
-essentials::IdentifierConstPtr RunningPlan::getOwnID() const
+AgentId RunningPlan::getOwnID() const
 {
     return _ae->getTeamManager().getLocalAgentID();
 }
@@ -871,6 +874,21 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     out << std::endl << "CycleManagement - Assignment Overridden: " << (r._cycleManagement.isOverridden() ? "true" : "false") << std::endl;
     out << std::endl << "########## ENDRP ###########" << std::endl;
     return out;
+}
+
+std::shared_ptr<Blackboard> RunningPlan::getBlackboard() const
+{
+    if (isBehaviour()) {
+        return _basicBehaviour->getBlackboard();
+    } else {
+        return _basicPlan->getBlackboard();
+    }
+}
+
+const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
+{
+    assert(!isBehaviour());
+    return _basicPlan->getKeyMapping(wrapperId);
 }
 
 } /* namespace alica */

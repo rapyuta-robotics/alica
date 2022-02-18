@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/USummand.h>
-#include <essentials/IdentifierConstPtr.h>
 #include <string>
 #include <vector>
 
@@ -13,8 +12,8 @@ class DummyTestSummand : public USummand
 public:
     DummyTestSummand(double weight);
     virtual ~DummyTestSummand();
-    UtilityInterval eval(IAssignment ass, const Assignment* oldAss) const override;
-    essentials::IdentifierConstPtr robotId;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const override;
+    AgentId robotId;
 
 protected:
     double sb;

@@ -1,0 +1,38 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 831400441334251602,
+  "name": "TestParameterPassingBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "requiresParameters": true,
+  "runtimeCondition": null,
+  "variables": [],
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "behaviorKey",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "behaviorInputKey",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "behaviorOutputKey",
+      "type" : "std::any",
+      "access" : "output",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
+}

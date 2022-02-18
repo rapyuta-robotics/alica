@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1588061024407,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1588061024407",
@@ -23,6 +24,7 @@
   "name": "ConfigurationTestPlan",
   "preCondition": null,
   "relativeDirectory": "Configurations",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

@@ -1,5 +1,6 @@
 #include "alica/test/Util.h"
 
+#include <engine/Types.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
 
@@ -19,6 +20,19 @@ std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, 
     return behaviour;
 }
 
+BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId)
+{
+    BasicPlan* plan = nullptr;
+    for (auto& planEntry : ae->getPlanPool().getAvailablePlans()) {
+        if (planEntry.first.first->getId() == planId &&
+                (configurationId == 0 ? planEntry.first.second == nullptr : planEntry.first.second->getId() == configurationId)) {
+            plan = planEntry.second.get();
+            break;
+        }
+    }
+    return plan;
+}
+
 bool Util::isStateActive(alica::AlicaEngine* ae, int64_t id)
 {
     return isStateActiveHelper(ae->getPlanBase().getRootNode(), id);
@@ -34,9 +48,9 @@ bool Util::isStateActiveHelper(const RunningPlan* rp, int64_t id)
     if (activeState && activeState->getId() == id) {
         return true;
     }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isStateActiveHelper(children[i], id)) {
+
+    for (const auto& child : rp->getChildren()) {
+        if (isStateActiveHelper(child, id)) {
             return true;
         }
     }
@@ -58,9 +72,33 @@ bool Util::isPlanActiveHelper(const RunningPlan* rp, int64_t id)
     if (abstractPlan && abstractPlan->getId() == id) {
         return true;
     }
-    const std::vector<RunningPlan*>& children = rp->getChildren();
-    for (int i = 0; i < static_cast<int>(children.size()); ++i) {
-        if (isPlanActiveHelper(children[i], id)) {
+
+    for (const auto& child : rp->getChildren()) {
+        if (isPlanActiveHelper(child, id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Util::hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id)
+{
+    return hasPlanSucceededHelper(ae->getPlanBase().getRootNode(), id);
+}
+
+bool Util::hasPlanSucceededHelper(const RunningPlan* rp, int64_t id)
+{
+    if (!rp) {
+        return false;
+    }
+
+    const AbstractPlan* abstractPlan = rp->getActivePlan();
+    if (abstractPlan && abstractPlan->getId() == id) {
+        return rp->amISuccessful();
+    }
+
+    for (const auto& child : rp->getChildren()) {
+        if (hasPlanSucceededHelper(child, id)) {
             return true;
         }
     }
@@ -77,7 +115,7 @@ int Util::getTeamSize(alica::AlicaEngine* ae)
     return ae->getTeamManager().getTeamSize();
 }
 
-const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, essentials::IdentifierConstPtr agentID)
+const alica::Agent* Util::getAgentByID(alica::AlicaEngine* ae, alica::AgentId agentID)
 {
     return ae->getTeamManager().getAgentByID(agentID);
 }

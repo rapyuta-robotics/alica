@@ -5,6 +5,7 @@
 
 #include "AbstractPlan.h"
 #include "engine/Types.h"
+#include "engine/blackboard/BlackboardBlueprint.h"
 
 namespace alica
 {
@@ -38,6 +39,7 @@ public:
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 
 private:
     friend ModelFactory;
@@ -61,6 +63,7 @@ private:
      * state. Has only effect for Behaviours not running in EventDriven mode.
      */
     int _deferring;
+
     /**
      * This behaviour's runtime condition.
      */
@@ -73,6 +76,11 @@ private:
      * This behaviour's postcondition
      */
     PostCondition* _postCondition;
+    /**
+     * If nullptr it will simply receive a reference to its parent's Blackboard
+     * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
+     */
+    std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };
 
 } // namespace alica

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+  <name>constraintsolver</name>
+  <version>0.0.1</version>
+  <description>The constraintsolver package</description>
+
+  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <build_depend>fsystem</build_depend>
+  <build_depend>autodiff</build_depend>
+  <build_depend>alica_engine</build_depend>
+  <build_depend>alica_ros_proxy</build_depend>
+  <build_depend>alica_solver_interface</build_depend>
+  <build_depend>alica_common_config</build_depend>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>fsystem</run_depend>
+  <run_depend>autodiff</run_depend>
+  <run_depend>alica_engine</run_depend>
+  <run_depend>alica_ros_proxy</run_depend>
+  <run_depend>alica_solver_interface</run_depend>
+  <run_depend>alica_common_config</run_depend>
+
+  <test_depend>gtest</test_depend>
+  <build_depend>roslib</build_depend>
+  <run_depend>roslib</run_depend>
+
+  <export>
+  </export>
+</package>

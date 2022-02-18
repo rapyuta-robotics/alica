@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1414068495568,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "1414068495568",
@@ -23,6 +24,7 @@
   "name": "ConstraintTestMaster",
   "preCondition": null,
   "relativeDirectory": "",
+  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

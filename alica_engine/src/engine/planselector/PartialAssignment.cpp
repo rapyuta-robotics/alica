@@ -122,7 +122,7 @@ bool PartialAssignment::assignUnassignedAgent(int agentIdx, int epIdx)
  * If the robot has already assigned itself, this method updates the partial assignment accordingly
  */
 // TODO: this is pretty inefficient
-bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, essentials::IdentifierConstPtr agent, int idx)
+bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, AgentId agent, int idx)
 {
     if (spt->getEntryPoint()->getPlan() == _plan) {
         const int numEps = static_cast<int>(_plan->getEntryPoints().size());
@@ -146,7 +146,7 @@ bool PartialAssignment::addIfAlreadyAssigned(const SimplePlanTree* spt, essentia
     return false;
 }
 
-bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old)
+bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const IAlicaWorldModel* wm)
 {
     // iterate next idx for cases of pre-assigned agents:
     while (_nextAgentIdx < static_cast<int>(_assignment.size()) && _assignment[_nextAgentIdx] >= 0) {
@@ -163,7 +163,7 @@ bool PartialAssignment::expand(std::vector<PartialAssignment*>& o_container, Par
             PartialAssignment* newPa = pool.getNext();
             *newPa = *this;
             newPa->assignUnassignedAgent(_nextAgentIdx, i);
-            newPa->evaluate(old);
+            newPa->evaluate(old, wm);
             if (newPa->_utility.getMax() > -1.0) {
                 o_container.insert(std::upper_bound(o_container.begin(), o_container.end(), newPa, compare), newPa);
                 change = true;
@@ -223,8 +223,8 @@ std::ostream& operator<<(std::ostream& out, const PartialAssignment& pa)
     out << "Plan: " << (p != nullptr ? p->getName() : "NULL") << std::endl;
     out << "Utility: " << pa._utility << std::endl;
     out << "Agents: ";
-    for (essentials::IdentifierConstPtr agent : pa._problem->getAgents()) {
-        out << *agent << " ";
+    for (AgentId agent : pa._problem->getAgents()) {
+        out << agent << " ";
     }
     out << std::endl;
     if (p) {

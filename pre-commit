@@ -3,7 +3,7 @@
 # Usage:
 #   Create a proper symlink: ln -sr pre-commit .git/hooks
 
-CLANG="clang-format-5.0"
+CLANG="clang-format-10"
 
 format_file() {
     file="${1}"

@@ -17,6 +17,7 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _deferring(0)
         , _eventDriven(false)
         , AbstractPlan(ae)
+        , _blackboardBlueprint(nullptr)
 {
 }
 

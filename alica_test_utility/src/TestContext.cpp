@@ -12,9 +12,8 @@
 namespace alica::test
 {
 
-TestContext::TestContext(const std::string& agentName, const std::string& configPath,
-                         const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                         const essentials::Identifier& agentID)
+TestContext::TestContext(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+        bool stepEngine, const AgentId agentID)
         : AlicaContext(AlicaContextParams(agentName, configPath, roleSetName, masterPlanName, stepEngine, agentID))
         , _initCalled(false)
 {
@@ -48,30 +47,6 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     }
     const_cast<Behaviour*>(constBehaviour)->setEventDriven(true);
     return true;
-}
-
-std::shared_ptr<essentials::ITrigger> TestContext::addBehaviourTrigger(
-        int64_t behaviourID, int64_t configurationID, std::shared_ptr<essentials::ITrigger> trigger)
-{
-    // create a trigger, if none is passed
-    std::shared_ptr<essentials::ITrigger> behaviourTrigger;
-    if (!trigger) {
-        behaviourTrigger = std::make_shared<BehaviourTrigger>();
-    } else {
-        behaviourTrigger = trigger;
-    }
-
-    // register the trigger in the TestContext trigger-map
-    auto behaviourConfKey = std::make_pair(behaviourID, configurationID);
-    auto behaviourTriggerEntry = _behaviourTriggers.find(behaviourConfKey);
-    if (behaviourTriggerEntry == _behaviourTriggers.end()) {
-        _behaviourTriggers[behaviourConfKey] = behaviourTrigger;
-    } else {
-        std::cerr << "[TestContext] Trigger for behaviourID " << behaviourID << " and configurationID " << configurationID << " already exists!" << std::endl;
-    }
-
-    // return the registered trigger
-    return behaviourTrigger;
 }
 
 std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)

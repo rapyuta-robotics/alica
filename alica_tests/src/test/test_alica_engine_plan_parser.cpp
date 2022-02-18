@@ -8,6 +8,7 @@ using namespace std;
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/Behaviour.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Plan.h"
@@ -16,7 +17,6 @@ using namespace std;
 #include "engine/model/Quantifier.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
@@ -24,9 +24,9 @@ using namespace std;
 
 #include <gtest/gtest.h>
 
+#include <cstdio>
 #include <iostream>
 #include <list>
-#include <cstdio>
 
 namespace alica
 {

@@ -66,7 +66,8 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
     _pap.reset();
     try {
         if (rp.getPlanType() == nullptr) {
-            return createRunningPlan(rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, rp.getConfiguration(), robots, &rp, nullptr, o_currentUtility);
+            return createRunningPlan(
+                    rp.getParent(), {static_cast<const Plan*>(rp.getActivePlan())}, rp.getConfiguration(), robots, &rp, nullptr, o_currentUtility);
         } else {
             return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), rp.getConfiguration(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
@@ -93,8 +94,8 @@ bool PlanSelector::getPlansForState(
     }
 }
 
-RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs, const RunningPlan* oldRp,
-        const PlanType* relevantPlanType, double& o_oldUtility)
+RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs,
+        const RunningPlan* oldRp, const PlanType* relevantPlanType, double& o_oldUtility)
 {
     PlanGrp newPlanList;
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
@@ -112,7 +113,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         return nullptr;
     }
 
-    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap);
+    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap, _wm);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {
@@ -128,7 +129,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
             const Plan* oldPlan = static_cast<const Plan*>(oldRp->getActivePlan());
             ptemp->prepare(oldPlan, &ta);
             oldRp->getAssignment().fillPartial(*ptemp);
-            o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment()).getMax();
+            o_oldUtility = oldPlan->getUtilityFunction()->eval(ptemp, &oldRp->getAssignment(), _wm).getMax();
         }
         // dont preassign other robots, because we need a similar assignment (not the same)
         rp = _pb->makeRunningPlan(oldRp->getPlanType(), configuration);
@@ -136,7 +137,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     }
 
     // some variables for the do while loop
-    const essentials::IdentifierConstPtr localAgentID = _ae->getTeamManager().getLocalAgentID();
+    const AgentId localAgentID = _ae->getTeamManager().getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     std::vector<RunningPlan*> rpChildren;
@@ -209,7 +210,7 @@ bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
     ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent: " << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
-                                                           << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>");
+                                                            << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>");
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
@@ -238,6 +239,11 @@ bool PlanSelector::getPlansForStateInternal(
         }
     }
     return true;
+}
+
+void PlanSelector::setWorldModel(const IAlicaWorldModel* wm)
+{
+    _wm = wm;
 }
 
 } /* namespace alica */

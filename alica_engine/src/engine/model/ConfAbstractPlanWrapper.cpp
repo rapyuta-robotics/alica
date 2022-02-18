@@ -4,6 +4,7 @@ namespace alica
 ConfAbstractPlanWrapper::ConfAbstractPlanWrapper()
         : _abstractPlan(nullptr)
         , _configuration(nullptr)
+        , _keyMapping(nullptr)
 {
 }
 

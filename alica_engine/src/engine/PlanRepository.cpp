@@ -1,12 +1,12 @@
 #include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
-#include "engine/model/VariableBinding.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/Quantifier.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/Variable.h"
+#include "engine/model/VariableBinding.h"
 
 #include <cassert>
 namespace alica
@@ -31,7 +31,7 @@ bool checkVarsInCondition(const Condition* c, const Plan* p)
 
     return true;
 }
-bool checkVarsInVariableBindings(const Plan *p)
+bool checkVarsInVariableBindings(const Plan* p)
 {
     const VariableGrp& pvars = p->getVariables();
     for (const State* s : p->getStates()) {

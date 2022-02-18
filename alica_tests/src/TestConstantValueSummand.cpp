@@ -14,14 +14,14 @@ namespace alica
 
 TestConstantValueSummand::TestConstantValueSummand(double weight, double val)
         : USummand(weight)
-        , robotId(nullptr)
+        , robotId(0)
         , val(val)
 {
 }
 
 TestConstantValueSummand::~TestConstantValueSummand() {}
 
-UtilityInterval TestConstantValueSummand::eval(IAssignment, const Assignment* oldAss) const
+UtilityInterval TestConstantValueSummand::eval(IAssignment, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     return UtilityInterval(val, val);
 }

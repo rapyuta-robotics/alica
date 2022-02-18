@@ -34,9 +34,11 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool)
+TaskAssignmentProblem::TaskAssignmentProblem(
+        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
+        , _wm(wm)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
@@ -54,7 +56,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp&
         // prep successinfo for this plan
         _successData.push_back(_to.createSuccessCollection(curPlan));
         // allow caching of eval data
-        curPlan->getUtilityFunction()->cacheEvalData();
+        curPlan->getUtilityFunction()->cacheEvalData(_wm);
         // seed the fringe with a partial assignment
         PartialAssignment* curPa = _pool.getNext();
 
@@ -77,7 +79,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr);
+            curPa->evaluate(nullptr, _wm);
             changed = true;
         }
         ++i;
@@ -124,7 +126,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
         } else {
             ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
             ALICA_DEBUG_MSG(_fringe << "--->");
-            curPa->expand(_fringe, _pool, oldAss);
+            curPa->expand(_fringe, _pool, oldAss, _wm);
             ALICA_DEBUG_MSG("<--- TA: AFTER fringe exp:" << std::endl << "TA: fringe size " << _fringe.size());
             ALICA_DEBUG_MSG(_fringe << "--->");
         }
@@ -140,9 +142,9 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  * @param simplePlanTreeMap never try to delete this
  * @return True if any robot has already assigned itself, false otherwise
  */
-bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<essentials::IdentifierConstPtr, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
+bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentId, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
-    essentials::IdentifierConstPtr ownAgentId = _tm.getLocalAgentID();
+    AgentId ownAgentId = _tm.getLocalAgentID();
     bool haveToRevalute = false;
 
     for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {
@@ -159,15 +161,14 @@ bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, cons
     return haveToRevalute;
 }
 
-
 std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
 {
     out << std::endl;
     out << "--------------------TA:--------------------" << std::endl;
     out << "Agent count: " << tap._agents.size() << std::endl;
     out << "AgentIDs: ";
-    for (essentials::IdentifierConstPtr id : tap._agents) {
-        out << *id << " ";
+    for (AgentId id : tap._agents) {
+        out << id << " ";
     }
     out << std::endl;
     out << "Initial Fringe (Count " << tap._fringe.size() << "):" << std::endl;

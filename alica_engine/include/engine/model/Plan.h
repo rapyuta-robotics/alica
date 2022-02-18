@@ -1,8 +1,8 @@
 #pragma once
 
 #include "AbstractPlan.h"
-#include "engine/Types.h"
 #include "engine/BasicPlan.h"
+#include "engine/Types.h"
 
 namespace alica
 {
@@ -54,6 +54,8 @@ public:
 
     int getFrequency() const { return _frequency; }
 
+    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
+
     std::string toString(std::string indent = "") const;
 
 private:
@@ -68,7 +70,7 @@ private:
     void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
     void setStates(const StateGrp& states);
-    void setSynchronisations(const SynchronisationGrp &synchronisations);
+    void setSynchronisations(const SynchronisationGrp& synchronisations);
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
@@ -110,6 +112,11 @@ private:
      * The frequency with which this Plan is called.
      */
     int _frequency;
+    /**
+     * If nullptr, it will simply receive a reference to its parents Blackboard
+     * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
+     */
+    std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };
 
 } // namespace alica

@@ -4,25 +4,24 @@
 #include "engine/BehaviourPool.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
+#include "engine/PlanPool.h"
 #include "engine/PlanRepository.h"
 #include "engine/TeamObserver.h"
-#include "engine/modelmanagement/ModelManager.h"
+#include "engine/Types.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/blackboard/BlackBoard.h"
+#include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
+#include "engine/modelmanagement/ModelManager.h"
+#include "engine/scheduler/JobQueue.h"
+#include "engine/scheduler/Scheduler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/scheduler/Scheduler.h"
-#include "engine/scheduler/JobQueue.h"
 
-#include <essentials/IdentifierConstPtr.h>
-#include <essentials/IDManager.h>
-
+#include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
-#include <functional>
 
 namespace alica
 {
@@ -41,9 +40,8 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& configPath,
-                const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-                const essentials::Identifier& agentID = essentials::Identifier());
+    AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
+            const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:
@@ -63,6 +61,9 @@ public:
     const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
     BehaviourPool& editBehaviourPool() { return _behaviourPool; }
 
+    const PlanPool& getPlanPool() const { return _planPool; }
+    PlanPool& editPlanPool() { return _planPool; }
+
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
 
@@ -70,7 +71,7 @@ public:
     PlanBase& editPlanBase() { return _planBase; }
 
     const ModelManager& getModelManager() const { return _modelManager; }
-    ModelManager& editModelManager() {return _modelManager; }
+    ModelManager& editModelManager() { return _modelManager; }
 
     const PlanRepository& getPlanRepository() const { return _planRepository; }
     PlanRepository& editPlanRepository() { return _planRepository; }
@@ -90,13 +91,14 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const BlackBoard& getBlackBoard() const { return _blackboard; }
-    BlackBoard& editBlackBoard() { return _blackboard; }
+    const Blackboard& getBlackboard() const { return _Blackboard; }
+    Blackboard& editBlackboard() { return _Blackboard; }
 
     scheduler::JobScheduler& editScheduler() { return *_scheduler; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
+    const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
     void setStepCalled(bool stepCalled);
@@ -107,15 +109,16 @@ public:
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
+    IAlicaTimerFactory& getTimerFactory() const;
+    // can be null if no traceFactory is set
+    const IAlicaTraceFactory* getTraceFactory() const;
+    IAlicaWorldModel* getWorldModel() const;
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-    template <class Prototype>
-    essentials::IdentifierConstPtr getID(Prototype& idPrototype, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr getIDFromBytes(const uint8_t *idBytes, int idSize, uint8_t type = essentials::Identifier::UUID_TYPE);
-    essentials::IdentifierConstPtr generateID(std::size_t size);
+    AgentId generateID();
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
@@ -140,6 +143,7 @@ private:
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     BehaviourPool _behaviourPool;
+    PlanPool _planPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
@@ -147,6 +151,7 @@ private:
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     PlanBase _planBase;
+
     /**
      * TODO: Make VariableSyncModule a stack variable.
      * Currently, it has circular dependency with engine header, because it needs to access
@@ -155,25 +160,12 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    BlackBoard _blackboard;
-    bool _useStaticRoles; /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
+    Blackboard _Blackboard;
+    bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
-    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
-    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/
+    bool _stepEngine;      /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled;      /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
-
-/**
- * If present, returns the ID corresponding to the given prototype.
- * Otherwise, it creates a new one, stores and returns it.
- *
- * This method can be used, e.g., for passing an int and receiving
- * a pointer to a corresponding Identifier object.
- */
-template <class Prototype>
-essentials::IdentifierConstPtr AlicaEngine::getID(Prototype& idPrototype, uint8_t type)
-{
-    return _ctx.getIDManager().getID<Prototype>(idPrototype, type);
-}
 
 template <typename T>
 void AlicaEngine::abort(const std::string& msg, const T& tail)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.10)
 project(alica_dummy_proxy)
 
 add_compile_options(-std=c++17)
@@ -34,8 +34,8 @@ if (NOT catkin_FOUND)
  target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )

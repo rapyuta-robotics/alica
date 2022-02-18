@@ -1,33 +1,25 @@
-#include <alica_tests/CounterClass.h>
-#include "test_alica.h"
 #include "Behaviour/BehAAA.h"
 #include "Behaviour/BehBAA.h"
+#include "test_alica.h"
+#include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>
-#include <gtest/gtest.h>
 #include <alica_tests/test_sched_world_model.h>
+#include <gtest/gtest.h>
 
 namespace alica
 {
 namespace
 {
 
-class AlicaSchedulingPlan : public AlicaTestFixture
+class AlicaSchedulingPlan : public AlicaSchedulingTestFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
     bool stepEngine() const override { return true; }
-    virtual void SetUp() override
-    {
-        alica_test::SchedWM::instance().reset();
-        AlicaTestFixture::SetUp();
-    }
-    virtual void TearDown() override
-    {
-        AlicaTestFixture::TearDown();
-        alica_test::SchedWM::instance().reset();
-    }
+    virtual void SetUp() override { AlicaSchedulingTestFixture::SetUp(); }
+    virtual void TearDown() override { AlicaSchedulingTestFixture::TearDown(); }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)
@@ -35,22 +27,22 @@ TEST_F(AlicaSchedulingPlan, scheduling)
     ae->start();
     CounterClass::called = 0;
 
-    ac->stepEngine();
+    STEP_UNTIL(CounterClass::called == 1);
     // init of scheduling plan 1
     ASSERT_EQ(1, CounterClass::called);
     CounterClass::called += 1; // allow transition
 
-    ac->stepEngine();
+    STEP_UNTIL(CounterClass::called == 4);
     // init of scheduling plan 2 and 3
     ASSERT_EQ(4, CounterClass::called);
     CounterClass::called += 1; // allow transition
 
-    ac->stepEngine();
+    STEP_UNTIL(CounterClass::called == 7);
     // onTermination of scheduling plan 2 and 3 called
     ASSERT_EQ(7, CounterClass::called);
     CounterClass::called += 1; // allow transition
 
-    ac->stepEngine();
+    STEP_UNTIL(CounterClass::called == 9);
     // onTermination of scheduling plan 1 called
     ASSERT_EQ(9, CounterClass::called);
 }
@@ -60,7 +52,8 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
 
     std::string planAInitOrder = "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n";
     std::string planATermOrder = "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n";
@@ -68,35 +61,35 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     std::string planBTermOrder = "BehBAA::Term\nPlanBA::Term\nPlanB::Term\n";
 
     std::string expectedExecOrder = planAInitOrder;
-    wm.execOrderTest = true;
-    ac->stepEngine();
-    ASSERT_EQ(expectedExecOrder, wm.execOrder);
+    wm->execOrderTest = true;
+    STEP_UNTIL(expectedExecOrder == wm->execOrder);
+    ASSERT_EQ(expectedExecOrder, wm->execOrder);
 
     for (int i = 0; i < 10; ++i) {
         expectedExecOrder += planATermOrder + planBInitOrder;
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
-        ac->stepEngine();
-        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
+        STEP_UNTIL(expectedExecOrder == wm->execOrder);
+        ASSERT_EQ(expectedExecOrder, wm->execOrder);
 
         expectedExecOrder += planBTermOrder + planAInitOrder;
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
-        ac->stepEngine();
-        ASSERT_EQ(expectedExecOrder, wm.execOrder);
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
+        STEP_UNTIL(expectedExecOrder == wm->execOrder);
+        ASSERT_EQ(expectedExecOrder, wm->execOrder);
     }
 
-    wm.execOrder.clear();
-    wm.execOrder = planAInitOrder;
+    wm->execOrder.clear();
+    wm->execOrder = planAInitOrder;
     for (int i = 0; i < 10; ++i) {
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
     }
-    ASSERT_EQ(expectedExecOrder, wm.execOrder);
+    ASSERT_EQ(expectedExecOrder, wm->execOrder);
 }
 
 TEST_F(AlicaSchedulingPlan, orderedRunCheck)
@@ -104,25 +97,26 @@ TEST_F(AlicaSchedulingPlan, orderedRunCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     for (int i = 0; i < 10; ++i) {
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
         ac->stepEngine();
 
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
         ac->stepEngine();
     }
-    ASSERT_TRUE(wm.planARunCalled);
-    ASSERT_FALSE(wm.planARunOutOfOrder);
-    ASSERT_TRUE(wm.behAAARunCalled);
-    ASSERT_FALSE(wm.behAAARunOutOfOrder);
+    ASSERT_TRUE(wm->planARunCalled);
+    ASSERT_FALSE(wm->planARunOutOfOrder);
+    ASSERT_TRUE(wm->behAAARunCalled);
+    ASSERT_FALSE(wm->behAAARunOutOfOrder);
 }
 
 TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
@@ -130,64 +124,67 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     CounterClass::called = -1;
     ae->start();
 
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInInit);
-    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(wm->behAAASuccessInInit);
+    ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.behAAASetSuccess = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    wm->behAAASetSuccess = true;
+    ac->stepEngine();
+    SLEEP_UNTIL(behAAA->isSuccess());
     ASSERT_TRUE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetSuccessFailed);
+    ASSERT_FALSE(wm->behAAASetSuccessFailed);
 
-    wm.behAAASetSuccess = false;
-    wm.behAAASetFailure = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    wm->behAAASetSuccess = false;
+    wm->behAAASetFailure = true;
+    ac->stepEngine();
+    SLEEP_UNTIL(behAAA->isFailure());
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_TRUE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetFailureFailed);
+    ASSERT_FALSE(wm->behAAASetFailureFailed);
 
-    wm.planA2PlanB = true;
-    wm.planB2PlanA = false;
+    wm->planA2PlanB = true;
+    wm->planB2PlanA = false;
     ac->stepEngine();
-    wm.behAAASetSuccess = false;
-    wm.behAAASetFailure = false;
+    wm->behAAASetSuccess = false;
+    wm->behAAASetFailure = false;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInTerminate);
-    ASSERT_FALSE(wm.behAAAFailureInTerminate);
+    ASSERT_FALSE(wm->behAAASuccessInTerminate);
+    ASSERT_FALSE(wm->behAAAFailureInTerminate);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.planA2PlanB = false;
-    wm.planB2PlanA = true;
+    wm->planA2PlanB = false;
+    wm->planB2PlanA = true;
     ac->stepEngine();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    ASSERT_FALSE(wm.behAAASuccessInInit);
-    ASSERT_FALSE(wm.behAAAFailureInInit);
+    ASSERT_FALSE(wm->behAAASuccessInInit);
+    ASSERT_FALSE(wm->behAAAFailureInInit);
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 
-    wm.behAAASetSuccess = true;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    wm->behAAASetSuccess = true;
+    SLEEP_UNTIL(behAAA->isSuccess());
     ASSERT_TRUE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
-    ASSERT_FALSE(wm.behAAASetSuccessFailed);
-    wm.behAAABlockRun = true;
+    ASSERT_FALSE(wm->behAAASetSuccessFailed);
+    wm->behAAABlockRun = true;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    wm.planA2PlanB = true;
-    wm.planB2PlanA = false;
+    wm->planA2PlanB = true;
+    wm->planB2PlanA = false;
     ac->stepEngine();
-    wm.behAAABlockRun = false;
+    wm->behAAABlockRun = false;
     ASSERT_FALSE(behAAA->isSuccess());
     ASSERT_FALSE(behAAA->isFailure());
 }
@@ -196,32 +193,75 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
 {
     CounterClass::called = -1;
     ae->start();
-    auto& wm = alica_test::SchedWM::instance();
-    wm.execOrderTest = true;
+
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execOrderTest = true;
     ac->stepEngine();
 
     auto behAAA = std::dynamic_pointer_cast<alica::BehAAA>(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0));
     auto behBAA = std::dynamic_pointer_cast<alica::BehBAA>(alica::test::Util::getBasicBehaviour(ae, 1629895911592, 0));
 
     for (int i = 0; i < 10; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        ASSERT_GT(behAAA->runCount, 10);
 
-        wm.planA2PlanB = true;
-        wm.planB2PlanA = false;
-        ac->stepEngine();
+        STEP_UNTIL(behAAA->runCount >= 1);
+        SLEEP_UNTIL(behAAA->runCount >= 10);
+        ASSERT_GE(behAAA->runCount, 10);
+
+        wm->planA2PlanB = true;
+        wm->planB2PlanA = false;
+        STEP_UNTIL(behAAA->runCount == 0);
 
         ASSERT_EQ(behAAA->runCount, 0);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        ASSERT_GT(behBAA->runCount, 10);
+        STEP_UNTIL(behAAA->runCount >= 1);
+        SLEEP_UNTIL(behAAA->runCount >= 10);
+        ASSERT_GE(behBAA->runCount, 10);
 
-        wm.planA2PlanB = false;
-        wm.planB2PlanA = true;
-        ac->stepEngine();
+        wm->planA2PlanB = false;
+        wm->planB2PlanA = true;
+        STEP_UNTIL(behAAA->runCount == 0);
 
         ASSERT_EQ(behBAA->runCount, 0);
     }
+}
+
+TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
+{
+    CounterClass::called = -1;
+    ae->start();
+
+    IAlicaWorldModel* wmTemp = ac->getWorldModel();
+    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    wm->execBehaviourTest = true;
+    STEP_UNTIL(wm->execOrder == "TestBehaviour::Init\nTestBehaviour::Run\n");
+
+    EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\n");
+
+    wm->transitionToExecuteBehaviour = false;
+    wm->transitionToExecuteBehaviourInSubPlan = true;
+    STEP_UNTIL(wm->execOrder == "TestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n");
+    EXPECT_EQ(wm->execOrder, "TestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n");
+
+    std::string execOrderBeforeTransition = "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+    std::string execOrderAfterTransition =
+            "TestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\nTestBehaviour::Term\nTestBehaviour::Init\nTestBehaviour::Run\n";
+
+    for (int i = 0; i < 10; i++) {
+        wm->execOrder = "";
+
+        wm->transitionToExecuteBehaviourInSubPlan = false;
+        wm->transitionToExecuteBehaviour = true;
+        STEP_UNTIL(wm->execOrder == execOrderBeforeTransition);
+        EXPECT_EQ(wm->execOrder, execOrderBeforeTransition);
+
+        wm->transitionToExecuteBehaviour = false;
+        wm->transitionToExecuteBehaviourInSubPlan = true;
+        STEP_UNTIL(wm->execOrder == execOrderAfterTransition);
+        EXPECT_EQ(wm->execOrder, execOrderAfterTransition);
+    }
+
+    wm->transitionToEndTest = true;
 }
 
 } // namespace

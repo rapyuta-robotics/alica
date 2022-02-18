@@ -8,8 +8,6 @@
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <essentials/IdentifierConstPtr.h>
-
 #include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -78,7 +76,7 @@ void StaticRoleAssignment::calculateRoles()
                     // TODO: fix this take context
                     RoleSwitch rs;
                     rs.roleID = role->getId();
-                    _ae->getCommunicator().sendRoleSwitch(rs);
+                    _ae->getCommunicator().sendRoleSwitch(rs, _ae->getTeamManager().getLocalAgentID());
                 }
                 roleIsAssigned = true;
                 break;
