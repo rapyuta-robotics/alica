@@ -320,6 +320,10 @@ void PlanBase::stop()
 PlanBase::~PlanBase()
 {
     delete _statusMessage;
+    // Destroy running plans from most recent to least recent
+    while (!_runningPlans.empty()) {
+        _runningPlans.pop_back();
+    }
 }
 
 void PlanBase::addFastPathEvent(RunningPlan* p)
