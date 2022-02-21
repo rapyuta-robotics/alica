@@ -3,27 +3,27 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 1417423751089,
+      "id": 3264799698587952617,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
-      "name": "MISSING_NAME",
-      "plan": 1417423751087,
+      "name": "",
+      "plan": 2369418759245288160,
       "positionWeb": {
         "x": 200,
         "y": 212
       },
-      "state": 1417423751088,
+      "state": 1749352633184971627,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1417423751087,
-  "masterPlan": false,
-  "name": "GSolverMaster",
+  "id": 2369418759245288160,
+  "masterPlan": true,
+  "name": "ActionServerExampleMaster",
   "preCondition": null,
-  "relativeDirectory": "GSolver",
+  "relativeDirectory": "",
   "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
@@ -31,19 +31,19 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "GSolverTestPlan.pml#1417423757243",
+          "abstractPlan": "ActionServerExample.pml#2379894799421542548",
           "comment": "",
           "configuration": null,
-          "id": 1597658636419,
-          "name": "1597658636419"
+          "id": 913747350165238705,
+          "name": ""
         }
       ],
-      "entryPoint": 1417423751089,
-      "id": 1417423751088,
+      "entryPoint": 3264799698587952617,
+      "id": 1749352633184971627,
       "inTransitions": [],
-      "name": "Init",
+      "name": "RunActionServer",
       "outTransitions": [],
-      "parentPlan": 1417423751087,
+      "parentPlan": 2369418759245288160,
       "positionWeb": {
         "x": 428,
         "y": 200
@@ -54,6 +54,6 @@
   ],
   "synchronisations": [],
   "transitions": [],
-  "utilityThreshold": 0.1,
+  "utilityThreshold": 0.0,
   "variables": []
 }
