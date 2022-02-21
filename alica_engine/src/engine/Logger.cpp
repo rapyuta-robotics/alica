@@ -28,10 +28,12 @@ using std::to_string;
 
 Logger::Logger(AlicaEngine* ae)
         : _ae(ae)
-        , _itCount(0)
-        , _inIteration(false)
-        , _receivedEvent(false)
         , _fileWriter()
+        , _itCount(0)
+        , _active(false)
+        , _receivedEvent(false)
+        , _inIteration(false)
+        , _logging(false)
 {
     auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
