@@ -16,6 +16,7 @@ public:
     PlanCreator();
     virtual ~PlanCreator();
     std::unique_ptr<BasicPlan> createPlan(int64_t planId, IAlicaWorldModel* wm) override;
+    std::unique_ptr<PlanAttachment> createPlanAttachment(int64_t attachmentWrapperConfId) override;
 };
 
 } /* namespace alica */

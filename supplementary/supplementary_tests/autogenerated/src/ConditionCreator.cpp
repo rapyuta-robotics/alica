@@ -1,4 +1,7 @@
 #include "ConditionCreator.h"
+#include "ActionServerExample2379894799421542548.h"
+#include "ActionServerExampleMaster2369418759245288160.h"
+#include "DummyImplementation4126421719858579722.h"
 #include "GSolver/GSolverMaster1417423751087.h"
 #include "GSolver/GSolverTestPlan1417423757243.h"
 #include "GSolver/SolverTestBehaviour1417424455986.h"
@@ -45,6 +48,15 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1524463006078:
         return std::make_shared<RunTimeCondition1524463006078>();
+        break;
+    case 587249152722263568:
+        return std::make_shared<PreCondition587249152722263568>();
+        break;
+    case 1886820548377048134:
+        return std::make_shared<PreCondition1886820548377048134>();
+        break;
+    case 3469760593538210700:
+        return std::make_shared<PreCondition3469760593538210700>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
