@@ -1,4 +1,7 @@
 #include "PlanCreator.h"
+#include "ActionServerExample2379894799421542548.h"
+#include "ActionServerExampleMaster2369418759245288160.h"
+#include "DummyImplementation4126421719858579722.h"
 #include "GSolver/GSolverMaster1417423751087.h"
 #include "GSolver/GSolverTestPlan1417423757243.h"
 #include "ProblemModule/ProbBuildingLevel11479557378264.h"
@@ -56,6 +59,15 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1524452836022:
         return std::make_unique<Lvl31524452836022>(wm);
         break;
+    case 2369418759245288160:
+        return std::make_unique<ActionServerExampleMaster2369418759245288160>(wm);
+        break;
+    case 2379894799421542548:
+        return std::make_unique<ActionServerExample2379894799421542548>(wm);
+        break;
+    case 4126421719858579722:
+        return std::make_unique<DummyImplementation4126421719858579722>(wm);
+        break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;
         throw new std::exception();
@@ -63,4 +75,12 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     }
 }
 
+std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
+{
+    switch (attachmentWrapperConfId) {
+    default:
+        // Lookups will occur even if the child does not require parameters, but the function will never be called
+        return nullptr;
+    }
+}
 } // namespace alica
