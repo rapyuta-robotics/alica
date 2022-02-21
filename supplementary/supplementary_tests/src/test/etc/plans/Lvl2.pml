@@ -4,6 +4,7 @@
     {
       "comment": "",
       "id": 1524452793380,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +20,7 @@
     {
       "comment": "",
       "id": 1524453238753,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "AttackTask",
@@ -38,6 +40,7 @@
   "name": "Lvl2",
   "preCondition": null,
   "relativeDirectory": "VariableHandling",
+  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "Lvl2 Runtime Condition",
