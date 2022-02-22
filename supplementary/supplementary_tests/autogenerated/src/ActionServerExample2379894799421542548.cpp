@@ -1,6 +1,7 @@
 #include "ActionServerExample2379894799421542548.h"
 /*PROTECTED REGION ID(eph2379894799421542548) ENABLED START*/
 // Add additional options here
+#include <string>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -55,8 +56,9 @@ std::shared_ptr<UtilityFunction> UtilityFunction2379894799421542548::getUtilityF
 bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(430744406068167347) ENABLED START*/
-    std::cout << "The PreCondition 1886820548377048134 in Transition '430744406068167347' is not implement yet!" << std::endl;
-    return false;
+    auto plan = rp->getBasicPlan();
+    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
+    return bb.get<std::optional<int32_t>>("goal") != std::nullopt;
     /*PROTECTED REGION END*/
 }
 
@@ -78,12 +80,61 @@ bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1354699620997961969) ENABLED START*/
-    std::cout << "The PreCondition 587249152722263568 in Transition '1354699620997961969' is not implement yet!" << std::endl;
-    return false;
+    auto plan = rp->getBasicPlan();
+    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed);
     /*PROTECTED REGION END*/
 }
 
 /*PROTECTED REGION ID(methods2379894799421542548) ENABLED START*/
 // Add additional options here
+void ActionServerExample2379894799421542548::goalCallback()
+{
+    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
+    bb.get<std::optional<int32_t>>("_goalFinished") = std::nullopt;
+    bb.get<std::optional<int32_t>>("goal") = _actionServer.acceptNewGoal();
+}
+
+void ActionServerExample2379894799421542548::preemptCallback()
+{
+    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
+    bb.get<std::optional<int32_t>>("cancel") = true;
+}
+
+void ActionServerExample2379894799421542548::onInit()
+{
+    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
+    bb.registerValue("result", std::optional<std::vector<int32_t>>());
+    bb.registerValue("feedback", std::optional<std::vector<int32_t>>());
+    bb.registerValue("goal", std::optional<int32_t>());
+    bb.registerValue("cancel", std::optional<bool>());
+    bb.registerValue("cancelAccepted", std::optional<bool>());
+    _actionServer(_nh, std::string("DummyActionServer"), false);
+    _actionServer.registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback), this);
+    _actionServer.registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback), this);
+    _actionServer.start();
+}
+
+void ActionServerExample2379894799421542548::run(void* msg)
+{
+    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
+    if (bb.get<std::optional<std::vector<int32_t>>>("result") != std::nullopt) {
+        _actionServer.setSucceeded(bb.get<std::optional<supplementary_tests::DummyActionResult>>("result"));
+        bb.get<std::optional<std::vector<int32_t>>>("result") = std::nullopt;
+    }
+    if (bb.get<std::optional<std::vector<int32_t>>>("feedback") != std::nullopt) {
+        _actionServer.publishFeedback(bb.get<std::optional<std::vector<int32_t>>>("feedback"));
+        bb.get<std::optional<std::vector<int32_t>>>("feedback") = std::nullopt;
+    }
+    if (bb.get<std::optional<bool>>("cancelAccepted") != std::nullopt) {
+        _actionServer.setAborted(bb.get<std::optional<supplementary_tests::DummyActionResult>>("result"));
+        bb.get<std::optional<bool>>("cancelAccepted") = std::nullopt;
+        bb.get<std::optional<supplementary_tests::DummyActionResult>("result") = std::nullopt;
+    }
+}
+
+void ActionServerExample2379894799421542548::onTerminate()
+{
+    _actionServer.shutdown();
+}
 /*PROTECTED REGION END*/
 } // namespace alica

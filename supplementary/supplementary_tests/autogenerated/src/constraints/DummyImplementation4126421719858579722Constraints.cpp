@@ -12,10 +12,12 @@ namespace alica
  *
  * States:
  * - DummySuccess (1823707990536087965)
+ * - DummyFailure (1069042249878174940)
  * - DummyState (400856976447099508)
  *
  * Vars:
  */
 // State: DummySuccess
+// State: DummyFailure
 // State: DummyState
 } // namespace alica
