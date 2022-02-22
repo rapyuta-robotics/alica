@@ -8,6 +8,7 @@
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl4126421719858579722) ENABLED START*/
 // Add additional includes here
+#include <supplementary_tests/DummyAction.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -26,7 +27,7 @@ public:
 protected:
     /*PROTECTED REGION ID(pro4126421719858579722) ENABLED START*/
     // Override these methods for your use case
-    // virtual void run(void* msg) override;
+    virtual void run(void* msg) override;
     // virtual void onInit() override;
     // virtual void onTerminate() override;
     // Add additional protected methods here
@@ -34,6 +35,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv4126421719858579722) ENABLED START*/
     // Add additional private methods here
+    int32_t _currentGoal;
     /*PROTECTED REGION END*/
 };
 
@@ -42,6 +44,10 @@ class UtilityFunction4126421719858579722 : public BasicUtilityFunction
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 class PreCondition3469760593538210700 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition2084505765197602547 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };

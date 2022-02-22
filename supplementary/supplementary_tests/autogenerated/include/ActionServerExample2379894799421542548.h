@@ -8,6 +8,8 @@
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl2379894799421542548) ENABLED START*/
 // Add additional includes here
+#include <actionlib/server/simple_action_server.h>
+#include <supplementary_tests/DummyAction.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -26,14 +28,20 @@ public:
 protected:
     /*PROTECTED REGION ID(pro2379894799421542548) ENABLED START*/
     // Override these methods for your use case
-    // virtual void run(void* msg) override;
-    // virtual void onInit() override;
-    // virtual void onTerminate() override;
+    virtual void run(void* msg) override;
+    virtual void onInit() override;
+    virtual void onTerminate() override;
+    void goalCallback();
+    void preemptCallback();
     // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv2379894799421542548) ENABLED START*/
     // Add additional private methods here
+    ros::NodeHandle _nh;
+    actionlib::SimpleActionServer<supplementary_tests::DummyAction> _actionServer;
+    supplementary_tests::DummyActionFeedback _feedback;
+    supplementary_tests::DummyActionResult _result;
     /*PROTECTED REGION END*/
 };
 

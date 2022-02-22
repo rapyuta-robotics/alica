@@ -55,6 +55,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1886820548377048134:
         return std::make_shared<PreCondition1886820548377048134>();
         break;
+    case 2084505765197602547:
+        return std::make_shared<PreCondition2084505765197602547>();
+        break;
     case 3469760593538210700:
         return std::make_shared<PreCondition3469760593538210700>();
         break;
