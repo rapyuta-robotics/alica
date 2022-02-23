@@ -1,7 +1,4 @@
 #include "UtilityFunctionCreator.h"
-#include "ActionServerExample2379894799421542548.h"
-#include "ActionServerExampleMaster2369418759245288160.h"
-#include "DummyImplementation4126421719858579722.h"
 #include "GSolver/GSolverMaster1417423751087.h"
 #include "GSolver/GSolverTestPlan1417423757243.h"
 #include "ProblemModule/ProbBuildingLevel11479557378264.h"
@@ -57,15 +54,6 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 1524452836022:
         return std::make_shared<UtilityFunction1524452836022>();
-        break;
-    case 2369418759245288160:
-        return std::make_shared<UtilityFunction2369418759245288160>();
-        break;
-    case 2379894799421542548:
-        return std::make_shared<UtilityFunction2379894799421542548>();
-        break;
-    case 4126421719858579722:
-        return std::make_shared<UtilityFunction4126421719858579722>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
