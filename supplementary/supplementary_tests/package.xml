@@ -18,13 +18,11 @@
   <depend>constraintsolver</depend>
   <depend>autodiff</depend>
   <depend>alica_ros_proxy</depend>
-  <depend>actionlib_msgs</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <test_depend>rostest</test_depend>
   <test_depend>gtest</test_depend>
-  <exec_depend>message_generation</exec_depend>
   <export>
   </export>
 </package>
