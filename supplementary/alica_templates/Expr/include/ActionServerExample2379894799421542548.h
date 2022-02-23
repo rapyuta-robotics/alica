@@ -31,8 +31,6 @@ protected:
     virtual void run(void* msg) override;
     virtual void onInit() override;
     // virtual void onTerminate() override;
-    void goalCallback();
-    void preemptCallback();
     // Add additional protected methods here
     /*PROTECTED REGION END*/
 private:

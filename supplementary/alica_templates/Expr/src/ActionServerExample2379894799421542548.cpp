@@ -21,8 +21,6 @@ ActionServerExample2379894799421542548::ActionServerExample2379894799421542548(I
     /*PROTECTED REGION ID(con2379894799421542548) ENABLED START*/
     // Add additional options here
     _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), false);
-    _actionServer->registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback, this));
-    _actionServer->registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback, this));
     _actionServer->start();
     /*PROTECTED REGION END*/
 }
@@ -85,25 +83,12 @@ bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, c
 {
     /*PROTECTED REGION ID(1354699620997961969) ENABLED START*/
     LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
-    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").has_value();
+    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").value_or(false);
     /*PROTECTED REGION END*/
 }
 
 /*PROTECTED REGION ID(methods2379894799421542548) ENABLED START*/
 // Add additional options here
-void ActionServerExample2379894799421542548::goalCallback()
-{
-    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    bb.get<std::optional<int32_t>>("_goalFinished") = std::nullopt;
-    bb.get<std::optional<int32_t>>("goal") = _actionServer->acceptNewGoal()->value;
-}
-
-void ActionServerExample2379894799421542548::preemptCallback()
-{
-    LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    bb.get<std::optional<int32_t>>("cancel") = true;
-}
-
 void ActionServerExample2379894799421542548::onInit()
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
@@ -116,13 +101,32 @@ void ActionServerExample2379894799421542548::onInit()
 void ActionServerExample2379894799421542548::run(void* msg)
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
+    if (_actionServer->isNewGoalAvailable()) {
+        bb.get<std::optional<int32_t>>("cancel") = false;
+        // on the arrival of a new goal, preempt the current goal
+        if (_actionServer->isActive()) {
+            _actionServer->setPreempted();
+        }
+        // dont send result of the old goal when a new goal is available
+        bb.get<std::optional<int32_t>>("result") = std::nullopt;
+        bb.get<std::optional<int32_t>>("goal") = _actionServer->acceptNewGoal()->value;
+    }
+    if (_actionServer->isPreemptRequested()) {
+        _actionServer->setAborted();
+        // dont send result of the cancelled goal, clear cancelled goal
+        bb.get<std::optional<int32_t>>("result") = std::nullopt;
+        bb.get<std::optional<int32_t>>("goal") = std::nullopt;
+        bb.get<std::optional<int32_t>>("cancel") = true;
+    }
     if (bb.get<std::optional<int32_t>>("result").has_value()) {
         int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
         _result.value = resultValue;
         _actionServer->setSucceeded(_result);
         bb.get<std::optional<int32_t>>("result") = std::nullopt;
+        // dont send feedback after sending the result
+        bb.get<std::optional<int32_t>>("feedback") = std::nullopt;
     }
-    if (bb.get<std::optional<std::vector<int32_t>>>("feedback").has_value()) {
+    if (bb.get<std::optional<int32_t>>("feedback").has_value()) {
         int32_t feedbackValue = *(bb.get<std::optional<int32_t>>("feedback"));
         _feedback.value = feedbackValue;
         _actionServer->publishFeedback(_feedback);
