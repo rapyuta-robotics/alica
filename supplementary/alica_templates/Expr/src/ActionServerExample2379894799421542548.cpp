@@ -109,7 +109,7 @@ void ActionServerExample2379894799421542548::onInit()
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
     bb.registerValue("cancelAccepted", std::optional<bool>());
-    _actionServer = std::make_unique<actionlib::SimpleActionServer<supplementary_tests::DummyAction>>(_nh, std::string("DummyActionServer"), false);
+    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), false);
     _actionServer->registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback, this));
     _actionServer->registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback, this));
     _actionServer->start();
@@ -128,7 +128,7 @@ void ActionServerExample2379894799421542548::run(void* msg)
         int32_t feedbackValue = *(bb.get<std::optional<int32_t>>("feedback"));
         _feedback.value = feedbackValue;
         _actionServer->publishFeedback(_feedback);
-        bb.get<std::optional<supplementary_tests::DummyActionFeedback>>("feedback") = std::nullopt;
+        bb.get<std::optional<alica_templates::DummyActionFeedback>>("feedback") = std::nullopt;
     }
     if (bb.get<std::optional<bool>>("cancelAccepted") != std::nullopt) {
         int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
