@@ -61,9 +61,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction2379894799421542548::getUtilityF
 bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(430744406068167347) ENABLED START*/
-    auto plan = rp->getBasicPlan();
     LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
-    return bb.get<std::optional<int32_t>>("goal") != std::nullopt;
+    return bb.get<std::optional<int32_t>>("goal").has_value();
     /*PROTECTED REGION END*/
 }
 
@@ -85,8 +84,8 @@ bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1354699620997961969) ENABLED START*/
-    auto plan = rp->getBasicPlan();
-    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed);
+    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
+    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").has_value();
     /*PROTECTED REGION END*/
 }
 
@@ -112,30 +111,22 @@ void ActionServerExample2379894799421542548::onInit()
     bb.registerValue("feedback", std::optional<int32_t>());
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
-    bb.registerValue("cancelAccepted", std::optional<bool>());
 }
 
 void ActionServerExample2379894799421542548::run(void* msg)
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    if (bb.get<std::optional<int32_t>>("result") != std::nullopt) {
+    if (bb.get<std::optional<int32_t>>("result").has_value()) {
         int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
         _result.value = resultValue;
         _actionServer->setSucceeded(_result);
         bb.get<std::optional<int32_t>>("result") = std::nullopt;
     }
-    if (bb.get<std::optional<std::vector<int32_t>>>("feedback") != std::nullopt) {
+    if (bb.get<std::optional<std::vector<int32_t>>>("feedback").has_value()) {
         int32_t feedbackValue = *(bb.get<std::optional<int32_t>>("feedback"));
         _feedback.value = feedbackValue;
         _actionServer->publishFeedback(_feedback);
         bb.get<std::optional<alica_templates::DummyActionFeedback>>("feedback") = std::nullopt;
-    }
-    if (bb.get<std::optional<bool>>("cancelAccepted") != std::nullopt) {
-        int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
-        _result.value = resultValue;
-        _actionServer->setAborted(_result);
-        bb.get<std::optional<bool>>("cancelAccepted") = std::nullopt;
-        bb.get<std::optional<int32_t>>("result") = std::nullopt;
     }
 }
 /*PROTECTED REGION END*/
