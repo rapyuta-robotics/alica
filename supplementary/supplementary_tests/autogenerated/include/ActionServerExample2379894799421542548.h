@@ -39,9 +39,9 @@ private:
     /*PROTECTED REGION ID(prv2379894799421542548) ENABLED START*/
     // Add additional private methods here
     ros::NodeHandle _nh;
-    actionlib::SimpleActionServer<supplementary_tests::DummyAction> _actionServer;
-    supplementary_tests::DummyActionFeedback _feedback;
-    supplementary_tests::DummyActionResult _result;
+    std::unique_ptr<actionlib::SimpleActionServer<supplementary_tests::DummyAction>> _actionServer;
+    supplementary_tests::DummyFeedback _feedback;
+    supplementary_tests::DummyResult _result;
     /*PROTECTED REGION END*/
 };
 

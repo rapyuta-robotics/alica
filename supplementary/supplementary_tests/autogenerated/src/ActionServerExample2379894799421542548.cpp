@@ -2,6 +2,7 @@
 /*PROTECTED REGION ID(eph2379894799421542548) ENABLED START*/
 // Add additional options here
 #include <string>
+#include <optional>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -91,7 +92,7 @@ void ActionServerExample2379894799421542548::goalCallback()
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
     bb.get<std::optional<int32_t>>("_goalFinished") = std::nullopt;
-    bb.get<std::optional<int32_t>>("goal") = _actionServer.acceptNewGoal();
+    bb.get<std::optional<int32_t>>("goal") = _actionServer->acceptNewGoal()->value;
 }
 
 void ActionServerExample2379894799421542548::preemptCallback()
@@ -103,38 +104,44 @@ void ActionServerExample2379894799421542548::preemptCallback()
 void ActionServerExample2379894799421542548::onInit()
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    bb.registerValue("result", std::optional<std::vector<int32_t>>());
-    bb.registerValue("feedback", std::optional<std::vector<int32_t>>());
+    bb.registerValue("result", std::optional<int32_t>());
+    bb.registerValue("feedback", std::optional<int32_t>());
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
     bb.registerValue("cancelAccepted", std::optional<bool>());
-    _actionServer(_nh, std::string("DummyActionServer"), false);
-    _actionServer.registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback), this);
-    _actionServer.registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback), this);
-    _actionServer.start();
+    _actionServer = std::make_unique<actionlib::SimpleActionServer<supplementary_tests::DummyAction>>(_nh, std::string("DummyActionServer"), false);
+    _actionServer->registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback, this));
+    _actionServer->registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback, this));
+    _actionServer->start();
 }
 
 void ActionServerExample2379894799421542548::run(void* msg)
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    if (bb.get<std::optional<std::vector<int32_t>>>("result") != std::nullopt) {
-        _actionServer.setSucceeded(bb.get<std::optional<supplementary_tests::DummyActionResult>>("result"));
-        bb.get<std::optional<std::vector<int32_t>>>("result") = std::nullopt;
+    if (bb.get<std::optional<int32_t>>("result") != std::nullopt) {
+        int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
+        _result.value = resultValue;
+        _actionServer->setSucceeded(_result);
+        bb.get<std::optional<int32_t>>("result") = std::nullopt;
     }
     if (bb.get<std::optional<std::vector<int32_t>>>("feedback") != std::nullopt) {
-        _actionServer.publishFeedback(bb.get<std::optional<std::vector<int32_t>>>("feedback"));
-        bb.get<std::optional<std::vector<int32_t>>>("feedback") = std::nullopt;
+        int32_t feedbackValue = *(bb.get<std::optional<int32_t>>("feedback"));
+        _feedback.value = feedbackValue;
+        _actionServer->publishFeedback(_feedback);
+        bb.get<std::optional<supplementary_tests::DummyActionFeedback>>("feedback") = std::nullopt;
     }
     if (bb.get<std::optional<bool>>("cancelAccepted") != std::nullopt) {
-        _actionServer.setAborted(bb.get<std::optional<supplementary_tests::DummyActionResult>>("result"));
+        int32_t resultValue = *(bb.get<std::optional<int32_t>>("result"));
+        _result.value = resultValue;
+        _actionServer->setAborted(_result);
         bb.get<std::optional<bool>>("cancelAccepted") = std::nullopt;
-        bb.get<std::optional<supplementary_tests::DummyActionResult>("result") = std::nullopt;
+        bb.get<std::optional<int32_t>>("result") = std::nullopt;
     }
 }
 
 void ActionServerExample2379894799421542548::onTerminate()
 {
-    _actionServer.shutdown();
+    _actionServer->shutdown();
 }
 /*PROTECTED REGION END*/
 } // namespace alica
