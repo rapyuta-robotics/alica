@@ -20,6 +20,10 @@ ActionServerExample2379894799421542548::ActionServerExample2379894799421542548(I
 {
     /*PROTECTED REGION ID(con2379894799421542548) ENABLED START*/
     // Add additional options here
+    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), false);
+    _actionServer->registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback, this));
+    _actionServer->registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback, this));
+    _actionServer->start();
     /*PROTECTED REGION END*/
 }
 ActionServerExample2379894799421542548::~ActionServerExample2379894799421542548()
@@ -109,10 +113,6 @@ void ActionServerExample2379894799421542548::onInit()
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
     bb.registerValue("cancelAccepted", std::optional<bool>());
-    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), false);
-    _actionServer->registerGoalCallback(std::bind(&ActionServerExample2379894799421542548::goalCallback, this));
-    _actionServer->registerPreemptCallback(std::bind(&ActionServerExample2379894799421542548::preemptCallback, this));
-    _actionServer->start();
 }
 
 void ActionServerExample2379894799421542548::run(void* msg)
@@ -137,11 +137,6 @@ void ActionServerExample2379894799421542548::run(void* msg)
         bb.get<std::optional<bool>>("cancelAccepted") = std::nullopt;
         bb.get<std::optional<int32_t>>("result") = std::nullopt;
     }
-}
-
-void ActionServerExample2379894799421542548::onTerminate()
-{
-    _actionServer->shutdown();
 }
 /*PROTECTED REGION END*/
 } // namespace alica

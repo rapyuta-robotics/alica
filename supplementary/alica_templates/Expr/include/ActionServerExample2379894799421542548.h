@@ -30,7 +30,7 @@ protected:
     // Override these methods for your use case
     virtual void run(void* msg) override;
     virtual void onInit() override;
-    virtual void onTerminate() override;
+    // virtual void onTerminate() override;
     void goalCallback();
     void preemptCallback();
     // Add additional protected methods here
