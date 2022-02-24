@@ -18,7 +18,7 @@
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
-  "frequency": 0,
+  "frequency": 5,
   "id": 2379894799421542548,
   "masterPlan": false,
   "name": "ActionServerExample",

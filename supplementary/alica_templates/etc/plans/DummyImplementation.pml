@@ -18,7 +18,7 @@
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
-  "frequency": 0,
+  "frequency": 5,
   "id": 4126421719858579722,
   "masterPlan": false,
   "name": "DummyImplementation",
