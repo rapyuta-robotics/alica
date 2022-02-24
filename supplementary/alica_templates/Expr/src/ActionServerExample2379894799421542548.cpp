@@ -83,7 +83,7 @@ bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, c
 {
     /*PROTECTED REGION ID(1354699620997961969) ENABLED START*/
     LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
-    return rp->isAnyChildTaskSuccessful() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").value_or(false);
+    return rp->amISuccessfulInAnyChild() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").value_or(false);
     /*PROTECTED REGION END*/
 }
 
