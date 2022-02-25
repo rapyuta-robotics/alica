@@ -57,8 +57,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction4126421719858579722::getUtilityF
 bool PreCondition3469760593538210700::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(293344705861516112) ENABLED START*/
-    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getParent()->getBasicPlan()->getBlackboard()));
-    return bb.get<std::optional<std::vector<int32_t>>>("result").has_value();
+    // Add success condition
+    return false;
     /*PROTECTED REGION END*/
 }
 
