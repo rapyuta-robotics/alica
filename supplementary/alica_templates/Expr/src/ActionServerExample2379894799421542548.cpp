@@ -20,8 +20,6 @@ ActionServerExample2379894799421542548::ActionServerExample2379894799421542548(I
 {
     /*PROTECTED REGION ID(con2379894799421542548) ENABLED START*/
     // Add additional options here
-    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), false);
-    _actionServer->start();
     /*PROTECTED REGION END*/
 }
 ActionServerExample2379894799421542548::~ActionServerExample2379894799421542548()
@@ -96,13 +94,15 @@ void ActionServerExample2379894799421542548::onInit()
     bb.registerValue("feedback", std::optional<int32_t>());
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
+    // To increase the lifestime of the server, create the server in the plan's constructor and don't destroy it in onTerminate()
+    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates::DummyAction>>(_nh, std::string("DummyActionServer"), true);
 }
 
 void ActionServerExample2379894799421542548::run(void* msg)
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
     if (_actionServer->isNewGoalAvailable()) {
-        bb.get<std::optional<int32_t>>("cancel") = false;
+        bb.get<std::optional<int32_t>>("cancel") = std::nullopt;
         // on the arrival of a new goal, preempt the current goal
         if (_actionServer->isActive()) {
             _actionServer->setPreempted();
@@ -132,6 +132,11 @@ void ActionServerExample2379894799421542548::run(void* msg)
         _actionServer->publishFeedback(_feedback);
         bb.get<std::optional<alica_templates::DummyActionFeedback>>("feedback") = std::nullopt;
     }
+}
+
+void ActionServerExample2379894799421542548::onTerminate()
+{
+    _actionServer.reset(); // will shutdown and destroy the action server
 }
 /*PROTECTED REGION END*/
 } // namespace alica
