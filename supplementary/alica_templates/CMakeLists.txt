@@ -40,15 +40,4 @@ include_directories(include Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "Expr/src/*.cpp")
 add_library(autogen_code_alica_templates ${autogen_SOURCES};)
 target_link_libraries(autogen_code_alica_templates ${catkin_LIBRARIES})
-
-# if (CATKIN_ENABLE_TESTING)
-
-#     find_package(rostest REQUIRED)
-#     file(GLOB_RECURSE test_supplementary_SOURCES "src/test/*.cpp" src/test_supplementary.cpp)
-#     set(alica_templates_SOURCES       
-#     )
-
-#     add_rostest_gtest(${PROJECT_NAME}-test test/alica_templates.test ${alica_templates_SOURCES})
-#     target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_templatess )
-
-# endif()
+add_dependencies(autogen_code_alica_templates ${catkin_EXPORTED_TARGETS})
