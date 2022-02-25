@@ -18,6 +18,7 @@
   <depend>constraintsolver</depend>
   <depend>autodiff</depend>
   <depend>alica_ros_proxy</depend>
+  <depend>actionlib</depend>
   <depend>actionlib_msgs</depend>
   <depend>message_generation</depend>
 
