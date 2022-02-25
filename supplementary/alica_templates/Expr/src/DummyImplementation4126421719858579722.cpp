@@ -101,9 +101,7 @@ void DummyImplementation4126421719858579722::run(void* msg)
     }
 
     if (!bb.get<std::optional<int32_t>>("result").has_value()) {
-        auto result = std::vector<int32_t>();
-        result.push_back(14);
-        bb.get<std::optional<std::vector<int32_t>>>("result") = result;
+        bb.get<std::optional<int32_t>>("result") = 14;
     }
 }
 /*PROTECTED REGION END*/
