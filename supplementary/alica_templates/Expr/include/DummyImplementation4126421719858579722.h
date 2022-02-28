@@ -8,7 +8,7 @@
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl4126421719858579722) ENABLED START*/
 // Add additional includes here
-#include <alica_templates/DummyAction.h>
+#include <alica_msgs/DummyAction.h>
 /*PROTECTED REGION END*/
 
 namespace alica
