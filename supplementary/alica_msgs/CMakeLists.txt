@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_msgs)
 
-find_package(catkin REQUIRED message_generation std_msgs geometry_msgs)
+find_package(catkin REQUIRED message_generation std_msgs geometry_msgs actionlib_msgs)
 
 add_message_files(
   DIRECTORY msg FILES
@@ -20,15 +20,21 @@ add_message_files(
   AgentAnnouncement.msg
 )
 
+add_action_files(
+    DIRECTORY action
+    FILES Dummy.action
+)
+
 generate_messages(
   DEPENDENCIES
   std_msgs
+  actionlib_msgs
 )
 
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES alica_msgs
-   CATKIN_DEPENDS std_msgs geometry_msgs message_runtime
+   CATKIN_DEPENDS std_msgs geometry_msgs message_runtime actionlib_msgs
 #  DEPENDS system_lib
 )
 
