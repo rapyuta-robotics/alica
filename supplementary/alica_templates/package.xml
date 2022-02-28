@@ -21,7 +21,6 @@
   <depend>actionlib</depend>
   <depend>actionlib_msgs</depend>
   <depend>alica_msgs</depend>
-  <!-- <depend>message_generation</depend> -->
 
   <buildtool_depend>catkin</buildtool_depend>
 
