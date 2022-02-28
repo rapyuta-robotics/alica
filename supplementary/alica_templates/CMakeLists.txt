@@ -19,17 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
     actionlib_msgs
     actionlib
-    genmsg
 )
-
-# add_action_files(
-#     DIRECTORY action
-#     FILES Dummy.action
-# )
-
-# generate_messages(
-#     DEPENDENCIES actionlib_msgs std_msgs
-# )
 
 include_directories(include)
 
