@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_common_config
     alica_solver_interface
     alica_test_utility
+    alica_msgs
     constraintsolver
     autodiff
     alica_ros_proxy
@@ -21,14 +22,14 @@ find_package(catkin REQUIRED COMPONENTS
     genmsg
 )
 
-add_action_files(
-    DIRECTORY action
-    FILES Dummy.action
-)
+# add_action_files(
+#     DIRECTORY action
+#     FILES Dummy.action
+# )
 
-generate_messages(
-    DEPENDENCIES actionlib_msgs std_msgs
-)
+# generate_messages(
+#     DEPENDENCIES actionlib_msgs std_msgs
+# )
 
 include_directories(include)
 

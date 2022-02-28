@@ -9,7 +9,7 @@
 /*PROTECTED REGION ID(incl2379894799421542548) ENABLED START*/
 // Add additional includes here
 #include <actionlib/server/simple_action_server.h>
-#include <alica_templates/DummyAction.h>
+#include <alica_msgs/DummyAction.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -37,9 +37,9 @@ private:
     /*PROTECTED REGION ID(prv2379894799421542548) ENABLED START*/
     // Add additional private methods here
     ros::NodeHandle _nh;
-    std::unique_ptr<actionlib::SimpleActionServer<alica_templates::DummyAction>> _actionServer;
-    alica_templates::DummyFeedback _feedback;
-    alica_templates::DummyResult _result;
+    std::unique_ptr<actionlib::SimpleActionServer<alica_msgs::DummyAction>> _actionServer;
+    alica_msgs::DummyFeedback _feedback;
+    alica_msgs::DummyResult _result;
     /*PROTECTED REGION END*/
 };
 
