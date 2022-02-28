@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
     actionlib_msgs
     actionlib
+    genmsg
 )
 
 add_action_files(
