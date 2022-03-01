@@ -26,7 +26,7 @@ include_directories(include)
 catkin_package(
   INCLUDE_DIRS include Expr/include
   LIBRARIES autogen_code_alica_templates
-  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver constraintsolver alica_ros_proxy actionlib_msgs actionlib
+  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver constraintsolver alica_ros_proxy actionlib actionlib_msgs
 )
 
 include_directories(include Expr/include ${catkin_INCLUDE_DIRS})
