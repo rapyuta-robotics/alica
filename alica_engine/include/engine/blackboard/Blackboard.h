@@ -104,12 +104,8 @@ public:
     LockedBlackboardRW& operator&=(LockedBlackboardRW&) = delete;
     LockedBlackboardRW(LockedBlackboardRW&) = delete;
 
-    void clear() { _impl->clear(); }
-
-    void removeValue(const std::string& key) { _impl->removeValue(key); }
-
     template <class... Args>
-    void registerValue(const std::string& key, Args&&... args)
+    [[deprecated]] void registerValue(const std::string& key, Args&&... args)
     {
         _impl->registerValue(key, std::forward<Args>(args)...);
     }
