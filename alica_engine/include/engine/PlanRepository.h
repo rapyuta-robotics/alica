@@ -114,6 +114,7 @@ public:
     }
     const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
 
+    const MapType<Behaviour>& behaviours() const { return _behaviours; }
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;
 

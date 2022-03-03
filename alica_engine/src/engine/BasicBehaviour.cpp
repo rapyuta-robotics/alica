@@ -26,13 +26,19 @@ namespace alica
  * If using eventTrigger set behaviourTrigger
  * @param name The name of the behaviour
  */
-BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name)
+BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name, const Behaviour* behaviourModel)
         : RunnableObject(wm, name)
-        , _behaviour(nullptr)
-        , _msDelayedStart(AlicaTime::milliseconds(0))
+        , _behaviour(behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
 {
+    if (behaviourModel->getFrequency() < 1) {
+        // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
+        setInterval(0);      
+    } else {
+        setInterval(1000 / behaviourModel->getFrequency());
+    }
+    setBlackboardBlueprint(behaviourModel->getBlackboardBlueprint());
 }
 
 /**
@@ -42,20 +48,6 @@ BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name)
 AgentId BasicBehaviour::getOwnId() const
 {
     return _engine->getTeamManager().getLocalAgentID();
-}
-
-void BasicBehaviour::setFailure()
-{
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::FAILURE);
-    if (prev != BehResult::FAILURE) {
-        _engine->editPlanBase().addFastPathEvent(_execContext.load());
-        if (_trace) {
-            _trace->setTag("Result", "Fail");
-        }
-    }
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
@@ -108,15 +100,6 @@ void BasicBehaviour::runJob(void* msg)
     _triggeredJobRunning = false;
 }
 
-void BasicBehaviour::doTrigger()
-{
-    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
-        return;
-    }
-    _triggeredJobRunning = true;
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
-}
-
 void BasicBehaviour::doTerminate()
 {
 
@@ -145,33 +128,32 @@ void BasicBehaviour::doTerminate()
     _execContext.store(nullptr);
 }
 
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
+void BasicBehaviour::doTrigger()
 {
-    if (!_configuration) {
-        valueOut.clear();
-        return false;
+    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
+        return;
     }
-
-    const auto& parameter = _configuration->getParameters().find(key);
-    if (parameter != _configuration->getParameters().end()) {
-        valueOut = parameter->second->getValue();
-        return true;
-    } else {
-        valueOut.clear();
-        return false;
-    }
+    _triggeredJobRunning = true;
+    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
 }
 
 void BasicBehaviour::setSuccess()
 {
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::SUCCESS);
-    if (prev != BehResult::SUCCESS) {
+    setResult(BehResult::SUCCESS);
+}
+
+void BasicBehaviour::setFailure()
+{
+    setResult(BehResult::FAILURE);
+}
+
+void BasicBehaviour::setResult(BehResult result)
+{
+    auto prev = _behResult.exchange(result);
+    if (prev != result) {
         _engine->editPlanBase().addFastPathEvent(_execContext.load());
         if (_trace) {
-            _trace->setTag("Result", "Success");
+            _trace->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
         }
     }
 }

@@ -5,7 +5,7 @@
 
 namespace alica
 {
-DomainBehaviour::DomainBehaviour(IAlicaWorldModel* wm, std::string name)
+DomainBehaviour::DomainBehaviour(IAlicaWorldModel* wm, std::string name, const Behaviour* behaviourModel)
         : BasicBehaviour(wm, name)
 {
     /*PROTECTED REGION ID(domainBehaviourConstructor) ENABLED START*/

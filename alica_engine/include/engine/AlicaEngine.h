@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/AlicaContext.h"
-#include "engine/BehaviourPool.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanPool.h"
@@ -27,7 +27,6 @@ namespace alica
 {
 struct AlicaCreators;
 class Plan;
-class BehaviourPool;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
@@ -58,8 +57,7 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
-    BehaviourPool& editBehaviourPool() { return _behaviourPool; }
+    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
 
     const PlanPool& getPlanPool() const { return _planPool; }
     PlanPool& editPlanPool() { return _planPool; }
@@ -142,7 +140,6 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
-    BehaviourPool _behaviourPool;
     PlanPool _planPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
@@ -150,6 +147,7 @@ private:
     AuthorityManager _auth;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     PlanBase _planBase;
 
     /**

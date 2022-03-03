@@ -24,7 +24,6 @@ namespace alica
 {
 class AbstractPlan;
 class AlicaEngine;
-class BehaviourPool;
 class BasicBehaviour;
 class BasicPlan;
 class Configuration;
@@ -135,7 +134,7 @@ public:
     const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.abstractPlan); }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
-    BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour; }
+    BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour.get(); }
     BasicPlan* getBasicPlan() const { return _basicPlan; }
     std::shared_ptr<Blackboard> getBlackboard() const;
     const KeyMapping* getKeyMapping(int64_t wrapperId) const;
@@ -150,7 +149,6 @@ public:
     void setParent(RunningPlan* parent) { _parent = parent; }
     void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
-    void setBasicBehaviour(BasicBehaviour* basicBehaviour) { _basicBehaviour = basicBehaviour; }
     void setBasicPlan(BasicPlan* basicPlan) { _basicPlan = basicPlan; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
@@ -227,7 +225,7 @@ private:
     std::vector<RunningPlan*> _children;
     RunningPlan* _parent;
 
-    BasicBehaviour* _basicBehaviour;
+    std::unique_ptr<BasicBehaviour> _basicBehaviour;
     BasicPlan* _basicPlan;
     // Components
     Assignment _assignment;

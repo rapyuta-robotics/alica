@@ -29,7 +29,7 @@ class EntryPoint;
 class BasicBehaviour : private RunnableObject
 {
 public:
-    BasicBehaviour(IAlicaWorldModel* wm, const std::string& name);
+    BasicBehaviour(IAlicaWorldModel* wm, const std::string& name, const Behaviour* behaviourModel);
     virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explicitly making members public
@@ -41,7 +41,6 @@ public:
     using RunnableObject::getTraceContext;
     using RunnableObject::getWorldModel;
     using RunnableObject::setBlackboardBlueprint;
-    using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::setName;
@@ -51,34 +50,13 @@ public:
 
     virtual void run(void* msg) = 0;
 
-    // This method returns true when it is safe to delete the RunningPlan instance that is passed to it
-    // Note that for things to work correctly it is assumed that this method is called after start() has finished execution
-    // i.e. either on the same thread or via some other synchronization mechanism
-    bool isRunningInContext(const RunningPlan* rp) const { return rp == _execContext.load() || rp == _signalContext.load(); };
-
-    void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
-
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 
-    void setDelayedStart(int32_t msDelayedStart) { _msDelayedStart = AlicaTime::milliseconds(msDelayedStart); }
-
-    bool isSuccess() const { return isExecutingInContext() && _behResult.load() == BehResult::SUCCESS; };
-    bool isFailure() const { return isExecutingInContext() && _behResult.load() == BehResult::FAILURE; };
-
-    bool getParameter(const std::string& key, std::string& valueOut) const;
+    bool isSuccess() const { return _behResult.load() == BehResult::SUCCESS; };
+    bool isFailure() const { return _behResult.load() == BehResult::FAILURE; };
 
     void doTrigger();
-    bool isTriggeredRunFinished();
-
-    /**
-     * Called after construction.
-     * Override in case custom initialization has to happen after the behavior has been integrated into the engine.
-     */
-    virtual void init() {}
-
-    bool isEventDriven() const { return _behaviour->isEventDriven(); }
-
 protected:
     using RunnableObject::getTrace;
 
@@ -123,6 +101,9 @@ private:
     void doInit() override;
     void doTerminate() override;
 
+    bool isEventDriven() const { return _behaviour->isEventDriven(); }
+    bool isTriggeredRunFinished();
+    void setResult(BehResult result);
     /*
      * The Alica main engine thread calls start() & stop() whenever the current running plan corresponds to this behaviour
      * & _signalState is used to track this context [signal context].
@@ -143,7 +124,6 @@ private:
      */
 
     const Behaviour* _behaviour;
-    AlicaTime _msDelayedStart;
     std::atomic<BehResult> _behResult;
     std::atomic<bool> _triggeredJobRunning;
 };

@@ -1,6 +1,7 @@
 #include "GoTo.h"
 #include <memory>
 
+class Behaviour;
 /*PROTECTED REGION ID(inccpp4054297592460872311) ENABLED START*/
 // Add additional includes here
 #include <alica_ros_turtlesim/world_model.hpp>
@@ -13,8 +14,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-GoTo::GoTo(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "GoTo")
+GoTo::GoTo(IAlicaWorldModel* wm, const Behaviour* behaviourModel)
+        : DomainBehaviour(wm, "GoTo", behaviourModel)
 {
     /*PROTECTED REGION ID(con4054297592460872311) ENABLED START*/
     // Add additional options here

@@ -9,13 +9,15 @@ namespace alica
 {
 
 class BasicBehaviour;
+class Behaviour;
+class IAlicaWorldModel;
 
 class BehaviourCreator : public IBehaviourCreator
 {
 public:
     BehaviourCreator();
     virtual ~BehaviourCreator();
-    virtual std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, IAlicaWorldModel* wm) override;
+    virtual std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, const Behaviour *behaviourModel, IAlicaWorldModel* wm) override;
 };
 
 } /* namespace alica */

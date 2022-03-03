@@ -5,8 +5,8 @@
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
-#include "engine/BehaviourPool.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
 #include "engine/SimplePlanTree.h"
@@ -107,7 +107,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuratio
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(nullptr)
+        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId()))
         , _basicPlan(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)
@@ -123,7 +123,7 @@ bool RunningPlan::isDeleteable() const
     if (_status.active == PlanActivity::InActive) {
         return true; // shortcut for plans from planselector
     }
-    return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool().isBehaviourRunningInContext(*this));
+    return isRetired();
 }
 
 void RunningPlan::preTick()
@@ -480,7 +480,7 @@ void RunningPlan::deactivate()
     deactivateChildren();
 
     if (isBehaviour()) {
-        _ae->editBehaviourPool().stopBehaviour(*this);
+        _basicBehaviour->stop(this);
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
         _ae->editPlanPool().stopPlan(*this);
@@ -568,7 +568,7 @@ void RunningPlan::activate()
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
-        _ae->editBehaviourPool().startBehaviour(*this);
+        _basicBehaviour->start(this);
     } else if (_activeTriple.abstractPlan) {
         _ae->editPlanPool().startPlan(*this);
     }
