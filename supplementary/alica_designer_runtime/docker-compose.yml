@@ -18,6 +18,7 @@ services:
 
   alica-backend:
     image: rrdockerhub/alica_backend:dev
+    user: $uid:$gid
     environment:
       - POSTGRES_DB=alicadb
       - POSTGRES_USER=postgres
@@ -30,16 +31,18 @@ services:
       - SOCIAL_APP_CLIENT_ID=${SOCIAL_APP_CLIENT_ID}
       - SOCIAL_APP_SECRET=${SOCIAL_APP_SECRET}
       - OAUTH_APPLICATION_URL=http://localhost:3030
-      - NATIVE_MODE=${NATIVE_MODE:-false}
+      - NATIVE_MODE=$false
 
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - ${BACKEND_PORT:-9000}:8000
-    volumes:
-      - ${NATIVE_IMPORT_EXPORT_PATH:-~/alica_program}:/alica_program  # mount path for native_mode plan import/export
     depends_on:
       - db
       - redis
+    volumes:
+      - /etc/group:/etc/group:ro
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/shadow:/etc/shadow:ro
 
   alica-debug-tree:
     image: rrdockerhub/alica_backend:interface_dev  # TODO: move to separate repo
