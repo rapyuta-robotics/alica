@@ -6,9 +6,10 @@
 supplementary/alica_designer_runtime/:
 
 ```
-    ./run_designer.sh [start|reset]
+    ./run_designer.sh [start|reset|update]
         start - (optional) starts the designer backend + UI
         reset - clear the database
+        update - pull newer images
 ```
 Launch time configurations can be changed at `config.env`
 

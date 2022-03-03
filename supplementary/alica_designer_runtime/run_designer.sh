@@ -18,6 +18,8 @@ if [ $action == "start" ]; then
 
 elif [ $action == "reset" ]; then
 	docker-compose down -v
+elif [ $action == "update" ]; then
+	docker-compose pull
 else
-	echo "Usage: run_designer.sh [start/reset]"
+	echo "Usage: run_designer.sh [start|reset|update]"
 fi
