@@ -30,21 +30,20 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 1823707990536087965,
-      "inTransitions": [
+      "entryPoint": 2593906152181871206,
+      "id": 400856976447099508,
+      "inTransitions": [],
+      "name": "DummyState",
+      "outTransitions": [
+        161866564931915050,
         293344705861516112
       ],
-      "name": "DummySuccess",
-      "outTransitions": [],
       "parentPlan": 4126421719858579722,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 428,
+        "y": 400
       },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
+      "type": "State",
       "variableBindings": []
     },
     {
@@ -70,44 +69,26 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": 2593906152181871206,
-      "id": 400856976447099508,
-      "inTransitions": [],
-      "name": "DummyState",
-      "outTransitions": [
-        293344705861516112,
-        161866564931915050
+      "entryPoint": null,
+      "id": 1823707990536087965,
+      "inTransitions": [
+        293344705861516112
       ],
+      "name": "DummySuccess",
+      "outTransitions": [],
       "parentPlan": 4126421719858579722,
       "positionWeb": {
-        "x": 428,
-        "y": 400
+        "x": 686,
+        "y": 200
       },
-      "type": "State",
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "id": 293344705861516112,
-      "inState": 400856976447099508,
-      "name": "",
-      "outState": 1823707990536087965,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 3469760593538210700,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "id": 161866564931915050,
@@ -120,6 +101,25 @@
         "conditionString": "",
         "enabled": true,
         "id": 2084505765197602547,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 293344705861516112,
+      "inState": 400856976447099508,
+      "name": "",
+      "outState": 1823707990536087965,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 3469760593538210700,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
