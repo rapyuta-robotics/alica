@@ -409,9 +409,9 @@ Same as the Plans Path in the previous import operation.
 If there was not any previous import operation the plans will be available inside the ‘plan_elems’ folder in repo root.
 
 ## 4 Code-Generation
-To generate the source code you need to download
-https://drive.google.com/file/d/1xAQ84NJSTOohR93QHBrysxz31v5sXZh2/view?usp=sharing &
-extract the .zip archive into the supplementary/alica_designer_runtime folder.
+To generate the source code you need to download the codegen.zip from
+https://drive.google.com/drive/u/0/folders/1YLTd4h_dhmW5naD06148kEBrnyu39wTB/<branch_name> &
+extract the codegen.zip archive into the supplementary/alica_designer_runtime folder.
 
 After extracting the code generation you can use the generate.sh script to generate the
 source code:
