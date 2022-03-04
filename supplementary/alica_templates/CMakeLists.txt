@@ -19,14 +19,14 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
     actionlib_msgs
     actionlib
+    alica_templates_msgs
 )
-
-include_directories(include)
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include Expr/include
   LIBRARIES autogen_code_alica_templates
-  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver constraintsolver alica_ros_proxy actionlib actionlib_msgs
+  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver constraintsolver alica_ros_proxy actionlib actionlib_msgs alica_templates_msgs
 )
 
 include_directories(include Expr/include ${catkin_INCLUDE_DIRS})
