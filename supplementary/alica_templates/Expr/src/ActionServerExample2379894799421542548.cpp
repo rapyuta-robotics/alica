@@ -95,7 +95,7 @@ void ActionServerExample2379894799421542548::onInit()
     bb.registerValue("goal", std::optional<int32_t>());
     bb.registerValue("cancel", std::optional<bool>());
     // To increase the lifestime of the server, create the server in the plan's constructor and don't destroy it in onTerminate()
-    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_msgs::DummyAction>>(_nh, std::string("DummyActionServer"), true);
+    _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates_msgs::DummyAction>>(_nh, std::string("DummyActionServer"), true);
 }
 
 void ActionServerExample2379894799421542548::run(void* msg)
