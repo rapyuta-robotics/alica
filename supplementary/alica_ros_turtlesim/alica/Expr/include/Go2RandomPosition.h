@@ -11,7 +11,7 @@ namespace alica
 class Go2RandomPosition : public DomainBehaviour
 {
 public:
-    Go2RandomPosition(IAlicaWorldModel* wm);
+    Go2RandomPosition(BehaviourContext& context);
     virtual ~Go2RandomPosition();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub4085572422059465423) ENABLED START*/

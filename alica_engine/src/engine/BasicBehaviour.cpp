@@ -26,19 +26,19 @@ namespace alica
  * If using eventTrigger set behaviourTrigger
  * @param name The name of the behaviour
  */
-BasicBehaviour::BasicBehaviour(IAlicaWorldModel* wm, const std::string& name, const Behaviour* behaviourModel)
-        : RunnableObjectNew(wm, name)
-        , _behaviour(behaviourModel)
+BasicBehaviour::BasicBehaviour(BehaviourContext& context)
+        : RunnableObjectNew(context.worldModel, context.name)
+        , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
 {
-    if (behaviourModel->getFrequency() < 1) {
+    if (_behaviour->getFrequency() < 1) {
         // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
         setInterval(0);      
     } else {
-        setInterval(1000 / behaviourModel->getFrequency());
+        setInterval(1000 / _behaviour->getFrequency());
     }
-    setBlackboardBlueprint(behaviourModel->getBlackboardBlueprint());
+    setBlackboardBlueprint(_behaviour->getBlackboardBlueprint());
 }
 
 /**

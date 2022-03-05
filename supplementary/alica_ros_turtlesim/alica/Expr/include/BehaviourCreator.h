@@ -17,7 +17,7 @@ class BehaviourCreator : public IBehaviourCreator
 public:
     BehaviourCreator();
     virtual ~BehaviourCreator();
-    virtual std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, const Behaviour *behaviourModel, IAlicaWorldModel* wm) override;
+    virtual std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
 };
 
 } /* namespace alica */

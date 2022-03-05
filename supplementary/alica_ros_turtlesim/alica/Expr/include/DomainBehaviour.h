@@ -12,7 +12,7 @@ namespace alica
 class DomainBehaviour : public BasicBehaviour
 {
 public:
-    DomainBehaviour(IAlicaWorldModel* wm, std::string name);
+    DomainBehaviour(BehaviourContext& context);
     virtual ~DomainBehaviour();
 
     /*PROTECTED REGION ID(domainBehaviourClassDecl) ENABLED START*/

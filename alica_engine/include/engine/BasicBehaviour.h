@@ -23,13 +23,19 @@ class TestContext;
 class Variable;
 class EntryPoint;
 
+struct BehaviourContext
+{
+    IAlicaWorldModel* worldModel;
+    const std::string name;
+    const Behaviour* behaviourModel;
+};
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
 class BasicBehaviour : private RunnableObjectNew
 {
 public:
-    BasicBehaviour(IAlicaWorldModel* wm, const std::string& name, const Behaviour* behaviourModel);
+    BasicBehaviour(BehaviourContext& context);
     virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explicitly making members public
