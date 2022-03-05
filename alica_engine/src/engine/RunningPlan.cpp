@@ -480,7 +480,7 @@ void RunningPlan::deactivate()
     deactivateChildren();
 
     if (isBehaviour()) {
-        _basicBehaviour->stop(this);
+        _basicBehaviour->stop();
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
         _ae->editPlanPool().stopPlan(*this);
