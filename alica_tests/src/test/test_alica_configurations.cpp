@@ -54,11 +54,13 @@ TEST_F(AlicaConfigurationPlan, runBehaviourConfigurationTest)
     // CHECK PLAN
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1588069261047)) << "Agent is not in state 'StateA' of the plan ReadConfigurationPlan!";
     // CHECK BEHAVIOURS - CONF A
-    EXPECT_TRUE(dynamic_cast<alica::ReadConfigurationBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1588061129360, 1588061188681))
-                        ->testValue.compare("1") == 0);
+    EXPECT_TRUE(
+            dynamic_cast<alica::ReadConfigurationBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1588061129360, 1588061188681))->testValue.compare("1") ==
+            0);
     // CHECK BEHAVIOURS - CONF B
-    EXPECT_TRUE(dynamic_cast<alica::ReadConfigurationBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1588061129360, 1588061200689))
-                        ->testValue.compare("2") == 0);
+    EXPECT_TRUE(
+            dynamic_cast<alica::ReadConfigurationBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1588061129360, 1588061200689))->testValue.compare("2") ==
+            0);
 
     // set counter that is checked in the transition of the master plan
     CounterClass::called = 1;

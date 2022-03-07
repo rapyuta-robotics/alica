@@ -71,8 +71,7 @@ TEST_F(AlicaConditionPlan, solverTest)
     ac->stepEngine();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
 
-    auto constraintUsingBehaviour =
-            dynamic_cast<alica::ConstraintUsingBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1414068597716, 0));
+    auto constraintUsingBehaviour = dynamic_cast<alica::ConstraintUsingBehaviour*>(alica::test::Util::getBasicBehaviour(ae, 1414068597716, 0));
     ASSERT_NE(constraintUsingBehaviour, nullptr);
     ASSERT_GT(constraintUsingBehaviour->getCallCounter(), 0);
 
