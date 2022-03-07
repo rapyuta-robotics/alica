@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - State1 (1479556022227)
 //   - State2 (1479557585252)
-ProblemBuildingMaster1479556022226::ProblemBuildingMaster1479556022226(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ProblemBuildingMaster1479556022226::ProblemBuildingMaster1479556022226(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1479556022226) ENABLED START*/
     // Add additional options here
