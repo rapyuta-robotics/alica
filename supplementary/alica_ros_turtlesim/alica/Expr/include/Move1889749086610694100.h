@@ -18,7 +18,7 @@ namespace alica
 class Move1889749086610694100 : public DomainPlan
 {
 public:
-    Move1889749086610694100(IAlicaWorldModel* wm);
+    Move1889749086610694100(PlanContext& context);
     virtual ~Move1889749086610694100();
     /*PROTECTED REGION ID(pub1889749086610694100) ENABLED START*/
     // Add additional public methods here

@@ -18,7 +18,7 @@ namespace alica
 class Master2425328142973735249 : public DomainPlan
 {
 public:
-    Master2425328142973735249(IAlicaWorldModel* wm);
+    Master2425328142973735249(PlanContext& context);
     virtual ~Master2425328142973735249();
     /*PROTECTED REGION ID(pub2425328142973735249) ENABLED START*/
     // Add additional public methods here
