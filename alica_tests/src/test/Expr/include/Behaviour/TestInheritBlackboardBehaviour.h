@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc831400441334251600) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -11,7 +10,7 @@ namespace alica
 class TestInheritBlackboardBehaviour : public DomainBehaviour
 {
 public:
-    TestInheritBlackboardBehaviour(IAlicaWorldModel* wm);
+    TestInheritBlackboardBehaviour(BehaviourContext& context);
     virtual ~TestInheritBlackboardBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub831400441334251600) ENABLED START*/

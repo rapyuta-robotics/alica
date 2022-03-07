@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1629895911592) ENABLED START*/
 // Add additional includes here
 namespace alica_test
@@ -15,7 +14,7 @@ namespace alica
 class BehBAA : public DomainBehaviour
 {
 public:
-    BehBAA(IAlicaWorldModel* wm);
+    BehBAA(BehaviourContext& context);
     virtual ~BehBAA();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1629895911592) ENABLED START*/

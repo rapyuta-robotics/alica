@@ -15,8 +15,8 @@ namespace alica
 //   - GetGoal (1402488910751)
 //   - GetBall (1402488959965)
 //   - TryToDefendGoal (1402489037735)
-Defend1402488893641::Defend1402488893641(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Defend1402488893641::Defend1402488893641(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1402488893641) ENABLED START*/
     // Add additional options here
