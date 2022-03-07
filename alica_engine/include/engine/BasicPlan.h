@@ -45,6 +45,7 @@ public:
     using RunnableObject::TracingType;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+
 protected:
     using RunnableObject::getTrace;
 

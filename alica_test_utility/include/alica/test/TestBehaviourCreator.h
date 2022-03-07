@@ -8,7 +8,7 @@
 namespace alica
 {
 class BasicBehaviour;
-class IAlicaWorldModel;
+class BehaviourContext;
 } // namespace alica
 
 namespace alica::test
@@ -32,7 +32,7 @@ public:
      * @param IAlicaWorldModel WorldModel used by the agent.
      * @return std::shared_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
-    std::shared_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID, alica::IAlicaWorldModel* wm) override;
+    std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID, alica::BehaviourContext& context) override;
 
     /**
      * Allows you specify the class that should be used to construct the BasicBehaviour
@@ -45,13 +45,13 @@ public:
     void setBehaviourMockUp(int64_t behaviourID);
 
 private:
-    std::unordered_map<int64_t, std::function<std::shared_ptr<BasicBehaviour>()>> _behaviourCreateFunctions;
+    std::unordered_map<int64_t, std::function<std::unique_ptr<BasicBehaviour>()>> _behaviourCreateFunctions;
     std::unique_ptr<IBehaviourCreator> _defaultBehaviourCreator;
 };
 
 template <class T>
 void TestBehaviourCreator::setBehaviourMockUp(int64_t behaviourID)
 {
-    _behaviourCreateFunctions[behaviourID] = []() -> std::shared_ptr<BasicBehaviour> { return std::make_shared<T>(); };
+    _behaviourCreateFunctions[behaviourID] = []() -> std::unique_ptr<BasicBehaviour> { return std::make_unique<T>(); };
 }
 } // namespace alica::test

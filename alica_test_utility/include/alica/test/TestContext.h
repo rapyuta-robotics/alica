@@ -67,7 +67,7 @@ public:
      * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
      * @return Shared Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
      */
-    std::shared_ptr<BasicBehaviour> getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
+    BasicBehaviour* getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
 
     /**
      * Allows to retrieve the name of an AlicaElement.
