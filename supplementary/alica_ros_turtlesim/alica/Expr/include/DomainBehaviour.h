@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/BasicBehaviour.h>
-#include <engine/IAlicaWorldModel.h>
 #include <string>
 /*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/
 // Add additional options here

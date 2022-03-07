@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - NewState (1428508768573)
 //   - NewState (1429017227839)
-BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1428508768572) ENABLED START*/
     // Add additional options here

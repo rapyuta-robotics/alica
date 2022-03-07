@@ -16,8 +16,8 @@ namespace alica
 //   - Sync (1402489273401)
 //   - Kill (1402500830885)
 //   - Shoot (1402500833246)
-MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MidFieldPlayPlan1402488770050::MidFieldPlayPlan1402488770050(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1402488770050) ENABLED START*/
     // Add additional options here

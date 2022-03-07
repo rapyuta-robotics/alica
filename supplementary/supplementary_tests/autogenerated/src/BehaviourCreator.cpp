@@ -2,7 +2,6 @@
 #include "GSolver/SolverTestBehaviour.h"
 #include "ProblemModule/QueryBehaviour1.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaWorldModel.h"
 
 namespace alica
 {
@@ -11,14 +10,14 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, IAlicaWorldModel* wm)
+std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     switch (behaviourId) {
     case 1417424455986:
-        return std::make_shared<SolverTestBehaviour>(wm);
+        return std::make_unique<SolverTestBehaviour>(context);
         break;
     case 1479556104511:
-        return std::make_shared<QueryBehaviour1>(wm);
+        return std::make_unique<QueryBehaviour1>(context);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

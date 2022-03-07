@@ -1,5 +1,5 @@
 #pragma once
-#include <engine/IAlicaWorldModel.h>
+
 #include <engine/IBehaviourCreator.h>
 
 #include <iostream>

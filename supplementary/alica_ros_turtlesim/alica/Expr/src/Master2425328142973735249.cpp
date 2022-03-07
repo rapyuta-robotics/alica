@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - Init (3997532517592149463)
 //   - Move (2405597980801916441)
-Master2425328142973735249::Master2425328142973735249(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Master2425328142973735249::Master2425328142973735249(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con2425328142973735249) ENABLED START*/
     // Add additional options here

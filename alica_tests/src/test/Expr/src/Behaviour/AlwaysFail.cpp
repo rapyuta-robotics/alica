@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-AlwaysFail::AlwaysFail(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "AlwaysFail")
+AlwaysFail::AlwaysFail(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1532424188199) ENABLED START*/
     // Add additional options here

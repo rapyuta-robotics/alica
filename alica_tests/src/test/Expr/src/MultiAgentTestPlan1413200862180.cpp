@@ -20,8 +20,8 @@ namespace alica
 //   - NewSuccessState1 (1413201164999)
 //   - NewSuccessState2 (1413552736921)
 //   - Idle (1413807264574)
-MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MultiAgentTestPlan1413200862180::MultiAgentTestPlan1413200862180(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1413200862180) ENABLED START*/
     // Add additional options here

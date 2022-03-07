@@ -29,6 +29,7 @@ struct BehaviourContext
     const std::string name;
     const Behaviour* behaviourModel;
 };
+
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
@@ -62,7 +63,6 @@ public:
      * Override for behaviour specific termination. Guaranteed to be executed on the behavior's thread.
      */
     virtual void onTermination() {}
-
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
 

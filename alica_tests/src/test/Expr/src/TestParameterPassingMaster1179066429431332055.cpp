@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - ParameterPassingRunSubPlan (2069338196796962570)
-TestParameterPassingMaster1179066429431332055::TestParameterPassingMaster1179066429431332055(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+TestParameterPassingMaster1179066429431332055::TestParameterPassingMaster1179066429431332055(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1179066429431332055) ENABLED START*/
     // Add additional options here

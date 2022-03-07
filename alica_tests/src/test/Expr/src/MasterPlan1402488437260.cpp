@@ -16,8 +16,8 @@ namespace alica
 //   - Goal (1402488470615)
 //   - MidField (1402488477650)
 //   - SucGoalState (1402488536570)
-MasterPlan1402488437260::MasterPlan1402488437260(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MasterPlan1402488437260::MasterPlan1402488437260(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1402488437260) ENABLED START*/
     // Add additional options here

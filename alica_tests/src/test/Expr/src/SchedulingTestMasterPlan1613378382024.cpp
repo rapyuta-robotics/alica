@@ -21,8 +21,8 @@ namespace alica
 //   - OrderedSchedulingTestPlan (1629895593451)
 //   - ExecuteBehaviour (1206766322278521913)
 //   - ExecuteBehaviourInSubPlan (3802371674214346622)
-SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestMasterPlan1613378382024::SchedulingTestMasterPlan1613378382024(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1613378382024) ENABLED START*/
     // Add additional options here
