@@ -43,7 +43,10 @@ bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const st
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         LockedBlackboardRW(bb).registerValue(s, var->getId());
+#pragma GCC diagnostic pop
         results.push_back(var->getId());
     }
     ++s_getSolutionCallCounter;

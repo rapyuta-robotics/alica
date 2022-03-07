@@ -35,7 +35,10 @@ bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::sh
     Blackboard& bb = getAlicaEngine()->editBlackboard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
         const std::string& val = getValue(dummyVariable->getId(), calls);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         LockedBlackboardRW(bb).registerValue(val, dummyVariable->getId());
+#pragma GCC diagnostic pop
         results.push_back(dummyVariable->getId());
     }
 
