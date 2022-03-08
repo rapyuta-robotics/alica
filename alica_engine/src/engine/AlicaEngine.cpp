@@ -87,7 +87,7 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(*creatorCtx.behaviourCreator, _planRepository.behaviours(), _ctx.getWorldModel(), this);
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(*creatorCtx.behaviourCreator, _ctx.getWorldModel(), this);
     _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
     _scheduler->init();
 

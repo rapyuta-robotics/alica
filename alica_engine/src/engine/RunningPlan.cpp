@@ -107,7 +107,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuratio
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId()))
+        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId(), b))
         , _basicPlan(nullptr)
         , _cycleManagement(ae, this)
         , _parent(nullptr)

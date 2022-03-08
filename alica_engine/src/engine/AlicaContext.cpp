@@ -32,8 +32,9 @@ AlicaContext::~AlicaContext()
     _validTag = ALICA_CTX_BAD;
 }
 
-int AlicaContext::init(AlicaCreators& creatorCtx)
+int AlicaContext::init(AlicaCreators&& creatorCtx)
 {
+    _creators = std::move(creatorCtx);
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
@@ -43,7 +44,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
         _communicator->startCommunication();
     }
 
-    if (_engine->init(creatorCtx)) {
+    if (_engine->init(_creators)) {
         _engine->start();
         _initialized = true;
         return 0;

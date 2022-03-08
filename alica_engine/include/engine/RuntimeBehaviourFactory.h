@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-#include <engine/PlanRepository.h>
 
 namespace alica
 {
@@ -20,14 +19,13 @@ class RuntimeBehaviourFactory
 {
 public:
     // TODO: remove engine reference later
-    RuntimeBehaviourFactory(IBehaviourCreator& bc, const PlanRepository::MapType<Behaviour>& behaviourRepo, IAlicaWorldModel *wm, AlicaEngine *engine);
+    RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWorldModel *wm, AlicaEngine *engine);
     ~RuntimeBehaviourFactory() = default;
 
-    std::unique_ptr<BasicBehaviour> create(int64_t id) const;
+    std::unique_ptr<BasicBehaviour> create(int64_t id, const Behaviour* behaviourModel) const;
 private:
 
     IBehaviourCreator& _creator;
-    const PlanRepository::MapType<Behaviour>& _behaviourRepo;
     IAlicaWorldModel *_wm;
     AlicaEngine *_engine;
 };

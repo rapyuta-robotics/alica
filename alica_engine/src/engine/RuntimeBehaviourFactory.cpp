@@ -9,21 +9,14 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, const PlanRepository::MapType<Behaviour>& behaviourRepo, IAlicaWorldModel *wm, AlicaEngine *engine)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWorldModel *wm, AlicaEngine *engine)
     : _creator(bc)
-    , _behaviourRepo(behaviourRepo)
-    , _engine(engine) {}
+    , _engine(engine)
+    , _wm(wm) {}
 
-std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id) const
+std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    const auto it = _behaviourRepo.find(id);
-    if(it == _behaviourRepo.end()) {
-        ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour not found in repo: " << id);
-        return nullptr;
-    }
-    const auto* behaviour = it->second;
-
-    BehaviourContext ctx{_wm, behaviour->getName(), behaviour};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator.createBehaviour(id, ctx);
     if (!basicBeh) {
         ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);

@@ -8,6 +8,8 @@
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/blackboard/KeyMapping.h"
+#include "engine/IAlicaTimer.h"
+
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -20,7 +22,6 @@ namespace test
 class TestContext;
 }
 class RunningPlan;
-class ThreadSafePlanInterface;
 class AlicaEngine;
 class IAlicaWorldModel;
 
@@ -70,6 +71,7 @@ protected:
 
     RunnableObjectNew(IAlicaWorldModel* wm, const std::string& name = "");
     virtual ~RunnableObjectNew() = default;
+    //virtual ~RunnableObjectNew() { std::cout << _name << " destructor" << std::endl; }
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
 
@@ -110,7 +112,7 @@ private:
     RunningPlan* _runningplanContext;
     std::string _name;
     AlicaTime _msInterval;
-    int64_t _activeRunJobId;
+    std::unique_ptr<IAlicaTimer> _activeRunTimer;
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
