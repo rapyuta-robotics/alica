@@ -30,7 +30,7 @@ public:
      * an instance of a behaviour.
      * @param behaviourID Id of the requested behaviour.
      * @param IAlicaWorldModel WorldModel used by the agent.
-     * @return std::shared_ptr<BasicBehaviour> pointing to the requested behaviour.
+     * @return std::unique_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
     std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID, alica::BehaviourContext& context) override;
 
