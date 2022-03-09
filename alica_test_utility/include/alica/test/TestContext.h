@@ -65,7 +65,7 @@ public:
      * to check properties of their domain specific behaviours.
      * @param behaviourID ID of the Behaviour
      * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
-     * @return Shared Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
+     * @return Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
      */
     BasicBehaviour* getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
 
