@@ -36,7 +36,7 @@ void Base::start()
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
-    ac->init(std::move(creators));
+    ac->init(creators);
 }
 
 Base::~Base()
