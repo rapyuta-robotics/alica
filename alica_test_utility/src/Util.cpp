@@ -8,16 +8,27 @@ namespace alica::test
 {
 BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID)
 {
-    BasicBehaviour* behaviour = nullptr;
-    for (auto& behaviourEntry : ae->getBehaviourPool().getAvailableBehaviours()) {
-        if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
-                (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
-                                      : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
-            behaviour = behaviourEntry.second.get();
-            break;
+    return getBasicBehaviourHelper(ae->getPlanBase().getRootNode(), behaviourID);
+}
+
+BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t behaviourId)
+{
+    if(!rp) {
+        return nullptr;
+    }
+
+    if(rp->isBehaviour() && rp->getBasicBehaviour()->getId() == behaviourId) {
+        return rp->getBasicBehaviour();
+    }
+
+    for(const auto& child : rp->getChildren()) {
+        BasicBehaviour* beh = getBasicBehaviourHelper(child, behaviourId);
+        if(beh) {
+            return beh;
         }
     }
-    return behaviour;
+
+    return nullptr;
 }
 
 BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId)
@@ -31,6 +42,28 @@ BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t co
         }
     }
     return plan;
+    //return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
+}
+
+BasicPlan* Util::getBasicPlanHelper(const RunningPlan* rp, int64_t planId)
+{
+    if(!rp) {
+        return nullptr;
+    }
+
+    BasicPlan* plan = rp->getBasicPlan();
+    if(plan /*&& plan->getId() == planId*/) {
+        return plan;
+    }
+
+    for(const auto& child : rp->getChildren()) {
+        plan = getBasicPlanHelper(child, planId);
+        if(plan) {
+            return plan;
+        }
+    }
+
+    return nullptr;
 }
 
 bool Util::isStateActive(alica::AlicaEngine* ae, int64_t id)

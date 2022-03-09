@@ -44,6 +44,7 @@ public:
     using RunnableObjectNew::getBlackboard;
     using RunnableObjectNew::getName;
     using RunnableObjectNew::getPlanContext;
+    using RunnableObjectNew::getInheritBlackboard;
     using RunnableObjectNew::getWorldModel;
     using RunnableObjectNew::setEngine;
     using RunnableObjectNew::setInterval;
@@ -65,6 +66,7 @@ public:
     virtual void onTermination() {}
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };
+    int64_t getId() const { return _behaviour->getId(); }
 
     bool isSuccess() const { return _behResult.load() == BehResult::SUCCESS; };
     bool isFailure() const { return _behResult.load() == BehResult::FAILURE; };
