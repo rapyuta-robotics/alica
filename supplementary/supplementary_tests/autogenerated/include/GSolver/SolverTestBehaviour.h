@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1417424455986) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
@@ -13,7 +12,7 @@ namespace alica
 class SolverTestBehaviour : public DomainBehaviour
 {
 public:
-    SolverTestBehaviour(IAlicaWorldModel* wm);
+    SolverTestBehaviour(BehaviourContext& context);
     virtual ~SolverTestBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1417424455986) ENABLED START*/

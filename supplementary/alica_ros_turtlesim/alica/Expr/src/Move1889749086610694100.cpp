@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - AlignCircle (2299237921449867536)
 //   - Move2Center (4158797811607100614)
-Move1889749086610694100::Move1889749086610694100(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Move1889749086610694100::Move1889749086610694100(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1889749086610694100) ENABLED START*/
     // Add additional options here

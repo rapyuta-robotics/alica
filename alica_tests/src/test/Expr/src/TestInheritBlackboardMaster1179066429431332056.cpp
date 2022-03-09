@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - InheritBlackboardRunSubPlan (2069338196796962571)
-TestInheritBlackboardMaster1179066429431332056::TestInheritBlackboardMaster1179066429431332056(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+TestInheritBlackboardMaster1179066429431332056::TestInheritBlackboardMaster1179066429431332056(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1179066429431332056) ENABLED START*/
     // Add additional options here

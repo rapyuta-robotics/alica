@@ -16,8 +16,8 @@ namespace alica
 //
 // States:
 //   - PreConditionTest (1418042796752)
-PreConditionPlan1418042796751::PreConditionPlan1418042796751(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PreConditionPlan1418042796751::PreConditionPlan1418042796751(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1418042796751) ENABLED START*/
     // Add additional options here

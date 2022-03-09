@@ -4,7 +4,6 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1613378423610) ENABLED START*/
 // Add additional includes here
@@ -18,7 +17,7 @@ namespace alica
 class SchedulingTestPlan21613378423610 : public DomainPlan
 {
 public:
-    SchedulingTestPlan21613378423610(IAlicaWorldModel* wm);
+    SchedulingTestPlan21613378423610(PlanContext& context);
     virtual ~SchedulingTestPlan21613378423610();
     /*PROTECTED REGION ID(pub1613378423610) ENABLED START*/
     // Add additional public methods here

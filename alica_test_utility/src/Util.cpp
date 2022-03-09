@@ -6,14 +6,14 @@
 
 namespace alica::test
 {
-std::shared_ptr<BasicBehaviour> Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID)
+BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID)
 {
-    std::shared_ptr<alica::BasicBehaviour> behaviour = nullptr;
+    BasicBehaviour* behaviour = nullptr;
     for (auto& behaviourEntry : ae->getBehaviourPool().getAvailableBehaviours()) {
         if (behaviourEntry.first->getAbstractPlan()->getId() == behaviourID &&
                 (configurationID == 0 ? behaviourEntry.first->getConfiguration() == nullptr
                                       : behaviourEntry.first->getConfiguration()->getId() == configurationID)) {
-            behaviour = behaviourEntry.second;
+            behaviour = behaviourEntry.second.get();
             break;
         }
     }

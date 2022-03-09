@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - First (1529456584983)
 //   - Second (1529456591410)
-BackForth1529456584982::BackForth1529456584982(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+BackForth1529456584982::BackForth1529456584982(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1529456584982) ENABLED START*/
     // Add additional options here

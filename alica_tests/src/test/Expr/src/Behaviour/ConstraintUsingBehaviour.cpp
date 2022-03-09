@@ -15,8 +15,8 @@ namespace alica
 std::vector<int64_t> ConstraintUsingBehaviour::result;
 /*PROTECTED REGION END*/
 
-ConstraintUsingBehaviour::ConstraintUsingBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "ConstraintUsingBehaviour")
+ConstraintUsingBehaviour::ConstraintUsingBehaviour(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1414068597716) ENABLED START*/
     // Add additional options here

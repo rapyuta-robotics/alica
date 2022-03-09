@@ -12,8 +12,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-TestParameterPassingBehaviour::TestParameterPassingBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "TestParameterPassingBehaviour")
+TestParameterPassingBehaviour::TestParameterPassingBehaviour(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con831400441334251602) ENABLED START*/
     // Add additional options here
