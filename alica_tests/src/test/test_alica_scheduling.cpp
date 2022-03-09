@@ -199,8 +199,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
     wm->execOrderTest = true;
     ac->stepEngine();
 
-    auto behAAA = std::dynamic_pointer_cast<alica::BehAAA>(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0));
-    auto behBAA = std::dynamic_pointer_cast<alica::BehBAA>(alica::test::Util::getBasicBehaviour(ae, 1629895911592, 0));
+    auto behAAA = dynamic_cast<alica::BehAAA*>(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0));
+    auto behBAA = dynamic_cast<alica::BehBAA*>(alica::test::Util::getBasicBehaviour(ae, 1629895911592, 0));
 
     for (int i = 0; i < 10; ++i) {
 

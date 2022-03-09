@@ -14,8 +14,8 @@ namespace alica
 //
 // States:
 //   - BehBAA (1629896094706)
-PlanBA1629895873188::PlanBA1629895873188(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PlanBA1629895873188::PlanBA1629895873188(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1629895873188) ENABLED START*/
     // Add additional options here

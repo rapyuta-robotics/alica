@@ -14,8 +14,8 @@ namespace alica
 //   - DecisionState (1588069177860)
 //   - StateA (1588069261047)
 //   - StateB (1588069265377)
-ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ReadConfigurationPlan1588061334567::ReadConfigurationPlan1588061334567(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1588061334567) ENABLED START*/
     // Add additional options here

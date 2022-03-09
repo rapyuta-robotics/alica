@@ -20,7 +20,6 @@
 #include "Behaviour/TriggerC.h"
 #include "TestBehaviour.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaWorldModel.h"
 
 namespace alica
 {
@@ -29,68 +28,68 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, IAlicaWorldModel* wm)
+std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     switch (behaviourId) {
     case 1402488696205:
-        return std::make_shared<MidFieldStandard>(wm);
+        return std::make_unique<MidFieldStandard>(context);
         break;
     case 1402488730695:
-        return std::make_shared<DefendMid>(wm);
+        return std::make_unique<DefendMid>(context);
         break;
     case 1402488848841:
-        return std::make_shared<Attack>(wm);
+        return std::make_unique<Attack>(context);
         break;
     case 1402488939130:
-        return std::make_shared<Tackle>(wm);
+        return std::make_unique<Tackle>(context);
         break;
     case 1402489351885:
-        return std::make_shared<AttackOpp>(wm);
+        return std::make_unique<AttackOpp>(context);
         break;
     case 1414068597716:
-        return std::make_shared<ConstraintUsingBehaviour>(wm);
+        return std::make_unique<ConstraintUsingBehaviour>(context);
         break;
     case 1428508297492:
-        return std::make_shared<TriggerA>(wm);
+        return std::make_unique<TriggerA>(context);
         break;
     case 1428508316905:
-        return std::make_shared<TriggerB>(wm);
+        return std::make_unique<TriggerB>(context);
         break;
     case 1428508355209:
-        return std::make_shared<TriggerC>(wm);
+        return std::make_unique<TriggerC>(context);
         break;
     case 1429017274116:
-        return std::make_shared<NotToTrigger>(wm);
+        return std::make_unique<NotToTrigger>(context);
         break;
     case 1522377401286:
-        return std::make_shared<SuccessSpam>(wm);
+        return std::make_unique<SuccessSpam>(context);
         break;
     case 1529456643148:
-        return std::make_shared<CountIndefinitely>(wm);
+        return std::make_unique<CountIndefinitely>(context);
         break;
     case 1532424188199:
-        return std::make_shared<AlwaysFail>(wm);
+        return std::make_unique<AlwaysFail>(context);
         break;
     case 1588061129360:
-        return std::make_shared<ReadConfigurationBehaviour>(wm);
+        return std::make_unique<ReadConfigurationBehaviour>(context);
         break;
     case 1625610857563:
-        return std::make_shared<EmptyBehaviour>(wm);
+        return std::make_unique<EmptyBehaviour>(context);
         break;
     case 1629895901559:
-        return std::make_shared<BehAAA>(wm);
+        return std::make_unique<BehAAA>(context);
         break;
     case 1629895911592:
-        return std::make_shared<BehBAA>(wm);
+        return std::make_unique<BehBAA>(context);
         break;
     case 55178365253414982:
-        return std::make_shared<TestBehaviour>(wm);
+        return std::make_unique<TestBehaviour>(context);
         break;
     case 831400441334251600:
-        return std::make_shared<TestInheritBlackboardBehaviour>(wm);
+        return std::make_unique<TestInheritBlackboardBehaviour>(context);
         break;
     case 831400441334251602:
-        return std::make_shared<TestParameterPassingBehaviour>(wm);
+        return std::make_unique<TestParameterPassingBehaviour>(context);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

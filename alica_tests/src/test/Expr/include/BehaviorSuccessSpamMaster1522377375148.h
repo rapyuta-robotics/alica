@@ -4,7 +4,6 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1522377375148) ENABLED START*/
 // Add inlcudes here
@@ -18,7 +17,7 @@ namespace alica
 class BehaviorSuccessSpamMaster1522377375148 : public DomainPlan
 {
 public:
-    BehaviorSuccessSpamMaster1522377375148(IAlicaWorldModel* wm);
+    BehaviorSuccessSpamMaster1522377375148(PlanContext& context);
     virtual ~BehaviorSuccessSpamMaster1522377375148();
     /*PROTECTED REGION ID(pub1522377375148) ENABLED START*/
     // Add additional public methods here

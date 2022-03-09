@@ -11,10 +11,17 @@ namespace alica
 
 class Plan;
 
+struct PlanContext
+{
+    IAlicaWorldModel* worldModel;
+    const std::string name;
+    const Plan* planModel;
+};
+
 class BasicPlan : private RunnableObject
 {
 public:
-    BasicPlan(IAlicaWorldModel* wm);
+    BasicPlan(PlanContext& context);
     virtual ~BasicPlan() = default;
 
     // Use of private inheritance and explicitly making members public
@@ -38,7 +45,6 @@ public:
     using RunnableObject::TracingType;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
-    void setAsMasterPlan() { _isMasterPlan = true; };
 
 protected:
     using RunnableObject::getTrace;

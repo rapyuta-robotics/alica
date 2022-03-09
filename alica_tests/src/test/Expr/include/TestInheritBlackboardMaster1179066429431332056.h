@@ -4,7 +4,6 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1179066429431332056) ENABLED START*/
 // Add additional includes here
@@ -18,7 +17,7 @@ namespace alica
 class TestInheritBlackboardMaster1179066429431332056 : public DomainPlan
 {
 public:
-    TestInheritBlackboardMaster1179066429431332056(IAlicaWorldModel* wm);
+    TestInheritBlackboardMaster1179066429431332056(PlanContext& context);
     virtual ~TestInheritBlackboardMaster1179066429431332056();
     /*PROTECTED REGION ID(pub1179066429431332056) ENABLED START*/
     // Add additional public methods here

@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - NewState (1524452793379)
 //   - Dummy (1524453248579)
-Lvl21524452793378::Lvl21524452793378(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Lvl21524452793378::Lvl21524452793378(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1524452793378) ENABLED START*/
     // Add additional options here

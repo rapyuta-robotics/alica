@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Attack (1402488646220)
 //   - Shoot (1402489396914)
-AttackPlan1402488634525::AttackPlan1402488634525(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AttackPlan1402488634525::AttackPlan1402488634525(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1402488634525) ENABLED START*/
     // Add additional options here

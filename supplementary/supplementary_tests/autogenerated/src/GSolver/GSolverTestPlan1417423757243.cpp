@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - SolverState (1417423777544)
-GSolverTestPlan1417423757243::GSolverTestPlan1417423757243(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+GSolverTestPlan1417423757243::GSolverTestPlan1417423757243(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1417423757243) ENABLED START*/
     // Add additional options here
