@@ -11,13 +11,13 @@ namespace alica
  * - EntryPoint:2593906152181871206 : DefaultTask (1225112227903)
  *
  * States:
- * - DummySuccess (1823707990536087965)
- * - DummyFailure (1069042249878174940)
  * - DummyState (400856976447099508)
+ * - DummyFailure (1069042249878174940)
+ * - DummySuccess (1823707990536087965)
  *
  * Vars:
  */
-// State: DummySuccess
-// State: DummyFailure
 // State: DummyState
+// State: DummyFailure
+// State: DummySuccess
 } // namespace alica
