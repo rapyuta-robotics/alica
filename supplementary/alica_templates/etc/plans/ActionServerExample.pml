@@ -118,5 +118,36 @@
     }
   ],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "inheritBlackboard" : false,
+  "blackboard" : [
+    {
+      "key" : "result",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is the result of the executed action"
+    },
+    {
+      "key" : "feedback",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is the feedback of the executed action"
+    },
+    {
+      "key" : "goal",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is the goal of the executed action"
+    },
+    {
+      "key" : "cancel",
+      "type" : "std::any",
+      "access" : "protected",
+      "defaultValue" : null,
+      "comment" : "This is a flag for cancelling the execution of the current goal"
+    }
+  ]
 }

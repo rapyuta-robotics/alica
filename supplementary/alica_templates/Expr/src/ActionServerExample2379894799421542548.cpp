@@ -90,10 +90,10 @@ bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, c
 void ActionServerExample2379894799421542548::onInit()
 {
     LockedBlackboardRW bb = LockedBlackboardRW(*getBlackboard());
-    bb.registerValue("result", std::optional<int32_t>());
-    bb.registerValue("feedback", std::optional<int32_t>());
-    bb.registerValue("goal", std::optional<int32_t>());
-    bb.registerValue("cancel", std::optional<bool>());
+    bb.set("result", std::optional<int32_t>());
+    bb.set("feedback", std::optional<int32_t>());
+    bb.set("goal", std::optional<int32_t>());
+    bb.set("cancel", std::optional<bool>());
     // To increase the lifestime of the server, create the server in the plan's constructor and don't destroy it in onTerminate()
     _actionServer = std::make_unique<actionlib::SimpleActionServer<alica_templates_msgs::DummyAction>>(_nh, std::string("DummyActionServer"), true);
 }
