@@ -13,10 +13,10 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 1647616282106629095)
 //
 // States:
-//   - WaitForGoal (4209576477302433246)
 //   - ExecuteGoal (2119574391126023630)
-ActionServerExample2379894799421542548::ActionServerExample2379894799421542548(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+//   - WaitForGoal (4209576477302433246)
+ActionServerExample2379894799421542548::ActionServerExample2379894799421542548(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con2379894799421542548) ENABLED START*/
     // Add additional options here
@@ -41,28 +41,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction2379894799421542548::getUtilityF
 }
 
 /**
- * Transition: 430744406068167347 (430744406068167347)
- *   - Comment:
- *   - Source2Dest: WaitForGoal --> ExecuteGoal
- *
- * Precondition: 1886820548377048134 (1886820548377048134)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in WaitForGoal:
- */
-bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(430744406068167347) ENABLED START*/
-    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
-    return bb.get<std::optional<int32_t>>("goal").has_value();
-    /*PROTECTED REGION END*/
-}
-
-/**
  * Transition: 1354699620997961969 (1354699620997961969)
  *   - Comment:
  *   - Source2Dest: ExecuteGoal --> WaitForGoal
@@ -82,6 +60,28 @@ bool PreCondition587249152722263568::evaluate(std::shared_ptr<RunningPlan> rp, c
     /*PROTECTED REGION ID(1354699620997961969) ENABLED START*/
     LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
     return rp->amISuccessfulInAnyChild() || rp->isAnyChildStatus(PlanStatus::Failed) || bb.get<std::optional<bool>>("cancel").value_or(false);
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 430744406068167347 (430744406068167347)
+ *   - Comment:
+ *   - Source2Dest: WaitForGoal --> ExecuteGoal
+ *
+ * Precondition: 1886820548377048134 (1886820548377048134)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in WaitForGoal:
+ */
+bool PreCondition1886820548377048134::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(430744406068167347) ENABLED START*/
+    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
+    return bb.get<std::optional<int32_t>>("goal").has_value();
     /*PROTECTED REGION END*/
 }
 

@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - RunActionServer (1749352633184971627)
-ActionServerExampleMaster2369418759245288160::ActionServerExampleMaster2369418759245288160(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ActionServerExampleMaster2369418759245288160::ActionServerExampleMaster2369418759245288160(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con2369418759245288160) ENABLED START*/
     // Add additional options here

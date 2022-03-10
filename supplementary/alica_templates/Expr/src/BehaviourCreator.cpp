@@ -1,6 +1,5 @@
 #include "BehaviourCreator.h"
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaWorldModel.h"
 
 namespace alica
 {
@@ -9,7 +8,7 @@ BehaviourCreator::BehaviourCreator() {}
 
 BehaviourCreator::~BehaviourCreator() {}
 
-std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, IAlicaWorldModel* wm)
+std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     switch (behaviourId) {
     default:

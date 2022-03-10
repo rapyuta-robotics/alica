@@ -12,11 +12,11 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 2593906152181871206)
 //
 // States:
-//   - DummySuccess (1823707990536087965)
-//   - DummyFailure (1069042249878174940)
 //   - DummyState (400856976447099508)
-DummyImplementation4126421719858579722::DummyImplementation4126421719858579722(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+//   - DummyFailure (1069042249878174940)
+//   - DummySuccess (1823707990536087965)
+DummyImplementation4126421719858579722::DummyImplementation4126421719858579722(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con4126421719858579722) ENABLED START*/
     // Add additional options here
@@ -41,28 +41,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction4126421719858579722::getUtilityF
 }
 
 /**
- * Transition: 293344705861516112 (293344705861516112)
- *   - Comment:
- *   - Source2Dest: DummyState --> DummySuccess
- *
- * Precondition: 3469760593538210700 (3469760593538210700)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in DummyState:
- */
-bool PreCondition3469760593538210700::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(293344705861516112) ENABLED START*/
-    // Add success condition
-    return false;
-    /*PROTECTED REGION END*/
-}
-
-/**
  * Transition: 161866564931915050 (161866564931915050)
  *   - Comment:
  *   - Source2Dest: DummyState --> DummyFailure
@@ -80,6 +58,28 @@ bool PreCondition2084505765197602547::evaluate(std::shared_ptr<RunningPlan> rp, 
 {
     /*PROTECTED REGION ID(161866564931915050) ENABLED START*/
     // Add failure condition if necessary
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 293344705861516112 (293344705861516112)
+ *   - Comment:
+ *   - Source2Dest: DummyState --> DummySuccess
+ *
+ * Precondition: 3469760593538210700 (3469760593538210700)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in DummyState:
+ */
+bool PreCondition3469760593538210700::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(293344705861516112) ENABLED START*/
+    // Add success condition
     return false;
     /*PROTECTED REGION END*/
 }
