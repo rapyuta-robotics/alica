@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - EntryState (338845808462999166)
 //   - SecondState (1114306208475690481)
-AdjacentSuccessMasterPlan3254486013443203397::AdjacentSuccessMasterPlan3254486013443203397(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AdjacentSuccessMasterPlan3254486013443203397::AdjacentSuccessMasterPlan3254486013443203397(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con3254486013443203397) ENABLED START*/
     // Add additional options here

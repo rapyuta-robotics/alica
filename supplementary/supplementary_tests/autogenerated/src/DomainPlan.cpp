@@ -5,8 +5,8 @@
 
 namespace alica
 {
-DomainPlan::DomainPlan(IAlicaWorldModel* wm)
-        : BasicPlan(wm)
+DomainPlan::DomainPlan(PlanContext& context)
+        : BasicPlan(context)
 {
     /*PROTECTED REGION ID(domainPlanConstructor) ENABLED START*/
     // Add additional options here

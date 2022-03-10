@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1429017274116) ENABLED START*/
 // Add additional includes here
 #include <alica_tests/TestWorldModel.h>
@@ -13,7 +12,7 @@ namespace alica
 class NotToTrigger : public DomainBehaviour
 {
 public:
-    NotToTrigger(IAlicaWorldModel* wm);
+    NotToTrigger(BehaviourContext& context);
     virtual ~NotToTrigger();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1429017274116) ENABLED START*/

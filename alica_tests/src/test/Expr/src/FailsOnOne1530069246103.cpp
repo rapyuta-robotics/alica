@@ -13,8 +13,8 @@ namespace alica
 //
 // States:
 //   - NewState (1530069246104)
-FailsOnOne1530069246103::FailsOnOne1530069246103(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+FailsOnOne1530069246103::FailsOnOne1530069246103(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1530069246103) ENABLED START*/
     // Add additional options here

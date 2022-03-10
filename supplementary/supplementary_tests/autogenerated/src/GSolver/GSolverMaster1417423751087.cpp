@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - Init (1417423751088)
-GSolverMaster1417423751087::GSolverMaster1417423751087(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+GSolverMaster1417423751087::GSolverMaster1417423751087(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1417423751087) ENABLED START*/
     // Add additional options here

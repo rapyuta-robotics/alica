@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - 2832176823961443072 (2832176823961443072)
 //   - 3077460522716760463 (3077460522716760463)
-TestTracingMasterPlan691392966514374878::TestTracingMasterPlan691392966514374878(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+TestTracingMasterPlan691392966514374878::TestTracingMasterPlan691392966514374878(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con691392966514374878) ENABLED START*/
     // Add additional options here

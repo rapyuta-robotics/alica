@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - 508968687272454527 (508968687272454527)
 //   - 807253925929611286 (807253925929611286)
-PlanPoolTestMasterPlan1964838032551226161::PlanPoolTestMasterPlan1964838032551226161(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+PlanPoolTestMasterPlan1964838032551226161::PlanPoolTestMasterPlan1964838032551226161(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1964838032551226161) ENABLED START*/
     // Add additional options here

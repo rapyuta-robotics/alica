@@ -16,8 +16,8 @@ namespace alica
 //   - InitPlan1 (1613378543512)
 //   - TerminateSubPlans (1613977406218)
 //   - InitSubPlans (1614960038398)
-SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestPlan11613378406860::SchedulingTestPlan11613378406860(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1613378406860) ENABLED START*/
     // Add additional options here

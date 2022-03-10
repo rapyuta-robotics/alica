@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - NewState (1524452721453)
-VHMaster1524452721452::VHMaster1524452721452(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+VHMaster1524452721452::VHMaster1524452721452(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1524452721452) ENABLED START*/
     // Add additional options here

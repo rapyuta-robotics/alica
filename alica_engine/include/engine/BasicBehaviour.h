@@ -23,13 +23,20 @@ class TestContext;
 class Variable;
 class EntryPoint;
 
+struct BehaviourContext
+{
+    IAlicaWorldModel* worldModel;
+    const std::string name;
+    const Behaviour* behaviourModel;
+};
+
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
 class BasicBehaviour : private RunnableObject
 {
 public:
-    BasicBehaviour(IAlicaWorldModel* wm, const std::string& name);
+    BasicBehaviour(BehaviourContext& context);
     virtual ~BasicBehaviour(){};
 
     // Use of private inheritance and explicitly making members public
@@ -55,8 +62,6 @@ public:
     // Note that for things to work correctly it is assumed that this method is called after start() has finished execution
     // i.e. either on the same thread or via some other synchronization mechanism
     bool isRunningInContext(const RunningPlan* rp) const { return rp == _execContext.load() || rp == _signalContext.load(); };
-
-    void setBehaviour(const Behaviour* beh) { _behaviour = beh; };
 
     const VariableGrp& getVariables() const { return _behaviour->getVariables(); }
     const Variable* getVariable(const std::string& name) const { return _behaviour->getVariable(name); };

@@ -13,8 +13,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-BehAAA::BehAAA(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "BehAAA")
+BehAAA::BehAAA(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1629895901559) ENABLED START*/
     // Add additional options here

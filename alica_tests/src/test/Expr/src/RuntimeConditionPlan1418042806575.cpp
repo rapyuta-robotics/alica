@@ -16,8 +16,8 @@ namespace alica
 //
 // States:
 //   - RuntimeConditionTest (1418042806576)
-RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+RuntimeConditionPlan1418042806575::RuntimeConditionPlan1418042806575(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1418042806575) ENABLED START*/
     // Add additional options here
