@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Default Name (1588060991102)
 //   - Default Name (1588253341545)
-ConfigurationTestPlan1588060981661::ConfigurationTestPlan1588060981661(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ConfigurationTestPlan1588060981661::ConfigurationTestPlan1588060981661(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1588060981661) ENABLED START*/
     // Add additional options here

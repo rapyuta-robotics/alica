@@ -14,8 +14,8 @@ namespace alica
 std::vector<double> SolverTestBehaviour::result;
 /*PROTECTED REGION END*/
 
-SolverTestBehaviour::SolverTestBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "SolverTestBehaviour")
+SolverTestBehaviour::SolverTestBehaviour(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1417424455986) ENABLED START*/
     // Add additional options here

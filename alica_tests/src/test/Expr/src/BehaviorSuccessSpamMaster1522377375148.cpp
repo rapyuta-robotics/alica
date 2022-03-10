@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Normal (1522377375149)
 //   - Dummy (1522377929290)
-BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+BehaviorSuccessSpamMaster1522377375148::BehaviorSuccessSpamMaster1522377375148(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1522377375148) ENABLED START*/
     // Add additional options here

@@ -13,8 +13,8 @@ namespace alica
 std::vector<double> QueryBehaviour1::result;
 /*PROTECTED REGION END*/
 
-QueryBehaviour1::QueryBehaviour1(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "QueryBehaviour1")
+QueryBehaviour1::QueryBehaviour1(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1479556104511) ENABLED START*/
     // Add additional options here

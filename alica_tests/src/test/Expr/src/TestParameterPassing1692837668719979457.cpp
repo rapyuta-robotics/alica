@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - FirstCall (1092447442809556626)
 //   - SecondCall (1529456591400)
-TestParameterPassing1692837668719979457::TestParameterPassing1692837668719979457(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+TestParameterPassing1692837668719979457::TestParameterPassing1692837668719979457(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1692837668719979457) ENABLED START*/
     // Add additional options here

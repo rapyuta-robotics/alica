@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1402488696205) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -11,7 +10,7 @@ namespace alica
 class MidFieldStandard : public DomainBehaviour
 {
 public:
-    MidFieldStandard(IAlicaWorldModel* wm);
+    MidFieldStandard(BehaviourContext& context);
     virtual ~MidFieldStandard();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1402488696205) ENABLED START*/

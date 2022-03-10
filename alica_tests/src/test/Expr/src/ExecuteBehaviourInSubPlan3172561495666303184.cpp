@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Suc (3575867719445223184)
 //   - Start (4459593820134418510)
-ExecuteBehaviourInSubPlan3172561495666303184::ExecuteBehaviourInSubPlan3172561495666303184(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ExecuteBehaviourInSubPlan3172561495666303184::ExecuteBehaviourInSubPlan3172561495666303184(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con3172561495666303184) ENABLED START*/
     // Add additional options here

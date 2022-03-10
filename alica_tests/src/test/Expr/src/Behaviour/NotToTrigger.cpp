@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-NotToTrigger::NotToTrigger(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "NotToTrigger")
+NotToTrigger::NotToTrigger(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1429017274116) ENABLED START*/
     // Add additional options here

@@ -15,8 +15,8 @@ namespace alica
 //   - SucState (496520533178003845)
 //   - EntryState (656998006978148289)
 //   - WaitState (235276470945876557)
-AdjacentSuccessSubPlan1682631238618360548::AdjacentSuccessSubPlan1682631238618360548(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+AdjacentSuccessSubPlan1682631238618360548::AdjacentSuccessSubPlan1682631238618360548(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1682631238618360548) ENABLED START*/
     // Add additional options here

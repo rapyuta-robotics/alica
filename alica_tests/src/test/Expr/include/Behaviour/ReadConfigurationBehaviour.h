@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1588061129360) ENABLED START*/
 /*PROTECTED REGION END*/
 
@@ -10,7 +9,7 @@ namespace alica
 class ReadConfigurationBehaviour : public DomainBehaviour
 {
 public:
-    ReadConfigurationBehaviour(IAlicaWorldModel* wm);
+    ReadConfigurationBehaviour(BehaviourContext& context);
     virtual ~ReadConfigurationBehaviour();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1588061129360) ENABLED START*/

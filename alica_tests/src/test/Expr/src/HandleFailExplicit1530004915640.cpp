@@ -17,8 +17,8 @@ namespace alica
 //   - C (1530004975275)
 //   - D (1532424087894)
 //   - E (1532424097662)
-HandleFailExplicit1530004915640::HandleFailExplicit1530004915640(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+HandleFailExplicit1530004915640::HandleFailExplicit1530004915640(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1530004915640) ENABLED START*/
     // Add additional options here
