@@ -4,9 +4,9 @@ This is the ALICA Codegeneration package.
 
 ## Build
 
-To build the ALICA codegeneration jar files, run '''mvn -DskipTests=true install''' inside the root folder of alica_codegeneration.
+To build the ALICA codegeneration jar files, run `mvn -DskipTests=true install` inside the root folder of alica_codegeneration.
 
-After building the jar files using maven, move the codegeneration jar file '''alica_codegeneration/target/PlanDesignerFX-Codegeneration-0.1.1.X.jar''' to '''/alica/supplementary/alica_designer_runtime/codegen/'''. Next, move the default plugin '''alica_codegeneration/alica-plan-designer-fx-default-plugin/target/alica-plan-designer-fx-default-plugin-0.1.1-SNAPSHOT.jar''' to '''/alica/supplementary/alica_designer_runtime/codegen/plugins/'''.
+After building the jar files using maven, move the codegeneration jar file `alica_codegeneration/target/PlanDesignerFX-Codegeneration-0.1.1.X.jar` to `/alica/supplementary/alica_designer_runtime/codegen/`. Next, move the default plugin `alica_codegeneration/alica-plan-designer-fx-default-plugin/target/alica-plan-designer-fx-default-plugin-0.1.1-SNAPSHOT.jar` to `/alica/supplementary/alica_designer_runtime/codegen/plugins/`.
 
 ### Java
 
