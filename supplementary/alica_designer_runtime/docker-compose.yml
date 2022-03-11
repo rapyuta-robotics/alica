@@ -39,10 +39,6 @@ services:
     depends_on:
       - db
       - redis
-    volumes:
-      - /etc/group:/etc/group:ro
-      - /etc/passwd:/etc/passwd:ro
-      - /etc/shadow:/etc/shadow:ro
 
   alica-debug-tree:
     image: rrdockerhub/alica_backend:interface_dev  # TODO: move to separate repo
