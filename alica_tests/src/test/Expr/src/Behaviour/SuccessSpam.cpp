@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-SuccessSpam::SuccessSpam(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "SuccessSpam")
+SuccessSpam::SuccessSpam(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1522377401286) ENABLED START*/
     // Add additional options here

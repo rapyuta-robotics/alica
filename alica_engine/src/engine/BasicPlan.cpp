@@ -11,9 +11,9 @@
 namespace alica
 {
 
-BasicPlan::BasicPlan(IAlicaWorldModel* wm)
-        : RunnableObject(wm)
-        , _isMasterPlan(false)
+BasicPlan::BasicPlan(PlanContext& context)
+        : RunnableObject(context.worldModel, context.name)
+        , _isMasterPlan(context.planModel->isMasterPlan())
 {
 }
 

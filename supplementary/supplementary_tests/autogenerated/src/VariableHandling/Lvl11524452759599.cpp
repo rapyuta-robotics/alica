@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - NewState (1524452759600)
 //   - BeforeTrans (1524453481856)
-Lvl11524452759599::Lvl11524452759599(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+Lvl11524452759599::Lvl11524452759599(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1524452759599) ENABLED START*/
     // Add additional options here

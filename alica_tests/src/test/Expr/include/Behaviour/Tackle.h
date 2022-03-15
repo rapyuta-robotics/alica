@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DomainBehaviour.h"
-#include <engine/IAlicaWorldModel.h>
 /*PROTECTED REGION ID(inc1402488939130) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/
@@ -11,7 +10,7 @@ namespace alica
 class Tackle : public DomainBehaviour
 {
 public:
-    Tackle(IAlicaWorldModel* wm);
+    Tackle(BehaviourContext& context);
     virtual ~Tackle();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub1402488939130) ENABLED START*/

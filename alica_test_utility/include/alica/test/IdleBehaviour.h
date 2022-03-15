@@ -4,7 +4,7 @@
 
 namespace alica
 {
-class IAlicaWorldModel;
+class BehaviourContext;
 }
 
 namespace alica::test
@@ -12,8 +12,8 @@ namespace alica::test
 class IdleBehaviour : public BasicBehaviour
 {
 public:
-    explicit IdleBehaviour(alica::IAlicaWorldModel* wm)
-            : BasicBehaviour(wm, "IdleBehaviour"){};
+    explicit IdleBehaviour(BehaviourContext& context)
+            : BasicBehaviour(context){};
     void run(void* msg) override;
 };
 } // namespace alica::test

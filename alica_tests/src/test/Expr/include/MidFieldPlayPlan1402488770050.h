@@ -4,7 +4,6 @@
 #include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/UtilityFunction.h>
 /*PROTECTED REGION ID(incl1402488770050) ENABLED START*/
 // Add inlcudes here
@@ -18,7 +17,7 @@ namespace alica
 class MidFieldPlayPlan1402488770050 : public DomainPlan
 {
 public:
-    MidFieldPlayPlan1402488770050(IAlicaWorldModel* wm);
+    MidFieldPlayPlan1402488770050(PlanContext& context);
     virtual ~MidFieldPlayPlan1402488770050();
     /*PROTECTED REGION ID(pub1402488770050) ENABLED START*/
     // Add additional public methods here

@@ -13,8 +13,8 @@ namespace alica
 // States:
 //   - Start (1418042656595)
 //   - Plantype (1418042674811)
-MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MasterPlanTestConditionPlanType1418042656594::MasterPlanTestConditionPlanType1418042656594(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1418042656594) ENABLED START*/
     // Add additional options here

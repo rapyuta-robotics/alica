@@ -17,8 +17,8 @@ namespace alica
 //   - SecondTaskFirstState (1418825404963)
 //   - FirstTaskSecondState (1418825409988)
 //   - SecondTaskSecondState (1418825411686)
-MasterSyncTransition1418825395939::MasterSyncTransition1418825395939(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MasterSyncTransition1418825395939::MasterSyncTransition1418825395939(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1418825395939) ENABLED START*/
     // Add additional options here

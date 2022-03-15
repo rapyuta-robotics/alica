@@ -14,8 +14,8 @@ namespace alica
 //   - Shoot (1402488881799)
 //   - Miss (1402489152217)
 //   - Scored (1402489192198)
-GoalPlan1402488870347::GoalPlan1402488870347(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+GoalPlan1402488870347::GoalPlan1402488870347(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1402488870347) ENABLED START*/
     // Add additional options here
