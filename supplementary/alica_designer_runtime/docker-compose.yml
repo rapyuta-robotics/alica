@@ -31,7 +31,7 @@ services:
       - SOCIAL_APP_CLIENT_ID=${SOCIAL_APP_CLIENT_ID}
       - SOCIAL_APP_SECRET=${SOCIAL_APP_SECRET}
       - OAUTH_APPLICATION_URL=http://localhost:3030
-      - NATIVE_MODE=$false
+      - NATIVE_MODE=false
 
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
