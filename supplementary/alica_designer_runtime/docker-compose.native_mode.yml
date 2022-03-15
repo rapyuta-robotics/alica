@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  alica-backend:
+    environment:
+      - NATIVE_MODE=true
+    volumes:
+      - ${NATIVE_IMPORT_EXPORT_PATH}:/alica_program  # mount path for native_mode plan import/export
