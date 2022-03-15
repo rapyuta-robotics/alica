@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - TestState1 (1412252439926)
 //   - TestState2 (1412761855746)
-SimpleTestPlan1412252439925::SimpleTestPlan1412252439925(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SimpleTestPlan1412252439925::SimpleTestPlan1412252439925(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1412252439925) ENABLED START*/
     // Add additional options here

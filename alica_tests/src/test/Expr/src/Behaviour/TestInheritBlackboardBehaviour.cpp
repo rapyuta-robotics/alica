@@ -11,8 +11,8 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-TestInheritBlackboardBehaviour::TestInheritBlackboardBehaviour(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "TestInheritBlackboardBehaviour")
+TestInheritBlackboardBehaviour::TestInheritBlackboardBehaviour(BehaviourContext& context)
+        : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con831400441334251600) ENABLED START*/
     // Add additional options here

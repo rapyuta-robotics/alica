@@ -17,8 +17,8 @@ namespace alica
 //   - InitSequenceSubPlan2 (1614964541828)
 //   - InitSequenceSubPlan3 (1614964542678)
 //   - TerminateSequenceSubPlan3 (1614964543300)
-SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan11614963946725(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+SchedulingTestSequencePlan11614963946725::SchedulingTestSequencePlan11614963946725(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1614963946725) ENABLED START*/
     // Add additional options here

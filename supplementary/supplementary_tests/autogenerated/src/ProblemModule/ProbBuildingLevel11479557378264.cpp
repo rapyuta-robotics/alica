@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - PTState (1479557378265)
-ProbBuildingLevel11479557378264::ProbBuildingLevel11479557378264(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+ProbBuildingLevel11479557378264::ProbBuildingLevel11479557378264(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1479557378264) ENABLED START*/
     // Add additional options here

@@ -49,7 +49,7 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     return true;
 }
 
-std::shared_ptr<BasicBehaviour> TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
+BasicBehaviour* TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
 {
     assert(_initCalled == true);
     return Util::getBasicBehaviour(_engine.get(), behaviourID, configurationID);

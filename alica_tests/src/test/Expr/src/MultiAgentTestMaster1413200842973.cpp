@@ -16,8 +16,8 @@ namespace alica
 //   - Init (1413200842974)
 //   - Start (1413201213955)
 //   - Finished (1413201380359)
-MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973(IAlicaWorldModel* wm)
-        : DomainPlan(wm)
+MultiAgentTestMaster1413200842973::MultiAgentTestMaster1413200842973(PlanContext& context)
+        : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con1413200842973) ENABLED START*/
     // Add additional options here
