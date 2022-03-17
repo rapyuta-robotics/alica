@@ -35,6 +35,7 @@
 #include "MultiAgentTestPlan1413200862180.h"
 #include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PickDrop725594143882346503.h"
 #include "PlanA1629895837159.h"
 #include "PlanAA1629895864090.h"
 #include "PlanB1629895853508.h"
@@ -64,6 +65,7 @@
 #include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TaskInstantiationIntegrationTestMaster4603312216886200747.h"
 #include "TestParameterPassing1692837668719979457.h"
 #include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
@@ -237,8 +239,14 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 691392966514374878:
         return std::make_unique<TestTracingMasterPlan691392966514374878>(wm);
         break;
+    case 725594143882346503:
+        return std::make_unique<PickDrop725594143882346503>(wm);
+        break;
     case 984284423749038756:
         return std::make_unique<EmptyPlan984284423749038756>(wm);
+        break;
+    case 1179066429431332055:
+        return std::make_unique<TestParameterPassingMaster1179066429431332055>(wm);
         break;
     case 1338298120374694644:
         return std::make_unique<DynamicTaskTogether1338298120374694644>(wm);
@@ -246,23 +254,20 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 1433931143598606082:
         return std::make_unique<SerializationSubPlanA1433931143598606082>(wm);
         break;
-    case 1179066429431332055:
-        return std::make_unique<TestParameterPassingMaster1179066429431332055>(wm);
-        break;
     case 1482512794732634139:
         return std::make_unique<TestTracingSubPlan1482512794732634139>(wm);
         break;
     case 1602078208698393838:
         return std::make_unique<DynamicTaskAssignmentTestMaster1602078208698393838>(wm);
         break;
-    case 1781630225028158279:
-        return std::make_unique<SerializationSubPlanD1781630225028158279>(wm);
+    case 1682631238618360548:
+        return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
         break;
     case 1692837668719979457:
         return std::make_unique<TestParameterPassing1692837668719979457>(wm);
         break;
-    case 1682631238618360548:
-        return std::make_unique<AdjacentSuccessSubPlan1682631238618360548>(wm);
+    case 1781630225028158279:
+        return std::make_unique<SerializationSubPlanD1781630225028158279>(wm);
         break;
     case 1964838032551226161:
         return std::make_unique<PlanPoolTestMasterPlan1964838032551226161>(wm);
@@ -279,14 +284,17 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(wm);
         break;
+    case 3254486013443203397:
+        return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>(wm);
+        break;
     case 3337489358878214836:
         return std::make_unique<DynamicTaskLA3337489358878214836>(wm);
         break;
     case 4316676367342780557:
         return std::make_unique<DynamicTaskLB4316676367342780557>(wm);
         break;
-    case 3254486013443203397:
-        return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>(wm);
+    case 4603312216886200747:
+        return std::make_unique<TaskInstantiationIntegrationTestMaster4603312216886200747>(wm);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;
@@ -298,6 +306,10 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
 std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
 {
     switch (attachmentWrapperConfId) {
+    case 1463506596775213702:
+        return std::make_unique<PlanAttachment1463506596775213702>();
+    case 2743493125610368794:
+        return std::make_unique<PlanAttachment2743493125610368794>();
     case 105160539449888459:
         return std::make_unique<PlanAttachment105160539449888459>();
     case 445396005944825225:

@@ -35,6 +35,7 @@
 #include "MultiAgentTestPlan1413200862180.h"
 #include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "PickDrop725594143882346503.h"
 #include "PlanA1629895837159.h"
 #include "PlanAA1629895864090.h"
 #include "PlanB1629895853508.h"
@@ -64,6 +65,7 @@
 #include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TaskInstantiationIntegrationTestMaster4603312216886200747.h"
 #include "TestParameterPassing1692837668719979457.h"
 #include "TestParameterPassingMaster1179066429431332055.h"
 #include "TestTracingMasterPlan691392966514374878.h"
@@ -236,8 +238,14 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 691392966514374878:
         return std::make_shared<UtilityFunction691392966514374878>();
         break;
+    case 725594143882346503:
+        return std::make_shared<UtilityFunction725594143882346503>();
+        break;
     case 984284423749038756:
         return std::make_shared<UtilityFunction984284423749038756>();
+        break;
+    case 1179066429431332055:
+        return std::make_shared<UtilityFunction1179066429431332055>();
         break;
     case 1338298120374694644:
         return std::make_shared<UtilityFunction1338298120374694644>();
@@ -245,23 +253,20 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 1433931143598606082:
         return std::make_shared<UtilityFunction1433931143598606082>();
         break;
-    case 1179066429431332055:
-        return std::make_shared<UtilityFunction1179066429431332055>();
-        break;
     case 1482512794732634139:
         return std::make_shared<UtilityFunction1482512794732634139>();
         break;
     case 1602078208698393838:
         return std::make_shared<UtilityFunction1602078208698393838>();
         break;
-    case 1781630225028158279:
-        return std::make_shared<UtilityFunction1781630225028158279>();
+    case 1682631238618360548:
+        return std::make_shared<UtilityFunction1682631238618360548>();
         break;
     case 1692837668719979457:
         return std::make_shared<UtilityFunction1692837668719979457>();
         break;
-    case 1682631238618360548:
-        return std::make_shared<UtilityFunction1682631238618360548>();
+    case 1781630225028158279:
+        return std::make_shared<UtilityFunction1781630225028158279>();
         break;
     case 1964838032551226161:
         return std::make_shared<UtilityFunction1964838032551226161>();
@@ -278,14 +283,17 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
         break;
+    case 3254486013443203397:
+        return std::make_shared<UtilityFunction3254486013443203397>();
+        break;
     case 3337489358878214836:
         return std::make_shared<UtilityFunction3337489358878214836>();
         break;
     case 4316676367342780557:
         return std::make_shared<UtilityFunction4316676367342780557>();
         break;
-    case 3254486013443203397:
-        return std::make_shared<UtilityFunction3254486013443203397>();
+    case 4603312216886200747:
+        return std::make_shared<UtilityFunction4603312216886200747>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
