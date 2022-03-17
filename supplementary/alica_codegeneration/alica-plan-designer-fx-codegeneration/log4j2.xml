@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+    </Properties>
+    <Filter elementType="ThresholdFilter" level="trace"/>
+
+    <Appenders>
+        <Appender elementType="Console" name="STDOUT">
+            <Layout elementType="PatternLayout" pattern="%m MDC%X%n"/>
+            <Filters>
+                <Filter elementType="MarkerFilter" marker="FLOW" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <Filter elementType="MarkerFilter" marker="EXCEPTION" onMatch="DENY" onMismatch="ACCEPT"/>
+            </Filters>
+        </Appender>
+        <Appender elementType="Console" name="FLOW">
+            <Layout elementType="PatternLayout" pattern="%C{1}.%M %m %ex%n"/><!-- class and line number -->
+            <Filters>
+                <Filter elementType="MarkerFilter" marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <Filter elementType="MarkerFilter" marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Appender>
+        <Appender elementType="File" name="File" fileName="${filename}">
+            <Layout elementType="PatternLayout">
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </Layout>
+        </Appender>
+        <Appender elementType="List" name="List">
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
+            <Filter elementType="ThreadContextMapFilter">
+                <KeyValuePair key="test" value="123"/>
+            </Filter>
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+
+        <Logger name="org.apache.logging.log4j.test2" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="List"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
