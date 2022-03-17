@@ -1,6 +1,7 @@
 #include "test_alica.h"
 
 #include "DynamicTaskBehavior.h"
+#include "alica_tests/TaskInstantiationIntegrationWorldModel.h"
 
 #include <alica/test/Util.h>
 #include <engine/AlicaContext.h>
@@ -132,6 +133,136 @@ protected:
 
     static constexpr const char* kDynamicTaskName = "DynamicTask";
 };
+
+// GTEST_FILTER=AlicaTaskInstantiationIntegrationTest.* catkin run_tests -i alica_tests
+
+class AlicaTaskInstantiationIntegrationTest : public AlicaTestMultiAgentFixture
+{
+protected:
+    const char* getRoleSetName() const override { return "Roleset"; }
+    const char* getMasterPlanName() const override { return "TaskInstantiationIntegrationTestMaster"; }
+    int getAgentCount() const override { return 4; }
+    int getPayloadCount() const { return 8; }
+
+    const char* getHostName(int agentNumber) const override
+    {
+        switch(agentNumber) {
+            case 0: return "nase";
+            case 1: return "hairy";
+            case 2: return "fred";
+            case 3: return "george";
+            default: return "";
+        }
+    }
+
+    void startAgents()
+    {
+        for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
+            aes[agent_index]->start();
+        }
+    }
+
+    void stepAgents()
+    {
+        for (uint8_t agent_index = 0; agent_index < getAgentCount(); agent_index++) {
+            acs[agent_index]->stepEngine();
+        }
+    }
+
+    void SetUp() override
+    {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
+
+        for (int i = 0; i < getAgentCount(); ++i) {
+            alica::AlicaContext* ac =
+                    new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            ASSERT_TRUE(ac->isValid());
+            cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
+            spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
+            ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+            ac->setWorldModel<alicaTests::TaskInstantiationIntegrationWorldModel>();
+            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+            spinners.back()->start();
+            EXPECT_TRUE(ae->init(creators));
+            acs.push_back(ac);
+            aes.push_back(ae);
+        }
+
+        wms = make_shared<std::vector<alicaTests::TaskInstantiationIntegrationWorldModel*>>();
+        for (int i = 0; i < getAgentCount(); i++) {
+            IAlicaWorldModel* wmTemp = acs[i]->getWorldModel();            
+            alicaTests::TaskInstantiationIntegrationWorldModel* wm = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wmTemp);
+            wms->push_back(wm);
+            wm->wms = wms;
+            wm->agentId = aes[i]->getTeamManager().getLocalAgentID();
+        }
+    }
+
+    std::shared_ptr<std::vector<alicaTests::TaskInstantiationIntegrationWorldModel*>> wms;
+    std::vector<alicaTests::Payload> payloads;
+    std::unordered_map<uint64_t, std::pair<uint64_t, uint64_t>> agentLocations;
+    const uint64_t TP_TO_PICK_SPOT = 2867928428650937962;
+};
+
+TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
+{
+    /**
+     * @brief 
+     * ------------------------------------------------------------------------------------------------
+     */
+
+    ASSERT_NO_SIGNAL
+
+    for (int i = 0; i < getPayloadCount(); i++) {
+        alicaTests::Payload payload;
+        payload.id = i;
+        payload.state = alicaTests::PayloadState::READY_FOR_PICKUP;
+        payload.pickX = i * 50;
+        payload.pickY = i * 50;
+        payload.dropX = i * 50 + 10;
+        payload.dropY = i * 50 + 10;
+
+        payloads.push_back(payload);
+    }
+
+    for (int i = 0; i < getAgentCount(); i++) {
+        agentLocations[i + 8] = std::pair<uint64_t, uint64_t>(0, 0);
+    }
+
+    for (int i = 0; i < getAgentCount(); i++) {
+        wms->at(i)->payloads = payloads;
+        wms->at(i)->agentLocations = agentLocations;
+        wms->at(i)->currentPayloadId = i;
+    }
+
+    startAgents();
+
+    stepAgents();
+    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+
+    stepAgents();
+    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+
+    stepAgents();
+    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+
+    stepAgents();
+    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500)); 
+
+    /**
+     * @brief 
+     * --------------------------------------------------------------------------------------------------
+     */
+}
 
 TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
 {
