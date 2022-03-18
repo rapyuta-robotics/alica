@@ -1,0 +1,65 @@
+version: "{build}"
+
+environment:
+  matrix:
+    - JAVA_VERSION: "11"
+      JAVA_HOME: C:\Program Files\Java\jdk11
+      _JAVA_OPTIONS: "-Dtestfx.robot=awt"
+
+# fetch repository as zip archive
+shallow_clone: false
+
+# list of build branches
+branches:
+  only:
+    - master
+
+# install without run tests
+build_script:
+  - mvn clean install -DskipTests
+
+# run tests
+test_script:
+  - mvn test -B
+
+# increase screen size
+before_build:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/set-screenresolution.ps1'))
+  - ps: Set-ScreenResolution 1920 1080
+
+# build cache
+cache:
+  - C:\maven\ -> appveyor.yml
+  - C:\Users\appveyor\.m2\ -> **\pom.xml
+
+# files that will be uploaded
+artifacts:
+  - path: target\PlanDesignerFX-*.jar
+
+deploy:
+  # github artifact upload to tag/release
+  # auth_token: "Generate new token" at https://github.com/settings/tokens
+  - provider: GitHub
+    auth_token:
+      secure: /GqIUIFjaJtRIncBGDG7Ws2lkrEDnaOncyh6Nt4i9EQJ4DHWlvyywQt2PEWsREd1
+    force_update: true
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true
+
+notifications:
+  # slack notification
+  # "Create New App" at https://api.slack.com/apps
+  # auth_token: "OAuth Access Token" from https://api.slack.com/apps/<ID>/oauth
+  - provider: Slack
+    auth_token:
+      secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
+    channel: '#alica-plan-designer-fx'
+    on_build_success: true  # TODO: set to false later
+
+# RDP for debugging
+# requires encrypted environment variable "APPVEYOR_RDP_PASSWORD"
+# The password must meet the Windows Server requirements
+# more info: https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
