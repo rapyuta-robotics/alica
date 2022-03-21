@@ -38,7 +38,7 @@ public:
     const EntryPoint* getEntryPoint(int idx) const { return _impl->getPlan()->getEntryPoints()[idx]; }
 
     PartialAssignmentView getAgentsWorking(const EntryPoint* ep) const;
-    PartialAssignmentView getAgentsWorking(int64_t epid) const;
+    PartialAssignmentView getAgentsWorking(int64_t epid, uint64_t dynEpId) const;
 
     PartialAssignmentView getUnassignedAgents() const;
 

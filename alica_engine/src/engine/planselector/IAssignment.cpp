@@ -54,11 +54,11 @@ PartialAssignmentView IAssignment::getAgentsWorking(const EntryPoint* ep) const
     return PartialAssignmentView(ep->getIndex(), _impl);
 }
 
-PartialAssignmentView IAssignment::getAgentsWorking(int64_t epid) const
+PartialAssignmentView IAssignment::getAgentsWorking(int64_t epid, uint64_t dynEpId = 0) const
 {
     const EntryPointGrp& eps = _impl->getPlan()->getEntryPoints();
     for (int i = 0; i < static_cast<int>(eps.size()); ++i) {
-        if (eps[i]->getId() == epid) {
+        if (eps[i]->getId() == epid && eps[i]->getDynamicId() == dynEpId) {
             return PartialAssignmentView(i, _impl);
         }
     }
