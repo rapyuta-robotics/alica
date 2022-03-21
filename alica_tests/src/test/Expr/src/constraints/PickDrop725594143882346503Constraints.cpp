@@ -14,17 +14,19 @@ namespace alica
  * States:
  * - Pick (1965586362363306757)
  * - Idle (3766678166599855988)
+ * - AssignPayload (3785266111914580157)
+ * - Moved (3464891834530950837)
  * - TPToPickSpot (2867928428650937962)
  * - Drop (624744054901478287)
  * - TPToDropSpot (726015981546724416)
- * - Moved (2821606377944727817)
  *
  * Vars:
  */
 // State: Pick
 // State: Idle
+// State: AssignPayload
+// State: Moved
 // State: TPToPickSpot
 // State: Drop
 // State: TPToDropSpot
-// State: Moved
 } // namespace alica

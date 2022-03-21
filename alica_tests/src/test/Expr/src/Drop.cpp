@@ -16,6 +16,7 @@ Drop::Drop(IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(con3009473645416620380) ENABLED START*/
     // Add additional options here
+    _worldModel = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     /*PROTECTED REGION END*/
 }
 Drop::~Drop()

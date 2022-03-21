@@ -306,10 +306,6 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
 std::unique_ptr<PlanAttachment> PlanCreator::createPlanAttachment(int64_t attachmentWrapperConfId)
 {
     switch (attachmentWrapperConfId) {
-    case 1463506596775213702:
-        return std::make_unique<PlanAttachment1463506596775213702>();
-    case 2743493125610368794:
-        return std::make_unique<PlanAttachment2743493125610368794>();
     case 105160539449888459:
         return std::make_unique<PlanAttachment105160539449888459>();
     case 445396005944825225:

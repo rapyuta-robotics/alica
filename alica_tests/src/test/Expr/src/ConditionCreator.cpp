@@ -1,6 +1,7 @@
 #include "ConditionCreator.h"
 #include "AdjacentSuccessMasterPlan3254486013443203397.h"
 #include "AdjacentSuccessSubPlan1682631238618360548.h"
+#include "AssignPayload3826644292150922713.h"
 #include "AttackPlan1402488634525.h"
 #include "Authority/AuthorityTest1414403413451.h"
 #include "Authority/AuthorityTestMaster1414403396328.h"
@@ -42,6 +43,7 @@
 #include "EmptyPlan984284423749038756.h"
 #include "ExecuteBehaviourInSubPlan3172561495666303184.h"
 #include "FailsOnOne1530069246103.h"
+#include "FreePayload422054015709952219.h"
 #include "FrequencyTestPlan1626848999740.h"
 #include "GoalPlan1402488870347.h"
 #include "HandleFailExplicit1530004915640.h"
@@ -53,7 +55,8 @@
 #include "MidFieldPlayPlan1402488770050.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
-#include "Navigate4505472195947429717.h"
+#include "NavigateToDrop4459885370764933844.h"
+#include "NavigateToPick4505472195947429717.h"
 #include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
 #include "Pick2580816776008671737.h"
@@ -305,9 +308,6 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 68542020926196536:
         return std::make_shared<PreCondition68542020926196536>();
         break;
-    case 232513088105009661:
-        return std::make_shared<PreCondition232513088105009661>();
-        break;
     case 289358204208851392:
         return std::make_shared<PreCondition289358204208851392>();
         break;
@@ -332,8 +332,14 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1943478533524176732:
         return std::make_shared<PreCondition1943478533524176732>();
         break;
+    case 1971173312201839855:
+        return std::make_shared<PreCondition1971173312201839855>();
+        break;
     case 2132248203469102498:
         return std::make_shared<PreCondition2132248203469102498>();
+        break;
+    case 2187308102082241829:
+        return std::make_shared<PreCondition2187308102082241829>();
         break;
     case 2915681556800498724:
         return std::make_shared<PreCondition2915681556800498724>();

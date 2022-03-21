@@ -3,12 +3,12 @@
   "deferring": 0,
   "eventDriven": false,
   "frequency": 5,
-  "id": 4505472195947429717,
-  "name": "Navigate",
+  "id": 3826644292150922713,
+  "name": "AssignPayload",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": true,
+  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": []
 }

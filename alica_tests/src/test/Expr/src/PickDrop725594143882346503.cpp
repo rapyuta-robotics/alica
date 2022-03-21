@@ -2,6 +2,7 @@
 /*PROTECTED REGION ID(eph725594143882346503) ENABLED START*/
 // Add additional options here
 #include "alica_tests/AssignPayloadSummand.h"
+#include "alica_tests/TaskInstantiationIntegrationWorldModel.h"
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -14,10 +15,11 @@ namespace alica
 // States:
 //   - Pick (1965586362363306757)
 //   - Idle (3766678166599855988)
+//   - AssignPayload (3785266111914580157)
+//   - Moved (3464891834530950837)
 //   - TPToPickSpot (2867928428650937962)
 //   - Drop (624744054901478287)
 //   - TPToDropSpot (726015981546724416)
-//   - Moved (2821606377944727817)
 PickDrop725594143882346503::PickDrop725594143882346503(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -36,14 +38,14 @@ bool PickDrop725594143882346503::getApplicationEntrypointContext(std::unordered_
 {
     /*PROTECTED REGION ID(getApplicationEntrypointContext725594143882346503) ENABLED START*/
     // Add additional options here
-    bool ret = entryPointMap.begin()->second.insert(1).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(2).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(3).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(4).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(5).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(6).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(7).second;
-    ret |= std::next(entryPointMap.begin())->second.insert(8).second;
+    bool ret = entryPointMap[2603044554417791500].insert(1).second;
+    ret |= entryPointMap[2603044554417791500].insert(2).second;
+    ret |= entryPointMap[2603044554417791500].insert(3).second;
+    ret |= entryPointMap[2603044554417791500].insert(4).second;
+    ret |= entryPointMap[2603044554417791500].insert(5).second;
+    ret |= entryPointMap[2603044554417791500].insert(6).second;
+    ret |= entryPointMap[2603044554417791500].insert(7).second;
+    ret |= entryPointMap[2603044554417791500].insert(8).second;
     return ret;
     /*PROTECTED REGION END*/
 }
@@ -63,30 +65,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction725594143882346503::getUtilityFu
 
     function->editUtilSummands().emplace_back(us);
     return function;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Set parameters for child abstract plan Navigate4505472195947429717 of state TPToPickSpot2867928428650937962
- */
-bool PlanAttachment1463506596775213702::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
-{
-    /*PROTECTED REGION ID(1463506596775213702) ENABLED START*/
-    LockedBlackboardRW bb = LockedBlackboardRW(child_bb);
-    bb.registerValue("nav_action", "PICK");
-    return true;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Set parameters for child abstract plan Navigate4505472195947429717 of state TPToDropSpot726015981546724416
- */
-bool PlanAttachment2743493125610368794::setParameters(const Blackboard& parent_bb, Blackboard& child_bb)
-{
-    /*PROTECTED REGION ID(2743493125610368794) ENABLED START*/
-    LockedBlackboardRW bb = LockedBlackboardRW(child_bb);
-    bb.registerValue("nav_action", "DROP");
-    return true;
     /*PROTECTED REGION END*/
 }
 
@@ -116,6 +94,29 @@ bool PreCondition3953991713597643491::evaluate(std::shared_ptr<RunningPlan> rp, 
 }
 
 /**
+ * Transition: 3103663386312740882 (3103663386312740882)
+ *   - Comment:
+ *   - Source2Dest: AssignPayload --> TPToPickSpot
+ *
+ * Precondition: 1971173312201839855 (1971173312201839855)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in AssignPayload:
+ *   - AssignPayload (3826644292150922713)
+ */
+bool PreCondition1971173312201839855::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(3103663386312740882) ENABLED START*/
+    auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
+    return _worldModel->currentPayloadId != 0;
+    /*PROTECTED REGION END*/
+}
+
+/**
  * Transition: 3201336270766679779 (3201336270766679779)
  *   - Comment:
  *   - Source2Dest: TPToPickSpot --> Pick
@@ -128,26 +129,24 @@ bool PreCondition3953991713597643491::evaluate(std::shared_ptr<RunningPlan> rp, 
  *   - Quantifiers:
  *
  * Abstract Plans in TPToPickSpot:
- *   - Navigate (4505472195947429717)
+ *   - NavigateToPick (4505472195947429717)
  */
 bool PreCondition32970225314063392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3201336270766679779) ENABLED START*/
     if (rp->amISuccessfulInAnyChild()) {
         std::cerr << "transition to Pick" << std::endl;
-    } else {
-        std::cerr << "dont transition to pick" << std::endl;
     }
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
 
 /**
- * Transition: 3356468674620212088 (3356468674620212088)
+ * Transition: 2630758425967053453 (2630758425967053453)
  *   - Comment:
  *   - Source2Dest: Drop --> Moved
  *
- * Precondition: 232513088105009661 (232513088105009661)
+ * Precondition: 2187308102082241829 (2187308102082241829)
  *   - Enabled: true
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
@@ -157,13 +156,11 @@ bool PreCondition32970225314063392::evaluate(std::shared_ptr<RunningPlan> rp, co
  * Abstract Plans in Drop:
  *   - Drop (3009473645416620380)
  */
-bool PreCondition232513088105009661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition2187308102082241829::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(3356468674620212088) ENABLED START*/
-    if (rp->amISuccessfulInAnyChild()) {
-        std::cerr << "transition to Moved" << std::endl;
-    }
-    return rp->amISuccessfulInAnyChild();
+    /*PROTECTED REGION ID(2630758425967053453) ENABLED START*/
+    auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
+    return _worldModel->currentPayloadId == 0;
     /*PROTECTED REGION END*/
 }
 
@@ -180,7 +177,7 @@ bool PreCondition232513088105009661::evaluate(std::shared_ptr<RunningPlan> rp, c
  *   - Quantifiers:
  *
  * Abstract Plans in TPToDropSpot:
- *   - Navigate (4505472195947429717)
+ *   - NavigateToDrop (4459885370764933844)
  */
 bool PreCondition3691801807787093963::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {

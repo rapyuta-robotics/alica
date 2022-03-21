@@ -1,4 +1,4 @@
-#include "Navigate.h"
+#include "NavigateToPick.h"
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp4505472195947429717) ENABLED START*/
@@ -12,47 +12,40 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-Navigate::Navigate(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "Navigate")
+NavigateToPick::NavigateToPick(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "NavigateToPick")
 {
     /*PROTECTED REGION ID(con4505472195947429717) ENABLED START*/
     // Add additional options here
     _worldModel = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     /*PROTECTED REGION END*/
 }
-Navigate::~Navigate()
+NavigateToPick::~NavigateToPick()
 {
     /*PROTECTED REGION ID(dcon4505472195947429717) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void Navigate::run(void* msg)
+void NavigateToPick::run(void* msg)
 {
     /*PROTECTED REGION ID(run4505472195947429717) ENABLED START*/
-    // Add additional options here
+    // Add additional options here 
     if (isSuccess()) {
         return;
     }
 
-    if (_action == "PICK") {
-        _worldModel->agentLocations[_agentId].first = _worldModel->payloads[_worldModel->currentPayloadId].pickX;
-        _worldModel->agentLocations[_agentId].second = _worldModel->payloads[_worldModel->currentPayloadId].pickY;
-        
-    } else if (_action == "DROP") {
-        _worldModel->agentLocations[_agentId].first = _worldModel->payloads[_worldModel->currentPayloadId].dropX;
-        _worldModel->agentLocations[_agentId].second = _worldModel->payloads[_worldModel->currentPayloadId].dropY;
-    }
+    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[_worldModel->currentPayloadId].pickX;
+    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[_worldModel->currentPayloadId].pickY;
+
     std::cout << "Move robot " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
-            << _worldModel->agentLocations[_agentId].second << std::endl;   
+              << _worldModel->agentLocations[_agentId].second << " payload " << _worldModel->currentPayloadId << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }
-void Navigate::initialiseParameters()
+void NavigateToPick::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters4505472195947429717) ENABLED START*/
     // Add additional options here
-    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
-    _action = bb.get<std::string>("nav_action");
     _agentId = getEngine()->getTeamManager().getLocalAgentID();
     /*PROTECTED REGION END*/
 }

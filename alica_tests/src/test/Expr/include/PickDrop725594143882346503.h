@@ -39,14 +39,6 @@ private:
     /*PROTECTED REGION END*/
 };
 
-class PlanAttachment1463506596775213702 : public PlanAttachment
-{
-    bool setParameters(const Blackboard& parent_bb, Blackboard& child_bb);
-};
-class PlanAttachment2743493125610368794 : public PlanAttachment
-{
-    bool setParameters(const Blackboard& parent_bb, Blackboard& child_bb);
-};
 class UtilityFunction725594143882346503 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
@@ -55,11 +47,15 @@ class PreCondition3953991713597643491 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
+class PreCondition1971173312201839855 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
 class PreCondition32970225314063392 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition232513088105009661 : public DomainCondition
+class PreCondition2187308102082241829 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };

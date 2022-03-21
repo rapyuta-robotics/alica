@@ -35,7 +35,6 @@ void AlwaysFail::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1532424188199) ENABLED START*/
     // Add additional options here
-
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1532424188199) ENABLED START*/
