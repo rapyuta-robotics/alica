@@ -18,41 +18,49 @@ AssignPayloadSummand::~AssignPayloadSummand() {}
 
 UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
-    // for (uint64_t dynId = 1; dynId < 9; dynId++) {
-    //     std::cerr << "only one robot per dyn ep" << std::endl;
-    //     for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, dynId)) {
-    //         std::cerr << "working agent: " << agentId << " in " << dynId << std::endl;
-    //     }
-    //     if (ass.getAgentsWorking(movePayloadEpId, dynId).size() > 1) {
-    //         return UtilityInterval(-1, -1);
-    //     }
-    // }
-    // for (int64_t dynId = 1; dynId < 5; dynId++) {
-    //     if (ass.getAgentsWorking(movePayloadEpId, dynId).size() > 1) {
-    //         return UtilityInterval(-1, -1);
-    //     }
-    //     // for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, dynId)) {
-    //     //     if (agentId == this->robotId) {        
-    //     //         const alicaTests::TaskInstantiationIntegrationWorldModel* worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
-    //     //         double x = worldModel->agentLocations.at(agentId).first - worldModel->payloads[dynId - 1].pickX;
-    //     //         double y = worldModel->agentLocations.at(agentId).second - worldModel->payloads[dynId - 1].pickY;
-    //     //         double distance = pow(x, 2) + pow(y, 2);
-    //     //         return UtilityInterval(1 / distance, 1);
-    //     //     }
-    //     // }
-    // }
+    auto worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
+    std::vector<uint64_t> nonVisitedEps;
+    for (uint64_t dynId = 1; dynId < 9; dynId++) {
+        int64_t payloadId = dynId - 1;
+        auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, dynId);
 
-    UtilityInterval ui(0, 1);
-    const alicaTests::TaskInstantiationIntegrationWorldModel* worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
+        // dont accept assignments with multiple agents in one entry point
+        if (agentsInEntryPoint.size() > 1) {
+            return UtilityInterval(-1, -1);
+        }
 
-    for (uint64_t agentId = 8; agentId < 12; agentId++) {
-        for (AgentId id : ass.getAgentsWorking(movePayloadEpId, worldModel->currentPayloadId + 1)) {
-            if (worldModel->agentId == id) {
-                return UtilityInterval(0, 1);
+        if (!oldAss) {
+            continue;
+        }
+
+        // // agents already working on payloads should not switch entry points
+        // auto agentsInEntryPointOldAss = oldAss->getAgentsWorking(movePayloadEpId, dynId);
+        // if (agentsInEntryPointOldAss.size() == 1 && *(agentsInEntryPoint.begin()) != *(agentsInEntryPointOldAss.begin()) && worldModel->payloads.at(dynId - 1).state != alicaTests::PayloadState::DROPPED) {
+        //     return UtilityInterval(-1, -1);
+        // }
+
+        // // agents should not be assigned to payloads that have already been moved
+        // if (agentsInEntryPoint.size() > 0 && worldModel->payloads.at(dynId - 1).state == alicaTests::PayloadState::DROPPED) {
+        //     return UtilityInterval(-1, -1);
+        // }
+
+        // // collect payloads that are currently unassigned
+        // if (agentsInEntryPointOldAss.size() == 0 && worldModel->payloads.at(dynId - 1).state == alicaTests::PayloadState::READY_FOR_PICKUP) {
+        //     nonVisitedEps.push_back(dynId);
+        // }
+
+    }
+
+    for (auto it = nonVisitedEps.begin(); it != nonVisitedEps.end(); it++) {
+        for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, *(it))) {
+            if (agentId == worldModel->agentId) {
+                double x = worldModel->agentLocations.at(agentId).first - worldModel->payloads[*it - 1].pickX;
+                double y = worldModel->agentLocations.at(agentId).second - worldModel->payloads[*it - 1].pickY;
+                double distance = sqrt(pow(x, 2) + pow(y, 2));
+                return UtilityInterval(1 / distance, 1);
             }
         }
     }
-
     return UtilityInterval(0, 1);
 }
 
