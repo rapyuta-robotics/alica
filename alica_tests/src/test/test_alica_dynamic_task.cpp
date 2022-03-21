@@ -215,11 +215,6 @@ protected:
 
 TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
 {
-    /**
-     * @brief 
-     * ------------------------------------------------------------------------------------------------
-     */
-
     ASSERT_NO_SIGNAL
 
     for (int i = 0; i < getPayloadCount(); i++) {
@@ -241,27 +236,27 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
     for (int i = 0; i < getAgentCount(); i++) {
         wms->at(i)->payloads = payloads;
         wms->at(i)->agentLocations = agentLocations;
-        wms->at(i)->currentPayloadId = i;
     }
 
     startAgents();
 
-    stepAgents();
-    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+    bool allPayloadsAreDropped = false;
+    int count = 0;
+    while (!allPayloadsAreDropped && count < 10) {
+        stepAgents();
+        count++;
+        aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+        payloads = wms->at(0)->payloads;
+        allPayloadsAreDropped = true;
 
-    stepAgents();
-    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
+        for (alicaTests::Payload payload : payloads) {
+            if (payload.state != alicaTests::PayloadState::DROPPED) {
+                allPayloadsAreDropped = false;
+            }
+        }
+    }
 
-    stepAgents();
-    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
-
-    stepAgents();
-    aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500)); 
-
-    /**
-     * @brief 
-     * --------------------------------------------------------------------------------------------------
-     */
+    ASSERT_TRUE(allPayloadsAreDropped);
 }
 
 TEST_F(AlicaDynamicTaskPlanTest, testMultipleEntrypoints)
