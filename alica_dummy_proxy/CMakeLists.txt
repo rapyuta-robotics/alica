@@ -34,8 +34,8 @@ if (NOT catkin_FOUND)
  target_include_directories(alica_dummy_proxy PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+install(DIRECTORY include/communication/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/communication/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )
