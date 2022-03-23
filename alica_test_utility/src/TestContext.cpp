@@ -21,7 +21,15 @@ TestContext::TestContext(const std::string& agentName, const std::string& config
 
 int TestContext::init(AlicaCreators& creatorCtx)
 {
+    AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    return init(std::move(creators));
+}
+
+int TestContext::init(AlicaCreators&& creatorCtx)
+{
     _initCalled = true;
+    _creators = std::move(creatorCtx);
     if (_communicator) {
         _communicator->startCommunication();
     }

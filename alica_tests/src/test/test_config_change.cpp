@@ -30,7 +30,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents)
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
     EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
-    EXPECT_TRUE(!ac->init(creators));
+    EXPECT_TRUE(!ac->init(std::move(creators)));
 }
 
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
@@ -39,7 +39,7 @@ TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
-    EXPECT_TRUE(!ac->init(creators));
+    EXPECT_TRUE(!ac->init(std::move(creators)));
 
     // changes to config not allowed after initialization of AlicaContext
     ASSERT_FALSE(ac->setOption<int>("Alica.TeamTimeOut", 2000));

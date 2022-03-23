@@ -36,6 +36,17 @@ public:
     int init(AlicaCreators& creatorCtx);
 
     /**
+     * Initialize alica framework and related modules.
+     *
+     * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     *
+     * @return Return code '0' stands for success, any other for corresponding error
+     *
+     * @see AlicaCreators
+     */
+    int init(AlicaCreators&& creatorCtx);
+
+    /**
      * Starts the main thread of the engine to run.
      */
     void startEngine();
@@ -111,6 +122,7 @@ private:
     };
 
     bool _initCalled;
+    AlicaCreators _creators;
 };
 
 template <typename AlicaElementType>

@@ -30,11 +30,6 @@ protected:
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
-
     ae->start();
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     ae->getAlicaClock().sleep(duration);

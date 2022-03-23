@@ -32,7 +32,7 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
 {
-    if (_behaviour->getFrequency() < 1) {
+    if (_behaviour->getFrequency() < 1 || _behaviour->isEventDriven()) {
         // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
         setInterval(0);      
     } else {
