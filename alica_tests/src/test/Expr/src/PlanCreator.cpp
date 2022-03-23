@@ -31,11 +31,11 @@
 #include "MasterPlanTestConditionPlanType1418042656594.h"
 #include "MasterSyncTransition1418825395939.h"
 #include "MidFieldPlayPlan1402488770050.h"
+#include "MovePayload725594143882346503.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
 #include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
-#include "PickDrop725594143882346503.h"
 #include "PlanA1629895837159.h"
 #include "PlanAA1629895864090.h"
 #include "PlanB1629895853508.h"
@@ -240,7 +240,7 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, IAlicaWorldMo
         return std::make_unique<TestTracingMasterPlan691392966514374878>(wm);
         break;
     case 725594143882346503:
-        return std::make_unique<PickDrop725594143882346503>(wm);
+        return std::make_unique<MovePayload725594143882346503>(wm);
         break;
     case 984284423749038756:
         return std::make_unique<EmptyPlan984284423749038756>(wm);

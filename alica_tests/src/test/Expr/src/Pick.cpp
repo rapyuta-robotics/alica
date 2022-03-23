@@ -17,8 +17,6 @@ Pick::Pick(IAlicaWorldModel* wm)
     /*PROTECTED REGION ID(con2580816776008671737) ENABLED START*/
     // Add additional options here
     _worldModel = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
-    // TODO: get local agent ID
-    _agentId = 0;
     /*PROTECTED REGION END*/
 }
 Pick::~Pick()

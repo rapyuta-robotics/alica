@@ -46,6 +46,7 @@ void NavigateToDrop::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters4459885370764933844) ENABLED START*/
     // Add additional options here
     _agentId = getEngine()->getTeamManager().getLocalAgentID();
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods4459885370764933844) ENABLED START*/

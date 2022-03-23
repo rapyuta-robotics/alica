@@ -20,12 +20,12 @@
 #include "Drop.h"
 #include "DynamicTaskBehavior.h"
 #include "DynamicTaskBehaviourLD.h"
-#include "FreePayload.h"
 #include "NavigateToDrop.h"
 #include "NavigateToPick.h"
 #include "Pick.h"
 #include "TestBehaviour.h"
 #include "TestParameterPassingBehaviour.h"
+#include "UnassignPayload.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -97,7 +97,7 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         return std::make_shared<TestBehaviour>(wm);
         break;
     case 422054015709952219:
-        return std::make_shared<FreePayload>(wm);
+        return std::make_shared<UnassignPayload>(wm);
         break;
     case 831400441334251602:
         return std::make_shared<TestParameterPassingBehaviour>(wm);

@@ -26,6 +26,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv2580816776008671737) ENABLED START*/
     // Add additional private methods here
+    alicaTests::TaskInstantiationIntegrationWorldModel* _worldModel;
     /*PROTECTED REGION END*/
 };
 } /* namespace alica */

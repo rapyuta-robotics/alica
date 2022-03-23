@@ -4,7 +4,7 @@
   "eventDriven": false,
   "frequency": 5,
   "id": 422054015709952219,
-  "name": "FreePayload",
+  "name": "UnassignPayload",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "",

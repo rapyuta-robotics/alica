@@ -1,4 +1,4 @@
-#include "FreePayload.h"
+#include "UnassignPayload.h"
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp422054015709952219) ENABLED START*/
@@ -12,21 +12,21 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-FreePayload::FreePayload(IAlicaWorldModel* wm)
-        : DomainBehaviour(wm, "FreePayload")
+UnassignPayload::UnassignPayload(IAlicaWorldModel* wm)
+        : DomainBehaviour(wm, "UnassignPayload")
 {
     /*PROTECTED REGION ID(con422054015709952219) ENABLED START*/
     // Add additional options here
     _worldModel = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     /*PROTECTED REGION END*/
 }
-FreePayload::~FreePayload()
+UnassignPayload::~UnassignPayload()
 {
     /*PROTECTED REGION ID(dcon422054015709952219) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void FreePayload::run(void* msg)
+void UnassignPayload::run(void* msg)
 {
     /*PROTECTED REGION ID(run422054015709952219) ENABLED START*/
     // Add additional options here
@@ -38,10 +38,11 @@ void FreePayload::run(void* msg)
     setSuccess();
     /*PROTECTED REGION END*/
 }
-void FreePayload::initialiseParameters()
+void UnassignPayload::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters422054015709952219) ENABLED START*/
     // Add additional options here
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods422054015709952219) ENABLED START*/

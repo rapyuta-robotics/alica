@@ -16,11 +16,11 @@ namespace alica
 /*PROTECTED REGION ID(meth725594143882346503) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class PickDrop725594143882346503 : public DomainPlan
+class MovePayload725594143882346503 : public DomainPlan
 {
 public:
-    PickDrop725594143882346503(IAlicaWorldModel* wm);
-    virtual ~PickDrop725594143882346503();
+    MovePayload725594143882346503(IAlicaWorldModel* wm);
+    virtual ~MovePayload725594143882346503();
     /*PROTECTED REGION ID(pub725594143882346503) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
@@ -43,11 +43,15 @@ class UtilityFunction725594143882346503 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
-class PreCondition3953991713597643491 : public DomainCondition
+class PreCondition2187308102082241829 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition1971173312201839855 : public DomainCondition
+class PreCondition3691801807787093963 : public DomainCondition
+{
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition3953991713597643491 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
@@ -55,11 +59,7 @@ class PreCondition32970225314063392 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition2187308102082241829 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
-};
-class PreCondition3691801807787093963 : public DomainCondition
+class PreCondition1971173312201839855 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };

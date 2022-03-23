@@ -31,7 +31,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "PickDrop.pml#725594143882346503",
+          "abstractPlan": "MovePayload.pml#725594143882346503",
           "comment": "",
           "configuration": null,
           "id": 1975970727016849361,

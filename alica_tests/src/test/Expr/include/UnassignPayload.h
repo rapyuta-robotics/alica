@@ -9,11 +9,11 @@
 
 namespace alica
 {
-class FreePayload : public DomainBehaviour
+class UnassignPayload : public DomainBehaviour
 {
 public:
-    FreePayload(IAlicaWorldModel* wm);
-    virtual ~FreePayload();
+    UnassignPayload(IAlicaWorldModel* wm);
+    virtual ~UnassignPayload();
     virtual void run(void* msg);
     /*PROTECTED REGION ID(pub422054015709952219) ENABLED START*/
     // Add additional protected methods here
