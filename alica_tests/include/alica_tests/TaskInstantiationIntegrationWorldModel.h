@@ -3,18 +3,24 @@
 #include <engine/IAlicaWorldModel.h>
 
 #include <atomic>
+#include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <memory>
-#include <optional>
 
 namespace alicaTests
 {
 
-enum PayloadState {READY_FOR_PICKUP, PICKED, DROPPED};
+enum PayloadState
+{
+    READY_FOR_PICKUP,
+    PICKED,
+    DROPPED
+};
 
-struct Payload {
+struct Payload
+{
     uint64_t id;
     PayloadState state;
     int pickX;
@@ -28,7 +34,7 @@ class TaskInstantiationIntegrationWorldModel : public alica::IAlicaWorldModel
 public:
     TaskInstantiationIntegrationWorldModel() = default;
     virtual ~TaskInstantiationIntegrationWorldModel() = default;
-    void reset() {};
+    void reset(){};
 
     std::vector<Payload> payloads;
     std::unordered_map<uint64_t, std::pair<uint64_t, uint64_t>> agentLocations;

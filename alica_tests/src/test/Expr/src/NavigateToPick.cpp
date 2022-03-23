@@ -29,7 +29,7 @@ NavigateToPick::~NavigateToPick()
 void NavigateToPick::run(void* msg)
 {
     /*PROTECTED REGION ID(run4505472195947429717) ENABLED START*/
-    // Add additional options here 
+    // Add additional options here
     if (isSuccess()) {
         return;
     }

@@ -146,12 +146,17 @@ protected:
 
     const char* getHostName(int agentNumber) const override
     {
-        switch(agentNumber) {
-            case 0: return "nase";
-            case 1: return "hairy";
-            case 2: return "fred";
-            case 3: return "george";
-            default: return "";
+        switch (agentNumber) {
+        case 0:
+            return "nase";
+        case 1:
+            return "hairy";
+        case 2:
+            return "fred";
+        case 3:
+            return "george";
+        default:
+            return "";
         }
     }
 
@@ -199,7 +204,7 @@ protected:
 
         wms = make_shared<std::vector<alicaTests::TaskInstantiationIntegrationWorldModel*>>();
         for (int i = 0; i < getAgentCount(); i++) {
-            IAlicaWorldModel* wmTemp = acs[i]->getWorldModel();            
+            IAlicaWorldModel* wmTemp = acs[i]->getWorldModel();
             alicaTests::TaskInstantiationIntegrationWorldModel* wm = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wmTemp);
             wms->push_back(wm);
             wm->wms = wms;
