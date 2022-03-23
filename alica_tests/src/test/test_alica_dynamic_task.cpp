@@ -230,7 +230,7 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
     }
 
     for (int i = 0; i < getAgentCount(); i++) {
-        agentLocations[i + 8] = std::pair<uint64_t, uint64_t>(0, 0);
+        agentLocations[i + 8] = std::pair<uint64_t, uint64_t>(50 * i, 50 * i);
     }
 
     for (int i = 0; i < getAgentCount(); i++) {
@@ -242,10 +242,10 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
 
     bool allPayloadsAreDropped = false;
     int count = 0;
-    while (!allPayloadsAreDropped && count < 10) {
+    while (!allPayloadsAreDropped && count < 50) {
         stepAgents();
+        aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(50));
         count++;
-        aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(500));
         payloads = wms->at(0)->payloads;
         allPayloadsAreDropped = true;
 

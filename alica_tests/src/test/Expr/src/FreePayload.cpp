@@ -3,6 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp422054015709952219) ENABLED START*/
 // Add additional includes here
+#include <optional>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -29,13 +30,18 @@ void FreePayload::run(void* msg)
 {
     /*PROTECTED REGION ID(run422054015709952219) ENABLED START*/
     // Add additional options here
+    if (isSuccess()) {
+        return;
+    }
+    std::cout << "[UNASSIGN] payload " << _worldModel->currentPayloadId.value() << std::endl;
+    _worldModel->currentPayloadId = std::nullopt;
+    setSuccess();
     /*PROTECTED REGION END*/
 }
 void FreePayload::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters422054015709952219) ENABLED START*/
     // Add additional options here
-    _worldModel->currentPayloadId = 0;
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods422054015709952219) ENABLED START*/

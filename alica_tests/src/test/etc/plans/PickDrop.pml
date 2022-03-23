@@ -5,7 +5,7 @@
       "comment": "",
       "id": 2603044554417791500,
       "isDynamic": true,
-      "maxCardinality": 1,
+      "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MovePayload",
       "plan": 725594143882346503,

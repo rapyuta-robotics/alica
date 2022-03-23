@@ -32,8 +32,10 @@ void Drop::run(void* msg)
     if (isSuccess()) {
         return;
     }
-    _worldModel->payloads[_worldModel->currentPayloadId].state = alicaTests::PayloadState::DROPPED;
-    std::cerr << "Dropping payload " << _worldModel->currentPayloadId << std::endl;
+    for (auto* wm : *(_worldModel->wms.get())) {
+        wm->payloads[_worldModel->currentPayloadId.value()].state = alicaTests::PayloadState::DROPPED;
+    }
+    std::cout << "[DROP] payload " << _worldModel->currentPayloadId.value() << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }

@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <optional>
 
 namespace alicaTests
 {
@@ -32,7 +33,7 @@ public:
     std::vector<Payload> payloads;
     std::unordered_map<uint64_t, std::pair<uint64_t, uint64_t>> agentLocations;
     std::shared_ptr<std::vector<TaskInstantiationIntegrationWorldModel*>> wms;
-    uint64_t currentPayloadId;
+    std::optional<uint64_t> currentPayloadId;
     uint64_t agentId;
 };
 

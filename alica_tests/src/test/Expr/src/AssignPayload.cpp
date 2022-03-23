@@ -37,19 +37,9 @@ void AssignPayload::run(void* msg)
     if (context.isValid()) {
         auto rp = context.getRunningPlan();
         _worldModel->currentPayloadId = rp->getParent()->getActiveEntryPoint()->getDynamicId() - 1;
-        std::cerr << "assigning payload " << _worldModel->currentPayloadId << " to " << _worldModel->agentId << " with dynId " << rp->getParent()->getActiveEntryPoint()->getDynamicId() << std::endl;
-        for (uint64_t dynId = 1; dynId < 9; dynId++) {
-            int64_t payloadId = dynId - 1;
-            auto agentsInEntryPoint = rp->getParent()->getAssignment().getAgentsWorking(rp->getParent()->getActiveEntryPoint()->getId(), dynId);
-            if (agentsInEntryPoint.size() > 0) {
-                std::cerr << "agents assigned to " << dynId << ": " << *(agentsInEntryPoint.begin()) << std::endl;
-            }
-        }
+        std::cout << "[ASSIGN] payload " << _worldModel->currentPayloadId.value() << " to agent " << _worldModel->agentId << std::endl;
+        setSuccess();
     }
-
-    
-
-    setSuccess();
     /*PROTECTED REGION END*/
 }
 void AssignPayload::initialiseParameters()

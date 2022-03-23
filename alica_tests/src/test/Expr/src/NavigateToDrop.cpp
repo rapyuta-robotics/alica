@@ -33,11 +33,11 @@ void NavigateToDrop::run(void* msg)
     if (isSuccess()) {
         return;
     }
-    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[_worldModel->currentPayloadId].dropX;
-    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[_worldModel->currentPayloadId].dropY;
+    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[*(_worldModel->currentPayloadId)].dropX;
+    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[*(_worldModel->currentPayloadId)].dropY;
 
-    std::cout << "Move robot " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
-              << _worldModel->agentLocations[_agentId].second << " payload " << _worldModel->currentPayloadId << std::endl;
+    std::cout << "[MOVE TO DROP] agent " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
+              << _worldModel->agentLocations[_agentId].second << " (payload " << *(_worldModel->currentPayloadId) << ")" << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }

@@ -86,9 +86,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction725594143882346503::getUtilityFu
 bool PreCondition3953991713597643491::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1425389364493331507) ENABLED START*/
-    if (rp->amISuccessfulInAnyChild()) {
-        std::cerr << "transition to TPToDropSpot" << std::endl;
-    }
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
@@ -112,7 +109,7 @@ bool PreCondition1971173312201839855::evaluate(std::shared_ptr<RunningPlan> rp, 
 {
     /*PROTECTED REGION ID(3103663386312740882) ENABLED START*/
     auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
-    return _worldModel->currentPayloadId != 0;
+    return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
 
@@ -134,9 +131,6 @@ bool PreCondition1971173312201839855::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition32970225314063392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3201336270766679779) ENABLED START*/
-    if (rp->amISuccessfulInAnyChild()) {
-        std::cerr << "transition to Pick" << std::endl;
-    }
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
@@ -160,7 +154,7 @@ bool PreCondition2187308102082241829::evaluate(std::shared_ptr<RunningPlan> rp, 
 {
     /*PROTECTED REGION ID(2630758425967053453) ENABLED START*/
     auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
-    return _worldModel->currentPayloadId == 0;
+    return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
 
@@ -182,9 +176,6 @@ bool PreCondition2187308102082241829::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition3691801807787093963::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1537785163841820841) ENABLED START*/
-    if (rp->amISuccessfulInAnyChild()) {
-        std::cerr << "transition to Drop" << std::endl;
-    }
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }

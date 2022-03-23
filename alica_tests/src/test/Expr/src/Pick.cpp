@@ -35,11 +35,9 @@ void Pick::run(void* msg)
         return;
     }
     for (auto* wm : *(_worldModel->wms.get())) {
-        wm->payloads[_worldModel->currentPayloadId].state = alicaTests::PayloadState::PICKED;
-        // std::cerr << "setting picked for payload " << _worldModel->currentPayloadId << " for agent " << wm->agentId << std::endl;
+        wm->payloads[_worldModel->currentPayloadId.value()].state = alicaTests::PayloadState::PICKED;
     }
-    // _worldModel->payloads[_worldModel->currentPayloadId].state = alicaTests::PayloadState::PICKED;
-    std::cerr << "Picking payload " << _worldModel->currentPayloadId << std::endl;
+    std::cout << "[PICK] payload " << _worldModel->currentPayloadId.value() << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }

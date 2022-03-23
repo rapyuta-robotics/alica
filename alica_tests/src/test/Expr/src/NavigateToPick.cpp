@@ -34,11 +34,11 @@ void NavigateToPick::run(void* msg)
         return;
     }
 
-    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[_worldModel->currentPayloadId].pickX;
-    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[_worldModel->currentPayloadId].pickY;
+    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[*(_worldModel->currentPayloadId)].pickX;
+    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[*(_worldModel->currentPayloadId)].pickY;
 
-    std::cout << "Move robot " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
-              << _worldModel->agentLocations[_agentId].second << " payload " << _worldModel->currentPayloadId << std::endl;
+    std::cout << "[MOVE TO PICK] agent " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
+              << _worldModel->agentLocations[_agentId].second << " (payload " << *(_worldModel->currentPayloadId) << ")" << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }
