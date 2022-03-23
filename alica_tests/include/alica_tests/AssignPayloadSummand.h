@@ -13,7 +13,6 @@ public:
     AssignPayloadSummand(double weight);
     virtual ~AssignPayloadSummand();
     UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const override;
-    AgentId robotId;
     uint64_t movePayloadEpId = 2603044554417791500;
 };
 

@@ -108,7 +108,6 @@ bool PreCondition3953991713597643491::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition1971173312201839855::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3103663386312740882) ENABLED START*/
-    auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
@@ -153,7 +152,6 @@ bool PreCondition32970225314063392::evaluate(std::shared_ptr<RunningPlan> rp, co
 bool PreCondition2187308102082241829::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(2630758425967053453) ENABLED START*/
-    auto _worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }

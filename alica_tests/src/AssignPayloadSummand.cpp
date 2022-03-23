@@ -11,7 +11,6 @@ namespace alica
 AssignPayloadSummand::AssignPayloadSummand(double weight)
         : USummand(weight)
 {
-    this->robotId = 8;
 }
 
 AssignPayloadSummand::~AssignPayloadSummand() {}
@@ -68,7 +67,6 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
     for (auto it = distances.begin(); it != distances.end(); it++) {
         utilityValue += 1 / *it;
     }
-    // return UtilityInterval(0, utilityValue ? nonVisitedEps.size() > 0 : 1);
     return UtilityInterval(0, utilityValue);
 }
 
