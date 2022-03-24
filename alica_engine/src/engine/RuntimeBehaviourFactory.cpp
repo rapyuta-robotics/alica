@@ -1,18 +1,20 @@
 
 #include <engine/RuntimeBehaviourFactory.h>
 
-#include "engine/IBehaviourCreator.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/IBehaviourCreator.h"
 
 #include <alica_common_config/debug_output.h>
 
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWorldModel *wm, AlicaEngine *engine)
-    : _creator(bc)
-    , _engine(engine)
-    , _wm(wm) {}
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
+        : _creator(bc)
+        , _engine(engine)
+        , _wm(wm)
+{
+}
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {

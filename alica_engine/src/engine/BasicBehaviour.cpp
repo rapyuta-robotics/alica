@@ -34,7 +34,7 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
 {
     if (_behaviour->getFrequency() < 1 || _behaviour->isEventDriven()) {
         // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
-        setInterval(0);      
+        setInterval(0);
     } else {
         setInterval(1000 / _behaviour->getFrequency());
     }
@@ -79,7 +79,7 @@ void BasicBehaviour::doTerminate()
 {
     // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
     _behResult.store(BehResult::UNKNOWN);
-  
+
     // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
         onTermination();

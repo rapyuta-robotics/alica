@@ -65,8 +65,8 @@ struct AlicaCreators
     AlicaCreators() = default;
     ~AlicaCreators() = default;
     AlicaCreators(const AlicaCreators&) = delete;
-    AlicaCreators& operator= (const AlicaCreators&) = delete;
-    AlicaCreators& operator= (AlicaCreators&&) = default;
+    AlicaCreators& operator=(const AlicaCreators&) = delete;
+    AlicaCreators& operator=(AlicaCreators&&) = default;
 
     std::unique_ptr<IConditionCreator> conditionCreator;
     std::unique_ptr<IUtilityCreator> utilityCreator;

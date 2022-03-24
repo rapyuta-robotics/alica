@@ -1,10 +1,10 @@
 #include "engine/AlicaEngine.h"
 
 #include "engine/IRoleAssignment.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
-#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"

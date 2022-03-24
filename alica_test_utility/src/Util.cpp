@@ -13,17 +13,17 @@ BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviou
 
 BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t behaviourId)
 {
-    if(!rp) {
+    if (!rp) {
         return nullptr;
     }
 
-    if(rp->isBehaviour() && rp->getBasicBehaviour()->getId() == behaviourId) {
+    if (rp->isBehaviour() && rp->getBasicBehaviour()->getId() == behaviourId) {
         return rp->getBasicBehaviour();
     }
 
-    for(const auto& child : rp->getChildren()) {
+    for (const auto& child : rp->getChildren()) {
         BasicBehaviour* beh = getBasicBehaviourHelper(child, behaviourId);
-        if(beh) {
+        if (beh) {
             return beh;
         }
     }
@@ -42,23 +42,23 @@ BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t co
         }
     }
     return plan;
-    //return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
+    // return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
 }
 
 BasicPlan* Util::getBasicPlanHelper(const RunningPlan* rp, int64_t planId)
 {
-    if(!rp) {
+    if (!rp) {
         return nullptr;
     }
 
     BasicPlan* plan = rp->getBasicPlan();
-    if(plan /*&& plan->getId() == planId*/) {
+    if (plan /*&& plan->getId() == planId*/) {
         return plan;
     }
 
-    for(const auto& child : rp->getChildren()) {
+    for (const auto& child : rp->getChildren()) {
         plan = getBasicPlanHelper(child, planId);
-        if(plan) {
+        if (plan) {
             return plan;
         }
     }

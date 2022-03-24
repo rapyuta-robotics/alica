@@ -51,6 +51,7 @@ class AlicaTestFixture : public AlicaTestFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -71,12 +72,12 @@ protected:
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();        
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
         EXPECT_TRUE(ae->init(creators));
     }
 
@@ -114,6 +115,7 @@ class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -131,7 +133,7 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                        std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
         for (int i = 0; i < getAgentCount(); ++i) {
             alica::AlicaContext* ac =
@@ -203,6 +205,7 @@ class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -246,6 +249,7 @@ class AlicaTestTracingFixture : public AlicaTestFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -290,6 +294,7 @@ class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;

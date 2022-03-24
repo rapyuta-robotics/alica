@@ -34,7 +34,7 @@ void ReadConfigurationBehaviour::run(void* msg)
 void ReadConfigurationBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1588061129360) ENABLED START*/
-    //getPlanContext()->getParameter("TestValue", testValue);
+    // getPlanContext()->getParameter("TestValue", testValue);
     testValue = "1";
 
     /*PROTECTED REGION END*/

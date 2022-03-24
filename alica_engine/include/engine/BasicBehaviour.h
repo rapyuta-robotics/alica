@@ -42,9 +42,9 @@ public:
     // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObjectNew::getBlackboard;
+    using RunnableObjectNew::getInheritBlackboard;
     using RunnableObjectNew::getName;
     using RunnableObjectNew::getPlanContext;
-    using RunnableObjectNew::getInheritBlackboard;
     using RunnableObjectNew::getWorldModel;
     using RunnableObjectNew::setEngine;
     using RunnableObjectNew::setInterval;
@@ -72,6 +72,7 @@ public:
     bool isFailure() const { return _behResult.load() == BehResult::FAILURE; };
 
     void doTrigger();
+
 protected:
     using RunnableObjectNew::getTrace;
 

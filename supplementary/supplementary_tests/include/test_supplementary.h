@@ -52,6 +52,7 @@ class AlicaTestFixture : public AlicaTestFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -110,6 +111,7 @@ class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
 {
 private:
     alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;

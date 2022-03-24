@@ -5,10 +5,10 @@
 
 #include <alica_common_config/debug_output.h>
 
+#include "engine/IAlicaTimer.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/blackboard/KeyMapping.h"
-#include "engine/IAlicaTimer.h"
 
 #include <atomic>
 #include <functional>
@@ -28,9 +28,11 @@ class IAlicaWorldModel;
 class TraceRunnableObject
 {
 public:
-    TraceRunnableObject() 
-        : _tracingType(TracingType::DEFAULT)
-        , _runTraced(false) {}
+    TraceRunnableObject()
+            : _tracingType(TracingType::DEFAULT)
+            , _runTraced(false)
+    {
+    }
 
     enum class TracingType : uint8_t
     {
@@ -52,6 +54,7 @@ public:
     void setupTraceContext(const std::string& name, RunningPlan* rp, const IAlicaTraceFactory* traceFactory);
     void cleanupTraceContext();
     void traceRunCall();
+
 private:
     TracingType _tracingType;
     std::function<std::optional<std::string>()> _customTraceContextGetter;
@@ -71,7 +74,7 @@ protected:
 
     RunnableObjectNew(IAlicaWorldModel* wm, const std::string& name = "");
     virtual ~RunnableObjectNew() = default;
-    //virtual ~RunnableObjectNew() { std::cout << _name << " destructor" << std::endl; }
+    // virtual ~RunnableObjectNew() { std::cout << _name << " destructor" << std::endl; }
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
 
@@ -79,7 +82,10 @@ protected:
     virtual void doRun() = 0;
     virtual void doTerminate() = 0;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {}) { _runnableObjectTracer.setTracing(type, customTraceContextGetter); }
+    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {})
+    {
+        _runnableObjectTracer.setTracing(type, customTraceContextGetter);
+    }
     const std::string& getName() { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
 
@@ -98,7 +104,8 @@ protected:
     void setBlackboardBlueprint(const BlackboardBlueprint* blackboard) { _blackboardBlueprint = blackboard; }
 
     AlicaEngine* _engine;
-private:   
+
+private:
     void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
     void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
     int64_t getParentWrapperId(RunningPlan* rt) const;
