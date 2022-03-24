@@ -16,7 +16,6 @@ RunnableObjectNew::RunnableObjectNew(IAlicaWorldModel* wm, const std::string& na
         , _wm(wm)
         , _blackboard(nullptr)
 {
-    // std::cout << _name << " created" << std::endl;
 }
 
 void RunnableObjectNew::sendLogMessage(int level, const std::string& message) const
@@ -40,17 +39,14 @@ void RunnableObjectNew::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMa
 
 void RunnableObjectNew::stop()
 {
-    // std::cout << _name << " stop" << std::endl;
     stopRunCalls();
     doTerminate();
     cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
-    // std::cout << _name << " stopped" << std::endl;
 }
 
 void RunnableObjectNew::start(RunningPlan* rp)
 {
-    // std::cout << _name << " start" << std::endl;
     _runningplanContext = rp;
 
     // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
@@ -58,7 +54,6 @@ void RunnableObjectNew::start(RunningPlan* rp)
     setupBlackboard();
     doInit();
     scheduleRunCalls();
-    // std::cout << _name << " started" << std::endl;
 }
 
 void RunnableObjectNew::scheduleRunCalls()
@@ -108,11 +103,8 @@ void RunnableObjectNew::cleanupBlackboard()
 
 void RunnableObjectNew::runJob()
 {
-    // std::cout << _name << " run called" << std::endl;
-    // TODO: get rid of msg
     _runnableObjectTracer.traceRunCall();
     doRun();
-    // std::cout << _name << " run finished" << std::endl;
 }
 
 void RunnableObjectNew::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
