@@ -2,10 +2,16 @@
 
 ## 1 How to start the plan designer?
 
-- To run the designer use the docker-compose.yml file in
+- To run the designer, use the shell script in
 supplementary/alica_designer_runtime/:
 
-  `$ docker-compose up`
+```
+    ./run_designer.sh [start|reset|update]
+        start - (optional) starts the designer backend + UI
+        reset - clear the database
+        update - pull newer images
+```
+Launch time configurations can be changed at `config.env`
 
 - The designer is web based & runs in the browser. After executing the above command,
 navigate to http://localhost:3030/ to run the designer.
@@ -290,8 +296,8 @@ The plan designer supports three ways of importing and exporting plans:
 The web-plan-designer provides the capability to import and export plans directly from and to the local filesystem on the host where the web designer is running.
 
 To do this, the following environment variables must be set at launch time
-- `NATIVE_MODE` must be set to `true`(default). [See here](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/alica_designer_runtime/docker-compose.yml#L33)
-- `NATIVE_IMPORT_EXPORT_PATH` should be set to the filesystem path where the import/export takes place [See here](https://github.com/rapyuta-robotics/alica/tree/rr-devel/supplementary/alica_designer_runtime/docker-compose.yml#L38-L39)
+- `NATIVE_MODE` must be set to `true`. [See here](https://github.com/rapyuta-robotics/alica/blob/7ca145e25647a3a65a6e624c0ab8786d15198cf3/supplementary/alica_designer_runtime/config.env#L8)
+- `NATIVE_IMPORT_EXPORT_PATH` should be set to the filesystem path where the import/export takes place [See here](https://github.com/rapyuta-robotics/alica/blob/7ca145e25647a3a65a6e624c0ab8786d15198cf3/supplementary/alica_designer_runtime/config.env#L11)
 
 #### 3.1.1 Export
 Simply click on the ‘+’ button in the top left corner of the page, and then click on File System -> Export
@@ -362,6 +368,8 @@ To be able to login to github and use the Git-workflow to import and export plan
     export SOCIAL_APP_CLIENT_ID=<client_id>
     export SOCIAL_APP_SECRET=<client_secret
 ```
+This can also be set in `config.env`
+
 4. Set the client ID in the web-plan-designer [settings](#21-settings) after launch
 
 ![oauth_settings](./doc/oauth_settings.png)
