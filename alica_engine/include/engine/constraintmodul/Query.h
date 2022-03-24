@@ -82,10 +82,10 @@ public:
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(RunningPlan* pi);
+    bool existsSolution(const RunningPlan* pi);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(RunningPlan* pi, std::vector<ResultType>& result);
+    bool getSolution(const RunningPlan* pi, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -98,7 +98,7 @@ public:
 private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,7 +114,7 @@ private:
 };
 
 template <class SolverType>
-bool Query::existsSolution(RunningPlan* pi)
+bool Query::existsSolution(const RunningPlan* pi)
 {
     SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
 
@@ -127,7 +127,7 @@ bool Query::existsSolution(RunningPlan* pi)
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(RunningPlan* pi, std::vector<ResultType>& result)
+bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
 {
     result.clear();
 

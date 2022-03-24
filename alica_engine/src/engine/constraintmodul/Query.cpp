@@ -83,7 +83,7 @@ void Query::fillBufferFromQuery()
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
+bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
@@ -98,7 +98,7 @@ bool Query::collectProblemStatement(RunningPlan* pi, ISolverBase& solver, std::v
     ALICA_DEBUG_MSG("Query: Initial domain buffer Size: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Starting Query with static Vars:" << std::endl << _uniqueVarStore);
     {
-        RunningPlan* rp = pi;
+        const RunningPlan* rp = pi;
         // Goes recursive upwards in the plan tree and does three steps on each level.
         while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
             ALICA_DEBUG_MSG("Query: Plantree-LVL of " << rp->getActivePlan()->getName() << std::endl << _uniqueVarStore);
