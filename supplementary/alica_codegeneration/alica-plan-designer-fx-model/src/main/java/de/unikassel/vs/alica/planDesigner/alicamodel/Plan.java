@@ -184,4 +184,32 @@ public class Plan extends AbstractPlan {
             }
         }
     }
+
+    /**
+     * Returns true if at least one condition has variables or quantifiers
+     */
+    public boolean hasConstraint() {
+
+        if ((getPreCondition() != null && getPreCondition().hasConstraint())
+                || (getRuntimeCondition() != null && getRuntimeCondition().hasConstraint())) {
+            return true;
+        }
+
+        for (State state : getStates()) {
+            if (!(state instanceof TerminalState)) {
+                continue;
+            }
+            TerminalState terminalState = (TerminalState) state;
+            if (terminalState.getPostCondition() != null && terminalState.getPostCondition().hasConstraint()) {
+                return true;
+            }
+        }
+
+        for (Transition transition : getTransitions()) {
+            if (transition.getPreCondition().hasConstraint()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
