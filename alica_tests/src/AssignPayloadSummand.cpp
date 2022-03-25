@@ -33,7 +33,6 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
     }
 
     for (uint64_t dynId = 1; dynId < 9; dynId++) {
-        int64_t payloadId = dynId - 1;
         auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, dynId);
 
         // dont accept assignments with multiple agents in one entry point
