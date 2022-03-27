@@ -1,5 +1,4 @@
 #pragma once
-
 #include <engine/IBehaviourCreator.h>
 
 #include <iostream>
