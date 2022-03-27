@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * General Code Generator. It manages calling the correct {@link IGenerator} implementation
@@ -102,15 +103,24 @@ public class Codegenerator {
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
-        languageSpecificGenerator.createConstraintCreator(plans, behaviours, conditions);
 
-        languageSpecificGenerator.createConstraints(plans);
+        /**
+         * filter plans and behaviours for constraints before passing them to the creator, prevents
+         * the creation of unnecessary includes
+         */
+        List<Plan> plansWithConstraints = plans.stream().filter(plan -> plan.hasConstraint()).collect(Collectors.toList());
+        List<Behaviour> behavioursWithConstraints = behaviours.stream().filter(behaviour -> behaviour.hasConstraint()).collect(Collectors.toList());
+
+        languageSpecificGenerator.createConstraintCreator(plansWithConstraints, behavioursWithConstraints, conditions);
+        languageSpecificGenerator.createConstraints(plansWithConstraints);
         languageSpecificGenerator.createPlans(plans);
         languageSpecificGenerator.createPlanCreator(plans);
 
         for (Behaviour behaviour : behaviours) {
             languageSpecificGenerator.createBehaviour(behaviour);
-            languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
+            if (behaviour.hasConstraint()) {
+                languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
+            }
         }
         LOG.info("Generated all files successfully");
     }
@@ -143,7 +153,9 @@ public class Codegenerator {
         List<File> generatedFiles = generatedSourcesManager.getGeneratedConditionFilesForPlan(plan);
         generatedFiles.addAll(generatedSourcesManager.getGeneratedConstraintFilesForPlan(plan));
         collectProtectedRegions(generatedFiles);
-        languageSpecificGenerator.createConstraintsForPlan(plan);
+        if (plan.hasConstraint()) {
+            languageSpecificGenerator.createConstraintsForPlan(plan);
+        }
         languageSpecificGenerator.createPlan(plan);
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
@@ -154,7 +166,9 @@ public class Codegenerator {
         generatedFiles.addAll(generatedSourcesManager.getGeneratedConstraintFilesForBehaviour(behaviour));
         collectProtectedRegions(generatedFiles);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
-        languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
+        if (behaviour.hasConstraint()) {
+            languageSpecificGenerator.createConstraintsForBehaviour(behaviour);
+        }
         languageSpecificGenerator.createBehaviour(behaviour);
     }
 

@@ -117,4 +117,13 @@ public class Behaviour extends AbstractPlan {
             getPostCondition().removeVariable(variable);
         }
     }
+
+    public boolean hasConstraint() {
+        if ((getPreCondition() != null && getPreCondition().hasConstraint())
+                || (getRuntimeCondition() != null && getRuntimeCondition().hasConstraint())
+                || (getPostCondition() != null && getPostCondition().hasConstraint())) {
+            return true;
+        }
+        return false;
+    }
 }
