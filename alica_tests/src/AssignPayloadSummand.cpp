@@ -18,7 +18,7 @@ AssignPayloadSummand::~AssignPayloadSummand() {}
 UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
 {
     auto worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
-    std::vector<uint64_t> nonVisitedEps;
+    std::vector<uint64_t> payloadsReadyForPickup;
 
     // agents that have already been assigned to a payload should not be reassigned
     for (auto wm : *(worldModel->wms)) {
@@ -32,8 +32,10 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
         }
     }
 
-    for (uint64_t dynId = 1; dynId < 9; dynId++) {
-        auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, dynId);
+    // for (uint64_t dynId = 1; dynId < 9; dynId++) {
+    for (uint64_t payloadId = 0; payloadId < worldModel->payloads.size(); payloadId++) {
+        uint64_t dynId = payloadId + 1;
+        auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, payloadId + 1);
 
         // dont accept assignments with multiple agents in one entry point
         if (agentsInEntryPoint.size() > 1) {
@@ -41,20 +43,21 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
         }
 
         // agents should not be assigned to payloads that have already been moved
-        if (agentsInEntryPoint.size() > 0 && worldModel->payloads.at(dynId - 1).state == alicaTests::PayloadState::DROPPED) {
+        if (agentsInEntryPoint.size() > 0 && worldModel->payloads.at(payloadId).state == alicaTests::PayloadState::DROPPED) {
             return UtilityInterval(-1, -1);
         }
 
         // collect payloads have not been picked yet
-        if (worldModel->payloads.at(dynId - 1).state == alicaTests::PayloadState::READY_FOR_PICKUP) {
-            nonVisitedEps.push_back(dynId);
+        if (worldModel->payloads.at(payloadId).state == alicaTests::PayloadState::READY_FOR_PICKUP) {
+            payloadsReadyForPickup.push_back(payloadId);
         }
     }
     std::vector<double> distances;
-    for (auto it = nonVisitedEps.begin(); it != nonVisitedEps.end(); it++) {
-        for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, *(it))) {
-            int x = worldModel->agentLocations.at(agentId).first - worldModel->payloads[*it - 1].pickX;
-            int y = worldModel->agentLocations.at(agentId).second - worldModel->payloads[*it - 1].pickY;
+    for (auto it = payloadsReadyForPickup.begin(); it != payloadsReadyForPickup.end(); it++) {
+        uint64_t dynId = *it - 1;
+        for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, dynId)) {
+            int x = worldModel->agentLocations.at(agentId).first - worldModel->payloads[*it].pickX;
+            int y = worldModel->agentLocations.at(agentId).second - worldModel->payloads[*it].pickY;
             double distance = sqrt(pow(x, 2) + pow(y, 2));
             if (distance < 1) {
                 distance = 1;
