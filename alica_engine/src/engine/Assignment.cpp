@@ -249,7 +249,7 @@ AssignmentView Assignment::getAgentsWorking(int idx) const
     return AssignmentView(this, idx);
 }
 
-AssignmentView Assignment::getAgentsWorking(int64_t epId, int64_t dynamicId = 0) const
+AssignmentView Assignment::getAgentsWorking(int64_t epId, int64_t dynamicId) const
 {
     const EntryPoint* ep = _plan->getEntryPointByID(epId, dynamicId);
     return ep ? AssignmentView(this, ep->getIndex()) : AssignmentView();
