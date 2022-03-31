@@ -30,9 +30,7 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
         }
     }
 
-    // for (uint64_t dynId = 1; dynId < 9; dynId++) {
     for (uint64_t payloadId = 0; payloadId < worldModel->sharedWorldModel->payloads.size(); payloadId++) {
-        uint64_t dynId = payloadId + 1;
         auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, payloadId + 1);
 
         // dont accept assignments with multiple agents in one entry point
@@ -52,7 +50,7 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
     }
     std::vector<double> distances;
     for (auto it = payloadsReadyForPickup.begin(); it != payloadsReadyForPickup.end(); it++) {
-        uint64_t dynId = *it - 1;
+        uint64_t dynId = *it + 1;
         for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, dynId)) {
             int x = worldModel->sharedWorldModel->agentLocations.at(agentId).first - worldModel->sharedWorldModel->payloads[*it].pickX;
             int y = worldModel->sharedWorldModel->agentLocations.at(agentId).second - worldModel->sharedWorldModel->payloads[*it].pickY;
