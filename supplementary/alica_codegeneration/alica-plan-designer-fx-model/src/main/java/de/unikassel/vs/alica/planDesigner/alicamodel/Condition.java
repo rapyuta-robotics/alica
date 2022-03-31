@@ -97,4 +97,8 @@ public class Condition extends PlanElement {
         }
         // Variables are owned by an AbstractPlan, so listeners are registered there and exist already
     }
+
+    public boolean hasConstraint() {
+        return !variables.isEmpty() || !quantifiers.isEmpty();
+    }
 }
