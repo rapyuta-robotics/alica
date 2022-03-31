@@ -1,0 +1,43 @@
+{
+  "comment": "",
+  "id": 1532424188199,
+  "name": "onSuccess",
+  "relativeDirectory": "conditions",
+  "blackboard" : [
+    {
+      "key" : "planOutputKey",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planInputKey",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planSecondOutputKey",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planKey",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    },
+    {
+      "key" : "planInputFromMaster",
+      "type" : "std::any",
+      "access" : "input",
+      "defaultValue" : null,
+      "comment" : "This is a blackboard entry for testing"
+    }
+  ]
+}
