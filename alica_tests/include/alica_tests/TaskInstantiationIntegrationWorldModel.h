@@ -1,7 +1,7 @@
 #pragma once
 
-#include <engine/IAlicaWorldModel.h>
 #include <alica_tests/TaskInstantiationIntegrationSharedWorldModel.h>
+#include <engine/IAlicaWorldModel.h>
 
 #include <atomic>
 #include <memory>

@@ -1,8 +1,8 @@
 #include "test_alica.h"
 
 #include "DynamicTaskBehavior.h"
-#include "alica_tests/TaskInstantiationIntegrationWorldModel.h"
 #include "alica_tests/TaskInstantiationIntegrationSharedWorldModel.h"
+#include "alica_tests/TaskInstantiationIntegrationWorldModel.h"
 
 #include <alica/test/Util.h>
 #include <engine/AlicaContext.h>
@@ -256,7 +256,7 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
         {
             std::lock_guard<std::mutex> guard(sharedWorldModel->mtx);
             payloads = sharedWorldModel->payloads;
-        }   
+        }
         allPayloadsAreDropped = true;
 
         for (alicaTests::Payload payload : payloads) {
