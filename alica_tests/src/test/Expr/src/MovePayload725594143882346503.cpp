@@ -17,9 +17,7 @@ namespace alica
 //   - TPToDropSpot (726015981546724416)
 //   - Pick (1965586362363306757)
 //   - TPToPickSpot (2867928428650937962)
-//   - Moved (3464891834530950837)
 //   - Idle (3766678166599855988)
-//   - AssignPayload (3785266111914580157)
 MovePayload725594143882346503::MovePayload725594143882346503(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -65,28 +63,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction725594143882346503::getUtilityFu
 
     function->editUtilSummands().emplace_back(us);
     return function;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: 2630758425967053453 (2630758425967053453)
- *   - Comment:
- *   - Source2Dest: Drop --> Moved
- *
- * Precondition: 2187308102082241829 (2187308102082241829)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Drop:
- *   - Drop (3009473645416620380)
- */
-bool PreCondition2187308102082241829::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(2630758425967053453) ENABLED START*/
-    return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }
 
@@ -152,28 +128,6 @@ bool PreCondition3953991713597643491::evaluate(std::shared_ptr<RunningPlan> rp, 
 bool PreCondition32970225314063392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(3201336270766679779) ENABLED START*/
-    return rp->amISuccessfulInAnyChild();
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: 3103663386312740882 (3103663386312740882)
- *   - Comment:
- *   - Source2Dest: AssignPayload --> TPToPickSpot
- *
- * Precondition: 1971173312201839855 (1971173312201839855)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in AssignPayload:
- *   - AssignPayload (3826644292150922713)
- */
-bool PreCondition1971173312201839855::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(3103663386312740882) ENABLED START*/
     return rp->amISuccessfulInAnyChild();
     /*PROTECTED REGION END*/
 }

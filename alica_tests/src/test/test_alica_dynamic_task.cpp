@@ -2,6 +2,7 @@
 
 #include "DynamicTaskBehavior.h"
 #include "alica_tests/TaskInstantiationIntegrationWorldModel.h"
+#include "alica_tests/TaskInstantiationIntegrationSharedWorldModel.h"
 
 #include <alica/test/Util.h>
 #include <engine/AlicaContext.h>
@@ -202,19 +203,20 @@ protected:
             aes.push_back(ae);
         }
 
-        wms = make_shared<std::vector<alicaTests::TaskInstantiationIntegrationWorldModel*>>();
+        sharedWorldModel = make_shared<alicaTests::TaskInstantiationIntegrationSharedWorldModel>();
+
         for (int i = 0; i < getAgentCount(); i++) {
             IAlicaWorldModel* wmTemp = acs[i]->getWorldModel();
             alicaTests::TaskInstantiationIntegrationWorldModel* wm = dynamic_cast<alicaTests::TaskInstantiationIntegrationWorldModel*>(wmTemp);
-            wms->push_back(wm);
-            wm->wms = wms;
             wm->agentId = aes[i]->getTeamManager().getLocalAgentID();
+            wm->sharedWorldModel = sharedWorldModel;
         }
     }
 
-    std::shared_ptr<std::vector<alicaTests::TaskInstantiationIntegrationWorldModel*>> wms;
+    std::shared_ptr<alicaTests::TaskInstantiationIntegrationSharedWorldModel> sharedWorldModel;
     std::vector<alicaTests::Payload> payloads;
     std::unordered_map<uint64_t, std::pair<uint64_t, uint64_t>> agentLocations;
+    std::unordered_map<uint64_t, std::optional<uint64_t>> payloadAssignments;
     const uint64_t TP_TO_PICK_SPOT = 2867928428650937962;
 };
 
@@ -236,12 +238,12 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
 
     for (int i = 0; i < getAgentCount(); i++) {
         agentLocations[i + 8] = std::pair<uint64_t, uint64_t>(50 * i, 50 * i);
+        payloadAssignments[i + 8] = std::nullopt;
     }
 
-    for (int i = 0; i < getAgentCount(); i++) {
-        wms->at(i)->payloads = payloads;
-        wms->at(i)->agentLocations = agentLocations;
-    }
+    sharedWorldModel->payloads = payloads;
+    sharedWorldModel->agentLocations = agentLocations;
+    sharedWorldModel->payloadAssignments = payloadAssignments;
 
     startAgents();
 
@@ -251,7 +253,10 @@ TEST_F(AlicaTaskInstantiationIntegrationTest, taskInstantiationIntegrationTest)
         stepAgents();
         aes[0]->getAlicaClock().sleep(alica::AlicaTime::milliseconds(50));
         count++;
-        payloads = wms->at(0)->payloads;
+        {
+            std::lock_guard<std::mutex> guard(sharedWorldModel->mtx);
+            payloads = sharedWorldModel->payloads;
+        }   
         allPayloadsAreDropped = true;
 
         for (alicaTests::Payload payload : payloads) {

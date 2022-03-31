@@ -32,10 +32,11 @@ void Pick::run(void* msg)
     if (isSuccess()) {
         return;
     }
-    for (auto* wm : *(_worldModel->wms.get())) {
-        wm->payloads[_worldModel->currentPayloadId.value()].state = alicaTests::PayloadState::PICKED;
-    }
-    std::cout << "[PICK] payload " << _worldModel->currentPayloadId.value() << std::endl;
+
+    std::lock_guard<std::mutex> guard(_worldModel->sharedWorldModel->mtx);
+    int64_t assignedPayload = _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId].value();
+    _worldModel->sharedWorldModel->payloads[assignedPayload].state = alicaTests::PayloadState::PICKED;
+    std::cout << "[PICK] payload " << assignedPayload << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }

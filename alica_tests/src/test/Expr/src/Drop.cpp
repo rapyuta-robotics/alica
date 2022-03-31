@@ -32,10 +32,15 @@ void Drop::run(void* msg)
     if (isSuccess()) {
         return;
     }
-    for (auto* wm : *(_worldModel->wms.get())) {
-        wm->payloads[_worldModel->currentPayloadId.value()].state = alicaTests::PayloadState::DROPPED;
-    }
-    std::cout << "[DROP] payload " << _worldModel->currentPayloadId.value() << std::endl;
+
+    std::lock_guard<std::mutex> guard(_worldModel->sharedWorldModel->mtx);
+    int64_t assignedPayload = _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId].value();
+    _worldModel->sharedWorldModel->payloads[assignedPayload].state = alicaTests::PayloadState::DROPPED;
+    std::cout << "[DROP] payload " << assignedPayload << std::endl;
+
+    std::cout << "[UNASSIGN] payload " << _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId].value() << std::endl;
+    _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId] = std::nullopt;
+
     setSuccess();
     /*PROTECTED REGION END*/
 }

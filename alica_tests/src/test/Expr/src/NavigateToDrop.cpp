@@ -33,11 +33,14 @@ void NavigateToDrop::run(void* msg)
     if (isSuccess()) {
         return;
     }
-    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[*(_worldModel->currentPayloadId)].dropX;
-    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[*(_worldModel->currentPayloadId)].dropY;
 
-    std::cout << "[MOVE TO DROP] agent " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
-              << _worldModel->agentLocations[_agentId].second << " (payload " << *(_worldModel->currentPayloadId) << ")" << std::endl;
+    std::lock_guard<std::mutex> guard(_worldModel->sharedWorldModel->mtx);
+    int64_t assignedPayload = _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId].value();
+    _worldModel->sharedWorldModel->agentLocations[_worldModel->agentId].first = _worldModel->sharedWorldModel->payloads[assignedPayload].dropX;
+    _worldModel->sharedWorldModel->agentLocations[_worldModel->agentId].second = _worldModel->sharedWorldModel->payloads[assignedPayload].dropY;
+
+    std::cout << "[MOVE TO DROP] agent " << _agentId << " to position " << _worldModel->sharedWorldModel->agentLocations[_agentId].first << " | "
+              << _worldModel->sharedWorldModel->agentLocations[_agentId].second << " (payload " << assignedPayload << ")" << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }

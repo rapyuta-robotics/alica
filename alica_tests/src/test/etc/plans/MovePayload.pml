@@ -11,7 +11,7 @@
       "plan": 725594143882346503,
       "positionWeb": {
         "x": 200,
-        "y": 212
+        "y": 412
       },
       "state": 3766678166599855988,
       "successRequired": false,
@@ -27,9 +27,9 @@
       "plan": 725594143882346503,
       "positionWeb": {
         "x": 200,
-        "y": 412
+        "y": 212
       },
-      "state": 3785266111914580157,
+      "state": 2867928428650937962,
       "successRequired": false,
       "task": "taskrepository.tsk#1225112227903"
     }
@@ -60,13 +60,11 @@
         1537785163841820841
       ],
       "name": "Drop",
-      "outTransitions": [
-        2630758425967053453
-      ],
+      "outTransitions": [],
       "parentPlan": 725594143882346503,
       "positionWeb": {
-        "x": 1460,
-        "y": 400
+        "x": 1202,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -93,8 +91,8 @@
       ],
       "parentPlan": 725594143882346503,
       "positionWeb": {
-        "x": 1202,
-        "y": 400
+        "x": 944,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -121,8 +119,8 @@
       ],
       "parentPlan": 725594143882346503,
       "positionWeb": {
-        "x": 944,
-        "y": 400
+        "x": 686,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -138,45 +136,17 @@
           "name": ""
         }
       ],
-      "entryPoint": null,
+      "entryPoint": 2603044554417791500,
       "id": 2867928428650937962,
-      "inTransitions": [
-        3103663386312740882
-      ],
+      "inTransitions": [],
       "name": "TPToPickSpot",
       "outTransitions": [
         3201336270766679779
       ],
       "parentPlan": 725594143882346503,
       "positionWeb": {
-        "x": 686,
-        "y": 400
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "behaviours/UnassignPayload.beh#422054015709952219",
-          "comment": "",
-          "configuration": null,
-          "id": 4191136452969136787,
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3464891834530950837,
-      "inTransitions": [
-        2630758425967053453
-      ],
-      "name": "Moved",
-      "outTransitions": [],
-      "parentPlan": 725594143882346503,
-      "positionWeb": {
-        "x": 1718,
-        "y": 400
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -189,32 +159,6 @@
       "inTransitions": [],
       "name": "Idle",
       "outTransitions": [],
-      "parentPlan": 725594143882346503,
-      "positionWeb": {
-        "x": 428,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "behaviours/AssignPayload.beh#3826644292150922713",
-          "comment": "",
-          "configuration": null,
-          "id": 2590285740552773678,
-          "name": ""
-        }
-      ],
-      "entryPoint": 2603044554417791500,
-      "id": 3785266111914580157,
-      "inTransitions": [],
-      "name": "AssignPayload",
-      "outTransitions": [
-        3103663386312740882
-      ],
       "parentPlan": 725594143882346503,
       "positionWeb": {
         "x": 428,
@@ -257,44 +201,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 3691801807787093963,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "id": 2630758425967053453,
-      "inState": 624744054901478287,
-      "name": "",
-      "outState": 3464891834530950837,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2187308102082241829,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "id": 3103663386312740882,
-      "inState": 3785266111914580157,
-      "name": "",
-      "outState": 2867928428650937962,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1971173312201839855,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

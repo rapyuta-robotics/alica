@@ -1,5 +1,4 @@
 #include "BehaviourCreator.h"
-#include "AssignPayload.h"
 #include "Behaviour/AlwaysFail.h"
 #include "Behaviour/Attack.h"
 #include "Behaviour/AttackOpp.h"
@@ -25,7 +24,6 @@
 #include "Pick.h"
 #include "TestBehaviour.h"
 #include "TestParameterPassingBehaviour.h"
-#include "UnassignPayload.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/IAlicaWorldModel.h"
 
@@ -96,9 +94,6 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
     case 55178365253414982:
         return std::make_shared<TestBehaviour>(wm);
         break;
-    case 422054015709952219:
-        return std::make_shared<UnassignPayload>(wm);
-        break;
     case 831400441334251602:
         return std::make_shared<TestParameterPassingBehaviour>(wm);
         break;
@@ -107,9 +102,6 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 3009473645416620380:
         return std::make_shared<Drop>(wm);
-        break;
-    case 3826644292150922713:
-        return std::make_shared<AssignPayload>(wm);
         break;
     case 4044546549214673470:
         return std::make_shared<DynamicTaskBehavior>(wm);

@@ -4,6 +4,7 @@
 /*PROTECTED REGION ID(inccpp4505472195947429717) ENABLED START*/
 // Add additional includes here
 #include <engine/AlicaEngine.h>
+#include <engine/PlanInterface.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -34,11 +35,13 @@ void NavigateToPick::run(void* msg)
         return;
     }
 
-    _worldModel->agentLocations[_agentId].first = _worldModel->payloads[*(_worldModel->currentPayloadId)].pickX;
-    _worldModel->agentLocations[_agentId].second = _worldModel->payloads[*(_worldModel->currentPayloadId)].pickY;
+    std::lock_guard<std::mutex> guard(_worldModel->sharedWorldModel->mtx);
+    int64_t assignedPayload = _worldModel->sharedWorldModel->payloadAssignments[_worldModel->agentId].value();
+    _worldModel->sharedWorldModel->agentLocations[_worldModel->agentId].first = _worldModel->sharedWorldModel->payloads[assignedPayload].pickX;
+    _worldModel->sharedWorldModel->agentLocations[_worldModel->agentId].second = _worldModel->sharedWorldModel->payloads[assignedPayload].pickY;
 
-    std::cout << "[MOVE TO PICK] agent " << _agentId << " to position " << _worldModel->agentLocations[_agentId].first << " | "
-              << _worldModel->agentLocations[_agentId].second << " (payload " << *(_worldModel->currentPayloadId) << ")" << std::endl;
+    std::cout << "[MOVE TO PICK] agent " << _agentId << " to position " << _worldModel->sharedWorldModel->agentLocations[_agentId].first << " | "
+              << _worldModel->sharedWorldModel->agentLocations[_agentId].second << " (payload " << assignedPayload << ")" << std::endl;
     setSuccess();
     /*PROTECTED REGION END*/
 }
@@ -47,6 +50,15 @@ void NavigateToPick::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters4505472195947429717) ENABLED START*/
     // Add additional options here
     _agentId = getEngine()->getTeamManager().getLocalAgentID();
+    auto context = getPlanContext();
+    if (context.isValid()) {
+        auto rp = context.getRunningPlan();
+
+        std::lock_guard<std::mutex> guard(_worldModel->sharedWorldModel->mtx);
+        int64_t assignedPayload = rp->getParent()->getActiveEntryPoint()->getDynamicId() - 1;
+        _worldModel->sharedWorldModel->payloadAssignments[_agentId] = assignedPayload;
+        std::cout << "[ASSIGN] payload " << assignedPayload << " to agent " << _agentId << std::endl;
+    }
 
     /*PROTECTED REGION END*/
 }
