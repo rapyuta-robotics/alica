@@ -20,20 +20,18 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
     auto worldModel = dynamic_cast<const alicaTests::TaskInstantiationIntegrationWorldModel*>(wm);
     std::vector<uint64_t> payloadsReadyForPickup;
 
-    // agents that have already been assigned to a payload should not be reassigned
-    for (auto wm : *(worldModel->wms)) {
-        if (!wm->currentPayloadId.has_value()) {
+    for (auto& pa : worldModel->sharedWorldModel->payloadAssignments) {
+        if (!pa.second.has_value()) {
             continue;
         }
-        auto agentId = wm->agentId;
-        auto agentsAssignedToPayload = ass.getAgentsWorking(movePayloadEpId, wm->currentPayloadId.value() + 1);
-        if (agentsAssignedToPayload.size() != 1 || agentId != *(agentsAssignedToPayload.begin())) {
+        auto agentsAssignedToPayload = ass.getAgentsWorking(movePayloadEpId, pa.second.value() + 1);
+        if (agentsAssignedToPayload.size() != 1 || pa.first != *(agentsAssignedToPayload.begin())) {
             return UtilityInterval(-1, -1);
         }
     }
 
     // for (uint64_t dynId = 1; dynId < 9; dynId++) {
-    for (uint64_t payloadId = 0; payloadId < worldModel->payloads.size(); payloadId++) {
+    for (uint64_t payloadId = 0; payloadId < worldModel->sharedWorldModel->payloads.size(); payloadId++) {
         uint64_t dynId = payloadId + 1;
         auto agentsInEntryPoint = ass.getAgentsWorking(movePayloadEpId, payloadId + 1);
 
@@ -43,12 +41,12 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
         }
 
         // agents should not be assigned to payloads that have already been moved
-        if (agentsInEntryPoint.size() > 0 && worldModel->payloads.at(payloadId).state == alicaTests::PayloadState::DROPPED) {
+        if (agentsInEntryPoint.size() > 0 && worldModel->sharedWorldModel->payloads.at(payloadId).state == alicaTests::PayloadState::DROPPED) {
             return UtilityInterval(-1, -1);
         }
 
         // collect payloads have not been picked yet
-        if (worldModel->payloads.at(payloadId).state == alicaTests::PayloadState::READY_FOR_PICKUP) {
+        if (worldModel->sharedWorldModel->payloads.at(payloadId).state == alicaTests::PayloadState::READY_FOR_PICKUP) {
             payloadsReadyForPickup.push_back(payloadId);
         }
     }
@@ -56,8 +54,8 @@ UtilityInterval AssignPayloadSummand::eval(IAssignment ass, const Assignment* ol
     for (auto it = payloadsReadyForPickup.begin(); it != payloadsReadyForPickup.end(); it++) {
         uint64_t dynId = *it - 1;
         for (AgentId agentId : ass.getAgentsWorking(movePayloadEpId, dynId)) {
-            int x = worldModel->agentLocations.at(agentId).first - worldModel->payloads[*it].pickX;
-            int y = worldModel->agentLocations.at(agentId).second - worldModel->payloads[*it].pickY;
+            int x = worldModel->sharedWorldModel->agentLocations.at(agentId).first - worldModel->sharedWorldModel->payloads[*it].pickX;
+            int y = worldModel->sharedWorldModel->agentLocations.at(agentId).second - worldModel->sharedWorldModel->payloads[*it].pickY;
             double distance = sqrt(pow(x, 2) + pow(y, 2));
             if (distance < 1) {
                 distance = 1;
