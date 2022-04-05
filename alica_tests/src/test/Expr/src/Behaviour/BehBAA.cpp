@@ -11,6 +11,7 @@ namespace alica
 {
 /*PROTECTED REGION ID(staticVars1629895911592) ENABLED START*/
 // initialise static variables here
+int BehBAA::runCount;
 /*PROTECTED REGION END*/
 
 BehBAA::BehBAA(BehaviourContext& context)

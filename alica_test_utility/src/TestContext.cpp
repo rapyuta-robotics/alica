@@ -57,12 +57,6 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     return true;
 }
 
-BasicBehaviour* TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
-{
-    assert(_initCalled == true);
-    return Util::getBasicBehaviour(_engine.get(), behaviourID, configurationID);
-}
-
 int TestContext::getTeamSize()
 {
     return Util::getTeamSize(_engine.get());

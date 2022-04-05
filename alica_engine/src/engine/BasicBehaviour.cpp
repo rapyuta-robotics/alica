@@ -11,7 +11,6 @@
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
-#include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>

@@ -6,7 +6,7 @@
 
 namespace alica::test
 {
-BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, int64_t configurationID)
+BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, [[maybe_unused]] int64_t configurationID)
 {
     return getBasicBehaviourHelper(ae->getPlanBase().getRootNode(), behaviourID);
 }
@@ -17,12 +17,13 @@ BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t beh
         return nullptr;
     }
 
-    if (rp->isBehaviour() && rp->getBasicBehaviour()->getId() == behaviourId) {
-        return rp->getBasicBehaviour();
+    BasicBehaviour* beh = rp->getBasicBehaviour();
+    if (beh && beh->getId() == behaviourId) {
+        return beh;
     }
 
     for (const auto& child : rp->getChildren()) {
-        BasicBehaviour* beh = getBasicBehaviourHelper(child, behaviourId);
+        beh = getBasicBehaviourHelper(child, behaviourId);
         if (beh) {
             return beh;
         }
@@ -31,18 +32,9 @@ BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t beh
     return nullptr;
 }
 
-BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, int64_t configurationId)
+BasicPlan* Util::getBasicPlan(alica::AlicaEngine* ae, int64_t planId, [[maybe_unused]] int64_t configurationId)
 {
-    BasicPlan* plan = nullptr;
-    for (auto& planEntry : ae->getPlanPool().getAvailablePlans()) {
-        if (planEntry.first.first->getId() == planId &&
-                (configurationId == 0 ? planEntry.first.second == nullptr : planEntry.first.second->getId() == configurationId)) {
-            plan = planEntry.second.get();
-            break;
-        }
-    }
-    return plan;
-    // return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
+    return getBasicPlanHelper(ae->getPlanBase().getRootNode(), planId);
 }
 
 BasicPlan* Util::getBasicPlanHelper(const RunningPlan* rp, int64_t planId)
@@ -52,7 +44,7 @@ BasicPlan* Util::getBasicPlanHelper(const RunningPlan* rp, int64_t planId)
     }
 
     BasicPlan* plan = rp->getBasicPlan();
-    if (plan /*&& plan->getId() == planId*/) {
+    if (plan && plan->getId() == planId) {
         return plan;
     }
 

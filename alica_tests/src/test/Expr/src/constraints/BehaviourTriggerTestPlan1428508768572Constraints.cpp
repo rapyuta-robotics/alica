@@ -12,10 +12,8 @@ namespace alica
  *
  * States:
  * - NewState (1428508768573)
- * - NewState (1429017227839)
  *
  * Vars:
  */
-// State: NewState
 // State: NewState
 } // namespace alica

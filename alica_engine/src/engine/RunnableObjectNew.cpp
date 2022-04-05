@@ -1,6 +1,7 @@
 #include "engine/RunnableObjectNew.h"
 #include "engine/AlicaEngine.h"
-#include "engine/PlanInterface.h"
+// TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
+#include "engine/BasicPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <assert.h>
@@ -155,9 +156,9 @@ void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan
     switch (_tracingType) {
     case TracingType::DEFAULT: {
         auto parent = rp->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext()); parent = parent->getParent())
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTrace()); parent = parent->getParent())
             ;
-        _trace = traceFactory->create(name, (parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt));
+        _trace = traceFactory->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
         break;
     }
     case TracingType::SKIP: {
