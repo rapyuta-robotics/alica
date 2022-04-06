@@ -72,8 +72,8 @@ void RunnableObject::stop(RunningPlan* rp)
         auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
         auto terminateCall = [this, parentPlan, keyMapping]() {
             assert(_blackboard);
-            setOutput(parentPlan->getBlackboard().get(), keyMapping);
             doTerminate();
+            setOutput(parentPlan->getBlackboard().get(), keyMapping);
         };
         _engine->editScheduler().schedule(terminateCall);
     } else {
