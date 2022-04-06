@@ -25,3 +25,6 @@ _*.pyc
 # clion
 **/.idea
 **/cmake-build-debug
+
+# java
+target/
