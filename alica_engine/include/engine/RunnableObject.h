@@ -67,14 +67,14 @@ private:
 /**
  * The base class for BasicBehaviour and BasicPlan
  */
-class RunnableObjectNew
+class RunnableObject
 {
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObjectNew(IAlicaWorldModel* wm, const std::string& name = "");
-    virtual ~RunnableObjectNew() = default;
-    // virtual ~RunnableObjectNew() { std::cout << _name << " destructor" << std::endl; }
+    RunnableObject(IAlicaWorldModel* wm, const std::string& name = "");
+    virtual ~RunnableObject() = default;
+    // virtual ~RunnableObject() { std::cout << _name << " destructor" << std::endl; }
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
 
