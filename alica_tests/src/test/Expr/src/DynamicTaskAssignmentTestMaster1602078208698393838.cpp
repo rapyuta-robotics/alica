@@ -14,8 +14,8 @@ namespace alica
 // States:
 //   - Start (751302000461175045)
 //   - Finish (1317277234576050904)
-//   - Init (4467904887554008050)
 //   - 3235149896384117046 (3235149896384117046)
+//   - Init (4467904887554008050)
 DynamicTaskAssignmentTestMaster1602078208698393838::DynamicTaskAssignmentTestMaster1602078208698393838(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -73,29 +73,30 @@ bool PreCondition4344644064496100420::evaluate(std::shared_ptr<RunningPlan> rp, 
 }
 
 /**
- * Transition: 4266666033623620026 (4266666033623620026)
+ * Transition: 1967586736681651770 (1967586736681651770)
  *   - Comment:
- *   - Source2Dest: Init --> Start
+ *   - Source2Dest: 3235149896384117046 --> Finish
  *
- * Precondition: InitDone (4496654201854254411)
+ * Precondition: 2132248203469102498 (2132248203469102498)
  *   - Enabled: true
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in Init:
+ * Abstract Plans in 3235149896384117046:
+ *   - DynamicTaskTogether (1338298120374694644)
  */
-bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition2132248203469102498::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
+    /*PROTECTED REGION ID(1967586736681651770) ENABLED START*/
     if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
         return false;
     }
     if (alicaTests::TestWorldModel::getCurAgent() == 9) {
-        return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
+        return alicaTests::TestWorldModel::getOne()->isTransitionToFinish();
     } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
-        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition4496654201854254411();
+        return alicaTests::TestWorldModel::getTwo()->isTransitionToFinish();
     }
     return false;
     /*PROTECTED REGION END*/
@@ -131,30 +132,29 @@ bool PreCondition3126176581533900616::evaluate(std::shared_ptr<RunningPlan> rp, 
 }
 
 /**
- * Transition: 1967586736681651770 (1967586736681651770)
+ * Transition: 4266666033623620026 (4266666033623620026)
  *   - Comment:
- *   - Source2Dest: 3235149896384117046 --> Finish
+ *   - Source2Dest: Init --> Start
  *
- * Precondition: 2132248203469102498 (2132248203469102498)
+ * Precondition: InitDone (4496654201854254411)
  *   - Enabled: true
  *   - PluginName: DefaultPlugin
  *   - ConditionString:
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in 3235149896384117046:
- *   - DynamicTaskTogether (1338298120374694644)
+ * Abstract Plans in Init:
  */
-bool PreCondition2132248203469102498::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition4496654201854254411::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(1967586736681651770) ENABLED START*/
+    /*PROTECTED REGION ID(4266666033623620026) ENABLED START*/
     if (alicaTests::TestWorldModel::getCurAgent() != rp->getOwnID()) {
         return false;
     }
     if (alicaTests::TestWorldModel::getCurAgent() == 9) {
-        return alicaTests::TestWorldModel::getOne()->isTransitionToFinish();
+        return alicaTests::TestWorldModel::getOne()->isTransitionCondition4496654201854254411();
     } else if (alicaTests::TestWorldModel::getCurAgent() == 8) {
-        return alicaTests::TestWorldModel::getTwo()->isTransitionToFinish();
+        return alicaTests::TestWorldModel::getTwo()->isTransitionCondition4496654201854254411();
     }
     return false;
     /*PROTECTED REGION END*/

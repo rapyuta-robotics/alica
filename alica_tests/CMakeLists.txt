@@ -45,6 +45,7 @@ if (CATKIN_ENABLE_TESTING)
         src/SimpleSwitches.cpp
         src/SwitchEntryPointsSummand.cpp
         src/TestConstantValueSummand.cpp
+        src/AssignPayloadSummand.cpp
         src/TestWorldModel.cpp
         src/test_alica.cpp
         src/test/test_main.cpp

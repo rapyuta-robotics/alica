@@ -16,8 +16,12 @@
 #include "Behaviour/TriggerA.h"
 #include "Behaviour/TriggerB.h"
 #include "Behaviour/TriggerC.h"
+#include "Drop.h"
 #include "DynamicTaskBehavior.h"
 #include "DynamicTaskBehaviourLD.h"
+#include "NavigateToDrop.h"
+#include "NavigateToPick.h"
+#include "Pick.h"
 #include "TestBehaviour.h"
 #include "TestParameterPassingBehaviour.h"
 #include "engine/BasicBehaviour.h"
@@ -90,11 +94,23 @@ std::shared_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
     case 55178365253414982:
         return std::make_shared<TestBehaviour>(wm);
         break;
+    case 831400441334251602:
+        return std::make_shared<TestParameterPassingBehaviour>(wm);
+        break;
+    case 2580816776008671737:
+        return std::make_shared<Pick>(wm);
+        break;
+    case 3009473645416620380:
+        return std::make_shared<Drop>(wm);
+        break;
     case 4044546549214673470:
         return std::make_shared<DynamicTaskBehavior>(wm);
         break;
-    case 831400441334251602:
-        return std::make_shared<TestParameterPassingBehaviour>(wm);
+    case 4459885370764933844:
+        return std::make_shared<NavigateToDrop>(wm);
+        break;
+    case 4505472195947429717:
+        return std::make_shared<NavigateToPick>(wm);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

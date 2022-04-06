@@ -8,12 +8,12 @@ namespace alica
 // Plan:  DynamicTaskTogether (1338298120374694644)
 //
 // Tasks:
-//   - DynamicTaskForDefender (4028411332434222682) (Entrypoint: 2665027307523422046)//   - DynamicTaskForAttacker (4026821563126910189) (Entrypoint:
-//   2633712961224790694)
+//   - DynamicTaskForAttacker (4026821563126910189) (Entrypoint: 2633712961224790694)//   - DynamicTaskForDefender (4028411332434222682) (Entrypoint:
+//   2665027307523422046)
 //
 // States:
-//   - 2564904534754645793 (2564904534754645793)
 //   - 2362235348110947949 (2362235348110947949)
+//   - 2564904534754645793 (2564904534754645793)
 DynamicTaskTogether1338298120374694644::DynamicTaskTogether1338298120374694644(IAlicaWorldModel* wm)
         : DomainPlan(wm)
 {
@@ -39,8 +39,8 @@ bool DynamicTaskTogether1338298120374694644::getApplicationEntrypointContext(std
 }
 
 /**
- * Task: DynamicTaskForDefender  -> EntryPoint-ID: 2665027307523422046
  * Task: DynamicTaskForAttacker  -> EntryPoint-ID: 2633712961224790694
+ * Task: DynamicTaskForDefender  -> EntryPoint-ID: 2665027307523422046
  */
 std::shared_ptr<UtilityFunction> UtilityFunction1338298120374694644::getUtilityFunction(Plan* plan)
 {

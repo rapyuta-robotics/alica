@@ -1,0 +1,14 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 4505472195947429717,
+  "name": "NavigateToPick",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "requiresParameters": false,
+  "runtimeCondition": null,
+  "variables": []
+}

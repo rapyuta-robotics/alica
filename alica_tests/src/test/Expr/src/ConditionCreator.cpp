@@ -30,6 +30,7 @@
 #include "ConstraintTestMaster1414068495566.h"
 #include "ConstraintTestPlan1414068524245.h"
 #include "Defend1402488893641.h"
+#include "Drop3009473645416620380.h"
 #include "DynamicTaskAssignmentTest2252865124432942907.h"
 #include "DynamicTaskAssignmentTestMaster1602078208698393838.h"
 #include "DynamicTaskBehavior4044546549214673470.h"
@@ -50,10 +51,14 @@
 #include "MasterPlanTestConditionPlanType1418042656594.h"
 #include "MasterSyncTransition1418825395939.h"
 #include "MidFieldPlayPlan1402488770050.h"
+#include "MovePayload725594143882346503.h"
 #include "MultiAgentTestMaster1413200842973.h"
 #include "MultiAgentTestPlan1413200862180.h"
+#include "NavigateToDrop4459885370764933844.h"
+#include "NavigateToPick4505472195947429717.h"
 #include "OrderedSchedulingTestPlan1629895582410.h"
 #include "OtherPlan1418042819203.h"
+#include "Pick2580816776008671737.h"
 #include "PlanA1629895837159.h"
 #include "PlanAA1629895864090.h"
 #include "PlanB1629895853508.h"
@@ -83,6 +88,7 @@
 #include "SerializationSubPlanD1781630225028158279.h"
 #include "SimpleTestPlan1412252439925.h"
 #include "Tackle1402489318663.h"
+#include "TaskInstantiationIntegrationTestMaster4603312216886200747.h"
 #include "TestBehaviour55178365253414982.h"
 #include "TestParameterPassing1692837668719979457.h"
 #include "TestParameterPassingBehaviour831400441334251602.h"
@@ -291,17 +297,15 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 1629895768182:
         return std::make_shared<PreCondition1629895768182>();
         break;
+    case 32970225314063392:
+        return std::make_shared<PreCondition32970225314063392>();
+        break;
     case 61978004585920576:
         return std::make_shared<PreCondition61978004585920576>();
         break;
     case 68542020926196536:
         return std::make_shared<PreCondition68542020926196536>();
         break;
-    case 1078898265232036813:
-        return std::make_shared<PreCondition1078898265232036813>();
-        break;
-    case 1693256954385338259:
-        return std::make_shared<PreCondition1693256954385338259>();
     case 289358204208851392:
         return std::make_shared<PreCondition289358204208851392>();
         break;
@@ -313,6 +317,12 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1067314038887345208:
         return std::make_shared<PreCondition1067314038887345208>();
+        break;
+    case 1078898265232036813:
+        return std::make_shared<PreCondition1078898265232036813>();
+        break;
+    case 1693256954385338259:
+        return std::make_shared<PreCondition1693256954385338259>();
         break;
     case 1840401110297459509:
         return std::make_shared<PreCondition1840401110297459509>();
@@ -335,8 +345,14 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     case 3461968191733792853:
         return std::make_shared<PreCondition3461968191733792853>();
         break;
+    case 3691801807787093963:
+        return std::make_shared<PreCondition3691801807787093963>();
+        break;
     case 3932287302905544988:
         return std::make_shared<PreCondition3932287302905544988>();
+        break;
+    case 3953991713597643491:
+        return std::make_shared<PreCondition3953991713597643491>();
         break;
     case 4115970455290610262:
         return std::make_shared<PreCondition4115970455290610262>();
