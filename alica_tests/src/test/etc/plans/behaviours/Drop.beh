@@ -1,0 +1,14 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 3009473645416620380,
+  "name": "Drop",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "requiresParameters": false,
+  "runtimeCondition": null,
+  "variables": []
+}

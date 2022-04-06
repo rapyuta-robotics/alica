@@ -11,13 +11,13 @@ namespace alica
  * - EntryPoint:3470417373268048093 : DefaultTask (1225112227903)
  *
  * States:
+ * - WaitState (235276470945876557)
  * - SucState (496520533178003845)
  * - EntryState (656998006978148289)
- * - WaitState (235276470945876557)
  *
  * Vars:
  */
+// State: WaitState
 // State: SucState
 // State: EntryState
-// State: WaitState
 } // namespace alica

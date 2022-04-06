@@ -1,0 +1,14 @@
+{
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 4459885370764933844,
+  "name": "NavigateToDrop",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "requiresParameters": false,
+  "runtimeCondition": null,
+  "variables": []
+}
