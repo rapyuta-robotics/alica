@@ -141,6 +141,14 @@ void BasicBehaviour::doTerminate()
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
 
+    // map output keys to parent blackboard
+    auto rp = _execContext.load();
+    if (rp->getParent() && !getInheritBlackboard()) {
+        auto parentPlan = rp->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
+        setOutput(parentPlan->getBlackboard().get(), keyMapping);
+    }
+
     // Reset the execution context so that the RunningPlan instance can be deleted
     _execContext.store(nullptr);
 }

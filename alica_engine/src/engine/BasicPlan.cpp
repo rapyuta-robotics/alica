@@ -78,6 +78,13 @@ void BasicPlan::doTerminate()
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
     }
 
+    auto rp = _execContext.load();
+    if (rp->getParent() && !getInheritBlackboard()) {
+        auto parentPlan = rp->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
+        setOutput(parentPlan->getBlackboard().get(), keyMapping);
+    }
+
     _execContext.store(nullptr);
 }
 
