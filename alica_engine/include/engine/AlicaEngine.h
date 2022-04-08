@@ -2,6 +2,7 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/BehaviourPool.h"
+#include "engine/TransitionPreConditionFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanPool.h"
@@ -96,6 +97,8 @@ public:
 
     scheduler::JobScheduler& editScheduler() { return *_scheduler; }
 
+    const TransitionPreConditionFactory& getTransitionPreConditionFactory() const { return *_transitionPreConditionFactory; }
+
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
@@ -150,6 +153,7 @@ private:
     AuthorityManager _auth;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
+    std::unique_ptr<TransitionPreConditionFactory> _transitionPreConditionFactory;
     PlanBase _planBase;
 
     /**
