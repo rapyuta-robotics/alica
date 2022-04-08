@@ -37,6 +37,7 @@ RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
         , _pb(pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
+        , _transitionPreConditionFactory(ae->getTransitionPreConditionFactory())
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
@@ -440,9 +441,13 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     }
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSynchronisation() != nullptr)
+        if (t->getSynchronisation() != nullptr) {
             continue;
-        if (t->evalCondition(r, _wm)) {
+        }
+        // TODO: Update inputs in input map
+        auto inputs = _transitionPreConditionInputs[t->getId()];
+            
+        if (_transitionPreConditionFactory.create(t->getId())(inputs)) {
             nextState = t->getOutState();
             r.editConstraintStore().addCondition(t->getPreCondition());
             break;
@@ -455,6 +460,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     ALICA_DEBUG_MSG("RB: Transition " << r.getActivePlan()->getName());
 
     r.moveState(nextState);
+    _transitionPreConditionInputs.clear();
 
     r.setAllocationNeeded(true);
     _log.eventOccurred("Transition(", r.getActivePlan()->getName(), " to State ", r.getActiveState()->getName(), ")");
@@ -487,8 +493,9 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
         if (t->getSynchronisation() == nullptr) {
             continue;
         }
+        auto inputs = _transitionPreConditionInputs[t->getId()];
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp, _wm)) {
+            if (_transitionPreConditionFactory.create(t->getId())(inputs)) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 rp.editConstraintStore().addCondition(t->getPreCondition());
@@ -499,7 +506,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->evalCondition(rp, _wm));
+            _sm.setSynchronisation(t, _transitionPreConditionFactory.create(t->getId())(inputs));
         }
     }
     if (nextState == nullptr) {
