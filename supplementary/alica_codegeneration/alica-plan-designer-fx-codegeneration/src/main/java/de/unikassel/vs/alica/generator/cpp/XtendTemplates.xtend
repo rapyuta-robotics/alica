@@ -1121,4 +1121,58 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
     /*PROTECTED REGION END*/
 }
 '''
+
+def String transitionPreConditionHeader(Condition condition) '''
+#pragma once
+
+static bool «condition.getName()»«condition.getId()»(std::map<int64_t, std::map<std::string, std::any>> input) 
+{
+/*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
+        «IF (protectedRegions.containsKey("condition" + condition.id))»
+«protectedRegions.get("condition" + condition.id)»
+        «ELSE»
+            std::cout << "The condition «condition.id» is not implement yet!" << std::endl;
+        «ENDIF»
+    /*PROTECTED REGION END*/
+}
+'''
+
+def String transitionPreConditionCreatorHeader(List<Condition> conditions) '''
+TransitionPreConditionCreator : public ITransitionPreConditionCreator
+#pragma once
+
+#include <engine/ITransitionPreConditionCreator.h>
+
+«FOR c : conditions»
+«IF (c.relativeDirectory == null || c.relativeDirectory.isEmpty)»
+#include "«c.name»«c.id».h"
+«ELSE»
+#include  "«c.relativeDirectory»/«c.name»«c.id».h"
+«ENDIF»
+«ENDFOR»
+
+namespace alica
+{
+class TransitionPreConditionCreator : public ITransitionPreConditionCreator
+{
+    TransitionPreConditionCreator() = default;
+    ~TransitionPreConditionCreator() = default
+
+    std::function<bool (std::map<int64_t, std::map<std::string, std::any>>)> createConditions(int64_t conditionId)
+    {
+        switch (conditionId)
+        {
+            «FOR con : conditions»
+            case «con.id»:
+                return std::bind(«con.id»«con.name», std::placeholders::_1);
+            «ENDFOR»
+            default:
+            std::cerr << "TransitionPreConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+            throw new std::exception();
+            break;
+        }
+    }
+}
+}
+'''
 }

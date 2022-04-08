@@ -404,6 +404,24 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
+    public void createTransitionPreConditions(List<Condition> conditions) {
+        for (Condition c : conditions) {
+            String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "conditions", c.getName() + c.getId() + ".h").toString();
+            String fileContentHeader = xtendTemplates.transitionPreConditionHeader(c);
+            writeSourceFile(headerPath, fileContentHeader);
+            formatFile(headerPath);
+        }      
+    }
+
+    @Override
+    public void createTransitionPreConditionsCreator(List<Condition> conditions) {
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionPreConditionCreator.h").toString();
+        String fileContentHeader = xtendTemplates.transitionPreConditionCreatorHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+    }
+
+    @Override
     public void setFormatter(String formatter) {
         this.formatter = formatter;
     }

@@ -9,6 +9,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.antlr.v4.runtime.CharStreams;
@@ -23,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -102,7 +104,19 @@ public class Codegenerator {
 
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
+        List<Condition> transitionPreConditions = new ArrayList<Condition>();
+        List<Condition> conditionsWithoutTransitions = new ArrayList<Condition>();
+        for (Plan plan : plans) {
+            for (Transition t : plan.getTransitions()) {
+                transitionPreConditions.add(t.getPreCondition());
+            }
+        }
+
+        // TODO: collect conditions which are not pre conditions of transitions, dont change how they are generated
+        
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
+        languageSpecificGenerator.createTransitionPreConditions(transitionPreConditions);
+        languageSpecificGenerator.createTransitionPreConditionsCreator(transitionPreConditions);
 
         /**
          * filter plans and behaviours for constraints before passing them to the creator, prevents
