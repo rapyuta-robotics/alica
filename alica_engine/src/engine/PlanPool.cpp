@@ -129,7 +129,7 @@ void PlanPool::stopPlan(RunningPlan& rp)
 {
     if (const auto* plan = dynamic_cast<const Plan*>(rp.getActivePlan())) {
         if (auto basicPlan = getBasicPlan(plan, rp.getConfiguration())) {
-            basicPlan->stop();
+            basicPlan->stop(&rp);
         }
     } else {
         ALICA_ERROR_MSG("PP::stopPlan(): Cannot stop Plan of given RunningPlan! Plan Name: " << rp.getActivePlan()->getName()
