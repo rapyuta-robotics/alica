@@ -44,12 +44,13 @@ void RunnableObjectNew::stop()
     if (!_started) {
         return;
     }
-    _started = false;
 
     stopRunCalls();
     doTerminate();
     cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+
+    _started = false;
 }
 
 void RunnableObjectNew::start(RunningPlan* rp)
