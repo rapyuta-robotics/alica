@@ -2,6 +2,7 @@
 
 #include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
+#include <engine/BasicPlan.h>
 
 #include <chrono>
 #include <memory>
@@ -29,6 +30,7 @@
 
 namespace alica::test
 {
+
 class Util
 {
 public:
@@ -42,6 +44,8 @@ public:
     static const alica::Agent* getAgentByID(alica::AlicaEngine* ae, AgentId agentID);
 
 private:
+    static BasicBehaviour* getBasicBehaviourHelper(const RunningPlan* rp, int64_t behaviourId);
+    static BasicPlan* getBasicPlanHelper(const RunningPlan* rp, int64_t planId);
     static bool hasPlanSucceededHelper(const RunningPlan* rp, int64_t id);
     static bool isPlanActiveHelper(const RunningPlan* rp, int64_t id);
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);

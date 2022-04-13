@@ -83,11 +83,11 @@ void Query::fillBufferFromQuery()
     _uniqueVarStore.initWith(_queriedStaticVariables);
 }
 
-bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
+bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& pds, int& domOffset)
 {
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
-    time = pi.getAlicaEngine()->getAlicaClock().now();
+    time = pi->getAlicaEngine()->getAlicaClock().now();
 #endif
 
     clearTemporaries();
@@ -98,13 +98,13 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
     ALICA_DEBUG_MSG("Query: Initial domain buffer Size: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Starting Query with static Vars:" << std::endl << _uniqueVarStore);
     {
-        ReadLockedPlanPointer rp = pi.getRunningPlan();
+        const RunningPlan* rp = pi;
         // Goes recursive upwards in the plan tree and does three steps on each level.
         while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
             ALICA_DEBUG_MSG("Query: Plantree-LVL of " << rp->getActivePlan()->getName() << std::endl << _uniqueVarStore);
 
             // 1. fill the query's static and domain variables, as well as its problem parts
-            rp->getConstraintStore().acceptQuery(*this, rp.get());
+            rp->getConstraintStore().acceptQuery(*this, rp);
             // next should be empty, current full
 
             ALICA_DEBUG_MSG("Query: Size of problemParts is " << _problemParts.size());
@@ -143,7 +143,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
                  */
                 _staticVars.flip();
             }
-            rp.moveUp();
+            rp = rp->getParent();
         }
     }
 
@@ -181,7 +181,7 @@ bool Query::collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& sol
     ALICA_DEBUG_MSG("Query: Number of relevant static variables: " << domOffset);
     ALICA_DEBUG_MSG("Query: Number of relevant domain variables: " << _domainVars.getCurrent().size());
     ALICA_DEBUG_MSG("Query: Total number of relevant variables: " << _relevantVariables.size());
-    ALICA_DEBUG_MSG("Query: PrepTime: " << (pi.getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds() << "us");
+    ALICA_DEBUG_MSG("Query: PrepTime: " << (pi->getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds() << "us");
 
     return true;
 }

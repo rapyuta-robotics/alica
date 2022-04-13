@@ -2,57 +2,48 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
-#include "engine/model/Configuration.h"
-#include "engine/model/Plan.h"
-#include "engine/scheduler/Scheduler.h"
-
-#include "engine/PlanInterface.h"
 
 namespace alica
 {
 
 BasicPlan::BasicPlan(PlanContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObjectNew(context.worldModel, context.name)
         , _isMasterPlan(context.planModel->isMasterPlan())
+        , _plan(context.planModel)
 {
+    if (_plan->getFrequency() < 1) {
+        setInterval(0);
+    } else {
+        setInterval(1000 / _plan->getFrequency());
+    }
+
+    for (const State* state : _plan->getStates()) {
+        for (const ConfAbstractPlanWrapper* wrapper : state->getConfAbstractPlanWrappers()) {
+            addKeyMapping(wrapper->getId(), wrapper->getKeyMapping());
+        }
+    }
+    setBlackboardBlueprint(_plan->getBlackboardBlueprint());
 }
 
 void BasicPlan::doInit()
 {
-    ++_execState;
-
-    if (!isExecutingInContext()) {
-        return;
-    }
-
-    _execContext = _signalContext.exchange(nullptr);
-
-    initTrace();
-    if (_isMasterPlan && _trace) {
+    // TODO Cleanup: do this after moving trace context setting to RunningPlan
+    /*if (_isMasterPlan) {
         // Immediately send out the trace for the master plan, otherwise the traces will not be available until the application ends
-        _trace->finish();
-    }
+        _runnableObjectTracer.cleanupTraceContext();
+    }*/
 
     try {
-        traceInit("Plan");
         onInit();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
     }
-
-    _initExecuted.store(true);
-
-    // Do not schedule runJob when freq is 0.
-    if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicPlan::doRun, this, nullptr), getInterval());
-    }
 }
 
-void BasicPlan::doRun(void* msg)
+void BasicPlan::doRun()
 {
     try {
-        traceRun();
-        run(msg);
+        run(nullptr);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
         sendLogMessage(4, err);
@@ -61,39 +52,25 @@ void BasicPlan::doRun(void* msg)
 
 void BasicPlan::doTerminate()
 {
-    if (_activeRunJobId != -1) {
-        _engine->editScheduler().cancelJob(_activeRunJobId);
-        _activeRunJobId = -1;
-    }
-    if (setTerminatedState()) {
-        return;
-    }
     try {
-        if (_trace) {
-            _trace->setLog({"status", "terminating"});
-        }
         onTerminate();
-        _trace.reset();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
-    }
-
-    _execContext.store(nullptr);
-}
-
-void BasicPlan::notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
-{
-    if (_engine->getTraceFactory()) {
-        _engine->editScheduler().schedule(std::bind(&BasicPlan::traceAssignmentChange, this, assignedEntryPoint, oldUtility, newUtility, numberOfAgents));
     }
 }
 
 void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
-    if (_trace) {
-        _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
-                                                        "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+    if (_engine->getTraceFactory() && getTrace()) {
+        getTrace()->setLog(
+                {"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
+                                                 "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
     }
+}
+
+int64_t BasicPlan::getId() const
+{
+    return _plan->getId();
 }
 
 } // namespace alica

@@ -34,6 +34,14 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
+    AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    return init(std::move(creators));
+}
+
+int AlicaContext::init(AlicaCreators&& creatorCtx)
+{
+    _creators = std::move(creatorCtx);
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
@@ -43,7 +51,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
         _communicator->startCommunication();
     }
 
-    if (_engine->init(creatorCtx)) {
+    if (_engine->init(_creators)) {
         _engine->start();
         _initialized = true;
         return 0;

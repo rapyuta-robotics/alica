@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/IPlanCreator.h"
-#include "engine/RunnableObject.h"
+#include "engine/RunnableObjectNew.h"
 #include "engine/blackboard/KeyMapping.h"
 
 #include <unordered_map>
@@ -18,7 +18,7 @@ struct PlanContext
     const Plan* planModel;
 };
 
-class BasicPlan : private RunnableObject
+class BasicPlan : private RunnableObjectNew
 {
 public:
     BasicPlan(PlanContext& context);
@@ -26,36 +26,29 @@ public:
 
     // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
-    using RunnableObject::addKeyMapping;
-    using RunnableObject::getBlackboard;
-    using RunnableObject::getInheritBlackboard;
-    using RunnableObject::getKeyMapping;
-    using RunnableObject::getName;
-    using RunnableObject::getPlanContext;
-    using RunnableObject::getTraceContext;
-    using RunnableObject::getWorldModel;
-    using RunnableObject::initExecuted;
-    using RunnableObject::setBlackboardBlueprint;
-    using RunnableObject::setConfiguration;
-    using RunnableObject::setEngine;
-    using RunnableObject::setInterval;
-    using RunnableObject::setName;
-    using RunnableObject::start;
-    using RunnableObject::stop;
-    using RunnableObject::TracingType;
+    using RunnableObjectNew::getBlackboard;
+    using RunnableObjectNew::getInheritBlackboard;
+    using RunnableObjectNew::getKeyMapping;
+    using RunnableObjectNew::getName;
+    using RunnableObjectNew::getPlanContext;
+    using RunnableObjectNew::getTrace;
+    using RunnableObjectNew::getWorldModel;
+    using RunnableObjectNew::setEngine;
+    using RunnableObjectNew::start;
+    using RunnableObjectNew::stop;
+    using RunnableObjectNew::TracingType;
 
-    void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    int64_t getId() const;
 
 protected:
-    using RunnableObject::getTrace;
-
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
-            RunnableObject::setTracing(
+            RunnableObjectNew::setTracing(
                     type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
         } else {
-            RunnableObject::setTracing(type, {});
+            RunnableObjectNew::setTracing(type, {});
         }
     }
 
@@ -65,11 +58,10 @@ protected:
 
 private:
     void doInit() override;
-    void doRun(void* msg);
+    void doRun() override;
     void doTerminate() override;
 
-    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
-
     bool _isMasterPlan;
+    const Plan* _plan;
 };
 } // namespace alica

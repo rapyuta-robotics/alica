@@ -52,7 +52,6 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_behaviourtrigger.cpp
         src/test/test_alica_condition_plan.cpp
         src/test/test_alica_condition_plantype.cpp
-        src/test/test_alica_engine_behavior_pool_init.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
         src/test/test_alica_multi_agent_plan.cpp
@@ -68,16 +67,13 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_varsync.cpp
         src/test/test_agent_dies.cpp
         src/test/test_agent_discovery.cpp
-        src/test/test_alica_configurations.cpp
         src/test/test_yaml_cfg.cpp
         src/test/test_path_parser.cpp
         src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
-        src/test/test_alica_engine_plan_pool.cpp
         src/test/test_adjacent_plans_success.cpp
         src/test/test_alica_tracing.cpp
         src/test/test_blackboard.cpp
-        src/test/test_alica_plan_context.cpp
         src/test/test_inherit_blackboard.cpp
     )
 

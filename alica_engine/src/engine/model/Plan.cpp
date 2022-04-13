@@ -2,13 +2,13 @@
 
 #include <assert.h>
 
+#include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
-
 //#include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -22,7 +22,6 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _utilityThreshold(1.0)
         , _runtimeCondition(nullptr)
         , _preCondition(nullptr)
-        , _basicPlan(nullptr)
         , _frequency(0)
         , _blackboardBlueprint(nullptr)
 {
@@ -105,11 +104,6 @@ void Plan::setSynchronisations(const SynchronisationGrp& synchronisations)
 void Plan::setTransitions(const TransitionGrp& transitions)
 {
     _transitions = transitions;
-}
-
-void Plan::setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan)
-{
-    _basicPlan = std::move(basicPlan);
 }
 
 std::string Plan::toString(std::string indent) const
