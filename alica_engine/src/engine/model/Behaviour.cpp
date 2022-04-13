@@ -46,11 +46,12 @@ std::string Behaviour::toString(std::string indent) const
 void Behaviour::setEventDriven(bool eventDriven)
 {
     _eventDriven = eventDriven;
+    _frequency = (_eventDriven ? 0 : _frequency);
 }
 
 void Behaviour::setFrequency(int frequency)
 {
-    _frequency = frequency;
+    _frequency = (_eventDriven ? 0 : frequency);
 }
 
 void Behaviour::setDeferring(int deferring)

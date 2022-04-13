@@ -1,6 +1,7 @@
 #include "engine/AlicaEngine.h"
 
 #include "engine/IRoleAssignment.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
@@ -46,8 +47,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
         , _syncModul(this)
-        , _behaviourPool(this)
-        , _planPool(this)
         , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
@@ -87,13 +86,12 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(*creatorCtx.behaviourCreator, _ctx.getWorldModel(), this);
+    _planFactory = std::make_unique<RuntimePlanFactory>(*creatorCtx.planCreator, _ctx.getWorldModel(), this);
     _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
     _scheduler->init();
 
     _stepCalled = false;
-    bool everythingWorked = true;
-    everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
-    everythingWorked = everythingWorked && _planPool.init(*creatorCtx.planCreator);
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);
@@ -104,7 +102,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
-    return everythingWorked;
+    return true;
 }
 
 void AlicaEngine::start()
@@ -120,8 +118,6 @@ void AlicaEngine::terminate()
 {
     _maySendMessages = false;
     _planBase.stop();
-    _behaviourPool.stopAll();
-    _planPool.stopAll();
     if (_scheduler) {
         _scheduler->terminate();
     }

@@ -21,7 +21,15 @@ TestContext::TestContext(const std::string& agentName, const std::string& config
 
 int TestContext::init(AlicaCreators& creatorCtx)
 {
+    AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    return init(std::move(creators));
+}
+
+int TestContext::init(AlicaCreators&& creatorCtx)
+{
     _initCalled = true;
+    _creators = std::move(creatorCtx);
     if (_communicator) {
         _communicator->startCommunication();
     }
@@ -47,12 +55,6 @@ bool TestContext::makeBehaviourEventDriven(int64_t behaviourID)
     }
     const_cast<Behaviour*>(constBehaviour)->setEventDriven(true);
     return true;
-}
-
-BasicBehaviour* TestContext::getBasicBehaviour(int64_t behaviourID, int64_t configurationID)
-{
-    assert(_initCalled == true);
-    return Util::getBasicBehaviour(_engine.get(), behaviourID, configurationID);
 }
 
 int TestContext::getTeamSize()

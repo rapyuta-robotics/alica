@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AbstractPlan.h"
-#include "engine/BasicPlan.h"
 #include "engine/Types.h"
 
 namespace alica
@@ -19,7 +18,7 @@ class PlanFactory;
 class PreCondition;
 class RuntimeCondition;
 class AlicaEngine;
-
+class BlackboardBlueprint;
 /**
  * An ALICA plan
  */
@@ -50,7 +49,6 @@ public:
     const SynchronisationGrp& getSynchronisations() const { return _synchronisations; }
     const RuntimeCondition* getRuntimeCondition() const { return _runtimeCondition; }
     const PreCondition* getPreCondition() const { return _preCondition; }
-    BasicPlan* getBasicPlan() const { return _basicPlan.get(); }
 
     int getFrequency() const { return _frequency; }
 
@@ -74,7 +72,6 @@ private:
     void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
-    void setBasicPlan(std::unique_ptr<BasicPlan>&& basicPlan);
 
     int _minCardinality;
     int _maxCardinality;
@@ -84,8 +81,6 @@ private:
     FailureStateGrp _failureStates;
     SynchronisationGrp _synchronisations;
     TransitionGrp _transitions;
-    // TODO: move to plan pool once it is implemented
-    std::unique_ptr<BasicPlan> _basicPlan;
 
     /**
      * This plan's Utility function

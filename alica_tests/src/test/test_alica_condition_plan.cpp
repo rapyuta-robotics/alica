@@ -8,7 +8,6 @@
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/BasicBehaviour.h>
-#include <engine/BehaviourPool.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>

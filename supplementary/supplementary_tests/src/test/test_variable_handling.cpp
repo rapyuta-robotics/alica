@@ -85,7 +85,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     alica::Query q1;
 
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
-    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
+    ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_FALSE(ok);
     EXPECT_TRUE(result1.empty());
     EXPECT_EQ(0, q1.getPartCount());
@@ -101,7 +101,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.addStaticVariable(v1);
     q1.addStaticVariable(v2);
 
-    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
+    ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
@@ -110,7 +110,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_LT(result1[0] + result1[1], 10.0);
     EXPECT_GT(result1[0] + result1[1], -10.0);
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
-    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
+    ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(3u, result1.size());
     EXPECT_EQ(1, q1.getPartCount());
@@ -134,7 +134,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q1.addStaticVariable(v1);
     q1.addStaticVariable(v2);
 
-    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
+    ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
@@ -143,7 +143,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
     q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
 
-    ok = q2.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp2), result1);
+    ok = q2.getSolution<CGSolver, double>(rp2, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(3, q2.getPartCount());
@@ -154,7 +154,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "Y"));
-    ok = q1.getSolution<CGSolver, double>(ThreadSafePlanInterface(rp1), result1);
+    ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());

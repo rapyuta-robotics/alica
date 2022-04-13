@@ -50,26 +50,7 @@
           "configuration": null,
           "id": 1587718662755,
           "name": "1587718662755"
-        }
-      ],
-      "entryPoint": 1428508768574,
-      "id": 1428508768573,
-      "inTransitions": [],
-      "name": "NewState",
-      "outTransitions": [
-        1429017235181
-      ],
-      "parentPlan": 1428508768572,
-      "positionWeb": {
-        "x": 428,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
+        },
         {
           "abstractPlan": "behaviours/NotToTrigger.beh#1429017274116",
           "comment": "",
@@ -78,16 +59,14 @@
           "name": "1587718662758"
         }
       ],
-      "entryPoint": null,
-      "id": 1429017227839,
-      "inTransitions": [
-        1429017235181
-      ],
+      "entryPoint": 1428508768574,
+      "id": 1428508768573,
+      "inTransitions": [],
       "name": "NewState",
       "outTransitions": [],
       "parentPlan": 1428508768572,
       "positionWeb": {
-        "x": 686,
+        "x": 428,
         "y": 200
       },
       "type": "State",
@@ -95,27 +74,7 @@
     }
   ],
   "synchronisations": [],
-  "transitions": [
-    {
-      "comment": "",
-      "id": 1429017235181,
-      "inState": 1428508768573,
-      "name": "MISSING_NAME",
-      "outState": 1429017227839,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1429017236633,
-        "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    }
-  ],
+  "transitions": [],
   "utilityThreshold": 0.1,
   "variables": []
 }

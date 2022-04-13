@@ -1,11 +1,11 @@
 #pragma once
 
 #include "engine/AlicaContext.h"
-#include "engine/BehaviourPool.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
-#include "engine/PlanPool.h"
 #include "engine/PlanRepository.h"
+#include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AuthorityManager.h"
@@ -27,7 +27,6 @@ namespace alica
 {
 struct AlicaCreators;
 class Plan;
-class BehaviourPool;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
@@ -58,11 +57,8 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
-    BehaviourPool& editBehaviourPool() { return _behaviourPool; }
-
-    const PlanPool& getPlanPool() const { return _planPool; }
-    PlanPool& editPlanPool() { return _planPool; }
+    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
+    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
@@ -142,14 +138,14 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
-    BehaviourPool _behaviourPool;
-    PlanPool _planPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
+    std::unique_ptr<RuntimePlanFactory> _planFactory;
     PlanBase _planBase;
 
     /**
