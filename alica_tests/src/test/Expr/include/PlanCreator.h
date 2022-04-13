@@ -1,5 +1,4 @@
 #pragma once
-
 #include <engine/IPlanCreator.h>
 
 #include <iostream>

@@ -13,7 +13,7 @@ class IBehaviourCreator;
 class IAlicaWorldModel;
 
 /**
- * Construct a runtime BasicBehaviour instance based
+ * Construct a runtime BasicBehaviour instance based on the Behaviour model
  */
 class RuntimeBehaviourFactory
 {
