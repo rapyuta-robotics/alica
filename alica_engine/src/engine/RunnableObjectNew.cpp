@@ -1,6 +1,7 @@
 #include "engine/RunnableObjectNew.h"
 #include "engine/AlicaEngine.h"
-#include "engine/PlanInterface.h"
+// TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
+#include "engine/BasicPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <assert.h>
@@ -15,6 +16,7 @@ RunnableObjectNew::RunnableObjectNew(IAlicaWorldModel* wm, const std::string& na
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
         , _blackboard(nullptr)
+        , _started(false)
 {
 }
 
@@ -39,6 +41,11 @@ void RunnableObjectNew::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMa
 
 void RunnableObjectNew::stop()
 {
+    if (!_started) {
+        return;
+    }
+    _started = false;
+
     stopRunCalls();
     doTerminate();
     cleanupBlackboard();
@@ -47,6 +54,11 @@ void RunnableObjectNew::stop()
 
 void RunnableObjectNew::start(RunningPlan* rp)
 {
+    if (_started) {
+        return;
+    }
+    _started = true;
+
     _runningplanContext = rp;
 
     // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
@@ -155,9 +167,9 @@ void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan
     switch (_tracingType) {
     case TracingType::DEFAULT: {
         auto parent = rp->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext()); parent = parent->getParent())
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTrace()); parent = parent->getParent())
             ;
-        _trace = traceFactory->create(name, (parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt));
+        _trace = traceFactory->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
         break;
     }
     case TracingType::SKIP: {

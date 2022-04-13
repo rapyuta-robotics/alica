@@ -38,12 +38,6 @@ public:
     bool isTransitionCondition1626848015861() const;
     void setTransitionCondition1626848015861(bool transitionCondition1626848015861);
 
-    // PlanPool test transitions
-    bool isTransitionCondition4238964946542987247() const;
-    void setTransitionCondition4238964946542987247(bool transitionCondition4238964946542987247);
-    bool isTransitionCondition4115970455290610262() const;
-    void setTransitionCondition4115970455290610262(bool transitionCondition4115970455290610262);
-
     // MasterPlanTestSyncTransition
     bool isTransitionCondition1418825427317() const;
     void setTransitionCondition1418825427317(bool transitionCondition1418825427317);
@@ -105,9 +99,6 @@ private:
     // master plan final transition
     bool transitionCondition1626848015861;
 
-    // PlanPoolTest transitions
-    bool transitionCondition4238964946542987247;
-    bool transitionCondition4115970455290610262;
     // tracing master plan
     bool preCondition1840401110297459509;
 

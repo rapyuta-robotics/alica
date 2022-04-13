@@ -101,14 +101,15 @@ protected:
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
     bool getInheritBlackboard() const { return _blackboardBlueprint == nullptr; };
     void setBlackboardBlueprint(const BlackboardBlueprint* blackboard) { _blackboardBlueprint = blackboard; }
+    const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
 
     AlicaEngine* _engine;
+    TraceRunnableObject _runnableObjectTracer;
 
 private:
     void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
     void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
     int64_t getParentWrapperId(RunningPlan* rt) const;
-    const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
     void setupBlackboard();
     void scheduleRunCalls();
     void stopRunCalls();
@@ -125,6 +126,7 @@ private:
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these
     std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
-    TraceRunnableObject _runnableObjectTracer;
+
+    bool _started;
 };
 } /* namespace alica */

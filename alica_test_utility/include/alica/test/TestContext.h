@@ -72,15 +72,6 @@ public:
     bool makeBehaviourEventDriven(int64_t behaviourID);
 
     /**
-     * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
-     * to check properties of their domain specific behaviours.
-     * @param behaviourID ID of the Behaviour
-     * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
-     * @return Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
-     */
-    BasicBehaviour* getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
-
-    /**
      * Allows to retrieve the name of an AlicaElement.
      * @param elementID The ID of the AlicaElement, whose name is requested.
      * @return The name of the element.

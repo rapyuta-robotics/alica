@@ -70,16 +70,11 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_yaml_cfg.cpp
         src/test/test_path_parser.cpp
         src/test/test_config_change.cpp
-        # Reenable with PlanPool PR
-        #src/test/test_alica_scheduling.cpp
-        src/test/test_alica_engine_plan_pool.cpp
+        src/test/test_alica_scheduling.cpp
         src/test/test_adjacent_plans_success.cpp
-        # Reenable with PlanPool PR
-        #src/test/test_alica_tracing.cpp
-        #src/test/test_blackboard.cpp
-        # remove this
-        #src/test/test_alica_plan_context.cpp
-        #src/test/test_inherit_blackboard.cpp
+        src/test/test_alica_tracing.cpp
+        src/test/test_blackboard.cpp
+        src/test/test_inherit_blackboard.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

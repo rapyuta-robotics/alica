@@ -12,7 +12,6 @@ namespace alica
 //
 // States:
 //   - NewState (1428508768573)
-//   - NewState (1429017227839)
 BehaviourTriggerTestPlan1428508768572::BehaviourTriggerTestPlan1428508768572(PlanContext& context)
         : DomainPlan(context)
 {
@@ -37,30 +36,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunctio
     shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: MISSING_NAME (1429017235181)
- *   - Comment:
- *   - Source2Dest: NewState --> NewState
- *
- * Precondition: MISSING_NAME (1429017236633)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in NewState:
- *   - TriggerA (1428508297492)
- *   - TriggerB (1428508316905)
- *   - TriggerC (1428508355209)
- */
-bool PreCondition1429017236633::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1429017235181) ENABLED START*/
-    return false;
     /*PROTECTED REGION END*/
 }
 

@@ -2,7 +2,6 @@
 
 #include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/PlanChange.h"
 #include "engine/PlanStatus.h"
 #include "engine/Types.h"
@@ -39,6 +38,8 @@ class CycleManager;
 class Behaviour;
 class IPlanTreeVisitor;
 class SimplePlanTree;
+class Blackboard;
+class KeyMapping;
 
 struct PlanStateTriple
 {
@@ -134,8 +135,10 @@ public:
     const Plan* getActivePlanAsPlan() const { return isBehaviour() ? nullptr : static_cast<const Plan*>(_activeTriple.abstractPlan); }
     const Assignment& getAssignment() const { return _assignment; }
     Assignment& editAssignment() { return _assignment; }
+    // TODO Cleanup: Get rid of these 2 methods
     BasicBehaviour* getBasicBehaviour() const { return _basicBehaviour.get(); }
-    BasicPlan* getBasicPlan() const { return _basicPlan; }
+    BasicPlan* getBasicPlan() const { return _basicPlan.get(); }
+
     std::shared_ptr<Blackboard> getBlackboard() const;
     const KeyMapping* getKeyMapping(int64_t wrapperId) const;
 
@@ -149,7 +152,6 @@ public:
     void setParent(RunningPlan* parent) { _parent = parent; }
     void setFailureHandlingNeeded(bool failHandlingNeeded);
     void setAssignment(const Assignment& assignment) { _assignment = assignment; }
-    void setBasicPlan(BasicPlan* basicPlan) { _basicPlan = basicPlan; }
     void adaptAssignment(const RunningPlan& replacement);
     void clearFailures();
 
@@ -224,9 +226,8 @@ private:
 
     std::vector<RunningPlan*> _children;
     RunningPlan* _parent;
-
     std::unique_ptr<BasicBehaviour> _basicBehaviour;
-    BasicPlan* _basicPlan;
+    std::unique_ptr<BasicPlan> _basicPlan;
     // Components
     Assignment _assignment;
     CycleManager _cycleManagement;

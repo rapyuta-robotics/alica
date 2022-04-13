@@ -2,6 +2,7 @@
 
 #include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
+#include <engine/BasicPlan.h>
 
 #include <chrono>
 #include <memory>
@@ -29,6 +30,7 @@
 
 namespace alica::test
 {
+
 class Util
 {
 public:
