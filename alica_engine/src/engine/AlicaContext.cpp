@@ -78,8 +78,14 @@ bool AlicaContext::isValid() const
 void AlicaContext::stepEngine()
 {
     _engine->stepNotify();
+    constexpr const auto timeout = std::chrono::seconds(2);
+    auto start = std::chrono::system_clock::now();
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
+        if (std::chrono::system_clock::now() > start + timeout) {
+            assert(false && "Got stuck trying to step engine");
+            throw std::runtime_error("Got stuck trying to step engine");
+        }
     } while (!_engine->getPlanBase().isWaiting());
 }
 
