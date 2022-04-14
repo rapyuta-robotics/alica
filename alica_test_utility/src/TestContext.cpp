@@ -33,7 +33,7 @@ int TestContext::init(AlicaCreators&& creatorCtx)
         _communicator->startCommunication();
     }
 
-    if (_engine->init(creatorCtx)) {
+    if (_engine->init(std::move(creatorCtx))) {
         return 0;
     }
     return -1;
