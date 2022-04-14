@@ -17,7 +17,7 @@ services:
     command: redis-server
 
   alica-backend:
-    image: rrdockerhub/alica_backend:dev
+    image: rrdockerhub/alica_backend:blackboard
     user: $uid:$gid
     environment:
       - POSTGRES_DB=alicadb
@@ -48,7 +48,7 @@ services:
       - 7890
 
   alica-frontend:
-    image: rrdockerhub/alica_frontend:dev
+    image: rrdockerhub/alica_frontend:blackboard
     ports:
       - 3030:80
     environment:
