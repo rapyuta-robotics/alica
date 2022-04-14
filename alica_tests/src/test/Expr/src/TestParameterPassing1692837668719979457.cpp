@@ -79,7 +79,7 @@ bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const 
 bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(2229456609900) ENABLED START*/
-    LockedBlackboardRO bb = LockedBlackboardRO(*(rp->getBasicPlan()->getBlackboard()));
+    LockedBlackboardRO bb(*(rp->getBasicPlan()->getBlackboard()));
     auto testWm = const_cast<alicaTests::TestWorldModel*>(dynamic_cast<const alicaTests::TestWorldModel*>(wm));
     testWm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
     return false;
@@ -89,7 +89,7 @@ bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const 
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
 void TestParameterPassing1692837668719979457::onInit()
 {
-    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
+    LockedBlackboardRW bb(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
     bb.set("planKey", 1);
     wm->passedParameters["planKey"] = bb.get<int>("planKey");
