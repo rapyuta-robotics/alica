@@ -89,7 +89,7 @@ private:
     AlicaTime _lastSentStatusTime;
     AlicaTime _sendStatusInterval;
 
-    std::mutex _lomutex;
+    std::recursive_mutex _lomutex;
     std::mutex _stepMutex;
 
     std::queue<RunningPlan*> _fpEvents;
