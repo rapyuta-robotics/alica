@@ -7,8 +7,8 @@ cd "$(dirname "$0")"
 sudo apt install -y openjdk-11-jdk maven
 
 # Check java default is correct (https://stackoverflow.com/a/7335120/2015911)
-JAVA_VER=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*".*/\1\2/p;')
-if [ "$JAVA_VER" -ge 110 ]; then
+JAVA_VER=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
+if [ "$JAVA_VER" -ge 11 ]; then
     echo "Java version ok"
 else
     echo "Wrong default java version detected! Continuing in 5s..."
