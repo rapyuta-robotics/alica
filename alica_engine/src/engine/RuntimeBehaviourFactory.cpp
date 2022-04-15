@@ -9,8 +9,8 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
-        : _creator(bc)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
+        : _creator(std::move(bc))
         , _engine(engine)
         , _wm(wm)
 {
@@ -19,7 +19,7 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(IBehaviourCreator& bc, IAlicaWo
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
-    std::unique_ptr<BasicBehaviour> basicBeh = _creator.createBehaviour(id, ctx);
+    std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
         return nullptr;

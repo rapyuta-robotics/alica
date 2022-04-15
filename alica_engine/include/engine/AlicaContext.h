@@ -424,7 +424,6 @@ private:
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
-    AlicaCreators _creators;
 
     bool _initialized = false;
 

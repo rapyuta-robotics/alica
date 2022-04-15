@@ -29,12 +29,11 @@ int TestContext::init(AlicaCreators& creatorCtx)
 int TestContext::init(AlicaCreators&& creatorCtx)
 {
     _initCalled = true;
-    _creators = std::move(creatorCtx);
     if (_communicator) {
         _communicator->startCommunication();
     }
 
-    if (_engine->init(creatorCtx)) {
+    if (_engine->init(std::move(creatorCtx))) {
         return 0;
     }
     return -1;
