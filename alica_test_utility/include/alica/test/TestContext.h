@@ -113,7 +113,6 @@ private:
     };
 
     bool _initCalled;
-    AlicaCreators _creators;
 };
 
 template <typename AlicaElementType>
@@ -149,7 +148,12 @@ bool TestContext::stepUntilStateReached(int64_t state, std::chrono::duration<Rep
 {
     auto start = std::chrono::system_clock::now();
     while (std::chrono::system_clock::now() - start < timeout) {
-        stepEngine();
+        try {
+            stepEngine();
+        } catch (const std::exception& e) {
+            std::cerr << "[TestContext] Exception in state.  Halting steps" << std::endl;
+            break;
+        }
         if (isStateActive(state)) {
             return true;
         }

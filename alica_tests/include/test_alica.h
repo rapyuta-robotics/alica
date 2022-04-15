@@ -78,7 +78,7 @@ protected:
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(creators));
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -132,10 +132,10 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-
         for (int i = 0; i < getAgentCount(); ++i) {
+            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
@@ -147,7 +147,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(creators));
+            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -232,7 +232,7 @@ protected:
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(creators));
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -277,7 +277,7 @@ protected:
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(creators));
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -311,10 +311,10 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-
         for (int i = 0; i < getAgentCount(); ++i) {
+            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
@@ -327,7 +327,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(creators));
+            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
