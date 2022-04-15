@@ -258,12 +258,17 @@ void PlanBase::run(const Plan* masterPlan)
             checkFp = std::cv_status::no_timeout == _fpEventWait.wait_for(lock, std::chrono::nanoseconds(availTime.inNanoseconds()));
         }
 
-        if (checkFp && _fpEvents.size() > 0) {
-            // lock for fpEvents
-            std::lock_guard<std::mutex> lock(_lomutex);
-            while (_running && availTime > AlicaTime::milliseconds(1) && _fpEvents.size() > 0) {
-                RunningPlan* rp = _fpEvents.front();
-                _fpEvents.pop();
+        if (checkFp) {
+            std::queue<RunningPlan*> nextFpEvents;
+            {
+                // move fath path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking _loMutex
+                std::lock_guard<std::mutex> lock(_lomutex);
+                nextFpEvents.swap(_fpEvents);
+            }
+
+            while (_running && availTime > AlicaTime::milliseconds(1) && !nextFpEvents.empty()) {
+                RunningPlan* rp = nextFpEvents.front();
+                nextFpEvents.pop();
 
                 if (rp->isActive()) {
                     bool first = true;
@@ -278,6 +283,18 @@ void PlanBase::run(const Plan* masterPlan)
                 }
                 now = alicaClock.now();
                 availTime = _loopTime - (now - beginTime);
+            }
+
+            {
+                // if all fast path events could not be processed, prepend them back to _fpEvents
+                if (!nextFpEvents.empty()) {
+                    std::lock_guard<std::mutex> lock(_lomutex);
+                    _fpEvents.swap(nextFpEvents);
+                    while (!nextFpEvents.empty()) {
+                        _fpEvents.push(nextFpEvents.front());
+                        nextFpEvents.pop();
+                    }
+                }
             }
         }
 
