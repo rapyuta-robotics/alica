@@ -1,7 +1,5 @@
 package de.unikassel.vs.alica.planDesigner.command.create;
 
-import com.sun.javafx.geom.Line2D;
-import com.sun.javafx.geom.Point2D;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
 
 import de.unikassel.vs.alica.planDesigner.command.UiPositionCommand;
