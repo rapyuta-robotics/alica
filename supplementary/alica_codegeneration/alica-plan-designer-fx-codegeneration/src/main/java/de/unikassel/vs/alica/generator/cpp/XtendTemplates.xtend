@@ -71,13 +71,13 @@ namespace alica
 '''
 
 def String planCreatorSource(List<Plan> plans)'''
-#include "PlanCreator.h"
+#include <lbc/PlanCreator.h>
 #include "engine/BasicPlan.h"
 «FOR plan : plans»
 «IF (plan.relativeDirectory == null || plan.relativeDirectory.isEmpty)»
-#include "«plan.name»«plan.id».h"
+#include <lbc/«plan.name»«plan.id».h>
 «ELSE»
-#include  "«plan.relativeDirectory»/«plan.name»«plan.id».h"
+#include <lbc/«plan.relativeDirectory»/«plan.name»«plan.id».h>
 «ENDIF»
 «ENDFOR»
 
@@ -111,13 +111,13 @@ namespace alica
 '''
 
     def String behaviourCreatorSource(List<Behaviour> behaviours)'''
-#include "BehaviourCreator.h"
+#include <lbc/BehaviourCreator.h>
 #include "engine/BasicBehaviour.h"
 «FOR beh : behaviours»
 «IF (beh.relativeDirectory == null || beh.relativeDirectory.isEmpty)»
-#include "«beh.name».h"
+#include <lbc/«beh.name».h>
 «ELSE»
-#include  "«beh.relativeDirectory»/«beh.name».h"
+#include <lbc/«beh.relativeDirectory»/«beh.name».h>
 «ENDIF»
 «ENDFOR»
 
@@ -153,7 +153,7 @@ namespace alica
     def String behaviourHeader(Behaviour behaviour)'''
 #pragma once
 
-#include "DomainBehaviour.h"
+#include <lbc/DomainBehaviour.h>
 /*PROTECTED REGION ID(inc«behaviour.id») ENABLED START*/
 «IF (protectedRegions.containsKey("inc" + behaviour.id))»
 «protectedRegions.get("inc" + behaviour.id)»
@@ -200,9 +200,9 @@ namespace alica
 
     def String behaviourSource(Behaviour behaviour) '''
 «IF (behaviour.relativeDirectory == null || behaviour.relativeDirectory.isEmpty)»
-#include "«behaviour.name».h"
+#include <lbc/«behaviour.name».h>
 «ELSE»
-#include  "«behaviour.relativeDirectory»/«behaviour.name».h"
+#include <lbc/«behaviour.relativeDirectory»/«behaviour.name».h>
 «ENDIF»
 #include <memory>
 
@@ -302,12 +302,12 @@ namespace alica
 
 
     def String utilityFunctionCreatorSource(List<Plan> plans)'''
-#include "UtilityFunctionCreator.h"
+#include <lbc/UtilityFunctionCreator.h>
 «FOR p : plans»
 «IF (p.relativeDirectory == null || p.relativeDirectory.isEmpty)»
-#include "«p.name»«p.id».h"
+#include <lbc/«p.name»«p.id».h>
 «ELSE»
-#include  "«p.relativeDirectory»/«p.name»«p.id».h"
+#include <lbc/«p.relativeDirectory»/«p.name»«p.id».h>
 «ENDIF»
 «ENDFOR»
 #include <iostream>
@@ -366,19 +366,19 @@ namespace alica
 } /* namespace alica */
 '''
     def String conditionCreatorSource(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions) '''
-#include "ConditionCreator.h"
+#include <lbc/ConditionCreator.h>
 «FOR p : plans»
 «IF (p.relativeDirectory == null || p.relativeDirectory.isEmpty)»
-#include "«p.name»«p.id».h"
+#include <lbc/«p.name»«p.id».h>
 «ELSE»
-#include  "«p.relativeDirectory»/«p.name»«p.id».h"
+#include <lbc/«p.relativeDirectory»/«p.name»«p.id».h>
 «ENDIF»
 «ENDFOR»
 «FOR b : behaviours»
 «IF (b.relativeDirectory == null || b.relativeDirectory.isEmpty)»
-#include "«b.name»«b.id».h"
+#include <lbc/«b.name»«b.id».h>
 «ELSE»
-#include  "«b.relativeDirectory»/«b.name»«b.id».h"
+#include <lbc/«b.relativeDirectory»/«b.name»«b.id».h>
 «ENDIF»
 «ENDFOR»
 
@@ -439,20 +439,20 @@ namespace alica
 '''
 
     def String constraintCreatorSource(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions)'''
-#include "ConstraintCreator.h"
+#include <lbc/ConstraintCreator.h>
 
 «FOR plan : plans»
 «IF (plan.relativeDirectory == null || plan.relativeDirectory.isEmpty)»
-#include "constraints/«plan.name»«plan.id»Constraints.h"
+#include <lbc/constraints/«plan.name»«plan.id»Constraints.h>
 «ELSE»
-#include "«plan.relativeDirectory»/constraints/«plan.name»«plan.id»Constraints.h"
+#include <lbc/«plan.relativeDirectory»/constraints/«plan.name»«plan.id»Constraints.h>
 «ENDIF»
 «ENDFOR»
 «FOR behaviour : behaviours»
 «IF (behaviour.relativeDirectory == null || behaviour.relativeDirectory.isEmpty)»
-#include "constraints/«behaviour.name»«behaviour.id»Constraints.h"
+#include <lbc/constraints/«behaviour.name»«behaviour.id»Constraints.h>
 «ELSE»
-#include "«behaviour.relativeDirectory»/constraints/«behaviour.name»«behaviour.id»Constraints.h"
+#include <lbc/«behaviour.relativeDirectory»/constraints/«behaviour.name»«behaviour.id»Constraints.h>
 «ENDIF»
 «ENDFOR»
 
@@ -495,7 +495,7 @@ namespace alica
     def String behaviourConditionHeader(Behaviour behaviour)'''
 
 
-#include "DomainCondition.h"
+#include <lbc/DomainCondition.h>
 /*PROTECTED REGION ID(incBC«behaviour.id») ENABLED START*/
 «IF (protectedRegions.containsKey("incBC" + behaviour.id))»
 «protectedRegions.get("incBC" + behaviour.id)»
@@ -537,9 +537,9 @@ namespace alica
 
     def String behaviourConditionSource(Behaviour behaviour, IConstraintCodeGenerator constraintCodeGenerator) '''
 «IF (behaviour.relativeDirectory == null || behaviour.relativeDirectory.isEmpty)»
-#include "«behaviour.name»«behaviour.id».h"
+#include <lbc/«behaviour.name»«behaviour.id».h>
 «ELSE»
-#include  "«behaviour.relativeDirectory»/«behaviour.name»«behaviour.id».h"
+#include <lbc/«behaviour.relativeDirectory»/«behaviour.name»«behaviour.id».h>
 «ENDIF»
 #include <memory>
 
@@ -600,9 +600,9 @@ namespace alica
 
     def String constraintsSource(Behaviour behaviour, IConstraintCodeGenerator constraintCodeGenerator) '''
 «IF (behaviour.relativeDirectory == null || behaviour.relativeDirectory.isEmpty)»
-#include "constraints/«behaviour.name»«behaviour.id»Constraints.h"
+#include <lbc/constraints/«behaviour.name»«behaviour.id»Constraints.h>
 «ELSE»
-#include "«behaviour.relativeDirectory»/constraints/«behaviour.name»«behaviour.id»Constraints.h"
+#include <lbc/«behaviour.relativeDirectory»/constraints/«behaviour.name»«behaviour.id»Constraints.h>
 «ENDIF»
 /*PROTECTED REGION ID(ch«behaviour.id») ENABLED START*/
         «IF (protectedRegions.containsKey("ch" + behaviour.id))»
@@ -663,9 +663,9 @@ namespace alica
 
     def String constraintsSource(Plan plan, IConstraintCodeGenerator constraintCodeGenerator) '''
 «IF (plan.relativeDirectory == null || plan.relativeDirectory.isEmpty)»
-#include "constraints/«plan.name»«plan.id»Constraints.h"
+#include <lbc/constraints/«plan.name»«plan.id»Constraints.h>
 «ELSE»
-#include "«plan.relativeDirectory»/constraints/«plan.name»«plan.id»Constraints.h"
+#include <lbc/«plan.relativeDirectory»/constraints/«plan.name»«plan.id»Constraints.h>
 «ENDIF»
 /*PROTECTED REGION ID(ch«plan.id») ENABLED START*/
         «IF (protectedRegions.containsKey("ch" + plan.id))»
@@ -759,7 +759,7 @@ namespace alica
 '''
 
 def String domainPlanSource() '''
-#include "DomainPlan.h"
+#include <lbc/DomainPlan.h>
 /*PROTECTED REGION ID(domainPlanSrcHeaders) ENABLED START*/
 «IF (protectedRegions.containsKey("domainPlanSrcHeaders"))»
 «protectedRegions.get("domainPlanSrcHeaders")»
@@ -803,7 +803,7 @@ namespace alica
 '''
 
     def String domainBehaviourSource() '''
-#include "DomainBehaviour.h"
+#include <lbc/DomainBehaviour.h>
 /*PROTECTED REGION ID(domainBehaviourSrcHeaders) ENABLED START*/
 «IF (protectedRegions.containsKey("domainBehaviourSrcHeaders"))»
 «protectedRegions.get("domainBehaviourSrcHeaders")»
@@ -898,7 +898,7 @@ private:
 '''
 
     def String domainConditionSource() '''
-#include "DomainCondition.h"
+#include <lbc/DomainCondition.h>
 /*PROTECTED REGION ID(domainSourceHeaders) ENABLED START*/
 «IF (protectedRegions.containsKey("domainSourceHeaders"))»
 «protectedRegions.get("domainSourceHeaders")»
@@ -944,8 +944,8 @@ namespace alica
     def String planHeader(Plan plan) '''
 #pragma once
 
-#include "DomainPlan.h"
-#include "DomainCondition.h"
+#include <lbc/DomainPlan.h>
+#include <lbc/DomainCondition.h>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/UtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
@@ -1043,9 +1043,9 @@ namespace alica
 
     def String planSource(Plan plan, IConstraintCodeGenerator constraintCodeGenerator) '''
 «IF (plan.relativeDirectory == null || plan.relativeDirectory.isEmpty)»
-#include "«plan.name»«plan.id».h"
+#include <lbc/«plan.name»«plan.id».h>
 «ELSE»
-#include "«plan.relativeDirectory»/«plan.name»«plan.id».h"
+#include <lbc/«plan.relativeDirectory»/«plan.name»«plan.id».h>
 «ENDIF»
 /*PROTECTED REGION ID(eph«plan.id») ENABLED START*/
 «IF (protectedRegions.containsKey("eph" + plan.id))»

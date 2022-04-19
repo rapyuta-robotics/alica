@@ -25,7 +25,7 @@ public class GeneratedSourcesManager {
         return codegenPath;
     }
     public String getIncludeDir() {
-        return Paths.get(codegenPath, "include").toString();
+        return Paths.get(codegenPath, "include/lbc").toString();
     }
     public String getSrcDir() {
         return Paths.get(codegenPath, "src").toString();
