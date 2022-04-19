@@ -45,6 +45,7 @@ public class StandaloneCodegenerator {
     }
 
     public static void main(String[] args) throws IOException {
+        System.out.println("Starting code generation...");
         readCmdLineArgs(args);
 
         PluginManager.getInstance().updateAvailablePlugins(pluginsPath);
@@ -66,5 +67,6 @@ public class StandaloneCodegenerator {
                 generatedSourcesManager);
 
         codegenerator.generate();
+        System.out.println("Success!");
     }
 }
