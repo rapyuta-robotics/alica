@@ -10,10 +10,12 @@ import java.nio.file.Paths;
 public class GeneratedSourcesManager {
 
     private String codegenPath;
+    private String pkgName;
     private String editorExecutablePath;
     private Map<Long, Integer> linesForGeneratedElements;
 
-    public GeneratedSourcesManager() {
+    public GeneratedSourcesManager(String pkgName) {
+        this.pkgName = pkgName;
         linesForGeneratedElements = new HashMap<>();
     }
 
@@ -25,7 +27,7 @@ public class GeneratedSourcesManager {
         return codegenPath;
     }
     public String getIncludeDir() {
-        return Paths.get(codegenPath, "include/lbc").toString();
+        return Paths.get(codegenPath, "include", pkgName).toString();
     }
     public String getSrcDir() {
         return Paths.get(codegenPath, "src").toString();
