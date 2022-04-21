@@ -20,10 +20,10 @@ public class StandaloneCodegenerator {
     private static String rolesPath;
     private static String tasksPath;
     private static String pluginsPath;
-    private static String defaultPluginName = "DefaultPlugin";
+    private static String packageName = "lbc";
 
     private static void printUsage(){
-        System.out.println("Usage: java -jar StandaloneCodegenerator <clangFormat> <sourceGenPath> <plansPath> <rolesPath> <tasksPaths> <pluginsPath> [DefaultPluginName - default is \"DefaultPlugin\"]");
+        System.out.println("Usage: java -jar StandaloneCodegenerator <clangFormat> <sourceGenPath> <plansPath> <rolesPath> <tasksPaths> <pluginsPath> [PackageName - default is \"lbc\"]");
         System.exit(-1);
     }
 
@@ -39,16 +39,17 @@ public class StandaloneCodegenerator {
         rolesPath = args[3];
         tasksPath = args[4];
         pluginsPath = args[5];
-        if (args.length == 7) {
-            defaultPluginName = args[6];
+        if (args.length >= 7) {
+            packageName = args[6];
         }
     }
 
     public static void main(String[] args) throws IOException {
+        System.out.println("Starting code generation...");
         readCmdLineArgs(args);
 
         PluginManager.getInstance().updateAvailablePlugins(pluginsPath);
-        PluginManager.getInstance().setDefaultPlugin(defaultPluginName);
+        PluginManager.getInstance().setDefaultPlugin("DefaultPlugin");
 
         ModelManager modelManager = new ModelManager();
         modelManager.setPlansPath(plansPath);
@@ -56,15 +57,17 @@ public class StandaloneCodegenerator {
         modelManager.setRolesPath(rolesPath);
         modelManager.loadModelFromDisk();
 
-        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager();
+        GeneratedSourcesManager generatedSourcesManager = new GeneratedSourcesManager(packageName);
         generatedSourcesManager.setCodegenPath(sourceGenPath);
 
         Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
                 clangFormatPath,
-                generatedSourcesManager);
+                generatedSourcesManager,
+                packageName);
 
         codegenerator.generate();
+        System.out.println("Success!");
     }
 }
