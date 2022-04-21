@@ -51,9 +51,9 @@ public class Codegenerator {
     /**
      * This constructor initializes a C++ code generator
      */
-    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, String formatter, GeneratedSourcesManager generatedSourcesManager) {
+    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
         // TODO: Document this! Here can the programming language be changed.
-        languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager);
+        languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager, packageName);
         languageSpecificGenerator.setFormatter(formatter);
         codeGenerationDestination = generatedSourcesManager.getCodegenPath();
         this.generatedSourcesManager = generatedSourcesManager;
