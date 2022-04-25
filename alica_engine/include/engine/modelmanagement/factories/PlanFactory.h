@@ -10,7 +10,8 @@ class Plan;
 class PlanFactory : public Factory
 {
 public:
-    static Plan* create(AlicaEngine* ae, const YAML::Node& node);
+    [[deprecated("It will be removed in the last PR")]] static Plan* create(AlicaEngine* ae, const YAML::Node& node);
+    static Plan* create(const YAML::Node& config, SubscribeFunction subscribe, const YAML::Node& node);
     static void attachReferences();
 
 private:

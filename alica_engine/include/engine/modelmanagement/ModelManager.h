@@ -1,7 +1,9 @@
 #pragma once
 
+#include "../GlobalEngineType.h"
 #include <yaml-cpp/yaml.h>
 
+#include <functional>
 #include <string>
 
 namespace essentials
@@ -26,7 +28,8 @@ class AlicaEngine;
 class ModelManager
 {
 public:
-    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);
+    [[deprecated("It will be removed in the last PR")]] ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);
+    ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribe, const std::string& domainConfigFolder);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -38,6 +41,7 @@ private:
     friend Factory;
 
     AlicaEngine* _ae;
+    const YAML::Node& _config;
     std::string domainConfigFolder;
     std::string basePlanPath;
     std::string baseRolePath;

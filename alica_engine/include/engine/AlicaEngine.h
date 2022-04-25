@@ -30,9 +30,6 @@ class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
 
-using ReloadFunction=std::function<void(const YAML::Node&)>;
-using SubscribeFunction=std::function<void(ReloadFunction)>;
-
 class AlicaEngine
 {
 public:
