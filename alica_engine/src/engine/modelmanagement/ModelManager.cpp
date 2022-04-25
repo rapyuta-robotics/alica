@@ -29,11 +29,24 @@ namespace alica
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _ae(ae)
+        , _config(YAML::Node()) // fake
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
+    Factory::setModelManager(this);
+}
+
+ModelManager::ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribe, const std::string& domainConfigFolder)
+        : _planRepository(planRepository)
+        , _ae(nullptr) // to be removed in the last PR
+        , _config(config)
+        , domainConfigFolder(domainConfigFolder)
+{
+    auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
+    subscribe(reloadFunctionPtr);
+    reload(config);
     Factory::setModelManager(this);
 }
 
@@ -48,7 +61,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
 {
     std::string basePath;
     try {
-        basePath = _ae->getConfig()["Alica"][configKey].as<std::string>();
+        basePath = _config["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
     }
