@@ -28,9 +28,10 @@ Behaviour::Behaviour(const YAML::Node& config, SubscribeFunction subscribeFunc)
         , _frequency(1)
         , _deferring(0)
         , _eventDriven(false)
-        , AbstractPlan(config,subscribeFunc)
+        , AbstractPlan(config, subscribeFunc)
         , _blackboardBlueprint(nullptr)
-{}
+{
+}
 
 Behaviour::~Behaviour() {}
 
@@ -53,7 +54,6 @@ std::string Behaviour::toString(std::string indent) const
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }
-
 
 void Behaviour::setEventDriven(bool eventDriven)
 {

@@ -41,7 +41,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, _ctx.getConfig(),std::bind(&AlicaEngine::subscribe, this, std::placeholders::_1), configPath)
+        , _modelManager(_planRepository, _ctx.getConfig(), std::bind(&AlicaEngine::subscribe, this, std::placeholders::_1), configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
