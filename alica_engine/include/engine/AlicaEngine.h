@@ -16,7 +16,6 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -114,7 +113,7 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
-    void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
+    void subscribe(ReloadFunction reloadFunction);
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
@@ -130,6 +129,7 @@ private:
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
+    //std::unique_ptr<ModelManager> _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;

@@ -25,8 +25,10 @@ class AlicaEngine;
 class AbstractPlan : public AlicaElement
 {
 public:
-    AbstractPlan(AlicaEngine* ae);
-    AbstractPlan(AlicaEngine* ae, int64_t id);
+    [[deprecated("It will be removed in the last PR")]] AbstractPlan(AlicaEngine* ae);
+    [[deprecated("It will be removed in the last PR")]] AbstractPlan(AlicaEngine* ae, int64_t id);
+    AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc);
+    AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id);
 
     virtual ~AbstractPlan();
 

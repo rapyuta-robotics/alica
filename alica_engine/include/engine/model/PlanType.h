@@ -18,7 +18,8 @@ class AlicaEngine;
 class PlanType : public AbstractPlan
 {
 public:
-    PlanType(AlicaEngine* ae);
+    [[deprecated("It will be removed in the last PR")]] PlanType(AlicaEngine* ae);
+    PlanType(const YAML::Node& config, SubscribeFunction subscribeFunc);
     virtual ~PlanType();
 
     std::string toString(std::string indent = "") const override;

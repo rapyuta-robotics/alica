@@ -25,7 +25,8 @@ class BlackboardBlueprint;
 class Plan : public AbstractPlan
 {
 public:
-    Plan(AlicaEngine* ae, int64_t id);
+    [[deprecated("It will be removed in the last PR")]] Plan(AlicaEngine* ae, int64_t id);
+    Plan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id);
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
