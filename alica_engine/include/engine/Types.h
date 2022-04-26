@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <yaml-cpp/yaml.h>
+#include <functional>
 
 namespace alica
 {
@@ -54,6 +56,9 @@ using VariableGrp = std::vector<const Variable*>;
 
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
+
+using ReloadFunction = std::function<void(const YAML::Node&)>;
+using SubscribeFunction = std::function<void(ReloadFunction)>;
 
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 

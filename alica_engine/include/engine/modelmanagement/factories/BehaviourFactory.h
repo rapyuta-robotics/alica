@@ -10,7 +10,9 @@ class Behaviour;
 class BehaviourFactory : public Factory
 {
 public:
-    static Behaviour* create(AlicaEngine* ae, const YAML::Node& node);
+    [[deprecated("It will be removed in the last PR")]] static Behaviour* create(AlicaEngine* ae, const YAML::Node& node);
+    static Behaviour* create(const YAML::Node& config, SubscribeFunction subscribeFunc, const YAML::Node& node);
+
     static void attachReferences();
 
 private:

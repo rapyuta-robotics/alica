@@ -29,23 +29,25 @@ namespace alica
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _ae(ae)
-        , _config(YAML::Node()) // fake
+        , _config(ae->getConfig())
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
     reload(_ae->getConfig());
     Factory::setModelManager(this);
+    //TODO add luca
 }
 
-ModelManager::ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribe, const std::string& domainConfigFolder)
+ModelManager::ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribeFunc, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _ae(nullptr) // to be removed in the last PR
         , _config(config)
+        , _subscribeFunc(subscribeFunc)
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
-    subscribe(reloadFunctionPtr);
+    subscribeFunc(reloadFunctionPtr);
     reload(config);
     Factory::setModelManager(this);
 }
@@ -189,11 +191,11 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(_ae, node);
+        Plan* plan = PlanFactory::create(_config,_subscribeFunc, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(_ae, node);
+        Behaviour* behaviour = BehaviourFactory::create(_config,_subscribeFunc, node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -201,7 +203,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(_ae, node);
+        PlanType* planType = PlanTypeFactory::create(_config,_subscribeFunc, node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {

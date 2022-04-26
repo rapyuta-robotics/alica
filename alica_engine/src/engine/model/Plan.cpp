@@ -9,12 +9,28 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
+#include "engine/model/Variable.h"
+
 //#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
 Plan::Plan(AlicaEngine* ae, int64_t id)
         : AbstractPlan(ae, id)
+        , _minCardinality(0)
+        , _maxCardinality(0)
+        , _masterPlan(false)
+        , _utilityFunction(nullptr)
+        , _utilityThreshold(1.0)
+        , _runtimeCondition(nullptr)
+        , _preCondition(nullptr)
+        , _frequency(0)
+        , _blackboardBlueprint(nullptr)
+{
+}
+
+Plan::Plan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id)
+        : AbstractPlan(config,subscribeFunc, id)
         , _minCardinality(0)
         , _maxCardinality(0)
         , _masterPlan(false)

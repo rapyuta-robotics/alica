@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GlobalEngineType.h"
+#include "engine/Types.h"
 #include <yaml-cpp/yaml.h>
 
 #include <functional>
@@ -29,7 +29,7 @@ class ModelManager
 {
 public:
     [[deprecated("It will be removed in the last PR")]] ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);
-    ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribe, const std::string& domainConfigFolder);
+    ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribeFunc, const std::string& domainConfigFolder);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -42,6 +42,7 @@ private:
 
     AlicaEngine* _ae;
     const YAML::Node& _config;
+    SubscribeFunction _subscribeFunc;
     std::string domainConfigFolder;
     std::string basePlanPath;
     std::string baseRolePath;

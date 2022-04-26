@@ -10,6 +10,11 @@ PlanType::PlanType(AlicaEngine* ae)
 {
 }
 
+PlanType::PlanType(const YAML::Node& config, SubscribeFunction subscribeFunc)
+        : AbstractPlan(config, subscribeFunc)
+{
+}
+
 PlanType::~PlanType() {}
 
 const Plan* PlanType::getPlanById(int64_t id) const
