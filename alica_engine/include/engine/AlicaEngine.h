@@ -129,7 +129,6 @@ private:
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
-    //std::unique_ptr<ModelManager> _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;

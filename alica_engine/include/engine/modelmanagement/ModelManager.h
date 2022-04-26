@@ -40,7 +40,6 @@ public:
 private:
     friend Factory;
 
-    AlicaEngine* _ae;
     const YAML::Node& _config;
     SubscribeFunction _subscribeFunc;
     std::string domainConfigFolder;
