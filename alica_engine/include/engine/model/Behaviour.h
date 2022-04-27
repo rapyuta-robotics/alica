@@ -28,7 +28,8 @@ class AlicaEngine;
 class Behaviour : public AbstractPlan
 {
 public:
-    [[deprecated("It will be removed in the last PR")]] Behaviour(AlicaEngine* ae);
+    //[[deprecated("It will be removed in the last PR")]]
+    Behaviour(AlicaEngine* ae);//TOBE removed
     Behaviour(const YAML::Node& config, SubscribeFunction subscribeFunc);
     virtual ~Behaviour();
 
