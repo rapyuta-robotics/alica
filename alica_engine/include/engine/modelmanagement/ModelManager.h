@@ -28,7 +28,8 @@ class AlicaEngine;
 class ModelManager
 {
 public:
-    [[deprecated("It will be removed in the last PR")]] ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);
+    //[[deprecated("It will be removed in the last PR")]] 
+    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);//TOBE removed
     ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribeFunc, const std::string& domainConfigFolder);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
