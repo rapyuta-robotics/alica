@@ -25,8 +25,8 @@ class BlackboardBlueprint;
 class Plan : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]] 
-    Plan(AlicaEngine* ae, int64_t id);//TOBE removed
+    //[[deprecated("It will be removed in the last PR")]]
+    Plan(AlicaEngine* ae, int64_t id); // TOBE removed
     Plan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id);
     virtual ~Plan();
 
