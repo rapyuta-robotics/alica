@@ -25,10 +25,10 @@ class AlicaEngine;
 class AbstractPlan : public AlicaElement
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]] 
-    AbstractPlan(AlicaEngine* ae);//TOBE removed
-    //[[deprecated("It will be removed in the last PR")]] 
-    AbstractPlan(AlicaEngine* ae, int64_t id);//TOBE removed
+    //[[deprecated("It will be removed in the last PR")]]
+    AbstractPlan(AlicaEngine* ae); // TOBE removed
+    //[[deprecated("It will be removed in the last PR")]]
+    AbstractPlan(AlicaEngine* ae, int64_t id); // TOBE removed
     AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc);
     AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id);
 
