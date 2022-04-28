@@ -126,9 +126,9 @@ private:
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
-    AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
+    AlicaContext& _ctx;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
