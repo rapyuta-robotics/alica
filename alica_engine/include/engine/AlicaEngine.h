@@ -113,6 +113,7 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
+    YAML::Node& editConfig();
     void subscribe(ReloadFunction reloadFunction);
 
     /**
