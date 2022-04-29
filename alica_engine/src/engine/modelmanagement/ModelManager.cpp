@@ -28,7 +28,7 @@ namespace alica
 
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _config(ae->getConfig())                                                      // temp
+        , _config(ae->editConfig())                                                     // temp
         , _subscribeFunc(std::bind(&AlicaEngine::subscribe, ae, std::placeholders::_1)) // temp
         , domainConfigFolder(domainConfigFolder)
 {
@@ -38,7 +38,7 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(PlanRepository& planRepository, const YAML::Node& config, SubscribeFunction subscribeFunc, const std::string& domainConfigFolder)
+ModelManager::ModelManager(PlanRepository& planRepository, YAML::Node& config, SubscribeFunction subscribeFunc, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _config(config)
         , _subscribeFunc(subscribeFunc)
@@ -52,6 +52,7 @@ ModelManager::ModelManager(PlanRepository& planRepository, const YAML::Node& con
 
 void ModelManager::reload(const YAML::Node& config)
 {
+    _config = config;
     basePlanPath = getBasePath("PlanDir");
     baseRolePath = getBasePath("RoleDir");
     baseTaskPath = getBasePath("TaskDir");
