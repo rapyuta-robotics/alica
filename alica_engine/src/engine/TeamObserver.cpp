@@ -46,7 +46,10 @@ TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const
         , _communicator(communicator)
         , _alicaClock(clock)
         , _planRepository(planRepository)
-        , _tm(teamManager){};
+        , _tm(teamManager)
+{
+    _me = _tm.editLocalAgent();
+};
 
 TeamObserver::~TeamObserver() {}
 
