@@ -45,7 +45,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
-        , _syncModul(getTeamManager(),getPlanRepository(),maySendMessages(),getCommunicator(),getAlicaClock())
+        , _syncModul(getTeamManager(), getPlanRepository(), maySendMessages(), getCommunicator(), getAlicaClock())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _teamObserver(editLog(), editRoleAssignment(), maySendMessages(), getCommunicator(), getAlicaClock(), getPlanRepository(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
