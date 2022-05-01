@@ -40,17 +40,18 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const
         : _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
-        , _log(this)
         , _modelManager(_planRepository, ctx.editConfig(), std::bind(&AlicaEngine::subscribe, this, std::placeholders::_1), configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
         , _syncModul(this)
-        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
-        , _teamObserver(editLog(), editRoleAssignment(), maySendMessages(), getAlicaClock(), getPlanRepository(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
+        , _log(this)
         , _auth(this)
+        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, getAlicaClock(), getPlanRepository(), editTeamManager())
+//, _teamObserver(this)
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);

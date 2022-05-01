@@ -128,21 +128,21 @@ private:
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
+    AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
-    AlicaContext& _ctx;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
+    Logger _log;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
+    TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    Logger _log;
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     PlanBase _planBase;
-    TeamObserver _teamObserver;
 
     /**
      * TODO: Make VariableSyncModule a stack variable.
