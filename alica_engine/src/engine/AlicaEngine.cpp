@@ -47,7 +47,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const
         , _teamManager(this, agentID)
         , _syncModul(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
-        , _teamObserver(editLog(), editRoleAssignment(), maySendMessages(), getCommunicator(), getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _teamObserver(editLog(), editRoleAssignment(), maySendMessages(), getAlicaClock(), getPlanRepository(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _planBase(this)
@@ -240,4 +240,10 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
         reloadFunction(config);
     }
 }
+
+void AlicaEngine::setCommunicator()
+{
+    _teamObserver.setCommunicator(&(const_cast<IAlicaCommunication&>(_ctx.getCommunicator()))); // todo remove cast
+}
+
 } // namespace alica

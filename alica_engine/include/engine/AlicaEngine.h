@@ -99,6 +99,7 @@ public:
 
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
+    void setCommunicator();
     const AlicaClock& getAlicaClock() const;
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
@@ -133,7 +134,6 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
-    TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
@@ -142,6 +142,7 @@ private:
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     PlanBase _planBase;
+    TeamObserver _teamObserver;
 
     /**
      * TODO: Make VariableSyncModule a stack variable.

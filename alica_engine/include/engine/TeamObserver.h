@@ -32,8 +32,8 @@ class TeamObserver
 public:
     //[[deprecated("It will be removed in the last PR")]]
     TeamObserver(AlicaEngine* ae);
-    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator, const AlicaClock& clock,
-            const PlanRepository& planRepository, TeamManager& teamManager);
+    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const AlicaClock& clock, const PlanRepository& planRepository,
+            TeamManager& teamManager);
     ~TeamObserver();
 
     void tick(RunningPlan* root);
@@ -49,6 +49,8 @@ public:
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
+    void setCommunicator(IAlicaCommunication* communicator);
+
 private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
@@ -58,7 +60,7 @@ private:
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
     const bool& _maySendMessages;
-    const IAlicaCommunication& _communicator;
+    IAlicaCommunication* _communicator{nullptr};
     const AlicaClock& _alicaClock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;

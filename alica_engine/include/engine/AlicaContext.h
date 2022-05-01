@@ -455,6 +455,11 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
+
+    /*
+     * Foreward communicator to engine
+     */
+    void setCommunicatorToAlicaEngine() const;
 };
 
 template <class ClockType, class... Args>
@@ -478,6 +483,7 @@ void AlicaContext::setCommunicator(Args&&... args)
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
+    setCommunicatorToAlicaEngine();
 }
 
 template <class SolverType, class... Args>

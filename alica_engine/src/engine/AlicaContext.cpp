@@ -144,4 +144,9 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
             [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
+void AlicaContext::setCommunicatorToAlicaEngine() const
+{
+    _engine->setCommunicator();
+}
+
 } // namespace alica

@@ -29,7 +29,6 @@ TeamObserver::TeamObserver(AlicaEngine* ae)
         : _logger(ae->editLog())
         , _roleAssignment(ae->editRoleAssignment())
         , _maySendMessages(ae->maySendMessages())
-        , _communicator(ae->getCommunicator())
         , _alicaClock(ae->getAlicaClock())
         , _planRepository(ae->getPlanRepository())
         , _tm(ae->editTeamManager())
@@ -38,12 +37,11 @@ TeamObserver::TeamObserver(AlicaEngine* ae)
     _me = _tm.editLocalAgent();
 }
 
-TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator,
-        const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
+TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const AlicaClock& clock,
+        const PlanRepository& planRepository, TeamManager& teamManager)
         : _logger(logger)
         , _roleAssignment(roleAssigment)
         , _maySendMessages(maySendMessages)
-        , _communicator(communicator)
         , _alicaClock(clock)
         , _planRepository(planRepository)
         , _tm(teamManager)
@@ -140,11 +138,15 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     if (!_maySendMessages) {
         return;
     }
+    if (!_communicator) {
+        // todo luca log error?
+        return;
+    }
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
-    _communicator.sendPlanTreeInfo(pti);
+    _communicator->sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
 
@@ -356,6 +358,11 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
         }
     }
     return root;
+}
+
+void TeamObserver::setCommunicator(IAlicaCommunication* communicator)
+{
+    _communicator = communicator;
 }
 
 } /* namespace alica */
