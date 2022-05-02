@@ -7,7 +7,7 @@ namespace alica
 {
 
 BasicPlan::BasicPlan(PlanContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObjectNew(context.worldModel, context.name)
         , _isMasterPlan(context.planModel->isMasterPlan())
         , _plan(context.planModel)
 {

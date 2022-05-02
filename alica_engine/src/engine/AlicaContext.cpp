@@ -41,7 +41,6 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
 int AlicaContext::init(AlicaCreators&& creatorCtx)
 {
-    _creators = std::move(creatorCtx);
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
@@ -51,7 +50,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx)
         _communicator->startCommunication();
     }
 
-    if (_engine->init(_creators)) {
+    if (_engine->init(std::move(creatorCtx))) {
         _engine->start();
         _initialized = true;
         return 0;
@@ -78,8 +77,13 @@ bool AlicaContext::isValid() const
 void AlicaContext::stepEngine()
 {
     _engine->stepNotify();
+    constexpr const auto timeout = std::chrono::seconds(2);
+    auto start = std::chrono::system_clock::now();
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
+        if (std::chrono::system_clock::now() > start + timeout) {
+            throw std::runtime_error("Got stuck trying to step engine");
+        }
     } while (!_engine->getPlanBase().isWaiting());
 }
 

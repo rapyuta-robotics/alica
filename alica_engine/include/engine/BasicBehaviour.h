@@ -2,7 +2,7 @@
 
 #include "engine/Assignment.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/RunnableObject.h"
+#include "engine/RunnableObjectNew.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 
@@ -33,7 +33,7 @@ struct BehaviourContext
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
-class BasicBehaviour : private RunnableObject
+class BasicBehaviour : private RunnableObjectNew
 {
 public:
     BasicBehaviour(BehaviourContext& context);
@@ -74,7 +74,7 @@ public:
     void doTrigger();
 
 protected:
-    using RunnableObject::getTrace;
+    using RunnableObjectNew::getTrace;
 
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -82,10 +82,10 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
-            RunnableObject::setTracing(
+            RunnableObjectNew::setTracing(
                     type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
         } else {
-            RunnableObject::setTracing(type, {});
+            RunnableObjectNew::setTracing(type, {});
         }
     }
 

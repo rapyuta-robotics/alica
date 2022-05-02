@@ -83,10 +83,10 @@ void AlicaEngine::reload(const YAML::Node& config)
  * Initialise the engine
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(AlicaCreators& creatorCtx)
+bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(*creatorCtx.behaviourCreator, _ctx.getWorldModel(), this);
-    _planFactory = std::make_unique<RuntimePlanFactory>(*creatorCtx.planCreator, _ctx.getWorldModel(), this);
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
+    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
 
     _stepCalled = false;
     _roleAssignment->init();

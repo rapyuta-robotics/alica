@@ -127,5 +127,7 @@ private:
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these
     std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
+
+    bool _started;
 };
 } /* namespace alica */

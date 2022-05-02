@@ -36,9 +36,11 @@ public class CPPGeneratorImpl implements IGenerator {
 
     private GeneratedSourcesManager generatedSourcesManager;
     private String formatter;
+    private String packageName;
 
-    public CPPGeneratorImpl(GeneratedSourcesManager generatedSourcesManager) {
+    public CPPGeneratorImpl(GeneratedSourcesManager generatedSourcesManager, String packageName) {
         this.generatedSourcesManager = generatedSourcesManager;
+        this.packageName = packageName;
         xtendTemplates = new XtendTemplates();
     }
 
@@ -61,7 +63,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "BehaviourCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.behaviourCreatorSource(behaviours);
+        String fileContentSource = xtendTemplates.behaviourCreatorSource(behaviours, packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -76,7 +78,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "PlanCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.planCreatorSource(plans);
+        String fileContentSource = xtendTemplates.planCreatorSource(plans, packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -88,26 +90,26 @@ public class CPPGeneratorImpl implements IGenerator {
 
         //DomainBehaviour
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".h").toString();
-        String fileContentHeader = xtendTemplates.behaviourConditionHeader(behaviour);
+        String fileContentHeader = xtendTemplates.behaviourConditionHeader(behaviour, packageName);
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName() + behaviour.getId() + ".cpp").toString();
-        String fileContentSource = xtendTemplates.behaviourConditionSource(behaviour, getActiveConstraintCodeGenerator());
+        String fileContentSource = xtendTemplates.behaviourConditionSource(behaviour, getActiveConstraintCodeGenerator(), packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
 
         //Behaviour
         String headerPath2 = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, behaviour.getName()+ ".h").toString();
-        String fileContentHeader2 = xtendTemplates.behaviourHeader(behaviour);
+        String fileContentHeader2 = xtendTemplates.behaviourHeader(behaviour, packageName);
         writeSourceFile(headerPath2, fileContentHeader2);
 
         formatFile(headerPath2);
 
         String srcPath2 = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, behaviour.getName()+ ".cpp").toString();
-        String fileContentSource2 = xtendTemplates.behaviourSource(behaviour);
+        String fileContentSource2 = xtendTemplates.behaviourSource(behaviour, packageName);
         writeSourceFile(srcPath2, fileContentSource2);
 
         formatFile(srcPath2);
@@ -128,7 +130,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "ConditionCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.conditionCreatorSource(plans, behaviours, conditions);
+        String fileContentSource = xtendTemplates.conditionCreatorSource(plans, behaviours, conditions, packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -164,7 +166,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "ConstraintCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.constraintCreatorSource(plans, behaviours, conditions);
+        String fileContentSource = xtendTemplates.constraintCreatorSource(plans, behaviours, conditions, packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -205,7 +207,7 @@ public class CPPGeneratorImpl implements IGenerator {
         }
 
         String srcPath = Paths.get(constraintSourcePath, plan.getName() + plan.getId() + "Constraints.cpp").toString();
-        String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator());
+        String fileContentSource = xtendTemplates.constraintsSource(plan, getActiveConstraintCodeGenerator(), packageName);
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
 
@@ -247,7 +249,7 @@ public class CPPGeneratorImpl implements IGenerator {
         }
 
         String srcPath = Paths.get(constraintSourcePath, behaviour.getName() + behaviour.getId() + "Constraints.cpp").toString();
-        String fileContentSource = xtendTemplates.constraintsSource(behaviour, getActiveConstraintCodeGenerator());
+        String fileContentSource = xtendTemplates.constraintsSource(behaviour, getActiveConstraintCodeGenerator(), packageName);
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
     }
@@ -269,13 +271,13 @@ public class CPPGeneratorImpl implements IGenerator {
         String destinationPath = cutDestinationPathToDirectory(plan);
 
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, plan.getName() + plan.getId() + ".h").toString();
-        String fileContentHeader = xtendTemplates.planHeader(plan);
+        String fileContentHeader = xtendTemplates.planHeader(plan, packageName);
         writeSourceFile(headerPath, fileContentHeader);
 
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, plan.getName() + plan.getId() + ".cpp").toString();
-        String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator());
+        String fileContentSource = xtendTemplates.planSource(plan, getActiveConstraintCodeGenerator(), packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -352,7 +354,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "UtilityFunctionCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.utilityFunctionCreatorSource(plans);
+        String fileContentSource = xtendTemplates.utilityFunctionCreatorSource(plans, packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -367,7 +369,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "DomainCondition.cpp").toString();
-        String fileContentSource = xtendTemplates.domainConditionSource();
+        String fileContentSource = xtendTemplates.domainConditionSource(packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -382,7 +384,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "DomainBehaviour.cpp").toString();
-        String fileContentSource = xtendTemplates.domainBehaviourSource();
+        String fileContentSource = xtendTemplates.domainBehaviourSource(packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);
@@ -397,7 +399,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "DomainPlan.cpp").toString();
-        String fileContentSource = xtendTemplates.domainPlanSource();
+        String fileContentSource = xtendTemplates.domainPlanSource(packageName);
         writeSourceFile(srcPath, fileContentSource);
 
         formatFile(srcPath);

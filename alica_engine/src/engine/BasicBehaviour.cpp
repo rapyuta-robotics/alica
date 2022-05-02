@@ -26,7 +26,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObjectNew(context.worldModel, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
@@ -76,15 +76,13 @@ void BasicBehaviour::doRun()
 
 void BasicBehaviour::doTerminate()
 {
-    // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
-    _behResult.store(BehResult::UNKNOWN);
-
-    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
     try {
         onTermination();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
     }
+
+    _behResult.store(BehResult::UNKNOWN);
 }
 
 void BasicBehaviour::doTrigger()

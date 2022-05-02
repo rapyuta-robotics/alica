@@ -42,7 +42,7 @@ public:
     ~AlicaEngine();
 
     // State modifiers:
-    bool init(AlicaCreators& creatorCtx);
+    bool init(AlicaCreators&& creatorCtx);
     void start();
     void terminate();
     void stepNotify();

@@ -283,6 +283,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
+        _basicPlan = _ae->getRuntimePlanFactory().create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
@@ -404,6 +405,7 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         if (!isBehaviour() && _basicPlan) {
             std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId());
             _basicPlan->traceAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+            _basicPlan->stop();
         }
     } else {
         AgentGrp robotsJoined;
@@ -563,12 +565,6 @@ void RunningPlan::activate()
     if (isBehaviour()) {
         _basicBehaviour->start(this);
     } else if (_activeTriple.abstractPlan) {
-        if (!_basicPlan || _basicPlan->getId() != _activeTriple.abstractPlan->getId()) {
-            if (_basicPlan) {
-                _basicPlan->stop();
-            }
-            _basicPlan = _ae->getRuntimePlanFactory().create(_activeTriple.abstractPlan->getId(), dynamic_cast<const Plan*>(_activeTriple.abstractPlan));
-        }
         _basicPlan->start(this);
     }
 
