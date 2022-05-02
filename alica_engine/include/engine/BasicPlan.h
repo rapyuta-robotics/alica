@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/IPlanCreator.h"
-#include "engine/RunnableObjectNew.h"
+#include "engine/RunnableObject.h"
 #include "engine/blackboard/KeyMapping.h"
 
 #include <unordered_map>
@@ -18,7 +18,7 @@ struct PlanContext
     const Plan* planModel;
 };
 
-class BasicPlan : private RunnableObjectNew
+class BasicPlan : private RunnableObject
 {
 public:
     BasicPlan(PlanContext& context);
@@ -45,10 +45,10 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
-            RunnableObjectNew::setTracing(
+            RunnableObject::setTracing(
                     type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
         } else {
-            RunnableObjectNew::setTracing(type, {});
+            RunnableObject::setTracing(type, {});
         }
     }
 
