@@ -74,7 +74,6 @@ protected:
 
     RunnableObject(IAlicaWorldModel* wm, const std::string& name = "");
     virtual ~RunnableObject() = default;
-    // virtual ~RunnableObject() { std::cout << _name << " destructor" << std::endl; }
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
 
