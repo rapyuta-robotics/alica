@@ -16,6 +16,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
         , _blackboard(nullptr)
+        , _started(false)
 {
 }
 
@@ -40,14 +41,25 @@ void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMappi
 
 void RunnableObject::stop()
 {
+    if (!_started) {
+        return;
+    }
+
     stopRunCalls();
     doTerminate();
     cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+
+    _started = false;
 }
 
 void RunnableObject::start(RunningPlan* rp)
 {
+    if (_started) {
+        return;
+    }
+    _started = true;
+
     _runningplanContext = rp;
 
     // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
