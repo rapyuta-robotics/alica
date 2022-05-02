@@ -113,7 +113,6 @@ private:
     };
 
     bool _initCalled;
-    AlicaCreators _creators;
 };
 
 template <typename AlicaElementType>
