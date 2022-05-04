@@ -36,8 +36,8 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-            const AgentId agentID = InvalidAgentID);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine, const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:
@@ -113,7 +113,6 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
-    YAML::Node& editConfig();
     void subscribe(ReloadFunction reloadFunction);
 
     /**

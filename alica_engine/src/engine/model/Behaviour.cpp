@@ -21,7 +21,7 @@ Behaviour::Behaviour(AlicaEngine* ae)
 {
 }
 
-Behaviour::Behaviour(const YAML::Node& config, SubscribeFunction subscribeFunc)
+Behaviour::Behaviour(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc)
         : _preCondition(nullptr)
         , _runtimeCondition(nullptr)
         , _postCondition(nullptr)

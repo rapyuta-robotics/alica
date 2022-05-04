@@ -377,13 +377,6 @@ public:
     const YAML::Node& getConfig() const { return _configRootNode; };
 
     /**
-     * Getter/setter for the agents configuration.
-     *
-     * @return YAML::Node& containing the agents configuration.
-     */
-    YAML::Node& editConfig() { return _configRootNode; };
-
-    /**
      * Set config values for the agent.
      *
      * @param path Path of the config value.

@@ -26,7 +26,7 @@ AbstractPlan::AbstractPlan(AlicaEngine* ae, int64_t id)
     reload(ae->getConfig());
 }
 
-AbstractPlan::AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc)
+AbstractPlan::AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc)
         : AlicaElement()
 
 {
@@ -35,7 +35,7 @@ AbstractPlan::AbstractPlan(const YAML::Node& config, SubscribeFunction subscribe
     reload(config);
 }
 
-AbstractPlan::AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id)
+AbstractPlan::AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64_t id)
         : AlicaElement(id)
 {
     auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);

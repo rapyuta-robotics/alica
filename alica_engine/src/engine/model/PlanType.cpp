@@ -10,7 +10,7 @@ PlanType::PlanType(AlicaEngine* ae)
 {
 }
 
-PlanType::PlanType(const YAML::Node& config, SubscribeFunction subscribeFunc)
+PlanType::PlanType(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc)
         : AbstractPlan(config, subscribeFunc)
 {
 }

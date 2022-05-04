@@ -28,7 +28,7 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
 {
 }
 
-Plan::Plan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id)
+Plan::Plan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64_t id)
         : AbstractPlan(config, subscribeFunc, id)
         , _minCardinality(0)
         , _maxCardinality(0)

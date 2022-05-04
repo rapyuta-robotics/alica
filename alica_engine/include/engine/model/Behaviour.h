@@ -30,7 +30,7 @@ class Behaviour : public AbstractPlan
 public:
     //[[deprecated("It will be removed in the last PR")]]
     Behaviour(AlicaEngine* ae); // TOBE removed
-    Behaviour(const YAML::Node& config, SubscribeFunction subscribeFunc);
+    Behaviour(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc);
     virtual ~Behaviour();
 
     std::string toString(std::string indent = "") const;

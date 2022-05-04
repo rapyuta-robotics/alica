@@ -29,8 +29,8 @@ public:
     AbstractPlan(AlicaEngine* ae); // TOBE removed
     //[[deprecated("It will be removed in the last PR")]]
     AbstractPlan(AlicaEngine* ae, int64_t id); // TOBE removed
-    AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc);
-    AbstractPlan(const YAML::Node& config, SubscribeFunction subscribeFunc, int64_t id);
+    AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc);
+    AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64_t id);
 
     virtual ~AbstractPlan();
 
