@@ -169,6 +169,11 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (!_enabled) {
         return;
     }
+
+    if (_rp->isBehaviour()) {
+        return;
+    }
+
     AgentId rid = aai.authority;
     if (rid == _myID) {
         return;
