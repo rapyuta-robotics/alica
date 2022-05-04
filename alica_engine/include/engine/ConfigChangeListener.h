@@ -18,5 +18,4 @@ public:
 private:
     std::vector<ReloadFunction> _configChangeListenerCBs;
 };
-
 }

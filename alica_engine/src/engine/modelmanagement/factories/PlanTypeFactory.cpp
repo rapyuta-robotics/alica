@@ -37,7 +37,7 @@ PlanType* PlanTypeFactory::create(AlicaEngine* ae, const YAML::Node& planTypeNod
     return planType;
 }
 
-PlanType* PlanTypeFactory::create(const YAML::Node& config,  const YAML::Node& planTypeNode)
+PlanType* PlanTypeFactory::create(const YAML::Node& config, const YAML::Node& planTypeNode)
 {
     PlanType* planType = new PlanType(config);
     Factory::setAttributes(planTypeNode, planType);
