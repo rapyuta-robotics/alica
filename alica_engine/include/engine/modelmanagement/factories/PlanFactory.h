@@ -13,7 +13,7 @@ class PlanFactory : public Factory
 public:
     //[[deprecated("It will be removed in the last PR")]]
     static Plan* create(AlicaEngine* ae, const YAML::Node& node); // TOBE removed
-    static Plan* create(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, const YAML::Node& node);
+    static Plan* create(const YAML::Node& config, ConfigChangeListener& configChangeListener, const YAML::Node& node);
     static void attachReferences();
 
 private:

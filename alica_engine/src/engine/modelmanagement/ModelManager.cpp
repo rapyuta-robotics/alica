@@ -1,6 +1,7 @@
 #include "engine/modelmanagement/ModelManager.h"
 
 #include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Configuration.h"
@@ -28,24 +29,25 @@ namespace alica
 
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _config(const_cast<YAML::Node&>(ae->getConfig()))                             // temp
-        , _subscribeFunc(std::bind(&AlicaEngine::subscribe, ae, std::placeholders::_1)) // temp
+        , _config(const_cast<YAML::Node&>(ae->getConfig()))    // temp
+        , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
-    _subscribeFunc(reloadFunctionPtr);
+    _configChangeListener.subscribe(reloadFunctionPtr);
     reload(_config);
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(PlanRepository& planRepository, YAML::Node& config, ConfigChangeSubscriber subscribeFunc, const std::string& domainConfigFolder)
+ModelManager::ModelManager(
+        PlanRepository& planRepository, YAML::Node& config, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
         , _config(config)
-        , _subscribeFunc(subscribeFunc)
+        , _configChangeListener(configChangeListener)
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
-    subscribeFunc(reloadFunctionPtr);
+    _configChangeListener.subscribe(reloadFunctionPtr);
     reload(config);
     Factory::setModelManager(this);
 }
@@ -190,11 +192,11 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(_config, _subscribeFunc, node);
+        Plan* plan = PlanFactory::create(_config, _configChangeListener, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(_config, _subscribeFunc, node);
+        Behaviour* behaviour = BehaviourFactory::create(_config, node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -202,7 +204,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(_config, _subscribeFunc, node);
+        PlanType* planType = PlanTypeFactory::create(_config, node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {

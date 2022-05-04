@@ -114,9 +114,9 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
     return plan;
 }
 
-Plan* PlanFactory::create(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, const YAML::Node& node)
+Plan* PlanFactory::create(const YAML::Node& config, ConfigChangeListener& configChangeListener, const YAML::Node& node)
 {
-    Plan* plan = new Plan(config, subscribeFunc, Factory::getValue<int64_t>(node, alica::Strings::id));
+    Plan* plan = new Plan(config, configChangeListener, Factory::getValue<int64_t>(node, alica::Strings::id));
     Factory::setAttributes(node, plan);
     Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);

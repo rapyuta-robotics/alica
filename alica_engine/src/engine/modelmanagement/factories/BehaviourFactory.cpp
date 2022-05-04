@@ -43,9 +43,9 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     return behaviour;
 }
 
-Behaviour* BehaviourFactory::create(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, const YAML::Node& node)
+Behaviour* BehaviourFactory::create(const YAML::Node& config,  const YAML::Node& node)
 {
-    Behaviour* behaviour = new Behaviour(config, subscribeFunc);
+    Behaviour* behaviour = new Behaviour(config);
     Factory::setAttributes(node, behaviour);
     Factory::storeElement(behaviour, alica::Strings::behaviour);
     AbstractPlanFactory::setVariables(node, behaviour);

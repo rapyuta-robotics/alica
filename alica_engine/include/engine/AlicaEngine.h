@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/AlicaContext.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -113,19 +114,20 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
-    void subscribe(ReloadFunction reloadFunction);
+    void subscribe(ReloadFunction reloadFunction);   // to be removed in the last PR
+    ConfigChangeListener& getConfigChangeListener(); // to be removed in the last PR
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig(const YAML::Node& config);
+    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
+    ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;

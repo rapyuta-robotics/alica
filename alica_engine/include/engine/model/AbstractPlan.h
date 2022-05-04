@@ -29,23 +29,19 @@ public:
     AbstractPlan(AlicaEngine* ae); // TOBE removed
     //[[deprecated("It will be removed in the last PR")]]
     AbstractPlan(AlicaEngine* ae, int64_t id); // TOBE removed
-    AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc);
-    AbstractPlan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64_t id);
+    AbstractPlan(const YAML::Node& config );
+    AbstractPlan(const YAML::Node& config, int64_t id);
 
     virtual ~AbstractPlan();
 
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
     const VariableGrp& getVariables() const { return _variables; }
-    const Variable* getVariable(const std::string& name) const;
-
-    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
-    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
+    const Variable* getVariable(const std::string& name) const;  
 
     std::string toString(std::string indent = "") const override;
     const std::string& getFileName() const { return _fileName; }
 
-    void reload(const YAML::Node& config);
 
 private:
     friend ModelFactory;
@@ -63,9 +59,6 @@ private:
      * The file this abstract plan is parsed from/ written to.
      */
     std::string _fileName;
-
-    // TODO: move this to the authority module
-    mutable AlicaTime _authorityTimeInterval;
 };
 
 } // namespace alica

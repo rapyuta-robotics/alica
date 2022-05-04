@@ -20,7 +20,7 @@ class PlanType : public AbstractPlan
 public:
     //[[deprecated("It will be removed in the last PR")]]
     PlanType(AlicaEngine* ae); // TOBE removed
-    PlanType(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc);
+    PlanType(const YAML::Node& config);
     virtual ~PlanType();
 
     std::string toString(std::string indent = "") const override;

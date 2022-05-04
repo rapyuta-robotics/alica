@@ -41,7 +41,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, config, std::bind(&AlicaEngine::subscribe, this, std::placeholders::_1), configPath)
+        , _modelManager(_planRepository, config, _configChangeListener, configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
@@ -192,7 +192,7 @@ IAlicaWorldModel* AlicaEngine::getWorldModel() const
 
 void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
 {
-    _configChangeListenerCBs.push_back(reloadFunction);
+    _configChangeListener.subscribe(reloadFunction);
 };
 
 /**
@@ -231,8 +231,11 @@ AgentId AlicaEngine::generateID()
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)
 {
-    for (auto reloadFunction : _configChangeListenerCBs) {
-        reloadFunction(config);
-    }
+    _configChangeListener.reloadConfig(config);
+}
+
+ConfigChangeListener& AlicaEngine::getConfigChangeListener()
+{
+    return _configChangeListener;
 }
 } // namespace alica

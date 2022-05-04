@@ -1,7 +1,9 @@
 #include "engine/model/Plan.h"
+#include "engine/AlicaEngine.h"
 
 #include <assert.h>
 
+#include "engine/ConfigChangeListener.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
@@ -26,10 +28,13 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _frequency(0)
         , _blackboardBlueprint(nullptr)
 {
+    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfig());
 }
 
-Plan::Plan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64_t id)
-        : AbstractPlan(config, subscribeFunc, id)
+Plan::Plan(const YAML::Node& config, ConfigChangeListener& configChangeListener, int64_t id)
+        : AbstractPlan(config, id)
         , _minCardinality(0)
         , _maxCardinality(0)
         , _masterPlan(false)
@@ -40,6 +45,9 @@ Plan::Plan(const YAML::Node& config, ConfigChangeSubscriber subscribeFunc, int64
         , _frequency(0)
         , _blackboardBlueprint(nullptr)
 {
+    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(config);
 }
 
 Plan::~Plan() {}
@@ -54,6 +62,11 @@ const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const
         }
     }
     return nullptr;
+}
+
+void Plan::reload(const YAML::Node& config)
+{
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
 }
 
 const EntryPoint* Plan::getEntryPointByID(int64_t epID) const
@@ -146,6 +159,11 @@ std::string Plan::toString(std::string indent) const
 
     ss << indent << "#EndPlan:" << std::endl;
     return ss.str();
+}
+
+void Plan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
+{
+    _authorityTimeInterval = authorithyTimeInterval;
 }
 
 } // namespace alica
