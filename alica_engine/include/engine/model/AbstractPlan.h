@@ -29,7 +29,7 @@ public:
     AbstractPlan(AlicaEngine* ae); // TOBE removed
     //[[deprecated("It will be removed in the last PR")]]
     AbstractPlan(AlicaEngine* ae, int64_t id); // TOBE removed
-    AbstractPlan(const YAML::Node& config );
+    AbstractPlan(const YAML::Node& config);
     AbstractPlan(const YAML::Node& config, int64_t id);
 
     virtual ~AbstractPlan();
@@ -37,11 +37,10 @@ public:
     bool containsVar(const Variable* v) const;
     bool containsVar(const std::string& name) const;
     const VariableGrp& getVariables() const { return _variables; }
-    const Variable* getVariable(const std::string& name) const;  
+    const Variable* getVariable(const std::string& name) const;
 
     std::string toString(std::string indent = "") const override;
     const std::string& getFileName() const { return _fileName; }
-
 
 private:
     friend ModelFactory;
