@@ -18,4 +18,4 @@ public:
 private:
     std::vector<ReloadFunction> _configChangeListenerCBs;
 };
-}
+} // namespace alica
