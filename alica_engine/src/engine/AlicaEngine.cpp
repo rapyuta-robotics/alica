@@ -38,7 +38,6 @@ void AlicaEngine::abort(const std::string& msg)
 AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
         const AgentId agentID)
         : _ctx(ctx)
-        , _scheduler()
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
@@ -88,8 +87,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
-    _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
-    _scheduler->init();
 
     _stepCalled = false;
     _roleAssignment->init();
@@ -118,9 +115,6 @@ void AlicaEngine::terminate()
 {
     _maySendMessages = false;
     _planBase.stop();
-    if (_scheduler) {
-        _scheduler->terminate();
-    }
     _auth.close();
     _syncModul.close();
     _teamObserver.close();
