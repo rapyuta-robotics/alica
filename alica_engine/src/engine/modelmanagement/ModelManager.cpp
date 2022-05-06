@@ -191,7 +191,6 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        YAML::Node& config = _configChangeListener.getConfig();
         Plan* plan = PlanFactory::create(_configChangeListener, node);
         plan->setFileName(currentFile);
         return plan;
