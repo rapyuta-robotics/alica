@@ -2,7 +2,7 @@
 
 #include "engine/Assignment.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/RunnableObjectNew.h"
+#include "engine/RunnableObject.h"
 #include "engine/Types.h"
 #include "engine/model/Behaviour.h"
 
@@ -33,7 +33,7 @@ struct BehaviourContext
 /**
  * The base class for all behaviours. All Behaviours must inherit from this class.
  */
-class BasicBehaviour : private RunnableObjectNew
+class BasicBehaviour : private RunnableObject
 {
 public:
     BasicBehaviour(BehaviourContext& context);
@@ -41,16 +41,16 @@ public:
 
     // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
-    using RunnableObjectNew::getBlackboard;
-    using RunnableObjectNew::getInheritBlackboard;
-    using RunnableObjectNew::getName;
-    using RunnableObjectNew::getPlanContext;
-    using RunnableObjectNew::getWorldModel;
-    using RunnableObjectNew::setEngine;
-    using RunnableObjectNew::setInterval;
-    using RunnableObjectNew::start;
-    using RunnableObjectNew::stop;
-    using RunnableObjectNew::TracingType;
+    using RunnableObject::getBlackboard;
+    using RunnableObject::getInheritBlackboard;
+    using RunnableObject::getName;
+    using RunnableObject::getPlanContext;
+    using RunnableObject::getWorldModel;
+    using RunnableObject::setEngine;
+    using RunnableObject::setInterval;
+    using RunnableObject::start;
+    using RunnableObject::stop;
+    using RunnableObject::TracingType;
 
     virtual void run(void* msg) = 0;
     /**
@@ -74,7 +74,7 @@ public:
     void doTrigger();
 
 protected:
-    using RunnableObjectNew::getTrace;
+    using RunnableObject::getTrace;
 
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
@@ -82,10 +82,10 @@ protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
-            RunnableObjectNew::setTracing(
+            RunnableObject::setTracing(
                     type, [this, customTraceContextGetter = std::move(customTraceContextGetter)]() { return customTraceContextGetter(this); });
         } else {
-            RunnableObjectNew::setTracing(type, {});
+            RunnableObject::setTracing(type, {});
         }
     }
 
