@@ -1,10 +1,10 @@
 #include "test_alica.h"
 
+#include <alica/test/Util.h>
 #include <alica_tests/Behaviour/NotToTrigger.h>
 #include <alica_tests/Behaviour/TriggerA.h>
 #include <alica_tests/Behaviour/TriggerB.h>
 #include <alica_tests/Behaviour/TriggerC.h>
-#include <alica/test/Util.h>
 #include <alica_tests/TestWorldModel.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/IAlicaCommunication.h>

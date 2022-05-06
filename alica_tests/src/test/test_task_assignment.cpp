@@ -4,8 +4,8 @@
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/PlanCreator.h>
-#include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
