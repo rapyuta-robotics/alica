@@ -1,5 +1,5 @@
-#include "Behaviour/CountIndefinitely.h"
 #include <memory>
+#include <test/Behaviour/CountIndefinitely.h>
 
 /*PROTECTED REGION ID(inccpp1529456643148) ENABLED START*/
 // Add additional includes here

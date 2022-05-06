@@ -1,5 +1,5 @@
-#include "Behaviour/MidFieldStandard.h"
 #include <memory>
+#include <test/Behaviour/MidFieldStandard.h>
 
 /*PROTECTED REGION ID(inccpp1402488696205) ENABLED START*/
 // Add additional includes here

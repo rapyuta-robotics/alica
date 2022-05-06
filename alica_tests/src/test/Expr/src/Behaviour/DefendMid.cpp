@@ -1,5 +1,5 @@
-#include "Behaviour/DefendMid.h"
 #include <memory>
+#include <test/Behaviour/DefendMid.h>
 
 /*PROTECTED REGION ID(inccpp1402488730695) ENABLED START*/
 // Add additional includes here

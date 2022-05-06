@@ -1,8 +1,8 @@
-#include "ConstraintCreator.h"
+#include <test/ConstraintCreator.h>
 
-#include "constraints/AttackPlan1402488634525Constraints.h"
-#include "constraints/ConstraintTestPlan1414068524245Constraints.h"
-#include "constraints/GoalPlan1402488870347Constraints.h"
+#include <test/constraints/AttackPlan1402488634525Constraints.h>
+#include <test/constraints/ConstraintTestPlan1414068524245Constraints.h>
+#include <test/constraints/GoalPlan1402488870347Constraints.h>
 
 #include <iostream>
 

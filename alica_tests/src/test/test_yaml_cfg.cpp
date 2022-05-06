@@ -1,7 +1,8 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <test/BehaviourCreator.h>
+#include <test/ConditionCreator.h>
+#include <test/ConstraintCreator.h>
+#include <test/PlanCreator.h>
+#include <test/UtilityFunctionCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <alica_tests/TestWorldModel.h>
 

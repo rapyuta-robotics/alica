@@ -1,5 +1,5 @@
-#include "Behaviour/EmptyBehaviour1625610857563.h"
 #include <memory>
+#include <test/Behaviour/EmptyBehaviour1625610857563.h>
 
 /*PROTECTED REGION ID(inccppBC1625610857563) ENABLED START*/
 // Add additional includes here

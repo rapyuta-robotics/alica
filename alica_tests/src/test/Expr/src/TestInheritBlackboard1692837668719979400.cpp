@@ -1,4 +1,4 @@
-#include "TestInheritBlackboard1692837668719979400.h"
+#include <test/TestInheritBlackboard1692837668719979400.h>
 /*PROTECTED REGION ID(eph1692837668719979400) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

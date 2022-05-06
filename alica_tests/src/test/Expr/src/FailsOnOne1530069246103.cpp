@@ -1,4 +1,4 @@
-#include "FailsOnOne1530069246103.h"
+#include <test/FailsOnOne1530069246103.h>
 /*PROTECTED REGION ID(eph1530069246103) ENABLED START*/
 // Add additional using directives here
 #include <alica_tests/SimpleSwitches.h>

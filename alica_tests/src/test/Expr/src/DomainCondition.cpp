@@ -1,4 +1,4 @@
-#include "DomainCondition.h"
+#include <test/DomainCondition.h>
 /*PROTECTED REGION ID(domainSourceHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

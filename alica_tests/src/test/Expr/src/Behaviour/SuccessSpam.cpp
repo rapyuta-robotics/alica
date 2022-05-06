@@ -1,5 +1,5 @@
-#include "Behaviour/SuccessSpam.h"
 #include <memory>
+#include <test/Behaviour/SuccessSpam.h>
 
 /*PROTECTED REGION ID(inccpp1522377401286) ENABLED START*/
 // Add additional includes here

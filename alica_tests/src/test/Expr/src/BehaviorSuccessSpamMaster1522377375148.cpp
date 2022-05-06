@@ -1,4 +1,4 @@
-#include "BehaviorSuccessSpamMaster1522377375148.h"
+#include <test/BehaviorSuccessSpamMaster1522377375148.h>
 /*PROTECTED REGION ID(eph1522377375148) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

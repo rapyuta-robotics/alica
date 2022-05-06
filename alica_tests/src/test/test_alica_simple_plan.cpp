@@ -1,7 +1,7 @@
 #include "test_alica.h"
 
-#include "Behaviour/Attack.h"
-#include "Behaviour/MidFieldStandard.h"
+#include <test/Behaviour/Attack.h>
+#include <test/Behaviour/MidFieldStandard.h>
 #include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>

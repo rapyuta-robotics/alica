@@ -1,5 +1,5 @@
-#include "Behaviour/TestParameterPassingBehaviour.h"
 #include <memory>
+#include <test/Behaviour/TestParameterPassingBehaviour.h>
 
 /*PROTECTED REGION ID(inccpp831400441334251602) ENABLED START*/
 // Add additional includes here

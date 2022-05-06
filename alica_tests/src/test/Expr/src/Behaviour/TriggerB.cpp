@@ -1,5 +1,5 @@
-#include "Behaviour/TriggerB.h"
 #include <memory>
+#include <test/Behaviour/TriggerB.h>
 
 /*PROTECTED REGION ID(inccpp1428508316905) ENABLED START*/
 // Add additional includes here

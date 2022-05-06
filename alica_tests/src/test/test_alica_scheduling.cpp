@@ -1,5 +1,5 @@
-#include "Behaviour/BehAAA.h"
-#include "Behaviour/BehBAA.h"
+#include <test/Behaviour/BehAAA.h>
+#include <test/Behaviour/BehBAA.h>
 #include "test_alica.h"
 #include <alica_tests/CounterClass.h>
 

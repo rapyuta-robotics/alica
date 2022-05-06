@@ -1,5 +1,5 @@
-#include "Behaviour/AttackOpp1402489351885.h"
 #include <memory>
+#include <test/Behaviour/AttackOpp1402489351885.h>
 
 /*PROTECTED REGION ID(inccppBC1402489351885) ENABLED START*/
 // Add additional includes here

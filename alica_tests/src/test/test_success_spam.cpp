@@ -1,9 +1,10 @@
 #include "test_alica.h"
 
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <test/BehaviourCreator.h>
+#include <test/ConditionCreator.h>
+#include <test/ConstraintCreator.h>
+#include <test/PlanCreator.h>
+#include <test/UtilityFunctionCreator.h>
 #include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>

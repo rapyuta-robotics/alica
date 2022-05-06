@@ -1,9 +1,9 @@
 #include "test_alica.h"
 
-#include <Behaviour/NotToTrigger.h>
-#include <Behaviour/TriggerA.h>
-#include <Behaviour/TriggerB.h>
-#include <Behaviour/TriggerC.h>
+#include <test/Behaviour/NotToTrigger.h>
+#include <test/Behaviour/TriggerA.h>
+#include <test/Behaviour/TriggerB.h>
+#include <test/Behaviour/TriggerC.h>
 #include <alica/test/Util.h>
 #include <alica_tests/TestWorldModel.h>
 #include <engine/BasicBehaviour.h>

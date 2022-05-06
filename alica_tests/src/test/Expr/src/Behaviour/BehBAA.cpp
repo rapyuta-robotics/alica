@@ -1,5 +1,5 @@
-#include "Behaviour/BehBAA.h"
 #include <memory>
+#include <test/Behaviour/BehBAA.h>
 
 /*PROTECTED REGION ID(inccpp1629895911592) ENABLED START*/
 // Add additional includes here

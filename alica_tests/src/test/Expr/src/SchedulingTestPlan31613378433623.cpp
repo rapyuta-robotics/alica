@@ -1,4 +1,4 @@
-#include "SchedulingTestPlan31613378433623.h"
+#include <test/SchedulingTestPlan31613378433623.h>
 /*PROTECTED REGION ID(eph1613378433623) ENABLED START*/
 // Add additional options here
 #include <alica_tests/CounterClass.h>

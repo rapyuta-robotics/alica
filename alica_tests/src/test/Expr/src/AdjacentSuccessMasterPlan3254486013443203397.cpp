@@ -1,4 +1,4 @@
-#include "AdjacentSuccessMasterPlan3254486013443203397.h"
+#include <test/AdjacentSuccessMasterPlan3254486013443203397.h>
 /*PROTECTED REGION ID(eph3254486013443203397) ENABLED START*/
 // Add additional options here
 #include <alica_tests/TestWorldModel.h>
