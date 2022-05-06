@@ -407,6 +407,8 @@ public:
     template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
+    std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -417,7 +419,7 @@ private:
     uint32_t _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    std::unique_ptr<AlicaClock> _clock;
+    std::shared_ptr<AlicaClock> _clock;
     std::unique_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
@@ -447,6 +449,12 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
+
+    /*
+     * Foreward communicator to engine
+     */
+    void setCommunicatorToAlicaEngine() const;
+    void setClockToAlicaEngine(std::shared_ptr<AlicaClock> clock) const;
 };
 
 template <class ClockType, class... Args>
@@ -458,6 +466,7 @@ void AlicaContext::setClock(Args&&... args)
 #else
     _clock = std::unique_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
 #endif
+    setClockToAlicaEngine(_clock);
 }
 
 template <class CommunicatorType, class... Args>
@@ -470,6 +479,7 @@ void AlicaContext::setCommunicator(Args&&... args)
 #else
     _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
+    setCommunicatorToAlicaEngine();
 }
 
 template <class SolverType, class... Args>

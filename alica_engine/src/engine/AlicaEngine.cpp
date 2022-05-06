@@ -47,11 +47,13 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
         , _syncModul(this)
-        , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
+        , _log(this)
         , _auth(this)
-        , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
+        , _planBase(this)
+        //, _teamObserver(this)
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, getAlicaClockPtr(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -235,8 +237,24 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
     _configChangeListener.reloadConfig(config);
 }
 
+void AlicaEngine::setCommunicator()
+{
+    _teamObserver.setCommunicator(&(const_cast<IAlicaCommunication&>(_ctx.getCommunicator()))); // todo remove cast
+}
+
 ConfigChangeListener& AlicaEngine::getConfigChangeListener()
 {
     return _configChangeListener;
 }
+
+void AlicaEngine::setAlicaClock(std::shared_ptr<AlicaClock> clock)
+{
+    _teamObserver.setAlicaClock(clock);
+}
+
+std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const
+{
+    return _ctx.getAlicaClockPtr();
+}
+
 } // namespace alica

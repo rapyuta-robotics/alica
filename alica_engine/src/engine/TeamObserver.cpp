@@ -26,11 +26,28 @@ using std::mutex;
 using std::pair;
 
 TeamObserver::TeamObserver(AlicaEngine* ae)
-        : _ae(ae)
+        : _logger(ae->editLog())
+        , _roleAssignment(ae->editRoleAssignment())
+        , _maySendMessages(true) // tmp
+        , _alicaClock(ae->getAlicaClockPtr())
+        , _planRepository(ae->getPlanRepository())
         , _tm(ae->editTeamManager())
+
 {
     _me = _tm.editLocalAgent();
 }
+
+TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, std::shared_ptr<AlicaClock> clock,
+        const PlanRepository& planRepository, TeamManager& teamManager)
+        : _logger(logger)
+        , _roleAssignment(roleAssigment)
+        , _maySendMessages(maySendMessages)
+        , _alicaClock(clock)
+        , _planRepository(planRepository)
+        , _tm(teamManager)
+{
+    _me = _tm.editLocalAgent();
+};
 
 TeamObserver::~TeamObserver() {}
 
@@ -67,14 +84,14 @@ bool TeamObserver::updateTeamPlanTrees()
 
 void TeamObserver::tick(RunningPlan* root)
 {
-    AlicaTime time = _ae->getAlicaClock().now();
+    AlicaTime time = _alicaClock->now();
     ALICA_DEBUG_MSG("TO: tick(..) called at " << time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
     if (someChanges) {
-        _ae->editRoleAssignment().update();
-        _ae->editLog().eventOccurred("TeamChanged");
+        _roleAssignment.update();
+        _logger.eventOccurred("TeamChanged");
     }
 
     cleanOwnSuccessMarks(root);
@@ -101,7 +118,7 @@ void TeamObserver::tick(RunningPlan* root)
         ALICA_DEBUG_MSG("TO: spts size " << updatespts.size());
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            _ae->editLog().eventOccurred("MsgUpdate");
+            _logger.eventOccurred("MsgUpdate");
         }
     }
 }
@@ -118,14 +135,18 @@ void TeamObserver::close()
  */
 void TeamObserver::doBroadCast(const IdGrp& msg) const
 {
-    if (!_ae->maySendMessages()) {
+    if (!_maySendMessages) {
+        return;
+    }
+    if (!_communicator) {
+        // todo luca log error?
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();
     pti.senderID = _me->getId();
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
-    _ae->getCommunicator().sendPlanTreeInfo(pti);
+    _communicator->sendPlanTreeInfo(pti);
     ALICA_DEBUG_MSG("TO: Sending Plan Message: " << msg);
 }
 
@@ -270,8 +291,8 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
     }
 
     lock_guard<mutex> lock(_msgQueueMutex);
-    ALICA_DEBUG_MSG("TO: Message received " << _ae->getAlicaClock().now());
-    _msgQueue.emplace_back(std::move(incoming), _ae->getAlicaClock().now());
+    ALICA_DEBUG_MSG("TO: Message received " << _alicaClock->now());
+    _msgQueue.emplace_back(std::move(incoming), _alicaClock->now());
 }
 
 /**
@@ -296,7 +317,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     root->setStateIds(ids);
 
     int64_t root_id = ids[0];
-    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository().getStates();
+    const PlanRepository::Accessor<State>& states = _planRepository.getStates();
     const State* s = states.find(root_id);
     if (s) {
         root->setState(s);
@@ -337,6 +358,16 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
         }
     }
     return root;
+}
+
+void TeamObserver::setCommunicator(IAlicaCommunication* communicator)
+{
+    _communicator = communicator;
+}
+
+void TeamObserver::setAlicaClock(std::shared_ptr<AlicaClock> clock)
+{
+    _alicaClock = clock;
 }
 
 } /* namespace alica */

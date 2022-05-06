@@ -21,7 +21,7 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
         , _engine(std::make_unique<AlicaEngine>(*this, _configRootNode, alicaContextParams.configPath, alicaContextParams.roleSetName,
                   alicaContextParams.masterPlanName, alicaContextParams.stepEngine, alicaContextParams.agentID))
-        , _clock(std::make_unique<AlicaClock>())
+        , _clock(std::make_shared<AlicaClock>())
         , _communicator(nullptr)
         , _worldModel(nullptr)
 {
@@ -146,6 +146,21 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
             [this](const SolverResult& sr) { _engine->editResultStore().onSolverResult(sr); },
             [this](const AgentQuery& pq) { _engine->getTeamManager().handleAgentQuery(pq); },
             [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
+}
+
+void AlicaContext::setCommunicatorToAlicaEngine() const
+{
+    _engine->setCommunicator();
+}
+
+void AlicaContext::setClockToAlicaEngine(std::shared_ptr<AlicaClock> clock) const
+{
+    _engine->setAlicaClock(clock);
+}
+
+std::shared_ptr<AlicaClock> AlicaContext::getAlicaClockPtr() const
+{
+    return _clock;
 }
 
 } // namespace alica
