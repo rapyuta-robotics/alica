@@ -12,6 +12,9 @@ namespace alica
 class ConfigChangeListener
 {
 public:
+    using ReloadFunction = std::function<void(const YAML::Node&)>;
+    using ConfigChangeSubscriber = std::function<void(ReloadFunction)>;
+
     void subscribe(ReloadFunction reloadFunction);
     void reloadConfig(const YAML::Node& config);
 

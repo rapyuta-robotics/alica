@@ -21,14 +21,14 @@ Behaviour::Behaviour(AlicaEngine* ae)
 {
 }
 
-Behaviour::Behaviour(const YAML::Node& config)
+Behaviour::Behaviour()
         : _preCondition(nullptr)
         , _runtimeCondition(nullptr)
         , _postCondition(nullptr)
         , _frequency(1)
         , _deferring(0)
         , _eventDriven(false)
-        , AbstractPlan(config)
+        , AbstractPlan()
         , _blackboardBlueprint(nullptr)
 {
 }

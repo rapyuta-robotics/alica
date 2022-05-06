@@ -196,7 +196,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(_config, node);
+        Behaviour* behaviour = BehaviourFactory::create(node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -204,7 +204,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(_config, node);
+        PlanType* planType = PlanTypeFactory::create(node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {

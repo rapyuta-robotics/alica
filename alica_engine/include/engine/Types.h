@@ -57,9 +57,6 @@ using VariableGrp = std::vector<const Variable*>;
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 
-using ReloadFunction = std::function<void(const YAML::Node&)>;
-using ConfigChangeSubscriber = std::function<void(ReloadFunction)>;
-
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 
 } // namespace alica

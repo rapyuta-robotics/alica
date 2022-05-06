@@ -114,8 +114,10 @@ public:
 
     void reload(const YAML::Node& config);
     const YAML::Node& getConfig() const;
-    void subscribe(ReloadFunction reloadFunction);   // to be removed in the last PR
-    ConfigChangeListener& getConfigChangeListener(); // to be removed in the last PR
+    //[[deprecated("It will be removed in the last PR")]]
+    void subscribe(ConfigChangeListener::ReloadFunction reloadFunction);
+    //[[deprecated("It will be removed in the last PR")]]
+    ConfigChangeListener& getConfigChangeListener();
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the

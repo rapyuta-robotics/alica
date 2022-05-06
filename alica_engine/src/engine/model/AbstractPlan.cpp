@@ -20,13 +20,13 @@ AbstractPlan::AbstractPlan(AlicaEngine* ae, int64_t id)
 {
 }
 
-AbstractPlan::AbstractPlan(const YAML::Node& config)
+AbstractPlan::AbstractPlan()
         : AlicaElement()
 
 {
 }
 
-AbstractPlan::AbstractPlan(const YAML::Node& config, int64_t id)
+AbstractPlan::AbstractPlan(int64_t id)
         : AlicaElement(id)
 {
 }

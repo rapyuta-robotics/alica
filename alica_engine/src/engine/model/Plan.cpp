@@ -34,7 +34,7 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
 }
 
 Plan::Plan(const YAML::Node& config, ConfigChangeListener& configChangeListener, int64_t id)
-        : AbstractPlan(config, id)
+        : AbstractPlan(id)
         , _minCardinality(0)
         , _maxCardinality(0)
         , _masterPlan(false)
