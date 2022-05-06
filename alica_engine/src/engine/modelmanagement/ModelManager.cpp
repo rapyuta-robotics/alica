@@ -29,32 +29,30 @@ namespace alica
 
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _config(const_cast<YAML::Node&>(ae->getConfig()))    // temp
         , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_config);
+    reload(_configChangeListener.getConfig());
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(
-        PlanRepository& planRepository, YAML::Node& config, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder)
+ModelManager::ModelManager(PlanRepository& planRepository, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _config(config)
         , _configChangeListener(configChangeListener)
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(config);
+    reload(_configChangeListener.getConfig());
     Factory::setModelManager(this);
 }
 
 void ModelManager::reload(const YAML::Node& config)
 {
-    _config = config;
+    YAML::Node& originalConfig = _configChangeListener.getConfig();
+    originalConfig = config;
     basePlanPath = getBasePath("PlanDir");
     baseRolePath = getBasePath("RoleDir");
     baseTaskPath = getBasePath("TaskDir");
@@ -62,9 +60,10 @@ void ModelManager::reload(const YAML::Node& config)
 
 std::string ModelManager::getBasePath(const std::string& configKey)
 {
+    YAML::Node& config = _configChangeListener.getConfig();
     std::string basePath;
     try {
-        basePath = _config["Alica"][configKey].as<std::string>();
+        basePath = config["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
     }
@@ -192,7 +191,8 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(_config, _configChangeListener, node);
+        YAML::Node& config = _configChangeListener.getConfig();
+        Plan* plan = PlanFactory::create(_configChangeListener, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {

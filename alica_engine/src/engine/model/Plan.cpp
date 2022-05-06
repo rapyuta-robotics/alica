@@ -30,10 +30,10 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
 {
     auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfig());
+    reload(ae->getConfigChangeListener().getConfig());
 }
 
-Plan::Plan(const YAML::Node& config, ConfigChangeListener& configChangeListener, int64_t id)
+Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         : AbstractPlan(id)
         , _minCardinality(0)
         , _maxCardinality(0)
@@ -47,7 +47,7 @@ Plan::Plan(const YAML::Node& config, ConfigChangeListener& configChangeListener,
 {
     auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
-    reload(config);
+    reload(configChangeListener.getConfig());
 }
 
 Plan::~Plan() {}

@@ -31,7 +31,7 @@ class ModelManager
 public:
     //[[deprecated("It will be removed in the last PR")]]
     ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder); // TOBE removed
-    ModelManager(PlanRepository& planRepository, YAML::Node& config, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder);
+    ModelManager(PlanRepository& planRepository, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -42,7 +42,6 @@ public:
 private:
     friend Factory;
 
-    YAML::Node& _config;
     ConfigChangeListener& _configChangeListener;
     std::string domainConfigFolder;
     std::string basePlanPath;

@@ -28,7 +28,7 @@ class Plan : public AbstractPlan
 public:
     //[[deprecated("It will be removed in the last PR")]]
     Plan(AlicaEngine* ae, int64_t id); // TOBE removed
-    Plan(const YAML::Node& config, ConfigChangeListener& configChangeListener, int64_t id);
+    Plan(ConfigChangeListener& configChangeListener, int64_t id);
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;

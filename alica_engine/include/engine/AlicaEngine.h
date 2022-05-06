@@ -113,6 +113,7 @@ public:
     AgentId generateID();
 
     void reload(const YAML::Node& config);
+    //[[deprecated("It will be removed in the last PR")]]
     const YAML::Node& getConfig() const;
     //[[deprecated("It will be removed in the last PR")]]
     void subscribe(ConfigChangeListener::ReloadFunction reloadFunction);
