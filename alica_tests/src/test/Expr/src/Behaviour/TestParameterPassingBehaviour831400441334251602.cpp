@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/TestParameterPassingBehaviour831400441334251602.h>
 #include <memory>
-#include <test/Behaviour/TestParameterPassingBehaviour831400441334251602.h>
 
 /*PROTECTED REGION ID(inccppBC831400441334251602) ENABLED START*/
 // Add additional includes here

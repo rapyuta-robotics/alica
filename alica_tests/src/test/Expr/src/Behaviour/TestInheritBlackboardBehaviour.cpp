@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/TestInheritBlackboardBehaviour.h>
 #include <memory>
-#include <test/Behaviour/TestInheritBlackboardBehaviour.h>
 
 /*PROTECTED REGION ID(inccpp831400441334251600) ENABLED START*/
 #include "alica_tests/TestWorldModel.h"

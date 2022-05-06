@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/SuccessSpam1522377401286.h>
 #include <memory>
-#include <test/Behaviour/SuccessSpam1522377401286.h>
 
 /*PROTECTED REGION ID(inccppBC1522377401286) ENABLED START*/
 // Add additional includes here

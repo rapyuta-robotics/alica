@@ -1,4 +1,4 @@
-#include <test/MasterSyncTransition1418825395939.h>
+#include <alica_tests/MasterSyncTransition1418825395939.h>
 /*PROTECTED REGION ID(eph1418825395939) ENABLED START*/
 // Add additional using directives here
 #include <alica_tests/TestWorldModel.h>

@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
 #include <memory>
-#include <test/Behaviour/ReadConfigurationBehaviour.h>
 
 /*PROTECTED REGION ID(inccpp1588061129360) ENABLED START*/
 #include "engine/model/Configuration.h"

@@ -1,4 +1,4 @@
-#include <test/TestTracingMasterPlan691392966514374878.h>
+#include <alica_tests/TestTracingMasterPlan691392966514374878.h>
 /*PROTECTED REGION ID(eph691392966514374878) ENABLED START*/
 // Add additional options here
 #include <alica_tests/TestWorldModel.h>

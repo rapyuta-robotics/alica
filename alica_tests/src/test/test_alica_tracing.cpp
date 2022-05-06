@@ -1,12 +1,12 @@
 #include "test_alica.h"
 
-#include <test/Behaviour/Attack.h>
-#include <test/Behaviour/MidFieldStandard.h>
-#include <test/BehaviourCreator.h>
-#include <test/ConditionCreator.h>
-#include <test/ConstraintCreator.h>
-#include <test/PlanCreator.h>
-#include <test/UtilityFunctionCreator.h>
+#include <alica_tests/Behaviour/Attack.h>
+#include <alica_tests/Behaviour/MidFieldStandard.h>
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
+#include <alica_tests/PlanCreator.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 
 #include <alica_tests/CounterClass.h>
 #include <alica_tests/DummyTestSummand.h>

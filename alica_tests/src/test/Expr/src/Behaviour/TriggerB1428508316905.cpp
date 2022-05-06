@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/TriggerB1428508316905.h>
 #include <memory>
-#include <test/Behaviour/TriggerB1428508316905.h>
 
 /*PROTECTED REGION ID(inccppBC1428508316905) ENABLED START*/
 // Add additional includes here

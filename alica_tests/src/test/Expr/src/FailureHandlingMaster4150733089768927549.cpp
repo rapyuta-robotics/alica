@@ -1,4 +1,4 @@
-#include <test/FailureHandlingMaster4150733089768927549.h>
+#include <alica_tests/FailureHandlingMaster4150733089768927549.h>
 /*PROTECTED REGION ID(eph4150733089768927549) ENABLED START*/
 // Add additional options here
 #include <alica_tests/TestWorldModel.h>

@@ -1,4 +1,4 @@
-#include <test/TestParameterPassing1692837668719979457.h>
+#include <alica_tests/TestParameterPassing1692837668719979457.h>
 /*PROTECTED REGION ID(eph1692837668719979457) ENABLED START*/
 // Add additional options here
 #include "alica_tests/TestWorldModel.h"

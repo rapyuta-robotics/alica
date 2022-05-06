@@ -1,4 +1,4 @@
-#include <test/TestInheritBlackboardMaster1179066429431332056.h>
+#include <alica_tests/TestInheritBlackboardMaster1179066429431332056.h>
 /*PROTECTED REGION ID(eph1179066429431332056) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

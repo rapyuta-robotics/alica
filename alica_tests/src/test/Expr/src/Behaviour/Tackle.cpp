@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/Tackle.h>
 #include <memory>
-#include <test/Behaviour/Tackle.h>
 
 /*PROTECTED REGION ID(inccpp1402488939130) ENABLED START*/
 // Add additional includes here

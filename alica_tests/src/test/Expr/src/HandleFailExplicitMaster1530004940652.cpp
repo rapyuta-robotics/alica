@@ -1,4 +1,4 @@
-#include <test/HandleFailExplicitMaster1530004940652.h>
+#include <alica_tests/HandleFailExplicitMaster1530004940652.h>
 /*PROTECTED REGION ID(eph1530004940652) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

@@ -1,5 +1,5 @@
+#include <alica_tests/Behaviour/NotToTrigger.h>
 #include <memory>
-#include <test/Behaviour/NotToTrigger.h>
 
 /*PROTECTED REGION ID(inccpp1429017274116) ENABLED START*/
 // Add additional includes here
