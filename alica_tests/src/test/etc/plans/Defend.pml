@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1402488893641,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Defend",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662824,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662824"
         },
         {
@@ -42,6 +47,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662826,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662826"
         }
       ],
@@ -111,6 +120,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662831,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662831"
         }
       ],

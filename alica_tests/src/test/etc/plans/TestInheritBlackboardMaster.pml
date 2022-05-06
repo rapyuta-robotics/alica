@@ -1,4 +1,14 @@
 {
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
+      "id": 1944554894288661764,
+      "key": "masterKey",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -20,6 +30,7 @@
   ],
   "frequency": 0,
   "id": 1179066429431332056,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "TestInheritBlackboardMaster",
   "preCondition": null,
@@ -34,6 +45,10 @@
           "comment": "",
           "configuration": null,
           "id": 105160539449888469,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],
@@ -54,15 +69,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "inheritBlackboard" : false,
-  "blackboard" : [
-    {
-      "key" : "masterKey",
-      "type" : "std::any",
-      "access" : "protected",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    }
-  ]
+  "variables": []
 }

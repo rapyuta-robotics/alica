@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -52,11 +53,11 @@
   ],
   "frequency": 0,
   "id": 1407153645238,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "PlanTwo",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -67,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662791,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662791"
         },
         {
@@ -74,6 +79,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662793,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662793"
         }
       ],
@@ -98,6 +107,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662796,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662796"
         },
         {
@@ -105,6 +118,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662798,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662798"
         },
         {
@@ -112,6 +129,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662800,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662800"
         }
       ],
@@ -136,6 +157,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662803,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662803"
         },
         {
@@ -143,6 +168,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662805,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662805"
         }
       ],

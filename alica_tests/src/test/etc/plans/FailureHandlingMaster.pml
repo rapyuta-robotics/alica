@@ -4,26 +4,26 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 1418042656596,
+      "id": 722203880690238135,
       "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
-      "name": "MISSING_NAME",
-      "plan": 1418042656594,
+      "name": "",
+      "plan": 4150733089768927549,
       "positionWeb": {
-        "x": 200,
-        "y": 212
+        "x": 532,
+        "y": 409
       },
-      "state": 1418042656595,
-      "successRequired": false,
+      "state": 198406198808981916,
+      "successRequired": true,
       "task": "taskrepository.tsk#1225112227903"
     }
   ],
   "frequency": 0,
-  "id": 1418042656594,
+  "id": 4150733089768927549,
   "inheritBlackboard": false,
   "masterPlan": true,
-  "name": "MasterPlanTestConditionPlanType",
+  "name": "FailureHandlingMaster",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -31,47 +31,49 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": 1418042656596,
-      "id": 1418042656595,
-      "inTransitions": [],
-      "name": "Start",
-      "outTransitions": [
-        1418042682960
+      "entryPoint": null,
+      "id": 4449850763179483831,
+      "inTransitions": [
+        3194919312481305139
       ],
-      "parentPlan": 1418042656594,
+      "name": "FailureHandled",
+      "outTransitions": [],
+      "parentPlan": 4150733089768927549,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 925.7482517482517,
+        "y": 398.65034965034965
       },
-      "type": "State",
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "TestPlanType.pty#1418042702402",
+          "abstractPlan": "FailurePlan.pml#631515556091266493",
           "comment": "",
           "configuration": null,
-          "id": 1587718662539,
+          "id": 1232744741140546324,
           "keyMapping": {
             "input": [],
             "output": []
           },
-          "name": "1587718662539"
+          "name": ""
         }
       ],
-      "entryPoint": null,
-      "id": 1418042674811,
-      "inTransitions": [
-        1418042682960
+      "entryPoint": 722203880690238135,
+      "id": 198406198808981916,
+      "inTransitions": [],
+      "name": "FailurePlan",
+      "outTransitions": [
+        3194919312481305139
       ],
-      "name": "Plantype",
-      "outTransitions": [],
-      "parentPlan": 1418042656594,
+      "parentPlan": 4150733089768927549,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 717,
+        "y": 397
       },
       "type": "State",
       "variableBindings": []
@@ -81,17 +83,17 @@
   "transitions": [
     {
       "comment": "",
-      "id": 1418042682960,
-      "inState": 1418042656595,
-      "name": "MISSING_NAME",
-      "outState": 1418042674811,
+      "id": 3194919312481305139,
+      "inState": 198406198808981916,
+      "name": "",
+      "outState": 4449850763179483831,
       "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 1418042683692,
-        "name": "MISSING_NAME",
+        "id": 488794245455049811,
+        "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
@@ -99,6 +101,6 @@
       "synchronisation": null
     }
   ],
-  "utilityThreshold": 0.1,
+  "utilityThreshold": 0.0,
   "variables": []
 }

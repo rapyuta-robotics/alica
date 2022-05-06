@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1522377375148,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "BehaviorSuccessSpamMaster",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663016,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663016"
         }
       ],
@@ -63,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663020,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663020"
         }
       ],

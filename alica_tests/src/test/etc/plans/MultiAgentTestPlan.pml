@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -52,11 +53,11 @@
   ],
   "frequency": 0,
   "id": 1413200862180,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "MultiAgentTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -67,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662849,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662849"
         }
       ],
@@ -93,6 +98,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662852,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662852"
         }
       ],
@@ -119,6 +128,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662855,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662855"
         }
       ],
@@ -187,6 +200,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662860,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662860"
         }
       ],
