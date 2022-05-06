@@ -13,8 +13,6 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
-#include "engine/scheduler/JobQueue.h"
-#include "engine/scheduler/Scheduler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
@@ -90,8 +88,6 @@ public:
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
 
-    scheduler::JobScheduler& editScheduler() { return *_scheduler; }
-
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
@@ -132,7 +128,6 @@ private:
     // Please do not change the declaration order of members.
     std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
     AlicaContext& _ctx;
-    std::unique_ptr<scheduler::JobScheduler> _scheduler;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/

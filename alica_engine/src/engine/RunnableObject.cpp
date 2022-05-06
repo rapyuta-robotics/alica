@@ -1,4 +1,4 @@
-#include "engine/RunnableObjectNew.h"
+#include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
 // TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
 #include "engine/BasicPlan.h"
@@ -9,7 +9,7 @@
 
 namespace alica
 {
-RunnableObjectNew::RunnableObjectNew(IAlicaWorldModel* wm, const std::string& name)
+RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
@@ -20,12 +20,12 @@ RunnableObjectNew::RunnableObjectNew(IAlicaWorldModel* wm, const std::string& na
 {
 }
 
-void RunnableObjectNew::sendLogMessage(int level, const std::string& message) const
+void RunnableObject::sendLogMessage(int level, const std::string& message) const
 {
     _engine->getCommunicator().sendLogMessage(level, message);
 }
 
-int64_t RunnableObjectNew::getParentWrapperId(RunningPlan* rp) const
+int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
 {
     const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
     auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
@@ -34,12 +34,12 @@ int64_t RunnableObjectNew::getParentWrapperId(RunningPlan* rp) const
     return wrapperId;
 }
 
-void RunnableObjectNew::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
+void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
 {
     _keyMappings.emplace(wrapperId, keyMapping);
 }
 
-void RunnableObjectNew::stop()
+void RunnableObject::stop()
 {
     if (!_started) {
         return;
@@ -53,7 +53,7 @@ void RunnableObjectNew::stop()
     _started = false;
 }
 
-void RunnableObjectNew::start(RunningPlan* rp)
+void RunnableObject::start(RunningPlan* rp)
 {
     if (_started) {
         return;
@@ -69,20 +69,20 @@ void RunnableObjectNew::start(RunningPlan* rp)
     scheduleRunCalls();
 }
 
-void RunnableObjectNew::scheduleRunCalls()
+void RunnableObject::scheduleRunCalls()
 {
     // Do not schedule repeatable run job when frequency is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObjectNew::runJob, this), _msInterval);
+        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
     }
 }
 
-void RunnableObjectNew::stopRunCalls()
+void RunnableObject::stopRunCalls()
 {
     _activeRunTimer.reset();
 }
 
-void RunnableObjectNew::setupBlackboard()
+void RunnableObject::setupBlackboard()
 {
     if (!_runningplanContext->getParent() || !_runningplanContext->getParent()->getBasicPlan()) {
         if (!_blackboard) {
@@ -105,7 +105,7 @@ void RunnableObjectNew::setupBlackboard()
     }
 }
 
-void RunnableObjectNew::cleanupBlackboard()
+void RunnableObject::cleanupBlackboard()
 {
     if (_runningplanContext->getParent() && !getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
@@ -114,13 +114,13 @@ void RunnableObjectNew::cleanupBlackboard()
     }
 }
 
-void RunnableObjectNew::runJob()
+void RunnableObject::runJob()
 {
     _runnableObjectTracer.traceRunCall();
     doRun();
 }
 
-void RunnableObjectNew::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
+void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
 {
     const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
     auto& childBb = _blackboard->impl(); // Child not started yet, no other user exists, dont' use lock
@@ -134,7 +134,7 @@ void RunnableObjectNew::setInput(const Blackboard* parent_bb, const KeyMapping* 
     }
 }
 
-void RunnableObjectNew::setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const
+void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const
 {
     auto lockedParentBb = LockedBlackboardRW(*parent_bb);
     const auto& childBb = _blackboard->impl(); // Child is terminated, no other users exists, don't use lock
