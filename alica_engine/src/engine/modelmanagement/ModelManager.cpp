@@ -51,8 +51,6 @@ ModelManager::ModelManager(PlanRepository& planRepository, ConfigChangeListener&
 
 void ModelManager::reload(const YAML::Node& config)
 {
-    YAML::Node& originalConfig = _configChangeListener.getConfig();
-    originalConfig = config;
     basePlanPath = getBasePath("PlanDir");
     baseRolePath = getBasePath("RoleDir");
     baseTaskPath = getBasePath("TaskDir");
