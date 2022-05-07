@@ -13,25 +13,25 @@ AbstractPlan::AbstractPlan(AlicaEngine* ae)
         : AlicaElement()
 
 {
-    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
-    ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfig());
 }
 
 AbstractPlan::AbstractPlan(AlicaEngine* ae, int64_t id)
         : AlicaElement(id)
 {
-    auto reloadFunctionPtr = std::bind(&AbstractPlan::reload, this, std::placeholders::_1);
-    ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfig());
+}
+
+AbstractPlan::AbstractPlan()
+        : AlicaElement()
+
+{
+}
+
+AbstractPlan::AbstractPlan(int64_t id)
+        : AlicaElement(id)
+{
 }
 
 AbstractPlan::~AbstractPlan() {}
-
-void AbstractPlan::reload(const YAML::Node& config)
-{
-    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
-}
 
 std::string AbstractPlan::toString(std::string indent) const
 {
@@ -68,11 +68,6 @@ bool AbstractPlan::containsVar(const std::string& name) const
         }
     }
     return false;
-}
-
-void AbstractPlan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
-{
-    _authorityTimeInterval = authorithyTimeInterval;
 }
 
 void AbstractPlan::setFileName(const std::string& fileName)

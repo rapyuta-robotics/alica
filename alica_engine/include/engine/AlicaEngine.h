@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/AlicaContext.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -16,7 +17,6 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -37,8 +37,8 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-            const AgentId agentID = InvalidAgentID);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine, const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:
@@ -113,20 +113,24 @@ public:
     AgentId generateID();
 
     void reload(const YAML::Node& config);
+    //[[deprecated("It will be removed in the last PR")]]
     const YAML::Node& getConfig() const;
-    void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
+    //[[deprecated("It will be removed in the last PR")]]
+    void subscribe(ConfigChangeListener::ReloadFunction reloadFunction);
+    //[[deprecated("It will be removed in the last PR")]]
+    ConfigChangeListener& getConfigChangeListener();
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig(const YAML::Node& config);
+    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
+    ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
