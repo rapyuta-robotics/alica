@@ -1,7 +1,9 @@
 #pragma once
 
+#include "engine/Types.h"
 #include <yaml-cpp/yaml.h>
 
+#include <functional>
 #include <string>
 
 namespace essentials
@@ -19,6 +21,7 @@ class Plan;
 class RoleSet;
 class Factory;
 class AlicaEngine;
+class ConfigChangeListener;
 
 /**
  * Parse the plan tree from disk and writes it back. Fills the PlanRepository and holds all existing elements.
@@ -26,7 +29,9 @@ class AlicaEngine;
 class ModelManager
 {
 public:
-    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder);
+    //[[deprecated("It will be removed in the last PR")]]
+    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder); // TOBE removed
+    ModelManager(PlanRepository& planRepository, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -37,7 +42,7 @@ public:
 private:
     friend Factory;
 
-    AlicaEngine* _ae;
+    ConfigChangeListener& _configChangeListener;
     std::string domainConfigFolder;
     std::string basePlanPath;
     std::string baseRolePath;

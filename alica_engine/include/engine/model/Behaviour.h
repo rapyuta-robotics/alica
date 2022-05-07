@@ -28,7 +28,9 @@ class AlicaEngine;
 class Behaviour : public AbstractPlan
 {
 public:
-    Behaviour(AlicaEngine* ae);
+    //[[deprecated("It will be removed in the last PR")]]
+    Behaviour(AlicaEngine* ae); // TOBE removed
+    Behaviour();
     virtual ~Behaviour();
 
     std::string toString(std::string indent = "") const;

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {

@@ -68,7 +68,7 @@ void CycleManager::update()
         return;
     }
 
-    const AbstractPlan* plan = _rp->getActivePlan();
+    const Plan* plan = dynamic_cast<const Plan*>(_rp->getActivePlan());
 
     if (_state == CycleState::observing) {
         if (detectAllocationCycle()) {
@@ -169,6 +169,11 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (!_enabled) {
         return;
     }
+
+    if (_rp->isBehaviour()) {
+        return;
+    }
+
     AgentId rid = aai.authority;
     if (rid == _myID) {
         return;
@@ -179,8 +184,8 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
             ALICA_DEBUG_MSG("CM: Overriding assignment of " << _rp->getActivePlan()->getName());
 
             _state = CycleState::overriding;
-            _rp->getActivePlan()->setAuthorityTimeInterval(
-                    std::min(_maximalOverrideTimeInterval, (_rp->getActivePlan()->getAuthorityTimeInterval() * _intervalIncFactor)));
+            const Plan* plan = dynamic_cast<const Plan*>(_rp->getActivePlan());
+            plan->setAuthorityTimeInterval(std::min(_maximalOverrideTimeInterval, (plan->getAuthorityTimeInterval() * _intervalIncFactor)));
             _overrideTimestamp = _ae->getAlicaClock().now();
             _overrideShoutTime = AlicaTime::zero();
         }

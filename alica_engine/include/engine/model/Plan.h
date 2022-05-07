@@ -19,13 +19,16 @@ class PreCondition;
 class RuntimeCondition;
 class AlicaEngine;
 class BlackboardBlueprint;
+class ConfigChangeListener;
 /**
  * An ALICA plan
  */
 class Plan : public AbstractPlan
 {
 public:
-    Plan(AlicaEngine* ae, int64_t id);
+    //[[deprecated("It will be removed in the last PR")]]
+    Plan(AlicaEngine* ae, int64_t id); // TOBE removed
+    Plan(ConfigChangeListener& configChangeListener, int64_t id);
     virtual ~Plan();
 
     const EntryPoint* getEntryPointTaskID(int64_t taskID) const;
@@ -55,6 +58,11 @@ public:
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 
     std::string toString(std::string indent = "") const;
+
+    AlicaTime getAuthorityTimeInterval() const { return _authorityTimeInterval; }
+    void setAuthorityTimeInterval(AlicaTime authorityTimeInterval) const; // not a mistake, this is mutable
+
+    void reload(const YAML::Node& config);
 
 private:
     friend ModelFactory;
@@ -112,6 +120,9 @@ private:
      * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
+
+    // TODO: move this to the authority module
+    mutable AlicaTime _authorityTimeInterval;
 };
 
 } // namespace alica

@@ -21,6 +21,18 @@ Behaviour::Behaviour(AlicaEngine* ae)
 {
 }
 
+Behaviour::Behaviour()
+        : _preCondition(nullptr)
+        , _runtimeCondition(nullptr)
+        , _postCondition(nullptr)
+        , _frequency(1)
+        , _deferring(0)
+        , _eventDriven(false)
+        , AbstractPlan()
+        , _blackboardBlueprint(nullptr)
+{
+}
+
 Behaviour::~Behaviour() {}
 
 std::string Behaviour::toString(std::string indent) const
