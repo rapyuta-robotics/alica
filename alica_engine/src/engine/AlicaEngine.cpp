@@ -52,8 +52,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
-        //, _teamObserver(this)
-        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, getAlicaClockPtr(), getPlanRepository(), editTeamManager())
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, _ctx.getAlicaClockPtr(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -237,9 +236,9 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
     _configChangeListener.reloadConfig(config);
 }
 
-void AlicaEngine::setCommunicator()
+void AlicaEngine::setCommunicator(IAlicaCommunication* communicator)
 {
-    _teamObserver.setCommunicator(&(const_cast<IAlicaCommunication&>(_ctx.getCommunicator()))); // todo remove cast
+    _teamObserver.setCommunicator(communicator);
 }
 
 ConfigChangeListener& AlicaEngine::getConfigChangeListener()
@@ -252,7 +251,7 @@ void AlicaEngine::setAlicaClock(std::shared_ptr<AlicaClock> clock)
     _teamObserver.setAlicaClock(clock);
 }
 
-std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const
+std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const // tobe removed in las PR
 {
     return _ctx.getAlicaClockPtr();
 }

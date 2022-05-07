@@ -100,8 +100,9 @@ public:
 
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
-    void setCommunicator();
+    void setCommunicator(IAlicaCommunication* communicator);
     const AlicaClock& getAlicaClock() const;
+    //[[deprecated("It will be removed in the last PR")]]
     std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
     void setAlicaClock(std::shared_ptr<AlicaClock> clock);
     IAlicaTimerFactory& getTimerFactory() const;

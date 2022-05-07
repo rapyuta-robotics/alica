@@ -150,7 +150,7 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
 
 void AlicaContext::setCommunicatorToAlicaEngine() const
 {
-    _engine->setCommunicator();
+    _engine->setCommunicator(_communicator.get());
 }
 
 void AlicaContext::setClockToAlicaEngine(std::shared_ptr<AlicaClock> clock) const
