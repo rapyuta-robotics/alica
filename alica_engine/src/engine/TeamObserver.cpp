@@ -360,7 +360,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
     return root;
 }
 
-void TeamObserver::setCommunicator(IAlicaCommunication* communicator)
+void TeamObserver::setCommunicator(std::shared_ptr<IAlicaCommunication> communicator)
 {
     _communicator = communicator;
 }

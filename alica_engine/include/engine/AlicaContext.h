@@ -420,7 +420,7 @@ private:
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     std::shared_ptr<AlicaClock> _clock;
-    std::unique_ptr<IAlicaCommunication> _communicator;
+    std::shared_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
@@ -449,12 +449,6 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
-
-    /*
-     * Foreward communicator to engine
-     */
-    void setCommunicatorToAlicaEngine() const;
-    void setClockToAlicaEngine(std::shared_ptr<AlicaClock> clock) const;
 };
 
 template <class ClockType, class... Args>
@@ -462,11 +456,12 @@ void AlicaContext::setClock(Args&&... args)
 {
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);
+    _clock = std::make_shared<ClockType>(std::forward<Args>(args)...);
 #else
-    _clock = std::unique_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
+    _clock = std::shared_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
 #endif
-    setClockToAlicaEngine(_clock);
+
+    _engine->setAlicaClock(_clock); // Refresh clock to engine
 }
 
 template <class CommunicatorType, class... Args>
@@ -475,11 +470,12 @@ void AlicaContext::setCommunicator(Args&&... args)
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
     AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _communicator = std::make_unique<CommunicatorType>(callbacks, std::forward<Args>(args)...);
+    _communicator = std::make_shared<CommunicatorType>(callbacks, std::forward<Args>(args)...);
 #else
-    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
+    _communicator = std::shared_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
-    setCommunicatorToAlicaEngine();
+
+    _engine->setCommunicator(_communicator);
 }
 
 template <class SolverType, class... Args>

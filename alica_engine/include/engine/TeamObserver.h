@@ -49,7 +49,7 @@ public:
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
 
-    void setCommunicator(IAlicaCommunication* communicator);
+    void setCommunicator(std::shared_ptr<IAlicaCommunication> communicator);
     void setAlicaClock(std::shared_ptr<AlicaClock> clock);
 
 private:
@@ -62,7 +62,7 @@ private:
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
     const bool& _maySendMessages;
-    IAlicaCommunication* _communicator{nullptr};
+    std::shared_ptr<IAlicaCommunication> _communicator{nullptr};
     std::shared_ptr<AlicaClock> _alicaClock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;

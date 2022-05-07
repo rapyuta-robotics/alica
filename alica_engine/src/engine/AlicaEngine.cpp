@@ -236,7 +236,7 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
     _configChangeListener.reloadConfig(config);
 }
 
-void AlicaEngine::setCommunicator(IAlicaCommunication* communicator)
+void AlicaEngine::setCommunicator(std::shared_ptr<IAlicaCommunication> communicator)
 {
     _teamObserver.setCommunicator(communicator);
 }

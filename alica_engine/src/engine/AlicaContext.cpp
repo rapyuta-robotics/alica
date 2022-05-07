@@ -148,16 +148,6 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
             [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
-void AlicaContext::setCommunicatorToAlicaEngine() const
-{
-    _engine->setCommunicator(_communicator.get());
-}
-
-void AlicaContext::setClockToAlicaEngine(std::shared_ptr<AlicaClock> clock) const
-{
-    _engine->setAlicaClock(clock);
-}
-
 std::shared_ptr<AlicaClock> AlicaContext::getAlicaClockPtr() const
 {
     return _clock;
