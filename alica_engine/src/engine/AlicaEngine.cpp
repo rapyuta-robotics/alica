@@ -48,7 +48,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _teamManager(this, agentID)
         , _syncModul(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
-        , _log(this)
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
