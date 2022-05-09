@@ -20,11 +20,17 @@ struct SyncData;
 struct SyncReady;
 struct SyncTalk;
 class IAlicaCommunication;
+class TeamManager;
+class AlicaClock;
 
 class SyncModule
 {
 public:
+    //[[deprecated("It will be removed in the last PR")]]
     SyncModule(const AlicaEngine* ae);
+    SyncModule(const TeamManager& teamManager, const PlanRepository& planRepository, const bool& maySendMessages,
+            std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock);
+
     ~SyncModule();
     void init();
     void close();
@@ -39,10 +45,17 @@ public:
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const Synchronisation* st);
 
+    void setCommunicator(std::shared_ptr<IAlicaCommunication> communicator);
+    void setAlicaClock(std::shared_ptr<AlicaClock> clock);
+
 private:
     bool _running;
-    const AlicaEngine* _ae;
     AgentId _myId;
+    const TeamManager& _teamManager;
+    const PlanRepository& _planRepository;
+    const bool& _maySendMessages;
+    std::shared_ptr<IAlicaCommunication> _communicator{nullptr};
+    std::shared_ptr<AlicaClock> _alicaClock;
     unsigned long _ticks;
     std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
     std::map<const Synchronisation*, SynchronisationProcess*>

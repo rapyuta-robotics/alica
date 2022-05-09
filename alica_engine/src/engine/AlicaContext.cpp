@@ -164,4 +164,9 @@ void AlicaContext::refreshCommunicatorToEngine()
 
     _engine->setCommunicator(_communicator);
 }
+
+std::shared_ptr<IAlicaCommunication> AlicaContext::getCommunicatorPtr() const
+{
+    return _communicator;
+}
 } // namespace alica

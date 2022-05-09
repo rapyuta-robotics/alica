@@ -408,6 +408,7 @@ public:
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
     std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
+    std::shared_ptr<IAlicaCommunication> getCommunicatorPtr() const;
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;

@@ -22,7 +22,9 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
+    //[[deprecated("It will be removed in the last PR")]]
     SynchronisationProcess(const AlicaEngine* ae, AgentId myID, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(std::shared_ptr<AlicaClock> clock, AgentId myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -40,7 +42,7 @@ private:
 
     friend std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& sync);
 
-    const AlicaEngine* _ae;
+    std::shared_ptr<AlicaClock> _alicaClock;
     std::mutex _syncMutex;
     std::mutex _rowOkMutex;
     SyncModule* _syncModule;

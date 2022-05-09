@@ -46,7 +46,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
-        , _syncModul(this)
+        , _syncModul(getTeamManager(), getPlanRepository(), maySendMessages(), _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
@@ -238,6 +238,7 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
 void AlicaEngine::setCommunicator(std::shared_ptr<IAlicaCommunication> communicator)
 {
     _teamObserver.setCommunicator(communicator);
+    _syncModul.setCommunicator(communicator);
 }
 
 ConfigChangeListener& AlicaEngine::getConfigChangeListener()
@@ -248,6 +249,7 @@ ConfigChangeListener& AlicaEngine::getConfigChangeListener()
 void AlicaEngine::setAlicaClock(std::shared_ptr<AlicaClock> clock)
 {
     _teamObserver.setAlicaClock(clock);
+    _syncModul.setAlicaClock(clock);
 }
 
 std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const // tobe removed in las PR
