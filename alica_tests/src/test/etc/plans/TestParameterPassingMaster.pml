@@ -1,4 +1,14 @@
 {
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
+      "id": 3046890668195475143,
+      "key": "masterKey",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +30,11 @@
   ],
   "frequency": 0,
   "id": 1179066429431332055,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "TestParameterPassingMaster",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,25 +45,16 @@
           "comment": "",
           "configuration": null,
           "id": 105160539449888459,
-          "name": "",
-          "keyMapping" : 
-          {
-            "input" : 
-            [
+          "keyMapping": {
+            "input": [
               {
-                "parentKey" : "masterKey",
-                "childKey" : "planInputFromMaster"
-              },
-              {
-                "parentKey" : "nonExistingKey",
-                "childKey" : "planInputFromMaster"
-              },
-              {
-                "parentKey" : "masterKey",
-                "childKey" : "nonExistingKey"
+                "childKey": "planInputFromMaster",
+                "parentKey": "masterKey"
               }
-            ]
-          }
+            ],
+            "output": []
+          },
+          "name": ""
         }
       ],
       "entryPoint": 4058387577648167302,
@@ -73,15 +74,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "inheritBlackboard" : false,
-  "blackboard" : [
-    {
-      "key" : "masterKey",
-      "type" : "std::any",
-      "access" : "protected",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    }
-  ]
+  "variables": []
 }

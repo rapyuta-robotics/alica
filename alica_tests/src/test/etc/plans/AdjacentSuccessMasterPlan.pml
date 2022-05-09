@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 3254486013443203397,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "AdjacentSuccessMasterPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587789133681493604,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],
@@ -63,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1193245213581698231,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],

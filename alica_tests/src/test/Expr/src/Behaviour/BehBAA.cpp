@@ -1,4 +1,4 @@
-#include "Behaviour/BehBAA.h"
+#include <alica_tests/Behaviour/BehBAA.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1629895911592) ENABLED START*/

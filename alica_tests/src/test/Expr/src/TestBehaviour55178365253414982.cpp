@@ -1,4 +1,4 @@
-#include "TestBehaviour55178365253414982.h"
+#include <alica_tests/TestBehaviour55178365253414982.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccppBC55178365253414982) ENABLED START*/

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1402488634525,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "AttackPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663068,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663068"
         },
         {
@@ -42,6 +47,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663070,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663070"
         }
       ],
@@ -70,6 +79,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663073,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663073"
         }
       ],

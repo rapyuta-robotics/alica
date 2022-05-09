@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -36,11 +37,11 @@
   ],
   "frequency": 0,
   "id": 1418825395939,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "MasterSyncTransition",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -87,6 +88,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662770,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662770"
         }
       ],
@@ -113,6 +118,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662773,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662773"
         }
       ],

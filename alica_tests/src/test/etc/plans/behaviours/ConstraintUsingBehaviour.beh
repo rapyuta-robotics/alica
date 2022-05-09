@@ -1,14 +1,15 @@
 {
+  "blackboard": [],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
   "id": 1414068597716,
+  "inheritBlackboard": false,
   "name": "ConstraintUsingBehaviour",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": [
     {

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1588061801734,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "ReadConfInPlantype",
   "preCondition": null,
   "relativeDirectory": "Configurations",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {

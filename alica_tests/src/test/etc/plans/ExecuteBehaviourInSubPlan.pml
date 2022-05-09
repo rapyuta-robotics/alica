@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 3172561495666303184,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "ExecuteBehaviourInSubPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -55,6 +56,10 @@
           "comment": "",
           "configuration": null,
           "id": 2313243829564670249,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],

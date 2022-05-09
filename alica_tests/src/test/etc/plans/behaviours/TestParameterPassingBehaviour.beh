@@ -1,38 +1,40 @@
 {
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
+      "id": 4595223845781635836,
+      "key": "behaviorKey",
+      "type": "std::any"
+    },
+    {
+      "access": "input",
+      "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
+      "id": 831672371947300202,
+      "key": "behaviorInputKey",
+      "type": "std::any"
+    },
+    {
+      "access": "output",
+      "comment": "This is a blackboard entry for testing",
+      "defaultValue": null,
+      "id": 4355442070811434152,
+      "key": "behaviorOutputKey",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
   "id": 831400441334251602,
+  "inheritBlackboard": false,
   "name": "TestParameterPassingBehaviour",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",
-  "requiresParameters": true,
   "runtimeCondition": null,
-  "variables": [],
-  "inheritBlackboard" : false,
-  "blackboard" : [
-    {
-      "key" : "behaviorKey",
-      "type" : "std::any",
-      "access" : "protected",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    },
-    {
-      "key" : "behaviorInputKey",
-      "type" : "std::any",
-      "access" : "input",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    },
-    {
-      "key" : "behaviorOutputKey",
-      "type" : "std::any",
-      "access" : "output",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    }
-  ]
+  "variables": []
 }

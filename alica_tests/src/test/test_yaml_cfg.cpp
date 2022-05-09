@@ -1,9 +1,10 @@
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
+#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>

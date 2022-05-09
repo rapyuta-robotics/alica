@@ -3,6 +3,7 @@
 // TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
 #include "engine/BasicPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/PlanType.h"
 
 #include <assert.h>
 #include <iostream>
@@ -28,7 +29,14 @@ void RunnableObject::sendLogMessage(int level, const std::string& message) const
 int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
 {
     const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) {
+        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
+            const auto& plans = planType->getPlans();
+            return std::find_if(plans.begin(), plans.end(), [this](const auto& plan) { return plan->getName() == _name; }) != plans.end();
+        } else {
+            return wrapper_ptr->getAbstractPlan()->getName() == _name;
+        }
+    });
     assert(it != wrappers.end());
     int64_t wrapperId = (*it)->getId();
     return wrapperId;

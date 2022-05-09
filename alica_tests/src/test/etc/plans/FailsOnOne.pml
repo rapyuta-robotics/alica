@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1530069246103,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "FailsOnOne",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "Is not set 1",
     "conditionString": "",

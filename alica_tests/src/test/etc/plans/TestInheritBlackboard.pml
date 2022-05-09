@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1692837668719979400,
+  "inheritBlackboard": true,
   "masterPlan": false,
   "name": "TestInheritBlackboard",
   "preCondition": null,
@@ -34,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 445396005944825200,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],
@@ -54,15 +60,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "inheritBlackboard" : true,
-  "blackboard" : [
-    {
-      "key" : "planKey",
-      "type" : "std::any",
-      "access" : "protected",
-      "defaultValue" : null,
-      "comment" : "This is a blackboard entry for testing"
-    }
-  ]
+  "variables": []
 }
