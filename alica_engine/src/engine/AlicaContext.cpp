@@ -153,9 +153,15 @@ std::shared_ptr<AlicaClock> AlicaContext::getAlicaClockPtr() const
     return _clock;
 }
 
-void AlicaContext::setRefreshAlicaClockToEngine()
+void AlicaContext::refreshAlicaClockToEngine()
 {
 
     _engine->setAlicaClock(_clock); // Refresh clock to engine
+}
+
+void AlicaContext::refreshCommunicatorToEngine()
+{
+
+    _engine->setCommunicator(_communicator);
 }
 } // namespace alica

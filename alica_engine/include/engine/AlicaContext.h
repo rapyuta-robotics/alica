@@ -450,7 +450,8 @@ private:
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
 
-    void setRefreshAlicaClockToEngine();
+    void refreshAlicaClockToEngine();
+    void refreshCommunicatorToEngine();
 };
 
 template <class ClockType, class... Args>
@@ -463,7 +464,7 @@ void AlicaContext::setClock(Args&&... args)
     _clock = std::shared_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
 #endif
 
-    setRefreshAlicaClockToEngine();
+    refreshAlicaClockToEngine();
 }
 
 template <class CommunicatorType, class... Args>
@@ -477,7 +478,7 @@ void AlicaContext::setCommunicator(Args&&... args)
     _communicator = std::shared_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
 #endif
 
-    _engine->setCommunicator(_communicator);
+    refreshCommunicatorToEngine();
 }
 
 template <class SolverType, class... Args>
