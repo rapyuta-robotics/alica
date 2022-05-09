@@ -1,4 +1,4 @@
-#include "Behaviour/TriggerA.h"
+#include <alica_tests/Behaviour/TriggerA.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1428508297492) ENABLED START*/

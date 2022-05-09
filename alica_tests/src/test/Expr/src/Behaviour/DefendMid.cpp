@@ -1,4 +1,4 @@
-#include "Behaviour/DefendMid.h"
+#include <alica_tests/Behaviour/DefendMid.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1402488730695) ENABLED START*/

@@ -1,4 +1,4 @@
-#include "BehaviourTriggerTestPlan1428508768572.h"
+#include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
 /*PROTECTED REGION ID(eph1428508768572) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

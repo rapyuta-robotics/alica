@@ -1,4 +1,4 @@
-#include "Behaviour/TestInheritBlackboardBehaviour.h"
+#include <alica_tests/Behaviour/TestInheritBlackboardBehaviour.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp831400441334251600) ENABLED START*/

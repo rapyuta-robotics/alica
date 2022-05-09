@@ -1,14 +1,15 @@
 {
+  "blackboard": [],
   "comment": "",
   "deferring": 0,
   "eventDriven": true,
   "frequency": 30,
   "id": 1428508316905,
+  "inheritBlackboard": false,
   "name": "TriggerB",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": []
 }

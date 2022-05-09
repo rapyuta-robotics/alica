@@ -1,4 +1,4 @@
-#include "Behaviour/MidFieldStandard.h"
+#include <alica_tests/Behaviour/MidFieldStandard.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1402488696205) ENABLED START*/

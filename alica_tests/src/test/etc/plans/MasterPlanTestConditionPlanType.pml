@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1418042656594,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "MasterPlanTestConditionPlanType",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -53,6 +54,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662539,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662539"
         }
       ],

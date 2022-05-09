@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -36,11 +37,11 @@
   ],
   "frequency": 0,
   "id": 1414403413451,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "AuthorityTest",
   "preCondition": null,
   "relativeDirectory": "Authority",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -51,6 +52,10 @@
           "comment": "",
           "configuration": null,
           "id": 1626437211225,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1626437211225"
         }
       ],
@@ -75,6 +80,10 @@
           "comment": "",
           "configuration": null,
           "id": 1626437213779,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1626437213779"
         }
       ],

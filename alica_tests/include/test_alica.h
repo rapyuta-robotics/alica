@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "PlanCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
+#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
 #include <alica_tests/TestTracing.h>
@@ -56,6 +56,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
         alicaTests::TestWorldModel::getOne()->reset();
@@ -65,7 +66,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();

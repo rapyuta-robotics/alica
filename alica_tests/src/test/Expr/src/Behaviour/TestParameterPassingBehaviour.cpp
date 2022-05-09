@@ -1,4 +1,4 @@
-#include "Behaviour/TestParameterPassingBehaviour.h"
+#include <alica_tests/Behaviour/TestParameterPassingBehaviour.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp831400441334251602) ENABLED START*/

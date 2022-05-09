@@ -1,14 +1,15 @@
 {
+  "blackboard": [],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
   "id": 1402488939130,
+  "inheritBlackboard": false,
   "name": "Tackle",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": []
 }

@@ -1,4 +1,4 @@
-#include "Behaviour/Attack1402488848841.h"
+#include <alica_tests/Behaviour/Attack1402488848841.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccppBC1402488848841) ENABLED START*/
