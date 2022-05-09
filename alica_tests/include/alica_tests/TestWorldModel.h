@@ -75,8 +75,8 @@ public:
     void reset();
 
     // Failure handling tests
-    void setTransitionCondition3194919312481305139(bool value);
-    bool isTransitionCondition3194919312481305139() const;
+    void enableTransitionCondition3194919312481305139();
+    bool transitionCondition3194919312481305139Enabled() const;
     void setTransitionCondition1446293122737278544(bool value);
     bool isTransitionCondition1446293122737278544() const;
     void setTransitionCondition1023566846009251524(bool value);

@@ -221,12 +221,11 @@ void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401
 {
     this->preCondition1840401110297459509 = preCondition1840401110297459509;
 }
-
-void TestWorldModel::setTransitionCondition3194919312481305139(bool value)
+void TestWorldModel::enableTransitionCondition3194919312481305139()
 {
-    transitionCondition3194919312481305139 = value;
+    transitionCondition3194919312481305139 = true;
 }
-bool TestWorldModel::isTransitionCondition3194919312481305139() const
+bool TestWorldModel::transitionCondition3194919312481305139Enabled() const
 {
     return transitionCondition3194919312481305139;
 }
