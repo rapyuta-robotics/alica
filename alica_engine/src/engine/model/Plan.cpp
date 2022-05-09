@@ -1,7 +1,9 @@
 #include "engine/model/Plan.h"
+#include "engine/AlicaEngine.h"
 
 #include <assert.h>
 
+#include "engine/ConfigChangeListener.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PreCondition.h"
@@ -9,6 +11,7 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
+
 //#include <alica_common_config/debug_output.h>
 
 namespace alica
@@ -25,6 +28,26 @@ Plan::Plan(AlicaEngine* ae, int64_t id)
         , _frequency(0)
         , _blackboardBlueprint(nullptr)
 {
+    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
+    ae->subscribe(reloadFunctionPtr);
+    reload(ae->getConfigChangeListener().getConfig());
+}
+
+Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
+        : AbstractPlan(id)
+        , _minCardinality(0)
+        , _maxCardinality(0)
+        , _masterPlan(false)
+        , _utilityFunction(nullptr)
+        , _utilityThreshold(1.0)
+        , _runtimeCondition(nullptr)
+        , _preCondition(nullptr)
+        , _frequency(0)
+        , _blackboardBlueprint(nullptr)
+{
+    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 Plan::~Plan() {}
@@ -39,6 +62,11 @@ const EntryPoint* Plan::getEntryPointTaskID(int64_t taskID) const
         }
     }
     return nullptr;
+}
+
+void Plan::reload(const YAML::Node& config)
+{
+    _authorityTimeInterval = AlicaTime::milliseconds(config["Alica"]["CycleDetection"]["MinimalAuthorityTimeInterval"].as<unsigned long>());
 }
 
 const EntryPoint* Plan::getEntryPointByID(int64_t epID) const
@@ -131,6 +159,11 @@ std::string Plan::toString(std::string indent) const
 
     ss << indent << "#EndPlan:" << std::endl;
     return ss.str();
+}
+
+void Plan::setAuthorityTimeInterval(AlicaTime authorithyTimeInterval) const
+{
+    _authorityTimeInterval = authorithyTimeInterval;
 }
 
 } // namespace alica
