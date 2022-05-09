@@ -1,4 +1,4 @@
-#include "Behaviour/EmptyBehaviour.h"
+#include <alica_tests/Behaviour/EmptyBehaviour.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1625610857563) ENABLED START*/

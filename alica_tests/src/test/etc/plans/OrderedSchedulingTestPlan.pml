@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1629895582410,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "OrderedSchedulingTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1629895930356,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1629895930356"
         }
       ],
@@ -63,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1629895934743,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1629895934743"
         }
       ],

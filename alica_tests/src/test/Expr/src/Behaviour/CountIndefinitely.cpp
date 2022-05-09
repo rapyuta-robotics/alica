@@ -1,4 +1,4 @@
-#include "Behaviour/CountIndefinitely.h"
+#include <alica_tests/Behaviour/CountIndefinitely.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1529456643148) ENABLED START*/

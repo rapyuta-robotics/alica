@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1402488870347,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "GoalPlan",
   "preCondition": {
@@ -33,7 +35,6 @@
     "variables": []
   },
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "test",

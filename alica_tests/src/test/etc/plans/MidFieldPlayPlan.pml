@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -36,11 +37,11 @@
   ],
   "frequency": 0,
   "id": 1402488770050,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "MidFieldPlayPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",
@@ -60,6 +61,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662682,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662682"
         }
       ],
@@ -87,6 +92,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662685,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662685"
         },
         {
@@ -94,6 +103,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662687,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662687"
         },
         {
@@ -101,6 +114,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662689,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662689"
         }
       ],
@@ -127,6 +144,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662692,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662692"
         }
       ],

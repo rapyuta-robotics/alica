@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1428508768572,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "BehaviourTriggerTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662751,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662751"
         },
         {
@@ -42,6 +47,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662753,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662753"
         },
         {
@@ -49,6 +58,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662755,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662755"
         },
         {
@@ -56,6 +69,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662758,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662758"
         }
       ],

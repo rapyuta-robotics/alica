@@ -1,4 +1,4 @@
-#include "OrderedSchedulingTestPlan1629895582410.h"
+#include <alica_tests/OrderedSchedulingTestPlan1629895582410.h>
 /*PROTECTED REGION ID(eph1629895582410) ENABLED START*/
 // Add additional options here
 #include "engine/PlanInterface.h"

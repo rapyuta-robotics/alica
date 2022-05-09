@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 50,
   "id": 1629895853508,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "PlanB",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1629896077656,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1629896077656"
         }
       ],

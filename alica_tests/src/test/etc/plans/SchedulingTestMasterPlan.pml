@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1613378382024,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "SchedulingTestMasterPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1613378494690,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1613378494690"
         }
       ],
@@ -105,6 +110,10 @@
           "comment": "",
           "configuration": null,
           "id": 1615797379906,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1615797379906"
         }
       ],
@@ -133,6 +142,10 @@
           "comment": "",
           "configuration": null,
           "id": 1629895663156,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1629895663156"
         }
       ],
@@ -161,6 +174,10 @@
           "comment": "",
           "configuration": null,
           "id": 923638215106179740,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],
@@ -190,6 +207,10 @@
           "comment": "",
           "configuration": null,
           "id": 2772491646832615539,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],

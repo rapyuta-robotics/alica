@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1626848999740,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "FrequencyTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1626849067526,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1626849067526"
         }
       ],

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1414068495566,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "ConstraintTestMaster",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662924,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662924"
         }
       ],
