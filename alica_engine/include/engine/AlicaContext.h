@@ -449,6 +449,8 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
+
+    void setRefreshAlicaClockToEngine();
 };
 
 template <class ClockType, class... Args>
@@ -461,7 +463,7 @@ void AlicaContext::setClock(Args&&... args)
     _clock = std::shared_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
 #endif
 
-    _engine->setAlicaClock(_clock); // Refresh clock to engine
+    setRefreshAlicaClockToEngine();
 }
 
 template <class CommunicatorType, class... Args>
