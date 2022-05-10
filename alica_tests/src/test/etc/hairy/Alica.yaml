@@ -27,6 +27,9 @@ Alica:
   TeamTimeOut: 10000
   AssignmentProtectionTime: 500
 
+  #Failure Handling
+  AutoFailureHandling: true
+
   #Hz
   MinBroadcastFrequency: 10
   MaxBroadcastFrequency: 15
@@ -82,4 +85,3 @@ Alica:
     SeedTTL4Usage: 5000
     MaxSolveTime: 10
     MaxFunctionEvaluations: 100000000
-
