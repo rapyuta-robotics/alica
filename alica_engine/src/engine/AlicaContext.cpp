@@ -165,6 +165,12 @@ void AlicaContext::refreshCommunicatorToEngine()
     _engine->setCommunicator(_communicator);
 }
 
+void AlicaContext::refreshTimerFactoryToEngine()
+{
+
+    _engine->setTimerFactory(*_timerFactory.get());//To change in shared_ptr
+}
+
 std::shared_ptr<IAlicaCommunication> AlicaContext::getCommunicatorPtr() const
 {
     return _communicator;

@@ -20,7 +20,10 @@ class IAlicaTimer;
 class VariableSyncModule
 {
 public:
+    //[[deprecated("It will be removed in the last PR")]]
     VariableSyncModule(AlicaEngine* ae);
+    VariableSyncModule(ConfigChangeListener& configChangeListener, const bool& maySendMessages, std::shared_ptr<IAlicaCommunication> communicator,
+            std::shared_ptr<AlicaClock> clock, TeamManager& teamManager, IAlicaTimerFactory& alicaTimerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -37,6 +40,10 @@ public:
     VariableSyncModule(VariableSyncModule&&) = delete;
     VariableSyncModule& operator=(const VariableSyncModule&) = delete;
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
+
+    void setCommunicator(std::shared_ptr<IAlicaCommunication> communicator);
+    void setAlicaClock(std::shared_ptr<AlicaClock> clock);
+    void setTimerFactory(IAlicaTimerFactory& timeFactory);
 
 private:
     class VotedSeed
@@ -61,7 +68,12 @@ private:
     SolverResult _publishData;
     AlicaTime _ttl4Communication;
     AlicaTime _ttl4Usage;
-    AlicaEngine* _ae;
+    ConfigChangeListener& _configChangeListener;
+    const bool& _maySendMessages;
+    std::shared_ptr<IAlicaCommunication> _communicator{nullptr};
+    std::shared_ptr<AlicaClock> _alicaClock{nullptr};
+    TeamManager& _teamManager;
+    IAlicaTimerFactory& _timerFactory;
     bool _running;
     double _distThreshold;
     std::unique_ptr<IAlicaTimer> _timer;
@@ -77,7 +89,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
 
     std::vector<VotedSeed> seeds;
 
-    AlicaTime earliest = _ae->getAlicaClock().now() - _ttl4Usage;
+    AlicaTime earliest = _alicaClock->now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const std::unique_ptr<ResultEntry>& re : _store) {

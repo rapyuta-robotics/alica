@@ -33,7 +33,8 @@ void AlicaEngine::abort(const std::string& msg)
 }
 
 /**
- * The main class.
+ * @brief
+ *
  */
 AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName,
         const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
@@ -47,7 +48,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
         , _syncModul(getTeamManager(), getPlanRepository(), maySendMessages(), _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr())
-        , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
+        , _variableSyncModule(std::make_unique<VariableSyncModule>(
+                  _configChangeListener, _maySendMessages, _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr(), _teamManager, _ctx.getTimerFactory()))
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
@@ -239,6 +241,7 @@ void AlicaEngine::setCommunicator(std::shared_ptr<IAlicaCommunication> communica
 {
     _teamObserver.setCommunicator(communicator);
     _syncModul.setCommunicator(communicator);
+    _variableSyncModule->setCommunicator(communicator);
 }
 
 ConfigChangeListener& AlicaEngine::getConfigChangeListener()
@@ -250,6 +253,12 @@ void AlicaEngine::setAlicaClock(std::shared_ptr<AlicaClock> clock)
 {
     _teamObserver.setAlicaClock(clock);
     _syncModul.setAlicaClock(clock);
+    _variableSyncModule->setAlicaClock(clock);
+}
+
+void AlicaEngine::setTimerFactory(IAlicaTimerFactory& timeFactory)
+{
+    _variableSyncModule->setTimerFactory(timeFactory);
 }
 
 std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const // tobe removed in las PR

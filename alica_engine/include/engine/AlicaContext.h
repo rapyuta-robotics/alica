@@ -453,6 +453,7 @@ private:
 
     void refreshAlicaClockToEngine();
     void refreshCommunicatorToEngine();
+    void refreshTimerFactoryToEngine();
 };
 
 template <class ClockType, class... Args>
@@ -517,6 +518,7 @@ void AlicaContext::setTimerFactory(Args&&... args)
 #else
     _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
 #endif
+    refreshTimerFactoryToEngine();
 }
 
 template <class TraceFactoryType, class... Args>

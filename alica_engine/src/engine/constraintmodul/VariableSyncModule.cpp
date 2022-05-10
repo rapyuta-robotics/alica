@@ -15,13 +15,35 @@
 namespace alica
 {
 VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-        : _ae(ae)
-        , _running(false)
+        : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
         , _ttl4Communication(AlicaTime::zero())
         , _ttl4Usage(AlicaTime::zero())
         , _ownResults(nullptr)
+        , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
+        , _maySendMessages(ae->maySendMessages())
+        , _communicator(nullptr) // tmp only for compilation
+        , _alicaClock(ae->getAlicaClockPtr())
+        , _teamManager(ae->editTeamManager())
+        , _timerFactory(const_cast<IAlicaTimerFactory&>(ae->getTimerFactory())) // tmp
+{
+}
+
+VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const bool& maySendMessages,
+        std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock, TeamManager& teamManager, IAlicaTimerFactory& alicaTimerFactory)
+        : _running(false)
+        , _timer(nullptr)
+        , _distThreshold(0)
+        , _ttl4Communication(AlicaTime::zero())
+        , _ttl4Usage(AlicaTime::zero())
+        , _ownResults(nullptr)
+        , _configChangeListener(configChangeListener)
+        , _maySendMessages(maySendMessages)
+        , _communicator(communicator)
+        , _alicaClock(clock)
+        , _teamManager(teamManager)
+        , _timerFactory(alicaTimerFactory)
 {
 }
 
@@ -34,8 +56,8 @@ void VariableSyncModule::init()
         return;
     }
     auto reloadFunctionPtr = std::bind(&VariableSyncModule::reload, this, std::placeholders::_1);
-    _ae->subscribe(reloadFunctionPtr);
-    reload(_ae->getConfig());
+    _configChangeListener.subscribe(reloadFunctionPtr);
+    reload(_configChangeListener.getConfig());
     _running = true;
 }
 
@@ -49,7 +71,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
     _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
     _distThreshold = config["Alica"]["CSPSolving"]["SeedMergingThreshold"].as<double>();
 
-    AgentId ownId = _ae->getTeamManager().getLocalAgentID();
+    AgentId ownId = _teamManager.getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));
@@ -62,7 +84,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = _ae->getTimerFactory().createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
+            _timer = _timerFactory.createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
         }
     }
 }
@@ -84,7 +106,7 @@ void VariableSyncModule::clear()
 
 void VariableSyncModule::onSolverResult(const SolverResult& msg)
 {
-    if (!_running || msg.senderID == _ownResults->getId() || _ae->getTeamManager().isAgentIgnored(msg.senderID)) {
+    if (!_running || msg.senderID == _ownResults->getId() || _teamManager.isAgentIgnored(msg.senderID)) {
         return;
     }
 
@@ -105,7 +127,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
         re = (*agent_sorted_loc).get();
     }
 
-    AlicaTime now = _ae->getAlicaClock().now();
+    AlicaTime now = _alicaClock->now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
         variant::loadFrom(sv.value, v);
@@ -118,22 +140,22 @@ void VariableSyncModule::publishContent()
     if (!_running) {
         return;
     }
-    if (!_ae->maySendMessages()) {
+    if (!_maySendMessages) {
         return;
     }
 
     _publishData.vars.clear();
-    AlicaTime now = _ae->getAlicaClock().now();
+    AlicaTime now = _alicaClock->now();
     _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
     if (_publishData.vars.empty()) {
         return;
     }
-    _ae->getCommunicator().sendSolverResult(_publishData);
+    _communicator->sendSolverResult(_publishData);
 }
 
 void VariableSyncModule::postResult(int64_t vid, Variant result)
 {
-    _ownResults->addValue(vid, result, _ae->getAlicaClock().now());
+    _ownResults->addValue(vid, result, _alicaClock->now());
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)
@@ -226,4 +248,20 @@ bool VariableSyncModule::VotedSeed::takeVector(const std::vector<Variant>& v, co
     }
     return false;
 }
+
+void VariableSyncModule::setCommunicator(std::shared_ptr<IAlicaCommunication> communicator)
+{
+    _communicator = communicator;
+}
+
+void VariableSyncModule::setAlicaClock(std::shared_ptr<AlicaClock> clock)
+{
+    _alicaClock = clock;
+}
+
+void VariableSyncModule::setTimerFactory(IAlicaTimerFactory& timeFactory)
+{
+    _timerFactory = timeFactory;
+}
+
 } /* namespace alica */
