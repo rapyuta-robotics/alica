@@ -46,6 +46,7 @@ void TestWorldModel::reset()
     tracingTags.clear();
     tracingParents.clear();
 
+    failurePlanInitCallCounter = 0;
     transitionCondition3194919312481305139 = false;
     transitionCondition1446293122737278544 = false;
     transitionCondition1023566846009251524 = false;
@@ -220,6 +221,14 @@ bool TestWorldModel::isPreCondition1840401110297459509() const
 void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401110297459509)
 {
     this->preCondition1840401110297459509 = preCondition1840401110297459509;
+}
+void TestWorldModel::failurePlanInitCalled()
+{
+    ++failurePlanInitCallCounter;
+}
+int TestWorldModel::failurePlanInitCallCount() const
+{
+    return failurePlanInitCallCounter;
 }
 void TestWorldModel::enableTransitionCondition3194919312481305139()
 {

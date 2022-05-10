@@ -229,8 +229,6 @@ PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
  */
 PlanChange RuleBook::planAbortRule(RunningPlan& r)
 {
-    if (!_autoFailureHandlingEnabled)
-        return PlanChange::NoChange;
     assert(!r.isRetired());
     if (r.isFailureHandlingNeeded())
         return PlanChange::NoChange;

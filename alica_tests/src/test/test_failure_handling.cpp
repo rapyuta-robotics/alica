@@ -79,6 +79,7 @@ TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
     wm->setTransitionCondition1446293122737278544(false);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
+    ASSERT_EQ(wm->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
@@ -86,6 +87,7 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     // Checks if nothing is done when a plan failure occurs when auto failure handling is disabled
     auto wm = alicaTests::TestWorldModel::getTwo();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
+    const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
     const uint64_t FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE = 4449850763179483831;
 
@@ -94,6 +96,10 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
     wm->setTransitionCondition1446293122737278544(true);
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
+
+    wm->setTransitionCondition1446293122737278544(false);
     wm->setTransitionCondition1023566846009251524(true);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
@@ -108,6 +114,7 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     wm->enableTransitionCondition3194919312481305139();
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    ASSERT_EQ(wm->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent)
@@ -142,6 +149,8 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_EQ(wm0->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(wm1->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisabledMultiAgentTest)
@@ -150,6 +159,7 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     auto wm0 = alicaTests::TestWorldModel::getOne();
     auto wm1 = alicaTests::TestWorldModel::getTwo();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
+    const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
     const uint64_t FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE = 4449850763179483831;
 
@@ -161,8 +171,15 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
 
     wm0->setTransitionCondition1446293122737278544(true);
-    wm0->setTransitionCondition1023566846009251524(true);
     wm1->setTransitionCondition1446293122737278544(true);
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+
+    wm0->setTransitionCondition1446293122737278544(false);
+    wm0->setTransitionCondition1023566846009251524(true);
+    wm1->setTransitionCondition1446293122737278544(false);
     wm1->setTransitionCondition1023566846009251524(true);
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
@@ -184,6 +201,8 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    ASSERT_EQ(wm0->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(wm1->failurePlanInitCallCount(), 1);
 }
 
 } // namespace

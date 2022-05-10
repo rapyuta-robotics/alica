@@ -86,5 +86,10 @@ bool PreCondition2038762164340314344::evaluate(std::shared_ptr<RunningPlan> rp, 
 
 /*PROTECTED REGION ID(methods631515556091266493) ENABLED START*/
 // Add additional options here
+void FailurePlan631515556091266493::onInit()
+{
+    auto twm = getPlanContext()->getOwnID() == 8 ? alicaTests::TestWorldModel::getOne() : alicaTests::TestWorldModel::getTwo();
+    twm->failurePlanInitCalled();
+}
 /*PROTECTED REGION END*/
 } // namespace alica
