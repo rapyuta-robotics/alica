@@ -81,7 +81,11 @@ void RunnableObject::scheduleRunCalls()
 {
     // Do not schedule repeatable run job when frequency is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
+        if (!_engine->getTimerFactory()) {
+            AlicaEngine::abort("TimerFactory not set");
+            return;
+        }
+        _activeRunTimer = _engine->getTimerFactory()->createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
     }
 }
 

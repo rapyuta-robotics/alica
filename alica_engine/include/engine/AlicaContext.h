@@ -325,14 +325,8 @@ public:
      *
      * @return A reference to timer factory object being used by context
      */
-    IAlicaTimerFactory& getTimerFactory() const
+    std::shared_ptr<IAlicaTimerFactory> getTimerFactory() const
     {
-        assert(_timerFactory.get());
-        return *_timerFactory;
-    }
-    std::shared_ptr<IAlicaTimerFactory> getTimerFactoryPtr() const
-    {
-        // assert(_timerFactory.get());
         return _timerFactory;
     }
 

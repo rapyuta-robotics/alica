@@ -105,8 +105,7 @@ public:
     //[[deprecated("It will be removed in the last PR")]]
     std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
     void setAlicaClock(std::shared_ptr<AlicaClock> clock);
-    IAlicaTimerFactory& getTimerFactory() const;
-    std::shared_ptr<IAlicaTimerFactory> getTimerFactoryPtr() const;
+    std::shared_ptr<IAlicaTimerFactory> getTimerFactory() const;
     void setTimerFactory(std::shared_ptr<IAlicaTimerFactory> timeFactory);
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;

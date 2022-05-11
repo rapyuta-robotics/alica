@@ -14,25 +14,9 @@
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-        : _running(false)
-        , _timer(nullptr)
-        , _distThreshold(0)
-        , _ttl4Communication(AlicaTime::zero())
-        , _ttl4Usage(AlicaTime::zero())
-        , _ownResults(nullptr)
-        , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
-        , _maySendMessages(ae->maySendMessages())
-        , _communicator(nullptr) // tmp only for compilation
-        , _alicaClock(ae->getAlicaClockPtr())
-        , _teamManager(ae->editTeamManager())
-        , _timerFactory(ae->getTimerFactoryPtr())
-{
-}
 
 VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const bool& maySendMessages,
-        std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock, TeamManager& teamManager,
-        std::shared_ptr<IAlicaTimerFactory> alicaTimerFactory)
+        std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock, TeamManager& teamManager)
         : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
@@ -44,7 +28,6 @@ VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListene
         , _communicator(communicator)
         , _alicaClock(clock)
         , _teamManager(teamManager)
-        , _timerFactory(alicaTimerFactory)
 {
 }
 
