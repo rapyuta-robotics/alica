@@ -23,7 +23,7 @@ public:
     //[[deprecated("It will be removed in the last PR")]]
     VariableSyncModule(AlicaEngine* ae);
     VariableSyncModule(ConfigChangeListener& configChangeListener, const bool& maySendMessages, std::shared_ptr<IAlicaCommunication> communicator,
-            std::shared_ptr<AlicaClock> clock, TeamManager& teamManager, IAlicaTimerFactory& alicaTimerFactory);
+            std::shared_ptr<AlicaClock> clock, TeamManager& teamManager, std::shared_ptr<IAlicaTimerFactory> alicaTimerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -43,7 +43,7 @@ public:
 
     void setCommunicator(std::shared_ptr<IAlicaCommunication> communicator);
     void setAlicaClock(std::shared_ptr<AlicaClock> clock);
-    void setTimerFactory(IAlicaTimerFactory& timeFactory);
+    void setTimerFactory(std::shared_ptr<IAlicaTimerFactory> timeFactory);
 
 private:
     class VotedSeed
@@ -73,7 +73,7 @@ private:
     std::shared_ptr<IAlicaCommunication> _communicator{nullptr};
     std::shared_ptr<AlicaClock> _alicaClock{nullptr};
     TeamManager& _teamManager;
-    IAlicaTimerFactory& _timerFactory;
+    std::shared_ptr<IAlicaTimerFactory> _timerFactory;
     bool _running;
     double _distThreshold;
     std::unique_ptr<IAlicaTimer> _timer;

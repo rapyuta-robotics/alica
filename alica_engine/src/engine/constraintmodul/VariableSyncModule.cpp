@@ -26,12 +26,13 @@ VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
         , _communicator(nullptr) // tmp only for compilation
         , _alicaClock(ae->getAlicaClockPtr())
         , _teamManager(ae->editTeamManager())
-        , _timerFactory(const_cast<IAlicaTimerFactory&>(ae->getTimerFactory())) // tmp
+        , _timerFactory(ae->getTimerFactoryPtr())
 {
 }
 
 VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const bool& maySendMessages,
-        std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock, TeamManager& teamManager, IAlicaTimerFactory& alicaTimerFactory)
+        std::shared_ptr<IAlicaCommunication> communicator, std::shared_ptr<AlicaClock> clock, TeamManager& teamManager,
+        std::shared_ptr<IAlicaTimerFactory> alicaTimerFactory)
         : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
@@ -84,7 +85,11 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = _timerFactory.createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
+            if (!_timerFactory) {
+                AlicaEngine::abort("TimerFactory not set");
+                return;
+            }
+            _timer = _timerFactory->createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
         }
     }
 }
@@ -259,7 +264,7 @@ void VariableSyncModule::setAlicaClock(std::shared_ptr<AlicaClock> clock)
     _alicaClock = clock;
 }
 
-void VariableSyncModule::setTimerFactory(IAlicaTimerFactory& timeFactory)
+void VariableSyncModule::setTimerFactory(std::shared_ptr<IAlicaTimerFactory> timeFactory)
 {
     _timerFactory = timeFactory;
 }

@@ -330,6 +330,11 @@ public:
         assert(_timerFactory.get());
         return *_timerFactory;
     }
+    std::shared_ptr<IAlicaTimerFactory> getTimerFactoryPtr() const
+    {
+        // assert(_timerFactory.get());
+        return _timerFactory;
+    }
 
     /**
      * Set trace factory to be used by this alica framework instance.
@@ -424,7 +429,7 @@ private:
     std::shared_ptr<IAlicaCommunication> _communicator;
     std::unique_ptr<AlicaEngine> _engine;
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
-    std::unique_ptr<IAlicaTimerFactory> _timerFactory;
+    std::shared_ptr<IAlicaTimerFactory> _timerFactory{nullptr};
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
 
@@ -514,9 +519,9 @@ void AlicaContext::setTimerFactory(Args&&... args)
 {
     static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
+    _timerFactory = std::make_shared<TimerFactoryType>(std::forward<Args>(args)...);
 #else
-    _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
+    _timerFactory = std::shared_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
 #endif
     refreshTimerFactoryToEngine();
 }

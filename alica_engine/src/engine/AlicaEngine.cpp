@@ -49,7 +49,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::strin
         , _teamManager(this, agentID)
         , _syncModul(getTeamManager(), getPlanRepository(), maySendMessages(), _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
-                  _configChangeListener, _maySendMessages, _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr(), _teamManager, _ctx.getTimerFactory()))
+                  _configChangeListener, _maySendMessages, _ctx.getCommunicatorPtr(), _ctx.getAlicaClockPtr(), _teamManager, nullptr))
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
@@ -256,9 +256,14 @@ void AlicaEngine::setAlicaClock(std::shared_ptr<AlicaClock> clock)
     _variableSyncModule->setAlicaClock(clock);
 }
 
-void AlicaEngine::setTimerFactory(IAlicaTimerFactory& timeFactory)
+void AlicaEngine::setTimerFactory(std::shared_ptr<IAlicaTimerFactory> timeFactory)
 {
     _variableSyncModule->setTimerFactory(timeFactory);
+}
+
+std::shared_ptr<IAlicaTimerFactory> AlicaEngine::getTimerFactoryPtr() const
+{
+    return _ctx.getTimerFactoryPtr();
 }
 
 std::shared_ptr<AlicaClock> AlicaEngine::getAlicaClockPtr() const // tobe removed in las PR

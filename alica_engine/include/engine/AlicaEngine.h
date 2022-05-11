@@ -106,7 +106,8 @@ public:
     std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
     void setAlicaClock(std::shared_ptr<AlicaClock> clock);
     IAlicaTimerFactory& getTimerFactory() const;
-    void setTimerFactory(IAlicaTimerFactory& timeFactory);
+    std::shared_ptr<IAlicaTimerFactory> getTimerFactoryPtr() const;
+    void setTimerFactory(std::shared_ptr<IAlicaTimerFactory> timeFactory);
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
     IAlicaWorldModel* getWorldModel() const;
