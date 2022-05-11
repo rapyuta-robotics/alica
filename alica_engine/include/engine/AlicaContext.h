@@ -325,10 +325,7 @@ public:
      *
      * @return A reference to timer factory object being used by context
      */
-    std::shared_ptr<IAlicaTimerFactory> getTimerFactory() const
-    {
-        return _timerFactory;
-    }
+    std::shared_ptr<IAlicaTimerFactory> getTimerFactory() const { return _timerFactory; }
 
     /**
      * Set trace factory to be used by this alica framework instance.
