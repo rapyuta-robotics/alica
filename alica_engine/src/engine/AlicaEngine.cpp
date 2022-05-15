@@ -35,23 +35,22 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName,
-        const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams)
         : _ctx(ctx)
         , _configChangeListener(config)
         , _stepCalled(false)
-        , _stepEngine(stepEngine)
+        , _stepEngine(alicaContextParams.stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, _configChangeListener, configPath)
-        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
-        , _roleSet(_modelManager.loadRoleSet(roleSetName))
-        , _teamManager(this, agentID)
+        , _modelManager(_planRepository, _configChangeListener, alicaContextParams.configPath)
+        , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
+        , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
+        , _teamManager(this, alicaContextParams.agentID)
         , _syncModul(this)
-        , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
-        , _planBase(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
+        , _planBase(this)
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages,_ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);

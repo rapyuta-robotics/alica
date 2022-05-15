@@ -145,6 +145,7 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            ac->init(creators);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
