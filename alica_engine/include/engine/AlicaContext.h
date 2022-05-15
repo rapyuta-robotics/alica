@@ -175,7 +175,7 @@ public:
      * @note This is the main alica api class
      * @note Can throw an exception if some necessary configurations dont exist in the config file.
      */
-    AlicaContext(const AlicaContextParams& alicaContextParams);
+    AlicaContext(const AlicaContextParams alicaContextParams);
 
     /**
      * Destroys AlicaContext object.
@@ -428,7 +428,7 @@ private:
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
-    const AlicaContextParams& _alicaContextParams;
+    const AlicaContextParams _alicaContextParams;
 
     bool _initialized = false;
 
