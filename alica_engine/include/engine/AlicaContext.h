@@ -428,7 +428,7 @@ private:
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
-    const AlicaContextParams _alicaContextParams;
+    const AlicaContextParams& _alicaContextParams;
 
     bool _initialized = false;
 

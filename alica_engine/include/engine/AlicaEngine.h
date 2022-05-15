@@ -49,7 +49,7 @@ public:
 
     // Parameter Access:
     bool getStepEngine() const;
-    bool maySendMessages() const { return _maySendMessages; }
+    const bool& maySendMessages() const { return _maySendMessages; }
 
     // Module Access:
     const AuthorityManager& getAuth() const { return _auth; }
@@ -101,6 +101,9 @@ public:
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
+    //[[deprecated("It will be removed in the last PR")]]
+    std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
+    void setAlicaClock(std::shared_ptr<AlicaClock> clock);
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
