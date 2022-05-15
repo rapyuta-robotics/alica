@@ -50,7 +50,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
-        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages,_ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -85,6 +85,11 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AE: Already initialized.");
+        return true; // todo false?
+    }
+
     _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
 
@@ -99,6 +104,8 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+
+    _initialized = true;
     return true;
 }
 

@@ -148,6 +148,7 @@ private:
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     PlanBase _planBase;
+    bool _initialized{false};
 
     /**
      * TODO: Make VariableSyncModule a stack variable.
