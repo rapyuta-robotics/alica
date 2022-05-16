@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,13 +21,33 @@
   ],
   "frequency": 0,
   "id": 1682631238618360548,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "AdjacentSuccessSubPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 235276470945876557,
+      "inTransitions": [
+        1747408236004727286
+      ],
+      "name": "WaitState",
+      "outTransitions": [
+        4079672912751513705
+      ],
+      "parentPlan": 1682631238618360548,
+      "positionWeb": {
+        "x": 686,
+        "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
@@ -64,49 +85,10 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 235276470945876557,
-      "inTransitions": [
-        1747408236004727286
-      ],
-      "name": "WaitState",
-      "outTransitions": [
-        4079672912751513705
-      ],
-      "parentPlan": 1682631238618360548,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "id": 4079672912751513705,
-      "inState": 235276470945876557,
-      "name": "",
-      "outState": 496520533178003845,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1067314038887345208,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "id": 1747408236004727286,
@@ -119,6 +101,25 @@
         "conditionString": "",
         "enabled": true,
         "id": 597347780541336226,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "id": 4079672912751513705,
+      "inState": 235276470945876557,
+      "name": "",
+      "outState": 496520533178003845,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1067314038887345208,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

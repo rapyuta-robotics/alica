@@ -36,6 +36,17 @@ public:
     int init(AlicaCreators& creatorCtx);
 
     /**
+     * Initialize alica framework and related modules.
+     *
+     * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     *
+     * @return Return code '0' stands for success, any other for corresponding error
+     *
+     * @see AlicaCreators
+     */
+    int init(AlicaCreators&& creatorCtx);
+
+    /**
      * Starts the main thread of the engine to run.
      */
     void startEngine();
@@ -59,15 +70,6 @@ public:
      * @return True, if the property could be set. False, otherwise.
      */
     bool makeBehaviourEventDriven(int64_t behaviourID);
-
-    /**
-     * Returns a shared pointer to a BasicBehaviour, in order to enable Tests
-     * to check properties of their domain specific behaviours.
-     * @param behaviourID ID of the Behaviour
-     * @param configurationID ID of the Configuration in order to identify the right BasicBehaviour
-     * @return Pointer to the requested BasicBehaviour, nullptr if behaviour is not known.
-     */
-    BasicBehaviour* getBasicBehaviour(int64_t behaviourID, int64_t configurationID = 0);
 
     /**
      * Allows to retrieve the name of an AlicaElement.
@@ -146,7 +148,12 @@ bool TestContext::stepUntilStateReached(int64_t state, std::chrono::duration<Rep
 {
     auto start = std::chrono::system_clock::now();
     while (std::chrono::system_clock::now() - start < timeout) {
-        stepEngine();
+        try {
+            stepEngine();
+        } catch (const std::exception& e) {
+            std::cerr << "[TestContext] Exception in state.  Halting steps" << std::endl;
+            break;
+        }
         if (isStateActive(state)) {
             return true;
         }

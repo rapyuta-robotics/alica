@@ -2,11 +2,12 @@
 
 #include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
+#include <engine/BasicPlan.h>
 
 #include <chrono>
 #include <memory>
 
-#define STEP_UNTIL(condition)                                                                                                                                  \
+#define STEP_UNTIL1(condition)                                                                                                                                 \
     do {                                                                                                                                                       \
         for (int i = 0; i < 10; ++i) {                                                                                                                         \
             ac->stepEngine();                                                                                                                                  \
@@ -16,6 +17,20 @@
             std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                        \
         }                                                                                                                                                      \
     } while (0)
+
+#define STEP_UNTIL2(ac, condition)                                                                                                                             \
+    do {                                                                                                                                                       \
+        for (int i = 0; i < 10; ++i) {                                                                                                                         \
+            (ac)->stepEngine();                                                                                                                                \
+            if (condition) {                                                                                                                                   \
+                break;                                                                                                                                         \
+            }                                                                                                                                                  \
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                        \
+        }                                                                                                                                                      \
+    } while (0)
+
+#define GET_STEP_MACRO(_0, _1, _2, NAME, ...) NAME
+#define STEP_UNTIL(...) GET_STEP_MACRO(_0, __VA_ARGS__, STEP_UNTIL2, STEP_UNTIL1)(__VA_ARGS__)
 
 #define SLEEP_UNTIL(condition)                                                                                                                                 \
     do {                                                                                                                                                       \
@@ -29,6 +44,7 @@
 
 namespace alica::test
 {
+
 class Util
 {
 public:
@@ -42,6 +58,8 @@ public:
     static const alica::Agent* getAgentByID(alica::AlicaEngine* ae, AgentId agentID);
 
 private:
+    static BasicBehaviour* getBasicBehaviourHelper(const RunningPlan* rp, int64_t behaviourId);
+    static BasicPlan* getBasicPlanHelper(const RunningPlan* rp, int64_t planId);
     static bool hasPlanSucceededHelper(const RunningPlan* rp, int64_t id);
     static bool isPlanActiveHelper(const RunningPlan* rp, int64_t id);
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);

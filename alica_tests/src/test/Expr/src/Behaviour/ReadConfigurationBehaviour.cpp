@@ -1,4 +1,4 @@
-#include "Behaviour/ReadConfigurationBehaviour.h"
+#include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1588061129360) ENABLED START*/
@@ -34,7 +34,8 @@ void ReadConfigurationBehaviour::run(void* msg)
 void ReadConfigurationBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1588061129360) ENABLED START*/
-    getParameter("TestValue", testValue);
+    // getPlanContext()->getParameter("TestValue", testValue);
+    testValue = "1";
 
     /*PROTECTED REGION END*/
 }

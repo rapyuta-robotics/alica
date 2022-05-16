@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Factory.h"
+#include "engine/Types.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -10,7 +11,9 @@ class Plan;
 class PlanFactory : public Factory
 {
 public:
-    static Plan* create(AlicaEngine* ae, const YAML::Node& node);
+    //[[deprecated("It will be removed in the last PR")]]
+    static Plan* create(AlicaEngine* ae, const YAML::Node& node); // TOBE removed
+    static Plan* create(ConfigChangeListener& configChangeListener, const YAML::Node& node);
     static void attachReferences();
 
 private:

@@ -18,7 +18,9 @@ class AlicaEngine;
 class PlanType : public AbstractPlan
 {
 public:
-    PlanType(AlicaEngine* ae);
+    //[[deprecated("It will be removed in the last PR")]]
+    PlanType(AlicaEngine* ae); // TOBE removed
+    PlanType();
     virtual ~PlanType();
 
     std::string toString(std::string indent = "") const override;

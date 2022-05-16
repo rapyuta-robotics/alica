@@ -1,14 +1,15 @@
 {
+  "blackboard": [],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
   "id": 1522377401286,
+  "inheritBlackboard": false,
   "name": "SuccessSpam",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "variables": []
 }

@@ -1,6 +1,6 @@
-#include "Behaviour/Attack.h"
-#include "Behaviour/ConstraintUsingBehaviour.h"
 #include "test_alica.h"
+#include <alica_tests/Behaviour/Attack.h>
+#include <alica_tests/Behaviour/ConstraintUsingBehaviour.h>
 #include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>
@@ -8,7 +8,6 @@
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/BasicBehaviour.h>
-#include <engine/BehaviourPool.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>

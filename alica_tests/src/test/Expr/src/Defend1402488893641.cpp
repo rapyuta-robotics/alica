@@ -1,4 +1,4 @@
-#include "Defend1402488893641.h"
+#include <alica_tests/Defend1402488893641.h>
 /*PROTECTED REGION ID(eph1402488893641) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

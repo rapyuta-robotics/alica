@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1529456584982,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "BackForth",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587663024659,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587663024659"
         }
       ],
@@ -63,6 +68,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587663024662,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587663024662"
         }
       ],

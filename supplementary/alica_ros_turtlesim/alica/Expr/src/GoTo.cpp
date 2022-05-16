@@ -1,6 +1,7 @@
 #include "GoTo.h"
 #include <memory>
 
+class Behaviour;
 /*PROTECTED REGION ID(inccpp4054297592460872311) ENABLED START*/
 // Add additional includes here
 #include <alica_ros_turtlesim/world_model.hpp>

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1413200842973,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "MultiAgentTestMaster",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -53,6 +54,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662949,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662949"
         }
       ],
@@ -81,6 +86,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662952,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662952"
         }
       ],

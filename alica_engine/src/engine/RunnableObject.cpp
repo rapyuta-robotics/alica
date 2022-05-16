@@ -1,7 +1,9 @@
 #include "engine/RunnableObject.h"
 #include "engine/AlicaEngine.h"
-#include "engine/PlanInterface.h"
+// TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
+#include "engine/BasicPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/PlanType.h"
 
 #include <assert.h>
 #include <iostream>
@@ -11,19 +13,11 @@ namespace alica
 RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
-        , _configuration(nullptr)
-        , _tracingType(TracingType::DEFAULT)
-        , _runTraced(false)
-        , _initExecuted(false)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
-        , _activeRunJobId(-1)
         , _blackboardBlueprint(nullptr)
-        , _signalContext(nullptr)
-        , _execContext(nullptr)
-        , _signalState(1)
-        , _execState(1)
         , _wm(wm)
         , _blackboard(nullptr)
+        , _started(false)
 {
 }
 
@@ -32,24 +26,17 @@ void RunnableObject::sendLogMessage(int level, const std::string& message) const
     _engine->getCommunicator().sendLogMessage(level, message);
 }
 
-ThreadSafePlanInterface RunnableObject::getPlanContext() const
-{
-    return ThreadSafePlanInterface(isExecutingInContext() ? _execContext.load() : nullptr);
-}
-
-void RunnableObject::stop()
-{
-    if (!isActive(_signalState.load())) {
-        return;
-    }
-    ++_signalState;
-    _engine->editScheduler().schedule([this]() { doTerminate(); });
-}
-
 int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
 {
     const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) { return wrapper_ptr->getAbstractPlan()->getName() == _name; });
+    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) {
+        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
+            const auto& plans = planType->getPlans();
+            return std::find_if(plans.begin(), plans.end(), [this](const auto& plan) { return plan->getName() == _name; }) != plans.end();
+        } else {
+            return wrapper_ptr->getAbstractPlan()->getName() == _name;
+        }
+    });
     assert(it != wrappers.end());
     int64_t wrapperId = (*it)->getId();
     return wrapperId;
@@ -60,125 +47,85 @@ void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMappi
     _keyMappings.emplace(wrapperId, keyMapping);
 }
 
-void RunnableObject::stop(RunningPlan* rp)
+void RunnableObject::stop()
 {
-    if (!isActive(_signalState.load())) {
+    if (!_started) {
         return;
     }
-    ++_signalState;
-    if (rp->getParent() && !getInheritBlackboard()) {
 
-        auto parentPlan = rp->getParent();
-        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
-        auto terminateCall = [this, parentPlan, keyMapping]() {
-            assert(_blackboard);
-            setOutput(parentPlan->getBlackboard().get(), keyMapping);
-            doTerminate();
-        };
-        _engine->editScheduler().schedule(terminateCall);
-    } else {
-        _engine->editScheduler().schedule([this]() { doTerminate(); });
-    }
+    stopRunCalls();
+    doTerminate();
+    cleanupBlackboard();
+    _runnableObjectTracer.cleanupTraceContext();
+
+    _started = false;
 }
 
 void RunnableObject::start(RunningPlan* rp)
 {
-    if (isActive(_signalState.load())) {
+    if (_started) {
         return;
     }
-    ++_signalState;
-    _signalContext.store(rp);
-    std::function<void()> initCall;
-    if (!rp->getParent() || !rp->getParent()->getBasicPlan()) {
-        initCall = [this]() {
-            if (!_blackboard) {
-                if (_blackboardBlueprint) {
-                    _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-                } else {
-                    _blackboard = std::make_shared<Blackboard>();
-                }
+    _started = true;
+
+    _runningplanContext = rp;
+
+    // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _engine->getTraceFactory());
+    setupBlackboard();
+    doInit();
+    scheduleRunCalls();
+}
+
+void RunnableObject::scheduleRunCalls()
+{
+    // Do not schedule repeatable run job when frequency is 0.
+    if (_msInterval > AlicaTime::milliseconds(0)) {
+        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
+    }
+}
+
+void RunnableObject::stopRunCalls()
+{
+    _activeRunTimer.reset();
+}
+
+void RunnableObject::setupBlackboard()
+{
+    if (!_runningplanContext->getParent() || !_runningplanContext->getParent()->getBasicPlan()) {
+        if (!_blackboard) {
+            if (_blackboardBlueprint) {
+                _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
+            } else {
+                _blackboard = std::make_shared<Blackboard>();
             }
-            doInit();
-        };
+        }
     } else if (!getInheritBlackboard()) {
-        auto parentPlan = rp->getParent();
-        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(rp));
-        initCall = [this, parentPlan, keyMapping]() {
-            _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-            setInput(parentPlan->getBlackboard().get(), keyMapping);
-            doInit();
-        };
+        auto parentPlan = _runningplanContext->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(_runningplanContext));
+
+        _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
+        setInput(parentPlan->getBlackboard().get(), keyMapping);
     } else {
         // Inherit blackboard
-        BasicPlan* parentPlan = rp->getParent()->getBasicPlan();
-        initCall = [this, parentPlan]() {
-            _blackboard = parentPlan->getBlackboard();
-            doInit();
-        };
-    }
-    _engine->editScheduler().schedule(initCall);
-}
-
-bool RunnableObject::setTerminatedState()
-{
-    ++_execState;
-
-    _runTraced = false;
-    if (!_initExecuted.load()) {
-        _execContext.store(nullptr);
-        return true;
-    }
-    _initExecuted.store(false);
-    return false;
-}
-
-void RunnableObject::initTrace()
-{
-    if (!_engine->getTraceFactory()) {
-        return;
-    }
-
-    switch (_tracingType) {
-    case TracingType::DEFAULT: {
-        auto parent = _execContext.load()->getParent();
-        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTraceContext().has_value()); parent = parent->getParent())
-            ;
-        _trace = _engine->getTraceFactory()->create(_name, parent ? parent->getBasicPlan()->getTraceContext() : std::nullopt);
-        break;
-    }
-    case TracingType::SKIP: {
-        break;
-    }
-    case TracingType::ROOT: {
-        _trace = _engine->getTraceFactory()->create(_name);
-        break;
-    }
-    case TracingType::CUSTOM: {
-        _trace = _engine->getTraceFactory()->create(_name, _customTraceContextGetter());
-        break;
-    }
+        BasicPlan* parentPlan = _runningplanContext->getParent()->getBasicPlan();
+        _blackboard = parentPlan->getBlackboard();
     }
 }
 
-void RunnableObject::traceRun()
+void RunnableObject::cleanupBlackboard()
 {
-    if (_trace && !_runTraced) {
-        _trace->setLog({"status", "running"});
-        _runTraced = true;
+    if (_runningplanContext->getParent() && !getInheritBlackboard()) {
+        auto parentPlan = _runningplanContext->getParent();
+        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(_runningplanContext));
+        setOutput(parentPlan->getBlackboard().get(), keyMapping);
     }
 }
 
-void RunnableObject::traceInit(const std::string& type)
+void RunnableObject::runJob()
 {
-    if (_trace) {
-        _trace->setTag(type, "true");
-        _trace->setLog({"status", "initializing"});
-    }
-}
-
-void RunnableObject::setBlackboardBlueprint(const BlackboardBlueprint* blackboard)
-{
-    _blackboardBlueprint = blackboard;
+    _runnableObjectTracer.traceRunCall();
+    doRun();
 }
 
 void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
@@ -206,6 +153,58 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
         } catch (std::exception& e) {
             ALICA_WARNING_MSG("Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what());
         }
+    }
+}
+
+// Tracing methods
+void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
+{
+    _tracingType = type;
+    _customTraceContextGetter = std::move(customTraceContextGetter);
+    if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
+        ALICA_ERROR_MSG("Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+        _tracingType = TracingType::DEFAULT;
+    }
+}
+
+void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan* rp, const IAlicaTraceFactory* traceFactory)
+{
+    if (!traceFactory) {
+        return;
+    }
+
+    switch (_tracingType) {
+    case TracingType::DEFAULT: {
+        auto parent = rp->getParent();
+        for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTrace()); parent = parent->getParent())
+            ;
+        _trace = traceFactory->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
+        break;
+    }
+    case TracingType::SKIP: {
+        break;
+    }
+    case TracingType::ROOT: {
+        _trace = traceFactory->create(name);
+        break;
+    }
+    case TracingType::CUSTOM: {
+        _trace = traceFactory->create(name, _customTraceContextGetter());
+        break;
+    }
+    }
+}
+
+void TraceRunnableObject::cleanupTraceContext()
+{
+    _trace.reset();
+}
+
+void TraceRunnableObject::traceRunCall()
+{
+    if (_trace && !_runTraced) {
+        _trace->setLog({"status", "run"});
+        _runTraced = true;
     }
 }
 } /* namespace alica */

@@ -1,4 +1,4 @@
-#include "Behaviour/BehAAA.h"
+#include <alica_tests/Behaviour/BehAAA.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1629895901559) ENABLED START*/
@@ -11,6 +11,7 @@ namespace alica
 {
 /*PROTECTED REGION ID(staticVars1629895901559) ENABLED START*/
 // initialise static variables here
+int BehAAA::runCount;
 /*PROTECTED REGION END*/
 
 BehAAA::BehAAA(BehaviourContext& context)

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -68,11 +69,11 @@
   ],
   "frequency": 0,
   "id": 1407153703092,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "PlanFive",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -83,6 +84,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662616,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662616"
         }
       ],
@@ -107,6 +112,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662619,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662619"
         }
       ],
@@ -131,6 +140,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662622,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662622"
         },
         {
@@ -138,6 +151,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662624,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662624"
         }
       ],
@@ -162,6 +179,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662627,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662627"
         }
       ],

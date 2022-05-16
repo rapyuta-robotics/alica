@@ -1,4 +1,4 @@
-#include "GoalPlan1402488870347.h"
+#include <alica_tests/GoalPlan1402488870347.h>
 /*PROTECTED REGION ID(eph1402488870347) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

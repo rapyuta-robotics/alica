@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1530004940652,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "HandleFailExplicitMaster",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662811,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662811"
         }
       ],

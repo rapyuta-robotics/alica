@@ -82,10 +82,10 @@ public:
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(ThreadSafePlanInterface pi);
+    bool existsSolution(const RunningPlan* pi);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& result);
+    bool getSolution(const RunningPlan* pi, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -98,7 +98,7 @@ public:
 private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(ThreadSafePlanInterface pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,9 +114,9 @@ private:
 };
 
 template <class SolverType>
-bool Query::existsSolution(ThreadSafePlanInterface pi)
+bool Query::existsSolution(const RunningPlan* pi)
 {
-    SolverType& solver = pi.getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
@@ -127,7 +127,7 @@ bool Query::existsSolution(ThreadSafePlanInterface pi)
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& result)
+bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
 {
     result.clear();
 
@@ -135,12 +135,12 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
 
-    if (!pi.getAlicaEngine()->existSolver<SolverType>()) {
+    if (!pi->getAlicaEngine()->existSolver<SolverType>()) {
         std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
-    SolverType& solver = pi.getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
@@ -154,7 +154,7 @@ bool Query::getSolution(ThreadSafePlanInterface pi, std::vector<ResultType>& res
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule& rs = pi.getAlicaEngine()->editResultStore();
+        VariableSyncModule& rs = pi->getAlicaEngine()->editResultStore();
         for (const ResultType& value : solverResult) {
             rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;

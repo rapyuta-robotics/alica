@@ -49,6 +49,7 @@ private:
     PlanBase* _pb;
     Logger& _log;
     int _maxConsecutiveChanges;
+    bool _autoFailureHandlingEnabled;
     bool _changeOccurred;
     const IAlicaWorldModel* _wm;
 

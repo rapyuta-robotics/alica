@@ -19,8 +19,8 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _engine(std::make_unique<AlicaEngine>(*this, alicaContextParams.configPath, alicaContextParams.roleSetName, alicaContextParams.masterPlanName,
-                  alicaContextParams.stepEngine, alicaContextParams.agentID))
+        , _engine(std::make_unique<AlicaEngine>(*this, _configRootNode, alicaContextParams.configPath, alicaContextParams.roleSetName,
+                  alicaContextParams.masterPlanName, alicaContextParams.stepEngine, alicaContextParams.agentID))
         , _clock(std::make_unique<AlicaClock>())
         , _communicator(nullptr)
         , _worldModel(nullptr)
@@ -34,6 +34,13 @@ AlicaContext::~AlicaContext()
 
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
+    AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    return init(std::move(creators));
+}
+
+int AlicaContext::init(AlicaCreators&& creatorCtx)
+{
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
@@ -43,7 +50,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
         _communicator->startCommunication();
     }
 
-    if (_engine->init(creatorCtx)) {
+    if (_engine->init(std::move(creatorCtx))) {
         _engine->start();
         _initialized = true;
         return 0;
@@ -70,8 +77,13 @@ bool AlicaContext::isValid() const
 void AlicaContext::stepEngine()
 {
     _engine->stepNotify();
+    constexpr const auto timeout = std::chrono::seconds(2);
+    auto start = std::chrono::system_clock::now();
     do {
         _engine->getAlicaClock().sleep(alica::AlicaTime::milliseconds(ALICA_LOOP_TIME_ESTIMATE));
+        if (std::chrono::system_clock::now() > start + timeout) {
+            throw std::runtime_error("Got stuck trying to step engine");
+        }
     } while (!_engine->getPlanBase().isWaiting());
 }
 
