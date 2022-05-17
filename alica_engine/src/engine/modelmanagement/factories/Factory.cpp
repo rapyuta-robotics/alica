@@ -18,6 +18,7 @@ ReferenceList Factory::synchTransitionReferences;
 ReferenceList Factory::transitionSynchReferences;
 ReferenceList Factory::transitionInStateReferences;
 ReferenceList Factory::transitionOutStateReferences;
+RefreenceList Factory::transitionConditionReferences:
 ReferenceList Factory::bindingSubPlanReferences;
 ReferenceList Factory::bindingSubVarReferences;
 ReferenceList Factory::bindingVarReferences;
@@ -77,6 +78,7 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
     synchTransitionReferences.clear();
     transitionInStateReferences.clear();
     transitionOutStateReferences.clear();
+    transitionConditionReferences.clear();
     bindingSubPlanReferences.clear();
     bindingSubVarReferences.clear();
     bindingVarReferences.clear();
@@ -151,6 +153,8 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._confAbstractPlanWrapperRepository.emplace(ael->getId(), (ConfAbstractPlanWrapper*) ael);
     } else if (alica::Strings::configuration.compare(type) == 0) {
         modelManager->_planRepository._configurationRepository.emplace(ael->getId(), (Configuration*) ael);
+    } else if (alica::String::transitionCondition.compare(type) == 0) {
+        modelManager->_planRepository._transitionConditions.emplace(ael->getId(), (TransitionCondition*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");
