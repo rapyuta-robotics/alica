@@ -61,7 +61,7 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 
-    acs[0]->setClock<TestClock>(); //LUCA setclock must be done befor ac.init
+    acs[0]->setClock<TestClock>(); // LUCA setclock must be done befor ac.init
     acs[1]->setClock<TestClock>();
 
     aes[0]->start();

@@ -78,7 +78,7 @@ protected:
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
-        EXPECT_EQ(0,ac->init(std::move(creators)));
+        EXPECT_EQ(0, ac->init(std::move(creators)));
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
@@ -150,7 +150,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(std::move(creators)));//LUCA to be removec
+            EXPECT_TRUE(ae->init(std::move(creators))); // LUCA to be removec
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -191,7 +191,7 @@ protected:
         ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         spinner->start();
-        ae = AlicaTestsEngineGetter::getEngine(ac);//ae here is still nullptr needs ac->init
+        ae = AlicaTestsEngineGetter::getEngine(ac); // ae here is still nullptr needs ac->init
     }
 
     void TearDown() override
@@ -327,7 +327,7 @@ protected:
             ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);//LUCA ae here is nullptr needs ac->init
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac); // LUCA ae here is nullptr needs ac->init
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             EXPECT_TRUE(ae->init(std::move(creators)));

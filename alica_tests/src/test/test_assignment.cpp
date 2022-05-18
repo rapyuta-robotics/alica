@@ -42,7 +42,7 @@ TEST(Assignment, RobotsInserted)
     alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
-    EXPECT_EQ(0,ac->init(std::move(creators)));
+    EXPECT_EQ(0, ac->init(std::move(creators)));
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);

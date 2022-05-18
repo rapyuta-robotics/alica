@@ -136,7 +136,7 @@ const IAlicaCommunication& AlicaEngine::getCommunicator() const
 
 const AlicaClock& AlicaEngine::getAlicaClock() const
 {
-    //return _ctx.getAlicaClock();
+    // return _ctx.getAlicaClock();
     return *_ctx.getClockPtr();
 }
 

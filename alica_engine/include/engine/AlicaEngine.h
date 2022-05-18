@@ -135,7 +135,7 @@ private:
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan{nullptr}; /**< Pointing to the top level plan of the loaded ALICA program.*/
-    const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
+    const RoleSet* _roleSet;          /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;

@@ -30,8 +30,8 @@ class IAlicaCommunication;
 class TeamObserver
 {
 public:
-    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator, const std::unique_ptr<AlicaClock>& clock,
-            const PlanRepository& planRepository, TeamManager& teamManager);
+    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator,
+            const std::unique_ptr<AlicaClock>& clock, const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
     void tick(RunningPlan* root);
