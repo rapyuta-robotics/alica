@@ -50,7 +50,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
-        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _teamObserver(editLog(), editRoleAssignment(), _maySendMessages, _ctx.getCommunicator(), _ctx.getClockPtr(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -136,7 +136,13 @@ const IAlicaCommunication& AlicaEngine::getCommunicator() const
 
 const AlicaClock& AlicaEngine::getAlicaClock() const
 {
-    return _ctx.getAlicaClock();
+    //return _ctx.getAlicaClock();
+    return *_ctx.getClockPtr();
+}
+
+const std::unique_ptr<AlicaClock>& AlicaEngine::getClockPtr() const
+{
+    return _ctx.getClockPtr();
 }
 
 const IAlicaTraceFactory* AlicaEngine::getTraceFactory() const

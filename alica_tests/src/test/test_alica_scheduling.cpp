@@ -24,7 +24,7 @@ protected:
 
 TEST_F(AlicaSchedulingPlan, scheduling)
 {
-    ae->start();
+    ae->start();//Missing in fixture  ac->init
     CounterClass::called = 0;
 
     STEP_UNTIL(CounterClass::called == 1);

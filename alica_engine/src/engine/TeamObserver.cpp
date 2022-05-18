@@ -26,7 +26,7 @@ using std::mutex;
 using std::pair;
 
 TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator,
-        const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
+        const std::unique_ptr<AlicaClock>& clock, const PlanRepository& planRepository, TeamManager& teamManager)
         : _logger(logger)
         , _roleAssignment(roleAssigment)
         , _maySendMessages(maySendMessages)
@@ -73,7 +73,7 @@ bool TeamObserver::updateTeamPlanTrees()
 
 void TeamObserver::tick(RunningPlan* root)
 {
-    AlicaTime time = _clock.now();
+    AlicaTime time = _clock->now();
     ALICA_DEBUG_MSG("TO: tick(..) called at " << time);
 
     bool someChanges = updateTeamPlanTrees();
@@ -276,8 +276,8 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
     }
 
     lock_guard<mutex> lock(_msgQueueMutex);
-    ALICA_DEBUG_MSG("TO: Message received " << _clock.now());
-    _msgQueue.emplace_back(std::move(incoming), _clock.now());
+    ALICA_DEBUG_MSG("TO: Message received " << _clock->now());
+    _msgQueue.emplace_back(std::move(incoming), _clock->now());
 }
 
 /**

@@ -43,8 +43,8 @@ struct AlicaTestsEngineGetter
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::AlicaContext* ac;
-    alica::AlicaEngine* ae;
+    alica::AlicaContext* ac{nullptr};
+    alica::AlicaEngine* ae{nullptr};
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -150,7 +150,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(std::move(creators)));
+            EXPECT_TRUE(ae->init(std::move(creators)));//LUCA to be removec
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -191,7 +191,7 @@ protected:
         ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         spinner->start();
-        ae = AlicaTestsEngineGetter::getEngine(ac);
+        ae = AlicaTestsEngineGetter::getEngine(ac);//ae here is still nullptr needs ac->init
     }
 
     void TearDown() override
@@ -327,7 +327,7 @@ protected:
             ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);//LUCA ae here is nullptr needs ac->init
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             EXPECT_TRUE(ae->init(std::move(creators)));

@@ -155,4 +155,9 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
             [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
+const std::unique_ptr<AlicaClock>& AlicaContext::getClockPtr() const
+{
+    return _clock;
+}
+
 } // namespace alica

@@ -30,7 +30,7 @@ class IAlicaCommunication;
 class TeamObserver
 {
 public:
-    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator, const AlicaClock& clock,
+    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator, const std::unique_ptr<AlicaClock>& clock,
             const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
@@ -57,7 +57,7 @@ private:
     IRoleAssignment& _roleAssignment;
     const bool& _maySendMessages;
     const IAlicaCommunication& _communicator;
-    const AlicaClock& _clock;
+    const std::unique_ptr<AlicaClock>& _clock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;
 

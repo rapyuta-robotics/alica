@@ -18,7 +18,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents)
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
-    EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
+    EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));//engine not yet created so AlicaContext::reload gives error
     EXPECT_TRUE(ae->maySendMessages());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", true));
