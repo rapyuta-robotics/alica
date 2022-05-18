@@ -222,7 +222,6 @@ public:
      */
     template <class ClockType, class... Args>
     void setClock(Args&&... args);
-    const std::unique_ptr<AlicaClock>& getClockPtr() const;
 
     /**
      * Get clock being used by this alica instance.
@@ -454,6 +453,11 @@ private:
 template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new clock");
+        return;
+    }
+
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);
@@ -465,6 +469,11 @@ void AlicaContext::setClock(Args&&... args)
 template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new communicator");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
     AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
 #if (defined __cplusplus && __cplusplus >= 201402L)
@@ -503,6 +512,11 @@ bool AlicaContext::existSolver() const
 template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new timerfactory");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
