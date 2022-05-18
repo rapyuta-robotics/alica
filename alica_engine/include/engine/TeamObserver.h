@@ -58,7 +58,7 @@ private:
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
-    const AlicaClock& _clock;
+    const std::unique_ptr<AlicaClock>& _clock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;
 

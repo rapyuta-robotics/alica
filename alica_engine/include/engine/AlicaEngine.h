@@ -101,9 +101,7 @@ public:
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
-    //[[deprecated("It will be removed in the last PR")]]
-    std::shared_ptr<AlicaClock> getAlicaClockPtr() const;
-    void setAlicaClock(std::shared_ptr<AlicaClock> clock);
+    const std::unique_ptr<AlicaClock>& getClockPtr() const;
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
@@ -138,7 +136,7 @@ private:
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
-    const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
+    const Plan* _masterPlan{nullptr}; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
     Logger _log;
