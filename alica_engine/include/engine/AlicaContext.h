@@ -226,7 +226,6 @@ public:
      */
     template <class ClockType, class... Args>
     void setClock(Args&&... args);
-    const std::unique_ptr<AlicaClock>& getClockPtr() const;
 
     /**
      * Get clock being used by this alica instance.

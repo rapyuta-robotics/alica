@@ -154,13 +154,7 @@ const IAlicaCommunication& AlicaEngine::getCommunicator() const
 
 const AlicaClock& AlicaEngine::getAlicaClock() const
 {
-    // return _ctx.getAlicaClock();
-    return *_ctx.getClockPtr();
-}
-
-const std::unique_ptr<AlicaClock>& AlicaEngine::getClockPtr() const
-{
-    return _ctx.getClockPtr();
+    return _ctx.getAlicaClock();
 }
 
 const IAlicaTraceFactory* AlicaEngine::getTraceFactory() const

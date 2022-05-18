@@ -101,7 +101,6 @@ public:
     // AlicaContext forwarded interface:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
-    const std::unique_ptr<AlicaClock>& getClockPtr() const;
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
