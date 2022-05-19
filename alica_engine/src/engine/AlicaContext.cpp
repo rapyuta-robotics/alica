@@ -30,11 +30,11 @@ AlicaContext::~AlicaContext()
     _validTag = ALICA_CTX_BAD;
 }
 
-int AlicaContext::init(AlicaCreators& creatorCtx)
+int AlicaContext::init(AlicaCreators& creatorCtx, bool delayStart)
 {
     AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
-            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator), std::move(creatorCtx.transitionConditionCreator));
-    return init(std::move(creators));
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+    return init(std::move(creators), delayStart);
 }
 
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
