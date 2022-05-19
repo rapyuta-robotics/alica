@@ -138,10 +138,10 @@ protected:
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(*cbQueues.back());
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            EXPECT_TRUE(ac->init(std::move(creators), true));
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
