@@ -8,6 +8,7 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/model/Variable.h"
+#include "engine/BasicTransitionCondition.h"
 
 //#include <alica_common_config/debug_output.h>
 

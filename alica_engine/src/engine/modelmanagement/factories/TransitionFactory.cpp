@@ -27,9 +27,6 @@ Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* pl
         Factory::transitionConditionReferences.push_back(
             std::pair<int64_t, int64_t>(transition->getId(), Factory::getReferencedId(transitionNode[alica::Strings::condition])));
     }
-    if (Factory::isValid(transitionNode[alica::Strings::keyMapping])) {
-        transition->_keyMapping = KeyMappingFactory::create(transitionNode[alica::Strings::keyMapping]);
-    }
 
     return transition;
 }

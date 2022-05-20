@@ -16,6 +16,7 @@ static const std::string taskrepository = "taskrepository";
 static const std::string taskrepository_extension = ".tsk";
 static const std::string configuration = "configuration";
 static const std::string configuration_extension = ".cfg";
+static const std::string condition_extension = ".cnd";
 static const std::string task = "task";
 static const std::string state = "state";
 static const std::string confAbstractPlanWrapper = "confAbstractPlanWrapper";
@@ -97,5 +98,6 @@ static const std::string inheritBlackboard = "inheritBlackboard";
 static const std::string key = "key";
 static const std::string defaultValue = "defaultValue";
 static const std::string transitionCondition = "transitionCondition";
+static const std::string transitionConditionRepository = "transitionConditionRepository";
 } // namespace Strings
 } // namespace alica

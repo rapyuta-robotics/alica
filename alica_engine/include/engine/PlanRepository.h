@@ -27,6 +27,8 @@ class ModelFactory;
 class Factory;
 class ExpressionHandler;
 class ModelManager;
+class TransitionCondition;
+class TransitionConditionRepository;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -113,6 +115,8 @@ public:
         return Accessor<ConfAbstractPlanWrapper>(_confAbstractPlanWrapperRepository);
     }
     const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
+    const Accessor<TransitionCondition> getTransitionConditions() const { return Accessor<TransitionCondition>(_transitionConditions); }
+    const Accessor<TransitionConditionRepository> getTransitionConditionRepositories() const { return Accessor<TransitionConditionRepository>(_transitionConditionRepositories); }
 
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;
@@ -145,5 +149,7 @@ private:
     MapType<TaskRepository> _taskRepositories;
     MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
     MapType<Configuration> _configurationRepository;
+    MapType<TransitionCondition> _transitionConditions;
+    MapType<TransitionConditionRepository> _transitionConditionRepositories;
 };
 } // namespace alica

@@ -4,8 +4,10 @@
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Plan.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
+#include "engine/RuntimeTransitionConditionFactory.h"
 #include "engine/scheduler/Scheduler.h"
-
 #include "engine/PlanInterface.h"
 
 namespace alica
@@ -93,6 +95,18 @@ void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, dou
     if (_trace) {
         _trace->setLog({"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
                                                         "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+    }
+}
+
+bool BasicPlan::evalTransitionCondition(const Transition* transition, RunningPlan* rp)
+{
+    return transitionConditions[transition->getId()]->evaluate(rp);
+}
+
+void BasicPlan::initTransitionConditions(const TransitionGrp& transitions)
+{
+    for (auto it = transitions.begin(); it != transitions.end(); it++) {
+        transitionConditions[(*it)->getId()] = std::move(_engine->getRuntimeTransitionConditionFactory().create((*it)->getTransitionCondition()));
     }
 }
 

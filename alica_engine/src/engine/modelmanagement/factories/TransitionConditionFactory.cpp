@@ -1,18 +1,20 @@
 #include "engine/modelmanagement/factories/TransitionConditionFactory.h"
+
 #include "engine/model/TransitionCondition.h"
+#include "engine/model/TransitionConditionRepository.h"
 #include "engine/modelmanagement/Strings.h"
+#include "engine/modelmanagement/factories/BlackboardBlueprintFactory.h"
 
 namespace alica
 {
-TransitionCondition* TransitionConditionFactory::create(const YAML::Node& conditionNode, ConditionRepository* conditionRepository)
+TransitionCondition* TransitionConditionFactory::create(const YAML::Node& conditionNode, TransitionConditionRepository* conditionRepository)
 {
     TransitionCondition* transitionCondition = new TransitionCondition();
     Factory::setAttributes(conditionNode, transitionCondition);
-    Factory::storeElement(condition, alica::Strings::transitionCondition);
-    transitionCondition->_conditionRepository = conditionRepository;
+    Factory::storeElement(transitionCondition, alica::Strings::transitionCondition);
 
-    if (Factory::isValid(node[alica::Strings::blackboard])) {
-        transitionCondition->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]));
+    if (Factory::isValid(conditionNode[alica::Strings::blackboard])) {
+        transitionCondition->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(conditionNode[alica::Strings::blackboard]));
     } else {
         transitionCondition->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
     }

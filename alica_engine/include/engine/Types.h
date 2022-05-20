@@ -27,6 +27,7 @@ class SuccessState;
 class Synchronisation;
 class Task;
 class Transition;
+class TransitionCondition;
 class Variable;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
@@ -50,6 +51,7 @@ using SuccessStateGrp = std::vector<const SuccessState*>;
 using SynchronisationGrp = std::vector<const Synchronisation*>;
 using TaskGrp = std::vector<const Task*>;
 using TransitionGrp = std::vector<const Transition*>;
+using TransitionConditionGrp = std::vector<const TransitionCondition*>;
 using VariableGrp = std::vector<const Variable*>;
 
 using ParameterMap = std::unordered_map<std::string, Parameter*>;

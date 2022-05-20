@@ -215,6 +215,7 @@ public:
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
+    bool evalTransitionCondition(const Transition* transition);
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

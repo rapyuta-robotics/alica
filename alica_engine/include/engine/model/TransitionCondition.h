@@ -10,18 +10,18 @@ namespace alica
 {
 class AbstractPlan;
 class ModelFactory;
-class ExpressionHandler;
+class TransitionConditionFactory;
 
-class TransitionConditon : public AlicaElement
+class TransitionCondition : public AlicaElement
 {
 public:
-    Condition();
-    virtual ~Condition();
+    TransitionCondition();
+    virtual ~TransitionCondition();
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 private:
     // TODO: Check if friends are necessary
     friend ModelFactory;
-    friend ExpressionHandler;
+    friend TransitionConditionFactory;
 
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 };

@@ -571,6 +571,7 @@ void RunningPlan::activate()
         _ae->editBehaviourPool().startBehaviour(*this);
     } else if (_activeTriple.abstractPlan) {
         _ae->editPlanPool().startPlan(*this);
+        _basicPlan->initTransitionConditions(getActivePlanAsPlan()->getTransitions());
     }
 
     attachPlanConstraints();
@@ -889,6 +890,14 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
 {
     assert(!isBehaviour());
     return _basicPlan->getKeyMapping(wrapperId);
+}
+
+bool RunningPlan::evalTransitionCondition(const Transition* transition)
+{
+    if (isBehaviour()) {
+        return false;
+    }
+    return _basicPlan->evalTransitionCondition(transition, this);
 }
 
 } /* namespace alica */

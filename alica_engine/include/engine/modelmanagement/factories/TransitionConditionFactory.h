@@ -5,10 +5,11 @@
 namespace alica
 {
 class TransitionCondition;
-class ConditonRepository;
-class TransitionConditonFactory : public Factory
+class TransitionConditionRepository;
+
+class TransitionConditionFactory : public Factory
 {
 public:
-    static TransitionCondition* create(const YAML::Node& taskNode, ConditionRepository* conditionRepository);
+    static TransitionCondition* create(const YAML::Node& taskNode, TransitionConditionRepository* conditionRepository);
 };
 } // namespace alica

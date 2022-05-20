@@ -87,6 +87,8 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators& creatorCtx)
 {
+    _runtimeTransitionConditionFactory = std::make_unique<RuntimeTransitionConditionFactory>(std::move(creatorCtx.transitionPreConditionCreator), _ctx.getWorldModel());
+
     _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
     _scheduler->init();
 

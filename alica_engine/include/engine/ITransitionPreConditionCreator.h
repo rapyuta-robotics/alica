@@ -1,19 +1,17 @@
 #pragma once
 
-#include <any>
-#include <unordered_map>
-#include <string>
 #include <functional>
 
 namespace alica
 {
-class BasicCondition;
+class RunningPlan;
+class Blackboard;
 
 class ITransitionPreConditionCreator
 {
 public:
     virtual ~ITransitionPreConditionCreator() {}
-    virtual std::function<bool(std::unordered_map<std::string, std::any>)> createConditions(int64_t conditionId) = 0;
+    virtual std::function<bool(RunningPlan*, Blackboard*)> createConditions(int64_t conditionId) = 0;
 };
 
 } /* namespace alica */

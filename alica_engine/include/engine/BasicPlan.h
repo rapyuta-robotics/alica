@@ -2,14 +2,18 @@
 
 #include "engine/IPlanCreator.h"
 #include "engine/RunnableObject.h"
+#include "engine/BasicTransitionCondition.h"
+#include "engine/Types.h"
 #include "engine/blackboard/KeyMapping.h"
 
 #include <unordered_map>
+#include <memory>
 
 namespace alica
 {
 
 class Plan;
+class Transition;
 
 struct PlanContext
 {
@@ -45,6 +49,8 @@ public:
     using RunnableObject::TracingType;
 
     void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    bool evalTransitionCondition(const Transition* transition, RunningPlan* rp);
+    void initTransitionConditions(const TransitionGrp& transitions);
 
 protected:
     using RunnableObject::getTrace;
@@ -71,5 +77,6 @@ private:
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
 
     bool _isMasterPlan;
+    std::unordered_map<int64_t, std::unique_ptr<BasicTransitionCondition>> transitionConditions;
 };
 } // namespace alica

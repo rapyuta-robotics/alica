@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/PlanChange.h"
-#include "engine/TransitionPreConditionFactory.h"
 
 #include <memory>
 #include <yaml-cpp/yaml.h>
@@ -54,8 +53,6 @@ private:
     int _maxConsecutiveChanges;
     bool _changeOccurred;
     const IAlicaWorldModel* _wm;
-    std::unordered_map<int64_t, std::unordered_map<std::string, std::any>> _transitionPreConditionInputs;
-    const TransitionPreConditionFactory& _transitionPreConditionFactory;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);
