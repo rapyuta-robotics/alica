@@ -37,7 +37,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx, bool delayStart)
     return init(std::move(creators), delayStart);
 }
 
-int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
+int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart) // delayStarted==true is only used for testing purpose
 {
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
