@@ -69,7 +69,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_agent_discovery.cpp
         src/test/test_yaml_cfg.cpp
         src/test/test_path_parser.cpp
-        #src/test/test_config_change.cpp
+        src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
         src/test/test_adjacent_plans_success.cpp
         src/test/test_alica_tracing.cpp
