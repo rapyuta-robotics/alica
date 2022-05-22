@@ -579,10 +579,6 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
         return false;
     }
-
-    if (reload) {
-        reloadConfig();
-    }
     return true;
 }
 
@@ -619,11 +615,6 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
         return false;
     }
-
-    if (reload) {
-        reloadConfig();
-    }
-
     return true;
 }
 

@@ -13,24 +13,61 @@ protected:
     const char* getMasterPlanName() const override { return "MasterPlan"; }
 };
 
-TEST_F(AlicaNotInitialized, TestUpdatingComponents)
+TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
-    EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false)); // engine not yet created so AlicaContext::reload gives error
+    EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
+
+    EXPECT_EQ(0, ac->init(std::move(creators)));
+    ae = AlicaTestsEngineGetter::getEngine(ac);
     EXPECT_TRUE(ae->maySendMessages());
 
+    ac->terminate();
+}
+
+TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
+{
+    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
+
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", true));
+
+    EXPECT_EQ(0, ac->init(std::move(creators)));
+    ae = AlicaTestsEngineGetter::getEngine(ac);
     EXPECT_FALSE(ae->maySendMessages());
+
+    // TearDown
+    ac->terminate();
+}
+
+TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
+{
+    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", false));
     EXPECT_FALSE(PartialAssignment::isIdlingAllowed());
 
+    EXPECT_EQ(0, ac->init(std::move(creators)));
+
+    // TearDown
+    ac->terminate();
+}
+
+TEST_F(AlicaNotInitialized, TestUpdatingComponents_004)
+{
+    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
+
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
     EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
-    EXPECT_TRUE(!ac->init(std::move(creators)));
+    EXPECT_EQ(0, ac->init(std::move(creators)));
+
+    // TearDown
+    ac->terminate();
 }
 
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
@@ -39,11 +76,14 @@ TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);
-    EXPECT_TRUE(!ac->init(std::move(creators)));
+    EXPECT_EQ(0, ac->init(std::move(creators)));
 
     // changes to config not allowed after initialization of AlicaContext
     ASSERT_FALSE(ac->setOption<int>("Alica.TeamTimeOut", 2000));
     EXPECT_EQ(1000, ac->getConfig()["Alica"]["TeamTimeOut"].as<int>());
+
+    // TearDown
+    ac->terminate();
 }
 
 TEST_F(AlicaNotInitialized, TestConfigUpdatesWithVector)
