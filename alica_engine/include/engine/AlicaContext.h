@@ -528,6 +528,11 @@ void AlicaContext::setTimerFactory(Args&&... args)
 template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new tracefactory");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
@@ -539,6 +544,11 @@ void AlicaContext::setTraceFactory(Args&&... args)
 template <class WorldModelType, class... Args>
 void AlicaContext::setWorldModel(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new worldmodeltype");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaWorldModel, WorldModelType>::value, "Must be derived from IAlicaWorldModel");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);

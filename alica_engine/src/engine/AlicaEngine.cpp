@@ -41,7 +41,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, _configChangeListener, alicaContextParams.configPath)
+        , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(this, alicaContextParams.agentID)

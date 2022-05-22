@@ -34,8 +34,8 @@ TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const
         , _clock(clock)
         , _planRepository(planRepository)
         , _tm(teamManager)
+        ,_me(_tm.editLocalAgent())
 {
-    _me = _tm.editLocalAgent();
 };
 
 TeamObserver::~TeamObserver() {}

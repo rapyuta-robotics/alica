@@ -45,22 +45,21 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     }
 
     if (!_communicator) {
-        AlicaEngine::abort("AC: Communicator not seted");
+        AlicaEngine::abort("AC: Communicator not set");
     }
     if (!_timerFactory) {
-        AlicaEngine::abort("AC: TimerFactory not seted");
+        AlicaEngine::abort("AC: TimerFactory not set");
     }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
 
-    if (_communicator) {
-        _communicator->startCommunication();
-    }
+    _communicator->startCommunication();
 
     if (_engine->init(std::move(creatorCtx))) {
         _initialized = true;
-        if (!delayStart)
+        if (!delayStart) {
             _engine->start();
+        }
 
         return 0;
     }
