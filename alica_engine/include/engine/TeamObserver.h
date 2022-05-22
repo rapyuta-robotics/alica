@@ -54,13 +54,13 @@ private:
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
 
-    ConfigChangeListener& _configChangeListener;
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;
+    Agent* _me;
 
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;
