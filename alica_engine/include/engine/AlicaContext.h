@@ -557,6 +557,7 @@ void AlicaContext::setWorldModel(Args&&... args)
 #endif
 }
 
+// Some options can be set before AlicaContext::init but become available only after the init is called
 template <class T>
 bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
 {
@@ -580,6 +581,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
     return true;
 }
 
+// Some options can be set before AlicaContext::init but become available only after the init is called
 template <class T>
 bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload) noexcept
 {
@@ -609,6 +611,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
         return false;
     }
+
     if (reload && _initialized) {
         reloadConfig();
     }
