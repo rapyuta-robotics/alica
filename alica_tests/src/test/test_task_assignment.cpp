@@ -43,7 +43,26 @@ protected:
     const char* getMasterPlanName() const override { return "MasterPlanTaskAssignment"; }
     bool stepEngine() const override { return false; }
 };
+/*
+class TaskAssignmentTest : public AlicaTestNotInitializedFixture
+{
+protected:
+    alica::AlicaCreators creators;
+    const char* getRoleSetName() const override { return "RolesetTA"; }
+    const char* getMasterPlanName() const override { return "MasterPlanTaskAssignment"; }
+    bool stepEngine() const override { return false; }
+    void SetUp() override
+    {
+        alica::AlicaTestNotInitializedFixture::SetUp();
 
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
+        ac->init(std::move(creators), true);
+        alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+    }
+};
+*/
 TEST_F(TaskAssignmentTest, constructTaskAssignment)
 {
     ASSERT_NO_SIGNAL
