@@ -66,7 +66,6 @@ TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
-    //ae->start();
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
@@ -91,7 +90,6 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
     const uint64_t FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE = 4449850763179483831;
 
-    //ae->start();
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
