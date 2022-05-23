@@ -62,10 +62,10 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_back_forth.cpp
         src/test/test_continue_on_fail.cpp
         src/test/test_success_spam.cpp
-        #src/test/test_task_assignment.cpp
+        src/test/test_task_assignment.cpp
         src/test/test_variant.cpp
         src/test/test_varsync.cpp
-        #src/test/test_agent_dies.cpp
+        src/test/test_agent_dies.cpp
         src/test/test_agent_discovery.cpp
         src/test/test_yaml_cfg.cpp
         src/test/test_path_parser.cpp
