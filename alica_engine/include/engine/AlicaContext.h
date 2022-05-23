@@ -565,11 +565,6 @@ void AlicaContext::setWorldModel(Args&&... args)
 template <class T>
 bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
 {
-    if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. setOption not possibile.");
-        return false;
-    }
-
     ConfigPathParser configPathParser;
     std::vector<std::string> params = configPathParser.getParams('.', path);
 
@@ -594,10 +589,6 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
 template <class T>
 bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload) noexcept
 {
-    if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. setOption not possibile.");
-        return false;
-    }
     ConfigPathParser configPathParser;
     std::vector<std::pair<std::string, T>> oldKeyValuePairs;
 
