@@ -62,7 +62,8 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_004)
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
-    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
+    bool tmp = PartialAssignment::isIdlingAllowed();
+    EXPECT_TRUE(tmp);
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
 
