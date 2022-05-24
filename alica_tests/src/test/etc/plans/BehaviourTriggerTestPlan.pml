@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1428508768572,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "BehaviourTriggerTestPlan",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662751,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662751"
         },
         {
@@ -42,6 +47,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662753,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662753"
         },
         {
@@ -49,16 +58,29 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662755,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662755"
+        },
+        {
+          "abstractPlan": "behaviours/NotToTrigger.beh#1429017274116",
+          "comment": "",
+          "configuration": null,
+          "id": 1587718662758,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": "1587718662758"
         }
       ],
       "entryPoint": 1428508768574,
       "id": 1428508768573,
       "inTransitions": [],
       "name": "NewState",
-      "outTransitions": [
-        1429017235181
-      ],
+      "outTransitions": [],
       "parentPlan": 1428508768572,
       "positionWeb": {
         "x": 428,
@@ -66,56 +88,10 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "behaviours/NotToTrigger.beh#1429017274116",
-          "comment": "",
-          "configuration": null,
-          "id": 1587718662758,
-          "name": "1587718662758"
-        }
-      ],
-      "entryPoint": null,
-      "id": 1429017227839,
-      "inTransitions": [
-        1429017235181
-      ],
-      "name": "NewState",
-      "outTransitions": [],
-      "parentPlan": 1428508768572,
-      "positionWeb": {
-        "x": 686,
-        "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
-  "transitions": [
-    {
-      "comment": "",
-      "id": 1429017235181,
-      "inState": 1428508768573,
-      "name": "MISSING_NAME",
-      "outState": 1429017227839,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1429017236633,
-        "name": "MISSING_NAME",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    }
-  ],
+  "transitions": [],
   "utilityThreshold": 0.1,
   "variables": []
 }

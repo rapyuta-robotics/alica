@@ -55,6 +55,7 @@ void RuleBook::init(const IAlicaWorldModel* wm)
 void RuleBook::reload(const YAML::Node& config)
 {
     _maxConsecutiveChanges = config["Alica"]["MaxRuleApplications"].as<int>();
+    _autoFailureHandlingEnabled = config["Alica"]["AutoFailureHandling"].as<bool>();
 }
 
 /**
@@ -257,6 +258,9 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
  */
 PlanChange RuleBook::planRedoRule(RunningPlan& r)
 {
+    if (!_autoFailureHandlingEnabled)
+        return PlanChange::NoChange;
+
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanRedoRule-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanRedoRule RP \n" << r);
@@ -295,6 +299,9 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
  */
 PlanChange RuleBook::planReplaceRule(RunningPlan& r)
 {
+    if (!_autoFailureHandlingEnabled)
+        return PlanChange::NoChange;
+
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanReplace-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanReplace RP \n" << r);
@@ -325,6 +332,9 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
  */
 PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 {
+    if (!_autoFailureHandlingEnabled)
+        return PlanChange::NoChange;
+
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: PlanPropagation-Rule called.");
     ALICA_DEBUG_MSG("RB: PlanPropagation RP \n" << r);
@@ -389,6 +399,9 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
  */
 PlanChange RuleBook::topFailRule(RunningPlan& r)
 {
+    if (!_autoFailureHandlingEnabled)
+        return PlanChange::NoChange;
+
     assert(!r.isRetired());
     ALICA_DEBUG_MSG("RB: TopFail-Rule called.");
     ALICA_DEBUG_MSG("RB: TopFail RP \n" << r);
@@ -435,7 +448,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     const State* nextState = nullptr;
 
-    if (!r.getBasicPlan() || !r.getBasicPlan()->initExecuted()) {
+    if (!r.getBasicPlan()) {
         return PlanChange::NoChange;
     }
 

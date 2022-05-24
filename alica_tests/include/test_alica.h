@@ -1,12 +1,12 @@
 #pragma once
 
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "PlanCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
+#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
 #include <alica_tests/TestTracing.h>
@@ -49,10 +49,14 @@ protected:
 
 class AlicaTestFixture : public AlicaTestFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
         alicaTests::TestWorldModel::getOne()->reset();
@@ -62,7 +66,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -70,12 +74,12 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
-        EXPECT_TRUE(ae->init(creators));
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -110,6 +114,9 @@ protected:
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -126,10 +133,10 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
-
         for (int i = 0; i < getAgentCount(); ++i) {
+            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
@@ -141,7 +148,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(creators));
+            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -197,6 +204,9 @@ protected:
 
 class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -218,12 +228,12 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
-        EXPECT_TRUE(ae->init(creators));
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -238,6 +248,9 @@ protected:
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -260,12 +273,12 @@ protected:
         ac->setWorldModel<alica_test::SchedWM>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
-        EXPECT_TRUE(ae->init(creators));
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -280,6 +293,9 @@ protected:
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -296,10 +312,10 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
-
         for (int i = 0; i < getAgentCount(); ++i) {
+            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
@@ -312,7 +328,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(creators));
+            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }

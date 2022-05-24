@@ -1,12 +1,13 @@
 #pragma once
 
 #include "engine/AlicaContext.h"
-#include "engine/BehaviourPool.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/RuntimeTransitionConditionFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
-#include "engine/PlanPool.h"
 #include "engine/PlanRepository.h"
+#include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AuthorityManager.h"
@@ -14,12 +15,9 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
-#include "engine/scheduler/JobQueue.h"
-#include "engine/scheduler/Scheduler.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <functional>
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -28,7 +26,6 @@ namespace alica
 {
 struct AlicaCreators;
 class Plan;
-class BehaviourPool;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
@@ -41,12 +38,12 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-            const AgentId agentID = InvalidAgentID);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
+            bool stepEngine, const AgentId agentID = InvalidAgentID);
     ~AlicaEngine();
 
     // State modifiers:
-    bool init(AlicaCreators& creatorCtx);
+    bool init(AlicaCreators&& creatorCtx);
     void start();
     void terminate();
     void stepNotify();
@@ -59,11 +56,8 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const BehaviourPool& getBehaviourPool() const { return _behaviourPool; }
-    BehaviourPool& editBehaviourPool() { return _behaviourPool; }
-
-    const PlanPool& getPlanPool() const { return _planPool; }
-    PlanPool& editPlanPool() { return _planPool; }
+    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
+    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
@@ -94,11 +88,9 @@ public:
 
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
-
-    scheduler::JobScheduler& editScheduler() { return *_scheduler; }
-
+  
     const RuntimeTransitionConditionFactory& getRuntimeTransitionConditionFactory() const { return *_runtimeTransitionConditionFactory; }
-
+    
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
@@ -124,35 +116,38 @@ public:
     AgentId generateID();
 
     void reload(const YAML::Node& config);
+    //[[deprecated("It will be removed in the last PR")]]
     const YAML::Node& getConfig() const;
-    void subscribe(std::function<void(const YAML::Node& config)> reloadFunction);
+    //[[deprecated("It will be removed in the last PR")]]
+    void subscribe(ConfigChangeListener::ReloadFunction reloadFunction);
+    //[[deprecated("It will be removed in the last PR")]]
+    ConfigChangeListener& getConfigChangeListener();
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig(const YAML::Node& config);
+    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
-    std::vector<std::function<void(const YAML::Node& config)>> _configChangeListenerCBs;
+    ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
-    std::unique_ptr<scheduler::JobScheduler> _scheduler;
     PlanRepository _planRepository;
     ModelManager _modelManager;
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
-    BehaviourPool _behaviourPool;
-    PlanPool _planPool;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
+    std::unique_ptr<RuntimePlanFactory> _planFactory;
     std::unique_ptr<RuntimeTransitionConditionFactory> _runtimeTransitionConditionFactory;
     PlanBase _planBase;
 

@@ -106,14 +106,23 @@ public class ModelManager implements Observer {
 
     public void setPlansPath(String plansPath) {
         this.plansPath = plansPath;
+        if (!new File(plansPath).exists()) {
+            throw new RuntimeException("Given folder does not exist: " + plansPath);
+        }
     }
 
     public void setTasksPath(String tasksPath) {
         this.tasksPath = tasksPath;
+        if (!new File(tasksPath).exists()) {
+            throw new RuntimeException("Given folder does not exist: " + tasksPath);
+        }
     }
 
     public void setRolesPath(String rolesPath) {
         this.rolesPath = rolesPath;
+        if (!new File(rolesPath).exists()) {
+            throw new RuntimeException("Given folder does not exist: " + rolesPath);
+        }
     }
 
     public ArrayList<Plan> getPlans() {

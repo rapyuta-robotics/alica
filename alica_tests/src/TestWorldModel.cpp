@@ -39,14 +39,17 @@ void TestWorldModel::reset()
     transitionCondition1625776897472 = false;
     switchEntryPoints = false;
 
-    transitionCondition4238964946542987247 = false;
-    transitionCondition4115970455290610262 = false;
     preCondition1840401110297459509 = false;
 
     x = 0;
     tracingLogs.clear();
     tracingTags.clear();
     tracingParents.clear();
+
+    failurePlanInitCallCounter = 0;
+    transitionCondition3194919312481305139 = false;
+    transitionCondition1446293122737278544 = false;
+    transitionCondition1023566846009251524 = false;
 }
 
 bool TestWorldModel::isTransitionCondition1413201227586() const
@@ -183,26 +186,6 @@ void TestWorldModel::setTransitionCondition1626848015861(bool transitionConditio
     this->transitionCondition1626848015861 = transitionCondition1626848015861;
 }
 
-bool TestWorldModel::isTransitionCondition4238964946542987247() const
-{
-    return this->transitionCondition4238964946542987247;
-}
-
-void TestWorldModel::setTransitionCondition4238964946542987247(bool transitionCondition4238964946542987247)
-{
-    this->transitionCondition4238964946542987247 = transitionCondition4238964946542987247;
-}
-
-bool TestWorldModel::isTransitionCondition4115970455290610262() const
-{
-    return this->transitionCondition4115970455290610262;
-}
-
-void TestWorldModel::setTransitionCondition4115970455290610262(bool transitionCondition4115970455290610262)
-{
-    this->transitionCondition4115970455290610262 = transitionCondition4115970455290610262;
-}
-
 bool TestWorldModel::isSwitchingEntryPoints() const
 {
     return this->switchEntryPoints;
@@ -239,5 +222,36 @@ void TestWorldModel::setPreCondition1840401110297459509(bool preCondition1840401
 {
     this->preCondition1840401110297459509 = preCondition1840401110297459509;
 }
-
+void TestWorldModel::failurePlanInitCalled()
+{
+    ++failurePlanInitCallCounter;
+}
+int TestWorldModel::failurePlanInitCallCount() const
+{
+    return failurePlanInitCallCounter;
+}
+void TestWorldModel::enableTransitionCondition3194919312481305139()
+{
+    transitionCondition3194919312481305139 = true;
+}
+bool TestWorldModel::transitionCondition3194919312481305139Enabled() const
+{
+    return transitionCondition3194919312481305139;
+}
+void TestWorldModel::setTransitionCondition1446293122737278544(bool value)
+{
+    transitionCondition1446293122737278544 = value;
+}
+bool TestWorldModel::isTransitionCondition1446293122737278544() const
+{
+    return transitionCondition1446293122737278544;
+}
+void TestWorldModel::setTransitionCondition1023566846009251524(bool value)
+{
+    transitionCondition1023566846009251524 = value;
+}
+bool TestWorldModel::isTransitionCondition1023566846009251524() const
+{
+    return transitionCondition1023566846009251524;
+}
 } // namespace alicaTests

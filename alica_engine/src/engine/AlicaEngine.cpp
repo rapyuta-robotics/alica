@@ -1,6 +1,7 @@
 #include "engine/AlicaEngine.h"
 
 #include "engine/IRoleAssignment.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
@@ -34,20 +35,18 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine,
-        const AgentId agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName,
+        const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
         : _ctx(ctx)
-        , _scheduler()
+        , _configChangeListener(config)
         , _stepCalled(false)
         , _stepEngine(stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, this, configPath)
+        , _modelManager(_planRepository, _configChangeListener, configPath)
         , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(roleSetName))
         , _teamManager(this, agentID)
         , _syncModul(this)
-        , _behaviourPool(this)
-        , _planPool(this)
         , _teamObserver(this)
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
@@ -85,17 +84,13 @@ void AlicaEngine::reload(const YAML::Node& config)
  * Initialise the engine
  * @return bool true if everything worked false otherwise
  */
-bool AlicaEngine::init(AlicaCreators& creatorCtx)
+bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
+    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
     _runtimeTransitionConditionFactory = std::make_unique<RuntimeTransitionConditionFactory>(std::move(creatorCtx.transitionPreConditionCreator), _ctx.getWorldModel());
 
-    _scheduler = std::make_unique<scheduler::JobScheduler>(_ctx.getTimerFactory());
-    _scheduler->init();
-
     _stepCalled = false;
-    bool everythingWorked = true;
-    everythingWorked &= _behaviourPool.init(*creatorCtx.behaviourCreator);
-    everythingWorked = everythingWorked && _planPool.init(*creatorCtx.planCreator);
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);
@@ -106,7 +101,7 @@ bool AlicaEngine::init(AlicaCreators& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
-    return everythingWorked;
+    return true;
 }
 
 void AlicaEngine::start()
@@ -122,11 +117,6 @@ void AlicaEngine::terminate()
 {
     _maySendMessages = false;
     _planBase.stop();
-    _behaviourPool.stopAll();
-    _planPool.stopAll();
-    if (_scheduler) {
-        _scheduler->terminate();
-    }
     _auth.close();
     _syncModul.close();
     _teamObserver.close();
@@ -204,7 +194,7 @@ IAlicaWorldModel* AlicaEngine::getWorldModel() const
 
 void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
 {
-    _configChangeListenerCBs.push_back(reloadFunction);
+    _configChangeListener.subscribe(reloadFunction);
 };
 
 /**
@@ -243,8 +233,11 @@ AgentId AlicaEngine::generateID()
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)
 {
-    for (auto reloadFunction : _configChangeListenerCBs) {
-        reloadFunction(config);
-    }
+    _configChangeListener.reloadConfig(config);
+}
+
+ConfigChangeListener& AlicaEngine::getConfigChangeListener()
+{
+    return _configChangeListener;
 }
 } // namespace alica

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1414403396328,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "AuthorityTestMaster",
   "preCondition": null,
   "relativeDirectory": "Authority",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718663037,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718663037"
         }
       ],

@@ -1,4 +1,4 @@
-#include "DomainBehaviour.h"
+#include <alica_tests/DomainBehaviour.h>
 /*PROTECTED REGION ID(domainBehaviourSrcHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

@@ -1,11 +1,12 @@
 #include "test_alica.h"
 
-#include "Behaviour/Attack.h"
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
-#include "UtilityFunctionCreator.h"
+#include <alica_tests/Behaviour/Attack.h>
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
+#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
+#include <alica_tests/UtilityFunctionCreator.h>
 
 #include <alica/test/Util.h>
 #include <communication/AlicaDummyCommunication.h>
@@ -13,7 +14,6 @@
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/BasicBehaviour.h>
-#include <engine/BehaviourPool.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>

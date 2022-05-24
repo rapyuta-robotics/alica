@@ -10,8 +10,6 @@ import de.unikassel.vs.alica.planDesigner.events.ModelEvent;
 import de.unikassel.vs.alica.planDesigner.events.ModelEventType;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelManager;
 import de.unikassel.vs.alica.planDesigner.modelmanagement.ModelModificationQuery;
-import javafx.collections.ObservableList;
-import javafx.util.Pair;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.InvocationTargetException;

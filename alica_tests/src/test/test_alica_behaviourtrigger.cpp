@@ -1,13 +1,12 @@
 #include "test_alica.h"
 
-#include <Behaviour/NotToTrigger.h>
-#include <Behaviour/TriggerA.h>
-#include <Behaviour/TriggerB.h>
-#include <Behaviour/TriggerC.h>
 #include <alica/test/Util.h>
+#include <alica_tests/Behaviour/NotToTrigger.h>
+#include <alica_tests/Behaviour/TriggerA.h>
+#include <alica_tests/Behaviour/TriggerB.h>
+#include <alica_tests/Behaviour/TriggerC.h>
 #include <alica_tests/TestWorldModel.h>
 #include <engine/BasicBehaviour.h>
-#include <engine/BehaviourPool.h>
 #include <engine/IAlicaCommunication.h>
 #include <engine/PlanBase.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
@@ -31,11 +30,6 @@ protected:
 TEST_F(AlicaBehaviourTrigger, triggerTest)
 {
     ASSERT_NO_SIGNAL
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
-
     ae->start();
     alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
     ae->getAlicaClock().sleep(duration);

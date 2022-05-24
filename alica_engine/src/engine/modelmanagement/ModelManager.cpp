@@ -1,6 +1,7 @@
 #include "engine/modelmanagement/ModelManager.h"
 
 #include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Configuration.h"
@@ -30,12 +31,23 @@ namespace alica
 
 ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _ae(ae)
+        , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
         , domainConfigFolder(domainConfigFolder)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
-    _ae->subscribe(reloadFunctionPtr);
-    reload(_ae->getConfig());
+    _configChangeListener.subscribe(reloadFunctionPtr);
+    reload(_configChangeListener.getConfig());
+    Factory::setModelManager(this);
+}
+
+ModelManager::ModelManager(PlanRepository& planRepository, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder)
+        : _planRepository(planRepository)
+        , _configChangeListener(configChangeListener)
+        , domainConfigFolder(domainConfigFolder)
+{
+    auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
+    _configChangeListener.subscribe(reloadFunctionPtr);
+    reload(_configChangeListener.getConfig());
     Factory::setModelManager(this);
 }
 
@@ -48,9 +60,10 @@ void ModelManager::reload(const YAML::Node& config)
 
 std::string ModelManager::getBasePath(const std::string& configKey)
 {
+    YAML::Node& config = _configChangeListener.getConfig();
     std::string basePath;
     try {
-        basePath = _ae->getConfig()["Alica"][configKey].as<std::string>();
+        basePath = config["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
         AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
     }
@@ -180,11 +193,11 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
-        Plan* plan = PlanFactory::create(_ae, node);
+        Plan* plan = PlanFactory::create(_configChangeListener, node);
         plan->setFileName(currentFile);
         return plan;
     } else if (alica::Strings::behaviour.compare(type) == 0) {
-        Behaviour* behaviour = BehaviourFactory::create(_ae, node);
+        Behaviour* behaviour = BehaviourFactory::create(node);
         behaviour->setFileName(currentFile);
         return behaviour;
     } else if (alica::Strings::configuration.compare(type) == 0) {
@@ -192,7 +205,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         configuration->setFileName(currentFile);
         return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
-        PlanType* planType = PlanTypeFactory::create(_ae, node);
+        PlanType* planType = PlanTypeFactory::create(node);
         planType->setFileName(currentFile);
         return planType;
     } else if (alica::Strings::taskrepository.compare(type) == 0) {

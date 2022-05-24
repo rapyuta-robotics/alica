@@ -1,4 +1,4 @@
-#include "Behaviour/ConstraintUsingBehaviour.h"
+#include <alica_tests/Behaviour/ConstraintUsingBehaviour.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1414068597716) ENABLED START*/

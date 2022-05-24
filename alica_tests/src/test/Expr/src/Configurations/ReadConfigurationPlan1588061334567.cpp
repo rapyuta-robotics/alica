@@ -1,4 +1,4 @@
-#include "Configurations/ReadConfigurationPlan1588061334567.h"
+#include <alica_tests/Configurations/ReadConfigurationPlan1588061334567.h>
 /*PROTECTED REGION ID(eph1588061334567) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

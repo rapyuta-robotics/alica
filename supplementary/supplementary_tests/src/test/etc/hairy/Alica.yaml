@@ -6,6 +6,9 @@ Alica:
   TeamTimeOut: 10000
   AssignmentProtectionTime: 500
 
+  #Failure Handling
+  AutoFailureHandling: true
+
   #Hz
   MinBroadcastFrequency: 10
   MaxBroadcastFrequency: 15

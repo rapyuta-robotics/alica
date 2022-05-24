@@ -1,4 +1,4 @@
-#include "FrequencyTestPlan1626848999740.h"
+#include <alica_tests/FrequencyTestPlan1626848999740.h>
 /*PROTECTED REGION ID(eph1626848999740) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

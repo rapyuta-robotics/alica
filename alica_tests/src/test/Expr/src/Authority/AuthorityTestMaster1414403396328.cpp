@@ -1,4 +1,4 @@
-#include "Authority/AuthorityTestMaster1414403396328.h"
+#include <alica_tests/Authority/AuthorityTestMaster1414403396328.h>
 /*PROTECTED REGION ID(eph1414403396328) ENABLED START*/
 // Add additional using directives here
 #include <memory>

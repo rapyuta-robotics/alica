@@ -1,4 +1,4 @@
-#include "TestParameterPassingMaster1179066429431332055.h"
+#include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 /*PROTECTED REGION ID(eph1179066429431332055) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
@@ -40,7 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1179066429431332055::getUtilityF
 /*PROTECTED REGION ID(methods1179066429431332055) ENABLED START*/
 void TestParameterPassingMaster1179066429431332055::onInit()
 {
-    LockedBlackboardRW bb = LockedBlackboardRW(*(getBlackboard()));
+    LockedBlackboardRW bb(*(getBlackboard()));
     bb.set("masterKey", 8);
 }
 // Add additional options here

@@ -1,4 +1,4 @@
-#include "Behaviour/AlwaysFail.h"
+#include <alica_tests/Behaviour/AlwaysFail.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1532424188199) ENABLED START*/

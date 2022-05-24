@@ -11,7 +11,6 @@
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
-#include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/debug_output.h>
@@ -29,10 +28,16 @@ namespace alica
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
         : RunnableObject(context.worldModel, context.name)
         , _behaviour(context.behaviourModel)
-        , _msDelayedStart(AlicaTime::milliseconds(0))
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
 {
+    if (_behaviour->getFrequency() < 1 || _behaviour->isEventDriven()) {
+        // TODO: set interval to invalid value like -1 & have the basic behaviour not schedule run jobs for such intervals
+        setInterval(0);
+    } else {
+        setInterval(1000 / _behaviour->getFrequency());
+    }
+    setBlackboardBlueprint(_behaviour->getBlackboardBlueprint());
 }
 
 /**
@@ -44,20 +49,6 @@ AgentId BasicBehaviour::getOwnId() const
     return _engine->getTeamManager().getLocalAgentID();
 }
 
-void BasicBehaviour::setFailure()
-{
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::FAILURE);
-    if (prev != BehResult::FAILURE) {
-        _engine->editPlanBase().addFastPathEvent(_execContext.load());
-        if (_trace) {
-            _trace->setTag("Result", "Fail");
-        }
-    }
-}
-
 bool BasicBehaviour::isTriggeredRunFinished()
 {
     return !_triggeredJobRunning.load();
@@ -65,47 +56,33 @@ bool BasicBehaviour::isTriggeredRunFinished()
 
 void BasicBehaviour::doInit()
 {
-    assert(_behResult.load() == BehResult::UNKNOWN);
-    ++_execState;
-
-    if (!isExecutingInContext()) {
-        return;
-    }
-
-    // There is a possible race condition here in the sense that the _execState can be behind the _signalState
-    // and yet this behaviour can execute in the _signalState's RunningPlan context. However this is harmless
-    // since all methods are guarded by isExecutingInContext() which will return false in all such cases.
-    // Atomically set the signal context to nullptr so that the RunningPlan instance can be deleted
-    // when the behaviour is terminated
-    _execContext = _signalContext.exchange(nullptr);
-    initTrace();
     try {
-        traceInit("Behaviour");
         initialiseParameters();
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
     }
-
-    _initExecuted.store(true);
-
-    // Do not schedule repeatable run job when behaviour is event driven or when frequency is 0.
-    if (!isEventDriven() && _msInterval > AlicaTime::milliseconds(0)) {
-        // TODO: account for delayed start
-        _activeRunJobId = _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr), getInterval());
-    }
 }
 
-void BasicBehaviour::runJob(void* msg)
+void BasicBehaviour::doRun()
 {
-    // TODO: get rid of msg
     try {
-        traceRun();
-        run(msg);
+        run(nullptr);
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
         sendLogMessage(4, err);
     }
     _triggeredJobRunning = false;
+}
+
+void BasicBehaviour::doTerminate()
+{
+    try {
+        onTermination();
+    } catch (const std::exception& e) {
+        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+    }
+
+    _behResult.store(BehResult::UNKNOWN);
 }
 
 void BasicBehaviour::doTrigger()
@@ -114,64 +91,26 @@ void BasicBehaviour::doTrigger()
         return;
     }
     _triggeredJobRunning = true;
-    _engine->editScheduler().schedule(std::bind(&BasicBehaviour::runJob, this, nullptr));
-}
-
-void BasicBehaviour::doTerminate()
-{
-
-    if (_activeRunJobId != -1) {
-        _engine->editScheduler().cancelJob(_activeRunJobId);
-        _activeRunJobId = -1;
-    }
-    // Just to be double safe in terms of the correct behaviour of isSuccess() & isFailure() ensure result is reset before incrementing _execState
-    _behResult.store(BehResult::UNKNOWN);
-    if (setTerminatedState()) {
-        return;
-    }
-
-    // Intentionally call onTermination() at the end. This prevents setting success/failure from this method
-    try {
-        if (_trace) {
-            _trace->setLog({"status", "terminating"});
-        }
-        onTermination();
-        _trace.reset();
-    } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
-    }
-
-    // Reset the execution context so that the RunningPlan instance can be deleted
-    _execContext.store(nullptr);
-}
-
-bool BasicBehaviour::getParameter(const std::string& key, std::string& valueOut) const
-{
-    if (!_configuration) {
-        valueOut.clear();
-        return false;
-    }
-
-    const auto& parameter = _configuration->getParameters().find(key);
-    if (parameter != _configuration->getParameters().end()) {
-        valueOut = parameter->second->getValue();
-        return true;
-    } else {
-        valueOut.clear();
-        return false;
-    }
+    doRun();
 }
 
 void BasicBehaviour::setSuccess()
 {
-    if (!isExecutingInContext()) {
-        return;
-    }
-    auto prev = _behResult.exchange(BehResult::SUCCESS);
-    if (prev != BehResult::SUCCESS) {
-        _engine->editPlanBase().addFastPathEvent(_execContext.load());
-        if (_trace) {
-            _trace->setTag("Result", "Success");
+    setResult(BehResult::SUCCESS);
+}
+
+void BasicBehaviour::setFailure()
+{
+    setResult(BehResult::FAILURE);
+}
+
+void BasicBehaviour::setResult(BehResult result)
+{
+    auto prev = _behResult.exchange(result);
+    if (prev != result) {
+        _engine->editPlanBase().addFastPathEvent(getPlanContext());
+        if (getTrace()) {
+            getTrace()->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
         }
     }
 }

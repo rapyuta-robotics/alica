@@ -2,6 +2,7 @@
 
 #include <engine/IAlicaWorldModel.h>
 
+#include <atomic>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -38,12 +39,6 @@ public:
     bool isTransitionCondition1626848015861() const;
     void setTransitionCondition1626848015861(bool transitionCondition1626848015861);
 
-    // PlanPool test transitions
-    bool isTransitionCondition4238964946542987247() const;
-    void setTransitionCondition4238964946542987247(bool transitionCondition4238964946542987247);
-    bool isTransitionCondition4115970455290610262() const;
-    void setTransitionCondition4115970455290610262(bool transitionCondition4115970455290610262);
-
     // MasterPlanTestSyncTransition
     bool isTransitionCondition1418825427317() const;
     void setTransitionCondition1418825427317(bool transitionCondition1418825427317);
@@ -79,6 +74,16 @@ public:
 
     void reset();
 
+    // Failure handling tests
+    void failurePlanInitCalled();
+    int failurePlanInitCallCount() const;
+    void enableTransitionCondition3194919312481305139();
+    bool transitionCondition3194919312481305139Enabled() const;
+    void setTransitionCondition1446293122737278544(bool value);
+    bool isTransitionCondition1446293122737278544() const;
+    void setTransitionCondition1023566846009251524(bool value);
+    bool isTransitionCondition1023566846009251524() const;
+
 private:
     bool transitionCondition1413201227586;
     bool transitionCondition1413201389955;
@@ -105,9 +110,6 @@ private:
     // master plan final transition
     bool transitionCondition1626848015861;
 
-    // PlanPoolTest transitions
-    bool transitionCondition4238964946542987247;
-    bool transitionCondition4115970455290610262;
     // tracing master plan
     bool preCondition1840401110297459509;
 
@@ -116,6 +118,12 @@ private:
     bool transitionCondition1067314038887345208;
 
     bool switchEntryPoints;
+
+    // Failure handling tests
+    std::atomic<int> failurePlanInitCallCounter;
+    std::atomic<bool> transitionCondition3194919312481305139;
+    std::atomic<bool> transitionCondition1446293122737278544;
+    std::atomic<bool> transitionCondition1023566846009251524;
 };
 
 } // namespace alicaTests

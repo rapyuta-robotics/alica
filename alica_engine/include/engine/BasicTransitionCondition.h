@@ -1,40 +1,38 @@
 #pragma once
 
-#include "engine/RunnableObject.h"
+#include <string>
+#include <functional>
+#include <memory>
 
 namespace alica
 {
 
 class RunningPlan;
 class TransitionCondition;
+class IAlicaWorldModel;
+class Blackboard;
+class KeyMapping;
 
 struct TransitionConditionContext
 {
-    IAlicaWorldModel* worldModel;
-    const std::string name;
     const TransitionCondition* transitionConditionModel;
     std::function<bool(RunningPlan*, Blackboard*)> evalCallback;  
 };
 
-class BasicTransitionCondition : private RunnableObject
+class BasicTransitionCondition
 {
 public:
-    using RunnableObject::addKeyMapping;
-    using RunnableObject::getBlackboard;
-    using RunnableObject::getKeyMapping;
-
     BasicTransitionCondition(TransitionConditionContext& context);
     virtual ~BasicTransitionCondition();
     virtual bool evaluate(RunningPlan* rp);
-protected:
-    virtual void onInit(){};
-    virtual void onTerminate(){};
-    virtual void doInit(){};
-    virtual void doTerminate(){};
 
 private:
+    void updateInputs(const Blackboard* parentBb, const KeyMapping* keyMapping);
+    int64_t getParentWrapperId(RunningPlan* rp) const;
+
     const TransitionCondition* _transitionCondition;
     std::function<bool(RunningPlan*, Blackboard*)> _evalCallback;
+    std::unique_ptr<Blackboard> _blackboard;
 };
 
 } /* namespace alica */

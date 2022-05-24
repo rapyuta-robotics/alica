@@ -64,6 +64,12 @@ struct AlicaCreators
         assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator);
     }
 
+    AlicaCreators() = default;
+    ~AlicaCreators() = default;
+    AlicaCreators(const AlicaCreators&) = delete;
+    AlicaCreators& operator=(const AlicaCreators&) = delete;
+    AlicaCreators& operator=(AlicaCreators&&) = default;
+
     std::unique_ptr<IConditionCreator> conditionCreator;
     std::unique_ptr<IUtilityCreator> utilityCreator;
     std::unique_ptr<IConstraintCreator> constraintCreator;
@@ -188,7 +194,18 @@ public:
      *
      * @see AlicaCreators
      */
-    int init(AlicaCreators& creatorCtx);
+    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx);
+
+    /**
+     * Initialize alica framework and related modules.
+     *
+     * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     *
+     * @return Return code '0' stands for success, any other for corresponding error
+     *
+     * @see AlicaCreators
+     */
+    int init(AlicaCreators&& creatorCtx);
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before

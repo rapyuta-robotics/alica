@@ -7,8 +7,8 @@ cd "$(dirname "$0")"
 sudo apt install -y openjdk-11-jdk maven
 
 # Check java default is correct (https://stackoverflow.com/a/7335120/2015911)
-JAVA_VER=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*".*/\1\2/p;')
-if [ "$JAVA_VER" -ge 110 ]; then
+JAVA_VER=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
+if [ "$JAVA_VER" -ge 11 ]; then
     echo "Java version ok"
 else
     echo "Wrong default java version detected! Continuing in 5s..."
@@ -18,6 +18,6 @@ fi
 
 # Compile and move JAR files
 mvn -DskipTests=true install
-rm ../alica_designer_runtime/codegen/*.jar ../alica_designer_runtime/codegen/plugins/*.jar
-mv target/*.jar ../alica_designer_runtime/codegen/
-mv alica-plan-designer-fx-default-plugin/target/*.jar ../alica_designer_runtime/codegen/plugins/
+rm codegen/*.jar codegen/plugins/*.jar
+mv target/*.jar codegen/
+mv alica-plan-designer-fx-default-plugin/target/*.jar codegen/plugins/

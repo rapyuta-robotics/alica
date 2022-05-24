@@ -8,6 +8,8 @@ namespace alica
 {
 
 class BasicBehaviour;
+class Behaviour;
+class IAlicaWorldModel;
 
 class BehaviourCreator : public IBehaviourCreator
 {

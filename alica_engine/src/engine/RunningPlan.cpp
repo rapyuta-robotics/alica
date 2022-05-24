@@ -5,10 +5,10 @@
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
-#include "engine/BehaviourPool.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
+#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"
@@ -27,7 +27,6 @@
 #include "engine/model/RuntimeCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
-#include "engine/scheduler/Scheduler.h"
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/common_defines.h>
@@ -60,8 +59,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
         , _behaviour(false)
         , _assignment()
         , _cycleManagement(ae, this)
-        , _basicBehaviour(nullptr)
-        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -80,8 +77,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
         , _behaviour(false)
         , _assignment(plan)
         , _cycleManagement(ae, this)
-        , _basicBehaviour(nullptr)
-        , _basicPlan(nullptr)
+        , _basicPlan(ae->getRuntimePlanFactory().create(plan->getId(), plan))
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -94,8 +90,6 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuratio
         , _behaviour(false)
         , _assignment()
         , _cycleManagement(ae, this)
-        , _basicBehaviour(nullptr)
-        , _basicPlan(nullptr)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -107,8 +101,7 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuratio
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(nullptr)
-        , _basicPlan(nullptr)
+        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId(), b))
         , _cycleManagement(ae, this)
         , _parent(nullptr)
         , _configuration(configuration)
@@ -123,7 +116,7 @@ bool RunningPlan::isDeleteable() const
     if (_status.active == PlanActivity::InActive) {
         return true; // shortcut for plans from planselector
     }
-    return isRetired() && (!isBehaviour() || !_ae->getBehaviourPool().isBehaviourRunningInContext(*this));
+    return isRetired();
 }
 
 void RunningPlan::preTick()
@@ -290,6 +283,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
+        _basicPlan = _ae->getRuntimePlanFactory().create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
@@ -329,7 +323,7 @@ void RunningPlan::useState(const State* s)
  */
 PlanStatus RunningPlan::getStatus() const
 {
-    if (_basicBehaviour != nullptr) {
+    if (isBehaviour()) {
         if (_basicBehaviour->isSuccess()) {
             return PlanStatus::Success;
         } else if (_basicBehaviour->isFailure()) {
@@ -408,9 +402,10 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
         clearChildren();
         addChildren(replacement.getChildren());
         reactivate = true;
-        if (_basicPlan) {
+        if (!isBehaviour() && _basicPlan) {
             std::string replacementAssignmentName = replacement.getActiveEntryPoint()->getName() + std::to_string(replacement.getActiveEntryPoint()->getId());
-            _basicPlan->notifyAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+            _basicPlan->traceAssignmentChange(replacementAssignmentName, oldUtility, _assignment.getLastUtilityValue(), _assignment.size());
+            _basicPlan->stop();
         }
     } else {
         AgentGrp robotsJoined;
@@ -480,10 +475,10 @@ void RunningPlan::deactivate()
     deactivateChildren();
 
     if (isBehaviour()) {
-        _ae->editBehaviourPool().stopBehaviour(*this);
+        _basicBehaviour->stop();
     } else {
         _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
-        _ae->editPlanPool().stopPlan(*this);
+        _basicPlan->stop();
     }
 }
 
@@ -568,9 +563,9 @@ void RunningPlan::activate()
     assert(_status.active != PlanActivity::Retired);
     _status.active = PlanActivity::Active;
     if (isBehaviour()) {
-        _ae->editBehaviourPool().startBehaviour(*this);
+        _basicBehaviour->start(this);
     } else if (_activeTriple.abstractPlan) {
-        _ae->editPlanPool().startPlan(*this);
+        _basicPlan->start(this);
         _basicPlan->initTransitionConditions(getActivePlanAsPlan()->getTransitions());
     }
 

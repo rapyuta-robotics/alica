@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1412252439925,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "SimpleTestPlan",
   "preCondition": {
@@ -33,7 +35,6 @@
     "variables": []
   },
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": {
     "comment": "",
     "conditionString": "",
@@ -53,6 +54,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662588,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662588"
         }
       ],
@@ -79,6 +84,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662591,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662591"
         }
       ],

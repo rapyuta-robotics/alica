@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -68,11 +69,11 @@
   ],
   "frequency": 0,
   "id": 1407152758497,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "MasterPlanTaskAssignment",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -83,6 +84,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662976,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662976"
         },
         {
@@ -90,6 +95,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662978,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662978"
         }
       ],
@@ -114,6 +123,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662981,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662981"
         },
         {
@@ -121,6 +134,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662983,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662983"
         }
       ],
@@ -145,6 +162,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662986,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662986"
         },
         {
@@ -152,6 +173,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662988,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662988"
         }
       ],
@@ -176,6 +201,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662991,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662991"
         },
         {
@@ -183,6 +212,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662993,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662993"
         }
       ],

@@ -1,4 +1,5 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
@@ -20,11 +21,11 @@
   ],
   "frequency": 0,
   "id": 1402489318663,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Tackle",
   "preCondition": null,
   "relativeDirectory": "",
-  "requiresParameters": false,
   "runtimeCondition": null,
   "states": [
     {
@@ -35,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1587718662873,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1587718662873"
         }
       ],

@@ -30,31 +30,24 @@ public:
 
     // Use of private inheritance and explicitly making members public
     // to share code between BasicPlan and Runnable object but not expose internals to further derived classes
-    using RunnableObject::addKeyMapping;
     using RunnableObject::getBlackboard;
     using RunnableObject::getInheritBlackboard;
     using RunnableObject::getKeyMapping;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
-    using RunnableObject::getTraceContext;
+    using RunnableObject::getTrace;
     using RunnableObject::getWorldModel;
-    using RunnableObject::initExecuted;
-    using RunnableObject::setBlackboardBlueprint;
-    using RunnableObject::setConfiguration;
     using RunnableObject::setEngine;
-    using RunnableObject::setInterval;
-    using RunnableObject::setName;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
 
-    void notifyAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
+    int64_t getId() const;
     bool evalTransitionCondition(const Transition* transition, RunningPlan* rp);
     void initTransitionConditions(const TransitionGrp& transitions);
 
 protected:
-    using RunnableObject::getTrace;
-
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
@@ -71,12 +64,11 @@ protected:
 
 private:
     void doInit() override;
-    void doRun(void* msg);
+    void doRun() override;
     void doTerminate() override;
 
-    void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
-
     bool _isMasterPlan;
-    std::unordered_map<int64_t, std::unique_ptr<BasicTransitionCondition>> transitionConditions;
+    const Plan* _plan;
+    std::unordered_map<int64_t, std::unique_ptr<BasicTransitionCondition>> _transitionConditions;
 };
 } // namespace alica
