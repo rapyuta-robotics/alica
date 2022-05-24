@@ -135,6 +135,7 @@ private:
 
 protected:
     bool delayStart{true};
+    bool useTestClock{false};
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual int getAgentCount() const = 0;
@@ -162,7 +163,8 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
-            ac->setClock<TestClock>();
+            if (useTestClock)
+                ac->setClock<TestClock>();
             ac->init(std::move(creators), delayStart);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
