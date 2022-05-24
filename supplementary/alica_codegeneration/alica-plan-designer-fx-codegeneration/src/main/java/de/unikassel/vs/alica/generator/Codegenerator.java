@@ -104,19 +104,29 @@ public class Codegenerator {
 
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
-        List<Condition> transitionPreConditions = new ArrayList<Condition>();
+        List<Condition> transitionConditions = new ArrayList<Condition>();
         List<Condition> conditionsWithoutTransitions = new ArrayList<Condition>();
         for (Plan plan : plans) {
             for (Transition t : plan.getTransitions()) {
-                transitionPreConditions.add(t.getPreCondition());
+                transitionConditions.add(t.getPreCondition());
             }
         }
 
-        // TODO: collect conditions which are not pre conditions of transitions, dont change how they are generated
-        
+        for (Condition condition : conditions) {
+            if (transitionConditions.contains(condition)) {
+                continue;
+            }
+            conditionsWithoutTransitions.add(condition);
+        }
+
+        /**
+         * TODO: pass conditions without transitionsConditions list to createConditionCreator
+         * when in alica_tests, supplementary_tests, alica_turtle_sim and other packages have 
+         * been updated to use the new transitions
+         */
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
-        languageSpecificGenerator.createTransitionPreConditions(transitionPreConditions);
-        languageSpecificGenerator.createTransitionPreConditionsCreator(transitionPreConditions);
+        languageSpecificGenerator.createTransitionConditions(transitionConditions);
+        languageSpecificGenerator.createTransitionConditionsCreator(transitionConditions);
 
         /**
          * filter plans and behaviours for constraints before passing them to the creator, prevents

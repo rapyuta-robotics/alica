@@ -1122,10 +1122,28 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
 }
 '''
 
-def String transitionPreConditionHeader(Condition condition) '''
+def String transitionConditionHeader(List<Condition> conditions) '''
 #pragma once
 
-static bool «condition.getName()»«condition.getId()»(std::map<int64_t, std::map<std::string, std::any>> input) 
+namespace alica
+{
+«FOR condition : conditions»
+static bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+«ENDFOR»
+} /* namespace alica */
+'''
+
+def String transitionConditionSource(List<Condition> conditions, String pkgName) '''
+«IF (conditions.get(0).relativeDirectory == null || conditions.get(0).relativeDirectory.isEmpty)»
+#include <«pkgName»/condition.h>
+«ELSE»
+#include <«pkgName»/condition.relativeDirectory».h>
+«ENDIF»
+
+namespace alica
+{
+«FOR condition : conditions»
+static bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
 /*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
         «IF (protectedRegions.containsKey("condition" + condition.id))»
@@ -1135,44 +1153,54 @@ static bool «condition.getName()»«condition.getId()»(std::map<int64_t, std::
         «ENDIF»
     /*PROTECTED REGION END*/
 }
+«ENDFOR»
+} /* namespace alica */
 '''
 
-def String transitionPreConditionCreatorHeader(List<Condition> conditions) '''
-TransitionPreConditionCreator : public ITransitionPreConditionCreator
+def String transitionConditionCreatorHeader(List<Condition> conditions) '''
 #pragma once
 
-#include <engine/ITransitionPreConditionCreator.h>
+#include <engine/ITransitionConditionCreator.h>
+
+namespace alica
+{
+class TransitionConditionCreator : public ITransitionConditionCreator
+{
+    TransitionConditionCreator() = default;
+    ~TransitionConditionCreator() = default;
+
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
+}
+} /* namespace alica */
+'''
+
+def String transitionConditionCreatorSource(List<Condition> conditions) '''
+#include "TransitionConditionCreator.h"
 
 «FOR c : conditions»
 «IF (c.relativeDirectory == null || c.relativeDirectory.isEmpty)»
-#include "«c.name»«c.id».h"
+#include "conditions.h"
 «ELSE»
-#include  "«c.relativeDirectory»/«c.name»«c.id».h"
+#include  "«c.relativeDirectory»/conditions.h"
 «ENDIF»
 «ENDFOR»
 
 namespace alica
 {
-class TransitionPreConditionCreator : public ITransitionPreConditionCreator
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId)
 {
-    TransitionPreConditionCreator() = default;
-    ~TransitionPreConditionCreator() = default
-
-    std::function<bool (std::map<int64_t, std::map<std::string, std::any>>)> createConditions(int64_t conditionId)
+    switch (conditionId)
     {
-        switch (conditionId)
-        {
-            «FOR con : conditions»
-            case «con.id»:
-                return std::bind(«con.id»«con.name», std::placeholders::_1);
-            «ENDFOR»
-            default:
-            std::cerr << "TransitionPreConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
-            throw new std::exception();
-            break;
-        }
+        «FOR con : conditions»
+        case «con.id»:
+            return std::bind(condition«con.id»«con.name», std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        «ENDFOR»
+        default:
+        std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+        throw new std::exception();
+        break;
     }
 }
-}
+} /* namespace alica */
 '''
 }

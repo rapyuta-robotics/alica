@@ -24,7 +24,7 @@ public interface IGenerator {
     void createConstraintsForBehaviour(Behaviour behaviour);
     void createPlans(List<Plan> plans);
     void createPlan(Plan plan);
-    void createTransitionPreConditions(List<Condition> conditions);
+    void createTransitionConditions(List<Condition> conditions);
     void createUtilityFunctionCreator(List<Plan> plans);
 
     void createDomainCondition();
@@ -34,7 +34,7 @@ public interface IGenerator {
     IConstraintCodeGenerator getActiveConstraintCodeGenerator();
 
     void createPlanCreator(List<Plan> plans);
-    void createTransitionPreConditionsCreator(List<Condition> conditions);
+    void createTransitionConditionsCreator(List<Condition> conditions);
 
     void createDomainPlan();
 }

@@ -316,6 +316,8 @@ public class CPPGeneratorImpl implements IGenerator {
             }
         }
 
+        // TODO: Remove generation of transitions eval functions in plans when in alica_tests,
+        // supplementary_tests, alica_turtle_sim and other packages have been updated to use the new transitions
         for (Transition inPlan : plan.getTransitions()) {
             try {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
@@ -335,6 +337,19 @@ public class CPPGeneratorImpl implements IGenerator {
 
     private String cutDestinationPathToDirectory(AbstractPlan plan) {
         String destinationPath = plan.getRelativeDirectory();
+        if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+        }
+        if (destinationPath == null) {
+            return "";
+        } else {
+            return destinationPath;
+        }
+    }
+
+    //TODO: remove duplicated code
+    private String cutDestinationPathToDirectory(Condition condition) {
+        String destinationPath = condition.getRelativeDirectory();
         if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }
@@ -406,21 +421,30 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
-    public void createTransitionPreConditions(List<Condition> conditions) {
-        for (Condition c : conditions) {
-            String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "conditions", c.getName() + c.getId() + ".h").toString();
-            String fileContentHeader = xtendTemplates.transitionPreConditionHeader(c);
-            writeSourceFile(headerPath, fileContentHeader);
-            formatFile(headerPath);
-        }      
+    public void createTransitionConditions(List<Condition> conditions) {
+        String destinationPath = cutDestinationPathToDirectory(conditions.get(0));
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, "conditions.h").toString();
+        String fileContentHeader = xtendTemplates.transitionConditionHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, "conditions.cpp").toString();
+        String fileContentSource = xtendTemplates.transitionConditionSource(conditions, packageName);
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
     }
 
     @Override
-    public void createTransitionPreConditionsCreator(List<Condition> conditions) {
-        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionPreConditionCreator.h").toString();
-        String fileContentHeader = xtendTemplates.transitionPreConditionCreatorHeader(conditions);
+    public void createTransitionConditionsCreator(List<Condition> conditions) {
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionConditionCreator.h").toString();
+        String fileContentHeader = xtendTemplates.transitionConditionCreatorHeader(conditions);
         writeSourceFile(headerPath, fileContentHeader);
         formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "TransitionConditionCreator.cpp").toString();
+        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions);
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
     }
 
     @Override
