@@ -19,43 +19,13 @@ BasicTransitionCondition::BasicTransitionCondition(TransitionConditionContext& c
 
 BasicTransitionCondition::~BasicTransitionCondition() {}
 
-bool BasicTransitionCondition::evaluate(RunningPlan* rp)
+bool BasicTransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     if (rp->isBehaviour()) {
         return false;
     }
-    updateInputs(rp->getBasicPlan()->getBlackboard().get(), rp->getKeyMapping(getParentWrapperId(rp)));
-    return _evalCallback(rp, _blackboard.get());
-}
-
-void BasicTransitionCondition::updateInputs(const Blackboard* parentBb, const KeyMapping* keyMapping)
-{
-    const auto lockedParentBb = LockedBlackboardRO(*parentBb);
-    auto childBb = _blackboard->impl();
-    for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
-        try {
-            childBb.set(childKey, lockedParentBb.get(parentKey));
-        } catch (std::exception& e) {
-            ALICA_WARNING_MSG("Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what());
-        }
-    }
-}
-
-int64_t BasicTransitionCondition::getParentWrapperId(RunningPlan* rp) const
-{
-    const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-    std::string name = rp->getActivePlanAsPlan()->getName();
-
-    auto it = std::find_if(wrappers.begin(), wrappers.end(), [name](const auto& wrapper_ptr) {
-        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
-            const auto& plans = planType->getPlans();
-            return std::find_if(plans.begin(), plans.end(), [name](const auto& plan) { return plan->getName() == name; }) != plans.end();
-        } else {
-            return wrapper_ptr->getAbstractPlan()->getName() == name;
-        }
-    });
-    assert(it != wrappers.end());
-    int64_t wrapperId = (*it)->getId();
-    return wrapperId;
+    auto keyMapping = rp->getKeyMapping(rp->getParentWrapperId(rp));
+    keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
+    return _evalCallback(_blackboard.get(), rp, wm);
 }
 } /* namespace alica */

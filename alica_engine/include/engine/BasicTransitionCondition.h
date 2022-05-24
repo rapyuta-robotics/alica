@@ -26,12 +26,9 @@ class BasicTransitionCondition
 public:
     BasicTransitionCondition(TransitionConditionContext& context);
     virtual ~BasicTransitionCondition();
-    virtual bool evaluate(RunningPlan* rp);
+    virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm);
 
 private:
-    void updateInputs(const Blackboard* parentBb, const KeyMapping* keyMapping);
-    int64_t getParentWrapperId(RunningPlan* rp) const;
-
     const TransitionCondition* _transitionCondition;
     TransitionConditionCallback _evalCallback;
     std::unique_ptr<Blackboard> _blackboard;

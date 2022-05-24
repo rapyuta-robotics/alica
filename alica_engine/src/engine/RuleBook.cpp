@@ -457,7 +457,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
             continue;
         }
             
-        if (r.evalTransitionCondition(t)) {
+        if (r.evalTransitionCondition(t, _wm)) {
             nextState = t->getOutState();
             // TODO: find solution for constraints with new transition conditions
             // r.editConstraintStore().addCondition(t->getPreCondition());
@@ -504,7 +504,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             continue;
         }
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (rp.evalTransitionCondition(t)) {
+            if (rp.evalTransitionCondition(t, _wm)) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 // TODO: Find solution for constraints with new transition conditions
@@ -516,7 +516,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, rp.evalTransitionCondition(t));
+            _sm.setSynchronisation(t, rp.evalTransitionCondition(t, _wm));
         }
     }
     if (nextState == nullptr) {

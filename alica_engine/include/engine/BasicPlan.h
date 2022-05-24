@@ -44,7 +44,7 @@ public:
 
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     int64_t getId() const;
-    bool evalTransitionCondition(const Transition* transition, RunningPlan* rp);
+    bool evalTransitionCondition(const Transition* transition, const RunningPlan* rp, const IAlicaWorldModel* wm);
     void initTransitionConditions(const TransitionGrp& transitions);
 
 protected:

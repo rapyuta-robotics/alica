@@ -11,6 +11,7 @@ namespace alica
 {
 class AbstractPlan;
 class AlicaElement;
+class Blackboard;
 class Capability;
 class CapValue;
 class Condition;
@@ -18,11 +19,13 @@ class ConfAbstractPlanWrapper;
 class DomainVariable;
 class EntryPoint;
 class FailureState;
+class IAlicaWorldModel;
 class Parameter;
 class VariableBinding;
 class Plan;
 class Quantifier;
 class Role;
+class RunningPlan;
 class SolverVariable;
 class State;
 class SuccessState;
@@ -58,7 +61,7 @@ using VariableGrp = std::vector<const Variable*>;
 
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
-using TransitionConditionCallback = std::function<bool(RunningPlan*, Blackboard*)>
+using TransitionConditionCallback = std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)>;
 
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 

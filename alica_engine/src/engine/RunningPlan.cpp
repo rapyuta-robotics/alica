@@ -28,6 +28,7 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>
@@ -887,12 +888,30 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
     return _basicPlan->getKeyMapping(wrapperId);
 }
 
-bool RunningPlan::evalTransitionCondition(const Transition* transition)
+bool RunningPlan::evalTransitionCondition(const Transition* transition, const IAlicaWorldModel* wm)
 {
     if (isBehaviour()) {
         return false;
     }
-    return _basicPlan->evalTransitionCondition(transition, this);
+    return _basicPlan->evalTransitionCondition(transition, this, wm);
+}
+
+int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
+{
+    const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+    std::string name = rp->getActivePlanAsPlan()->getName();
+
+    auto it = std::find_if(wrappers.begin(), wrappers.end(), [name](const auto& wrapper_ptr) {
+        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
+            const auto& plans = planType->getPlans();
+            return std::find_if(plans.begin(), plans.end(), [name](const auto& plan) { return plan->getName() == name; }) != plans.end();
+        } else {
+            return wrapper_ptr->getAbstractPlan()->getName() == name;
+        }
+    });
+    assert(it != wrappers.end());
+    int64_t wrapperId = (*it)->getId();
+    return wrapperId;
 }
 
 } /* namespace alica */
