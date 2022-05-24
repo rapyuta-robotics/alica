@@ -1,6 +1,5 @@
 #include "engine/RuntimeTransitionConditionFactory.h"
 
-#include "engine/ITransitionPreConditionCreator.h"
 #include "engine/BasicTransitionCondition.h"
 #include "engine/model/TransitionCondition.h"
 
@@ -9,8 +8,8 @@
 
 namespace alica
 {
-    RuntimeTransitionConditionFactory::RuntimeTransitionConditionFactory(std::unique_ptr<ITransitionPreConditionCreator>&& cc, IAlicaWorldModel* wm)
-            : _creator(std::move(cc))
+    RuntimeTransitionConditionFactory::RuntimeTransitionConditionFactory(std::unique_ptr<ITransitionConditionCreator>&& tcc, IAlicaWorldModel* wm)
+            : _creator(std::move(tcc))
             , _wm(wm)
     {
     }
@@ -22,7 +21,7 @@ namespace alica
             ALICA_ERROR_MSG("RuntimeTransitionConditionFactory: Condition creation failed: " << transitionConditionModel->getId());
             return nullptr;
         }
-        TransitionConditionContext ctx{_wm, transitionConditionModel->getName(), transitionConditionModel, evalCallback};
+        TransitionConditionContext ctx{transitionConditionModel, evalCallback};
         std::unique_ptr<BasicTransitionCondition> basicTransitionCondition = std::make_unique<BasicTransitionCondition>(ctx);
         return basicTransitionCondition;
     }

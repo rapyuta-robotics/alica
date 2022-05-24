@@ -14,7 +14,7 @@
 #include "engine/IConstraintCreator.h"
 #include "engine/IPlanCreator.h"
 #include "engine/IUtilityCreator.h"
-#include "engine/ITransitionPreConditionCreator.h"
+#include "engine/ITransitionConditionCreator.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/ConfigPathParser.h"
@@ -53,15 +53,15 @@ class TestContext;
 struct AlicaCreators
 {
     AlicaCreators(std::unique_ptr<IConditionCreator> cc, std::unique_ptr<IUtilityCreator> uc, std::unique_ptr<IConstraintCreator> crc,
-            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc, std::unique_ptr<ITransitionPreConditionCreator> tpcc)
+            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc, std::unique_ptr<ITransitionConditionCreator> tcc)
             : conditionCreator(std::move(cc))
             , utilityCreator(std::move(uc))
             , constraintCreator(std::move(crc))
             , behaviourCreator(std::move(bc))
             , planCreator(std::move(pc))
-            , transitionPreConditionCreator(std::move(tpcc))
+            , transitionConditionCreator(std::move(tcc))
     {
-        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator);
+        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator && transitionConditionCreator);
     }
 
     AlicaCreators() = default;
@@ -75,7 +75,7 @@ struct AlicaCreators
     std::unique_ptr<IConstraintCreator> constraintCreator;
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
     std::unique_ptr<IPlanCreator> planCreator;
-    std::unique_ptr<ITransitionPreConditionCreator> transitionPreConditionCreator;
+    std::unique_ptr<ITransitionConditionCreator> transitionConditionCreator;
 };
 
 /**

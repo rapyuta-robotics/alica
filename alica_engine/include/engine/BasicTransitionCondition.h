@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/Types.h"
+
 #include <string>
 #include <functional>
 #include <memory>
@@ -16,7 +18,7 @@ class KeyMapping;
 struct TransitionConditionContext
 {
     const TransitionCondition* transitionConditionModel;
-    std::function<bool(RunningPlan*, Blackboard*)> evalCallback;  
+    TransitionConditionCallback evalCallback;  
 };
 
 class BasicTransitionCondition
@@ -31,7 +33,7 @@ private:
     int64_t getParentWrapperId(RunningPlan* rp) const;
 
     const TransitionCondition* _transitionCondition;
-    std::function<bool(RunningPlan*, Blackboard*)> _evalCallback;
+    TransitionConditionCallback _evalCallback;
     std::unique_ptr<Blackboard> _blackboard;
 };
 

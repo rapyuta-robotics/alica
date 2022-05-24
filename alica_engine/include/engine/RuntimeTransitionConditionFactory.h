@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/ITransitionPreConditionCreator.h"
+#include "engine/ITransitionConditionCreator.h"
 
 #include <memory>
 
@@ -13,13 +13,13 @@ class BasicTransitionCondition;
 class RuntimeTransitionConditionFactory
 {
 public:
-    RuntimeTransitionConditionFactory(std::unique_ptr<ITransitionPreConditionCreator>&& cc, IAlicaWorldModel* wm);
+    RuntimeTransitionConditionFactory(std::unique_ptr<ITransitionConditionCreator>&& tcc, IAlicaWorldModel* wm);
     ~RuntimeTransitionConditionFactory() = default;
 
     std::unique_ptr<BasicTransitionCondition> create(const TransitionCondition* transitionConditionModel) const;
 
 private:
-    std::unique_ptr<ITransitionPreConditionCreator> _creator;
+    std::unique_ptr<ITransitionConditionCreator> _creator;
     IAlicaWorldModel* _wm;
 };
 } // namespace alica
