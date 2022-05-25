@@ -53,7 +53,10 @@ public:
     JobId schedule(JobCb jobCb, std::optional<AlicaTime> repeatInterval = std::nullopt)
     {
         JobId jobId = _nextJobId++;
-        _jobQueue.emplace(jobId, std::move(jobCb), std::move(repeatInterval));
+        {
+            std::unique_lock<std::mutex> lock(_mutex);
+            _jobQueue.emplace(jobId, std::move(jobCb), std::move(repeatInterval));
+        }
         _cv.notify_one();
         return jobId;
     }
@@ -66,9 +69,12 @@ public:
 
     void terminate()
     {
-        _running = false;
-
+        {
+            std::unique_lock<std::mutex> lock(_mutex);
+            _running = false;
+        }
         _cv.notify_one();
+
         _thread.join();
 
         _repeatableJobs.clear();
