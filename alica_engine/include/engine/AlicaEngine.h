@@ -48,7 +48,7 @@ public:
 
     // Parameter Access:
     bool getStepEngine() const;
-    const bool maySendMessages() const { return _maySendMessages; }
+    bool maySendMessages() const { return _maySendMessages; }
 
     // Module Access:
     const AuthorityManager& getAuth() const { return _auth; }

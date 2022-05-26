@@ -127,6 +127,7 @@ void AlicaEngine::terminate()
     _teamObserver.close();
     _log.close();
     _variableSyncModule->close();
+    _initialized = false;
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const

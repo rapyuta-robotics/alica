@@ -53,7 +53,8 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    bool delayStart{false};
+    // bool delayStart{false};
+    virtual bool getDelayStart() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
@@ -79,9 +80,8 @@ protected:
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
-        EXPECT_EQ(0, ac->init(std::move(creators), delayStart));
+        EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
     virtual void TearDown() override
@@ -134,8 +134,10 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    bool delayStart{true};
-    bool useTestClock{false};
+    // bool delayStart{true};
+    // bool useTestClock{false};
+    virtual bool getDelayStart() { return true; }
+    virtual bool getUseTestClock() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual int getAgentCount() const = 0;
@@ -163,9 +165,10 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
-            if (useTestClock)
+            if (getUseTestClock()) {
                 ac->setClock<TestClock>();
-            ac->init(std::move(creators), delayStart);
+            }
+            ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();

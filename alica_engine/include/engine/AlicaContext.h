@@ -191,12 +191,13 @@ public:
      *
      * @see AlicaCreators
      */
-    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx, bool delayStart = false);
+    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx);
 
     /**
      * Initialize alica framework and related modules.
      *
      * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     * @param delayStarted does not start _engine. Set to true only for testing purpose
      *
      * @return Return code '0' stands for success, any other for corresponding error
      *

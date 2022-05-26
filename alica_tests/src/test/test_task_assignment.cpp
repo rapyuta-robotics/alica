@@ -37,7 +37,10 @@ namespace
 class TaskAssignmentTest : public AlicaTestFixture
 {
 protected:
-    TaskAssignmentTest() { delayStart = true; };
+    TaskAssignmentTest(){
+            // delayStart = true;
+    };
+    bool getDelayStart() override { return true; }
     const char* getRoleSetName() const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "MasterPlanTaskAssignment"; }
     bool stepEngine() const override { return false; }
