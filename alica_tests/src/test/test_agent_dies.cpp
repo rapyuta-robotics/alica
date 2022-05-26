@@ -25,10 +25,7 @@ class AlicaEngineAgentDiesTest : public AlicaTestMultiAgentFixture
 {
 protected:
     const int agentCount = 2;
-    AlicaEngineAgentDiesTest(){
-            // delayStart = false;
-            // useTestClock = true;
-    };
+    AlicaEngineAgentDiesTest(){};
     bool getDelayStart() override { return false; }
     bool getUseTestClock() override { return true; }
     const char* getRoleSetName() const override { return "RolesetTA"; }

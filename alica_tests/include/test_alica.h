@@ -53,7 +53,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    // bool delayStart{false};
     virtual bool getDelayStart() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -134,8 +133,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    // bool delayStart{true};
-    // bool useTestClock{false};
     virtual bool getDelayStart() { return true; }
     virtual bool getUseTestClock() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }

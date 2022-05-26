@@ -36,9 +36,7 @@ namespace
 class AlicaEngineAuthorityManager : public AlicaTestMultiAgentFixture
 {
 protected:
-    AlicaEngineAuthorityManager(){
-            // delayStart = true;
-    };
+    AlicaEngineAuthorityManager(){};
     const int agentCount = 2;
     bool getDelayStart() override { return true; }
     const char* getRoleSetName() const override { return "RolesetTA"; }
