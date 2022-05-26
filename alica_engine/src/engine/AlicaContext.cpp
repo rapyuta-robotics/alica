@@ -30,14 +30,14 @@ AlicaContext::~AlicaContext()
     _validTag = ALICA_CTX_BAD;
 }
 
-int AlicaContext::init(AlicaCreators& creatorCtx, bool delayStart)
+int AlicaContext::init(AlicaCreators& creatorCtx)
 {
     AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
             std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
-    return init(std::move(creators), delayStart);
+    return init(std::move(creators));
 }
 
-int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart) // delayStarted==true is only used for testing purpose
+int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");

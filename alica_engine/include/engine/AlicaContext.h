@@ -194,7 +194,7 @@ public:
      *
      * @see AlicaCreators
      */
-    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx, bool delayStart = false);
+    [[deprecated("call init(std::move(creators)) instead")]] int init(AlicaCreators& creatorCtx);
 
     /**
      * Initialize alica framework and related modules.
