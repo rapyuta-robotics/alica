@@ -132,7 +132,8 @@ void TeamObserver::close()
  */
 void TeamObserver::doBroadCast(const IdGrp& msg) const
 {
-    if (!_maySendMessages) {
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages) {
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();
