@@ -26,13 +26,19 @@ using std::pair;
 using std::shared_ptr;
 using std::vector;
 
-SyncModule::SyncModule(const AlicaEngine* ae)
+SyncModule::SyncModule(const TeamManager& teamManager, const PlanRepository& planRepository, const YAML::Node& config, const IAlicaCommunication& communicator,
+        const AlicaClock& clock)
         : _myId(0)
-        , _ae(ae)
         , _running(false)
         , _ticks(0)
+        , _teamManager(teamManager)
+        , _planRepository(planRepository)
+        , _config(config)
+        , _communicator(communicator)
+        , _clock(clock)
 {
 }
+
 SyncModule::~SyncModule()
 {
     for (auto iter : _synchProcessMapping) {
@@ -44,7 +50,7 @@ void SyncModule::init()
     lock_guard<mutex> lock(_lomutex);
     _ticks = 0;
     _running = true;
-    _myId = _ae->getTeamManager().getLocalAgentID();
+    _myId = _teamManager.getLocalAgentID();
 }
 void SyncModule::close()
 {
@@ -89,7 +95,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
         i->second->setTick(_ticks);
         i->second->changeOwnData(trans->getId(), holds);
     } else {
-        SynchronisationProcess* synchProcess = new SynchronisationProcess(_ae, _myId, trans->getSynchronisation(), this);
+        SynchronisationProcess* synchProcess = new SynchronisationProcess(_clock, _myId, trans->getSynchronisation(), this);
         synchProcess->setTick(_ticks);
         synchProcess->changeOwnData(trans->getId(), holds);
         lock_guard<mutex> lock(_lomutex);
@@ -129,14 +135,14 @@ bool SyncModule::isTransitionSuccessfullySynchronised(const Transition* trans)
  */
 void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
 {
-    if (!_running || st->senderID == _myId || _ae->getTeamManager().isAgentIgnored(st->senderID)) {
+    if (!_running || st->senderID == _myId || _teamManager.isAgentIgnored(st->senderID)) {
         return;
     }
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st);
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
-        const Transition* trans = _ae->getPlanRepository().getTransitions().find(sd.transitionID);
+        const Transition* trans = _planRepository.getTransitions().find(sd.transitionID);
         if (trans == nullptr) {
             ALICA_ERROR_MSG("[SM (" << _myId << ")]: Could not find Transition " << sd.transitionID);
             return;
@@ -155,7 +161,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
             if (i != _synchProcessMapping.end()) {
                 i->second->integrateSyncTalk(st, _ticks);
             } else {
-                SynchronisationProcess* syncProc = new SynchronisationProcess(_ae, _myId, synchronisation, this);
+                SynchronisationProcess* syncProc = new SynchronisationProcess(_clock, _myId, synchronisation, this);
                 _synchProcessMapping.insert(pair<const Synchronisation*, SynchronisationProcess*>(synchronisation, syncProc));
                 doAck = syncProc->integrateSyncTalk(st, _ticks);
             }
@@ -177,12 +183,12 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
  */
 void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 {
-    if (!_running || sr->senderID == _myId || _ae->getTeamManager().isAgentIgnored(sr->senderID)) {
+    if (!_running || sr->senderID == _myId || _teamManager.isAgentIgnored(sr->senderID)) {
         return;
     }
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncReady " << std::endl << *sr);
 
-    const Synchronisation* synchronisation = _ae->getPlanRepository().getSynchronisations().find(sr->synchronisationID);
+    const Synchronisation* synchronisation = _planRepository.getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
         ALICA_ERROR_MSG("[SM (" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID);
         return;
@@ -199,29 +205,32 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 
 void SyncModule::sendSyncTalk(SyncTalk& st)
 {
-    if (!_ae->maySendMessages())
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages)
         return;
     st.senderID = _myId;
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncTalk " << std::endl << st);
-    _ae->getCommunicator().sendSyncTalk(st);
+    _communicator.sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
 {
-    if (!_ae->maySendMessages())
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages)
         return;
     sr.senderID = _myId;
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr);
-    _ae->getCommunicator().sendSyncReady(sr);
+    _communicator.sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 {
-    if (!_ae->maySendMessages())
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages)
         return;
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending Acknowledgements " << std::endl << st);
-    _ae->getCommunicator().sendSyncTalk(st);
+    _communicator.sendSyncTalk(st);
 }
 
 } // namespace alica
