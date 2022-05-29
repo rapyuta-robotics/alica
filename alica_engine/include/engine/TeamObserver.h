@@ -30,7 +30,7 @@ class IAlicaCommunication;
 class TeamObserver
 {
 public:
-    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator, const AlicaClock& clock,
+    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock,
             const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
@@ -54,7 +54,7 @@ private:
 
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
-    const bool& _maySendMessages;
+    const YAML::Node& _config;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     const PlanRepository& _planRepository;

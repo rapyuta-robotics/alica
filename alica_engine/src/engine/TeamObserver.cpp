@@ -25,11 +25,11 @@ using std::map;
 using std::mutex;
 using std::pair;
 
-TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const bool& maySendMessages, const IAlicaCommunication& communicator,
+TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const YAML::Node& config, const IAlicaCommunication& communicator,
         const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
         : _logger(logger)
         , _roleAssignment(roleAssigment)
-        , _maySendMessages(maySendMessages)
+        , _config(config)
         , _communicator(communicator)
         , _clock(clock)
         , _planRepository(planRepository)
@@ -122,7 +122,8 @@ void TeamObserver::close()
  */
 void TeamObserver::doBroadCast(const IdGrp& msg) const
 {
-    if (!_maySendMessages) {
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages) {
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();
