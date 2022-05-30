@@ -19,9 +19,12 @@ namespace alica
 /**
  * Constructor
  */
-AuthorityManager::AuthorityManager(AlicaEngine* engine)
-        : _engine(engine)
-        , _localAgentID(InvalidAgentID)
+AuthorityManager::AuthorityManager(const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager)
+        : _localAgentID(InvalidAgentID)
+        , _config(config)
+        , _communicator(communicator)
+        , _clock(clock)
+        , _tm(teamManager)
 {
 }
 
@@ -32,7 +35,7 @@ AuthorityManager::~AuthorityManager() {}
  */
 void AuthorityManager::init()
 {
-    _localAgentID = _engine->getTeamManager().getLocalAgentID();
+    _localAgentID = _tm.getLocalAgentID();
 }
 
 /**
@@ -46,8 +49,8 @@ void AuthorityManager::close() {}
  */
 void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
 {
-    AlicaTime now = _engine->getAlicaClock().now();
-    TeamManager& tm = _engine->editTeamManager();
+    AlicaTime now = _clock.now();
+    TeamManager& tm = _tm;
     if (aai.senderID == _localAgentID || tm.isAgentIgnored(aai.senderID)) {
         return;
     }
@@ -114,7 +117,8 @@ void AuthorityManager::processPlan(RunningPlan& rp)
  */
 void AuthorityManager::sendAllocation(const RunningPlan& p)
 {
-    if (!_engine->maySendMessages()) {
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages) {
         return;
     }
     AllocationAuthorityInfo aai{};
@@ -136,7 +140,7 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
     ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
-    _engine->getCommunicator().sendAllocationAuthority(aai);
+    _communicator.sendAllocationAuthority(aai);
 }
 
 /**

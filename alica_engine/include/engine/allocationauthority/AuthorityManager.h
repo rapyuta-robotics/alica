@@ -21,7 +21,7 @@ class AlicaEngine;
 class AuthorityManager
 {
 public:
-    AuthorityManager(AlicaEngine* ae);
+    AuthorityManager(const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager);
     ~AuthorityManager();
     void init();
     void close();
@@ -34,7 +34,10 @@ private:
     bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 
     std::vector<AllocationAuthorityInfo> _queue;
-    AlicaEngine* _engine;
+    const YAML::Node& _config;
+    const IAlicaCommunication& _communicator;
+    const AlicaClock& _clock;
+    TeamManager& _tm;
     AgentId _localAgentID;
     std::mutex _mutex;
 };
