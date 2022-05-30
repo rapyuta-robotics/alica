@@ -30,7 +30,7 @@ void AlicaEngine::abort(const std::string& msg)
 {
     std::cerr << "ABORT: " << msg << std::endl;
     exit(EXIT_FAILURE);
-}   
+}
 
 /**
  * The main class.
@@ -49,7 +49,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _auth(config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
-        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
+        , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _planBase(this)
         , _teamObserver(editLog(), editRoleAssignment(), config, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
 {
