@@ -24,7 +24,7 @@ bool BasicTransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorld
     if (rp->isBehaviour()) {
         return false;
     }
-    keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
+    keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get());
     return _evalCallback(_blackboard.get(), rp, wm);
 }
 } /* namespace alica */

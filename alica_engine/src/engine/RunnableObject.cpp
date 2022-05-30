@@ -89,7 +89,7 @@ void RunnableObject::setupBlackboard()
         auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
 
         _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-        keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
+        keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get());
     } else {
         // Inherit blackboard
         BasicPlan* parentPlan = _runningplanContext->getParent()->getBasicPlan();
@@ -102,7 +102,7 @@ void RunnableObject::cleanupBlackboard()
     if (_runningplanContext->getParent() && !getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
         auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
-        keyMapping->setOutput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
+        keyMapping->setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
     }
 }
 

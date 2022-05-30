@@ -82,7 +82,7 @@ bool BasicPlan::evalTransitionCondition(const Transition* transition, const Runn
 void BasicPlan::initTransitionConditions(const TransitionGrp& transitions)
 {
     for (auto it = transitions.begin(); it != transitions.end(); it++) {
-        _transitionConditions[(*it)->getId()] = std::move(_engine->getRuntimeTransitionConditionFactory().create((*it)->getTransitionCondition()));
+        _transitionConditions[(*it)->getId()] = _engine->getRuntimeTransitionConditionFactory().create((*it)->getTransitionCondition());
     }
 }
 
