@@ -26,7 +26,7 @@ class BasicTransitionCondition
 public:
     BasicTransitionCondition(TransitionConditionContext& context);
     virtual ~BasicTransitionCondition();
-    virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm);
+    virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
 
 private:
     const TransitionCondition* _transitionCondition;

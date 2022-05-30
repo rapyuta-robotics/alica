@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/ITransitionConditionCreator.h"
+#include "engine/DefaultTransitionConditionCreator.h"
 
 #include <memory>
 
@@ -20,6 +21,7 @@ public:
 
 private:
     std::unique_ptr<ITransitionConditionCreator> _creator;
+    DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
     IAlicaWorldModel* _wm;
 };
 } // namespace alica

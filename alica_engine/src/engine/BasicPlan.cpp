@@ -76,7 +76,7 @@ int64_t BasicPlan::getId() const
 
 bool BasicPlan::evalTransitionCondition(const Transition* transition, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
-    return _transitionConditions[transition->getId()]->evaluate(rp, wm);
+    return _transitionConditions[transition->getId()]->evaluate(rp, wm, transition->getKeyMapping());
 }
 
 void BasicPlan::initTransitionConditions(const TransitionGrp& transitions)

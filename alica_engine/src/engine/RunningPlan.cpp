@@ -899,7 +899,7 @@ bool RunningPlan::evalTransitionCondition(const Transition* transition, const IA
 int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
 {
     const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-    std::string name = rp->getActivePlanAsPlan()->getName();
+    std::string name = isBehaviour() ? rp->getBasicBehaviour()->getName() : rp->getBasicPlan()->getName();
 
     auto it = std::find_if(wrappers.begin(), wrappers.end(), [name](const auto& wrapper_ptr) {
         if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {

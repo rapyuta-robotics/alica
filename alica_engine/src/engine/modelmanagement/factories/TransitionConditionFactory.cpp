@@ -5,6 +5,8 @@
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BlackboardBlueprintFactory.h"
 
+#include <string>
+
 namespace alica
 {
 TransitionCondition* TransitionConditionFactory::create(const YAML::Node& conditionNode, TransitionConditionRepository* conditionRepository)

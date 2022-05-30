@@ -49,7 +49,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
         std::string fileReferenced;
         if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) ||
                 essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
-                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension)) {
+                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension) ||
+                essentials::FileSystem::endsWith(locator, alica::Strings::condition_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);

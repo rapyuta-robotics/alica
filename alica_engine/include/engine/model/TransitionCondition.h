@@ -16,8 +16,8 @@ class BlackboardBlueprint;
 class TransitionCondition : public AlicaElement
 {
 public:
-    TransitionCondition();
-    virtual ~TransitionCondition();
+    TransitionCondition() = default;
+    virtual ~TransitionCondition() = default;
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
 private:
     // TODO: Check if friends are necessary

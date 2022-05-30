@@ -19,12 +19,11 @@ BasicTransitionCondition::BasicTransitionCondition(TransitionConditionContext& c
 
 BasicTransitionCondition::~BasicTransitionCondition() {}
 
-bool BasicTransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool BasicTransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping)
 {
     if (rp->isBehaviour()) {
         return false;
     }
-    auto keyMapping = rp->getKeyMapping(rp->getParentWrapperId(rp));
     keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
     return _evalCallback(_blackboard.get(), rp, wm);
 }

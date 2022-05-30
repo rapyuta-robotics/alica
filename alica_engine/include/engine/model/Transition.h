@@ -15,6 +15,7 @@ class ModelFactory;
 class TransitionFactory;
 class ExpressionHandler;
 class IAlicaWorldModel;
+class KeyMapping;
 
 /**
  * Connects two States in a Plan
@@ -29,6 +30,7 @@ public:
     const State* getInState() const { return _inState; }
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     const TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
+    const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
 
 private:
     friend ModelFactory;
@@ -55,6 +57,8 @@ private:
      * The Synchronisation this transition belongs to. Null if it does not belong to any.
      */
     const Synchronisation* _synchronisation;
+
+    std::unique_ptr<KeyMapping> _keyMapping;
 };
 
 } // namespace alica

@@ -3,6 +3,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/model/PostCondition.h"
 #include "engine/model/TransitionCondition.h"
+#include "engine/blackboard/KeyMapping.h"
 
 namespace alica
 {
@@ -12,6 +13,7 @@ Transition::Transition()
         , _inState(nullptr)
         , _outState(nullptr)
         , _synchronisation(nullptr)
+        , _keyMapping(nullptr)
 {
 }
 

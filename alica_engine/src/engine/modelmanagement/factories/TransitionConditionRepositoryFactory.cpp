@@ -4,6 +4,10 @@
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/TransitionConditionFactory.h"
 
+#include <alica_common_config/debug_output.h>
+#include <iostream>
+#include <string>
+
 namespace alica
 {
 TransitionConditionRepository* TransitionConditionRepositoryFactory::create(const YAML::Node& node)
@@ -12,8 +16,8 @@ TransitionConditionRepository* TransitionConditionRepositoryFactory::create(cons
     Factory::setAttributes(node, conditionRepository);
     Factory::storeElement(conditionRepository, alica::Strings::transitionConditionRepository);
 
-    if (Factory::isValid(node)) {
-        for (YAML::const_iterator it = node.begin(); it != node.end(); ++it) {
+    if (Factory::isValid(node["conditions"])) {
+        for (YAML::const_iterator it = node["conditions"].begin(); it != node["conditions"].end(); ++it) {
             conditionRepository->_transitionConditions.push_back(TransitionConditionFactory::create(*it, conditionRepository));
         }
     }
