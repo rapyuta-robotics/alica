@@ -1,6 +1,6 @@
-#include "UtilityFunctionCreator.h"
-#include "Master2425328142973735249.h"
-#include "Move1889749086610694100.h"
+#include <alica/Master2425328142973735249.h>
+#include <alica/Move1889749086610694100.h>
+#include <alica/UtilityFunctionCreator.h>
 #include <iostream>
 
 namespace alica
