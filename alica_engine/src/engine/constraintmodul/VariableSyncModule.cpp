@@ -1,5 +1,6 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 
+#include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/TeamObserver.h"
@@ -14,14 +15,20 @@
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(AlicaEngine* ae)
-        : _ae(ae)
-        , _running(false)
+VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const YAML::Node& config, const IAlicaCommunication& communicator,
+        const AlicaClock& clock, TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+        : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
         , _ttl4Communication(AlicaTime::zero())
         , _ttl4Usage(AlicaTime::zero())
         , _ownResults(nullptr)
+        , _configChangeListener(configChangeListener)
+        , _config(config)
+        , _communicator(communicator)
+        , _clock(clock)
+        , _teamManager(teamManager)
+        , _timerFactory(timerFactory)
 {
 }
 
@@ -34,8 +41,8 @@ void VariableSyncModule::init()
         return;
     }
     auto reloadFunctionPtr = std::bind(&VariableSyncModule::reload, this, std::placeholders::_1);
-    _ae->subscribe(reloadFunctionPtr);
-    reload(_ae->getConfig());
+    _configChangeListener.subscribe(reloadFunctionPtr);
+    reload(_configChangeListener.getConfig());
     _running = true;
 }
 
@@ -49,7 +56,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
     _ttl4Usage = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["SeedTTL4Usage"].as<long>());
     _distThreshold = config["Alica"]["CSPSolving"]["SeedMergingThreshold"].as<double>();
 
-    AgentId ownId = _ae->getTeamManager().getLocalAgentID();
+    AgentId ownId = _teamManager.getLocalAgentID();
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _store.emplace_back(new ResultEntry(ownId));
@@ -62,7 +69,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = _ae->getTimerFactory().createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
+            _timer = _timerFactory.createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
         }
     }
 }
@@ -84,7 +91,7 @@ void VariableSyncModule::clear()
 
 void VariableSyncModule::onSolverResult(const SolverResult& msg)
 {
-    if (!_running || msg.senderID == _ownResults->getId() || _ae->getTeamManager().isAgentIgnored(msg.senderID)) {
+    if (!_running || msg.senderID == _ownResults->getId() || _teamManager.isAgentIgnored(msg.senderID)) {
         return;
     }
 
@@ -105,7 +112,7 @@ void VariableSyncModule::onSolverResult(const SolverResult& msg)
         re = (*agent_sorted_loc).get();
     }
 
-    AlicaTime now = _ae->getAlicaClock().now();
+    AlicaTime now = _clock.now();
     for (const SolverVar& sv : msg.vars) {
         Variant v;
         variant::loadFrom(sv.value, v);
@@ -118,22 +125,23 @@ void VariableSyncModule::publishContent()
     if (!_running) {
         return;
     }
-    if (!_ae->maySendMessages()) {
+    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
+    if (!maySendMessages) {
         return;
     }
 
     _publishData.vars.clear();
-    AlicaTime now = _ae->getAlicaClock().now();
+    AlicaTime now = _clock.now();
     _ownResults->getCommunicatableResults(now - _ttl4Communication, _publishData.vars);
     if (_publishData.vars.empty()) {
         return;
     }
-    _ae->getCommunicator().sendSolverResult(_publishData);
+    _communicator.sendSolverResult(_publishData);
 }
 
 void VariableSyncModule::postResult(int64_t vid, Variant result)
 {
-    _ownResults->addValue(vid, result, _ae->getAlicaClock().now());
+    _ownResults->addValue(vid, result, _clock.now());
 }
 
 VariableSyncModule::VotedSeed::VotedSeed(std::vector<Variant>&& vs)

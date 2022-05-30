@@ -16,11 +16,15 @@ class ResultEntry;
 class IAlicaCommunication;
 class AlicaEngine;
 class IAlicaTimer;
+class AlicaClock;
+class TeamManager;
+class TimerFactory;
 
 class VariableSyncModule
 {
 public:
-    VariableSyncModule(AlicaEngine* ae);
+    VariableSyncModule(ConfigChangeListener& configChangeListener, const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock,
+            TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -56,15 +60,22 @@ private:
     };
 
     // This memory resides in _store, don't delete
-    ResultEntry* _ownResults;
     std::vector<std::unique_ptr<ResultEntry>> _store;
     SolverResult _publishData;
-    AlicaTime _ttl4Communication;
-    AlicaTime _ttl4Usage;
-    AlicaEngine* _ae;
+
     bool _running;
     double _distThreshold;
     std::unique_ptr<IAlicaTimer> _timer;
+    AlicaTime _ttl4Communication;
+    AlicaTime _ttl4Usage;
+    ResultEntry* _ownResults;
+    ConfigChangeListener& _configChangeListener;
+    const YAML::Node& _config;
+    const IAlicaCommunication& _communicator;
+    const AlicaClock& _clock;
+    TeamManager& _teamManager;
+    const IAlicaTimerFactory& _timerFactory;
+
     mutable std::mutex _mutex;
 };
 
@@ -77,7 +88,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
 
     std::vector<VotedSeed> seeds;
 
-    AlicaTime earliest = _ae->getAlicaClock().now() - _ttl4Usage;
+    AlicaTime earliest = _clock.now() - _ttl4Usage;
     { // for lock
         std::lock_guard<std::mutex> lock(_mutex);
         for (const std::unique_ptr<ResultEntry>& re : _store) {
