@@ -30,7 +30,7 @@ void AlicaEngine::abort(const std::string& msg)
 {
     std::cerr << "ABORT: " << msg << std::endl;
     exit(EXIT_FAILURE);
-}   
+}
 
 /**
  * The main class.
