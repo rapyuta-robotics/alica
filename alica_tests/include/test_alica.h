@@ -167,7 +167,6 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
             aes.push_back(ae);
