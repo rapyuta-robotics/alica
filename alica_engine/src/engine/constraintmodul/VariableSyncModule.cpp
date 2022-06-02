@@ -15,8 +15,8 @@
 
 namespace alica
 {
-VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const YAML::Node& config, const IAlicaCommunication& communicator,
-        const AlicaClock& clock, TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock,
+        TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
         : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)
@@ -24,7 +24,6 @@ VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListene
         , _ttl4Usage(AlicaTime::zero())
         , _ownResults(nullptr)
         , _configChangeListener(configChangeListener)
-        , _config(config)
         , _communicator(communicator)
         , _clock(clock)
         , _teamManager(teamManager)
@@ -48,6 +47,8 @@ void VariableSyncModule::init()
 
 void VariableSyncModule::reload(const YAML::Node& config)
 {
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+
     if (_running) {
         return;
     }
@@ -125,8 +126,7 @@ void VariableSyncModule::publishContent()
     if (!_running) {
         return;
     }
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages) {
+    if (!_maySendMessages) {
         return;
     }
 

@@ -47,7 +47,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _teamManager(this, alicaContextParams.agentID)
         , _syncModul(getTeamManager(), getPlanRepository(), config, _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
-                  _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
+                  _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
         , _planBase(this)
