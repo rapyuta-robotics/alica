@@ -19,6 +19,7 @@ class AbstractPlan;
 class EntryPoint;
 class DomainVariable;
 class SuccessMarks;
+class PlanRepository;
 struct AgentAnnouncement;
 
 class Agent
@@ -43,13 +44,15 @@ public:
     void setTimeout(AlicaTime t);
 
 private:
-    Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
+    Agent(const ModelManager& modelManager, const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole,
+            const AgentAnnouncement& aa);
 
     const AlicaEngine* _engine;
     AgentId _id;
     bool _active;
     bool _ignored;
     bool _local;
+    const AlicaClock& _clock;
     AlicaTime _timeout;
     AlicaTime _timeLastMsgReceived;
     RobotProperties _properties;

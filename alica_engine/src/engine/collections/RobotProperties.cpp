@@ -6,12 +6,13 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const AlicaEngine* engine, const std::string& defaultRole, const AgentAnnouncement& aa)
-        : _defaultRole(defaultRole.empty() ? "NOROLESPECIFIED" : defaultRole)
+RobotProperties::RobotProperties(const PlanRepository& planRepository, const std::string& defaultRole, const AgentAnnouncement& aa)
+        : _planRepository(planRepository)
+        , _defaultRole(defaultRole.empty() ? "NOROLESPECIFIED" : defaultRole)
 {
     // TODO: develop proper Role-Capability-Stuff when we need it
     //    for (const AgentAnnouncement::CapabilityPair& cp : aa.capabilities) {
-    //        for (const Capability* cap : engine->getPlanRepository().getCapabilities()) {
+    //        for (const Capability* cap : _planRepository.getCapabilities()) {
     //            if (cap->getName() == cp.first) {
     //                for (const CapValue* val : cap->getCapValues()) {
     //                    // transform(kvalue.begin(), kvalue.end(), kvalue.begin(), ::tolower);
