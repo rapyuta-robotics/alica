@@ -26,8 +26,8 @@ class AlicaClock;
 class SyncModule
 {
 public:
-    SyncModule(const TeamManager& teamManager, const PlanRepository& planRepository, const YAML::Node& config, const IAlicaCommunication& communicator,
-            const AlicaClock& clock);
+    SyncModule(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const PlanRepository& planRepository,
+            const IAlicaCommunication& communicator, const AlicaClock& clock);
 
     ~SyncModule();
     void init();
@@ -43,15 +43,14 @@ public:
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const Synchronisation* st);
 
-    void setCommunicator(std::shared_ptr<IAlicaCommunication> communicator);
-    void setAlicaClock(std::shared_ptr<AlicaClock> clock);
+    void reload(const YAML::Node& config);
 
 private:
     bool _running;
     AgentId _myId;
+    ConfigChangeListener& _configChangeListener;
     const TeamManager& _teamManager;
     const PlanRepository& _planRepository;
-    const YAML::Node& _config;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     unsigned long _ticks;
@@ -59,6 +58,7 @@ private:
     std::map<const Synchronisation*, SynchronisationProcess*>
             _synchProcessMapping;                                  /**< Mapping from synchronisations to their ongoing synchronisation process */
     std::list<const Synchronisation*> _successfulSynchronisations; /**< List of synchronisations that were achieved/successful */
+    bool _maySendMessages;
 };
 
 } // namespace alica
