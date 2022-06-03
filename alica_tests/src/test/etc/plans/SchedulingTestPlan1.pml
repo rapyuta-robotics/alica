@@ -1,5 +1,22 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "2",
+      "id": 683514589549348538,
+      "key": "Plan2Sub",
+      "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "5",
+      "id": 1571743223454861605,
+      "key": "Init2Term",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -112,11 +129,26 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2901825906319407673",
       "id": 1614960055819,
       "inState": 1613378543512,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "Plan2Sub"
+          }
+        ],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1614960038398,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -131,11 +163,26 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2901825906319407673",
       "id": 1614960063842,
       "inState": 1614960038398,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "Init2Term"
+          }
+        ],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1613977406218,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,

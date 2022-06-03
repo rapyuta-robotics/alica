@@ -88,8 +88,13 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#4281647834169813432",
       "id": 1588246141555,
       "inState": 1588103714226,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1588246134801,
       "pointsWeb": [],
@@ -107,8 +112,13 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#3684268241099966909",
       "id": 1588246144840,
       "inState": 1588103714226,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1588246136647,
       "pointsWeb": [],

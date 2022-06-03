@@ -12,9 +12,9 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 4488468250406966071)
 //
 // States:
-//   - Failed (3748960977005112327)
 //   - Init (1171453089016322268)
 //   - Fail (3487518754011112127)
+//   - Failed (3748960977005112327)
 FailurePlan631515556091266493::FailurePlan631515556091266493(PlanContext& context)
         : DomainPlan(context)
 {

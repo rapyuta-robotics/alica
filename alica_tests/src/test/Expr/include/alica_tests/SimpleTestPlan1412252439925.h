@@ -26,7 +26,7 @@ protected:
     /*PROTECTED REGION ID(pro1412252439925) ENABLED START*/
     // Override these methods for your use case
     // virtual void run(void* msg) override;
-    // virtual void onInit() override;
+    virtual void onInit() override;
     // virtual void onTerminate() override;
     // Add additional protected methods here
     /*PROTECTED REGION END*/

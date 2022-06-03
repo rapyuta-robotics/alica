@@ -91,6 +91,7 @@ void TestParameterPassing1692837668719979457::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+    bb.set("targetChildStatus", PlanStatus::Success);
     bb.set("planKey", 1);
     wm->passedParameters["planKey"] = bb.get<int>("planKey");
     bb.set("planOutputKey", 5);

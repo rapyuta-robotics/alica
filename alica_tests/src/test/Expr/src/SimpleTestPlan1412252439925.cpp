@@ -89,5 +89,10 @@ bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp, const 
 
 /*PROTECTED REGION ID(methods1412252439925) ENABLED START*/
 // Add additional options here
+void SimpleTestPlan1412252439925::onInit()
+{
+    LockedBlackboardRW bb(*(getBlackboard()));
+    bb.set("targetChildStatus", PlanStatus::Success);
+}
 /*PROTECTED REGION END*/
 } // namespace alica

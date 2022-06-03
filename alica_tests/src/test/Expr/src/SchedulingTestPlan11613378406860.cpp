@@ -89,6 +89,9 @@ bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp, const 
 // Add additional options here
 void SchedulingTestPlan11613378406860::onInit()
 {
+    LockedBlackboardRW bb(*(getBlackboard()));
+    bb.set("Plan2Sub", 2);
+    bb.set("Init2Term", 5);
     CounterClass::called = 1;
 }
 
