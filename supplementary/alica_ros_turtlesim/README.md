@@ -728,8 +728,8 @@ catkin build alica_ros_turtlesim
 Run application with roslaunch. video
 - Launch turtlesim
 			`roslaunch alica_ros_turtlesim env.launch`
-- Turtle node(you can launch turtle with different name till 5 turtles)
-`roslaunch alica_ros_turtlesim turtle.launch name:=turtle1`
+- Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
+`roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
 - Start moving.
 `rostopic pub /init std_msgs/Empty "{}" `
 
