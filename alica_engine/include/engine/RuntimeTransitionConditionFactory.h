@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/ITransitionConditionCreator.h"
-#include "engine/DefaultTransitionConditionCreator.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 
 #include <memory>
 
