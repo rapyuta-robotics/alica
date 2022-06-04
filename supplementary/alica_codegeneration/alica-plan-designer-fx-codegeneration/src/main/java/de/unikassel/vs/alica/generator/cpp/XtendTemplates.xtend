@@ -1127,6 +1127,10 @@ def String transitionConditionHeader(List<Condition> conditions) '''
 
 namespace alica
 {
+class Blackboard;
+class RunningPlan;
+class IAlicaWorldModel;
+
 «FOR condition : conditions»
 static bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 «ENDFOR»
@@ -1135,10 +1139,15 @@ static bool condition«condition.getName()»«condition.getId()»(const Blackboa
 
 def String transitionConditionSource(List<Condition> conditions, String pkgName) '''
 «IF (conditions.get(0).relativeDirectory == null || conditions.get(0).relativeDirectory.isEmpty)»
-#include <«pkgName»/condition.h>
+#include <«pkgName»/conditions.h>
 «ELSE»
-#include <«pkgName»/condition.relativeDirectory».h>
+#include <«pkgName»/«conditions.get(0).relativeDirectory»/conditions.h>
 «ENDIF»
+
+#include <iostream>
+#include <engine/blackboard/Blackboard.h>
+#include <engine/RunningPlan.h>
+#include <engine/IAlicaWorldModel.h>
 
 namespace alica
 {
@@ -1149,7 +1158,8 @@ static bool condition«condition.getName()»«condition.getId()»(const Blackboa
         «IF (protectedRegions.containsKey("condition" + condition.id))»
 «protectedRegions.get("condition" + condition.id)»
         «ELSE»
-            std::cout << "The condition «condition.id» is not implement yet!" << std::endl;
+            // static_assert(false, "Condition «condition.id» with name «condition.name» is not yet implemented");
+            return false;
         «ENDIF»
     /*PROTECTED REGION END*/
 }
@@ -1170,18 +1180,18 @@ class TransitionConditionCreator : public ITransitionConditionCreator
     ~TransitionConditionCreator() = default;
 
     std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
-}
+};
 } /* namespace alica */
 '''
 
-def String transitionConditionCreatorSource(List<Condition> conditions) '''
-#include "TransitionConditionCreator.h"
+def String transitionConditionCreatorSource(List<Condition> conditions, String pkgName) '''
+#include "«pkgName»/TransitionConditionCreator.h"
 
 «FOR c : conditions»
 «IF (c.relativeDirectory == null || c.relativeDirectory.isEmpty)»
-#include "conditions.h"
+#include "«pkgName»/conditions.h"
 «ELSE»
-#include  "«c.relativeDirectory»/conditions.h"
+#include  "«pkgName»/«c.relativeDirectory»/conditions.h"
 «ENDIF»
 «ENDFOR»
 
@@ -1193,7 +1203,7 @@ std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldMode
     {
         «FOR con : conditions»
         case «con.id»:
-            return std::bind(condition«con.id»«con.name», std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+            return std::bind(condition«con.name»«con.id», std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
         «ENDFOR»
         default:
         std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
