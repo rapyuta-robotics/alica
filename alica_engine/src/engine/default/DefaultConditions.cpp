@@ -1,4 +1,4 @@
-#include "engine/DefaultConditions.h"
+#include "engine/default/DefaultConditions.h"
 
 #include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"

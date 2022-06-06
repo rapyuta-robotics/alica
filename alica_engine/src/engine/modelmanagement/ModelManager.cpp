@@ -223,6 +223,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         YAML::Node tmp;
         tmp["id"] = -1;
         tmp["conditions"] = node;
+        tmp["name"] = "conditionRepository";
         TransitionConditionRepository* conditionRepository = TransitionConditionRepositoryFactory::create(tmp);
         conditionRepository->setFileName(currentFile);
         return conditionRepository;

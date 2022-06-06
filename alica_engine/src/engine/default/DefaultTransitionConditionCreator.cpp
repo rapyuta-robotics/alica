@@ -1,6 +1,6 @@
-#include "engine/DefaultTransitionConditionCreator.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 
-#include "engine/DefaultConditions.h"
+#include "engine/default/DefaultConditions.h"
 #include "engine/Types.h"
 #include <iostream>
 

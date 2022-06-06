@@ -890,9 +890,7 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
 
 bool RunningPlan::evalTransitionCondition(const Transition* transition, const IAlicaWorldModel* wm)
 {
-    if (isBehaviour()) {
-        return false;
-    }
+    assert(!isBehaviour());
     return _basicPlan->evalTransitionCondition(transition, this, wm);
 }
 

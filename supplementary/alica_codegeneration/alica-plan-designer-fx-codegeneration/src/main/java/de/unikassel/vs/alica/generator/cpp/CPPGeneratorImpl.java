@@ -442,7 +442,7 @@ public class CPPGeneratorImpl implements IGenerator {
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "TransitionConditionCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions);
+        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions, packageName);
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
     }
