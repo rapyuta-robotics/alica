@@ -1,7 +1,6 @@
-#include "VariableHandling/Lvl11524452759599.h"
+#include <supplementary_tests/VariableHandling/Lvl11524452759599.h>
 /*PROTECTED REGION ID(eph1524452759599) ENABLED START*/
 // Add additional using directives here
-bool vhStartCondition = false;
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -51,28 +50,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunctio
     shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: MISSING_NAME (1524453490345)
- *   - Comment: Lvl1 Transition
- *   - Source2Dest: BeforeTrans --> NewState
- *
- * Precondition: MISSING_NAME (1524453491764)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *	   - MISSING_NAME (1524453546255)
- *
- * Abstract Plans in BeforeTrans:
- */
-bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1524453490345) ENABLED START*/
-    return vhStartCondition;
     /*PROTECTED REGION END*/
 }
 

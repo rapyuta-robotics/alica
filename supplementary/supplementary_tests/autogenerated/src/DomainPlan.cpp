@@ -1,4 +1,4 @@
-#include "DomainPlan.h"
+#include <supplementary_tests/DomainPlan.h>
 /*PROTECTED REGION ID(domainPlanSrcHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

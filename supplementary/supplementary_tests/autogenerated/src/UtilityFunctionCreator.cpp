@@ -1,16 +1,16 @@
-#include "UtilityFunctionCreator.h"
-#include "GSolver/GSolverMaster1417423751087.h"
-#include "GSolver/GSolverTestPlan1417423757243.h"
-#include "ProblemModule/ProbBuildingLevel11479557378264.h"
-#include "ProblemModule/ProbBuildingLevel1_11479557664989.h"
-#include "ProblemModule/ProblemBuildingMaster1479556022226.h"
-#include "ProblemModule/QueryPlan11479556074049.h"
-#include "ProblemModule/QueryPlan21479718449392.h"
-#include "VariableHandling/Lvl11524452759599.h"
-#include "VariableHandling/Lvl21524452793378.h"
-#include "VariableHandling/Lvl31524452836022.h"
-#include "VariableHandling/VHMaster1524452721452.h"
 #include <iostream>
+#include <supplementary_tests/GSolver/GSolverMaster1417423751087.h>
+#include <supplementary_tests/GSolver/GSolverTestPlan1417423757243.h>
+#include <supplementary_tests/ProblemModule/ProbBuildingLevel11479557378264.h>
+#include <supplementary_tests/ProblemModule/ProbBuildingLevel1_11479557664989.h>
+#include <supplementary_tests/ProblemModule/ProblemBuildingMaster1479556022226.h>
+#include <supplementary_tests/ProblemModule/QueryPlan11479556074049.h>
+#include <supplementary_tests/ProblemModule/QueryPlan21479718449392.h>
+#include <supplementary_tests/UtilityFunctionCreator.h>
+#include <supplementary_tests/VariableHandling/Lvl11524452759599.h>
+#include <supplementary_tests/VariableHandling/Lvl21524452793378.h>
+#include <supplementary_tests/VariableHandling/Lvl31524452836022.h>
+#include <supplementary_tests/VariableHandling/VHMaster1524452721452.h>
 
 namespace alica
 {

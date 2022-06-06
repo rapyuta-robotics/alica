@@ -1,4 +1,4 @@
-#include <GSolver/SolverTestBehaviour.h>
+#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>

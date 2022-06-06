@@ -1,7 +1,7 @@
-#include "BehaviourCreator.h"
-#include "GSolver/SolverTestBehaviour.h"
-#include "ProblemModule/QueryBehaviour1.h"
 #include "engine/BasicBehaviour.h"
+#include <supplementary_tests/BehaviourCreator.h>
+#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
+#include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
 
 namespace alica
 {

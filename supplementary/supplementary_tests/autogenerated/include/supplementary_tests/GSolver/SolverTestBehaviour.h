@@ -1,40 +1,35 @@
 #pragma once
 
-#include "DomainBehaviour.h"
-/*PROTECTED REGION ID(inc1479556104511) ENABLED START*/
+#include <supplementary_tests/DomainBehaviour.h>
+/*PROTECTED REGION ID(inc1417424455986) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
-#include <mutex>
-
+#include <vector>
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-class QueryBehaviour1 : public DomainBehaviour
+class SolverTestBehaviour : public DomainBehaviour
 {
 public:
-    QueryBehaviour1(BehaviourContext& context);
-    virtual ~QueryBehaviour1();
+    SolverTestBehaviour(BehaviourContext& context);
+    virtual ~SolverTestBehaviour();
     virtual void run(void* msg);
-    /*PROTECTED REGION ID(pub1479556104511) ENABLED START*/
+    /*PROTECTED REGION ID(pub1417424455986) ENABLED START*/
     // Add additional public methods here
     int getCallCounter();
-    void stopQueries();
-
     static std::vector<double> result;
-    std::shared_ptr<alica::Query> query;
-    std::mutex queryMutex;
-    bool stopQuerying;
-
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1479556104511) ENABLED START*/
+    /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/
     // Add additional protected methods here
+    alica::Query _query;
     int callCounter;
+
     /*PROTECTED REGION END*/
 private:
-    /*PROTECTED REGION ID(prv1479556104511) ENABLED START*/
+    /*PROTECTED REGION ID(prv1417424455986) ENABLED START*/
     // Add additional private methods here
     /*PROTECTED REGION END*/
 };

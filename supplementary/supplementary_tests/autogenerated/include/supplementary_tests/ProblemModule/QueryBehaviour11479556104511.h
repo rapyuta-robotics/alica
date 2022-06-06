@@ -1,6 +1,6 @@
 
 
-#include "DomainCondition.h"
+#include <supplementary_tests/DomainCondition.h>
 /*PROTECTED REGION ID(incBC1479556104511) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/

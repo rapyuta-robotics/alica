@@ -1,5 +1,5 @@
-#include "GSolver/SolverTestBehaviour.h"
 #include <memory>
+#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 
 /*PROTECTED REGION ID(inccpp1417424455986) ENABLED START*/
 // Add additional includes here

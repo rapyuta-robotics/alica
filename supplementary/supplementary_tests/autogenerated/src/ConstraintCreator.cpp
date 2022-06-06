@@ -1,12 +1,12 @@
-#include "ConstraintCreator.h"
+#include <supplementary_tests/ConstraintCreator.h>
 
-#include "GSolver/constraints/GSolverTestPlan1417423757243Constraints.h"
-#include "ProblemModule/constraints/ProblemBuildingMaster1479556022226Constraints.h"
-#include "ProblemModule/constraints/QueryPlan11479556074049Constraints.h"
-#include "VariableHandling/constraints/Lvl11524452759599Constraints.h"
-#include "VariableHandling/constraints/Lvl21524452793378Constraints.h"
-#include "VariableHandling/constraints/Lvl31524452836022Constraints.h"
-#include "VariableHandling/constraints/VHMaster1524452721452Constraints.h"
+#include <supplementary_tests/GSolver/constraints/GSolverTestPlan1417423757243Constraints.h>
+#include <supplementary_tests/ProblemModule/constraints/ProblemBuildingMaster1479556022226Constraints.h>
+#include <supplementary_tests/ProblemModule/constraints/QueryPlan11479556074049Constraints.h>
+#include <supplementary_tests/VariableHandling/constraints/Lvl11524452759599Constraints.h>
+#include <supplementary_tests/VariableHandling/constraints/Lvl21524452793378Constraints.h>
+#include <supplementary_tests/VariableHandling/constraints/Lvl31524452836022Constraints.h>
+#include <supplementary_tests/VariableHandling/constraints/VHMaster1524452721452Constraints.h>
 
 #include <iostream>
 

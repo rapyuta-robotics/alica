@@ -1,4 +1,4 @@
-#include "GSolver/GSolverMaster1417423751087.h"
+#include <supplementary_tests/GSolver/GSolverMaster1417423751087.h>
 /*PROTECTED REGION ID(eph1417423751087) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/

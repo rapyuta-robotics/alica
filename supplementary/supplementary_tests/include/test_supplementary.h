@@ -1,11 +1,12 @@
 #pragma once
 
-#include "BehaviourCreator.h"
-#include "ConditionCreator.h"
-#include "ConstraintCreator.h"
+#include "supplementary_tests/BehaviourCreator.h"
+#include "supplementary_tests/ConditionCreator.h"
+#include "supplementary_tests/ConstraintCreator.h"
 #include "ConstraintTestPlanDummySolver.h"
-#include "PlanCreator.h"
-#include "UtilityFunctionCreator.h"
+#include "supplementary_tests/PlanCreator.h"
+#include "supplementary_tests/UtilityFunctionCreator.h"
+#include "supplementary_tests/TransitionConditionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
 #include <clock/AlicaRosTimer.h>
@@ -72,7 +73,7 @@ protected:
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
@@ -129,7 +130,7 @@ protected:
 
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
 
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));

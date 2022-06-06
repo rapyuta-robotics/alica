@@ -1,5 +1,5 @@
-#include "ProblemModule/QueryBehaviour1.h"
 #include <memory>
+#include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
 
 /*PROTECTED REGION ID(inccpp1479556104511) ENABLED START*/
 // Add additional includes here

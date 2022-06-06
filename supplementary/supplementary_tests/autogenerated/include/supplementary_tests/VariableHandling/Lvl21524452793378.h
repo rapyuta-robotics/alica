@@ -1,10 +1,10 @@
 #pragma once
 
-#include "DomainCondition.h"
-#include "DomainPlan.h"
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
+#include <supplementary_tests/DomainCondition.h>
+#include <supplementary_tests/DomainPlan.h>
 /*PROTECTED REGION ID(incl1524452793378) ENABLED START*/
 // Add inlcudes here
 /*PROTECTED REGION END*/

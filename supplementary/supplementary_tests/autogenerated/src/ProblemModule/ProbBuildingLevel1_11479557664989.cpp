@@ -1,4 +1,4 @@
-#include "ProblemModule/ProbBuildingLevel1_11479557664989.h"
+#include <supplementary_tests/ProblemModule/ProbBuildingLevel1_11479557664989.h>
 /*PROTECTED REGION ID(eph1479557664989) ENABLED START*/
 // Add additional using directives here
 /*PROTECTED REGION END*/
