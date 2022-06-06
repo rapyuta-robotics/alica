@@ -1132,7 +1132,7 @@ class RunningPlan;
 class IAlicaWorldModel;
 
 «FOR condition : conditions»
-static bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 «ENDFOR»
 } /* namespace alica */
 '''
@@ -1152,7 +1152,7 @@ def String transitionConditionSource(List<Condition> conditions, String pkgName)
 namespace alica
 {
 «FOR condition : conditions»
-static bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
 /*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
         «IF (protectedRegions.containsKey("condition" + condition.id))»
@@ -1176,8 +1176,9 @@ namespace alica
 {
 class TransitionConditionCreator : public ITransitionConditionCreator
 {
-    TransitionConditionCreator() = default;
-    ~TransitionConditionCreator() = default;
+public:
+    TransitionConditionCreator();
+    virtual ~TransitionConditionCreator();
 
     std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
 };
@@ -1194,10 +1195,19 @@ def String transitionConditionCreatorSource(List<Condition> conditions, String p
 #include  "«pkgName»/«c.relativeDirectory»/conditions.h"
 «ENDIF»
 «ENDFOR»
+#include <iostream>
+#include <engine/blackboard/Blackboard.h>
+#include <engine/RunningPlan.h>
+#include <engine/IAlicaWorldModel.h>
 
 namespace alica
 {
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId)
+
+TransitionConditionCreator::TransitionConditionCreator() {}
+
+TransitionConditionCreator::~TransitionConditionCreator() {}
+
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
 {
     switch (conditionId)
     {
