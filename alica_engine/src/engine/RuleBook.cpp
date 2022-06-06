@@ -459,8 +459,6 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
             
         if (r.evalTransitionCondition(t, _wm)) {
             nextState = t->getOutState();
-            // TODO: find solution for constraints with new transition conditions
-            // r.editConstraintStore().addCondition(t->getPreCondition());
             break;
         }
     }
