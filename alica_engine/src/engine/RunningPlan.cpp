@@ -53,8 +53,13 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+        const TeamManager& _teamManager, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
@@ -71,8 +76,13 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+        const TeamManager& teamManager, const Plan* plan, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
@@ -84,8 +94,13 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration*
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+        const TeamManager& teamManager, const PlanType* pt, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
@@ -95,8 +110,13 @@ RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuratio
 {
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+        const TeamManager& teamManager, const Behaviour* b, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _planType(nullptr)
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
@@ -188,7 +208,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this, _ae->getWorldModel());
+        return preCondition->evaluate(*this, _worldModel);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -217,7 +237,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this, _ae->getWorldModel());
+        bool ret = runtimeCondition->evaluate(*this, _worldModel);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
@@ -279,11 +299,11 @@ void RunningPlan::printRecursive() const
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
     if (_activeTriple.abstractPlan != plan) {
-        _status.planStartTime = _ae->getAlicaClock().now();
+        _status.planStartTime = _clock.now();
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
-        _basicPlan = _ae->getRuntimePlanFactory().create(plan->getId(), dynamic_cast<const Plan*>(plan));
+        _basicPlan = _runtimePlanFactory.create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
@@ -305,14 +325,14 @@ void RunningPlan::useState(const State* s)
     if (_activeTriple.state != s) {
         ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
-        _status.stateStartTime = _ae->getAlicaClock().now();
+        _status.stateStartTime = _clock.now();
         if (s != nullptr) {
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
                 AgentId mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->editTeamManager().setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
+                _teamManager.setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
         }
     }
@@ -477,7 +497,7 @@ void RunningPlan::deactivate()
     if (isBehaviour()) {
         _basicBehaviour->stop();
     } else {
-        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
+        _teamObserver.notifyRobotLeftPlan(_activeTriple.abstractPlan);
         _basicPlan->stop();
     }
 }
@@ -542,7 +562,7 @@ bool RunningPlan::amISuccessful() const
     if (isBehaviour()) { // behaviors only have a simple success flag
         return getStatus() == PlanStatus::Success;
     }
-    return getAssignment().isAgentSuccessful(_ae->getTeamManager().getLocalAgentID(), _activeTriple.entryPoint);
+    return getAssignment().isAgentSuccessful(_teamManager.getLocalAgentID(), _activeTriple.entryPoint);
 }
 
 bool RunningPlan::amISuccessfulInAnyChild() const
@@ -726,7 +746,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     aldif.setReason(AllocationDifference::Reason::message);
 
     // Update Success Collection:
-    _ae->editTeamObserver().updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
+    _teamObserver.updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
@@ -795,7 +815,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
 
 AgentId RunningPlan::getOwnID() const
 {
-    return _ae->getTeamManager().getLocalAgentID();
+    return _teamManager.getLocalAgentID();
 }
 
 /**

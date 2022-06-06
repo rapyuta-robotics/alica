@@ -40,6 +40,8 @@ class IPlanTreeVisitor;
 class SimplePlanTree;
 class Blackboard;
 class KeyMapping;
+class IAlicaWorldModel;
+class RuntimePlanFactory;
 
 struct PlanStateTriple
 {
@@ -98,10 +100,14 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
+    explicit RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+            const TeamManager& _teamManager, const Configuration* configuration);
+    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+            const TeamManager& _teamManager, const Plan* plan, const Configuration* configuration);
+    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+            const TeamManager& _teamManager, const PlanType* pt, const Configuration* configuration);
+    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
+            const TeamManager& _teamManager, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -238,7 +244,11 @@ private:
     const bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
 
     // engine Pointer
-    AlicaEngine* const _ae;
+    const AlicaClock& _clock;
+    IAlicaWorldModel* _worldModel;
+    const RuntimePlanFactory& _runTimePlanFactory;
+    const TeamObserver& _teamObserver;
+    const TeamManager& _teamManager;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;
