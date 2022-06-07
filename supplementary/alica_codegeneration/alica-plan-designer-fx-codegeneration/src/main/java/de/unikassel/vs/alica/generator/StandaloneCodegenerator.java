@@ -63,6 +63,7 @@ public class StandaloneCodegenerator {
         Codegenerator codegenerator = new Codegenerator(modelManager.getPlans(),
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
+                modelManager.getTransitionConditions(),
                 clangFormatPath,
                 generatedSourcesManager,
                 packageName);
