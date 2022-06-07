@@ -43,8 +43,9 @@ struct AlicaTestsEngineGetter
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::AlicaContext* ac;
-    alica::AlicaEngine* ae;
+    alica::AlicaContext* ac{nullptr};
+    alica::AlicaEngine* ae{nullptr};
+    virtual bool getDelayStart() { return true; }
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -74,12 +75,12 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        ae = AlicaTestsEngineGetter::getEngine(ac);
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(std::move(creators)));
+
+        EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
+        ae = AlicaTestsEngineGetter::getEngine(ac);
     }
 
     virtual void TearDown() override
@@ -110,6 +111,21 @@ protected:
     std::vector<alica::AlicaEngine*> aes;
     std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
     std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
+    virtual bool getDelayStart() { return true; }
+};
+
+class TestClock : public AlicaClock
+{
+public:
+    TestClock()
+            : _now(AlicaClock::now())
+    {
+    }
+    AlicaTime now() const override { return _now; }
+    void increment(AlicaTime t) { _now += t; }
+
+private:
+    AlicaTime _now;
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
@@ -118,6 +134,7 @@ private:
     alica::AlicaCreators creators;
 
 protected:
+    virtual bool getUseTestClock() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual int getAgentCount() const = 0;
@@ -145,10 +162,12 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            if (getUseTestClock()) {
+                ac->setClock<TestClock>();
+            }
+            ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -168,6 +187,9 @@ protected:
 
 class AlicaTestNotInitializedFixture : public AlicaTestFixtureBase
 {
+private:
+    alica::AlicaCreators creators;
+
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -189,13 +211,11 @@ protected:
         ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         spinner->start();
-        ae = AlicaTestsEngineGetter::getEngine(ac);
     }
 
     void TearDown() override
     {
         spinner->stop();
-        ac->terminate();
         delete ac;
     }
 
@@ -228,12 +248,13 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
+        ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -273,12 +294,12 @@ protected:
         ac->setWorldModel<alica_test::SchedWM>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+        ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
-        EXPECT_TRUE(ae->init(std::move(creators)));
     }
 
     virtual void TearDown() override
@@ -325,10 +346,10 @@ protected:
             ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            ac->init(std::move(creators), true);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
-            EXPECT_TRUE(ae->init(std::move(creators)));
             acs.push_back(ac);
             aes.push_back(ae);
         }
