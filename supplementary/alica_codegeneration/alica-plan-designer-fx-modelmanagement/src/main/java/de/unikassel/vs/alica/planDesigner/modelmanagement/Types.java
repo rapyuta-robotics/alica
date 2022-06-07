@@ -36,4 +36,5 @@ public class Types {
     public static final String VARIABLEBINDING = "variablebinding";
     public static final String CONFIGURATION = "configuration";
     public static final String CONF_ABSTRACTPLAN_WRAPPER = "configurationAbstractPlanWrapper";
+    public static final String CONDITIONS = "conditions";
 }

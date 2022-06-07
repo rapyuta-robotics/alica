@@ -2,6 +2,7 @@ package de.unikassel.vs.alica.generator;
 
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.TransitionCondition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface IGenerator {
     void createConstraintsForBehaviour(Behaviour behaviour);
     void createPlans(List<Plan> plans);
     void createPlan(Plan plan);
-    void createTransitionConditions(List<Condition> conditions);
+    void createTransitionConditions(List<TransitionCondition> conditions);
     void createUtilityFunctionCreator(List<Plan> plans);
 
     void createDomainCondition();
@@ -34,7 +35,7 @@ public interface IGenerator {
     IConstraintCodeGenerator getActiveConstraintCodeGenerator();
 
     void createPlanCreator(List<Plan> plans);
-    void createTransitionConditionsCreator(List<Condition> conditions);
+    void createTransitionConditionsCreator(List<TransitionCondition> conditions);
 
     void createDomainPlan();
 }
