@@ -19,11 +19,9 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _engine(std::make_unique<AlicaEngine>(*this, _configRootNode, alicaContextParams.configPath, alicaContextParams.roleSetName,
-                  alicaContextParams.masterPlanName, alicaContextParams.stepEngine, alicaContextParams.agentID))
-        , _clock(std::make_unique<AlicaClock>())
-        , _communicator(nullptr)
         , _worldModel(nullptr)
+        , _alicaContextParams(alicaContextParams)
+        , _clock(std::make_unique<AlicaClock>())
 {
 }
 
@@ -39,20 +37,30 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
     return init(std::move(creators));
 }
 
-int AlicaContext::init(AlicaCreators&& creatorCtx)
+int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
         ALICA_WARNING_MSG("AC: Context already initialized.");
         return -1;
     }
 
-    if (_communicator) {
-        _communicator->startCommunication();
+    if (!_communicator) {
+        AlicaEngine::abort("AC: Communicator not set");
+    }
+    if (!_timerFactory) {
+        AlicaEngine::abort("AC: TimerFactory not set");
     }
 
+    _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
+
+    _communicator->startCommunication();
+
     if (_engine->init(std::move(creatorCtx))) {
-        _engine->start();
+        if (!delayStart) {
+            _engine->start();
+        }
         _initialized = true;
+
         return 0;
     }
     return -1;
