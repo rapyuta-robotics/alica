@@ -360,6 +360,18 @@ public class CPPGeneratorImpl implements IGenerator {
         }
     }
 
+    private String cutDestinationPathToDirectory(TransitionCondition condition) {
+        String destinationPath = condition.getRelativeDirectory();
+        if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+        }
+        if (destinationPath == null) {
+            return "";
+        } else {
+            return destinationPath;
+        }
+    }
+
     @Override
     public void createUtilityFunctionCreator(List<Plan> plans) {
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "UtilityFunctionCreator.h").toString();
@@ -421,7 +433,7 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
-    public void createTransitionConditions(List<Condition> conditions) {
+    public void createTransitionConditions(List<TransitionCondition> conditions) {
         String destinationPath = cutDestinationPathToDirectory(conditions.get(0));
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, "conditions.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionHeader(conditions);
@@ -435,14 +447,14 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
-    public void createTransitionConditionsCreator(List<Condition> conditions) {
+    public void createTransitionConditionsCreator(List<TransitionCondition> conditions) {
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionConditionCreator.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionCreatorHeader(conditions);
         writeSourceFile(headerPath, fileContentHeader);
         formatFile(headerPath);
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "TransitionConditionCreator.cpp").toString();
-        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions);
+        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions, packageName);
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
     }

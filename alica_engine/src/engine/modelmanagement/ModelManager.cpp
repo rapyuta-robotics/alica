@@ -217,13 +217,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         roleSet->setFileName(currentFile);
         return roleSet;
     } else if (alica::Strings::transitionCondition.compare(type) == 0) {
-        // ID for wrapper object TransitionConditionRepository is required as a field of the node
-        // Because the actual yaml node of the file is a list, it does not contain any fields on the root level
-        // Need a tmp node which has the id and the list of transition conditions as fields
-        YAML::Node tmp;
-        tmp["id"] = -1;
-        tmp["conditions"] = node;
-        TransitionConditionRepository* conditionRepository = TransitionConditionRepositoryFactory::create(tmp);
+        TransitionConditionRepository* conditionRepository = TransitionConditionRepositoryFactory::create(node);
         conditionRepository->setFileName(currentFile);
         return conditionRepository;
     } else {

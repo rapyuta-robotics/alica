@@ -10,6 +10,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.TransitionCondition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.antlr.v4.runtime.CharStreams;
@@ -49,11 +50,12 @@ public class Codegenerator {
     private List<Plan> plans;
     private List<Behaviour> behaviours;
     private List<Condition> conditions;
+    private List<TransitionCondition> transitionConditions;
 
     /**
      * This constructor initializes a C++ code generator
      */
-    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
+    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, List<TransitionCondition> transitionConditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
         // TODO: Document this! Here can the programming language be changed.
         languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager, packageName);
         languageSpecificGenerator.setFormatter(formatter);
@@ -66,6 +68,7 @@ public class Codegenerator {
         Collections.sort(behaviours, new PlanElementComparator());
         this.conditions = conditions;
         Collections.sort(conditions, new PlanElementComparator());
+        this.transitionConditions = transitionConditions;
     }
 
     /**
@@ -104,26 +107,7 @@ public class Codegenerator {
 
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
-        List<Condition> transitionConditions = new ArrayList<Condition>();
-        List<Condition> conditionsWithoutTransitions = new ArrayList<Condition>();
-        for (Plan plan : plans) {
-            for (Transition t : plan.getTransitions()) {
-                transitionConditions.add(t.getPreCondition());
-            }
-        }
 
-        for (Condition condition : conditions) {
-            if (transitionConditions.contains(condition)) {
-                continue;
-            }
-            conditionsWithoutTransitions.add(condition);
-        }
-
-        /**
-         * TODO: pass conditions without transitionsConditions list to createConditionCreator
-         * when in alica_tests, supplementary_tests, alica_turtle_sim and other packages have 
-         * been updated to use the new transitions
-         */
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
         languageSpecificGenerator.createTransitionConditions(transitionConditions);
         languageSpecificGenerator.createTransitionConditionsCreator(transitionConditions);

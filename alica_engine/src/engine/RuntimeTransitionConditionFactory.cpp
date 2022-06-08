@@ -3,7 +3,6 @@
 #include "engine/BasicTransitionCondition.h"
 #include "engine/model/TransitionCondition.h"
 #include "engine/Types.h"
-#include "engine/DefaultTransitionConditionCreator.h"
 
 #include <alica_common_config/debug_output.h>
 #include <iostream>
