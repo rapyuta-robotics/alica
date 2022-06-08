@@ -1112,6 +1112,14 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
 def String transitionConditionHeader(List<TransitionCondition> conditions) '''
 #pragma once
 
+/*PROTECTED REGION ID(conditionHeader) ENABLED START*/
+«IF (protectedRegions.containsKey("conditionHeader"))»
+«protectedRegions.get("conditionHeader")»
+«ELSE»
+    //Add additional options here
+«ENDIF»
+/*PROTECTED REGION END*/
+
 namespace alica
 {
 class Blackboard;
