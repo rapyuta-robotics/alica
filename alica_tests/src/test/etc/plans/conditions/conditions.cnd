@@ -1,4 +1,9 @@
-[
+{
+  "comment": "",
+  "id": -1,
+  "name": "ConditionRepository",
+  "relativeDirectory": "",
+  "conditions": [
   {
     "blackboard": [],
     "comment": "",
@@ -309,3 +314,4 @@
     "relativeDirectory": "conditions"
   }
 ]
+}

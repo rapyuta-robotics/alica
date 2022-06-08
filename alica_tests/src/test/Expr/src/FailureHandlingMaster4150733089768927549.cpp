@@ -39,32 +39,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction4150733089768927549::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: 3194919312481305139 (3194919312481305139)
- *   - Comment:
- *   - Source2Dest: FailurePlan --> FailureHandled
- *
- * Precondition: 488794245455049811 (488794245455049811)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in FailurePlan:
- *   - FailurePlan (631515556091266493)
- */
-bool PreCondition488794245455049811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(3194919312481305139) ENABLED START*/
-    const auto twm = rp->getOwnID() == 8 ? alicaTests::TestWorldModel::getOne() : alicaTests::TestWorldModel::getTwo();
-    if (twm->transitionCondition3194919312481305139Enabled()) {
-        return rp->isAnyChildStatus(PlanStatus::Failed);
-    }
-    return false;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods4150733089768927549) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

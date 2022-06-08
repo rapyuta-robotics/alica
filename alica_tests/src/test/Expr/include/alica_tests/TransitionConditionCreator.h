@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/ITransitionConditionCreator.h>
-#include <functional>
 
 namespace alica
 {

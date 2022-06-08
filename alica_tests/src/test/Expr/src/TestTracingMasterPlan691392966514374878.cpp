@@ -39,28 +39,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction691392966514374878::getUtilityFu
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: 3626189722064037094 (3626189722064037094)
- *   - Comment:
- *   - Source2Dest: 2832176823961443072 --> 3077460522716760463
- *
- * Precondition: 1840401110297459509 (1840401110297459509)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in 2832176823961443072:
- *   - TestTracingSubPlan (1482512794732634139)
- */
-bool PreCondition1840401110297459509::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(3626189722064037094) ENABLED START*/
-    return alicaTests::TestWorldModel::getOne()->isPreCondition1840401110297459509();
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods691392966514374878) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
