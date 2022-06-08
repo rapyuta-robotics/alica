@@ -13,5 +13,4 @@ public interface IConstraintCodeGenerator {
     String expressionsPlanCheckingMethods(Plan plan);
     String expressionsBehaviourCheckingMethods(Behaviour behaviour);
     String constraintStateCheckingMethods(State state);
-    String expressionsStateCheckingMethods(State state);
 }
