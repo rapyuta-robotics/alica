@@ -26,9 +26,6 @@ std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t con
     case 1479556084493:
         return std::make_shared<Constraint1479556084493>();
         break;
-    case 1479557592662:
-        return std::make_shared<Constraint1479557592662>();
-        break;
     case 1524452937477:
         return std::make_shared<Constraint1524452937477>();
         break;
@@ -37,9 +34,6 @@ std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t con
         break;
     case 1524453470580:
         return std::make_shared<Constraint1524453470580>();
-        break;
-    case 1524453491764:
-        return std::make_shared<Constraint1524453491764>();
         break;
     case 1524463006078:
         return std::make_shared<Constraint1524463006078>();
