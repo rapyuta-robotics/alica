@@ -17,6 +17,8 @@ class RunningPlan;
 class PlanRepository;
 class Assignment;
 class AlicaEngine;
+class ConfigChangeListener;
+class TeamManager;
 
 /**
  * Responsibile for detecting cycles in assignment updates and reactions to these
@@ -24,7 +26,8 @@ class AlicaEngine;
 class CycleManager
 {
 public:
-    CycleManager(AlicaEngine* ae, RunningPlan* p);
+    CycleManager(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const TeamManager& teamManager, const PlanRepository& planRepository,
+            RunningPlan* p);
     ~CycleManager();
     void update();
     bool isOverridden() const;
@@ -48,7 +51,10 @@ private:
     };
     bool detectAllocationCycle();
 
-    AlicaEngine* _ae;
+    ConfigChangeListener& _configChangeListener;
+    const AlicaClock& _clock;
+    const TeamManager& _teamManager;
+    const PlanRepository& _planRepository;
     std::vector<AllocationDifference> _allocationHistory;
     int _newestAllocationDifference;
     int _maxAllocationCycles;

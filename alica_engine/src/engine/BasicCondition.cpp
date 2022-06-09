@@ -14,7 +14,7 @@ bool BasicCondition::isStateTimedOut(const AlicaTime timeOut, std::shared_ptr<Ru
 {
     if (rp->getStateStartTime() == AlicaTime::zero())
         return false;
-    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock().now() - rp->getStateStartTime();
+    AlicaTime timeDiff = rp->getAlicaClock().now() - rp->getStateStartTime();
     return timeDiff > timeOut;
 }
 
@@ -22,7 +22,7 @@ bool BasicCondition::isTimeOut(const AlicaTime timeOut, const AlicaTime startTim
 {
     if (startTime == AlicaTime::zero())
         return false;
-    AlicaTime timeDiff = rp->getAlicaEngine()->getAlicaClock().now() - startTime;
+    AlicaTime timeDiff = rp->getAlicaClock().now() - startTime;
     return timeDiff > timeOut;
 }
 } /* namespace alica */

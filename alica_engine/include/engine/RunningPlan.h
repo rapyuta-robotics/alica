@@ -100,14 +100,15 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-            const TeamManager& _teamManager, const Configuration* configuration);
-    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-            const TeamManager& _teamManager, const Plan* plan, const Configuration* configuration);
-    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-            const TeamManager& _teamManager, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-            const TeamManager& _teamManager, const Behaviour* b, const Configuration* configuration);
+    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const Plan* plan, const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const PlanType* pt, const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -220,8 +221,8 @@ public:
     AgentId getOwnID() const;
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
-    AlicaEngine* getAlicaEngine() const { return _ae; }
     int64_t getParentWrapperId(const RunningPlan* rp) const;
+    const AlicaClock& getAlicaClock() const { return _clock; };
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -248,8 +249,8 @@ private:
     const AlicaClock& _clock;
     IAlicaWorldModel* _worldModel;
     const RuntimePlanFactory& _runTimePlanFactory;
-    const TeamObserver& _teamObserver;
-    const TeamManager& _teamManager;
+    TeamObserver& _teamObserver;
+    TeamManager& _teamManager;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;
