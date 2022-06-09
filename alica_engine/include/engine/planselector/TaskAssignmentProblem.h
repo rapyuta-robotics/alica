@@ -30,7 +30,8 @@ class IAlicaWorldModel;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm);
+    TaskAssignmentProblem(const TeamObserver& teamObserver, TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
+            PartialAssignmentPool& pool, const IAlicaWorldModel* wm);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
@@ -59,8 +60,8 @@ private:
 
     PartialAssignment* calcNextBestPartialAssignment(const Assignment* oldAss);
 
-    const TeamManager& _tm;
-    const TeamObserver& _to;
+    const TeamManager& _teamManager;
+    const TeamObserver& _teamObserver;
     PartialAssignmentPool& _pool;
     PlanGrp _plans;
     AgentGrp _agents;

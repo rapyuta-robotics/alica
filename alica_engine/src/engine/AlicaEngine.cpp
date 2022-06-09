@@ -50,8 +50,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _teamObserver(editLog(), editRoleAssignment(), config, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
         , _syncModul(getTeamManager(), getPlanRepository(), config, _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _auth(config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
-        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), _roleAssignment, getSyncModul(), _auth, getTeamObserver(),
-                  editTeamManager(), _stepEngine, _stepCalled, getWorldModel(),getRuntimePlanFactory())
+        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
+                  editTeamObserver(), editTeamManager(),getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
 {

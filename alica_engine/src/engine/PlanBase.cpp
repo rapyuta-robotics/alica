@@ -28,27 +28,28 @@ namespace alica
  * @param masterplan A Plan
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
-        const IRoleAssignment& roleAssignment, const SyncModule& synchModule, const AuthorityManager& authorityManager, const TeamObserver& teamObserver,
-        TeamManager& teamManager, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel,const RuntimePlanFactory& runTimePlanFactory)
+        IRoleAssignment& roleAssignment, SyncModule& synchModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
-        , _log(log)
+        , _logger(log)
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
         , _synchModule(synchModule)
         , _authorityManager(authorityManager)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
+        , _planRepository(planRepository)
         , _stepEngine(stepEngine)
         , _stepCalled(stepCalled)
         , _worldModel(worldModel)
-        ,_runTimePlanFactory(runTimePlanFactory)
+        , _runTimePlanFactory(runTimePlanFactory)
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(ae, this)
+        , _ruleBook(configChangeListener, log, synchModule, teamObserver, teamManager, planRepository, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -146,7 +147,7 @@ void PlanBase::run(const Plan* masterPlan)
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
                 _isWaiting = true;
-                _stepModeCV.wait(lckStep, [_stepCalled] { return _stepCalled; });
+                _stepModeCV.wait(lckStep, [&] { return _stepCalled; });
                 _stepCalled = false;
                 _isWaiting = false;
                 if (!_running) {
@@ -241,9 +242,9 @@ void PlanBase::run(const Plan* masterPlan)
                 } else {
                     _statusMessage->currentState = "NONE";
                 }
-                auto tmpRole = ra.getOwnRole();
+                auto tmpRole = _roleAssignment.getOwnRole();
                 if (tmpRole) {
-                    _statusMessage->currentRole = ra.getOwnRole()->getName();
+                    _statusMessage->currentRole = _roleAssignment.getOwnRole()->getName();
                 } else {
                     _statusMessage->currentRole = "No Role";
                 }
@@ -361,17 +362,20 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(
+            _configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository, plan, configuration));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration));
+    _runningPlans.emplace_back(
+            new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository, b, configuration));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration));
+    _runningPlans.emplace_back(
+            new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository, pt, configuration));
     return _runningPlans.back().get();
 }
 
