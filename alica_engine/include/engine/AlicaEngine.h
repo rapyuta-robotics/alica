@@ -2,7 +2,7 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/RuntimeTransitionConditionFactory.h"
+#include "engine/TransitionConditionCallbackFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -89,7 +89,7 @@ public:
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
   
-    const RuntimeTransitionConditionFactory& getRuntimeTransitionConditionFactory() const { return *_runtimeTransitionConditionFactory; }
+    const TransitionConditionCallbackFactory& getTransitionConditionCallbackFactory() const { return *_transitionConditionCallbackFactory; }
     
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -131,6 +131,7 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
+    void initTransitionConditions();
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
@@ -148,7 +149,7 @@ private:
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
-    std::unique_ptr<RuntimeTransitionConditionFactory> _runtimeTransitionConditionFactory;
+    std::unique_ptr<TransitionConditionCallbackFactory> _transitionConditionCallbackFactory;
     PlanBase _planBase;
 
     /**

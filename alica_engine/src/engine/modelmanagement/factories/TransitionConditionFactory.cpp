@@ -11,15 +11,18 @@ namespace alica
 {
 TransitionCondition* TransitionConditionFactory::create(const YAML::Node& conditionNode, TransitionConditionRepository* conditionRepository)
 {
-    TransitionCondition* transitionCondition = new TransitionCondition();
+    std::unique_ptr<BlackboardBlueprint> blackboardBlueprint;
+    if (Factory::isValid(conditionNode[alica::Strings::blackboard])) {
+        blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(conditionNode[alica::Strings::blackboard]));
+    } else {
+        blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
+    }
+
+    TransitionConditionContext ctx{std::move(blackboardBlueprint)};
+    TransitionCondition* transitionCondition = new TransitionCondition(ctx);
     Factory::setAttributes(conditionNode, transitionCondition);
     Factory::storeElement(transitionCondition, alica::Strings::transitionCondition);
 
-    if (Factory::isValid(conditionNode[alica::Strings::blackboard])) {
-        transitionCondition->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(conditionNode[alica::Strings::blackboard]));
-    } else {
-        transitionCondition->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
-    }
     return transitionCondition;
 
 }

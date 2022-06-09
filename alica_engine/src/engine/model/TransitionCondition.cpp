@@ -1,4 +1,4 @@
-#include "engine/BasicTransitionCondition.h"
+#include "engine/model/TransitionCondition.h"
 
 #include "engine/AlicaEngine.h"
 #include "engine/RunningPlan.h"
@@ -11,15 +11,10 @@
 
 namespace alica
 {
+TransitionCondition::TransitionCondition(TransitionConditionContext& context)
+        : _blackboard(std::make_unique<Blackboard>(context.blackboardBlueprint.get())) {}
 
-BasicTransitionCondition::BasicTransitionCondition(TransitionConditionContext& context)
-        : _transitionCondition(context.transitionConditionModel)
-        , _evalCallback(context.evalCallback)
-        , _blackboard(std::make_unique<Blackboard>(context.transitionConditionModel->getBlackboardBlueprint())) {}
-
-BasicTransitionCondition::~BasicTransitionCondition() {}
-
-bool BasicTransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping)
+bool TransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping)
 {
     if (rp->isBehaviour()) {
         return false;
