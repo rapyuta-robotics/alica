@@ -20,7 +20,7 @@ class AlicaEngine;
 class PlanSelector
 {
 public:
-    PlanSelector(AlicaEngine* ae, PlanBase* pb);
+    PlanSelector(const TeamObserver& teamObserver, TeamManager& teamManager, PlanBase* pb);
     virtual ~PlanSelector();
 
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
@@ -37,7 +37,9 @@ private:
             RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
     PartialAssignmentPool _pap;
-    AlicaEngine* _ae;
+    const TeamObserver& _teamObserver;
+    TeamManager& _teamManager;
+
     PlanBase* _pb;
     const IAlicaWorldModel* _wm;
 };

@@ -54,8 +54,9 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-        const TeamManager& _teamManager, const Configuration* configuration)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -64,7 +65,7 @@ RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, 
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -77,8 +78,9 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-        const TeamManager& teamManager, const Plan* plan, const Configuration* configuration)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        const Plan* plan, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -87,16 +89,17 @@ RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, 
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
-        , _cycleManagement(ae, this)
-        , _basicPlan(ae->getRuntimePlanFactory().create(plan->getId(), plan))
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
+        , _basicPlan(runTimePlanFactory.create(plan->getId(), plan))
         , _parent(nullptr)
         , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-        const TeamManager& teamManager, const PlanType* pt, const Configuration* configuration)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        const PlanType* pt, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -105,14 +108,15 @@ RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, 
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
 }
 
-RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory, const TeamObserver& teamObserver,
-        const TeamManager& teamManager, const Behaviour* b, const Configuration* configuration)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -122,8 +126,8 @@ RunningPlan::RunningPlan(const AlicaClock& clock, IAlicaWorldModel* worldModel, 
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId(), b))
-        , _cycleManagement(ae, this)
+        , _basicBehaviour(runTimePlanFactory.create(b->getId(), b))
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -304,7 +308,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
-        _basicPlan = _runtimePlanFactory.create(plan->getId(), dynamic_cast<const Plan*>(plan));
+        _basicPlan = _runTimePlanFactory.create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
