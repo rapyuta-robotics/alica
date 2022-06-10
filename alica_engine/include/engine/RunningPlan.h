@@ -42,6 +42,8 @@ class Blackboard;
 class KeyMapping;
 class IAlicaWorldModel;
 class RuntimePlanFactory;
+class RuntimeBehaviourFactory;
+class VariableSyncModule;
 
 struct PlanStateTriple
 {
@@ -102,13 +104,16 @@ public:
     };
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            VariableSyncModule& resultStore, const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore, const Plan* plan,
             const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const Plan* plan, const Configuration* configuration);
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore, const PlanType* pt,
+            const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const Behaviour* b, const Configuration* configuration);
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const RuntimeBehaviourFactory& runTimeBehaviourFactory,
+            VariableSyncModule& resultStore, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -223,6 +228,7 @@ public:
     const Configuration* getConfiguration() const;
     int64_t getParentWrapperId(const RunningPlan* rp) const;
     const AlicaClock& getAlicaClock() const { return _clock; };
+    VariableSyncModule& editResultStore() const { return _resultStore; }
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -251,6 +257,7 @@ private:
     const RuntimePlanFactory& _runTimePlanFactory;
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;
+    VariableSyncModule& _resultStore;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;

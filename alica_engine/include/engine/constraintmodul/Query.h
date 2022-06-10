@@ -154,7 +154,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule& rs = pi->getAlicaEngine()->editResultStore();
+        VariableSyncModule& rs = pi->editResultStore();
         for (const ResultType& value : solverResult) {
             rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;
