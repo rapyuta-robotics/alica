@@ -55,12 +55,13 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const Configuration* configuration)
+        VariableSyncModule& resultStore, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
+        , _resultStore(resultStore)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
@@ -79,12 +80,13 @@ RunningPlan::~RunningPlan()
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const Plan* plan, const Configuration* configuration)
+        VariableSyncModule& resultStore, const Plan* plan, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
+        , _resultStore(resultStore)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
@@ -98,12 +100,13 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const PlanType* pt, const Configuration* configuration)
+        VariableSyncModule& resultStore, const PlanType* pt, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
+        , _resultStore(resultStore)
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
@@ -115,7 +118,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const Behaviour* b, const Configuration* configuration)
+        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -125,7 +128,8 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(runTimePlanFactory.create(b->getId(), b))
+        , _basicBehaviour(runTimeBehaviourFactory.create(b->getId(), b))
+        , _resultStore(resultStore)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
