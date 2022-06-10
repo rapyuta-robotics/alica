@@ -35,6 +35,8 @@ class PlanType;
 class Plan;
 class IAlicaWorldModel;
 class RuntimePlanFactory;
+class RuntimeBehaviourFactory;
+class VariableSyncModule;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -45,7 +47,7 @@ public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& synchModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
             const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel,
-            const RuntimePlanFactory& runTimePlanFactory);
+            const RuntimePlanFactory& runTimePlanFactory, const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
@@ -77,12 +79,6 @@ private:
      * List of RunningPlans scheduled for out-of-loop evaluation.
      */
 
-
-
-        
-
-
-
     ConfigChangeListener& _configChangeListener;
     const AlicaClock& _clock;
     Logger& _logger;
@@ -97,6 +93,8 @@ private:
     bool& _stepCalled;
     IAlicaWorldModel* _worldModel;
     const RuntimePlanFactory& _runTimePlanFactory;
+    const RuntimeBehaviourFactory& _runTimeBehaviourFactory;
+    VariableSyncModule& _resultStore;
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;
