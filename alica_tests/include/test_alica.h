@@ -54,7 +54,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    virtual bool getDelayStart() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
@@ -113,20 +112,6 @@ protected:
     std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
     std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
     virtual bool getDelayStart() { return true; }
-};
-
-class TestClock : public AlicaClock
-{
-public:
-    TestClock()
-            : _now(AlicaClock::now())
-    {
-    }
-    AlicaTime now() const override { return _now; }
-    void increment(AlicaTime t) { _now += t; }
-
-private:
-    AlicaTime _now;
 };
 
 class TestClock : public AlicaClock
