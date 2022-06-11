@@ -22,6 +22,7 @@ class SimplePlanTree;
 class IRoleAssignment;
 class PlanRepository;
 class IAlicaCommunication;
+class ConfigChangeListener;
 
 /**
  * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
@@ -30,8 +31,8 @@ class IAlicaCommunication;
 class TeamObserver
 {
 public:
-    TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock,
-            const PlanRepository& planRepository, TeamManager& teamManager);
+    TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
+            const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager);
     ~TeamObserver();
 
     void tick(RunningPlan* root);
@@ -46,20 +47,22 @@ public:
     void notifyRobotLeftPlan(const AbstractPlan* plan) const;
     void handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming);
     void close();
+    void reload(const YAML::Node& config);
 
 private:
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
 
+    ConfigChangeListener& _configChangeListener;
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
-    const YAML::Node& _config;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     const PlanRepository& _planRepository;
     TeamManager& _tm;
     Agent* _me;
+    bool _maySendMessages;
 
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;

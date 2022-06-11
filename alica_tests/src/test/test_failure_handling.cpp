@@ -10,6 +10,7 @@ namespace
 class AlicaFailureHandlingEnabledFixture : public AlicaTestFixture
 {
 protected:
+    bool getDelayStart() override { return false; }
     const char* getMasterPlanName() const override { return "FailureHandlingMaster"; }
     const char* getHostName() const override { return "hairy"; }
     void SetUp() override
@@ -22,6 +23,7 @@ protected:
 class AlicaFailureHandlingDisabledFixture : public AlicaTestFixture
 {
 protected:
+    bool getDelayStart() override { return false; }
     const char* getMasterPlanName() const override { return "FailureHandlingMaster"; }
     const char* getHostName() const override { return "nase"; }
     void SetUp() override
