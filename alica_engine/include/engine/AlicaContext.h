@@ -300,6 +300,7 @@ public:
      */
     template <class SolverType>
     SolverType& getSolver() const;
+    ISolverBase& getSolverBase(const std::type_info& solverType) const;
 
     /**
      * Check whether a particular solver is associated with this alica instance.
@@ -408,6 +409,9 @@ public:
      */
     template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
+
+    //[[deprecated("temporary method")]] 
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& getSolvers() const {return _solvers;};
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
