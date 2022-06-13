@@ -37,8 +37,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
-            bool stepEngine, const AgentId agentID = InvalidAgentID);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams);
     ~AlicaEngine();
 
     // State modifiers:
@@ -137,15 +136,16 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
+    Logger _log;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    Logger _log;
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     PlanBase _planBase;
+    bool _initialized{false};
 
     /**
      * TODO: Make VariableSyncModule a stack variable.

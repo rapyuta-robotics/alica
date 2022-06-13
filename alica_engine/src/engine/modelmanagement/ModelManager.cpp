@@ -38,10 +38,10 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(PlanRepository& planRepository, ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder)
-        : _planRepository(planRepository)
-        , _configChangeListener(configChangeListener)
+ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository)
+        : _configChangeListener(configChangeListener)
         , domainConfigFolder(domainConfigFolder)
+        , _planRepository(planRepository)
 {
     auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
