@@ -116,7 +116,7 @@ private:
 template <class SolverType>
 bool Query::existsSolution(const RunningPlan* pi)
 {
-    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
@@ -135,12 +135,12 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
 
-    if (!pi->getAlicaEngine()->existSolver<SolverType>()) {
+    if (!pi->existSolver<SolverType>()) {
         std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
-    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getSolver<SolverType>();
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }

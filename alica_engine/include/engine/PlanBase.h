@@ -37,6 +37,7 @@ class IAlicaWorldModel;
 class RuntimePlanFactory;
 class RuntimeBehaviourFactory;
 class VariableSyncModule;
+class ISolverBase;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -47,7 +48,8 @@ public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& synchModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
             const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel,
-            const RuntimePlanFactory& runTimePlanFactory, const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore);
+            const RuntimePlanFactory& runTimePlanFactory, const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
@@ -95,6 +97,7 @@ private:
     const RuntimePlanFactory& _runTimePlanFactory;
     const RuntimeBehaviourFactory& _runTimeBehaviourFactory;
     VariableSyncModule& _resultStore;
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;
