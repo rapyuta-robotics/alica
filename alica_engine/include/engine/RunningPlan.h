@@ -44,6 +44,7 @@ class IAlicaWorldModel;
 class RuntimePlanFactory;
 class RuntimeBehaviourFactory;
 class VariableSyncModule;
+class ISolverBase;
 
 struct PlanStateTriple
 {
@@ -104,16 +105,17 @@ public:
     };
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const Configuration* configuration);
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore, const Plan* plan,
-            const Configuration* configuration);
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan, const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore, const PlanType* pt,
-            const Configuration* configuration);
+            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt, const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
             TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const RuntimeBehaviourFactory& runTimeBehaviourFactory,
-            VariableSyncModule& resultStore, const Behaviour* b, const Configuration* configuration);
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b,
+            const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -230,6 +232,16 @@ public:
     const AlicaClock& getAlicaClock() const { return _clock; };
     VariableSyncModule& editResultStore() const { return _resultStore; }
 
+    //[[deprecated("temporary method")]] 
+    template <class SolverType>
+    SolverType& getSolver() const;
+    ISolverBase& getSolverBase(const std::type_info& solverType) const;
+
+    //[[deprecated("temporary method")]] 
+    template <class SolverType>
+    bool existSolver() const;
+
+
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
@@ -258,12 +270,28 @@ private:
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;
     VariableSyncModule& _resultStore;
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
 };
+
+  template <class SolverType>
+SolverType& RunningPlan::getSolver() const
+{
+    auto cit = _solvers.find(typeid(SolverType).hash_code());
+    assert(cit != _solvers.end());
+    return static_cast<SolverType&>(*(cit->second));
+}
+
+template <class SolverType>
+bool RunningPlan::existSolver() const
+{
+    auto cit = _solvers.find(typeid(SolverType).hash_code());
+    return (cit != _solvers.end());
+}
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
 

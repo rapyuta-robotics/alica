@@ -56,13 +56,14 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const Configuration* configuration)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
         , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
@@ -81,13 +82,15 @@ RunningPlan::~RunningPlan()
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const Plan* plan, const Configuration* configuration)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
+        const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
         , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
@@ -101,13 +104,15 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const PlanType* pt, const Configuration* configuration)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+        const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
         , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
@@ -119,7 +124,8 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore, const Behaviour* b, const Configuration* configuration)
+        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -131,6 +137,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _assignment()
         , _basicBehaviour(runTimeBehaviourFactory.create(b->getId(), b))
         , _resultStore(resultStore)
+        , _solvers(solvers)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
