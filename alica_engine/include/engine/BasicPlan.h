@@ -2,7 +2,6 @@
 
 #include "engine/IPlanCreator.h"
 #include "engine/RunnableObject.h"
-#include "engine/BasicTransitionCondition.h"
 #include "engine/Types.h"
 #include "engine/blackboard/KeyMapping.h"
 
@@ -44,8 +43,6 @@ public:
 
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     int64_t getId() const;
-    bool evalTransitionCondition(const Transition* transition, const RunningPlan* rp, const IAlicaWorldModel* wm);
-    void initTransitionConditions(const TransitionGrp& transitions);
 
 protected:
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
@@ -69,6 +66,5 @@ private:
 
     bool _isMasterPlan;
     const Plan* _plan;
-    std::unordered_map<int64_t, std::unique_ptr<BasicTransitionCondition>> _transitionConditions;
 };
 } // namespace alica

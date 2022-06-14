@@ -12,6 +12,8 @@
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 
 #include <algorithm>
 #include <alica_common_config/debug_output.h>
@@ -88,7 +90,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
-    _runtimeTransitionConditionFactory = std::make_unique<RuntimeTransitionConditionFactory>(std::move(creatorCtx.transitionConditionCreator), _ctx.getWorldModel());
+    _transitionConditionCallbackFactory = std::make_unique<TransitionConditionCallbackFactory>(std::move(creatorCtx.transitionConditionCreator), _ctx.getWorldModel());
 
     _stepCalled = false;
     _roleAssignment->init();
@@ -101,6 +103,8 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+
+    initTransitionConditions();
     return true;
 }
 
@@ -122,6 +126,14 @@ void AlicaEngine::terminate()
     _teamObserver.close();
     _log.close();
     _variableSyncModule->close();
+}
+
+void AlicaEngine::initTransitionConditions()
+{
+    for (const Transition* transition : _planRepository.getTransitions()) {
+        TransitionCondition* transitionCondition = transition->getTransitionCondition();
+        transitionCondition->setEvalCallback(_transitionConditionCallbackFactory->create(transitionCondition));
+    }
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const

@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <functional>
 
 namespace alica
 {
@@ -12,18 +13,28 @@ class AbstractPlan;
 class ModelFactory;
 class TransitionConditionFactory;
 class BlackboardBlueprint;
+class KeyMapping;
+class IAlicaWorldModel;
+class RunningPlan;
+
+struct TransitionConditionContext
+{
+    std::unique_ptr<BlackboardBlueprint> blackboardBlueprint;
+};
 
 class TransitionCondition : public AlicaElement
 {
 public:
-    TransitionCondition() = default;
+    TransitionCondition(TransitionConditionContext& context);
     virtual ~TransitionCondition() = default;
-    const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
+    virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
+    void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
 private:
     // TODO: Check if friends are necessary
     friend ModelFactory;
     friend TransitionConditionFactory;
 
-    std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
+    std::unique_ptr<Blackboard> _blackboard;
+    TransitionConditionCallback _evalCallback;
 };
 } // namespace alica

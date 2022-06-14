@@ -29,7 +29,7 @@ public:
     const State* getOutState() const { return _outState; }
     const State* getInState() const { return _inState; }
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
-    const TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
+    TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
 
 private:

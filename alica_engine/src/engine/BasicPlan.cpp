@@ -74,16 +74,4 @@ int64_t BasicPlan::getId() const
     return _plan->getId();
 }
 
-bool BasicPlan::evalTransitionCondition(const Transition* transition, const RunningPlan* rp, const IAlicaWorldModel* wm)
-{
-    return _transitionConditions[transition->getId()]->evaluate(rp, wm, transition->getKeyMapping());
-}
-
-void BasicPlan::initTransitionConditions(const TransitionGrp& transitions)
-{
-    for (auto it = transitions.begin(); it != transitions.end(); it++) {
-        _transitionConditions[(*it)->getId()] = _engine->getRuntimeTransitionConditionFactory().create((*it)->getTransitionCondition());
-    }
-}
-
 } // namespace alica

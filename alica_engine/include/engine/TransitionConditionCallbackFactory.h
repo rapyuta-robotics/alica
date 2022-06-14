@@ -2,6 +2,7 @@
 
 #include "engine/ITransitionConditionCreator.h"
 #include "engine/default/DefaultTransitionConditionCreator.h"
+#include "engine/Types.h"
 
 #include <memory>
 
@@ -11,13 +12,13 @@ class IAlicaWorldModel;
 class TransitionCondition;
 class BasicTransitionCondition;
 
-class RuntimeTransitionConditionFactory
+class TransitionConditionCallbackFactory
 {
 public:
-    RuntimeTransitionConditionFactory(std::unique_ptr<ITransitionConditionCreator>&& tcc, IAlicaWorldModel* wm);
-    ~RuntimeTransitionConditionFactory() = default;
+    TransitionConditionCallbackFactory(std::unique_ptr<ITransitionConditionCreator>&& tcc, IAlicaWorldModel* wm);
+    ~TransitionConditionCallbackFactory() = default;
 
-    std::unique_ptr<BasicTransitionCondition> create(const TransitionCondition* transitionConditionModel) const;
+    TransitionConditionCallback create(const TransitionCondition* transitionConditionModel) const;
 
 private:
     std::unique_ptr<ITransitionConditionCreator> _creator;
