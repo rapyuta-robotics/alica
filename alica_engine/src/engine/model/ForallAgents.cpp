@@ -75,7 +75,7 @@ bool ForallAgents::addDomainVariables(const RunningPlan& p, std::vector<AgentVar
     bool addedAgent = false;
     bool changedAgent = false;
 
-    const TeamManager& tm = p.getAlicaEngine()->getTeamManager();
+    const TeamManager& tm = p.getTeamManager();
     switch (getScopeType()) {
     case PLANSCOPE:
         if (p.getActivePlan() == getScopedPlan()) {

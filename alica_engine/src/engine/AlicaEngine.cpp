@@ -40,19 +40,21 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
+        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), this))
+        , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(_ctx.getWorldModel(), this))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
                   getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
+        , _syncModul(getTeamManager(), getPlanRepository(), config, _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _teamObserver(editLog(), editRoleAssignment(), config, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
-        , _syncModul(getTeamManager(), getPlanRepository(), config, _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _auth(config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
-                  getRuntimeBehaviourFactory(),editResultStore(),_ctx.getSolvers())
+                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
 {
@@ -94,8 +96,8 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
-    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
+    _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
+    _planFactory->init(std::move(creatorCtx.planCreator));
 
     _stepCalled = false;
     _roleAssignment->init();
