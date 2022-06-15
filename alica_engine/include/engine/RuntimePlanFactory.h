@@ -22,7 +22,6 @@ class IAlicaTimerFactory;
 class RuntimePlanFactory
 {
 public:
-    // TODO: remove engine reference later
     RuntimePlanFactory(IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
     ~RuntimePlanFactory() = default;
     void init(std::unique_ptr<IPlanCreator>&& pc);
