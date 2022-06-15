@@ -241,6 +241,9 @@ public:
     template <class SolverType>
     bool existSolver() const;
 
+    //[[deprecated("temporary method")]] 
+    TeamManager& getTeamManager() const;
+
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

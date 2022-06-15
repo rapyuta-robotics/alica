@@ -940,4 +940,9 @@ int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
     return wrapperId;
 }
 
+TeamManager& RunningPlan::getTeamManager() const
+{
+    return _teamManager;
+}
+
 } /* namespace alica */

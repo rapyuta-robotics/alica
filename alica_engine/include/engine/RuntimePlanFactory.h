@@ -19,8 +19,9 @@ class RuntimePlanFactory
 {
 public:
     // TODO: remove engine reference later
-    RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, AlicaEngine* engine);
+    RuntimePlanFactory(IAlicaWorldModel* wm, AlicaEngine* engine);
     ~RuntimePlanFactory() = default;
+    void init(std::unique_ptr<IPlanCreator>&& pc);
 
     std::unique_ptr<BasicPlan> create(int64_t id, const Plan* planModel) const;
 

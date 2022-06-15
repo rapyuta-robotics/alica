@@ -19,8 +19,9 @@ class RuntimeBehaviourFactory
 {
 public:
     // TODO: remove engine reference later
-    RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine);
+    RuntimeBehaviourFactory(IAlicaWorldModel* wm, AlicaEngine* engine);
     ~RuntimeBehaviourFactory() = default;
+    void init(std::unique_ptr<IBehaviourCreator>&& bc);
 
     std::unique_ptr<BasicBehaviour> create(int64_t id, const Behaviour* behaviourModel) const;
 
