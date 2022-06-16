@@ -81,8 +81,14 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
 
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModel(), ae->getRuntimePlanFactory(),
+            ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
+            ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+
+    // fake inform the team
+
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
@@ -132,8 +138,14 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     ae->editTeamObserver().tick(nullptr);
     ae->editRoleAssignment().tick();
 
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModel(), ae->getRuntimePlanFactory(),
+            ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
+            ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+
+    // fake inform the team observer about roles of none existing robots
+    // alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
