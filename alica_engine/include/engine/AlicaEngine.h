@@ -30,7 +30,6 @@ class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
-class DefaultTransitionConditionCreator;
 
 class AlicaEngine
 {
