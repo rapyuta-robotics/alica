@@ -4,6 +4,7 @@
 #include "engine/RunningPlan.h"
 #include "engine/BasicPlan.h"
 #include "engine/blackboard/Blackboard.h"
+#include "engine/blackboard/BlackboardUtil.h"
 #include "engine/blackboard/KeyMapping.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
@@ -20,7 +21,7 @@ bool TransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel
         return false;
     }
     assert(_evalCallback);
-    keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get());
+    BlackboardUtil::setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
     return _evalCallback(_blackboard.get(), rp, wm);
 }
 } /* namespace alica */
