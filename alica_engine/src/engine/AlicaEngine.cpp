@@ -90,7 +90,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
-    _transitionConditionCallbackFactory = std::make_unique<TransitionConditionCallbackFactory>(std::move(creatorCtx.transitionConditionCreator), _ctx.getWorldModel());
 
     _stepCalled = false;
     _roleAssignment->init();
@@ -104,7 +103,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _variableSyncModule->init();
     _auth.init();
 
-    initTransitionConditions();
+    initTransitionConditions(creatorCtx.transitionConditionCreator.get());
     return true;
 }
 
@@ -128,11 +127,15 @@ void AlicaEngine::terminate()
     _variableSyncModule->close();
 }
 
-void AlicaEngine::initTransitionConditions()
+void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
 {
     for (const Transition* transition : _planRepository.getTransitions()) {
         TransitionCondition* transitionCondition = transition->getTransitionCondition();
-        transitionCondition->setEvalCallback(_transitionConditionCallbackFactory->create(transitionCondition));
+        if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
+            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
+        } else {
+            transitionCondition->setEvalCallback(creator->createConditions(transitionCondition->getId()));
+        }
     }
 }
 

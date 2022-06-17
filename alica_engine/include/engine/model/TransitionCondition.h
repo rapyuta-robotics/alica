@@ -17,15 +17,10 @@ class KeyMapping;
 class IAlicaWorldModel;
 class RunningPlan;
 
-struct TransitionConditionContext
-{
-    std::unique_ptr<BlackboardBlueprint> blackboardBlueprint;
-};
-
 class TransitionCondition : public AlicaElement
 {
 public:
-    TransitionCondition(TransitionConditionContext& context);
+    TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint);
     virtual ~TransitionCondition() = default;
     virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };

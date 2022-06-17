@@ -2,7 +2,6 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/TransitionConditionCallbackFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -13,6 +12,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -30,6 +30,7 @@ class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
+class DefaultTransitionConditionCreator;
 
 class AlicaEngine
 {
@@ -89,8 +90,6 @@ public:
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
   
-    const TransitionConditionCallbackFactory& getTransitionConditionCallbackFactory() const { return *_transitionConditionCallbackFactory; }
-    
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
@@ -131,7 +130,7 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
-    void initTransitionConditions();
+    void initTransitionConditions(ITransitionConditionCreator* creator);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
@@ -149,7 +148,7 @@ private:
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
-    std::unique_ptr<TransitionConditionCallbackFactory> _transitionConditionCallbackFactory;
+    DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
     PlanBase _planBase;
 
     /**

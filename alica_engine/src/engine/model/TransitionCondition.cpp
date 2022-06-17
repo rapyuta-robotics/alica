@@ -11,14 +11,15 @@
 
 namespace alica
 {
-TransitionCondition::TransitionCondition(TransitionConditionContext& context)
-        : _blackboard(std::make_unique<Blackboard>(context.blackboardBlueprint.get())) {}
+TransitionCondition::TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint)
+        : _blackboard(std::make_unique<Blackboard>(blackboardBlueprint.get())) {}
 
 bool TransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping)
 {
     if (rp->isBehaviour()) {
         return false;
     }
+    assert(_evalCallback);
     keyMapping->setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get());
     return _evalCallback(_blackboard.get(), rp, wm);
 }
