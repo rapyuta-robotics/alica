@@ -43,9 +43,9 @@ public:
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const Synchronisation* st);
 
+private:
     void reload(const YAML::Node& config);
 
-private:
     bool _running;
     AgentId _myId;
     ConfigChangeListener& _configChangeListener;
