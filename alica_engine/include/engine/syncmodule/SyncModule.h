@@ -43,6 +43,8 @@ public:
     void sendAcks(const std::vector<SyncData>& syncDataList) const;
     void synchronisationDone(const Synchronisation* st);
 
+    void reload(const YAML::Node& config);
+
 private:
     void reload(const YAML::Node& config);
 
