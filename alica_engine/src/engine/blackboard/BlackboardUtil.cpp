@@ -3,6 +3,9 @@
 #include "engine/blackboard/KeyMapping.h"
 #include "engine/blackboard/Blackboard.h"
 
+#include <alica_common_config/debug_output.h>
+#include <iostream>
+
 namespace alica 
 {
 void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb, const KeyMapping* keyMapping)
