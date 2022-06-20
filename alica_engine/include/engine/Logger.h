@@ -23,6 +23,7 @@ class TeamManager;
 
 /**
  * The Plan Logger will write a log file according to the settings in the Alica.conf file.
+ * This class has nothing to do with IAlicaLogger.
  */
 namespace detail
 {
