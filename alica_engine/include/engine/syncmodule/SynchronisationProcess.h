@@ -22,7 +22,7 @@ class AlicaEngine;
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(const AlicaEngine* ae, AgentId myID, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(const AlicaClock& clock, AgentId myID, const Synchronisation* sync, SyncModule* sm);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -40,7 +40,7 @@ private:
 
     friend std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& sync);
 
-    const AlicaEngine* _ae;
+    const AlicaClock& _clock;
     std::mutex _syncMutex;
     std::mutex _rowOkMutex;
     SyncModule* _syncModule;
