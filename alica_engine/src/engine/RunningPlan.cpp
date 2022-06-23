@@ -567,7 +567,6 @@ void RunningPlan::activate()
         _basicBehaviour->start(this);
     } else if (_activeTriple.abstractPlan) {
         _basicPlan->start(this);
-        _basicPlan->initTransitionConditions(getActivePlanAsPlan()->getTransitions());
     }
 
     attachPlanConstraints();
@@ -886,12 +885,6 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
 {
     assert(!isBehaviour());
     return _basicPlan->getKeyMapping(wrapperId);
-}
-
-bool RunningPlan::evalTransitionCondition(const Transition* transition, const IAlicaWorldModel* wm)
-{
-    assert(!isBehaviour());
-    return _basicPlan->evalTransitionCondition(transition, this, wm);
 }
 
 int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const

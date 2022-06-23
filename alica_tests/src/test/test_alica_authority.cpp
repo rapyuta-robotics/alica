@@ -7,6 +7,7 @@
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/UtilityFunctionCreator.h>
+#include <alica_tests/TransitionConditionCreator.h>
 
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
@@ -36,6 +37,7 @@ namespace
 class AlicaEngineAuthorityManager : public AlicaTestMultiAgentFixture
 {
 protected:
+    AlicaEngineAuthorityManager(){};
     const int agentCount = 2;
     const char* getRoleSetName() const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "AuthorityTestMaster"; }
