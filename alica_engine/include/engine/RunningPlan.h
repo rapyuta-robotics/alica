@@ -216,7 +216,6 @@ public:
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
-    bool evalTransitionCondition(const Transition* transition, const IAlicaWorldModel* wm);
     int64_t getParentWrapperId(const RunningPlan* rp) const;
 
 private:

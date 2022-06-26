@@ -4,6 +4,7 @@
 #include "engine/BasicPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
+#include "engine/blackboard/BlackboardUtil.h"
 
 #include <assert.h>
 #include <iostream>
@@ -89,7 +90,7 @@ void RunnableObject::setupBlackboard()
         auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
 
         _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-        keyMapping->setInput(parentPlan->getBlackboard().get(), _blackboard.get());
+        BlackboardUtil::setInput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
     } else {
         // Inherit blackboard
         BasicPlan* parentPlan = _runningplanContext->getParent()->getBasicPlan();
@@ -102,7 +103,7 @@ void RunnableObject::cleanupBlackboard()
     if (_runningplanContext->getParent() && !getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
         auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
-        keyMapping->setOutput(parentPlan->getBlackboard().get(), _blackboard.get());
+        BlackboardUtil::setOutput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
     }
 }
 

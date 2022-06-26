@@ -2,7 +2,6 @@
 
 #include "engine/AlicaContext.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/RuntimeTransitionConditionFactory.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
@@ -13,6 +12,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -38,8 +38,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
-            bool stepEngine, const AgentId agentID = InvalidAgentID);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams);
     ~AlicaEngine();
 
     // State modifiers:
@@ -89,8 +88,6 @@ public:
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
   
-    const RuntimeTransitionConditionFactory& getRuntimeTransitionConditionFactory() const { return *_runtimeTransitionConditionFactory; }
-    
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
@@ -131,6 +128,7 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
+    void initTransitionConditions(ITransitionConditionCreator* creator);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
@@ -140,16 +138,17 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
+    Logger _log;
+    std::unique_ptr<IRoleAssignment> _roleAssignment;
     TeamObserver _teamObserver;
     SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    Logger _log;
-    std::unique_ptr<IRoleAssignment> _roleAssignment;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
-    std::unique_ptr<RuntimeTransitionConditionFactory> _runtimeTransitionConditionFactory;
+    DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
     PlanBase _planBase;
+    bool _initialized{false};
 
     /**
      * TODO: Make VariableSyncModule a stack variable.

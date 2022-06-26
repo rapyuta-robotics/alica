@@ -18,8 +18,6 @@ public:
     const KeyMappingList& getOutputMapping() const;
     void addInputMapping(const std::string& parentKey, const std::string& childKey);
     void addOutputMapping(const std::string& parentKey, const std::string& childKey);
-    void setInput(const Blackboard* parent_bb, Blackboard* child_bb) const;
-    void setOutput(Blackboard* parent_bb, const Blackboard* child_bb) const;
 
 private:
     KeyMappingList _inputMapping;

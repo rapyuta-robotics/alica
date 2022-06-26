@@ -25,6 +25,9 @@ class AlicaEngineAgentDiesTest : public AlicaTestMultiAgentFixture
 {
 protected:
     const int agentCount = 2;
+    AlicaEngineAgentDiesTest(){};
+    bool getDelayStart() override { return false; }
+    bool getUseTestClock() override { return true; }
     const char* getRoleSetName() const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "MultiAgentTestMaster"; }
     int getAgentCount() const override { return agentCount; }
@@ -38,20 +41,6 @@ protected:
     }
 };
 
-class TestClock : public AlicaClock
-{
-public:
-    TestClock()
-            : _now(AlicaClock::now())
-    {
-    }
-    AlicaTime now() const override { return _now; }
-    void increment(AlicaTime t) { _now += t; }
-
-private:
-    AlicaTime _now;
-};
-
 inline TestClock& getTestClock(AlicaContext* ac)
 {
     return static_cast<TestClock&>(const_cast<AlicaClock&>(ac->getAlicaClock()));
@@ -61,11 +50,6 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 
-    acs[0]->setClock<TestClock>();
-    acs[1]->setClock<TestClock>();
-
-    aes[0]->start();
-    aes[1]->start();
     // Let agent announce their presence
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
     // Process presence announcement
