@@ -28,7 +28,6 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 void Base::start()
@@ -39,6 +38,7 @@ void Base::start()
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));
+    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 Base::~Base()

@@ -7,7 +7,7 @@
 
 /*PROTECTED REGION ID(conditionSource) ENABLED START*/
 // Add additional options here
-#include "aliica_ros_turtlesim/world_model.hpp"
+#include <alica_ros_turtlesim/world_model.hpp>
 /*PROTECTED REGION END*/
 
 namespace alica
