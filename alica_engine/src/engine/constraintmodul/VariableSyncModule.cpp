@@ -16,7 +16,7 @@
 namespace alica
 {
 VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock,
-        TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+        TeamManager& teamManager, IAlicaTimerFactory& timerFactory)
         : _running(false)
         , _timer(nullptr)
         , _distThreshold(0)

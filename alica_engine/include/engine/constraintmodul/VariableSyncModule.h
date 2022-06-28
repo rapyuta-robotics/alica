@@ -24,7 +24,7 @@ class VariableSyncModule
 {
 public:
     VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager,
-            const IAlicaTimerFactory& timerFactory);
+            IAlicaTimerFactory& timerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -73,7 +73,7 @@ private:
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     TeamManager& _teamManager;
-    const IAlicaTimerFactory& _timerFactory;
+    IAlicaTimerFactory& _timerFactory;
     bool _maySendMessages;
 
     mutable std::mutex _mutex;
