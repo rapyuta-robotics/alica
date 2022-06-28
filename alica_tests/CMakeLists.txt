@@ -50,7 +50,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
         src/test/test_alica_behaviourtrigger.cpp
-        #src/test/test_alica_condition_plan.cpp#NO
+        src/test/test_alica_condition_plan.cpp#NO
         src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
