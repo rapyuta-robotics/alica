@@ -137,6 +137,32 @@ const TeamManager& RunnableObject::getTeamManager() const
     return *_teamManager;
 }
 
+void RunnableObject::setAlicaCommunication(const IAlicaCommunication* communication)
+{
+    _communication = communication;
+}
+void RunnableObject::setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory)
+{
+    _traceFactory = traceFactory;
+}
+void RunnableObject::setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory)
+{
+    _timerFactory = timerFactory;
+}
+void RunnableObject::setPlanBase(PlanBase* planBase)
+{
+    _planBase = planBase;
+}
+void RunnableObject::setTeamManager(const TeamManager* teamManager)
+{
+    _teamManager = teamManager;
+}
+
+const TeamManager& RunnableObject::getTeamManager() const
+{
+    return *_teamManager;
+}
+
 // Tracing methods
 void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {

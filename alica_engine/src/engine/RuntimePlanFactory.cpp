@@ -33,7 +33,6 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
         return nullptr;
     }
 
-    // TODO Cleanup: get rid of this later, behaviour only needs traceFactory, teamManager and not entire engine
     basicPlan->setAlicaTraceFactory(_traceFactory);
     basicPlan->setTeamManager(&_teamManager);
     basicPlan->setAlicaTimerFactory(&_timerFactory);

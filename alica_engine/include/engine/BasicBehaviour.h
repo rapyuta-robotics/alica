@@ -47,15 +47,18 @@ public:
     using RunnableObject::getPlanContext;
     using RunnableObject::getTeamManager;
     using RunnableObject::getWorldModel;
-    using RunnableObject::setAlicaCommunication;
-    using RunnableObject::setAlicaTimerFactory;
-    using RunnableObject::setAlicaTraceFactory;
     using RunnableObject::setInterval;
     using RunnableObject::setPlanBase;
     using RunnableObject::setTeamManager;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
+    using RunnableObject::setTeamManager;
+    using RunnableObject::setPlanBase;
+    using RunnableObject::setAlicaTraceFactory;
+    using RunnableObject::setAlicaTimerFactory;
+    using RunnableObject::setAlicaCommunication;
+    using RunnableObject::getTeamManager;
 
     virtual void run(void* msg) = 0;
     /**
