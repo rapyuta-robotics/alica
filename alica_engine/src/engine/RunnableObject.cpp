@@ -137,6 +137,11 @@ const TeamManager& RunnableObject::getTeamManager() const
     return *_teamManager;
 }
 
+const TeamManager& RunnableObject::getTeamManager() const
+{
+    return *_teamManager;
+}
+
 // Tracing methods
 void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
