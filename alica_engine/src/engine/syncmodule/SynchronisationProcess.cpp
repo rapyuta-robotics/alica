@@ -19,9 +19,8 @@ namespace alica
 using std::mutex;
 using std::shared_ptr;
 
-SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, AgentId myID, const Synchronisation* sync, SyncModule* sm)
-        : _ae(ae)
-        , _myID(myID)
+SynchronisationProcess::SynchronisationProcess(const AlicaClock& clock, AgentId myID, const Synchronisation* sync, SyncModule* sm)
+        : _myID(myID)
         , _synchronisation(sync)
         , _syncModule(sm)
         , _readyForSync(false)
@@ -30,8 +29,9 @@ SynchronisationProcess::SynchronisationProcess(const AlicaEngine* ae, AgentId my
         , _myRow(nullptr)
         , _lastTalkData(nullptr)
         , _synchronisationDone(false)
+        , _clock(clock)
 {
-    _syncStartTime = _ae->getAlicaClock().now();
+    _syncStartTime = _clock.now();
     for (const Transition* t : sync->getInSync()) {
         _connectedTransitions.push_back(t->getId());
     }
@@ -125,7 +125,7 @@ bool SynchronisationProcess::isValid(uint64_t curTick)
         return false;
     }
 
-    AlicaTime now = _ae->getAlicaClock().now();
+    AlicaTime now = _clock.now();
 
     if (_lastTalkTime != AlicaTime::zero()) // talked already
     {
@@ -197,8 +197,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             // late acks...
             if (_readyForSync) {
                 if (allSyncReady()) {
-                    ALICA_DEBUG_MSG(
-                            "[SP (" << _myID << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
+                    ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_clock.now() - _syncStartTime));
                     // notify sync module
                     _syncModule->synchronisationDone(_synchronisation);
                     _synchronisationDone = true;
@@ -230,7 +229,7 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
     if (_readyForSync) {
         if (allSyncReady()) {
             // notify _syncModul
-            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_ae->getAlicaClock().now() - _syncStartTime));
+            ALICA_DEBUG_MSG("[SP (" << _myID << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_clock.now() - _syncStartTime));
             _syncModule->synchronisationDone(_synchronisation);
             _synchronisationDone = true;
         }
@@ -241,7 +240,7 @@ void SynchronisationProcess::sendTalk(const SyncData& sd)
 {
     SyncTalk talk;
     talk.syncData.push_back(sd);
-    _lastTalkTime = _ae->getAlicaClock().now();
+    _lastTalkTime = _clock.now();
     _syncModule->sendSyncTalk(talk);
 }
 
