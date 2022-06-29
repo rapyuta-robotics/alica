@@ -12,7 +12,6 @@ namespace alica
 {
 RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
-        , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
@@ -23,7 +22,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
 
 void RunnableObject::sendLogMessage(int level, const std::string& message) const
 {
-    _engine->getCommunicator().sendLogMessage(level, message);
+    _communication->sendLogMessage(level, message);
 }
 
 int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
@@ -70,8 +69,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
-    // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
-    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _engine->getTraceFactory());
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
     doInit();
     scheduleRunCalls();
@@ -81,7 +79,7 @@ void RunnableObject::scheduleRunCalls()
 {
     // Do not schedule repeatable run job when frequency is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
+        _activeRunTimer = _timerFactory->createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
     }
 }
 
@@ -156,6 +154,32 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
     }
 }
 
+void RunnableObject::setAlicaCommunication(const IAlicaCommunication* communication)
+{
+    _communication = communication;
+}
+void RunnableObject::setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory)
+{
+    _traceFactory = traceFactory;
+}
+void RunnableObject::setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory)
+{
+    _timerFactory = timerFactory;
+}
+void RunnableObject::setPlanBase(PlanBase* planBase)
+{
+    _planBase = planBase;
+}
+void RunnableObject::setTeamManager(const TeamManager* teamManager)
+{
+    _teamManager = teamManager;
+}
+
+const TeamManager& RunnableObject::getTeamManager() const
+{
+    return *_teamManager;
+}
+
 // Tracing methods
 void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
@@ -207,4 +231,5 @@ void TraceRunnableObject::traceRunCall()
         _runTraced = true;
     }
 }
+
 } /* namespace alica */

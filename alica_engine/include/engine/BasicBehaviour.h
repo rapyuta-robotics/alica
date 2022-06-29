@@ -46,11 +46,16 @@ public:
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getWorldModel;
-    using RunnableObject::setEngine;
     using RunnableObject::setInterval;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
+    using RunnableObject::setTeamManager;
+    using RunnableObject::setPlanBase;
+    using RunnableObject::setAlicaTraceFactory;
+    using RunnableObject::setAlicaTimerFactory;
+    using RunnableObject::setAlicaCommunication;
+    using RunnableObject::getTeamManager;
 
     virtual void run(void* msg) = 0;
     /**
@@ -77,7 +82,6 @@ protected:
     using RunnableObject::getTrace;
 
     AgentId getOwnId() const;
-    const AlicaEngine* getEngine() const { return _engine; }
 
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicBehaviour*)> customTraceContextGetter = {})
     {
