@@ -22,8 +22,12 @@ namespace test
 class TestContext;
 }
 class RunningPlan;
-class AlicaEngine;
 class IAlicaWorldModel;
+class TeamManager;
+class PlanBase;
+class IAlicaCommunication;
+class IAlicaTraceFactory;
+class IAlicaTimerFactory;
 
 class TraceRunnableObject
 {
@@ -95,7 +99,7 @@ protected:
 
     void start(RunningPlan* rp);
     void stop();
-    void setEngine(AlicaEngine* engine) { _engine = engine; };
+
     // Only plan will have these
     void addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping);
     void setInterval(int32_t msInterval) { _msInterval = AlicaTime::milliseconds(msInterval); };
@@ -103,8 +107,19 @@ protected:
     void setBlackboardBlueprint(const BlackboardBlueprint* blackboard) { _blackboardBlueprint = blackboard; }
     const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
 
-    AlicaEngine* _engine;
+    const TeamManager& getTeamManager() const;
+    void setTeamManager(const TeamManager* teamManager);
+    void setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory);
+    void setPlanBase(PlanBase* planBase);
+    void setAlicaCommunication(const IAlicaCommunication* communication);
+    void setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory);
+
     TraceRunnableObject _runnableObjectTracer;
+    const TeamManager* _teamManager{nullptr};
+    PlanBase* _planBase{nullptr};
+    const IAlicaCommunication* _communication{nullptr};
+    const IAlicaTraceFactory* _traceFactory{nullptr};
+    const IAlicaTimerFactory* _timerFactory{nullptr};
 
 private:
     void setupBlackboard();
