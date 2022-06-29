@@ -143,7 +143,6 @@ private:
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
 
@@ -155,7 +154,9 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     PlanBase _planBase;
+
     bool _initialized{false};
 
     Blackboard _Blackboard;

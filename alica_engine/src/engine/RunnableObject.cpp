@@ -13,7 +13,6 @@ namespace alica
 {
 RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
-        , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
@@ -24,7 +23,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
 
 void RunnableObject::sendLogMessage(int level, const std::string& message) const
 {
-    _engine->getCommunicator().sendLogMessage(level, message);
+    _communication->sendLogMessage(level, message);
 }
 
 void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
@@ -55,8 +54,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
-    // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
-    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _engine->getTraceFactory());
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
     doInit();
     scheduleRunCalls();
@@ -66,7 +64,7 @@ void RunnableObject::scheduleRunCalls()
 {
     // Do not schedule repeatable run job when frequency is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
+        _activeRunTimer = _timerFactory->createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
     }
 }
 
@@ -164,4 +162,5 @@ void TraceRunnableObject::traceRunCall()
         _runTraced = true;
     }
 }
+
 } /* namespace alica */

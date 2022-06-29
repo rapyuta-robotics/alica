@@ -46,7 +46,7 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
  */
 AgentId BasicBehaviour::getOwnId() const
 {
-    return _engine->getTeamManager().getLocalAgentID();
+    return getTeamManager().getLocalAgentID();
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
@@ -108,7 +108,7 @@ void BasicBehaviour::setResult(BehResult result)
 {
     auto prev = _behResult.exchange(result);
     if (prev != result) {
-        _engine->editPlanBase().addFastPathEvent(getPlanContext());
+        _planBase->addFastPathEvent(getPlanContext());
         if (getTrace()) {
             getTrace()->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
         }
