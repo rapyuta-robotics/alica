@@ -129,20 +129,6 @@ private:
     AlicaTime _now;
 };
 
-class TestClock : public AlicaClock
-{
-public:
-    TestClock()
-            : _now(AlicaClock::now())
-    {
-    }
-    AlicaTime now() const override { return _now; }
-    void increment(AlicaTime t) { _now += t; }
-
-private:
-    AlicaTime _now;
-};
-
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
 {
 private:
