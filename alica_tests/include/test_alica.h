@@ -45,6 +45,7 @@ class AlicaTestFixtureBase : public ::testing::Test
 protected:
     alica::AlicaContext* ac{nullptr};
     alica::AlicaEngine* ae{nullptr};
+    virtual bool getDelayStart() { return true; }
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -111,6 +112,21 @@ protected:
     std::vector<alica::AlicaEngine*> aes;
     std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
     std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
+    virtual bool getDelayStart() { return true; }
+};
+
+class TestClock : public AlicaClock
+{
+public:
+    TestClock()
+            : _now(AlicaClock::now())
+    {
+    }
+    AlicaTime now() const override { return _now; }
+    void increment(AlicaTime t) { _now += t; }
+
+private:
+    AlicaTime _now;
 };
 
 class TestClock : public AlicaClock
@@ -133,7 +149,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    virtual bool getDelayStart() { return true; }
     virtual bool getUseTestClock() { return false; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
@@ -167,7 +182,6 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
             aes.push_back(ae);
