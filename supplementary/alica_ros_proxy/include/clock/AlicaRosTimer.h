@@ -139,7 +139,7 @@ public:
     TimerFactory&& operator=(TimerFactory&&) = delete;
     ~TimerFactory() = default;
 
-    std::unique_ptr<alica::IAlicaTimer> createTimer(TimerCb timerCb, alica::AlicaTime period) const override
+    std::unique_ptr<alica::IAlicaTimer> createTimer(TimerCb timerCb, alica::AlicaTime period) override
     {
         if (!timerCb) {
             throw std::invalid_argument("no timerCb specified!");
