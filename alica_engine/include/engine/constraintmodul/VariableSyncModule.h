@@ -23,8 +23,8 @@ class TimerFactory;
 class VariableSyncModule
 {
 public:
-    VariableSyncModule(ConfigChangeListener& configChangeListener, const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock,
-            TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
+    VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager,
+            IAlicaTimerFactory& timerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -70,11 +70,11 @@ private:
     AlicaTime _ttl4Usage;
     ResultEntry* _ownResults;
     ConfigChangeListener& _configChangeListener;
-    const YAML::Node& _config;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     TeamManager& _teamManager;
-    const IAlicaTimerFactory& _timerFactory;
+    IAlicaTimerFactory& _timerFactory;
+    bool _maySendMessages;
 
     mutable std::mutex _mutex;
 };
