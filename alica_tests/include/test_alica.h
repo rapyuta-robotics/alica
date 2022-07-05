@@ -5,6 +5,7 @@
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
 #include <alica_tests/PlanCreator.h>
+#include <alica_tests/TestLogger.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
@@ -15,6 +16,7 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
+#include <engine/IAlicaLogger.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -102,6 +104,59 @@ protected:
         ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
     }
     void TearDown() override { AlicaTestFixture::TearDown(); }
+};
+
+class AlicaTestFixtureWithLogger : public AlicaTestFixtureBase
+{
+private:
+    alica::AlicaCreators creators;
+
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual bool stepEngine() const { return true; }
+    virtual const char* getHostName() const { return "nase"; }
+
+    alicaTests::TestLogger& getLogger()
+    {
+        IAlicaLogger& logger = ae->getLogger();
+        return dynamic_cast<alicaTests::TestLogger&>(logger);
+    }
+
+    virtual void SetUp() override
+    {
+        alicaTests::TestWorldModel::getOne()->reset();
+        alicaTests::TestWorldModel::getTwo()->reset();
+
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
+        ASSERT_TRUE(ac->isValid());
+        const YAML::Node& config = ac->getConfig();
+        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setLogger<alicaTests::TestLogger>();
+        spinner->start();
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
+
+        EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+    }
+
+    virtual void TearDown() override
+    {
+        spinner->stop();
+        ac->terminate();
+        delete ac;
+    }
+
+    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
