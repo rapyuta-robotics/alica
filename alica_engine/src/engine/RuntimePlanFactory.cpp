@@ -2,6 +2,7 @@
 #include <engine/RuntimePlanFactory.h>
 
 #include "engine/BasicPlan.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/IPlanCreator.h"
 #include "engine/model/Plan.h"
 
@@ -10,9 +11,10 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, AlicaEngine* engine)
+RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, AlicaEngine* engine, IAlicaLogger& logger)
         : _creator(std::move(pc))
         , _engine(engine)
+        , _logger(logger)
         , _wm(wm)
 {
 }
@@ -22,7 +24,7 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
     PlanContext ctx{_wm, planModel->getName(), planModel};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
-        ALICA_ERROR_MSG("RuntimePlanFactory: Plan creation failed: " << id);
+        _logger.log(Verbosity::ERROR, "RuntimePlanFactory: Plan creation failed: ", id);
         return nullptr;
     }
 

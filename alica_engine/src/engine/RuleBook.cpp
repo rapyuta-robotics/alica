@@ -18,9 +18,9 @@
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
 
-//#define ALICA_DEBUG_LEVEL_ALL
-#include <alica_common_config/debug_output.h>
 #include <functional>
+#include <iostream>
+#include <string>
 
 namespace alica
 {
@@ -30,13 +30,14 @@ using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
+RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb, IAlicaLogger& logger)
         : _tm(ae->getTeamManager())
         , _ps(new PlanSelector(ae, pb))
         , _log(ae->editLog())
         , _pb(pb)
         , _sm(ae->editSyncModul())
         , _changeOccurred(true)
+        , _logger(logger)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
     ae->subscribe(reloadFunctionPtr);
@@ -65,7 +66,7 @@ void RuleBook::reload(const YAML::Node& config)
  */
 RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
 {
-    ALICA_DEBUG_MSG("RB: Init-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: Init-Rule called.");
     if (masterPlan->getEntryPoints().size() != 1) {
         AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
     }
@@ -148,8 +149,8 @@ PlanChange RuleBook::visit(RunningPlan& r)
 PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: dynAlloc-Rule called.");
-    ALICA_DEBUG_MSG("RB: dynAlloc RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: dynAlloc-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: dynAlloc RP \n", r);
 
     if (r.isAllocationNeeded() || r.isBehaviour()) {
         return PlanChange::NoChange;
@@ -173,13 +174,16 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
-    ALICA_DEBUG_MSG("RB: Old U " << curUtil << " | "
-                                 << " New U:" << possibleUtil);
-    ALICA_DEBUG_MSG_IF(curUtil < -0.99, "#############Assignment is valid?: " << r.getAssignment().isValid() << endl << r);
-    ALICA_DEBUG_MSG("RB: New Assignment" << newr->getAssignment() << endl << "RB: Old Assignment" << r.getAssignment());
+    _logger.log(Verbosity::DEBUG, "RB: Old U ", curUtil, " | ", " New U:", possibleUtil);
+
+    if (curUtil < -0.99) {
+        _logger.log(Verbosity::DEBUG, "#############Assignment is valid?: ", r.getAssignment().isValid(), "\n", r);
+    }
+
+    _logger.log(Verbosity::DEBUG, "RB: New Assignment", newr->getAssignment(), "\n", "RB: Old Assignment", r.getAssignment());
 
     if (possibleUtil - curUtil > p->getUtilityThreshold()) {
-        // cout << "RB: AllocationDifference::Reason::utility " << endl;
+        // cout, "RB: AllocationDifference::Reason::utility ", endl;
         r.editCycleManagement().setNewAllocDiff(r.getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
         const State* before = r.getActiveState();
         r.adaptAssignment(*newr);
@@ -187,10 +191,8 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
             r.setAllocationNeeded(true);
         }
 
-        ALICA_INFO_MSG("RB: B4 dynChange: Util is " << curUtil << " | "
-                                                    << " suggested is " << possibleUtil << " | "
-                                                    << " threshold " << p->getUtilityThreshold() << std::endl
-                                                    << "RB: DynAlloc in " << p->getName());
+        _logger.log(Verbosity::INFO, "RB: B4 dynChange: Util is ", curUtil, " | ", " suggested is ", possibleUtil, " | ", " threshold ",
+                p->getUtilityThreshold(), "\n", "RB: DynAlloc in ", p->getName());
 
         _log.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
@@ -205,17 +207,17 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: AuthorityOverride-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: AuthorityOverride-Rule called.");
 
     if (r.isBehaviour()) {
         return PlanChange::NoChange;
     }
-    ALICA_DEBUG_MSG("RB: AuthorityOverride RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: AuthorityOverride RP \n", r);
 
     if (r.getCycleManagement().isOverridden()) {
         if (r.editCycleManagement().applyAssignment()) {
             _log.eventOccurred("AuthorityOverride(", r.getActivePlan()->getName(), ")");
-            ALICA_DEBUG_MSG("RB: Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment());
+            _logger.log(Verbosity::DEBUG, "RB: Authorative set assignment of ", r.getActivePlan()->getName(), " is:", r.getAssignment());
             return PlanChange::InternalChange;
         }
     }
@@ -241,9 +243,9 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
 
     if ((r.getActiveState() != nullptr && r.getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.isRuntimeConditionValid()) {
 
-        ALICA_DEBUG_MSG("RB: PlanAbort-Rule called.");
-        ALICA_DEBUG_MSG("RB: PlanAbort RP \n" << r);
-        ALICA_DEBUG_MSG("RB: PlanAbort " << r.getActivePlan()->getName());
+        _logger.log(Verbosity::DEBUG, "RB: PlanAbort-Rule called.");
+        _logger.log(Verbosity::DEBUG, "RB: PlanAbort RP \n", r);
+        _logger.log(Verbosity::DEBUG, "RB: PlanAbort ", r.getActivePlan()->getName());
         r.addFailure();
         _log.eventOccurred("PAbort(", r.getActivePlan()->getName(), ")");
         return PlanChange::FailChange;
@@ -262,8 +264,8 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: PlanRedoRule-Rule called.");
-    ALICA_DEBUG_MSG("RB: PlanRedoRule RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: PlanRedoRule-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: PlanRedoRule RP \n", r);
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -273,8 +275,8 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
     if (r.getActiveState() == r.getActiveEntryPoint()->getState()) {
         r.addFailure();
-        ALICA_DEBUG_MSG("RB: PlanRedoRule not executed for " << r.getActivePlan()->getName()
-                                                             << "- Unable to repair, as the current state is already the initial state.");
+        _logger.log(Verbosity::DEBUG, "RB: PlanRedoRule not executed for ", r.getActivePlan()->getName(),
+                "- Unable to repair, as the current state is already the initial state.");
 
         return PlanChange::FailChange;
     }
@@ -286,7 +288,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
     r.useState(r.getActiveEntryPoint()->getState());
     r.setAllocationNeeded(true);
 
-    ALICA_DEBUG_MSG("RB: PlanRedoRule executed for " << r.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: PlanRedoRule executed for ", r.getActivePlan()->getName());
 
     _log.eventOccurred("PRedo(", r.getActivePlan()->getName(), ")");
     return PlanChange::InternalChange;
@@ -303,8 +305,8 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: PlanReplace-Rule called.");
-    ALICA_DEBUG_MSG("RB: PlanReplace RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: PlanReplace-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: PlanReplace RP \n", r);
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -320,7 +322,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
     }
     r.setFailureHandlingNeeded(false);
 
-    ALICA_DEBUG_MSG("RB: PlanReplace" << r.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: PlanReplace", r.getActivePlan()->getName());
 
     _log.eventOccurred("PReplace(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
@@ -336,8 +338,8 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: PlanPropagation-Rule called.");
-    ALICA_DEBUG_MSG("RB: PlanPropagation RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: PlanPropagation-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: PlanPropagation RP \n", r);
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -346,7 +348,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
     r.getParent()->addFailure();
     r.setFailureHandlingNeeded(false);
 
-    ALICA_DEBUG_MSG("RB: PlanPropagation " << r.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: PlanPropagation ", r.getActivePlan()->getName());
 
     _log.eventOccurred("PProp(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
@@ -360,8 +362,8 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 PlanChange RuleBook::allocationRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    ALICA_DEBUG_MSG("RB: Allocation-Rule called.");
-    ALICA_DEBUG_MSG("RB: Allocation RP \n" << rp);
+    _logger.log(Verbosity::DEBUG, "RB: Allocation-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: Allocation RP \n", rp);
 
     if (!rp.isAllocationNeeded()) {
         return PlanChange::NoChange;
@@ -371,19 +373,19 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     AgentGrp agents;
     rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
 
-    ALICA_DEBUG_MSG(rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName());
+    _logger.log(Verbosity::DEBUG, rp.getActiveState()->getConfAbstractPlanWrappers().size(), " Plans in State ", rp.getActiveState()->getName());
 
     std::vector<RunningPlan*> children;
     bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
     if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
-        ALICA_DEBUG_MSG("RB: PlanAllocFailed " << rp.getActivePlan()->getName());
+        _logger.log(Verbosity::DEBUG, "RB: PlanAllocFailed ", rp.getActivePlan()->getName());
         return PlanChange::FailChange;
     }
     rp.addChildren(children);
 
-    ALICA_DEBUG_MSG("RB: after add children");
-    ALICA_DEBUG_MSG("RB: PlanAlloc " << rp.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: after add children");
+    _logger.log(Verbosity::DEBUG, "RB: PlanAlloc ", rp.getActivePlan()->getName());
 
     if (!children.empty()) {
         _log.eventOccurred("PAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
@@ -403,8 +405,8 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: TopFail-Rule called.");
-    ALICA_DEBUG_MSG("RB: TopFail RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: TopFail-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: TopFail RP \n", r);
 
     if (r.getParent())
         return PlanChange::NoChange;
@@ -423,7 +425,7 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         r.useState(ep->getState());
         r.clearFailedChildren();
 
-        ALICA_DEBUG_MSG("RB: PlanTopFail " << r.getActivePlan()->getName());
+        _logger.log(Verbosity::DEBUG, "RB: PlanTopFail ", r.getActivePlan()->getName());
 
         _log.eventOccurred("TopFail");
         return PlanChange::InternalChange;
@@ -441,8 +443,8 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 PlanChange RuleBook::transitionRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    ALICA_DEBUG_MSG("RB: Transition-Rule called.");
-    ALICA_DEBUG_MSG("RB: Transition RP \n" << r);
+    _logger.log(Verbosity::DEBUG, "RB: Transition-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: Transition RP \n", r);
 
     if (r.getActiveState() == nullptr)
         return PlanChange::NoChange;
@@ -465,7 +467,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     }
 
-    ALICA_DEBUG_MSG("RB: Transition " << r.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: Transition ", r.getActivePlan()->getName());
 
     r.moveState(nextState);
 
@@ -487,8 +489,8 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
 PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    ALICA_DEBUG_MSG("RB: Sync-Rule called.");
-    ALICA_DEBUG_MSG("RB: Sync RP \n" << rp);
+    _logger.log(Verbosity::DEBUG, "RB: Sync-Rule called.");
+    _logger.log(Verbosity::DEBUG, "RB: Sync RP \n", rp);
 
     if (rp.getActiveState() == nullptr) {
         return PlanChange::NoChange;
@@ -522,7 +524,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
     rp.moveState(nextState);
     rp.setAllocationNeeded(true);
 
-    ALICA_DEBUG_MSG("RB: Follow synchronised transition in plan " << rp.getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "RB: Follow synchronised transition in plan ", rp.getActivePlan()->getName());
     _log.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
 
     if (rp.getActiveState()->isSuccessState())

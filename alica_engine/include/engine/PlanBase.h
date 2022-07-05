@@ -34,6 +34,7 @@ class AlicaEngine;
 class PlanType;
 class Plan;
 class IAlicaWorldModel;
+class IAlicaLogger;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -41,7 +42,7 @@ class IAlicaWorldModel;
 class PlanBase
 {
 public:
-    PlanBase(AlicaEngine* ae);
+    PlanBase(AlicaEngine* ae, IAlicaLogger& logger);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
@@ -74,6 +75,7 @@ private:
      */
 
     AlicaEngine* _ae;
+    IAlicaLogger& _logger;
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;

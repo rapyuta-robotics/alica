@@ -10,9 +10,6 @@
 #include <engine/syncmodule/SyncModule.h>
 #include <engine/syncmodule/SynchronisationProcess.h>
 
-//#define ALICA_DEBUG_LEVEL_DEBUG
-#include <alica_common_config/debug_output.h>
-
 namespace alica
 {
 using std::cerr;
@@ -27,8 +24,9 @@ using std::shared_ptr;
 using std::vector;
 
 SyncModule::SyncModule(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const PlanRepository& planRepository,
-        const IAlicaCommunication& communicator, const AlicaClock& clock)
+        const IAlicaCommunication& communicator, const AlicaClock& clock, IAlicaLogger& logger)
         : _myId(0)
+        , _logger(logger)
         , _running(false)
         , _ticks(0)
         , _configChangeListener(configChangeListener)
@@ -104,7 +102,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
         i->second->setTick(_ticks);
         i->second->changeOwnData(trans->getId(), holds);
     } else {
-        SynchronisationProcess* synchProcess = new SynchronisationProcess(_clock, _myId, trans->getSynchronisation(), this);
+        SynchronisationProcess* synchProcess = new SynchronisationProcess(_clock, _myId, trans->getSynchronisation(), this, _logger);
         synchProcess->setTick(_ticks);
         synchProcess->changeOwnData(trans->getId(), holds);
         lock_guard<mutex> lock(_lomutex);
@@ -117,7 +115,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId());
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Synchronisation successful for ID: ", sync->getId());
     _successfulSynchronisations.push_back(sync);
 }
 /**
@@ -147,19 +145,19 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _teamManager.isAgentIgnored(st->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st);
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Received SyncTalk\n", *st);
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
         const Transition* trans = _planRepository.getTransitions().find(sd.transitionID);
         if (trans == nullptr) {
-            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Could not find Transition " << sd.transitionID);
+            _logger.log(Verbosity::ERROR, "[SM (", _myId, ")]: Could not find Transition ", sd.transitionID);
             return;
         }
 
         const Synchronisation* synchronisation = trans->getSynchronisation();
         if (synchronisation == nullptr) {
-            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation");
+            _logger.log(Verbosity::ERROR, "[SM (", _myId, ")]: Transition ", trans->getId(), " is not connected to a Synchronisation");
             return;
         }
 
@@ -170,7 +168,7 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
             if (i != _synchProcessMapping.end()) {
                 i->second->integrateSyncTalk(st, _ticks);
             } else {
-                SynchronisationProcess* syncProc = new SynchronisationProcess(_clock, _myId, synchronisation, this);
+                SynchronisationProcess* syncProc = new SynchronisationProcess(_clock, _myId, synchronisation, this, _logger);
                 _synchProcessMapping.insert(pair<const Synchronisation*, SynchronisationProcess*>(synchronisation, syncProc));
                 doAck = syncProc->integrateSyncTalk(st, _ticks);
             }
@@ -195,11 +193,11 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     if (!_running || sr->senderID == _myId || _teamManager.isAgentIgnored(sr->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncReady " << std::endl << *sr);
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Received SyncReady\n", *sr);
 
     const Synchronisation* synchronisation = _planRepository.getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
-        ALICA_ERROR_MSG("[SM (" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID);
+        _logger.log(Verbosity::ERROR, "[SM (", _myId, ")]: Unable to find synchronisation ", sr->synchronisationID, " send by ", sr->senderID);
         return;
     }
 
@@ -217,7 +215,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_maySendMessages)
         return;
     st.senderID = _myId;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncTalk " << std::endl << st);
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending SyncTalk \n", st);
     _communicator.sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
@@ -225,7 +223,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_maySendMessages)
         return;
     sr.senderID = _myId;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr);
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending SyncReady\n", sr);
     _communicator.sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
@@ -235,7 +233,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending Acknowledgements " << std::endl << st);
+    _logger.log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending Acknowledgements\n", st);
     _communicator.sendSyncTalk(st);
 }
 

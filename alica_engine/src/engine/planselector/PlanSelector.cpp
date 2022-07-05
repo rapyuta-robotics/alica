@@ -22,9 +22,6 @@
 
 #include <assert.h>
 
-//#define ALICA_DEBUG_LEVEL_DEBUG
-#include <alica_common_config/debug_output.h>
-
 using std::vector;
 
 namespace alica
@@ -72,7 +69,7 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
             return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), rp.getConfiguration(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
     } catch (const PoolExhaustedException& pee) {
-        ALICA_ERROR_MSG(pee.what());
+        _ae->getLogger().log(Verbosity::ERROR, pee.what());
         _pap.increaseSize();
         return nullptr;
     }
@@ -88,7 +85,7 @@ bool PlanSelector::getPlansForState(
     try {
         return getPlansForStateInternal(planningParent, wrappers, robotIDs, o_plans);
     } catch (const PoolExhaustedException& pee) {
-        ALICA_ERROR_MSG(pee.what());
+        _ae->getLogger().log(Verbosity::ERROR, pee.what());
         _pap.increaseSize();
         return false;
     }
@@ -102,7 +99,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
-            ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
+            _ae->getLogger().log(
+                    Verbosity::DEBUG, "PS: AgentIds: ", robotIDs, " = ", robotIDs.size(), " IDs are not enough for the plan ", plan->getName(), "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
@@ -149,13 +147,13 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         rp->setAssignment(ta.getNextBestAssignment(oldAss));
 
         if (rp->getAssignment().getPlan() == nullptr) {
-            ALICA_DEBUG_MSG("PS: No good assignment found!!!!");
+            _ae->getLogger().log(Verbosity::DEBUG, "PS: No good assignment found!!!!");
             return nullptr;
         }
         // PLAN (needed for Conditionchecks)
         rp->usePlan(rp->getAssignment().getPlan());
 
-        ALICA_DEBUG_MSG("PS: rp.Assignment of Plan " << rp->getActivePlan()->getName() << " is: " << rp->getAssignment());
+        _ae->getLogger().log(Verbosity::DEBUG, "PS: rp.Assignment of Plan ", rp->getActivePlan()->getName(), " is: ", rp->getAssignment());
 
         // CONDITIONCHECK
         if (!rp->evalPreCondition()) {
@@ -169,8 +167,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            ALICA_DEBUG_MSG("PS: The agent "
-                            << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName() << " and will IDLE!");
+            _ae->getLogger().log(Verbosity::DEBUG, "PS: The agent ", "(Id: ", localAgentID, ") is not assigned to enter the plan ",
+                    rp->getActivePlan()->getName(), " and will IDLE!");
 
             rp->useState(nullptr);
             rp->useEntryPoint(nullptr);
@@ -187,7 +185,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 
             found = getPlansForStateInternal(rp, rp->getActiveState()->getConfAbstractPlanWrappers(), agents, rpChildren);
         } else {
-            ALICA_DEBUG_MSG("PS: no recursion due to utilitycheck");
+            _ae->getLogger().log(Verbosity::DEBUG, "PS: no recursion due to utilitycheck");
             // Don't calculate children, because we have an
             // oldRp -> we just replace the oldRp
             // (not its children -> this will happen in an extra call)
@@ -197,11 +195,11 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
     // VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
     if (found && !rpChildren.empty()) {
-        ALICA_DEBUG_MSG("PS: Set child -> parent reference");
+        _ae->getLogger().log(Verbosity::DEBUG, "PS: Set child -> parent reference");
         rp->addChildren(rpChildren);
     }
 
-    ALICA_DEBUG_MSG("PS: Created RunningPlan: \n" << *rp);
+    _ae->getLogger().log(Verbosity::DEBUG, "PS: Created RunningPlan: \n", *rp);
 
     return rp; // If we return here, this robot is normal assigned
 }
@@ -209,8 +207,9 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
-    ALICA_DEBUG_MSG("<######PS: GetPlansForState: Parent: " << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
-                                                            << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>");
+    _ae->getLogger().log(Verbosity::DEBUG,
+            "<######PS: GetPlansForState: Parent: ", (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null"),
+            " Plan count: ", wrappers.size(), " Robot count: ", robotIDs.size(), " ######>");
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
@@ -219,12 +218,12 @@ bool PlanSelector::getPlansForStateInternal(
             rp->usePlan(beh);
             o_plans.push_back(rp);
             rp->setParent(planningParent);
-            ALICA_DEBUG_MSG("PS: Added Behaviour " << beh->getName());
+            _ae->getLogger().log(Verbosity::DEBUG, "PS: Added Behaviour ", beh->getName());
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;
             RunningPlan* rp = createRunningPlan(planningParent, {p}, wrapper->getConfiguration(), robotIDs, nullptr, nullptr, zeroValue);
             if (!rp) {
-                ALICA_DEBUG_MSG("PS: It was not possible to create a RunningPlan for the Plan " << p->getName() << "!");
+                _ae->getLogger().log(Verbosity::DEBUG, "PS: It was not possible to create a RunningPlan for the Plan ", p->getName(), "!");
                 return false;
             }
             o_plans.push_back(rp);
@@ -232,7 +231,7 @@ bool PlanSelector::getPlansForStateInternal(
             double zeroVal;
             RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), wrapper->getConfiguration(), robotIDs, nullptr, pt, zeroVal);
             if (!rp) {
-                ALICA_INFO_MSG("PS: It was not possible to create a RunningPlan for the Plan " << pt->getName() << "!");
+                _ae->getLogger().log(Verbosity::INFO, "PS: It was not possible to create a RunningPlan for the Plan ", pt->getName(), "!");
                 return false;
             }
             o_plans.push_back(rp);

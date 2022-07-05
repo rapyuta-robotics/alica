@@ -23,6 +23,7 @@ class IRoleAssignment;
 class PlanRepository;
 class IAlicaCommunication;
 class ConfigChangeListener;
+class IAlicaLogger;
 
 /**
  * The TeamObserver manages communication with the team. Thus it sends and receives PlanTreeInfo messages.
@@ -32,7 +33,7 @@ class TeamObserver
 {
 public:
     TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
-            const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager);
+            const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager, IAlicaLogger& alicaLogger);
     ~TeamObserver();
 
     void tick(RunningPlan* root);
@@ -56,6 +57,7 @@ private:
 
     ConfigChangeListener& _configChangeListener;
     Logger& _logger;
+    IAlicaLogger& _alicaLogger;
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;

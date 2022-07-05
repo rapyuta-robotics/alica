@@ -2,6 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
 #include "engine/planselector/PartialAssignment.h"
@@ -11,9 +12,6 @@
 #include <engine/model/Plan.h>
 #include <engine/model/Task.h>
 #include <engine/teammanager/TeamManager.h>
-
-//#define ALICA_DEBUG_LEVEL_DEBUG
-#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -44,6 +42,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(
 #endif
         , _to(engine->getTeamObserver())
         , _tm(engine->getTeamManager())
+        , _logger(engine->getLogger())
         , _pool(pool)
 {
     // sort agent ids ascending
@@ -96,18 +95,18 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    ALICA_DEBUG_MSG("TA: Calculating next best PartialAssignment...");
+    _logger.log(Verbosity::DEBUG, "TA: Calculating next best PartialAssignment...");
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    ALICA_DEBUG_MSG("TA: ... calculated this PartialAssignment:\n" << *calculatedPa);
+    _logger.log(Verbosity::DEBUG, "TA: ... calculated this PartialAssignment:\n", *calculatedPa);
 
     Assignment newAss = Assignment(*calculatedPa);
 
-    ALICA_DEBUG_MSG("TA: Return this Assignment to PS:" << newAss);
+    _logger.log(Verbosity::DEBUG, "TA: Return this Assignment to PS:", newAss);
 
     return newAss;
 }
@@ -118,17 +117,17 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        ALICA_DEBUG_MSG("<--- TA: NEXT PA from fringe:");
-        ALICA_DEBUG_MSG(*curPa << "--->");
+        _logger.log(Verbosity::DEBUG, "<--- TA: NEXT PA from fringe:");
+        _logger.log(Verbosity::DEBUG, *curPa, "--->");
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            ALICA_DEBUG_MSG("<--- TA: BEFORE fringe exp:");
-            ALICA_DEBUG_MSG(_fringe << "--->");
+            _logger.log(Verbosity::DEBUG, "<--- TA: BEFORE fringe exp:");
+            _logger.log(Verbosity::DEBUG, _fringe, "--->");
             curPa->expand(_fringe, _pool, oldAss, _wm);
-            ALICA_DEBUG_MSG("<--- TA: AFTER fringe exp:" << std::endl << "TA: fringe size " << _fringe.size());
-            ALICA_DEBUG_MSG(_fringe << "--->");
+            _logger.log(Verbosity::DEBUG, "<--- TA: AFTER fringe exp:\n", "TA: fringe size ", _fringe.size());
+            _logger.log(Verbosity::DEBUG, _fringe, "--->");
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

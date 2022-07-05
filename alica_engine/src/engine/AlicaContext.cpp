@@ -1,4 +1,5 @@
 #include "engine/AlicaContext.h"
+#include "engine/AlicaDefaultLogger.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
@@ -40,7 +41,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized.");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized.");
         return -1;
     }
 
@@ -49,6 +50,10 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     }
     if (!_timerFactory) {
         AlicaEngine::abort("AC: TimerFactory not set");
+    }
+
+    if (!_logger) {
+        setLogger<AlicaDefaultLogger>();
     }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
@@ -115,7 +120,11 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configFile);
         return node;
     } catch (YAML::BadFile& badFile) {
-        ALICA_WARNING_MSG("AC: Could not parse file: " << configFile << " - " << badFile.msg);
+        if (!_logger) {
+            ALICA_WARNING_MSG("AC: Could not parse file: " << configFile << " - " << badFile.msg);
+        } else {
+            _logger->log(Verbosity::WARNING, "AC: Could not parse file: ", configFile, " - ", badFile.msg);
+        }
     }
 
     try {

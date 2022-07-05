@@ -135,9 +135,9 @@ void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* key
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
             childBb.set(childKey, lockedParentBb.get(parentKey));
-            ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
+            _engine->getLogger().log(Verbosity::DEBUG, "passing ", parentKey, " into ", childKey);
         } catch (std::exception& e) {
-            ALICA_WARNING_MSG("Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what());
+            _engine->getLogger().log(Verbosity::WARNING, "Blackboard error passing ", parentKey, " into ", childKey, ". ", e.what());
         }
     }
 }
@@ -149,20 +149,31 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
             lockedParentBb.set(parentKey, childBb.get(childKey));
-            ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
+            _engine->getLogger().log(Verbosity::DEBUG, "passing ", childKey, " into ", parentKey);
         } catch (std::exception& e) {
-            ALICA_WARNING_MSG("Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what());
+            _engine->getLogger().log(Verbosity::WARNING, "Blackboard error passing ", childKey, " into ", parentKey, ". ", e.what());
         }
     }
 }
 
+IAlicaLogger& RunnableObject::getLogger() const
+{
+    return _engine->getLogger();
+}
+
+void RunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
+{
+    _runnableObjectTracer.setTracing(type, _engine->getLogger(), customTraceContextGetter);
+}
+
 // Tracing methods
-void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
+void TraceRunnableObject::setTracing(TracingType type, IAlicaLogger& logger, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        ALICA_ERROR_MSG("Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+        logger.log(
+                Verbosity::ERROR, "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
         _tracingType = TracingType::DEFAULT;
     }
 }
@@ -207,4 +218,5 @@ void TraceRunnableObject::traceRunCall()
         _runTraced = true;
     }
 }
+
 } /* namespace alica */

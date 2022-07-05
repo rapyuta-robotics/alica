@@ -64,7 +64,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         }
     }
 
-    ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
+    _engine->getLogger().log(Verbosity::DEBUG, "AM: Received AAI Assignment: ", aai);
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
@@ -76,7 +76,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    ALICA_DEBUG_MSG("AM: Tick called!");
+    _engine->getLogger().log(Verbosity::DEBUG, "AM: Tick called!");
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {
@@ -95,11 +95,11 @@ void AuthorityManager::processPlan(RunningPlan& rp)
         rp.editCycleManagement().sent();
     }
 
-    ALICA_DEBUG_MSG("AM: Queue size of AuthorityInfos is " << _queue.size());
+    _engine->getLogger().log(Verbosity::DEBUG, "AM: Queue size of AuthorityInfos is ", _queue.size());
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
-            ALICA_DEBUG_MSG("AM: Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName());
+            _engine->getLogger().log(Verbosity::DEBUG, "AM: Found AuthorityInfo, which matches the plan ", rp.getActivePlan()->getName());
             rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
             _queue.erase(_queue.begin() + i);
             --i;
@@ -135,7 +135,7 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.senderID = _localAgentID;
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
-    ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
+    _engine->getLogger().log(Verbosity::DEBUG, "AM: Sending AAI Assignment: ", aai);
     _engine->getCommunicator().sendAllocationAuthority(aai);
 }
 

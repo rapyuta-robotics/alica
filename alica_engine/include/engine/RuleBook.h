@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/IAlicaLogger.h"
 #include "engine/PlanChange.h"
 
 #include <memory>
@@ -31,7 +32,7 @@ class IAlicaWorldModel;
 class RuleBook
 {
 public:
-    RuleBook(AlicaEngine* ae, PlanBase* pb);
+    RuleBook(AlicaEngine* ae, PlanBase* pb, IAlicaLogger& logger);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
     PlanChange visit(RunningPlan& r);
@@ -48,6 +49,7 @@ private:
     std::unique_ptr<PlanSelector> _ps;
     PlanBase* _pb;
     Logger& _log;
+    IAlicaLogger& _logger;
     int _maxConsecutiveChanges;
     bool _autoFailureHandlingEnabled;
     bool _changeOccurred;

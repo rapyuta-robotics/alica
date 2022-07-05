@@ -24,6 +24,7 @@ class TestContext;
 class RunningPlan;
 class AlicaEngine;
 class IAlicaWorldModel;
+class IAlicaLogger;
 
 class TraceRunnableObject
 {
@@ -50,7 +51,7 @@ public:
 
     // Set the tracing type for this runnable object. customTraceContextGetter is required for custom tracing
     // & this method will be called to get the parent trace context before initialiseParameters is called
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
+    void setTracing(TracingType type, IAlicaLogger& logger, std::function<std::optional<std::string>()> customTraceContextGetter = {});
     void setupTraceContext(const std::string& name, RunningPlan* rp, const IAlicaTraceFactory* traceFactory);
     void cleanupTraceContext();
     void traceRunCall();
@@ -81,10 +82,7 @@ protected:
     virtual void doRun() = 0;
     virtual void doTerminate() = 0;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {})
-    {
-        _runnableObjectTracer.setTracing(type, customTraceContextGetter);
-    }
+    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
     const std::string& getName() { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
 
@@ -102,6 +100,7 @@ protected:
     bool getInheritBlackboard() const { return _blackboardBlueprint == nullptr; };
     void setBlackboardBlueprint(const BlackboardBlueprint* blackboard) { _blackboardBlueprint = blackboard; }
     const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
+    IAlicaLogger& getLogger() const;
 
     AlicaEngine* _engine;
     TraceRunnableObject _runnableObjectTracer;

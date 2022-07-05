@@ -5,6 +5,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
 #include "engine/RuleBook.h"
@@ -21,20 +22,23 @@
 #include <functional>
 #include <math.h>
 
+#include <string>
+
 namespace alica
 {
 /**
  * Constructs the PlanBase given a top-level plan to execute
  * @param masterplan A Plan
  */
-PlanBase::PlanBase(AlicaEngine* ae)
+PlanBase::PlanBase(AlicaEngine* ae, IAlicaLogger& logger)
         : _ae(ae)
+        , _logger(logger)
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(ae, this)
+        , _ruleBook(ae, this, logger)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -82,8 +86,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
-                                              << _maxSendInterval.inMilliseconds() << "ms");
+    _logger.log(Verbosity::INFO, "PB: Engine loop time is ", _loopTime.inMilliseconds(), "ms, broadcast interval is ", _minSendInterval.inMilliseconds(),
+            "ms - ", _maxSendInterval.inMilliseconds(), "ms");
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -112,7 +116,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    ALICA_DEBUG_MSG("PB: Run-Method of PlanBase started. ");
+    _logger.log(Verbosity::DEBUG, "PB: Run-Method of PlanBase started.");
     const AlicaClock& alicaClock = _ae->getAlicaClock();
     IRoleAssignment& ra = _ae->editRoleAssignment();
     Logger& log = _ae->editLog();
@@ -127,13 +131,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_ae->getStepEngine()) {
 #ifdef ALICA_DEBUG_ENABLED
-            ALICA_DEBUG_MSG("PB: ===CUR TREE===");
+            _logger.log(Verbosity::DEBUG, "PB: ===CUR TREE===");
             if (_rootNode == nullptr) {
-                ALICA_DEBUG_MSG("PB: NULL");
+                _logger.log(Verbosity::DEBUG, "PB: NULL");
             } else {
                 _rootNode->printRecursive();
             }
-            ALICA_DEBUG_MSG("PB: ===END CUR TREE===");
+            _logger.log(Verbosity::DEBUG, "PB: ===END CUR TREE===");
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -162,7 +166,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            ALICA_INFO_MSG("PB: MasterPlan Failed");
+            _logger.log(Verbosity::INFO, "PB: MasterPlan Failed");
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -193,8 +197,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        ALICA_DEBUG_MSG("PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
-                                     << " inactive deleted: " << deleteCount);
+        _logger.log(Verbosity::DEBUG, "PlanBase: ", (totalCount - inActiveCount - retiredCount), " active ", retiredCount, " retired ", inActiveCount,
+                " inactive deleted: ", deleteCount);
 #endif
         // lock for fpEvents
         {
@@ -205,7 +209,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = alicaClock.now();
 
         if (now < _lastSendTime) {
-            ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
+            _logger.log(Verbosity::WARNING, "PB: lastSendTime is in the future of the current system time, did the system time change?");
             _lastSendTime = now;
         }
 
@@ -301,7 +305,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = alicaClock.now();
         availTime = _loopTime - (now - beginTime);
 
-        ALICA_DEBUG_MSG("PB: availTime " << availTime);
+        _logger.log(Verbosity::WARNING, "PB: availTime ", availTime);
 
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             alicaClock.sleep(availTime);

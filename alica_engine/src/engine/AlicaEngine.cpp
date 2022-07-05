@@ -1,5 +1,6 @@
 #include "engine/AlicaEngine.h"
 
+#include "engine/AlicaDefaultLogger.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
@@ -41,17 +42,18 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
         , _log(this)
-        , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
+        , _planRepository(_ctx.getLogger())
+        , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository, _ctx.getLogger())
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
-        , _teamManager(this, alicaContextParams.agentID)
-        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
+        , _teamManager(this, alicaContextParams.agentID, _ctx.getLogger())
+        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _ctx.getLogger())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
         , _auth(this)
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
-        , _planBase(this)
-        , _teamObserver(
-                  _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _planBase(this, ctx.getLogger())
+        , _teamObserver(_configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(),
+                  editTeamManager(), _ctx.getLogger())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -61,7 +63,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         AlicaEngine::abort("Error in parsed plans.");
     }
 
-    ALICA_DEBUG_MSG("AE: Constructor finished!");
+    _ctx.getLogger().log(Verbosity::DEBUG, "AE: Constructor finished!");
 }
 
 AlicaEngine::~AlicaEngine()
@@ -87,12 +89,12 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AE: Already initialized.");
+        _ctx.getLogger().log(Verbosity::WARNING, "AE: Already initialized.");
         return true; // todo false?
     }
 
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
-    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this, _ctx.getLogger());
+    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this, _ctx.getLogger());
 
     _stepCalled = false;
     _roleAssignment->init();
@@ -114,7 +116,7 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan, _ctx.getWorldModel());
-    ALICA_DEBUG_MSG("AE: Engine started!");
+    _ctx.getLogger().log(Verbosity::DEBUG, "AE: Engine started!");
 }
 /**
  * Closes the engine for good.
@@ -154,6 +156,11 @@ std::string AlicaEngine::getLocalAgentName() const
 IAlicaTimerFactory& AlicaEngine::getTimerFactory() const
 {
     return _ctx.getTimerFactory();
+}
+
+IAlicaLogger& AlicaEngine::getLogger() const
+{
+    return _ctx.getLogger();
 }
 
 /**

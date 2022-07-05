@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <ostream>
@@ -18,11 +19,12 @@ struct SyncData;
 struct SyncReady;
 struct SyncTalk;
 class AlicaEngine;
+class IAlicaLogger;
 
 class SynchronisationProcess
 {
 public:
-    SynchronisationProcess(const AlicaClock& clock, AgentId myID, const Synchronisation* sync, SyncModule* sm);
+    SynchronisationProcess(const AlicaClock& clock, AgentId myID, const Synchronisation* sync, SyncModule* sm, IAlicaLogger& logger);
     virtual ~SynchronisationProcess();
     void setTick(uint64_t now);
     void changeOwnData(int64_t transitionID, bool conditionHolds);
@@ -58,6 +60,7 @@ private:
     std::vector<SyncRow*> _syncMatrix;
     SyncRow* _myRow;
     bool _synchronisationDone;
+    IAlicaLogger& _logger;
 };
 std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc);
 } /* namespace alica */

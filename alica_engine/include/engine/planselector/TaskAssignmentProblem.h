@@ -22,6 +22,7 @@ class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
 class IAlicaWorldModel;
+class IAlicaLogger;
 
 /**
  * Represents an instance of an assignment problem for one plan or a plantype.
@@ -66,6 +67,7 @@ private:
     AgentGrp _agents;
     std::vector<SuccessCollection> _successData;
     const IAlicaWorldModel* _wm;
+    IAlicaLogger& _logger;
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;

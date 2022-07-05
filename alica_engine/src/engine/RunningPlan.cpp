@@ -30,7 +30,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/common_defines.h>
-#include <alica_common_config/debug_output.h>
 
 #include <cstddef>
 #include <iostream>
@@ -173,7 +172,7 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
+        _ae->getLogger().log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
         assert(false);
     }
 
@@ -190,7 +189,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in precondition: " << e.what());
+        _ae->getLogger().log(Verbosity::ERROR, "Exception in precondition: ", e.what());
         return false;
     }
 }
@@ -202,7 +201,7 @@ bool RunningPlan::evalPreCondition() const
 bool RunningPlan::evalRuntimeCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
+        _ae->getLogger().log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
     const RuntimeCondition* runtimeCondition = nullptr;
@@ -221,7 +220,7 @@ bool RunningPlan::evalRuntimeCondition() const
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what());
+        _ae->getLogger().log(Verbosity::ERROR, "Exception in runtimecondition: ", _activeTriple.abstractPlan->getName(), " ", e.what());
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -272,7 +271,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
+        _ae->getLogger().log(Verbosity::INFO, "END CHILDREN of ", (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()));
     }
 }
 

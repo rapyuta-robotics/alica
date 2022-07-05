@@ -43,6 +43,7 @@ public:
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObject::getBlackboard;
     using RunnableObject::getInheritBlackboard;
+    using RunnableObject::getLogger;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getWorldModel;

@@ -101,6 +101,7 @@ public:
     const IAlicaCommunication& getCommunicator() const;
     const AlicaClock& getAlicaClock() const;
     IAlicaTimerFactory& getTimerFactory() const;
+    IAlicaLogger& getLogger() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
     IAlicaWorldModel* getWorldModel() const;

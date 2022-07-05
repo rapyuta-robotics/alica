@@ -27,6 +27,7 @@ class ModelFactory;
 class Factory;
 class ExpressionHandler;
 class ModelManager;
+class IAlicaLogger;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -36,7 +37,7 @@ class ModelManager;
 class PlanRepository
 {
 public:
-    PlanRepository();
+    PlanRepository(IAlicaLogger& logger);
     virtual ~PlanRepository();
 
     template <typename T>
@@ -145,5 +146,6 @@ private:
     MapType<TaskRepository> _taskRepositories;
     MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
     MapType<Configuration> _configurationRepository;
+    IAlicaLogger& _logger;
 };
 } // namespace alica

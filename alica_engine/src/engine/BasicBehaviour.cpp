@@ -59,7 +59,7 @@ void BasicBehaviour::doInit()
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
+        _engine->getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-INIT of: ", getName(), ": ", e.what());
     }
 }
 
@@ -79,7 +79,7 @@ void BasicBehaviour::doTerminate()
     try {
         onTermination();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+        _engine->getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-TERMINATE of: ", getName(), ": ", e.what());
     }
 
     _behResult.store(BehResult::UNKNOWN);

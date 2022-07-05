@@ -1,6 +1,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include "engine/AlicaEngine.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
 #include "engine/collections/RobotProperties.h"
@@ -53,8 +54,9 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(AlicaEngine* engine, AgentId agentID)
+TeamManager::TeamManager(AlicaEngine* engine, AgentId agentID, IAlicaLogger& logger)
         : _localAgent(nullptr)
+        , _logger(logger)
         , _localAgentID(agentID)
         , _engine(engine)
         , _agentAnnouncementTimeInterval(AlicaTime::zero())
@@ -64,7 +66,7 @@ TeamManager::TeamManager(AlicaEngine* engine, AgentId agentID)
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
     _engine->subscribe(reloadFunctionPtr);
     reload(_engine->getConfig());
-    std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
+    _logger.log(Verbosity::INFO, "[TeamManager] Own ID is ", _localAnnouncement.senderID);
 }
 
 TeamManager::~TeamManager() {}
@@ -103,7 +105,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = _engine->generateID();
-            ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
+            _engine->getLogger().log(Verbosity::DEBUG, "TM: Auto generated id ", _localAnnouncement.senderID);
         }
     } else {
         _localAnnouncement.senderID = _localAgentID;
@@ -271,11 +273,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash);
+        _engine->getLogger().log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aq.senderID, " sdk: ", aq.senderSdk, " ph: ", aq.planHash);
         return;
     }
 
-    ALICA_DEBUG_MSG("TM: Responding to agent: " << aq.senderID);
+    _engine->getLogger().log(Verbosity::DEBUG, "TM: Responding to agent: ", aq.senderID);
     announcePresence();
 }
 
@@ -284,7 +286,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            ALICA_ERROR_MSG("Duplicate Agent(" << aa.senderID << ") discovered");
+            _engine->getLogger().log(Verbosity::ERROR, "Duplicate Agent(", aa.senderID, ") discovered");
         }
         return;
     }
@@ -295,7 +297,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        ALICA_WARNING_MSG("TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash);
+        _engine->getLogger().log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aa.senderID, " sdk: ", aa.senderSdk, " ph: ", aa.planHash);
         return;
     }
 
@@ -333,7 +335,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    ALICA_DEBUG_MSG("TM: Announcing presence " << _localAnnouncement.senderID);
+    _engine->getLogger().log(Verbosity::DEBUG, "TM: Announcing presence ", _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _engine->getCommunicator().sendAgentAnnouncement(_localAnnouncement);
     }

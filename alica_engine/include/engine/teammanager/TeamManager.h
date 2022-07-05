@@ -23,6 +23,7 @@ class ActiveAgentIdView;
 class ActiveAgentIdIterator;
 class ActiveAgentView;
 class ActiveAgentIterator;
+class IAlicaLogger;
 struct AgentQuery;
 
 // A read optimized cache for multi writer and readers.
@@ -46,7 +47,7 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine, AgentId agentID);
+    TeamManager(AlicaEngine* engine, AgentId agentID, IAlicaLogger& logger);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
@@ -93,6 +94,7 @@ private:
     AlicaEngine* _engine;
     bool _useAutoDiscovery;
     AgentId _localAgentID;
+    IAlicaLogger& _logger;
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>

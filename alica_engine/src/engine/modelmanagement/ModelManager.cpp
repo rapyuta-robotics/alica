@@ -2,6 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/ConfigChangeListener.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/PlanRepository.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Configuration.h"
@@ -27,8 +28,9 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
+ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder, IAlicaLogger& logger)
         : _planRepository(planRepository)
+        , _logger(logger)
         , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
         , domainConfigFolder(domainConfigFolder)
 {
@@ -38,8 +40,10 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository)
+ModelManager::ModelManager(
+        ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository, IAlicaLogger& logger)
         : _configChangeListener(configChangeListener)
+        , _logger(logger)
         , domainConfigFolder(domainConfigFolder)
         , _planRepository(planRepository)
 {
@@ -78,7 +82,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
         AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
     }
 
-    ALICA_INFO_MSG("MM: Config key '" + configKey + "' maps to '" + basePath + "'");
+    _logger.log(Verbosity::INFO, "MM: Config key '" + configKey + "' maps to '" + basePath + "'");
     return basePath;
 }
 
@@ -95,7 +99,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         std::string fileToParse = filesToParse.front();
         filesToParse.pop_front();
 
-        ALICA_DEBUG_MSG("MM: fileToParse: " << fileToParse);
+        _logger.log(Verbosity::DEBUG, "MM: fileToParse: ", fileToParse);
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
@@ -121,7 +125,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
-        ALICA_INFO_MSG("MM: " << beh->toString());
+        _logger.log(Verbosity::INFO, "MM: ", beh->toString());
     }
 
     return masterPlan;
@@ -140,7 +144,7 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 
     RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
     RoleSetFactory::attachReferences();
-    ALICA_INFO_MSG("MM: Parsed the following role set: \n" << roleSet->toString());
+    _logger.log(Verbosity::INFO, "MM: Parsed the following role set: \n", roleSet->toString());
     return roleSet;
 }
 

@@ -66,7 +66,7 @@ void StaticRoleAssignment::calculateRoles()
         for (const Role* role : roles) {
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
-                ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
+                _ae->getLogger().log(Verbosity::DEBUG, "Static RA: Setting Role ", role->getName(), " for robot ID ", agent->getId());
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me

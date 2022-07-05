@@ -98,8 +98,8 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
     }
 #ifdef RS_DEBUG
-    std::cout << "RS: Generated " << seeds.size() << "seeds" << std::endl;
-    for (int i = 0; i < seeds.size(); ++i) {
+    _ae->getLogger().log(Verbosity::DEBUG, "RS: Generated ", seeds.size(), "seeds") for (int i = 0; i < seeds.size(); ++i)
+    {
         cout << "Seed " << i << ": "; // (sup:{1}): ",i);
         for (auto j = 0; j < dim; ++j) {
             cout << seeds[i].values[j] << "\t";
