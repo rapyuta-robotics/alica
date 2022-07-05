@@ -1,5 +1,4 @@
 #include "engine/model/AbstractPlan.h"
-#include "engine/AlicaEngine.h"
 #include "engine/model/Variable.h"
 
 #include <functional>
@@ -9,20 +8,8 @@
 namespace alica
 {
 
-AbstractPlan::AbstractPlan(AlicaEngine* ae)
-        : AlicaElement()
-
-{
-}
-
-AbstractPlan::AbstractPlan(AlicaEngine* ae, int64_t id)
-        : AlicaElement(id)
-{
-}
-
 AbstractPlan::AbstractPlan()
         : AlicaElement()
-
 {
 }
 

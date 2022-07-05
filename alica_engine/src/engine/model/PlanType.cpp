@@ -5,11 +5,6 @@
 namespace alica
 {
 
-PlanType::PlanType(AlicaEngine* ae)
-        : AbstractPlan(ae)
-{
-}
-
 PlanType::PlanType()
         : AbstractPlan()
 {

@@ -9,18 +9,6 @@
 namespace alica
 {
 
-Behaviour::Behaviour(AlicaEngine* ae)
-        : _preCondition(nullptr)
-        , _runtimeCondition(nullptr)
-        , _postCondition(nullptr)
-        , _frequency(1)
-        , _deferring(0)
-        , _eventDriven(false)
-        , AbstractPlan(ae)
-        , _blackboardBlueprint(nullptr)
-{
-}
-
 Behaviour::Behaviour()
         : _preCondition(nullptr)
         , _runtimeCondition(nullptr)

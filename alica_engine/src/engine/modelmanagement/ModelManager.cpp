@@ -27,17 +27,6 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
-        : _planRepository(planRepository)
-        , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
-        , domainConfigFolder(domainConfigFolder)
-{
-    auto reloadFunctionPtr = std::bind(&ModelManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
-    Factory::setModelManager(this);
-}
-
 ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository)
         : _configChangeListener(configChangeListener)
         , domainConfigFolder(domainConfigFolder)

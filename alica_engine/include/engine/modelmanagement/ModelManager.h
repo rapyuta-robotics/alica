@@ -29,8 +29,6 @@ class ConfigChangeListener;
 class ModelManager
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder); // TOBE removed
     ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
