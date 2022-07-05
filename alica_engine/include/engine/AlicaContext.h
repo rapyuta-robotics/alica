@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
 #include "engine/IAlicaWorldModel.h"
@@ -279,6 +280,17 @@ public:
     IAlicaWorldModel* getWorldModel() const { return _worldModel.get(); }
 
     /**
+     * Get logger used by the alica instance.
+     *
+     * @return A reference to the logger object used by the alica instance.
+     */
+    IAlicaLogger& getLogger() const
+    {
+        assert(_logger.get());
+        return *_logger;
+    }
+
+    /**
      * Add a solver to be used by this alica instance.
      * Example usage: addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
      *
@@ -408,6 +420,18 @@ public:
     template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
+    /**
+     * Set logger to be used by this alica framework instance.
+     * Example usage: setLogger<alica::AlicaDefaultLogger>();
+     *
+     * @note LoggerType must be a derived class of IAlicaLogger
+     * @note This must be called before initializing context
+     *
+     * @param args Arguments to be forwarded to constructor of logger. Might be empty.
+     */
+    template <class LoggerType, class... Args>
+    void setLogger(Args&&... args);
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
@@ -425,6 +449,7 @@ private:
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
+    std::unique_ptr<IAlicaLogger> _logger;
     const AlicaContextParams _alicaContextParams;
 
     bool _initialized = false;
@@ -455,7 +480,7 @@ template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new clock");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new clock");
         return;
     }
 
@@ -471,7 +496,7 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new communicator");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new communicator");
         return;
     }
 
@@ -514,7 +539,7 @@ template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new timerfactory");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new timerfactory");
         return;
     }
 
@@ -530,7 +555,7 @@ template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new tracefactory");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new tracefactory");
         return;
     }
 
@@ -546,7 +571,7 @@ template <class WorldModelType, class... Args>
 void AlicaContext::setWorldModel(Args&&... args)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new worldmodeltype");
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new worldmodeltype");
         return;
     }
 
@@ -555,6 +580,35 @@ void AlicaContext::setWorldModel(Args&&... args)
     _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);
 #else
     _worldModel = std::unique_ptr<WorldModelType>(new WorldModelType(std::forward<Args>(args)...));
+#endif
+}
+
+template <class LoggerType, class... Args>
+void AlicaContext::setLogger(Args&&... args)
+{
+    if (_initialized) {
+        _logger->log(Verbosity::WARNING, "AC: Context already initialized. Can not set new loggertype");
+        return;
+    }
+
+    // TODO: Read verbosity from config, pass to logger
+    std::string verbosityString = _configRootNode["Alica"]["Logging"]["Verbosity"].as<std::string>();
+    Verbosity verbosity;
+    if (verbosityString == "DEBUG") {
+        verbosity = Verbosity::DEBUG;
+    } else if (verbosityString == "INFO") {
+        verbosity = Verbosity::INFO;
+    } else if (verbosityString == "ERROR") {
+        verbosity = Verbosity::ERROR;
+    } else if (verbosityString == "FATAL") {
+        verbosity = Verbosity::FATAL;
+    }
+
+    static_assert(std::is_base_of<IAlicaLogger, LoggerType>::value, "Must be derived from IAlicaLogger");
+#if (defined __cplusplus && __cplusplus >= 201402L)
+    _logger = std::make_unique<LoggerType>(verbosity, std::forward<Args>(args)...);
+#else
+    _logger = std::unique_ptr<LoggerType>(new LoggerType(verbosity, std::forward<Args>(args)...));
 #endif
 }
 
@@ -573,7 +627,12 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         }
         currentNode = value;
     } catch (const YAML::Exception& e) {
-        ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
+        if (!_logger) {
+            ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
+        } else {
+            _logger->log(Verbosity::WARNING, "AC: Could not set config value: ", e.msg);
+        }
+
         return false;
     }
     if (reload && _initialized) {
@@ -605,7 +664,12 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
             oldKeyValuePairs.push_back(oldKeyValuePair);
         }
     } catch (const YAML::Exception& e) {
-        ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
+        if (!_logger) {
+            ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
+        } else {
+            _logger->log(Verbosity::WARNING, "AC: Could not set config values: ", e.msg);
+        }
+
         // revert changes
         for (const auto& keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);

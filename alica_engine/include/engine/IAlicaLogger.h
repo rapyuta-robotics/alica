@@ -1,26 +1,39 @@
 #pragma once
 
+#include <iostream>
+#include <sstream>
 #include <string>
 
 namespace alica
 {
 // IAlicaLogger has nothing to do with engine/Logger.h
+
+enum class Verbosity
+{
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR,
+    FATAL
+};
+
 class IAlicaLogger
 {
 public:
-    
+    IAlicaLogger() = default;
     virtual ~IAlicaLogger() = default;
 
-    /**
-     * Alternative: 
-     * A single method that has the verbosity level as an argument.
-     * virtual void log(const std::string& msg, Verbosity verbosity=Verbosity.DEBUG)
-     **/
-    virtual void debug(const std::string& msg) = 0;
-    virtual void info(const std::string& msg) = 0;
-    virtual void warning(const std::string& msg) = 0;
-    virtual void error(const std::string& msg) = 0;
-    virtual void fatal(const std::string& msg) = 0;
+    template <class... Args>
+    void log(Verbosity verbosity, Args&&... args)
+    {
+        // parse args
+        std::ostringstream oss;
+        (oss << ... << std::forward<Args>(args));
+
+        log(oss.str(), verbosity);
+    }
+
+    virtual void log(const std::string& msg, Verbosity verbosity) = 0;
 };
 
 } // namespace alica
