@@ -25,10 +25,6 @@ class AlicaEngine;
 class AbstractPlan : public AlicaElement
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    AbstractPlan(AlicaEngine* ae); // TOBE removed
-    //[[deprecated("It will be removed in the last PR")]]
-    AbstractPlan(AlicaEngine* ae, int64_t id); // TOBE removed
     AbstractPlan();
     AbstractPlan(int64_t id);
 
