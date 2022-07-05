@@ -2,6 +2,7 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/AbstractPlan.h"
@@ -19,20 +20,33 @@ namespace alica
 /**
  * Constructor
  */
-AuthorityManager::AuthorityManager(AlicaEngine* engine)
-        : _engine(engine)
-        , _localAgentID(InvalidAgentID)
+AuthorityManager::AuthorityManager(
+        ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager, IAlicaLogger& logger)
+        : _localAgentID(InvalidAgentID)
+        , _configChangeListener(configChangeListener)
+        , _communicator(communicator)
+        , _clock(clock)
+        , _tm(teamManager)
+        , _logger(logger)
 {
+    auto reloadFunctionPtr = std::bind(&AuthorityManager::reload, this, std::placeholders::_1);
+    _configChangeListener.subscribe(reloadFunctionPtr);
+    reload(_configChangeListener.getConfig());
 }
 
 AuthorityManager::~AuthorityManager() {}
+
+void AuthorityManager::reload(const YAML::Node& config)
+{
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+}
 
 /**
  * Initialises this engine module
  */
 void AuthorityManager::init()
 {
-    _localAgentID = _engine->getTeamManager().getLocalAgentID();
+    _localAgentID = _tm.getLocalAgentID();
 }
 
 /**
@@ -46,8 +60,8 @@ void AuthorityManager::close() {}
  */
 void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityInfo& aai)
 {
-    AlicaTime now = _engine->getAlicaClock().now();
-    TeamManager& tm = _engine->editTeamManager();
+    AlicaTime now = _clock.now();
+    TeamManager& tm = _tm;
     if (aai.senderID == _localAgentID || tm.isAgentIgnored(aai.senderID)) {
         return;
     }
@@ -64,7 +78,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         }
     }
 
-    _engine->getLogger().log(Verbosity::DEBUG, "AM: Received AAI Assignment: ", aai);
+    _logger.log(Verbosity::DEBUG, "AM: Received AAI Assignment: ", aai);
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
@@ -76,7 +90,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    _engine->getLogger().log(Verbosity::DEBUG, "AM: Tick called!");
+    _logger.log(Verbosity::DEBUG, "AM: Tick called!");
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {
@@ -95,11 +109,11 @@ void AuthorityManager::processPlan(RunningPlan& rp)
         rp.editCycleManagement().sent();
     }
 
-    _engine->getLogger().log(Verbosity::DEBUG, "AM: Queue size of AuthorityInfos is ", _queue.size());
+    _logger.log(Verbosity::DEBUG, "AM: Queue size of AuthorityInfos is ", _queue.size());
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
-            _engine->getLogger().log(Verbosity::DEBUG, "AM: Found AuthorityInfo, which matches the plan ", rp.getActivePlan()->getName());
+            _logger.log(Verbosity::DEBUG, "AM: Found AuthorityInfo, which matches the plan ", rp.getActivePlan()->getName());
             rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
             _queue.erase(_queue.begin() + i);
             --i;
@@ -114,7 +128,7 @@ void AuthorityManager::processPlan(RunningPlan& rp)
  */
 void AuthorityManager::sendAllocation(const RunningPlan& p)
 {
-    if (!_engine->maySendMessages()) {
+    if (!_maySendMessages) {
         return;
     }
     AllocationAuthorityInfo aai{};
@@ -135,8 +149,8 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.senderID = _localAgentID;
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
-    _engine->getLogger().log(Verbosity::DEBUG, "AM: Sending AAI Assignment: ", aai);
-    _engine->getCommunicator().sendAllocationAuthority(aai);
+    _logger.log(Verbosity::DEBUG, "AM: Sending AAI Assignment: ", aai);
+    _communicator.sendAllocationAuthority(aai);
 }
 
 /**
