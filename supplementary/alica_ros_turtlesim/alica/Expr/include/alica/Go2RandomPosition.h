@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DomainBehaviour.h"
+#include <alica/DomainBehaviour.h>
 /*PROTECTED REGION ID(inc4085572422059465423) ENABLED START*/
 // Add additional includes here
 /*PROTECTED REGION END*/

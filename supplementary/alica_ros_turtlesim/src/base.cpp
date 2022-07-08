@@ -1,8 +1,9 @@
-#include <BehaviourCreator.h>
-#include <ConditionCreator.h>
-#include <ConstraintCreator.h>
-#include <PlanCreator.h>
-#include <UtilityFunctionCreator.h>
+#include <alica/BehaviourCreator.h>
+#include <alica/ConditionCreator.h>
+#include <alica/ConstraintCreator.h>
+#include <alica/PlanCreator.h>
+#include <alica/TransitionConditionCreator.h>
+#include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
 
 #include <clock/AlicaROSClock.h>
@@ -27,16 +28,17 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 void Base::start()
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>());
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::TransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));
+    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 Base::~Base()

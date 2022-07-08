@@ -11,8 +11,8 @@
       "name": "",
       "plan": 691392966514374878,
       "positionWeb": {
-        "x": 311,
-        "y": 380
+        "x": 200,
+        "y": 212
       },
       "state": 2832176823961443072,
       "successRequired": false,
@@ -52,8 +52,8 @@
       ],
       "parentPlan": 691392966514374878,
       "positionWeb": {
-        "x": 725,
-        "y": 377
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -70,8 +70,8 @@
       "outTransitions": [],
       "parentPlan": 691392966514374878,
       "positionWeb": {
-        "x": 1130,
-        "y": 408
+        "x": 838.9307805596466,
+        "y": 198.6097201767305
       },
       "type": "State",
       "variableBindings": []
@@ -81,11 +81,21 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#4547372457936774346",
       "id": 3626189722064037094,
       "inState": 2832176823961443072,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 3077460522716760463,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

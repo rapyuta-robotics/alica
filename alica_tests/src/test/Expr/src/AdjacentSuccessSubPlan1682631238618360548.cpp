@@ -40,50 +40,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: 4079672912751513705 (4079672912751513705)
- *   - Comment:
- *   - Source2Dest: WaitState --> SucState
- *
- * Precondition: 1067314038887345208 (1067314038887345208)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in WaitState:
- */
-bool PreCondition1067314038887345208::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(4079672912751513705) ENABLED START*/
-    auto worldmodel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldmodel->isTransitionCondition1067314038887345208();
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: 1747408236004727286 (1747408236004727286)
- *   - Comment:
- *   - Source2Dest: EntryState --> WaitState
- *
- * Precondition: 597347780541336226 (597347780541336226)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in EntryState:
- */
-bool PreCondition597347780541336226::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1747408236004727286) ENABLED START*/
-    auto worldmodel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    return worldmodel->isTransitionCondition1747408236004727286();
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1682631238618360548) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

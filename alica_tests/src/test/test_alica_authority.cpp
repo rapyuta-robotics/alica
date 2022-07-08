@@ -7,6 +7,7 @@
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/UtilityFunctionCreator.h>
+#include <alica_tests/TransitionConditionCreator.h>
 
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
