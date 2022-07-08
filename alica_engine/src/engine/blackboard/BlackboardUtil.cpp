@@ -1,12 +1,12 @@
 #include "engine/blackboard/BlackboardUtil.h"
 
-#include "engine/blackboard/KeyMapping.h"
 #include "engine/blackboard/Blackboard.h"
+#include "engine/blackboard/KeyMapping.h"
 
 #include <alica_common_config/debug_output.h>
 #include <iostream>
 
-namespace alica 
+namespace alica
 {
 void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb, const KeyMapping* keyMapping)
 {
@@ -35,4 +35,4 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
         }
     }
 }
-}   
+} // namespace alica

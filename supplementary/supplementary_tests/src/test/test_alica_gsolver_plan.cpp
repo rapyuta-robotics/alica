@@ -1,4 +1,3 @@
-#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 #include <communication/AlicaRosCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaEngine.h>
@@ -14,6 +13,7 @@
 #include <engine/model/Plan.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/State.h>
+#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 #include <test_supplementary.h>
 
 #include <gtest/gtest.h>
