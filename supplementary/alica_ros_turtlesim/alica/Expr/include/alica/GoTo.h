@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DomainBehaviour.h"
+#include <alica/DomainBehaviour.h>
 /*PROTECTED REGION ID(inc4054297592460872311) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>

@@ -1,4 +1,4 @@
-#include "Go2RandomPosition.h"
+#include <alica/Go2RandomPosition.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp4085572422059465423) ENABLED START*/

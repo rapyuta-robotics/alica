@@ -1,4 +1,4 @@
-#include "DomainCondition.h"
+#include <alica/DomainCondition.h>
 /*PROTECTED REGION ID(domainSourceHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
