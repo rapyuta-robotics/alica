@@ -40,7 +40,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(),getTraceFactory(), getTeamManager(), getTimerFactory()))
+        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), getTraceFactory(), getTeamManager(), getTimerFactory()))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -104,7 +104,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _stepCalled = false;
     _roleAssignment->init();
 
-    _expressionHandler.attachAll(this, _planRepository, creatorCtx);
+    _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
     RunningPlan::init(_ctx.getConfig());
