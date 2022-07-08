@@ -107,7 +107,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _stepCalled = false;
     _roleAssignment->init();
 
-    _expressionHandler.attachAll(this, _planRepository, creatorCtx);
+    _expressionHandler.attachAll(_planRepository, creatorCtx);
     UtilityFunction::initDataStructures(this);
 
     RunningPlan::init(_ctx.getConfig());
