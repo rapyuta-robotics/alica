@@ -10,12 +10,13 @@ class ProblemDescriptor;
 class Variable;
 class SolverVariable;
 class SolverContext;
+class Blackboard;
 
 class ISolverBase
 {
 public:
-    ISolverBase(AlicaEngine* ae)
-            : _ae(ae)
+    ISolverBase(Blackboard& blackboard)
+            : _blackboard(blackboard)
     {
     }
     virtual ~ISolverBase() {}
@@ -23,18 +24,18 @@ public:
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
 protected:
-    AlicaEngine* getAlicaEngine() const { return _ae; }
+    Blackboard& editBlackboard() { return _blackboard; };
 
 private:
-    AlicaEngine* _ae;
+    Blackboard& _blackboard;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
 public:
-    ISolver(AlicaEngine* ae)
-            : ISolverBase(ae)
+    ISolver(Blackboard& blackboard)
+            : ISolverBase(blackboard)
     {
     }
     virtual ~ISolver() {}

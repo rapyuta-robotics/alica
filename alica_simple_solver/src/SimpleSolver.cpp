@@ -14,8 +14,8 @@ namespace alica
 namespace reasoner
 {
 
-SimpleSolver::SimpleSolver(AlicaEngine* ae)
-        : ISolver(ae)
+SimpleSolver::SimpleSolver(Blackboard& blackboard)
+        : ISolver(blackboard)
 {
 }
 
@@ -32,7 +32,7 @@ bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::sh
 
     results.reserve(dc->getVariables().size());
 
-    Blackboard& bb = getAlicaEngine()->editBlackboard();
+    Blackboard& bb = editBlackboard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
         const std::string& val = getValue(dummyVariable->getId(), calls);
 #pragma GCC diagnostic push

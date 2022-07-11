@@ -19,7 +19,7 @@ namespace reasoner
 class SimpleSolver : public alica::ISolver<SimpleSolver, int64_t>
 {
 public:
-    SimpleSolver(AlicaEngine* ae);
+    SimpleSolver(Blackboard& blackboard);
     virtual ~SimpleSolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
