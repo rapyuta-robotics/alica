@@ -47,7 +47,6 @@ class AlicaTestFixtureBase : public ::testing::Test
 protected:
     alica::AlicaContext* ac;
     alica::AlicaEngine* ae;
-    virtual bool getDelayStart() { return true; }
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -108,7 +107,6 @@ protected:
     std::vector<alica::AlicaEngine*> aes;
     std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
     std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
-    virtual bool getDelayStart() { return true; }
 };
 
 class AlicaTestMultiAgentFixture : public AlicaTestMultiAgentFixtureBase
