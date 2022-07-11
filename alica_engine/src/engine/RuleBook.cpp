@@ -31,7 +31,8 @@ using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver,TeamManager& teamManager,const PlanRepository& planRepository, PlanBase* pb)
+RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, PlanBase* pb)
         : _configChangeListener(configChangeListener)
         , _logger(log)
         , _synchModule(synchModule)
