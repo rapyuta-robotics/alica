@@ -35,8 +35,8 @@ class PlanRepository;
 class RuleBook
 {
 public:
-    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,const PlanRepository& planRepository,
-            PlanBase* pb);
+    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
     PlanChange visit(RunningPlan& r);

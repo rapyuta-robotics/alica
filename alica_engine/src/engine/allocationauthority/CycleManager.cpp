@@ -24,8 +24,8 @@ using std::mutex;
  * Construct a CycleManager for a RunningPlan
  * @param p A RunningPlan
  */
-CycleManager::CycleManager(
-        ConfigChangeListener& configChangeListener, const AlicaClock& clock, const TeamManager& teamManager, const PlanRepository& planRepository, RunningPlan* p)
+CycleManager::CycleManager(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const TeamManager& teamManager,
+        const PlanRepository& planRepository, RunningPlan* p)
         : _state(CycleState::observing)
         , _configChangeListener(configChangeListener)
         , _clock(clock)
