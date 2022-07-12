@@ -11,12 +11,15 @@ class Variable;
 class SolverVariable;
 class SolverContext;
 class Blackboard;
+class VariableSyncModule;
 
 class ISolverBase
 {
 public:
-    ISolverBase(Blackboard& blackboard)
+    ISolverBase(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
             : _blackboard(blackboard)
+            , _resultStore(resultStore)
+            , _config(config)
     {
     }
     virtual ~ISolverBase() {}
@@ -25,17 +28,21 @@ public:
 
 protected:
     Blackboard& editBlackboard() { return _blackboard; };
+    const VariableSyncModule& getResultStore() { return _resultStore; };
+    const YAML::Node& getConfig() const { return _config; };
 
 private:
     Blackboard& _blackboard;
+    const VariableSyncModule& _resultStore;
+    const YAML::Node& _config;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
 public:
-    ISolver(Blackboard& blackboard)
-            : ISolverBase(blackboard)
+    ISolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
+            : ISolverBase(blackboard, resultStore, config)
     {
     }
     virtual ~ISolver() {}

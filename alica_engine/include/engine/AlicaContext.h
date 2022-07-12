@@ -410,8 +410,8 @@ public:
     template <class T>
     bool setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload = true) noexcept;
 
-    //[[deprecated("temporary method")]] 
-    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& getSolvers() const {return _solvers;};
+    //[[deprecated("temporary method")]]
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& getSolvers() const { return _solvers; };
 
 private:
     friend class ::alica::AlicaTestsEngineGetter;
@@ -494,9 +494,11 @@ void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
+    _solvers.emplace(typeid(SolverType).hash_code(),
+            std::make_unique<SolverType>(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...));
 #else
-    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine.get(), std::forward<Args>(args)...)));
+    _solvers.emplace(typeid(SolverType).hash_code(),
+            std::unique_ptr<SolverType>(new SolverType(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...)));
 #endif
 }
 

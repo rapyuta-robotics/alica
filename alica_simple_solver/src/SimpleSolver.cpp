@@ -14,8 +14,8 @@ namespace alica
 namespace reasoner
 {
 
-SimpleSolver::SimpleSolver(Blackboard& blackboard)
-        : ISolver(blackboard)
+SimpleSolver::SimpleSolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
+        : ISolver(blackboard, resultStore, config)
 {
 }
 
