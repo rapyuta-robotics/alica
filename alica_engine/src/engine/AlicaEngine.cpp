@@ -15,7 +15,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <algorithm>
-#include <alica_common_config/debug_output.h>
 #include <chrono>
 #include <functional>
 #include <random>
@@ -41,7 +40,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _configChangeListener(config)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _log(this)
+        , _log(this, _ctx.getLogger())
         , _planRepository(_ctx.getLogger())
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository, _ctx.getLogger())
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
@@ -51,7 +50,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getLogger())
-        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
+        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this, _ctx.getLogger()))
         , _planBase(this, ctx.getLogger())
         , _teamObserver(_configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(),
                   editTeamManager(), _ctx.getLogger())

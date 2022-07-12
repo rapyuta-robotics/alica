@@ -32,7 +32,7 @@ using std::endl;
  */
 RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb, IAlicaLogger& logger)
         : _tm(ae->getTeamManager())
-        , _ps(new PlanSelector(ae, pb))
+        , _ps(new PlanSelector(ae, pb, logger))
         , _log(ae->editLog())
         , _pb(pb)
         , _sm(ae->editSyncModul())

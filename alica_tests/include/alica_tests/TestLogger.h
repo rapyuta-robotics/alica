@@ -11,8 +11,9 @@ namespace alicaTests
 class TestLogger : public alica::IAlicaLogger
 {
 public:
-    TestLogger(alica::Verbosity verbosity)
+    TestLogger(alica::Verbosity verbosity, const std::string& localAgentName)
             : _verbosity(verbosity)
+            , _localAgentName(localAgentName)
     {
     }
 
@@ -24,6 +25,7 @@ public:
 
 private:
     alica::Verbosity _verbosity;
+    std::string _localAgentName;
 };
 
 } /* namespace alicaTests */

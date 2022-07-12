@@ -14,7 +14,6 @@
 #include "engine/teammanager/Agent.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
 #include <engine/Output.h>
 
 namespace alica

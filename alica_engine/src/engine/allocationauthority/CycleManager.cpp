@@ -11,7 +11,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 
-#include <alica_common_config/debug_output.h>
 #include <functional>
 
 namespace alica
@@ -24,11 +23,12 @@ using std::mutex;
  * Construct a CycleManager for a RunningPlan
  * @param p A RunningPlan
  */
-CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p)
+CycleManager::CycleManager(AlicaEngine* ae, RunningPlan* p, IAlicaLogger& logger)
         : _state(CycleState::observing)
         , _ae(ae)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
+        , _logger(logger)
 {
     _rp = p;
     _myID = _ae->getTeamManager().getLocalAgentID();
@@ -72,24 +72,24 @@ void CycleManager::update()
 
     if (_state == CycleState::observing) {
         if (detectAllocationCycle()) {
-            _ae->getLogger().log(Verbosity::INFO, "CM: Cycle Detected!");
+            _logger.log(Verbosity::INFO, "CM: Cycle Detected!");
 
             _state = CycleState::overriding;
             plan->setAuthorityTimeInterval(std::min(_maximalOverrideTimeInterval, plan->getAuthorityTimeInterval() * _intervalIncFactor));
             _overrideShoutTime = AlicaTime::zero();
 
-            _ae->getLogger().log(Verbosity::DEBUG, "CM: Assuming Authority for ", plan->getAuthorityTimeInterval().inSeconds(), "sec!");
+            _logger.log(Verbosity::DEBUG, "CM: Assuming Authority for ", plan->getAuthorityTimeInterval().inSeconds(), "sec!");
             _overrideTimestamp = _ae->getAlicaClock().now();
         } else {
             plan->setAuthorityTimeInterval(std::max(_minimalOverrideTimeInterval, plan->getAuthorityTimeInterval() * _intervalDecFactor));
         }
     } else {
         if (_state == CycleState::overriding && _overrideTimestamp + plan->getAuthorityTimeInterval() < _ae->getAlicaClock().now()) {
-            _ae->getLogger().log(Verbosity::DEBUG, "CM: Resume Observing!");
+            _logger.log(Verbosity::DEBUG, "CM: Resume Observing!");
             _state = CycleState::observing;
             _fixedAllocation = AllocationAuthorityInfo();
         } else if (_state == CycleState::overridden && _overrideShoutTime + plan->getAuthorityTimeInterval() < _ae->getAlicaClock().now()) {
-            _ae->getLogger().log(Verbosity::DEBUG, "CM: Resume Observing!");
+            _logger.log(Verbosity::DEBUG, "CM: Resume Observing!");
             _state = CycleState::observing;
             _fixedAllocation = AllocationAuthorityInfo();
         }
@@ -157,7 +157,7 @@ void CycleManager::setNewAllocDiff(const Assignment& oldAss, const Assignment& n
         }
     }
     aldif.setReason(reas);
-    _ae->getLogger().log(Verbosity::DEBUG, "CM: SetNewAllDiff(b): ", aldif);
+    _logger.log(Verbosity::DEBUG, "CM: SetNewAllDiff(b): ", aldif);
 }
 
 /**
@@ -179,9 +179,9 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
         return;
     }
     if (rid < _myID) {
-        _ae->getLogger().log(Verbosity::INFO, "CM: Rcv: Rejecting Authority!");
+        _logger.log(Verbosity::INFO, "CM: Rcv: Rejecting Authority!");
         if (_state != CycleState::overriding) {
-            _ae->getLogger().log(Verbosity::DEBUG, "CM: Overriding assignment of ", _rp->getActivePlan()->getName());
+            _logger.log(Verbosity::DEBUG, "CM: Overriding assignment of ", _rp->getActivePlan()->getName());
 
             _state = CycleState::overriding;
             const Plan* plan = dynamic_cast<const Plan*>(_rp->getActivePlan());
@@ -190,7 +190,7 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
             _overrideShoutTime = AlicaTime::zero();
         }
     } else {
-        _ae->getLogger().log(Verbosity::DEBUG, "CM: Assignment overridden in ", _rp->getActivePlan()->getName());
+        _logger.log(Verbosity::DEBUG, "CM: Assignment overridden in ", _rp->getActivePlan()->getName());
         _state = CycleState::overridden;
         _overrideShoutTime = _ae->getAlicaClock().now();
         _fixedAllocation = aai;
@@ -217,7 +217,7 @@ void CycleManager::sent()
  */
 bool CycleManager::applyAssignment()
 {
-    _ae->getLogger().log(Verbosity::DEBUG, "CM: Setting authorative assignment for plan ", _rp->getActivePlan()->getName());
+    _logger.log(Verbosity::DEBUG, "CM: Setting authorative assignment for plan ", _rp->getActivePlan()->getName());
 
     if (_fixedAllocation.authority == InvalidAgentID) {
         return false;

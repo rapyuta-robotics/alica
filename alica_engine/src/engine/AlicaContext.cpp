@@ -121,7 +121,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         return node;
     } catch (YAML::BadFile& badFile) {
         if (!_logger) {
-            ALICA_WARNING_MSG("AC: Could not parse file: " << configFile << " - " << badFile.msg);
+            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
         } else {
             _logger->log(Verbosity::WARNING, "AC: Could not parse file: ", configFile, " - ", badFile.msg);
         }

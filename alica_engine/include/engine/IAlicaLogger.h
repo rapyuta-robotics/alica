@@ -20,7 +20,7 @@ enum class Verbosity
 class IAlicaLogger
 {
 public:
-    IAlicaLogger() = default;
+    // IAlicaLogger() = default;
     virtual ~IAlicaLogger() = default;
 
     template <class... Args>

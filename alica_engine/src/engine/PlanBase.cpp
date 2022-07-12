@@ -358,17 +358,17 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration, _logger));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration, _logger));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration, _logger));
     return _runningPlans.back().get();
 }
 

@@ -23,6 +23,7 @@
 #include <engine/planselector/PlanSelector.h>
 #include <engine/teammanager/Agent.h>
 #include <engine/teammanager/TeamManager.h>
+#include <engine/AlicaDefaultLogger.h>
 
 #include <gtest/gtest.h>
 
@@ -82,7 +83,8 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::AlicaDefaultLogger logger(alica::Verbosity::DEBUG, "nase");
+    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr, logger);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
@@ -133,7 +135,8 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    alica::AlicaDefaultLogger logger(alica::Verbosity::DEBUG, "nase");
+    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr, logger);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));

@@ -7,16 +7,16 @@
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
-
-#include <alica_common_config/debug_output.h>
+#include "engine/IAlicaLogger.h"
 
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae)
+StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae, IAlicaLogger& logger)
         : IRoleAssignment()
         , _ae(ae)
         , _updateRoles(false)
+        , _logger(logger)
 {
 }
 
@@ -66,7 +66,7 @@ void StaticRoleAssignment::calculateRoles()
         for (const Role* role : roles) {
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
-                _ae->getLogger().log(Verbosity::DEBUG, "Static RA: Setting Role ", role->getName(), " for robot ID ", agent->getId());
+                _logger.log(Verbosity::DEBUG, "Static RA: Setting Role ", role->getName(), " for robot ID ", agent->getId());
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me

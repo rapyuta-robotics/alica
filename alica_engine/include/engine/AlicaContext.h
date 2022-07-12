@@ -19,8 +19,6 @@
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/util/ConfigPathParser.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include <cassert>
 #include <memory>
 #include <string>
@@ -591,7 +589,6 @@ void AlicaContext::setLogger(Args&&... args)
         return;
     }
 
-    // TODO: Read verbosity from config, pass to logger
     std::string verbosityString = _configRootNode["Alica"]["Logging"]["Verbosity"].as<std::string>();
     Verbosity verbosity;
     if (verbosityString == "DEBUG") {
@@ -606,9 +603,9 @@ void AlicaContext::setLogger(Args&&... args)
 
     static_assert(std::is_base_of<IAlicaLogger, LoggerType>::value, "Must be derived from IAlicaLogger");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _logger = std::make_unique<LoggerType>(verbosity, std::forward<Args>(args)...);
+    _logger = std::make_unique<LoggerType>(verbosity, _localAgentName, std::forward<Args>(args)...);
 #else
-    _logger = std::unique_ptr<LoggerType>(new LoggerType(verbosity, std::forward<Args>(args)...));
+    _logger = std::unique_ptr<LoggerType>(new LoggerType(verbosity, _localAgentName, std::forward<Args>(args)...));
 #endif
 }
 
@@ -628,7 +625,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         currentNode = value;
     } catch (const YAML::Exception& e) {
         if (!_logger) {
-            ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
+            std::cerr << "AC: Could not set config value: " << e.msg << std::endl;;
         } else {
             _logger->log(Verbosity::WARNING, "AC: Could not set config value: ", e.msg);
         }
@@ -665,7 +662,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
     } catch (const YAML::Exception& e) {
         if (!_logger) {
-            ALICA_WARNING_MSG("AC: Could not set config values: " << e.msg);
+            std::cerr << "AC: Could not set config values: " << e.msg << std::endl;;
         } else {
             _logger->log(Verbosity::WARNING, "AC: Could not set config values: ", e.msg);
         }

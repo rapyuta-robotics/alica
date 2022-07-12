@@ -6,8 +6,6 @@
 #include "engine/IPlanCreator.h"
 #include "engine/model/Plan.h"
 
-#include <alica_common_config/debug_output.h>
-
 namespace alica
 {
 

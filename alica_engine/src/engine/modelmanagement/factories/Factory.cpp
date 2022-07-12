@@ -7,7 +7,6 @@
 #include "engine/model/EntryPoint.h"
 #include "engine/modelmanagement/Strings.h"
 
-#include <alica_common_config/debug_output.h>
 #include <essentials/FileSystem.h>
 namespace alica
 {
@@ -153,7 +152,7 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._configurationRepository.emplace(ael->getId(), (Configuration*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
-        ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " is not stored in plan repository.");
+        std::cout << "Factory: INFO: Element type " << type << " is not stored in plan repository." << std::endl;
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing: Type is '" + type + "'");
     }

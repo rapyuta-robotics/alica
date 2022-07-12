@@ -23,7 +23,7 @@ namespace alica
 {
 using std::to_string;
 
-Logger::Logger(AlicaEngine* ae)
+Logger::Logger(AlicaEngine* ae, IAlicaLogger& logger)
         : _ae(ae)
         , _fileWriter()
         , _itCount(0)
@@ -31,6 +31,7 @@ Logger::Logger(AlicaEngine* ae)
         , _receivedEvent(false)
         , _inIteration(false)
         , _logging(false)
+        , _logger(logger)
 {
     auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
     _ae->subscribe(reloadFunctionPtr);
@@ -76,7 +77,7 @@ void Logger::processString(const std::string& event)
         _eventStrings.push_back(event + "(FP)");
     }
     _receivedEvent = true;
-    _ae->getLogger().log(Verbosity::DEBUG, "Logger: ", _eventStrings.back());
+    _logger.log(Verbosity::DEBUG, "Logger: ", _eventStrings.back());
 }
 
 /**

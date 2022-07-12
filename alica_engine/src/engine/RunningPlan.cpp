@@ -28,6 +28,7 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
+#include "engine/IAlicaLogger.h"
 
 #include <alica_common_config/common_defines.h>
 
@@ -52,14 +53,15 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration, IAlicaLogger& logger)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(ae, this, logger)
         , _parent(nullptr)
         , _configuration(configuration)
+        , _logger(logger)
 {
 }
 
@@ -70,40 +72,43 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration, IAlicaLogger& logger)
         : _ae(ae)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
-        , _cycleManagement(ae, this)
+        , _cycleManagement(ae, this, logger)
         , _basicPlan(ae->getRuntimePlanFactory().create(plan->getId(), plan))
         , _parent(nullptr)
         , _configuration(configuration)
+        , _logger(logger)
 {
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
+RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration, IAlicaLogger& logger)
         : _ae(ae)
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(ae, this, logger)
         , _parent(nullptr)
         , _configuration(configuration)
+        , _logger(logger)
 {
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration)
+RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration, IAlicaLogger& logger)
         : _ae(ae)
         , _planType(nullptr)
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
         , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId(), b))
-        , _cycleManagement(ae, this)
+        , _cycleManagement(ae, this, logger)
         , _parent(nullptr)
         , _configuration(configuration)
+        , _logger(logger)
 {
 }
 
@@ -172,7 +177,7 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        _ae->getLogger().log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
+        _logger.log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
         assert(false);
     }
 
@@ -189,7 +194,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
-        _ae->getLogger().log(Verbosity::ERROR, "Exception in precondition: ", e.what());
+        _logger.log(Verbosity::ERROR, "Exception in precondition: ", e.what());
         return false;
     }
 }
@@ -201,7 +206,7 @@ bool RunningPlan::evalPreCondition() const
 bool RunningPlan::evalRuntimeCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        _ae->getLogger().log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
+        _logger.log(Verbosity::ERROR, "Cannot Eval Condition, Plan is null");
         throw std::exception();
     }
     const RuntimeCondition* runtimeCondition = nullptr;
@@ -220,7 +225,7 @@ bool RunningPlan::evalRuntimeCondition() const
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        _ae->getLogger().log(Verbosity::ERROR, "Exception in runtimecondition: ", _activeTriple.abstractPlan->getName(), " ", e.what());
+        _logger.log(Verbosity::ERROR, "Exception in runtimecondition: ", _activeTriple.abstractPlan->getName(), " ", e.what());
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -271,7 +276,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        _ae->getLogger().log(Verbosity::INFO, "END CHILDREN of ", (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()));
+        _logger.log(Verbosity::INFO, "END CHILDREN of ", (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()));
     }
 }
 

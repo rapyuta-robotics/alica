@@ -12,6 +12,7 @@
 #include <engine/model/Plan.h>
 #include <engine/model/Task.h>
 #include <engine/teammanager/TeamManager.h>
+#include "engine/IAlicaLogger.h"
 
 namespace alica
 {
@@ -33,7 +34,7 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(
-        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm, IAlicaLogger& logger)
         : _agents(paraAgents)
         , _plans(planList)
         , _wm(wm)
@@ -42,7 +43,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(
 #endif
         , _to(engine->getTeamObserver())
         , _tm(engine->getTeamManager())
-        , _logger(engine->getLogger())
+        , _logger(logger)
         , _pool(pool)
 {
     // sort agent ids ascending

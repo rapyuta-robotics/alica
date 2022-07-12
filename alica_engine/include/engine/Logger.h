@@ -20,6 +20,7 @@ class TeamObserver;
 class EntryPoint;
 class AlicaEngine;
 class TeamManager;
+class IAlicaLogger;
 
 /**
  * The Plan Logger will write a log file according to the settings in the Alica.conf file.
@@ -55,7 +56,7 @@ struct StringBuilder<First>
 class Logger
 {
 public:
-    Logger(AlicaEngine* ae);
+    Logger(AlicaEngine* ae, IAlicaLogger& logger);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -85,6 +86,7 @@ private:
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;
+    IAlicaLogger& _logger;
     std::ofstream _fileWriter;
     std::stringstream _sBuild;
     std::list<std::string> _eventStrings;

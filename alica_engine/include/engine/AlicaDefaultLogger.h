@@ -11,8 +11,9 @@ namespace alica
 class AlicaDefaultLogger : public alica::IAlicaLogger
 {
 public:
-    AlicaDefaultLogger(Verbosity verbosity)
+    AlicaDefaultLogger(Verbosity verbosity, const std::string& localAgentName)
             : _verbosity(verbosity)
+            , _localAgentName(localAgentName)
     {
     }
 
@@ -26,14 +27,15 @@ public:
         }
 
         if (verbosity == alica::Verbosity::DEBUG || verbosity == alica::Verbosity::INFO) {
-            std::cout << msg << std::endl;
+            std::cout << _localAgentName << ":" << msg << std::endl;
         } else if (verbosity == alica::Verbosity::WARNING || verbosity == alica::Verbosity::ERROR || verbosity == alica::Verbosity::FATAL) {
-            std::cerr << msg << std::endl;
+            std::cerr << _localAgentName << ":" << msg << std::endl;
         }
     }
 
 private:
     Verbosity _verbosity;
+    std::string _localAgentName;
 };
 
 } /* namespace alica */

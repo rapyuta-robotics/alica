@@ -7,8 +7,6 @@
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include <functional>
 #include <limits>
 #include <random>
@@ -105,7 +103,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = _engine->generateID();
-            _engine->getLogger().log(Verbosity::DEBUG, "TM: Auto generated id ", _localAnnouncement.senderID);
+            _logger.log(Verbosity::DEBUG, "TM: Auto generated id ", _localAnnouncement.senderID);
         }
     } else {
         _localAnnouncement.senderID = _localAgentID;
@@ -273,11 +271,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        _engine->getLogger().log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aq.senderID, " sdk: ", aq.senderSdk, " ph: ", aq.planHash);
+        _logger.log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aq.senderID, " sdk: ", aq.senderSdk, " ph: ", aq.planHash);
         return;
     }
 
-    _engine->getLogger().log(Verbosity::DEBUG, "TM: Responding to agent: ", aq.senderID);
+    _logger.log(Verbosity::DEBUG, "TM: Responding to agent: ", aq.senderID);
     announcePresence();
 }
 
@@ -286,7 +284,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            _engine->getLogger().log(Verbosity::ERROR, "Duplicate Agent(", aa.senderID, ") discovered");
+            _logger.log(Verbosity::ERROR, "Duplicate Agent(", aa.senderID, ") discovered");
         }
         return;
     }
@@ -297,7 +295,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        _engine->getLogger().log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aa.senderID, " sdk: ", aa.senderSdk, " ph: ", aa.planHash);
+        _logger.log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aa.senderID, " sdk: ", aa.senderSdk, " ph: ", aa.planHash);
         return;
     }
 
@@ -335,7 +333,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    _engine->getLogger().log(Verbosity::DEBUG, "TM: Announcing presence ", _localAnnouncement.senderID);
+    _logger.log(Verbosity::DEBUG, "TM: Announcing presence ", _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _engine->getCommunicator().sendAgentAnnouncement(_localAnnouncement);
     }
