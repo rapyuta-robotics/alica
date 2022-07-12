@@ -19,7 +19,7 @@ RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlic
 
 std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* planModel) const
 {
-    PlanContext ctx{_wm, planModel->getName(), planModel};
+    PlanContext ctx{_wm, planModel->getName(), planModel, _logger};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
         _logger.log(Verbosity::ERROR, "RuntimePlanFactory: Plan creation failed: ", id);

@@ -10,12 +10,14 @@ namespace alica
 {
 
 class Plan;
+class IAlicaLogger;
 
 struct PlanContext
 {
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Plan* planModel;
+    IAlicaLogger& logger;
 };
 
 class BasicPlan : private RunnableObject
@@ -37,6 +39,7 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
+    using RunnableObject::getLogger;
 
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     int64_t getId() const;

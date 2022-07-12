@@ -18,7 +18,7 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreat
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _logger};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         _logger.log(Verbosity::ERROR, "RuntimeBehaviourFactory: Behaviour creation failed: ", id);

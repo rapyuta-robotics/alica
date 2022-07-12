@@ -10,7 +10,7 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
+RunnableObject::RunnableObject(IAlicaWorldModel* wm, IAlicaLogger& logger, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
@@ -18,6 +18,8 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         , _wm(wm)
         , _blackboard(nullptr)
         , _started(false)
+        , _runnableObjectTracer(logger)
+        , _logger(logger)
 {
 }
 
@@ -135,9 +137,9 @@ void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* key
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
             childBb.set(childKey, lockedParentBb.get(parentKey));
-            _engine->getLogger().log(Verbosity::DEBUG, "passing ", parentKey, " into ", childKey);
+            _logger.log(Verbosity::DEBUG, "passing ", parentKey, " into ", childKey);
         } catch (std::exception& e) {
-            _engine->getLogger().log(Verbosity::WARNING, "Blackboard error passing ", parentKey, " into ", childKey, ". ", e.what());
+            _logger.log(Verbosity::WARNING, "Blackboard error passing ", parentKey, " into ", childKey, ". ", e.what());
         }
     }
 }
@@ -149,30 +151,30 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
             lockedParentBb.set(parentKey, childBb.get(childKey));
-            _engine->getLogger().log(Verbosity::DEBUG, "passing ", childKey, " into ", parentKey);
+            _logger.log(Verbosity::DEBUG, "passing ", childKey, " into ", parentKey);
         } catch (std::exception& e) {
-            _engine->getLogger().log(Verbosity::WARNING, "Blackboard error passing ", childKey, " into ", parentKey, ". ", e.what());
+            _logger.log(Verbosity::WARNING, "Blackboard error passing ", childKey, " into ", parentKey, ". ", e.what());
         }
     }
 }
 
 IAlicaLogger& RunnableObject::getLogger() const
 {
-    return _engine->getLogger();
+    return _logger;
 }
 
 void RunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
-    _runnableObjectTracer.setTracing(type, _engine->getLogger(), customTraceContextGetter);
+    _runnableObjectTracer.setTracing(type, customTraceContextGetter);
 }
 
 // Tracing methods
-void TraceRunnableObject::setTracing(TracingType type, IAlicaLogger& logger, std::function<std::optional<std::string>()> customTraceContextGetter)
+void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        logger.log(
+        _logger.log(
                 Verbosity::ERROR, "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
         _tracingType = TracingType::DEFAULT;
     }

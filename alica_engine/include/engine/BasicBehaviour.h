@@ -22,12 +22,14 @@ class TestContext;
 }
 class Variable;
 class EntryPoint;
+class IAlicaLogger;
 
 struct BehaviourContext
 {
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Behaviour* behaviourModel;
+    IAlicaLogger& logger;
 };
 
 /**
@@ -52,6 +54,7 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
+    using RunnableObject::getLogger;
 
     virtual void run(void* msg) = 0;
     /**

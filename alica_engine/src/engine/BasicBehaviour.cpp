@@ -13,8 +13,6 @@
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include <assert.h>
 #include <iostream>
 
@@ -26,7 +24,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObject(context.worldModel, context.logger, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
@@ -59,7 +57,7 @@ void BasicBehaviour::doInit()
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
-        _engine->getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-INIT of: ", getName(), ": ", e.what());
+        getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-INIT of: ", getName(), ": ", e.what());
     }
 }
 
@@ -79,7 +77,7 @@ void BasicBehaviour::doTerminate()
     try {
         onTermination();
     } catch (const std::exception& e) {
-        _engine->getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-TERMINATE of: ", getName(), ": ", e.what());
+        getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-TERMINATE of: ", getName(), ": ", e.what());
     }
 
     _behResult.store(BehResult::UNKNOWN);
