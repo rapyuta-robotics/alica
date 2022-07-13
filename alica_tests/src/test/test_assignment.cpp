@@ -40,7 +40,8 @@ TEST(Assignment, RobotsInserted)
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
 
     alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::TransitionConditionCreator>()};
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
 

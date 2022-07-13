@@ -79,7 +79,8 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         spinner->start();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>()};
 
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -154,7 +155,8 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                    std::make_unique<alica::TransitionConditionCreator>()};
 
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
@@ -251,7 +253,8 @@ protected:
         ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -297,7 +300,8 @@ protected:
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
@@ -337,7 +341,8 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(), std::make_unique<alica::TransitionConditionCreator>()};
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                    std::make_unique<alica::TransitionConditionCreator>()};
 
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));

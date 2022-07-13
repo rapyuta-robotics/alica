@@ -8,12 +8,12 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/model/Transition.h"
-#include "engine/model/TransitionCondition.h"
 
 #include <algorithm>
 #include <alica_common_config/debug_output.h>
@@ -109,7 +109,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _variableSyncModule->init();
     _auth.init();
     initTransitionConditions(creatorCtx.transitionConditionCreator.get());
-    
+
     _initialized = true;
     return true;
 }

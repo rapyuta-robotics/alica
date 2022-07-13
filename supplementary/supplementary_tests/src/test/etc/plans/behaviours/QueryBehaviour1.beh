@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
   "id": 1479556104511,
+  "inheritBlackboard": false,
   "name": "QueryBehaviour1",
   "postCondition": null,
   "preCondition": null,
