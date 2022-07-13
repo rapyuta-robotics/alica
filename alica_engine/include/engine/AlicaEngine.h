@@ -87,7 +87,7 @@ public:
 
     const Blackboard& getBlackboard() const { return _Blackboard; }
     Blackboard& editBlackboard() { return _Blackboard; }
-  
+
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }

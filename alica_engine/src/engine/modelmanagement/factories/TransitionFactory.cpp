@@ -1,9 +1,9 @@
 #include "engine/modelmanagement/factories/TransitionFactory.h"
 #include "engine/model/Transition.h"
 #include "engine/modelmanagement/Strings.h"
+#include "engine/modelmanagement/factories/KeyMappingFactory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
 #include "engine/modelmanagement/factories/VariableBindingFactory.h"
-#include "engine/modelmanagement/factories/KeyMappingFactory.h"
 
 namespace alica
 {
@@ -26,7 +26,7 @@ Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* pl
     }
     if (Factory::isValid(transitionNode[alica::Strings::condition])) {
         Factory::transitionConditionReferences.push_back(
-            std::pair<int64_t, int64_t>(transition->getId(), Factory::getReferencedId(transitionNode[alica::Strings::condition])));
+                std::pair<int64_t, int64_t>(transition->getId(), Factory::getReferencedId(transitionNode[alica::Strings::condition])));
     }
     if (Factory::isValid(transitionNode[alica::Strings::keyMapping])) {
         transition->_keyMapping = KeyMappingFactory::create(transitionNode[alica::Strings::keyMapping]);

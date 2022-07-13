@@ -457,7 +457,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         if (t->getSynchronisation() != nullptr) {
             continue;
         }
-            
+
         if (t->getTransitionCondition()->evaluate(&r, _wm, t->getKeyMapping())) {
             nextState = t->getOutState();
             break;

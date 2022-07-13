@@ -116,7 +116,10 @@ public:
     }
     const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
     const Accessor<TransitionCondition> getTransitionConditions() const { return Accessor<TransitionCondition>(_transitionConditions); }
-    const Accessor<TransitionConditionRepository> getTransitionConditionRepositories() const { return Accessor<TransitionConditionRepository>(_transitionConditionRepositories); }
+    const Accessor<TransitionConditionRepository> getTransitionConditionRepositories() const
+    {
+        return Accessor<TransitionConditionRepository>(_transitionConditionRepositories);
+    }
 
     PlanRepository(const PlanRepository&) = delete;
     PlanRepository(PlanRepository&&) = delete;

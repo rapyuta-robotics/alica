@@ -12,8 +12,8 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 722203880690238135)
 //
 // States:
-//   - FailureHandled (4449850763179483831)
 //   - FailurePlan (198406198808981916)
+//   - FailureHandled (4449850763179483831)
 FailureHandlingMaster4150733089768927549::FailureHandlingMaster4150733089768927549(PlanContext& context)
         : DomainPlan(context)
 {
@@ -36,32 +36,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction4150733089768927549::getUtilityF
     /*PROTECTED REGION ID(4150733089768927549) ENABLED START*/
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: 3194919312481305139 (3194919312481305139)
- *   - Comment:
- *   - Source2Dest: FailurePlan --> FailureHandled
- *
- * Precondition: 488794245455049811 (488794245455049811)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in FailurePlan:
- *   - FailurePlan (631515556091266493)
- */
-bool PreCondition488794245455049811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(3194919312481305139) ENABLED START*/
-    const auto twm = rp->getOwnID() == 8 ? alicaTests::TestWorldModel::getOne() : alicaTests::TestWorldModel::getTwo();
-    if (twm->transitionCondition3194919312481305139Enabled()) {
-        return rp->isAnyChildStatus(PlanStatus::Failed);
-    }
-    return false;
     /*PROTECTED REGION END*/
 }
 

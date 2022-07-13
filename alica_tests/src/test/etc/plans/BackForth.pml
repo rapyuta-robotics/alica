@@ -97,11 +97,21 @@
   "transitions": [
     {
       "comment": "Forth",
+      "condition": "conditions/conditions.cnd#3016035752801585170",
       "id": 1529456609989,
       "inState": 1529456584983,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1529456591410,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 29
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -116,11 +126,21 @@
     },
     {
       "comment": "Back",
+      "condition": "conditions/conditions.cnd#1556522827919252115",
       "id": 1529456610905,
       "inState": 1529456591410,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1529456584983,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
