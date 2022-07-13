@@ -3,9 +3,9 @@
 #include "AlicaElement.h"
 #include "engine/Types.h"
 
+#include <functional>
 #include <memory>
 #include <string>
-#include <functional>
 
 namespace alica
 {
@@ -24,6 +24,7 @@ public:
     virtual ~TransitionCondition() = default;
     virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
+
 private:
     // TODO: Check if friends are necessary
     friend ModelFactory;

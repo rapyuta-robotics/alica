@@ -44,16 +44,4 @@ class RunTimeCondition1402489260911 : public DomainCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition1402489258509 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
-};
-class PreCondition1402489278408 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
-};
-class PreCondition1402500844446 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
-};
 } /* namespace alica */

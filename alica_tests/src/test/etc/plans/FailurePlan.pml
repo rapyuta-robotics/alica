@@ -11,8 +11,8 @@
       "name": "",
       "plan": 631515556091266493,
       "positionWeb": {
-        "x": 448,
-        "y": 349
+        "x": 200,
+        "y": 212
       },
       "state": 1171453089016322268,
       "successRequired": true,
@@ -31,26 +31,6 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 3748960977005112327,
-      "inTransitions": [
-        1023566846009251524
-      ],
-      "name": "Failed",
-      "outTransitions": [],
-      "parentPlan": 631515556091266493,
-      "positionWeb": {
-        "x": 854.0424867408265,
-        "y": 336.57841346877973
-      },
-      "postCondition": null,
-      "success": false,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
       "entryPoint": 4488468250406966071,
       "id": 1171453089016322268,
       "inTransitions": [],
@@ -60,8 +40,8 @@
       ],
       "parentPlan": 631515556091266493,
       "positionWeb": {
-        "x": 651,
-        "y": 337
+        "x": 428,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -80,10 +60,30 @@
       ],
       "parentPlan": 631515556091266493,
       "positionWeb": {
-        "x": 753.4866261331831,
-        "y": 223.84072270725608
+        "x": 686,
+        "y": 200
       },
       "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 3748960977005112327,
+      "inTransitions": [
+        1023566846009251524
+      ],
+      "name": "Failed",
+      "outTransitions": [],
+      "parentPlan": 631515556091266493,
+      "positionWeb": {
+        "x": 944,
+        "y": 200
+      },
+      "postCondition": null,
+      "success": false,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],
@@ -91,11 +91,21 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1770682125085719690",
       "id": 1023566846009251524,
       "inState": 3487518754011112127,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 3748960977005112327,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -110,11 +120,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1291995818541962959",
       "id": 1446293122737278544,
       "inState": 1171453089016322268,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 3487518754011112127,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

@@ -18,6 +18,7 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Parameter.h"
@@ -28,7 +29,6 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/model/ConfAbstractPlanWrapper.h"
 
 #include <alica_common_config/common_defines.h>
 #include <alica_common_config/debug_output.h>

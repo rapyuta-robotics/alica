@@ -1,7 +1,7 @@
-#include "BehaviourCreator.h"
-#include "Go2RandomPosition.h"
-#include "GoTo.h"
 #include "engine/BasicBehaviour.h"
+#include <alica/BehaviourCreator.h>
+#include <alica/Go2RandomPosition.h>
+#include <alica/GoTo.h>
 
 namespace alica
 {
