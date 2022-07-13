@@ -10,7 +10,9 @@
 namespace alica
 {
 
-BasicUtilityFunction::BasicUtilityFunction() {}
+BasicUtilityFunction::BasicUtilityFunction(IAlicaLogger& logger)
+        : _logger(logger)
+{}
 
 BasicUtilityFunction::~BasicUtilityFunction() {}
 

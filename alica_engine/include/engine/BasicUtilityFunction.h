@@ -14,14 +14,17 @@ namespace alica
 {
 class Plan;
 class UtilityFunction;
+class IAlicaLogger;
 
 class BasicUtilityFunction
 {
 public:
-    BasicUtilityFunction();
+    BasicUtilityFunction(IAlicaLogger& logger);
     virtual ~BasicUtilityFunction();
 
     virtual std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan) = 0;
+protected:
+    IAlicaLogger& _logger;
 };
 
 } /* namespace alica */

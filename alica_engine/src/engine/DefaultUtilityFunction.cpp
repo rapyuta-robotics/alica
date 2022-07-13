@@ -3,8 +3,8 @@
 namespace alica
 {
 
-DefaultUtilityFunction::DefaultUtilityFunction(const Plan* plan)
-        : UtilityFunction(1.0, 0.0, plan)
+DefaultUtilityFunction::DefaultUtilityFunction(const Plan* plan, IAlicaLogger& logger)
+        : UtilityFunction(1.0, 0.0, plan, logger)
 {
 }
 

@@ -56,6 +56,9 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         setLogger<AlicaDefaultLogger>();
     }
 
+    // Creator requires logger to pass it to utility functions
+    creatorCtx.utilityCreator->setLogger(*(_logger.get()));
+
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
 
     _communicator->startCommunication();

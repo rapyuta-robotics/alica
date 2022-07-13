@@ -22,11 +22,12 @@ namespace alica
 
 using std::pair;
 
-UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan)
+UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan, IAlicaLogger& logger)
         : _plan(plan)
         , _ae(nullptr)
         , _priorityWeight(priorityWeight)
         , _similarityWeight(similarityWeight)
+        , _logger(logger)
 {
 }
 
@@ -167,23 +168,23 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
             }
             priResult.setMin(priResult.getMin() + curPrio);
 
-            _ae->getLogger().log(Verbosity::DEBUG, "UF: taskId:", taskId, " roleId:", roleId, " prio: ", curPrio);
+            _logger.log(Verbosity::DEBUG, "UF: taskId:", taskId, " roleId:", roleId, " prio: ", curPrio);
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
     // TODO: fix
-    _ae->getLogger().log(Verbosity::DEBUG, "##\n", "UF: prioUI = ", priResult);
-    _ae->getLogger().log(Verbosity::DEBUG, "UF: denum = ", denum);
+    _logger.log(Verbosity::DEBUG, "##\n", "UF: prioUI = ", priResult);
+    _logger.log(Verbosity::DEBUG, "UF: denum = ", denum);
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    _ae->getLogger().log(Verbosity::DEBUG, "UF: prioUI = ", priResult);
-    _ae->getLogger().log(Verbosity::DEBUG, "##");
+    _logger.log(Verbosity::DEBUG, "UF: prioUI = ", priResult);
+    _logger.log(Verbosity::DEBUG, "##");
     return priResult;
 }
 
