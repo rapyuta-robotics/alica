@@ -42,11 +42,17 @@ bool RunTimeCondition1524463006078::evaluate(std::shared_ptr<RunningPlan> rp, co
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1524452721454
  */
+
+UtilityFunction1524452721452::UtilityFunction1524452721452(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1524452721452::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1524452721452) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

@@ -38,6 +38,8 @@ private:
 
 class UtilityFunction1417423757243 : public BasicUtilityFunction
 {
+public:
+    UtilityFunction1417423757243(IAlicaLogger& logger);
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 class RunTimeCondition1417424512343 : public DomainCondition

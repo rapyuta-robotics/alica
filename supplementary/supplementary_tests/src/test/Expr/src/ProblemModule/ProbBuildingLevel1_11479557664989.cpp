@@ -29,10 +29,16 @@ ProbBuildingLevel1_11479557664989::~ProbBuildingLevel1_11479557664989()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1479557690963
  */
+
+UtilityFunction1479557664989::UtilityFunction1479557664989(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1479557664989::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1479557664989) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
