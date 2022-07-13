@@ -30,11 +30,17 @@ MasterPlanTestConditionPlanType1418042656594::~MasterPlanTestConditionPlanType14
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418042656596
  */
+
+UtilityFunction1418042656594::UtilityFunction1418042656594(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1418042656594::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418042656594) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

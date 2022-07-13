@@ -32,11 +32,17 @@ Defend1402488893641::~Defend1402488893641()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1402488903550
  */
+
+UtilityFunction1402488893641::UtilityFunction1402488893641(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1402488893641) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

@@ -29,11 +29,17 @@ BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1428508768574
  */
+
+UtilityFunction1428508768572::UtilityFunction1428508768572(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1428508768572) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

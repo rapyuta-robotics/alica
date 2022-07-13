@@ -30,11 +30,17 @@ BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148(
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1522377375150
  */
+
+UtilityFunction1522377375148::UtilityFunction1522377375148(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1522377375148) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

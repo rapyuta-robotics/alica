@@ -29,10 +29,16 @@ FrequencyTestPlan1626848999740::~FrequencyTestPlan1626848999740()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1626849024805
  */
+
+UtilityFunction1626848999740::UtilityFunction1626848999740(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1626848999740::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1626848999740) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

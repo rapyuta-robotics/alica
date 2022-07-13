@@ -31,10 +31,16 @@ TestParameterPassing1692837668719979457::~TestParameterPassing169283766871997945
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 58084702421574748
  */
+
+UtilityFunction1692837668719979457::UtilityFunction1692837668719979457(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1692837668719979457) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

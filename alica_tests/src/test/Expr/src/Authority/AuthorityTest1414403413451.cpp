@@ -34,10 +34,16 @@ AuthorityTest1414403413451::~AuthorityTest1414403413451()
  * Task: DefaultTask  -> EntryPoint-ID: 1414403429951
  * Task: AttackTask  -> EntryPoint-ID: 1414403522424
  */
+
+UtilityFunction1414403413451::UtilityFunction1414403413451(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1414403413451::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414403413451) ENABLED START*/
-    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan);
+    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan, _logger);
     DummyTestSummand* us = new DummyTestSummand(1.0);
     us->addEntryPoint(plan->getEntryPointByID(1414403522424));
     us->addEntryPoint(plan->getEntryPointByID(1414403429951));

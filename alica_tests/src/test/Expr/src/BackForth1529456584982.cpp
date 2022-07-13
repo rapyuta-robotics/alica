@@ -31,11 +31,17 @@ BackForth1529456584982::~BackForth1529456584982()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1529456584984
  */
+
+UtilityFunction1529456584982::UtilityFunction1529456584982(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1529456584982::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1529456584982) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

@@ -29,11 +29,17 @@ RealMasterPlanForSyncTest1418902217839::~RealMasterPlanForSyncTest1418902217839(
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418902217841
  */
+
+UtilityFunction1418902217839::UtilityFunction1418902217839(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{
+}
+
 std::shared_ptr<UtilityFunction> UtilityFunction1418902217839::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418902217839) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
     return defaultFunction;
 
     /*PROTECTED REGION END*/
