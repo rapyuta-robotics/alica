@@ -288,6 +288,7 @@ namespace alica
 
 namespace alica
 {
+class IAlicaLogger;
 
     class UtilityFunctionCreator : public IUtilityCreator
     {
@@ -295,6 +296,9 @@ namespace alica
         virtual ~UtilityFunctionCreator();
         UtilityFunctionCreator();
         std::shared_ptr<BasicUtilityFunction> createUtility(int64_t utilityfunctionConfId);
+        void setLogger(IAlicaLogger& logger);
+        private:
+        IAlicaLogger* _logger;
     };
 
 } /* namespace alica */
@@ -315,12 +319,13 @@ namespace alica
 namespace alica
 {
 
-    UtilityFunctionCreator::~UtilityFunctionCreator()
-    {
-    }
+    UtilityFunctionCreator::~UtilityFunctionCreator() {};
 
-    UtilityFunctionCreator::UtilityFunctionCreator()
+    UtilityFunctionCreator::UtilityFunctionCreator() {};
+
+    void UtilityFunctionCreator::setLogger(IAlicaLogger& logger)
     {
+        _logger = &logger;
     }
 
 
@@ -330,7 +335,7 @@ namespace alica
         {
             «FOR p : plans»
             case «p.id»:
-                return std::make_shared<UtilityFunction«p.id»>();
+                return std::make_shared<UtilityFunction«p.id»>(*_logger);
                 break;
             «ENDFOR»
             default:
@@ -1004,6 +1009,8 @@ namespace alica
 
     class UtilityFunction«plan.id» : public BasicUtilityFunction
     {
+    public:
+        UtilityFunction«plan.id»(IAlicaLogger& logger);
         std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
     };
     «IF (plan.preCondition !== null)»
@@ -1095,13 +1102,18 @@ namespace alica
 * Task: «entryPoint.task.name»  -> EntryPoint-ID: «entryPoint.id»
 «ENDFOR»
 */
+
+UtilityFunction«plan.id»::UtilityFunction«plan.id»(IAlicaLogger& logger)
+        : BasicUtilityFunction(logger)
+{}
+
 std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(Plan* plan)
 {
    /*PROTECTED REGION ID(«plan.id») ENABLED START*/
    «IF (protectedRegions.containsKey(String.valueOf(plan.id)))»
 «protectedRegions.get(String.valueOf(plan.id))»
    «ELSE»
-        std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
+        std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
         return defaultFunction;
    «ENDIF»
     /*PROTECTED REGION END*/
