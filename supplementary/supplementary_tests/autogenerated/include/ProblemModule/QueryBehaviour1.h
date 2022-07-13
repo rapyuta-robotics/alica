@@ -10,6 +10,8 @@
 
 namespace alica
 {
+class IAlicaLogger;
+
 class QueryBehaviour1 : public DomainBehaviour
 {
 public:
@@ -25,6 +27,7 @@ public:
     std::shared_ptr<alica::Query> query;
     std::mutex queryMutex;
     bool stopQuerying;
+    IAlicaLogger* _logger;
 
     /*PROTECTED REGION END*/
 protected:

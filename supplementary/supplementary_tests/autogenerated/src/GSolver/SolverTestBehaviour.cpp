@@ -20,6 +20,7 @@ SolverTestBehaviour::SolverTestBehaviour(BehaviourContext& context)
     /*PROTECTED REGION ID(con1417424455986) ENABLED START*/
     // Add additional options here
     callCounter = 0;
+    _query = std::make_unique<Query>(context.logger);
     /*PROTECTED REGION END*/
 }
 SolverTestBehaviour::~SolverTestBehaviour()
@@ -35,17 +36,16 @@ void SolverTestBehaviour::run(void* msg)
     callCounter++;
     // std::cout << "SolverTestBehaviour was called " << callCounter << " times!" << std::endl;
 
-    _query.getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
+    _query->getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void SolverTestBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1417424455986) ENABLED START*/
     // Add additional options here
-    _query.clearStaticVariables();
-    _query.addStaticVariable(getVariable("X"));
-    _query.addStaticVariable(getVariable("Y"));
-
+    _query->clearStaticVariables();
+    _query->addStaticVariable(getVariable("X"));
+    _query->addStaticVariable(getVariable("Y"));
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1417424455986) ENABLED START*/

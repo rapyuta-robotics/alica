@@ -12,6 +12,7 @@
 #include <engine/constraintmodul/Query.h>
 #include <engine/model/Plan.h>
 #include <engine/model/State.h>
+#include <engine/AlicaDefaultLogger.h>
 
 #include <gtest/gtest.h>
 
@@ -82,7 +83,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     std::vector<double> result1;
     bool ok;
 
-    alica::Query q1;
+    alica::AlicaDefaultLogger logger(alica::Verbosity::DEBUG, "nase");
+    alica::Query q1(logger);
 
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(rp1, result1);
@@ -139,7 +141,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_EQ(2u, result1.size());
     EXPECT_EQ(4, q1.getPartCount());
 
-    Query q2;
+    Query q2(logger);
     q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
     q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
 
