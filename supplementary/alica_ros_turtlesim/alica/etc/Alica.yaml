@@ -44,6 +44,9 @@ Alica:
     Enabled: true
     LogFolder: log/temp
 
+  Logging:
+    Verbosity: DEBUG
+
   CycleDetection:
     Enabled: true
     CycleCount: 5

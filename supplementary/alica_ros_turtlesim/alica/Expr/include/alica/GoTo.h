@@ -4,6 +4,7 @@
 /*PROTECTED REGION ID(inc4054297592460872311) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
+#include <memory>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -25,7 +26,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv4054297592460872311) ENABLED START*/
     // Add additional private methods here
-    alica::Query _query;
+    std::unique_ptr<alica::Query> _query;
     std::vector<double> _results;
     /*PROTECTED REGION END*/
 };
