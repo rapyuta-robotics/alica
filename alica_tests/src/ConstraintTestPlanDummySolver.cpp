@@ -22,8 +22,8 @@ namespace reasoner
 int ConstraintTestPlanDummySolver::s_existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::s_getSolutionCallCounter = 0;
 
-ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-        : ISolver(ae)
+ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
+        : ISolver(blackboard, resultStore, config)
 {
 }
 
@@ -39,7 +39,7 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
 
 bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
-    Blackboard& bb = getAlicaEngine()->editBlackboard();
+    Blackboard& bb = editBlackboard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
