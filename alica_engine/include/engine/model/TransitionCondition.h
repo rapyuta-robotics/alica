@@ -23,6 +23,7 @@ public:
     TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint);
     bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
+
 private:
     std::unique_ptr<Blackboard> _blackboard;
     TransitionConditionCallback _evalCallback;
