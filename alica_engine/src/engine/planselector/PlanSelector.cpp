@@ -1,6 +1,7 @@
 #include "engine/planselector/PlanSelector.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/Output.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
@@ -19,7 +20,6 @@
 #include "engine/planselector/PartialAssignmentPool.h"
 #include "engine/planselector/TaskAssignmentProblem.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaLogger.h"
 
 #include <assert.h>
 
@@ -101,8 +101,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
-            _logger.log(
-                    Verbosity::DEBUG, "PS: AgentIds: ", robotIDs, " = ", robotIDs.size(), " IDs are not enough for the plan ", plan->getName(), "!");
+            _logger.log(Verbosity::DEBUG, "PS: AgentIds: ", robotIDs, " = ", robotIDs.size(), " IDs are not enough for the plan ", plan->getName(), "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
@@ -169,8 +168,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            _logger.log(Verbosity::DEBUG, "PS: The agent ", "(Id: ", localAgentID, ") is not assigned to enter the plan ",
-                    rp->getActivePlan()->getName(), " and will IDLE!");
+            _logger.log(Verbosity::DEBUG, "PS: The agent ", "(Id: ", localAgentID, ") is not assigned to enter the plan ", rp->getActivePlan()->getName(),
+                    " and will IDLE!");
 
             rp->useState(nullptr);
             rp->useEntryPoint(nullptr);
@@ -209,8 +208,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
-    _logger.log(Verbosity::DEBUG,
-            "<######PS: GetPlansForState: Parent: ", (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null"),
+    _logger.log(Verbosity::DEBUG, "<######PS: GetPlansForState: Parent: ", (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null"),
             " Plan count: ", wrappers.size(), " Robot count: ", robotIDs.size(), " ######>");
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();

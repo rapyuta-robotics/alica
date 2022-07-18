@@ -625,7 +625,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         currentNode = value;
     } catch (const YAML::Exception& e) {
         if (!_logger) {
-            std::cerr << "AC: Could not set config value: " << e.msg << std::endl;;
+            std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
         } else {
             _logger->log(Verbosity::WARNING, "AC: Could not set config value: ", e.msg);
         }
@@ -662,7 +662,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
     } catch (const YAML::Exception& e) {
         if (!_logger) {
-            std::cerr << "AC: Could not set config values: " << e.msg << std::endl;;
+            std::cerr << "AC: Could not set config values: " << e.msg << std::endl;
         } else {
             _logger->log(Verbosity::WARNING, "AC: Could not set config values: ", e.msg);
         }

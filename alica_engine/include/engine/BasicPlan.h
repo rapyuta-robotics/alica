@@ -31,6 +31,7 @@ public:
     using RunnableObject::getBlackboard;
     using RunnableObject::getInheritBlackboard;
     using RunnableObject::getKeyMapping;
+    using RunnableObject::getLogger;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTrace;
@@ -39,7 +40,6 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
-    using RunnableObject::getLogger;
 
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     int64_t getId() const;

@@ -66,7 +66,8 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 
-    std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this << std::endl;;
+    std::cout << "CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this
+              << std::endl;
 }
 
 /**
@@ -139,8 +140,8 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
                 continue;
             }
 
-            std::cout <<
-                    "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size() << std::endl;;
+            std::cout << "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size()
+                      << std::endl;
 
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),

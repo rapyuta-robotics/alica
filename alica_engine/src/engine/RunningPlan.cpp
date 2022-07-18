@@ -6,6 +6,7 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
 #include "engine/RuntimeBehaviourFactory.h"
@@ -28,7 +29,6 @@
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaLogger.h"
 
 #include <alica_common_config/common_defines.h>
 

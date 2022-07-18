@@ -12,7 +12,6 @@
 #include <engine/model/Plan.h>
 #include <engine/model/Task.h>
 #include <engine/teammanager/TeamManager.h>
-#include "engine/IAlicaLogger.h"
 
 namespace alica
 {

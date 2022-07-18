@@ -18,8 +18,8 @@ namespace alica
 /**
  * Constructor
  */
-AuthorityManager::AuthorityManager(
-        ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager, IAlicaLogger& logger)
+AuthorityManager::AuthorityManager(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock,
+        TeamManager& teamManager, IAlicaLogger& logger)
         : _localAgentID(InvalidAgentID)
         , _configChangeListener(configChangeListener)
         , _communicator(communicator)

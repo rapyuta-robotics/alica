@@ -54,7 +54,6 @@ public:
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;
-    using RunnableObject::getLogger;
 
     virtual void run(void* msg) = 0;
     /**

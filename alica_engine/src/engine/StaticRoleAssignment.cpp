@@ -3,11 +3,11 @@
 #include "engine/StaticRoleAssignment.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
+#include "engine/IAlicaLogger.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/RoleSwitch.h"
 #include "engine/teammanager/TeamManager.h"
-#include "engine/IAlicaLogger.h"
 
 namespace alica
 {

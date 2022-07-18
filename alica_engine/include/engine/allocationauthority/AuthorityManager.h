@@ -22,7 +22,8 @@ class IAlicaLogger;
 class AuthorityManager
 {
 public:
-    AuthorityManager(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager, IAlicaLogger& logger);
+    AuthorityManager(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager,
+            IAlicaLogger& logger);
     ~AuthorityManager();
     void init();
     void close();

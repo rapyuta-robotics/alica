@@ -31,7 +31,8 @@ class IAlicaLogger;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm, IAlicaLogger& logger);
+    TaskAssignmentProblem(AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm,
+            IAlicaLogger& logger);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
