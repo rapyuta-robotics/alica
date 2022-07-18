@@ -21,15 +21,9 @@ class TransitionCondition : public AlicaElement
 {
 public:
     TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint);
-    virtual ~TransitionCondition() = default;
-    virtual bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
+    bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
-
 private:
-    // TODO: Check if friends are necessary
-    friend ModelFactory;
-    friend TransitionConditionFactory;
-
     std::unique_ptr<Blackboard> _blackboard;
     TransitionConditionCallback _evalCallback;
 };

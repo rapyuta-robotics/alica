@@ -16,7 +16,7 @@ public:
     TransitionConditionRepository();
     virtual ~TransitionConditionRepository();
     const TransitionConditionGrp& getTransitionConditions() const { return _transitionConditions; }
-    std::string getFileName() const;
+    const std::string& getFileName() const;
 
 private:
     friend ModelFactory;

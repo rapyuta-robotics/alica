@@ -7,7 +7,7 @@
 namespace alica
 {
 
-TransitionConditionCallback DefaultTransitionConditionCreator::createConditions(std::string name) const
+TransitionConditionCallback DefaultTransitionConditionCreator::createConditions(const std::string& name) const
 {
     if (name == "DefaultCondition") {
         return std::bind(defaultCondition, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
@@ -16,33 +16,11 @@ TransitionConditionCallback DefaultTransitionConditionCreator::createConditions(
     throw new std::exception();
 }
 
-bool DefaultTransitionConditionCreator::isDefaultTransitionCondition(std::string name) const
+bool DefaultTransitionConditionCreator::isDefaultTransitionCondition(const std::string& name) const
 {
     if (name == "DefaultCondition") {
         return true;
     }
     return false;
 }
-
-// TransitionConditionCallback DefaultTransitionConditionCreator::createConditions(std::string name) const
-// {
-//     switch(name) {
-//     case "DefaultCondition":
-//         return std::bind(defaultCondition, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-//     default:
-//         std::cerr << "DefaultTransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
-//         throw new std::exception();
-//         break;
-//     }
-// }
-
-// bool DefaultTransitionConditionCreator::isDefaultTransitionCondition(std::string name) const;
-// {
-//     switch(name) {
-//         case "DefaultCondition":
-//             return true;
-//         default:
-//             return false;
-//     }
-// }
 } /* namespace alica */

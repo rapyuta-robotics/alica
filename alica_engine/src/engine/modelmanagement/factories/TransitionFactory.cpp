@@ -60,7 +60,7 @@ void TransitionFactory::attachReferences()
     }
     Factory::transitionSynchReferences.clear();
     // transitionConditionReferences
-    for (std::pair<int64_t, int64_t> pairs : Factory::transitionConditionReferences) {
+    for (std::pair<int64_t, int64_t>& pairs : Factory::transitionConditionReferences) {
         Transition* t = (Transition*) Factory::getElement(pairs.first);
         TransitionCondition* transitionCondition = (TransitionCondition*) Factory::getElement(pairs.second);
         t->setTransitionCondition(transitionCondition);

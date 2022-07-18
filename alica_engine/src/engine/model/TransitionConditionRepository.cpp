@@ -7,7 +7,7 @@ TransitionConditionRepository::TransitionConditionRepository() {}
 
 TransitionConditionRepository::~TransitionConditionRepository() {}
 
-std::string TransitionConditionRepository::getFileName() const
+const std::string& TransitionConditionRepository::getFileName() const
 {
     return _fileName;
 }
