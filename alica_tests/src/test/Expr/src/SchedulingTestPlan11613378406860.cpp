@@ -41,54 +41,13 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378406860::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: FromDefault NameTo Default Name (1614960055819)
- *   - Comment: MISSING_COMMENT
- *   - Source2Dest: InitPlan1 --> InitSubPlans
- *
- * Precondition: 1614960055821 (1614960055821)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in InitPlan1:
- */
-bool PreCondition1614960055821::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1614960055819) ENABLED START*/
-    return CounterClass::called == 2;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: FromDefault NameTo Default Name (1614960063842)
- *   - Comment: MISSING_COMMENT
- *   - Source2Dest: InitSubPlans --> TerminateSubPlans
- *
- * Precondition: 1614960063843 (1614960063843)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in InitSubPlans:
- *   - SchedulingTestPlan2 (1613378423610)
- *   - SchedulingTestPlan3 (1613378433623)
- */
-bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1614960063842) ENABLED START*/
-    return CounterClass::called == 5;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1613378406860) ENABLED START*/
 // Add additional options here
 void SchedulingTestPlan11613378406860::onInit()
 {
+    LockedBlackboardRW bb(*(getBlackboard()));
+    bb.set("Plan2Sub", 2);
+    bb.set("Init2Term", 5);
     CounterClass::called = 1;
 }
 

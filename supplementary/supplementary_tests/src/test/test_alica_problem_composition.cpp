@@ -1,8 +1,8 @@
-#include <ProblemModule/QueryBehaviour1.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
+#include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
 #include <test_supplementary.h>
 
 #include <chrono>
