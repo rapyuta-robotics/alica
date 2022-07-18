@@ -42,8 +42,8 @@
       ],
       "parentPlan": 1682631238618360548,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 627.8733431516937,
+        "y": 79.53460972017673
       },
       "type": "State",
       "variableBindings": []
@@ -80,8 +80,8 @@
       ],
       "parentPlan": 1682631238618360548,
       "positionWeb": {
-        "x": 428,
-        "y": 199.11812179016874
+        "x": 427.15758468335787,
+        "y": 332.21974181962383
       },
       "type": "State",
       "variableBindings": []
@@ -91,8 +91,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#19871606597697646",
       "id": 1747408236004727286,
       "inState": 656998006978148289,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 235276470945876557,
       "pointsWeb": [],
@@ -110,8 +115,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#3517323109117319233",
       "id": 4079672912751513705,
       "inState": 235276470945876557,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 496520533178003845,
       "pointsWeb": [],

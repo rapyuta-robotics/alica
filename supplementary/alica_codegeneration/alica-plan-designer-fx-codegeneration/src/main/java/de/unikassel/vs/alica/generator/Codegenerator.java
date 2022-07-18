@@ -9,6 +9,8 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.AbstractPlan;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Behaviour;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Condition;
 import de.unikassel.vs.alica.planDesigner.alicamodel.Plan;
+import de.unikassel.vs.alica.planDesigner.alicamodel.Transition;
+import de.unikassel.vs.alica.planDesigner.alicamodel.TransitionCondition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.antlr.v4.runtime.CharStreams;
@@ -23,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -47,11 +50,12 @@ public class Codegenerator {
     private List<Plan> plans;
     private List<Behaviour> behaviours;
     private List<Condition> conditions;
+    private List<TransitionCondition> transitionConditions;
 
     /**
      * This constructor initializes a C++ code generator
      */
-    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
+    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, List<TransitionCondition> transitionConditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
         // TODO: Document this! Here can the programming language be changed.
         languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager, packageName);
         languageSpecificGenerator.setFormatter(formatter);
@@ -64,6 +68,7 @@ public class Codegenerator {
         Collections.sort(behaviours, new PlanElementComparator());
         this.conditions = conditions;
         Collections.sort(conditions, new PlanElementComparator());
+        this.transitionConditions = transitionConditions;
     }
 
     /**
@@ -102,7 +107,10 @@ public class Codegenerator {
 
         languageSpecificGenerator.createUtilityFunctionCreator(plans);
         languageSpecificGenerator.createBehaviourCreator(behaviours);
+
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
+        languageSpecificGenerator.createTransitionConditions(transitionConditions);
+        languageSpecificGenerator.createTransitionConditionsCreator(transitionConditions);
 
         /**
          * filter plans and behaviours for constraints before passing them to the creator, prevents

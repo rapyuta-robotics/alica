@@ -1,5 +1,22 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 4227261568323854459,
+      "key": "aToBSwitch",
+      "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 4460455267274597988,
+      "key": "cToDSwitch",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -153,8 +170,18 @@
   "transitions": [
     {
       "comment": "From A to B, isset(0)",
+      "condition": "conditions/conditions.cnd#3787001793582633602",
       "id": 1530004992551,
       "inState": 1530004915641,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "idx",
+            "parentKey": "aToBSwitch"
+          }
+        ],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1530004973591,
       "pointsWeb": [],
@@ -172,8 +199,13 @@
     },
     {
       "comment": "AnyChildFail",
+      "condition": "conditions/conditions.cnd#711536493236439192",
       "id": 1530004993680,
       "inState": 1530004973591,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1530004975275,
       "pointsWeb": [],
@@ -191,8 +223,18 @@
     },
     {
       "comment": "C to D, isset(2)",
+      "condition": "conditions/conditions.cnd#3787001793582633602",
       "id": 1532424092280,
       "inState": 1530004975275,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "idx",
+            "parentKey": "cToDSwitch"
+          }
+        ],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1532424087894,
       "pointsWeb": [],
@@ -210,8 +252,13 @@
     },
     {
       "comment": "AnyChildFail",
+      "condition": "conditions/conditions.cnd#711536493236439192",
       "id": 1532424112331,
       "inState": 1532424087894,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1532424097662,
       "pointsWeb": [],

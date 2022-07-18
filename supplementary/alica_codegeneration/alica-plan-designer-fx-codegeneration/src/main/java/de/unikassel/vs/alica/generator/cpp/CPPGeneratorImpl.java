@@ -316,6 +316,8 @@ public class CPPGeneratorImpl implements IGenerator {
             }
         }
 
+        // TODO: Remove generation of transitions eval functions in plans when in alica_tests,
+        // supplementary_tests, alica_turtle_sim and other packages have been updated to use the new transitions
         for (Transition inPlan : plan.getTransitions()) {
             try {
                 LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(srcPath));
@@ -335,6 +337,31 @@ public class CPPGeneratorImpl implements IGenerator {
 
     private String cutDestinationPathToDirectory(AbstractPlan plan) {
         String destinationPath = plan.getRelativeDirectory();
+        if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+        }
+        if (destinationPath == null) {
+            return "";
+        } else {
+            return destinationPath;
+        }
+    }
+
+    //TODO: remove duplicated code
+    private String cutDestinationPathToDirectory(Condition condition) {
+        String destinationPath = condition.getRelativeDirectory();
+        if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
+            destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
+        }
+        if (destinationPath == null) {
+            return "";
+        } else {
+            return destinationPath;
+        }
+    }
+
+    private String cutDestinationPathToDirectory(TransitionCondition condition) {
+        String destinationPath = condition.getRelativeDirectory();
         if (destinationPath != null && destinationPath.lastIndexOf('.') > destinationPath.lastIndexOf(File.separator)) {
             destinationPath = destinationPath.substring(0, destinationPath.lastIndexOf(File.separator) + 1);
         }
@@ -402,6 +429,33 @@ public class CPPGeneratorImpl implements IGenerator {
         String fileContentSource = xtendTemplates.domainPlanSource(packageName);
         writeSourceFile(srcPath, fileContentSource);
 
+        formatFile(srcPath);
+    }
+
+    @Override
+    public void createTransitionConditions(List<TransitionCondition> conditions) {
+        String destinationPath = cutDestinationPathToDirectory(conditions.get(0));
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, "conditions.h").toString();
+        String fileContentHeader = xtendTemplates.transitionConditionHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), destinationPath, "conditions.cpp").toString();
+        String fileContentSource = xtendTemplates.transitionConditionSource(conditions, packageName);
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
+    }
+
+    @Override
+    public void createTransitionConditionsCreator(List<TransitionCondition> conditions) {
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionConditionCreator.h").toString();
+        String fileContentHeader = xtendTemplates.transitionConditionCreatorHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "TransitionConditionCreator.cpp").toString();
+        String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions, packageName);
+        writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
     }
 

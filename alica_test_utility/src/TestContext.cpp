@@ -21,7 +21,7 @@ TestContext::TestContext(const std::string& agentName, const std::string& config
 int TestContext::init(AlicaCreators& creatorCtx)
 {
     AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
-            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator), std::move(creatorCtx.transitionConditionCreator));
     return init(std::move(creators));
 }
 

@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1479556022228,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1479556022226,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "ProblemBuildingMaster",
   "preCondition": null,
@@ -33,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636476,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636476"
         }
       ],
@@ -76,6 +83,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636487,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636487"
         }
       ],
@@ -99,8 +110,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#2011598442725310989",
       "id": 1479557591331,
       "inState": 1479556022227,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1479557585252,
       "pointsWeb": [],
