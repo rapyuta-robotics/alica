@@ -387,7 +387,7 @@ Branch Name: You can also enter a branch name, if kept blank, remote’s default
 
 Plans Path: It is also recommended to provide the path to the plan elements (relative to repo root), in case your repo contains many different folders each organising an ALICA designer project.
 
-E.g.  If your plans are in the lbc-repo , then the path for plans would be `lbc/etc`, since that’s where the plans are located remotely.
+E.g.  If your plans are in the `di_core`-repo , then the path for plans would be `robot/lbc/etc`, since that’s where the plans are located remotely.
 
 NOTE: If the repository contains duplicate plans, but in different sub paths of the repo, providing Plans Path is necessary or else, the import process will fail.
 
