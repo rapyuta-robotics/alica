@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1479556074051,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1479556074049,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "QueryPlan1",
   "preCondition": null,
@@ -58,6 +61,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636505,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636505"
         }
       ],

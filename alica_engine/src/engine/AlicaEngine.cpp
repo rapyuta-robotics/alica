@@ -8,6 +8,8 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -35,23 +37,24 @@ void AlicaEngine::abort(const std::string& msg)
 /**
  * The main class.
  */
-AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const std::string& configPath, const std::string& roleSetName,
-        const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
+AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams)
         : _ctx(ctx)
         , _configChangeListener(config)
         , _stepCalled(false)
-        , _stepEngine(stepEngine)
+        , _stepEngine(alicaContextParams.stepEngine)
         , _log(this)
-        , _modelManager(_planRepository, _configChangeListener, configPath)
-        , _masterPlan(_modelManager.loadPlanTree(masterPlanName))
-        , _roleSet(_modelManager.loadRoleSet(roleSetName))
-        , _teamManager(this, agentID)
-        , _syncModul(this)
-        , _teamObserver(this)
-        , _variableSyncModule(std::make_unique<VariableSyncModule>(this))
-        , _auth(this)
-        , _planBase(this)
+        , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
+        , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
+        , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
+        , _teamManager(this, alicaContextParams.agentID)
+        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
+        , _variableSyncModule(std::make_unique<VariableSyncModule>(
+                  _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
+        , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(this))
+        , _planBase(this)
+        , _teamObserver(
+                  _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -86,6 +89,11 @@ void AlicaEngine::reload(const YAML::Node& config)
  */
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AE: Already initialized.");
+        return true; // todo false?
+    }
+
     _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
 
@@ -100,6 +108,9 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+    initTransitionConditions(creatorCtx.transitionConditionCreator.get());
+
+    _initialized = true;
     return true;
 }
 
@@ -121,6 +132,19 @@ void AlicaEngine::terminate()
     _teamObserver.close();
     _log.close();
     _variableSyncModule->close();
+    _initialized = false;
+}
+
+void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
+{
+    for (const Transition* transition : _planRepository.getTransitions()) {
+        TransitionCondition* transitionCondition = transition->getTransitionCondition();
+        if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
+            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
+        } else {
+            transitionCondition->setEvalCallback(creator->createConditions(transitionCondition->getId()));
+        }
+    }
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const

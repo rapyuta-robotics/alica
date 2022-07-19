@@ -42,27 +42,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: 1414403840950 (1414403840950)
- *   - Comment:
- *   - Source2Dest: Init --> testState
- *
- * Precondition: 1414403842622 (1414403842622)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Init:
- */
-bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1414403840950) ENABLED START*/
-    return true;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1414403396328) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

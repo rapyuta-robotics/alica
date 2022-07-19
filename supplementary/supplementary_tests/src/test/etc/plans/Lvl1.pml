@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1524452759601,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1524452759599,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Lvl1",
   "preCondition": null,
@@ -45,6 +48,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636548,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636548"
         }
       ],
@@ -103,8 +110,13 @@
   "transitions": [
     {
       "comment": "Lvl1 Transition",
+      "condition": "conditions/conditions.cnd#295816226925111421",
       "id": 1524453490345,
       "inState": 1524453481856,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1524452759600,
       "pointsWeb": [],

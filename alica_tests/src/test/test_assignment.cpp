@@ -34,6 +34,17 @@ TEST(Assignment, RobotsInserted)
 
     alica::AlicaContext* ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
 
+    ASSERT_TRUE(ac->isValid());
+    ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+    ac->setWorldModel<alicaTests::TestWorldModel>();
+    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+
+    alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::TransitionConditionCreator>()};
+
+    EXPECT_EQ(0, ac->init(std::move(creators)));
+
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(repo, ae, path + "/etc/");

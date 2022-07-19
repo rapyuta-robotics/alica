@@ -106,6 +106,8 @@ public class FileSystemUtil {
                 return Types.UIEXTENSION;
             case Extensions.CONFIGURATION:
                 return Types.CONFIGURATION;
+            case Extensions.CONDITIONS:
+                return Types.CONDITIONS;
             default:
                 return Types.UNSUPPORTED;
         }
@@ -127,6 +129,8 @@ public class FileSystemUtil {
                 return Configuration.class;
             case Extensions.PLAN_EXTENSION:
                 return UiExtension.class;
+            case Extensions.CONDITIONS:
+                return ConditionRepository.class;
             default:
                 return null;
         }

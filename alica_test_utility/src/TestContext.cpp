@@ -11,7 +11,6 @@
 
 namespace alica::test
 {
-
 TestContext::TestContext(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
         bool stepEngine, const AgentId agentID)
         : AlicaContext(AlicaContextParams(agentName, configPath, roleSetName, masterPlanName, stepEngine, agentID))
@@ -22,7 +21,7 @@ TestContext::TestContext(const std::string& agentName, const std::string& config
 int TestContext::init(AlicaCreators& creatorCtx)
 {
     AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
-            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator), std::move(creatorCtx.transitionConditionCreator));
     return init(std::move(creators));
 }
 

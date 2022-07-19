@@ -13,6 +13,7 @@
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
 #include "engine/IPlanCreator.h"
+#include "engine/ITransitionConditionCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/ISolver.h"
@@ -52,14 +53,15 @@ class TestContext;
 struct AlicaCreators
 {
     AlicaCreators(std::unique_ptr<IConditionCreator> cc, std::unique_ptr<IUtilityCreator> uc, std::unique_ptr<IConstraintCreator> crc,
-            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc)
+            std::unique_ptr<IBehaviourCreator> bc, std::unique_ptr<IPlanCreator> pc, std::unique_ptr<ITransitionConditionCreator> tcc)
             : conditionCreator(std::move(cc))
             , utilityCreator(std::move(uc))
             , constraintCreator(std::move(crc))
             , behaviourCreator(std::move(bc))
             , planCreator(std::move(pc))
+            , transitionConditionCreator(std::move(tcc))
     {
-        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator);
+        assert(conditionCreator && utilityCreator && constraintCreator && behaviourCreator && planCreator && transitionConditionCreator);
     }
 
     AlicaCreators() = default;
@@ -73,6 +75,7 @@ struct AlicaCreators
     std::unique_ptr<IConstraintCreator> constraintCreator;
     std::unique_ptr<IBehaviourCreator> behaviourCreator;
     std::unique_ptr<IPlanCreator> planCreator;
+    std::unique_ptr<ITransitionConditionCreator> transitionConditionCreator;
 };
 
 /**
@@ -197,12 +200,13 @@ public:
      * Initialize alica framework and related modules.
      *
      * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
+     * @param delayStarted does not start _engine. Set to true only for testing purpose
      *
      * @return Return code '0' stands for success, any other for corresponding error
      *
      * @see AlicaCreators
      */
-    int init(AlicaCreators&& creatorCtx);
+    int init(AlicaCreators&& creatorCtx, bool delayStart = false);
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before
@@ -424,6 +428,7 @@ private:
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
+    const AlicaContextParams _alicaContextParams;
 
     bool _initialized = false;
 
@@ -452,6 +457,11 @@ private:
 template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new clock");
+        return;
+    }
+
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);
@@ -463,6 +473,11 @@ void AlicaContext::setClock(Args&&... args)
 template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new communicator");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
     AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
 #if (defined __cplusplus && __cplusplus >= 201402L)
@@ -501,6 +516,11 @@ bool AlicaContext::existSolver() const
 template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new timerfactory");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
@@ -512,6 +532,11 @@ void AlicaContext::setTimerFactory(Args&&... args)
 template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new tracefactory");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
@@ -523,6 +548,11 @@ void AlicaContext::setTraceFactory(Args&&... args)
 template <class WorldModelType, class... Args>
 void AlicaContext::setWorldModel(Args&&... args)
 {
+    if (_initialized) {
+        ALICA_WARNING_MSG("AC: Context already initialized. Can not set new worldmodeltype");
+        return;
+    }
+
     static_assert(std::is_base_of<IAlicaWorldModel, WorldModelType>::value, "Must be derived from IAlicaWorldModel");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);
@@ -531,12 +561,10 @@ void AlicaContext::setWorldModel(Args&&... args)
 #endif
 }
 
+// Some options can be set before AlicaContext::init but become available only after the init is called
 template <class T>
 bool AlicaContext::setOption(const std::string& path, const T& value, bool reload) noexcept
 {
-    if (_initialized) {
-        return false;
-    }
     ConfigPathParser configPathParser;
     std::vector<std::string> params = configPathParser.getParams('.', path);
 
@@ -551,19 +579,16 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         ALICA_WARNING_MSG("AC: Could not set config value: " << e.msg);
         return false;
     }
-
-    if (reload) {
+    if (reload && _initialized) {
         reloadConfig();
     }
     return true;
 }
 
+// Some options can be set before AlicaContext::init but become available only after the init is called
 template <class T>
 bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyValuePairs, bool reload) noexcept
 {
-    if (_initialized) {
-        return false;
-    }
     ConfigPathParser configPathParser;
     std::vector<std::pair<std::string, T>> oldKeyValuePairs;
 
@@ -591,10 +616,9 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         return false;
     }
 
-    if (reload) {
+    if (reload && _initialized) {
         reloadConfig();
     }
-
     return true;
 }
 
