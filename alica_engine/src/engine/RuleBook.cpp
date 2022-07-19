@@ -99,12 +99,16 @@ PlanChange RuleBook::visit(RunningPlan& r)
     // obtain modification lock for visited plan
     RunningPlan::ScopedWriteLock lck = r.getWriteLock();
 
+    // do activation of plan if no transitions have been done during this tick
+    r.setActivationNeeded(true);
+
     do {
         msChange = updateChange(msChange, changeRecord);
         changeRecord = PlanChange::NoChange;
         changeRecord = updateChange(changeRecord, synchTransitionRule(r));
         PlanChange transChange = transitionRule(r);
         while (transChange != PlanChange::NoChange && ++changes < _maxConsecutiveChanges) {
+            r.setActivationNeeded(false);
             changeRecord = updateChange(changeRecord, transChange);
             transChange = transitionRule(r);
         }
@@ -136,6 +140,10 @@ PlanChange RuleBook::visit(RunningPlan& r)
         }
 
     } while (changeRecord != PlanChange::NoChange && ++changes < _maxConsecutiveChanges);
+
+    if (r.isActivationNeeded()) {
+        r.activate();
+    }
     return msChange;
 }
 

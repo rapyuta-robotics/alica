@@ -166,6 +166,12 @@ void RunningPlan::setAllocationNeeded(bool need)
     _status.allocationNeeded = need;
 }
 
+// TODO: Doc comment
+void RunningPlan::setActivationNeeded(bool need)
+{
+    _status.activationNeeded = need;
+}
+
 /**
  * Evaluates the precondition of the associated plan.
  * @return Whether the precondition currently holds or not.
@@ -236,9 +242,6 @@ void RunningPlan::addChildren(const std::vector<RunningPlan*>& runningPlans)
         auto iter = _failedSubPlans.find(r->getActivePlan());
         if (iter != _failedSubPlans.end()) {
             r->_status.failCount = iter->second;
-        }
-        if (isActive()) {
-            r->activate();
         }
     }
 }
@@ -418,9 +421,10 @@ void RunningPlan::adaptAssignment(const RunningPlan& replacement)
     usePlan(replacement.getActivePlan());
     _activeTriple.entryPoint = replacement.getActiveEntryPoint();
     useState(newState);
-    if (reactivate) {
-        activate();
-    }
+    // TODO: Check if adaptAssignment works correctly when not activating plan
+    // if (reactivate) {
+    //     activate();
+    // }
 }
 
 /**
@@ -556,7 +560,7 @@ bool RunningPlan::amISuccessfulInAnyChild() const
 }
 
 /**
- * Activate this plan, called when it is inserted into the plan graph.
+ * Activate this plan, called when the plan graph has been loaded and no more transitions are possible.
  */
 void RunningPlan::activate()
 {
@@ -839,6 +843,7 @@ std::ostream& operator<<(std::ostream& out, const RunningPlan& r)
     }
     const RunningPlan::PlanStatusInfo& psi = r.getStatusInfo();
     out << "AllocNeeded: " << psi.allocationNeeded << std::endl;
+    out << "ActivationNeeded: " << psi.activationNeeded << std::endl;
     out << "FailHandlingNeeded: " << psi.failHandlingNeeded << "\t";
     out << "FailCount: " << psi.failCount << std::endl;
     out << "Activity: " << getPlanActivityName(psi.active) << std::endl;
