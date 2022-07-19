@@ -84,6 +84,7 @@ public:
                 , planStartTime()
                 , active(PlanActivity::InActive)
                 , allocationNeeded(false)
+                , activationNeeded(false)
                 , failHandlingNeeded(false)
                 , runTimeConditionStatus(EvalStatus::Unknown)
         {
@@ -96,6 +97,7 @@ public:
         int failCount;
         bool failHandlingNeeded;
         bool allocationNeeded;
+        bool activationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
     explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
@@ -109,6 +111,7 @@ public:
 
     bool isBehaviour() const { return _behaviour; };
     bool isAllocationNeeded() const { return _status.allocationNeeded; }
+    bool isActivationNeeded() const { return _status.activationNeeded; }
     bool isFailureHandlingNeeded() const { return _status.failHandlingNeeded; }
     PlanStatus getStatus() const;
     AlicaTime getPlanStartTime() const { return _status.planStartTime; }
@@ -145,6 +148,7 @@ public:
     void printRecursive() const;
 
     void setAllocationNeeded(bool allocationNeeded);
+    void setActivationNeeded(bool activationNeeded);
     void useEntryPoint(const EntryPoint* value);
     void useState(const State* activeState);
 
