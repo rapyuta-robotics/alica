@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 3277312192440194145,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "",
@@ -19,6 +21,7 @@
     {
       "comment": "",
       "id": 4346694000146342467,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "",
@@ -34,6 +37,7 @@
   ],
   "frequency": 0,
   "id": 1889749086610694100,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Move",
   "preCondition": null,
@@ -69,6 +73,10 @@
           "comment": "",
           "configuration": null,
           "id": 3768390995110815611,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],
@@ -93,6 +101,10 @@
           "comment": "",
           "configuration": null,
           "id": 139589851715028435,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": ""
         }
       ],

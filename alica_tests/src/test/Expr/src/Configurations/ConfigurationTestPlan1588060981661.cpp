@@ -38,31 +38,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: FromDefault NameTo Default Name (1588253347211)
- *   - Comment: MISSING_COMMENT
- *   - Source2Dest: Default Name --> Default Name
- *
- * Precondition: 1588253347213 (1588253347213)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Default Name:
- *   - ReadConfigurationBehaviour (1588061129360)
- *   - ReadConfigurationBehaviour (1588061129360)
- *   - ReadConfigurationPlantype (1588061351007)
- *   - ReadConfigurationPlan (1588061334567)
- */
-bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1588253347211) ENABLED START*/
-    return CounterClass::called == 1;
-    /*PROTECTED REGION END*/
-}
-
 /*PROTECTED REGION ID(methods1588060981661) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

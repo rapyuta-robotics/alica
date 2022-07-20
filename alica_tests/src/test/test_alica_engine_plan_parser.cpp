@@ -21,6 +21,7 @@ using namespace std;
 #include "engine/model/Task.h"
 #include "engine/model/TerminalState.h"
 #include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 
 #include <gtest/gtest.h>
 
@@ -117,6 +118,11 @@ protected:
         EXPECT_EQ(enabled, condition->isEnabled()) << "Wrong enabled value!" << endl;
     }
 
+    static void checkTransitionCondition(const alica::TransitionCondition* condition, long id, string name, string comment)
+    {
+        checkAlicaElement(condition, id, name, comment);
+    }
+
     static void checkPostCondition(const alica::PostCondition* condition, long id, string name, string comment, string conString, string pluginName)
     {
         checkAlicaElement(condition, id, name, comment);
@@ -134,7 +140,8 @@ protected:
             string preConName, string preConComment, string preConString, string pluginName, bool enabled)
     {
         checkAlicaElement(transition, id, name, comment);
-        checkPreCondition(transition->getPreCondition(), preConditionId, preConName, preConComment, preConString, pluginName, enabled);
+        checkTransitionCondition(transition->getTransitionCondition(), preConditionId, preConName, preConComment);
+        // checkPreCondition(transition->getPreCondition(), preConditionId, preConName, preConComment, preConString, pluginName, enabled);
 
         EXPECT_EQ(inState, transition->getInState()->getId()) << "Unknown id for InState!" << endl;
 
@@ -203,42 +210,42 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
                 case 1402489459382:
-                    checkTransition(
-                            t, 1402489459382, "MISSING_NAME", "", 1402489460549, 1402488646220, 1402489396914, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489459382, "MISSING_NAME", "", 1678986049909129132, 1402488646220, 1402489396914, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     cout << "Quantifiers: " << endl;
-                    for (const alica::Quantifier* q : t->getPreCondition()->getQuantifiers()) {
-                        switch (q->getId()) {
-                        case 1403773214317:
-                            cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-                            checkQuantifier(q, 1403773214317, "MISSING_NAME", "", 1402488634525, {"X", "Y"});
-                            EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
-                            break;
-                        case 1403773224776:
-                            cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-                            checkQuantifier(q, 1403773224776, "MISSING_NAME", "", 1402488646220, {"A", "B"});
-                            EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
-                            break;
-                        case 1403773234841:
-                            cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-                            checkQuantifier(q, 1403773234841, "MISSING_NAME", "", 1402489396914, {"another one"});
-                            EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
-                            break;
-                        case 1403773248357:
-                            cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
-                            checkQuantifier(q, 1403773248357, "MISSING_NAME", "", 1402488646221, {"TaskQuantifier"});
-                            EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
-                            break;
-                        default:
-                            EXPECT_TRUE(false);
-                            cerr << "TEST_F(AlicaEngineTest, planParser) found a Quantifier not part of "
-                                    "AttackPlan.pml!"
-                                 << endl;
-                            break;
-                        }
-                    }
+                    // for (const alica::Quantifier* q : t->getPreCondition()->getQuantifiers()) {
+                    //     switch (q->getId()) {
+                    //     case 1403773214317:
+                    //         cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+                    //         checkQuantifier(q, 1403773214317, "MISSING_NAME", "", 1402488634525, {"X", "Y"});
+                    //         EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
+                    //         break;
+                    //     case 1403773224776:
+                    //         cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+                    //         checkQuantifier(q, 1403773224776, "MISSING_NAME", "", 1402488646220, {"A", "B"});
+                    //         EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
+                    //         break;
+                    //     case 1403773234841:
+                    //         cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+                    //         checkQuantifier(q, 1403773234841, "MISSING_NAME", "", 1402489396914, {"another one"});
+                    //         EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
+                    //         break;
+                    //     case 1403773248357:
+                    //         cout << "\t" << q->getName() << " ID: " << q->getId() << endl;
+                    //         checkQuantifier(q, 1403773248357, "MISSING_NAME", "", 1402488646221, {"TaskQuantifier"});
+                    //         EXPECT_TRUE(dynamic_cast<const alica::ForallAgents*>(q) != 0) << "Wrong Type!" << endl;
+                    //         break;
+                    //     default:
+                    //         EXPECT_TRUE(false);
+                    //         cerr << "TEST_F(AlicaEngineTest, planParser) found a Quantifier not part of "
+                    //                 "AttackPlan.pml!"
+                    //              << endl;
+                    //         break;
+                    //     }
+                    // }
                     break;
                 case 1402489460694:
-                    checkTransition(t, 1402489460694, "MISSING_NAME", "", 1402489462088, 1402489396914, 1402488646220, "ConditionNameShootAttack", "",
+                    checkTransition(t, 1402489460694, "MISSING_NAME", "", 1678986049909129132, 1402489396914, 1402488646220, "DefaultCondition", "",
                             "Some nice comment!", "DefaultPlugin", true);
                     break;
                 default:
@@ -287,20 +294,20 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
                 case 1402488990761:
-                    checkTransition(t, 1402488990761, "TackleToGetBall", "GetBallToTackle", 1402488991641, 1402488959965, 1402488903549, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1402488990761, "TackleToGetBall", "GetBallToTackle", 1678986049909129132, 1402488959965, 1402488903549,
+                            "DefaultCondition", "", "", "DefaultPlugin", true);
                     break;
                 case 1402488991762:
-                    checkTransition(t, 1402488991762, "TackleToGetBall", "TackleToGetBall", 1402488993122, 1402488903549, 1402488959965, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1402488991762, "TackleToGetBall", "TackleToGetBall", 1678986049909129132, 1402488903549, 1402488959965,
+                            "DefaultCondition", "", "", "DefaultPlugin", true);
                     break;
                 case 1402489064693:
-                    checkTransition(t, 1402489064693, "GetBallToTryToDefendGoal", "TESTESTETS", 1402489065962, 1402488959965, 1402489037735, "MISSING_NAME", "",
-                            "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489064693, "GetBallToTryToDefendGoal", "TESTESTETS", 1678986049909129132, 1402488959965, 1402489037735,
+                            "DefaultCondition", "", "", "DefaultPlugin", true);
                     break;
                 case 1402489071510:
-                    checkTransition(t, 1402489071510, "TryToDefendGoalToGetGoal", "TryToDefendGoalToGetGoal", 1402489073613, 1402489037735, 1402488910751,
-                            "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489071510, "TryToDefendGoalToGetGoal", "TryToDefendGoalToGetGoal", 1678986049909129132, 1402489037735, 1402488910751,
+                            "DefaultCondition", "", "", "DefaultPlugin", true);
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -357,16 +364,16 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
                 case 1402489173167:
-                    checkTransition(
-                            t, 1402489173167, "MISSING_NAME", "", 1402489174338, 1402488881799, 1402489152217, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489173167, "MISSING_NAME", "", 1678986049909129132, 1402488881799, 1402489152217, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     break;
                 case 1402489205153:
-                    checkTransition(
-                            t, 1402489205153, "MISSING_NAME", "", 1402489206278, 1402489152217, 1402488881799, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489205153, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402488881799, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     break;
                 case 1402489216617:
-                    checkTransition(
-                            t, 1402489216617, "MISSING_NAME", "", 1402489218027, 1402489152217, 1402489192198, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489216617, "MISSING_NAME", "", 1678986049909129132, 1402489152217, 1402489192198, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     break;
                 default:
                     EXPECT_TRUE(false);
@@ -425,20 +432,20 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
                 case 1402488557864:
-                    checkTransition(t, 1402488557864, "GoalToSucGoal", "GoalToSucGoal", 1402488558741, 1402488470615, 1402488536570, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1402488557864, "GoalToSucGoal", "GoalToSucGoal", 1678986049909129132, 1402488470615, 1402488536570, "DefaultCondition",
+                            "", "", "DefaultPlugin", true);
                     break;
                 case 1402488517667:
-                    checkTransition(t, 1402488517667, "AttackToGoal", "AttackToGoal", 1402488519140, 1402488437261, 1402488477650, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1402488517667, "AttackToGoal", "AttackToGoal", 1678986049909129132, 1402488437261, 1402488477650, "DefaultCondition", "",
+                            "", "DefaultPlugin", true);
                     break;
                 case 1402488519757:
-                    checkTransition(t, 1402488519757, "MidFieldToGoal", "MidFieldToGoal", 1402488520968, 1402488477650, 1402488470615, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1402488519757, "MidFieldToGoal", "MidFieldToGoal", 1678986049909129132, 1402488477650, 1402488470615, "DefaultCondition",
+                            "", "", "DefaultPlugin", true);
                     break;
                 case 1409218318661:
-                    checkTransition(t, 1409218318661, "AttackToDefend", "AttackToDefend", 1409218319990, 1402488437261, 1402488463437, "MISSING_NAME", "", "",
-                            "DefaultPlugin", true);
+                    checkTransition(t, 1409218318661, "AttackToDefend", "AttackToDefend", 1678986049909129132, 1402488437261, 1402488463437, "DefaultCondition",
+                            "", "", "DefaultPlugin", true);
                     break;
                 default:
                     cout << t->getId() << "########" << endl;
@@ -503,17 +510,17 @@ TEST_F(AlicaEngineTest, planParser)
                 cout << "\t" << t->getName() << " ID: " << t->getId() << endl;
                 switch (t->getId()) {
                 case 1402489257607:
-                    checkTransition(
-                            t, 1402489257607, "MISSING_NAME", "", 1402489258509, 1402488787818, 1402489237914, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489257607, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489237914, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     break;
                 case 1402489276995:
-                    checkTransition(
-                            t, 1402489276995, "MISSING_NAME", "", 1402489278408, 1402488787818, 1402489273401, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402489276995, "MISSING_NAME", "", 1678986049909129132, 1402488787818, 1402489273401, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     EXPECT_EQ(1402500865502, t->getSynchronisation()->getId()) << "Wrong synctransition ID!" << endl;
                     break;
                 case 1402500843072:
-                    checkTransition(
-                            t, 1402500843072, "MISSING_NAME", "", 1402500844446, 1402500830885, 1402500833246, "MISSING_NAME", "", "", "DefaultPlugin", true);
+                    checkTransition(t, 1402500843072, "MISSING_NAME", "", 1678986049909129132, 1402500830885, 1402500833246, "DefaultCondition", "", "",
+                            "DefaultPlugin", true);
                     checkSynchronisation(t->getSynchronisation(), 1402500865502, "SynChro", "", 30, 10000);
 
                     break;
