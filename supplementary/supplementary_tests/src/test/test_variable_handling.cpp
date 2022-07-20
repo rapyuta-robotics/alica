@@ -6,6 +6,7 @@
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
+#include <engine/AlicaDefaultLogger.h>
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/PlanBase.h>
