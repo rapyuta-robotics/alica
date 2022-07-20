@@ -504,7 +504,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
         if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_sm.isTransitionSuccessfullySynchronised(t)) {
+        if (_synchModule.isTransitionSuccessfullySynchronised(t)) {
             if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
@@ -517,7 +517,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
+            _synchModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {
