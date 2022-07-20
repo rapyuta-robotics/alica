@@ -11,6 +11,7 @@
 #include "engine/model/Quantifier.h"
 #include "engine/model/RoleSet.h"
 #include "engine/model/TaskRepository.h"
+#include "engine/model/TransitionConditionRepository.h"
 #include "engine/model/Variable.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BehaviourFactory.h"
@@ -19,6 +20,7 @@
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/modelmanagement/factories/TransitionConditionRepositoryFactory.h"
 #include "engine/util/HashFunctions.h"
 
 #include <essentials/FileSystem.h>
@@ -114,6 +116,8 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
             parseFile(fileToParse, alica::Strings::configuration);
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::plantype_extension)) {
             parseFile(fileToParse, alica::Strings::plantype);
+        } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::condition_extension)) {
+            parseFile(fileToParse, alica::Strings::transitionCondition);
         } else {
             AlicaEngine::abort("MM: Cannot parse file type: ", fileToParse);
         }
@@ -215,6 +219,10 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         RoleSet* roleSet = RoleSetFactory::create(node);
         roleSet->setFileName(currentFile);
         return roleSet;
+    } else if (alica::Strings::transitionCondition.compare(type) == 0) {
+        TransitionConditionRepository* conditionRepository = TransitionConditionRepositoryFactory::create(node);
+        conditionRepository->setFileName(currentFile);
+        return conditionRepository;
     } else {
         AlicaEngine::abort("MM: Parsing type not handled: ", type);
         return nullptr;

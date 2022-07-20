@@ -17,6 +17,7 @@ ReferenceList Factory::synchTransitionReferences;
 ReferenceList Factory::transitionSynchReferences;
 ReferenceList Factory::transitionInStateReferences;
 ReferenceList Factory::transitionOutStateReferences;
+ReferenceList Factory::transitionConditionReferences;
 ReferenceList Factory::bindingSubPlanReferences;
 ReferenceList Factory::bindingSubVarReferences;
 ReferenceList Factory::bindingVarReferences;
@@ -47,7 +48,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
         std::string fileReferenced;
         if (essentials::FileSystem::endsWith(locator, alica::Strings::plan_extension) ||
                 essentials::FileSystem::endsWith(locator, alica::Strings::behaviour_extension) ||
-                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension)) {
+                essentials::FileSystem::endsWith(locator, alica::Strings::plantype_extension) ||
+                essentials::FileSystem::endsWith(locator, alica::Strings::condition_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::taskrepository_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->baseTaskPath, locator);
@@ -76,6 +78,7 @@ void Factory::setModelManager(alica::ModelManager* modelManager)
     synchTransitionReferences.clear();
     transitionInStateReferences.clear();
     transitionOutStateReferences.clear();
+    transitionConditionReferences.clear();
     bindingSubPlanReferences.clear();
     bindingSubVarReferences.clear();
     bindingVarReferences.clear();
@@ -150,6 +153,10 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._confAbstractPlanWrapperRepository.emplace(ael->getId(), (ConfAbstractPlanWrapper*) ael);
     } else if (alica::Strings::configuration.compare(type) == 0) {
         modelManager->_planRepository._configurationRepository.emplace(ael->getId(), (Configuration*) ael);
+    } else if (alica::Strings::transitionCondition.compare(type) == 0) {
+        modelManager->_planRepository._transitionConditions.emplace(ael->getId(), (TransitionCondition*) ael);
+    } else if (alica::Strings::transitionConditionRepository.compare(type) == 0) {
+        modelManager->_planRepository._transitionConditionRepositories.emplace(ael->getId(), (TransitionConditionRepository*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
         std::cout << "Factory: INFO: Element type " << type << " is not stored in plan repository." << std::endl;

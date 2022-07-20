@@ -1,6 +1,6 @@
-#include "ConstraintCreator.h"
+#include <alica/ConstraintCreator.h>
 
-#include "constraints/Move1889749086610694100Constraints.h"
+#include <alica/constraints/Move1889749086610694100Constraints.h>
 
 #include <iostream>
 

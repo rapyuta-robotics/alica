@@ -41,6 +41,7 @@ class SimplePlanTree;
 class Blackboard;
 class KeyMapping;
 class IAlicaLogger;
+class IAlicaWorldModel;
 
 struct PlanStateTriple
 {
@@ -216,6 +217,7 @@ public:
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
     AlicaEngine* getAlicaEngine() const { return _ae; }
+    int64_t getParentWrapperId(const RunningPlan* rp) const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);

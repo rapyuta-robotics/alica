@@ -1,4 +1,5 @@
-#include "VariableHandling/Lvl11524452759599.h"
+// #include "VariableHandling/Lvl11524452759599.h"
+#include "supplementary_tests/conditions/conditions.h"
 #include "test_supplementary.h"
 
 #include <alica/test/Util.h>
@@ -139,28 +140,31 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     ok = q1.getSolution<CGSolver, double>(rp1, result1);
     EXPECT_TRUE(ok);
     EXPECT_EQ(2u, result1.size());
-    EXPECT_EQ(4, q1.getPartCount());
 
-    Query q2(logger);
-    q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
-    q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
+    /**
+     * This part of the test is deactivated for now because new transition conditions dont support
+     * constraints anymore.
+     */
+    // Query q2(logger);
+    // q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
+    // q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
 
-    ok = q2.getSolution<CGSolver, double>(rp2, result1);
-    EXPECT_TRUE(ok);
-    EXPECT_EQ(2u, result1.size());
-    EXPECT_EQ(3, q2.getPartCount());
-    EXPECT_GT(result1[0] + 0.001, result1[1]);
+    // ok = q2.getSolution<CGSolver, double>(rp2, result1);
+    // EXPECT_TRUE(ok);
+    // EXPECT_EQ(2u, result1.size());
+    // EXPECT_EQ(3, q2.getPartCount());
+    // EXPECT_GT(result1[0] + 0.001, result1[1]);
 
-    q1.clearStaticVariables();
-    q1.clearDomainVariables();
+    // q1.clearStaticVariables();
+    // q1.clearDomainVariables();
 
-    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
-    q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "Y"));
-    ok = q1.getSolution<CGSolver, double>(rp1, result1);
-    EXPECT_TRUE(ok);
-    EXPECT_EQ(2u, result1.size());
-    EXPECT_EQ(4, q1.getPartCount());
-    EXPECT_GT(result1[0] + 0.001, result1[1]);
+    // q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
+    // q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "Y"));
+    // ok = q1.getSolution<CGSolver, double>(rp1, result1);
+    // EXPECT_TRUE(ok);
+    // EXPECT_EQ(2u, result1.size());
+    // EXPECT_EQ(4, q1.getPartCount());
+    // EXPECT_GT(result1[0] + 0.001, result1[1]);
 }
 } // namespace
 } // namespace supplementary
