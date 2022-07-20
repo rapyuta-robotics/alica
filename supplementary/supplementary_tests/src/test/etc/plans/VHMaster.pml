@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1524452721454,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1524452721452,
+  "inheritBlackboard": false,
   "masterPlan": true,
   "name": "VHMaster",
   "preCondition": null,
@@ -45,6 +48,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636570,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636570"
         }
       ],

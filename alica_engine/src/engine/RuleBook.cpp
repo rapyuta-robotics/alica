@@ -14,6 +14,7 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
@@ -453,11 +454,12 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     }
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSynchronisation() != nullptr)
+        if (t->getSynchronisation() != nullptr) {
             continue;
-        if (t->evalCondition(r, _wm)) {
+        }
+
+        if (t->getTransitionCondition()->evaluate(&r, _wm, t->getKeyMapping())) {
             nextState = t->getOutState();
-            r.editConstraintStore().addCondition(t->getPreCondition());
             break;
         }
     }
@@ -501,10 +503,11 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             continue;
         }
         if (_sm.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp, _wm)) {
+            if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
-                rp.editConstraintStore().addCondition(t->getPreCondition());
+                // TODO: Find solution for constraints with new transition conditions
+                // rp.editConstraintStore().addCondition(t->getPreCondition());
                 break;
             } else {
                 // adds a new synchronisation process or updates existing
@@ -512,7 +515,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->evalCondition(rp, _wm));
+            _sm.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {

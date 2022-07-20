@@ -2,7 +2,9 @@
 
 #include "engine/PlanChange.h"
 
+#include <any>
 #include <memory>
+#include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
 namespace alica

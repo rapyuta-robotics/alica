@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1524452836024,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1524452836022,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Lvl3",
   "preCondition": null,

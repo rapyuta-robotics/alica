@@ -12,6 +12,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -126,6 +127,7 @@ public:
 
 private:
     void setStepEngine(bool stepEngine);
+    void initTransitionConditions(ITransitionConditionCreator* creator);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
@@ -143,6 +145,7 @@ private:
     AuthorityManager _auth;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
+    DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
     PlanBase _planBase;
     bool _initialized{false};
 

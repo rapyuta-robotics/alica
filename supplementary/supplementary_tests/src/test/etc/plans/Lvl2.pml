@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1524452793380,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
     {
       "comment": "",
       "id": 1524453238753,
+      "isDynamic": false,
       "maxCardinality": 1,
       "minCardinality": 1,
       "name": "AttackTask",
@@ -34,6 +37,7 @@
   ],
   "frequency": 0,
   "id": 1524452793378,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "Lvl2",
   "preCondition": null,
@@ -73,6 +77,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636528,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636528"
         }
       ],

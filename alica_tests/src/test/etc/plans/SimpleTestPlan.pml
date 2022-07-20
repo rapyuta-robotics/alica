@@ -1,5 +1,14 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 3196801973742034307,
+      "key": "targetChildStatus",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -100,8 +109,8 @@
       "outTransitions": [],
       "parentPlan": 1412252439925,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 874.3829160530191,
+        "y": 200.69513991163475
       },
       "type": "State",
       "variableBindings": []
@@ -111,11 +120,26 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#843443485857038179",
       "id": 1412761925032,
       "inState": 1412252439926,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "childStatus",
+            "parentKey": "targetChildStatus"
+          }
+        ],
+        "output": []
+      },
       "name": "1412761925032",
       "outState": 1412761855746,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

@@ -39,6 +39,14 @@
       "id": 785752561217999359,
       "key": "planInputFromMaster",
       "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 1610853554686361041,
+      "key": "targetChildStatus",
+      "type": "std::any"
     }
   ],
   "comment": "",
@@ -52,8 +60,8 @@
       "name": "ParameterPassingSubplanEP",
       "plan": 1692837668719979457,
       "positionWeb": {
-        "x": 309,
-        "y": 218
+        "x": 200,
+        "y": 212
       },
       "state": 1092447442809556626,
       "successRequired": false,
@@ -142,8 +150,8 @@
       ],
       "parentPlan": 1692837668719979457,
       "positionWeb": {
-        "x": 735,
-        "y": 243
+        "x": 357.09572901325475,
+        "y": 359.1870397643594
       },
       "type": "State",
       "variableBindings": []
@@ -153,11 +161,26 @@
   "transitions": [
     {
       "comment": "Forth",
+      "condition": "conditions/conditions.cnd#843443485857038179",
       "id": 1129456609900,
       "inState": 1092447442809556626,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "childStatus",
+            "parentKey": "targetChildStatus"
+          }
+        ],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1529456591400,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 29
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -172,11 +195,21 @@
     },
     {
       "comment": "Back",
+      "condition": "conditions/conditions.cnd#1237521027685048666",
       "id": 2229456609900,
       "inState": 1529456591400,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1092447442809556626,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

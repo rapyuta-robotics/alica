@@ -31,6 +31,7 @@ protected:
     static ReferenceList synchTransitionReferences;
     static ReferenceList transitionInStateReferences;
     static ReferenceList transitionOutStateReferences;
+    static ReferenceList transitionConditionReferences;
     static ReferenceList bindingSubPlanReferences;
     static ReferenceList bindingSubVarReferences;
     static ReferenceList bindingVarReferences;

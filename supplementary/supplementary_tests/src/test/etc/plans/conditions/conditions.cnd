@@ -1,0 +1,22 @@
+{
+  "comment": "",
+  "id": -1,
+  "name": "ConditionRepository",
+  "relativeDirectory": "",
+  "conditions": [
+  {
+    "blackboard": [],
+    "comment": "",
+    "id": 295816226925111421,
+    "name": "VariableHandlingStart",
+    "relativeDirectory": "conditions"
+  },
+  {
+    "blackboard": [],
+    "comment": "",
+    "id": 2011598442725310989,
+    "name": "DefaultCondition",
+    "relativeDirectory": "conditions"
+  }
+]
+}
