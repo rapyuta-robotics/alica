@@ -1,33 +1,27 @@
 #include "engine/model/Transition.h"
 #include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"
+#include "engine/blackboard/KeyMapping.h"
 #include "engine/model/PostCondition.h"
-#include "engine/model/PreCondition.h"
+#include "engine/model/TransitionCondition.h"
 
 namespace alica
 {
 
 Transition::Transition()
-        : _preCondition(nullptr)
+        : _transitionCondition(nullptr)
         , _inState(nullptr)
         , _outState(nullptr)
         , _synchronisation(nullptr)
+        , _keyMapping(nullptr)
 {
 }
 
 Transition::~Transition() {}
 
-bool Transition::evalCondition(const RunningPlan& r, const IAlicaWorldModel* wm) const
+void Transition::setTransitionCondition(TransitionCondition* transitionCondition)
 {
-    if (!_preCondition) {
-        std::cerr << "Transition " << this->getId() << " has no precondition attached!" << std::endl;
-    }
-    return _preCondition && _preCondition->evaluate(r, wm);
-}
-
-void Transition::setPreCondition(PreCondition* preCondition)
-{
-    _preCondition = preCondition;
+    _transitionCondition = transitionCondition;
 }
 
 void Transition::setInState(State* inState)

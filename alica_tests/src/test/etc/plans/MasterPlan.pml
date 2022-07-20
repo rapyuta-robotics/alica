@@ -200,8 +200,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1678986049909129132",
       "id": 1402488517667,
       "inState": 1402488437261,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "AttackToGoal",
       "outState": 1402488477650,
       "pointsWeb": [],
@@ -219,8 +224,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1678986049909129132",
       "id": 1402488519757,
       "inState": 1402488477650,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MidFieldToGoal",
       "outState": 1402488470615,
       "pointsWeb": [],
@@ -238,8 +248,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1678986049909129132",
       "id": 1402488557864,
       "inState": 1402488470615,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "GoalToSucGoal",
       "outState": 1402488536570,
       "pointsWeb": [],
@@ -257,8 +272,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1678986049909129132",
       "id": 1409218318661,
       "inState": 1402488437261,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "AttackToDefend",
       "outState": 1402488463437,
       "pointsWeb": [],

@@ -11,6 +11,7 @@ import de.unikassel.vs.alica.planDesigner.alicamodel.RuntimeCondition
 import java.util.List
 import java.util.Map
 import de.unikassel.vs.alica.planDesigner.alicamodel.Transition
+import de.unikassel.vs.alica.planDesigner.alicamodel.TransitionCondition
 import de.unikassel.vs.alica.planDesigner.alicamodel.EntryPoint
 import de.unikassel.vs.alica.planDesigner.alicamodel.State
 import de.unikassel.vs.alica.planDesigner.alicamodel.TerminalState
@@ -1028,15 +1029,6 @@ namespace alica
                 };
             «ENDIF»
         «ENDIF»
-        «var List<Transition> transitions = s.outTransitions»
-        «FOR transition : transitions»
-            «IF transition.preCondition !== null»
-                class PreCondition«transition.preCondition.id» : public DomainCondition
-                {
-                    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
-                };
-            «ENDIF»
-        «ENDFOR»
     «ENDFOR»
 } /* namespace alica */
 '''
@@ -1107,11 +1099,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
     /*PROTECTED REGION END*/
 }
 
-«FOR state : states»
-    «constraintCodeGenerator.expressionsStateCheckingMethods(state)»
-
-«ENDFOR»
-
 /*PROTECTED REGION ID(methods«plan.id») ENABLED START*/
         «IF (protectedRegions.containsKey("methods" + plan.id))»
 «protectedRegions.get("methods" + plan.id)»
@@ -1120,5 +1107,122 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
         «ENDIF»
     /*PROTECTED REGION END*/
 }
+'''
+
+def String transitionConditionHeader(List<TransitionCondition> conditions) '''
+#pragma once
+
+/*PROTECTED REGION ID(conditionHeader) ENABLED START*/
+«IF (protectedRegions.containsKey("conditionHeader"))»
+«protectedRegions.get("conditionHeader")»
+«ELSE»
+    //Add additional options here
+«ENDIF»
+/*PROTECTED REGION END*/
+
+namespace alica
+{
+class Blackboard;
+class RunningPlan;
+class IAlicaWorldModel;
+
+«FOR condition : conditions»
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+«ENDFOR»
+} /* namespace alica */
+'''
+
+def String transitionConditionSource(List<TransitionCondition> conditions, String pkgName) '''
+«IF (conditions.get(0).relativeDirectory == null || conditions.get(0).relativeDirectory.isEmpty)»
+#include <«pkgName»/conditions.h>
+«ELSE»
+#include <«pkgName»/«conditions.get(0).relativeDirectory»/conditions.h>
+«ENDIF»
+
+#include <iostream>
+#include <engine/blackboard/Blackboard.h>
+#include <engine/RunningPlan.h>
+#include <engine/IAlicaWorldModel.h>
+
+/*PROTECTED REGION ID(conditionSource) ENABLED START*/
+«IF (protectedRegions.containsKey("conditionSource"))»
+«protectedRegions.get("conditionSource")»
+«ELSE»
+    //Add additional options here
+«ENDIF»
+/*PROTECTED REGION END*/
+
+namespace alica
+{
+«FOR condition : conditions»
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+/*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
+        «IF (protectedRegions.containsKey("condition" + condition.id))»
+«protectedRegions.get("condition" + condition.id)»
+        «ELSE»
+            static_assert(false, "Condition «condition.id» with name «condition.name» is not yet implemented");
+        «ENDIF»
+    /*PROTECTED REGION END*/
+}
+«ENDFOR»
+} /* namespace alica */
+'''
+
+def String transitionConditionCreatorHeader(List<TransitionCondition> conditions) '''
+#pragma once
+
+#include <engine/ITransitionConditionCreator.h>
+
+namespace alica
+{
+class TransitionConditionCreator : public ITransitionConditionCreator
+{
+public:
+    TransitionConditionCreator();
+    virtual ~TransitionConditionCreator();
+
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
+};
+} /* namespace alica */
+'''
+
+def String transitionConditionCreatorSource(List<TransitionCondition> conditions, String pkgName) '''
+#include "«pkgName»/TransitionConditionCreator.h"
+
+«FOR c : conditions»
+«IF (c.relativeDirectory == null || c.relativeDirectory.isEmpty)»
+#include "«pkgName»/conditions.h"
+«ELSE»
+#include  "«pkgName»/«c.relativeDirectory»/conditions.h"
+«ENDIF»
+«ENDFOR»
+#include <iostream>
+#include <engine/blackboard/Blackboard.h>
+#include <engine/RunningPlan.h>
+#include <engine/IAlicaWorldModel.h>
+
+namespace alica
+{
+
+TransitionConditionCreator::TransitionConditionCreator() {}
+
+TransitionConditionCreator::~TransitionConditionCreator() {}
+
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+{
+    switch (conditionId)
+    {
+        «FOR con : conditions»
+        case «con.id»:
+            return std::bind(condition«con.name»«con.id», std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        «ENDFOR»
+        default:
+        std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+        throw new std::exception();
+        break;
+    }
+}
+} /* namespace alica */
 '''
 }

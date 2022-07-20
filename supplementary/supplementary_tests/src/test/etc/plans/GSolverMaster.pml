@@ -1,9 +1,11 @@
 {
+  "blackboard": [],
   "comment": "",
   "entryPoints": [
     {
       "comment": "",
       "id": 1417423751089,
+      "isDynamic": false,
       "maxCardinality": 2147483647,
       "minCardinality": 0,
       "name": "MISSING_NAME",
@@ -19,6 +21,7 @@
   ],
   "frequency": 0,
   "id": 1417423751087,
+  "inheritBlackboard": false,
   "masterPlan": false,
   "name": "GSolverMaster",
   "preCondition": null,
@@ -33,6 +36,10 @@
           "comment": "",
           "configuration": null,
           "id": 1597658636419,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
           "name": "1597658636419"
         }
       ],

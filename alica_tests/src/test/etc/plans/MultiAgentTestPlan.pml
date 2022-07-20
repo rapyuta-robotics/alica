@@ -225,8 +225,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#1377356708472618789",
       "id": 1413201050743,
       "inState": 1413200910490,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1413201050743",
       "outState": 1413201030936,
       "pointsWeb": [],
@@ -244,8 +249,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#2019050763618766552",
       "id": 1413201367062,
       "inState": 1413201030936,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1413201367062",
       "outState": 1413552736921,
       "pointsWeb": [],
@@ -263,8 +273,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/conditions.cnd#4368560569514553226",
       "id": 1413201368286,
       "inState": 1413200877336,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1413201368286",
       "outState": 1413201164999,
       "pointsWeb": [],

@@ -8,6 +8,8 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -106,6 +108,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+    initTransitionConditions(creatorCtx.transitionConditionCreator.get());
 
     _initialized = true;
     return true;
@@ -130,6 +133,18 @@ void AlicaEngine::terminate()
     _log.close();
     _variableSyncModule->close();
     _initialized = false;
+}
+
+void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
+{
+    for (const Transition* transition : _planRepository.getTransitions()) {
+        TransitionCondition* transitionCondition = transition->getTransitionCondition();
+        if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
+            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
+        } else {
+            transitionCondition->setEvalCallback(creator->createConditions(transitionCondition->getId()));
+        }
+    }
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const

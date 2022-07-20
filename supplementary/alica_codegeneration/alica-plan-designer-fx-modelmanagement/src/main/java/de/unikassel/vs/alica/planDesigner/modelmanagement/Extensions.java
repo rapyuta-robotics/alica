@@ -9,4 +9,5 @@ public class Extensions {
     public static final String BEHAVIOUR = "beh";
     public static final String PLANTYPE = "pty";
     public static final String CONFIGURATION = "cfg";
+    public static final String CONDITIONS = "cnd";
 }

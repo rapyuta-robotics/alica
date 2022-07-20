@@ -54,6 +54,7 @@ public class ModelManager implements Observer {
     private HashMap<Long, PlanType> planTypeMap = new HashMap<>();
     private HashMap<Long, Configuration> configurationMap = new HashMap<>();
     private TaskRepository taskRepository;
+    private ConditionRepository conditionRepository;
     private RoleSet roleSet;
 
     private List<IModelEventHandler> eventHandlerList = new ArrayList<>();
@@ -102,6 +103,7 @@ public class ModelManager implements Observer {
         objectMapper.addMixIn(BendPoint.class, BendPointMixIn.class);
         objectMapper.addMixIn(Behaviour.class, BehaviourMixIn.class);
         objectMapper.addMixIn(ConfAbstractPlanWrapper.class, ConfAbstractPlanWrapperMixIn.class);
+        objectMapper.addMixIn(TransitionCondition.class, TransitionConditionMixIn.class);
     }
 
     public void setPlansPath(String plansPath) {
@@ -220,9 +222,6 @@ public class ModelManager implements Observer {
         for (Plan plan : planMap.values()) {
             conditions.add(plan.getPreCondition());
             conditions.add(plan.getRuntimeCondition());
-            for (Transition transition : plan.getTransitions()) {
-                conditions.add(transition.getPreCondition());
-            }
             for (State state : plan.getStates()) {
                 if (state instanceof TerminalState) {
                     conditions.add(((TerminalState) state).getPostCondition());
@@ -238,6 +237,10 @@ public class ModelManager implements Observer {
         // remove all null values inserted before
         conditions.removeIf(Objects::isNull);
         return conditions;
+    }
+
+    public List<TransitionCondition> getTransitionConditions() {
+        return conditionRepository.getConditions();
     }
 
     public HashMap<Long, UiExtension> getUiExtensionMap() {
@@ -319,6 +322,7 @@ public class ModelManager implements Observer {
         planTypeMap.clear();
         configurationMap.clear();
         taskRepository = null;
+        conditionRepository = null;
         commandStack.getRedoStack().clear();
         commandStack.getUndoStack().clear();
         elementsSavedMap.clear();
@@ -354,6 +358,7 @@ public class ModelManager implements Observer {
         // 0. check if valid plan ending
         String type = FileSystemUtil.getType(modelFile);
         if ((type == Types.UNSUPPORTED)) {
+            System.out.println("unknown file: " + modelFile);
             return null;
         }
 
@@ -389,6 +394,8 @@ public class ModelManager implements Observer {
                 resolveReferences((TaskRepository) parsedObject);
             } else if (Types.BEHAVIOUR.equals(type)) {
                 resolveReferences((Behaviour) parsedObject);
+            } else if (Types.CONDITIONS.equals(type)) {
+                resolveReferences((ConditionRepository) parsedObject);
             } else if (Types.ROLESET.equals(type)) {
                 if (roleSet != null) {
                     roleSet.getRoles().forEach(role -> resolveReferences(role));
@@ -432,7 +439,7 @@ public class ModelManager implements Observer {
             while (modelFile.length() == 0) {
                 Thread.sleep(1000);
             }
-            planElement = objectMapper.readValue(modelFile, type);
+            planElement = objectMapper.readValue(modelFile, type);           
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
                 | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);
@@ -471,6 +478,7 @@ public class ModelManager implements Observer {
 
     private void resolveReferences() {
         resolveReferences(taskRepository);
+        resolveReferences(conditionRepository);
         for (Plan plan : planMap.values()) {
             resolveReferences(plan);
         }
@@ -505,6 +513,13 @@ public class ModelManager implements Observer {
             task.setTaskRepository(taskRepo);
         }
         taskRepo.setDirty(false);
+    }
+
+    private void resolveReferences(ConditionRepository conditionRepo) {
+        for (TransitionCondition condition : conditionRepo.getConditions()) {
+            condition.setConditionRepository(conditionRepo);
+        }
+        conditionRepo.setDirty(false);
     }
 
     private void resolveReferences(Plan plan) {
@@ -706,6 +721,12 @@ public class ModelManager implements Observer {
             case Types.CONFIGURATION:
                 Configuration configuration = (Configuration) planElement;
                 configurationMap.put(planElement.getId(), configuration);
+                break;
+            case Types.CONDITIONS:
+                conditionRepository = (ConditionRepository) planElement;
+                for (TransitionCondition condition : conditionRepository.getConditions()) {
+                    planElementMap.put(condition.getId(), condition);
+                }
                 break;
             default:
                 throw new RuntimeException("ModelManager: Storing " + type + " not implemented, yet!");

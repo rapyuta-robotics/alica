@@ -21,49 +21,6 @@ class DefaultTemplate {
         protectedRegions = regions;
     }
 
-    def String expressionsStateCheckingMethods(State state) '''
-        «var  List<Transition> outTransitions = state.outTransitions»
-        «FOR transition : outTransitions»
-            «IF (transition.preCondition !== null && transition.preCondition.pluginName == "DefaultPlugin")»
-                /**
-                * Transition: «transition.name» («transition.id»)
-                *   - Comment: «transition.comment»
-                *   - Source2Dest: «transition.inState.name» --> «transition.outState.name»
-                *
-                * Precondition: «transition.preCondition.name» («transition.preCondition.id»)
-                *   - Enabled: «transition.preCondition.enabled»
-                *   - PluginName: «transition.preCondition.pluginName»
-                *   - ConditionString: «transition.preCondition.conditionString»
-                *   - Variables:«var  List<Variable> variables = transition.preCondition.variables»
-                «FOR variable : variables»
-                *	   - «variable.name» («variable.id»)
-                «ENDFOR»
-                *   - Quantifiers:«var  List<Quantifier> quantifiers = transition.preCondition.quantifiers»
-                «FOR quantifier : quantifiers»
-                *	   - «quantifier.name» («quantifier.id»)
-                «ENDFOR»
-                *
-                * Abstract Plans in «transition.inState.name»: «var  List<ConfAbstractPlanWrapper> wrappers = state.confAbstractPlanWrappers»
-                «FOR wrapper : wrappers»
-                *   - «wrapper.abstractPlan.name» («wrapper.abstractPlan.id»)
-                «ENDFOR»
-                */
-                bool PreCondition«transition.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-                 {
-                    /*PROTECTED REGION ID(«transition.id») ENABLED START*/
-                    «IF (protectedRegions.containsKey(transition.id + ""))»
-                        «protectedRegions.get(transition.id + "")»
-                    «ELSE»
-                    std::cout << "The PreCondition «transition.preCondition.id» in Transition '«transition.getName»' is not implement yet!" << std::endl;
-                    return false;
-                    «ENDIF»
-                    /*PROTECTED REGION END*/
-                }
-
-            «ENDIF»
-        «ENDFOR»
-    '''
-
     def String expressionsPlanCheckingMethods(Plan plan) '''
         «IF (plan.preCondition !== null && plan.preCondition.pluginName == "DefaultPlugin")»
             //Check of PreCondition - (Name): «plan.preCondition.name», (ConditionString): «plan.preCondition.conditionString» , (Comment) : «plan.preCondition.comment»

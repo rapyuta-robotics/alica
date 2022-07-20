@@ -38,11 +38,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction1179066429431332055::getUtilityF
 }
 
 /*PROTECTED REGION ID(methods1179066429431332055) ENABLED START*/
+// Add additional options here
 void TestParameterPassingMaster1179066429431332055::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.set("masterKey", 8);
 }
-// Add additional options here
 /*PROTECTED REGION END*/
 } // namespace alica

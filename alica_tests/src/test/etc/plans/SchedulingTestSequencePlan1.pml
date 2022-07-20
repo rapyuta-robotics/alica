@@ -1,5 +1,30 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "2",
+      "id": 1998335174749558241,
+      "key": "Sequenze2SubPlan",
+      "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "3",
+      "id": 620992452739501207,
+      "key": "SubOne2SubTwo",
+      "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "4",
+      "id": 3390934806840785672,
+      "key": "InitSubThree2TermSubThree",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -40,8 +65,8 @@
       ],
       "parentPlan": 1614963946725,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 338.1214848905282,
+        "y": 4.795099996616045
       },
       "type": "State",
       "variableBindings": []
@@ -104,8 +129,8 @@
       ],
       "parentPlan": 1614963946725,
       "positionWeb": {
-        "x": 944,
-        "y": 200
+        "x": 944.0463456899656,
+        "y": -16.902834346510843
       },
       "type": "State",
       "variableBindings": []
@@ -136,8 +161,8 @@
       ],
       "parentPlan": 1614963946725,
       "positionWeb": {
-        "x": 1202,
-        "y": 200
+        "x": 1305.9220330953267,
+        "y": -6.439714392067941
       },
       "type": "State",
       "variableBindings": []
@@ -165,8 +190,18 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2901825906319407673",
       "id": 1614964566530,
       "inState": 1614963979424,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "Sequenze2SubPlan"
+          }
+        ],
+        "output": []
+      },
       "name": "FromInitSequencePlan1To InitSequenceSubPlan1",
       "outState": 1614964540694,
       "pointsWeb": [],
@@ -184,8 +219,18 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2901825906319407673",
       "id": 1614964572494,
       "inState": 1614964540694,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "SubOne2SubTwo"
+          }
+        ],
+        "output": []
+      },
       "name": "FromInitSequenceSubPlan1To InitSequenceSubPlan2",
       "outState": 1614964541828,
       "pointsWeb": [],
@@ -203,8 +248,13 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2872265442510628524",
       "id": 1614964575552,
       "inState": 1614964541828,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromInitSequenceSubPlan2To InitSequenceSubPlan3",
       "outState": 1614964542678,
       "pointsWeb": [],
@@ -222,8 +272,18 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/conditions.cnd#2901825906319407673",
       "id": 1614964578015,
       "inState": 1614964542678,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "InitSubThree2TermSubThree"
+          }
+        ],
+        "output": []
+      },
       "name": "FromInitSequenceSubPlan3To TerminateSequenceSubPlan3",
       "outState": 1614964543300,
       "pointsWeb": [],
