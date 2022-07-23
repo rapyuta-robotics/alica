@@ -13,9 +13,11 @@
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(const AlicaEngine* ae)
+StaticRoleAssignment::StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager)
         : IRoleAssignment()
-        , _ae(ae)
+        , _communicator(communicator)
+        , _planRepository(planRepository)
+        , _tm(teamManager)
         , _updateRoles(false)
 {
 }
@@ -56,10 +58,10 @@ void StaticRoleAssignment::calculateRoles()
     _robotRoleMapping.clear();
 
     // get data for "calculations"
-    const PlanRepository::Accessor<Role>& roles = _ae->getPlanRepository().getRoles();
+    const PlanRepository::Accessor<Role>& roles = _planRepository.getRoles();
 
     // assign a role for each robot if you have match
-    for (const Agent* agent : _ae->getTeamManager().getActiveAgents()) {
+    for (const Agent* agent : _tm.getActiveAgents()) {
         const RobotProperties& prop = agent->getProperties();
         bool roleIsAssigned = false;
 
@@ -70,13 +72,13 @@ void StaticRoleAssignment::calculateRoles()
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me
-                if (agent->getId() == _ae->getTeamManager().getLocalAgentID() && _ownRole != role) {
+                if (agent->getId() == _tm.getLocalAgentID() && _ownRole != role) {
                     _ownRole = role;
                     // probably nothing is reacting on this message, but anyway we send it
                     // TODO: fix this take context
                     RoleSwitch rs;
                     rs.roleID = role->getId();
-                    _ae->getCommunicator().sendRoleSwitch(rs, _ae->getTeamManager().getLocalAgentID());
+                    _communicator.sendRoleSwitch(rs, _tm.getLocalAgentID());
                 }
                 roleIsAssigned = true;
                 break;
