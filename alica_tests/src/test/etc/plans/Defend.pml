@@ -149,7 +149,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1678986049909129132",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402488990761,
       "inState": 1402488959965,
       "keyMapping": {
@@ -178,7 +178,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1678986049909129132",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402488991762,
       "inState": 1402488903549,
       "keyMapping": {
@@ -207,7 +207,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1678986049909129132",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489064693,
       "inState": 1402488959965,
       "keyMapping": {
@@ -236,7 +236,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1678986049909129132",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489071510,
       "inState": 1402489037735,
       "keyMapping": {
