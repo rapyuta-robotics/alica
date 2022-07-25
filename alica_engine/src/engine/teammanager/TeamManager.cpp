@@ -3,12 +3,13 @@
 #include "engine/AlicaEngine.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
+#include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "engine/util/idFunctions.h"
 
 #include <alica_common_config/debug_output.h>
 
+#include <chrono>
 #include <functional>
 #include <limits>
 #include <random>
@@ -112,7 +113,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
         if (id != InvalidAgentID) {
             _localAnnouncement.senderID = id;
         } else {
-            _localAnnouncement.senderID = GenerateID();
+            _localAnnouncement.senderID = generateID();
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
         }
     } else {
@@ -373,4 +374,19 @@ void TeamManager::tick()
         announcePresence();
     }
 }
+
+/**
+ * Generates random ID.
+ * @return The ID
+ */
+
+alica::AgentId TeamManager::generateID()
+{
+    std::random_device device;
+    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
+    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    id = (id << 32) | (distribution(device));
+    return id;
+}
+
 } /* namespace alica */

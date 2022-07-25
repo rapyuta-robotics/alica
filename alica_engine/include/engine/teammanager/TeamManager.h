@@ -108,6 +108,8 @@ private:
     int _version;
     uint64_t _masterPlanId;
     std::string _localAgentName;
+
+    static alica::AgentId generateID();
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>
