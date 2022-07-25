@@ -16,15 +16,15 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
-##Yaml
+# #Yaml
 find_package(yaml-cpp REQUIRED)
 
 include_directories(include ${YAML_CPP_INCLUDE_DIR})
 
 catkin_package(
-  INCLUDE_DIRS include src/test/Expr/include
-  LIBRARIES autogen_code_alica_tests
-  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver alica_ros_proxy
+    INCLUDE_DIRS include src/test/Expr/include
+    LIBRARIES autogen_code_alica_tests
+    CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver alica_ros_proxy
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
@@ -32,10 +32,10 @@ file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
 target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES})
 
-if (CATKIN_ENABLE_TESTING)
-
+if(CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
-    #file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp" src/test_alica.cpp)
+
+    # file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp" src/test_alica.cpp)
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
         src/CounterClass.cpp
@@ -50,7 +50,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_main.cpp
         src/test/test_alica_authority.cpp
         src/test/test_alica_behaviourtrigger.cpp
-        src/test/test_alica_condition_plan.cpp#NO
+        src/test/test_alica_condition_plan.cpp
         src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
@@ -62,7 +62,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_back_forth.cpp
         src/test/test_continue_on_fail.cpp
         src/test/test_success_spam.cpp
-        ##src/test/test_task_assignment.cpp#NO
+        src/test/test_task_assignment.cpp
         src/test/test_variant.cpp
         src/test/test_varsync.cpp
         src/test/test_agent_dies.cpp
@@ -80,5 +80,4 @@ if (CATKIN_ENABLE_TESTING)
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
     target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_tests ${YAML_CPP_LIBRARIES})
-
 endif()
