@@ -31,7 +31,6 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
 /**
  * @brief 
  * 
- */
  * @param planList Plans to build an assignment for
  * @param paraAgents agents to build an assignment for
  * @param a bool
