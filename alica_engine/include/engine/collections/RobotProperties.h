@@ -11,7 +11,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class PlanRepository;
 struct AgentAnnouncement;
 

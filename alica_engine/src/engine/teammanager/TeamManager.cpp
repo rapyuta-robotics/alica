@@ -1,14 +1,17 @@
 #include "engine/teammanager/TeamManager.h"
 
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
+#include "engine/PlanRepository.h"
+#include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "engine/util/idFunctions.h"
 
 #include <alica_common_config/debug_output.h>
 
+#include <chrono>
 #include <functional>
 #include <limits>
 #include <random>
@@ -58,7 +61,6 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
         const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName,
         AgentId agentID)
         : _localAgent(nullptr)
-        , _configChangeListener(configChangeListener)
         , _modelManager(modelManager)
         , _planRepository(planRepository)
         , _communicator(communicator)
@@ -73,8 +75,8 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
         , _localAgentID(agentID)
 {
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
@@ -112,7 +114,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
         if (id != InvalidAgentID) {
             _localAnnouncement.senderID = id;
         } else {
-            _localAnnouncement.senderID = GenerateID();
+            _localAnnouncement.senderID = generateID();
             ALICA_DEBUG_MSG("TM: Auto generated id " << _localAnnouncement.senderID);
         }
     } else {
@@ -373,4 +375,19 @@ void TeamManager::tick()
         announcePresence();
     }
 }
+
+/**
+ * Generates random ID.
+ * @return The ID
+ */
+
+alica::AgentId TeamManager::generateID()
+{
+    std::random_device device;
+    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
+    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    id = (id << 32) | (distribution(device));
+    return id;
+}
+
 } /* namespace alica */

@@ -12,7 +12,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class TeamManager;
 class TeamObserver;
 class AbstractPlan;
@@ -47,7 +46,6 @@ private:
     Agent(const ModelManager& modelManager, const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole,
             const AgentAnnouncement& aa);
 
-    const AlicaEngine* _engine;
     AgentId _id;
     bool _active;
     bool _ignored;
