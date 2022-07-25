@@ -1,19 +1,18 @@
 {
   "comment": "",
-  "id": -1,
-  "name": "ConditionRepository",
-  "relativeDirectory": "",
   "conditions": [
     {
       "blackboard": [],
       "comment": "",
-      "id": 2190266318562141841,
-      "name": "DefaultCondition",
+      "conditionRepository": 1,
+      "id": 748720375848597116,
+      "name": "Move2Init",
       "relativeDirectory": "conditions"
     },
     {
       "blackboard": [],
       "comment": "",
+      "conditionRepository": 1,
       "id": 974606107671315045,
       "name": "Init2Move",
       "relativeDirectory": "conditions"
@@ -21,9 +20,13 @@
     {
       "blackboard": [],
       "comment": "",
-      "id": 748720375848597116,
-      "name": "Move2Init",
+      "conditionRepository": 1,
+      "id": 2190266318562141841,
+      "name": "DefaultCondition",
       "relativeDirectory": "conditions"
     }
-  ]
+  ],
+  "id": 1,
+  "name": "ConditionRepository",
+  "relativeDirectory": ""
 }
