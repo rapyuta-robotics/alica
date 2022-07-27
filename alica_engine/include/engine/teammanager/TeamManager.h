@@ -14,7 +14,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class DomainVariable;
 class Variable;
 class SuccessMarks;
