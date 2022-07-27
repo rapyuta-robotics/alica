@@ -1,6 +1,5 @@
 #include "engine/collections/RobotEngineData.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/model/AlicaElement.h"
@@ -19,8 +18,9 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const AlicaEngine* engine, AgentId agentId)
-        : _engine(engine)
+RobotEngineData::RobotEngineData(const ModelManager& modelManager, const PlanRepository& planRepository, AgentId agentId)
+        : _modelManager(modelManager)
+        , _planRepository(planRepository)
         , _agentId(agentId)
         , _successMarks()
 {
@@ -31,7 +31,7 @@ RobotEngineData::~RobotEngineData() {}
 
 void RobotEngineData::updateSuccessMarks(const IdGrp& succeededEps)
 {
-    _successMarks.update(_engine, succeededEps);
+    _successMarks.update(_planRepository, succeededEps);
 }
 
 void RobotEngineData::initDomainVariables()
@@ -39,7 +39,7 @@ void RobotEngineData::initDomainVariables()
     std::stringstream ss;
     ss << _agentId << ".";
     std::string agentIdString = ss.str();
-    for (const Quantifier* quantifier : _engine->getPlanRepository().getQuantifiers()) {
+    for (const Quantifier* quantifier : _planRepository.getQuantifiers()) {
         for (const Variable* tv : quantifier->getTemplateVariables()) {
             _domainVariables.emplace(tv,
                     std::unique_ptr<const DomainVariable>(new DomainVariable(makeUniqueId(tv->getName()), agentIdString + tv->getName(), "", tv, _agentId)));
@@ -59,14 +59,14 @@ const DomainVariable* RobotEngineData::getDomainVariable(const Variable* templat
 
 const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name) const
 {
-    const Variable* tv = _engine->getPlanRepository().getVariables()[Hash64(name.c_str(), name.size())];
+    const Variable* tv = _planRepository.getVariables()[Hash64(name.c_str(), name.size())];
     return getDomainVariable(tv);
 }
 
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
     int64_t ret = static_cast<int64_t>(std::hash<AgentId>()(_agentId) + std::hash<std::string>()(s));
-    assert(!_engine->getModelManager().idExists(ret));
+    assert(!_modelManager.idExists(ret));
     return ret;
 }
 
