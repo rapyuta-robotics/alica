@@ -46,7 +46,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
-        , _teamManager(this, alicaContextParams.agentID)
+        , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
+                  getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
         , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
@@ -230,28 +231,6 @@ void AlicaEngine::stepNotify()
 {
     setStepCalled(true);
     _planBase.getStepModeCV()->notify_all();
-}
-
-/**
- * If present, returns the ID corresponding to the given prototype.
- * Otherwise, it creates a new one, stores and returns it.
- *
- * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding Identifier object.
- */
-
-/**
- * Generates random ID.
- * @return The ID
- */
-
-AgentId AlicaEngine::generateID()
-{
-    std::random_device device;
-    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
-    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    id = (id << 32) | (distribution(device));
-    return id;
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

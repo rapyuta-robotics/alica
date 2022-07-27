@@ -110,7 +110,6 @@ public:
     SolverType& getSolver() const;
     template <class SolverType>
     bool existSolver() const;
-    AgentId generateID();
 
     void reload(const YAML::Node& config);
     //[[deprecated("It will be removed in the last PR")]]
