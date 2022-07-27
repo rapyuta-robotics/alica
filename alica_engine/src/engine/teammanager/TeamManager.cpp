@@ -1,8 +1,10 @@
 #include "engine/teammanager/TeamManager.h"
 
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
+#include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
+#include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
@@ -59,7 +61,6 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
         const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName,
         AgentId agentID)
         : _localAgent(nullptr)
-        , _configChangeListener(configChangeListener)
         , _modelManager(modelManager)
         , _planRepository(planRepository)
         , _communicator(communicator)
@@ -74,8 +75,8 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
         , _localAgentID(agentID)
 {
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     std::cout << "[TeamManager] Own ID is " << _localAnnouncement.senderID << std::endl;
 }
 
