@@ -14,7 +14,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class DomainVariable;
 class Variable;
 class SuccessMarks;
@@ -97,7 +96,6 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
-    ConfigChangeListener& _configChangeListener;
     const ModelManager& _modelManager;
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;
@@ -108,6 +106,8 @@ private:
     int _version;
     uint64_t _masterPlanId;
     std::string _localAgentName;
+
+    static alica::AgentId generateID();
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>
