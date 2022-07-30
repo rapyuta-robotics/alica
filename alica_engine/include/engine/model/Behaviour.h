@@ -42,6 +42,7 @@ public:
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
+    bool isForceLoad() const {return _forceLoad;};
 
 private:
     friend ModelFactory;
@@ -83,6 +84,17 @@ private:
      * Otherwise, the mapped parameters will be copied in and out on init and termination respectively
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
+
+    /*
+     * If true the behaviour is loaded form an external library
+     */
+    bool _forceLoad{false}; // luca
+
+    /*
+     * If _forceLoad it contains the company name that had produced the behaviour library
+     * it is used to compose the library path.
+     */
+    std::string _companyName; // luca
 };
 
 } // namespace alica

@@ -54,6 +54,7 @@ if (CATKIN_ENABLE_TESTING)
         src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
+        src/test/test_alica_runtimebehaviourfactory.cpp
         src/test/test_alica_multi_agent_plan.cpp
         src/test/test_alica_simple_plan.cpp
         src/test/test_alica_sync_transition.cpp

@@ -19,6 +19,9 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreat
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
+
+    bool forceLoad=ctx.behaviourModel->isForceLoad();//luca
+    
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);

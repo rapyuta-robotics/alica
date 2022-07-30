@@ -18,6 +18,8 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _eventDriven(false)
         , AbstractPlan(ae)
         , _blackboardBlueprint(nullptr)
+        , _forceLoad(false)
+        ,_companyName("Acme")
 {
 }
 
@@ -30,6 +32,8 @@ Behaviour::Behaviour()
         , _eventDriven(false)
         , AbstractPlan()
         , _blackboardBlueprint(nullptr)
+        , _forceLoad(false)
+        ,_companyName("Acme")
 {
 }
 
@@ -51,6 +55,8 @@ std::string Behaviour::toString(std::string indent) const
     if (this->_postCondition != nullptr) {
         ss << this->_postCondition->toString(indent + "\t");
     }
+    ss << indent << "\tforceLoad: " << _forceLoad << std::endl;
+    ss << indent << "\tcompanyName: " << _companyName << std::endl;
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }

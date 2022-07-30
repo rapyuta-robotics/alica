@@ -20,6 +20,8 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
+    behaviour->_forceLoad = Factory::getValue<bool>(node, alica::Strings::forceLoad, false);//luca
+    behaviour->_companyName = Factory::getValue<std::string>(node, alica::Strings::companyName, "");//luca
 
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
@@ -53,6 +55,8 @@ Behaviour* BehaviourFactory::create(const YAML::Node& node)
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
+    behaviour->_forceLoad = Factory::getValue<bool>(node, alica::Strings::forceLoad, false);
+    behaviour->_companyName = Factory::getValue<bool>(node, alica::Strings::companyName, false);    
 
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
