@@ -48,6 +48,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
                   getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
+        , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
         , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
