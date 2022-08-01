@@ -43,6 +43,8 @@ public:
     const PostCondition* getPostCondition() const { return _postCondition; }
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
     bool isForceLoad() const {return _forceLoad;};
+    std::string getCompanyName() const {return _companyName;};
+    std::string getLibraryName() const {return _libraryName;};
 
 private:
     friend ModelFactory;
@@ -95,6 +97,7 @@ private:
      * it is used to compose the library path.
      */
     std::string _companyName; // luca
+    std::string _libraryName; // luca
 };
 
 } // namespace alica

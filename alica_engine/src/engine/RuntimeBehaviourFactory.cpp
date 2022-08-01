@@ -3,6 +3,7 @@
 
 #include "engine/BasicBehaviour.h"
 #include "engine/IBehaviourCreator.h"
+#include "engine/LibraryLoader.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -21,10 +22,17 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
 
     bool forceLoad=ctx.behaviourModel->isForceLoad();//luca
+    if(forceLoad)
+    {
+        std::cerr<<"Info: FORCE LOAD name:"<<behaviourModel->getLibraryName()<<" company:"<<behaviourModel->getCompanyName()<<std::endl;
+        LibraryLoader loader;
+        loader.load(behaviourModel->getLibraryName(), behaviourModel->getCompanyName(), "");
+        return nullptr;
+    }
     
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
+        std::cerr<<"Errro: RuntimeBehaviourFactory: Behaviour creation failed: " << id<<std::endl;
         return nullptr;
     }
 

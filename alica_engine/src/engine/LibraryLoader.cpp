@@ -19,23 +19,23 @@ namespace alica
 
 LibraryLoader::LibraryLoader() {}
 
-bool LibraryLoader::load(const std::string& name, const std::string& companyname, const std::string& additionalPath)
+bool LibraryLoader::load(const std::string& libraryName, const std::string& companyName, const std::string& additionalPath)
 {
     std::string currentPath;
     std::string extension;
 
-    std::cout << "Info:"
+    std::cerr << "Info:"
               << "LibraryLoader load" << std::endl;
 
-    std::string libraryPath{additionalPath + "/" + companyname + "/" + name + ".so"};
-
+    // std::string libraryPath{additionalPath + "/" + companyname + "/" + name + ".so"};
+    std::string libraryPath{"/tmp/customer/lib" + libraryName + ".so"};
     if (!boost::filesystem::exists(libraryPath)) {
-        std::cout << "Error:"
-                  << "Try load lib:" << libraryPath << std::endl;
+        std::cerr << "Error:"
+                  << "Lib not exixts in this path:" << libraryPath << std::endl;
         return false;
     }
 
-    std::cout << "Info:"
+    std::cerr << "Info:"
               << "Success load lib:" << libraryPath << std::endl;
     try {
         boost::function<funcptr> startFunction = boost_dll_import<funcptr>(libraryPath, "Stop", boost::dll::load_mode::rtld_lazy);
@@ -44,20 +44,19 @@ bool LibraryLoader::load(const std::string& name, const std::string& companyname
 
         stopFunction_.emplace_back(stopFunction);
 
-       
     } catch (boost::exception const& e) {
-        std::cout << "------------------" << boost::diagnostic_information(e, true) << std::endl;
-        std::cout << "Error:"
+        std::cerr << "------------------" << boost::diagnostic_information(e, true) << std::endl;
+        std::cerr << "Error:"
                   << "Lib:" << libraryPath << " error missing Configure/Stop/Start function in lib----" << boost::diagnostic_information(e, true) << std::endl;
         return false;
     } catch (std::exception& e) {
         std::string error;
         error = e.what();
     } catch (...) {
- std::cout << "Error:"
+        std::cerr << "Error:"
                   << "Lib:" << libraryPath << "Unknown error" << std::endl;
     }
-    std::cout << "Info:"
+    std::cerr << "Info:"
               << "Load lib ok:" << libraryPath << std::endl;
 
     return true;

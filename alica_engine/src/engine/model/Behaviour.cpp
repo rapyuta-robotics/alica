@@ -20,6 +20,7 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _blackboardBlueprint(nullptr)
         , _forceLoad(false)
         ,_companyName("Acme")
+        ,_libraryName("alica_customer_library")
 {
 }
 
@@ -34,6 +35,7 @@ Behaviour::Behaviour()
         , _blackboardBlueprint(nullptr)
         , _forceLoad(false)
         ,_companyName("Acme")
+        ,_libraryName("alica_customer_library")
 {
 }
 
@@ -57,6 +59,7 @@ std::string Behaviour::toString(std::string indent) const
     }
     ss << indent << "\tforceLoad: " << _forceLoad << std::endl;
     ss << indent << "\tcompanyName: " << _companyName << std::endl;
+    ss << indent << "\alica_customer_library: " << _libraryName << std::endl;
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }

@@ -22,7 +22,8 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
     behaviour->_forceLoad = Factory::getValue<bool>(node, alica::Strings::forceLoad, false);//luca
     behaviour->_companyName = Factory::getValue<std::string>(node, alica::Strings::companyName, "");//luca
-
+    behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");//luca
+    
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
     }

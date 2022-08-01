@@ -101,5 +101,7 @@ static const std::string transitionCondition = "transitionCondition";
 static const std::string transitionConditionRepository = "transitionConditionRepository";
 static const std::string forceLoad = "forceLoad";
 static const std::string companyName = "companyName";
+static const std::string libraryName = "libraryName";
+
 } // namespace Strings
 } // namespace alica
