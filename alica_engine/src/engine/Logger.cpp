@@ -23,8 +23,13 @@ namespace alica
 {
 using std::to_string;
 
-Logger::Logger(AlicaEngine* ae, IAlicaLogger& logger)
-        : _ae(ae)
+Logger::Logger(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const TeamObserver& teamObserver,
+        const PlanRepository& planRepository, const AlicaClock& clock, const std::string& localAgentName, IAlicaLogger& logger)
+        : _teamManager(teamManager)
+        , _teamObserver(teamObserver)
+        , _planRepository(planRepository)
+        , _clock(clock)
+        , _localAgentName(localAgentName)
         , _fileWriter()
         , _itCount(0)
         , _active(false)
@@ -34,8 +39,8 @@ Logger::Logger(AlicaEngine* ae, IAlicaLogger& logger)
         , _logger(logger)
 {
     auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
-    _ae->subscribe(reloadFunctionPtr);
-    reload(_ae->getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 Logger::~Logger() {}
@@ -47,7 +52,7 @@ void Logger::reload(const YAML::Node& config)
     }
     _active = config["Alica"]["EventLogging"]["Enabled"].as<bool>();
     if (_active) {
-        std::string agentName = _ae->getLocalAgentName();
+        std::string agentName = _localAgentName;
         std::string logPath = config["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
         if (!essentials::FileSystem::isDirectory(logPath)) {
             if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
@@ -86,7 +91,7 @@ void Logger::processString(const std::string& event)
 void Logger::itertionStarts()
 {
     _inIteration = true;
-    _startTime = _ae->getAlicaClock().now();
+    _startTime = _clock.now();
 }
 
 /**
@@ -100,7 +105,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
         return;
     }
     _inIteration = false;
-    _endTime = _ae->getAlicaClock().now();
+    _endTime = _clock.now();
     _itCount++;
     _time += (_endTime - _startTime);
 
@@ -121,11 +126,10 @@ void Logger::iterationEnds(const RunningPlan* rp)
         _sBuild << reason;
     }
     _sBuild << endl;
-    const TeamManager& tm = _ae->getTeamManager();
-    ActiveAgentIdView agents = tm.getActiveAgentIds();
+    ActiveAgentIdView agents = _teamManager.getActiveAgentIds();
 
     _sBuild << "TeamSize:\t";
-    _sBuild << tm.getTeamSize();
+    _sBuild << _teamManager.getTeamSize();
 
     _sBuild << " TeamMember:";
     for (AgentId id : agents) {
@@ -140,7 +144,7 @@ void Logger::iterationEnds(const RunningPlan* rp)
         evaluationAssignmentsToString(_sBuild, *rp);
     }
 
-    const auto& teamPlanTrees = _ae->getTeamObserver().getTeamPlanTrees();
+    const auto& teamPlanTrees = _teamObserver.getTeamPlanTrees();
     if (!teamPlanTrees.empty()) {
         _sBuild << "OtherTrees:" << endl;
         for (const auto& kvp : teamPlanTrees) {
@@ -187,7 +191,7 @@ std::shared_ptr<std::list<std::string>> Logger::createHumanReadablePlanTree(cons
 {
     std::shared_ptr<std::list<std::string>> result = std::make_shared<std::list<std::string>>(std::list<std::string>());
 
-    const PlanRepository::Accessor<State>& states = _ae->getPlanRepository().getStates();
+    const PlanRepository::Accessor<State>& states = _planRepository.getStates();
 
     const EntryPoint* e;
     for (int64_t id : l) {
@@ -264,7 +268,7 @@ std::stringstream& Logger::createTreeLog(std::stringstream& ss, const RunningPla
 
 void Logger::logToConsole(const std::string& logString)
 {
-    std::cout << "Agent " << _ae->getTeamManager().getLocalAgentID() << ":\t" << logString << std::endl;
+    std::cout << "Agent " << _teamManager.getLocalAgentID() << ":\t" << logString << std::endl;
 }
 
 } /* namespace alica */

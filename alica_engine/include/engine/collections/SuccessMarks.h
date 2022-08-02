@@ -6,7 +6,7 @@
 namespace alica
 {
 
-class AlicaEngine;
+class PlanRepository;
 
 /**
  * Globally holds information about succeeded entry points for a specific robot
@@ -18,7 +18,7 @@ public:
     ~SuccessMarks();
 
     void limitToPlans(const AbstractPlanGrp& active);
-    void update(const AlicaEngine* ae, const IdGrp& succeededEps);
+    void update(const PlanRepository& planRepository, const IdGrp& succeededEps);
     const std::map<const AbstractPlan*, EntryPointGrp>& getSuccessMarks() const { return _successMarks; }
 
     void clear();

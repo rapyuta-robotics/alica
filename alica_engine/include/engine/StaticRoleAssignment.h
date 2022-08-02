@@ -6,11 +6,13 @@ namespace alica
 {
 class AlicaEngine;
 class IAlicaLogger;
+class PlanRepository;
+class TeamManager;
 
 class StaticRoleAssignment : public IRoleAssignment
 {
 public:
-    StaticRoleAssignment(const AlicaEngine* ae, IAlicaLogger& logger);
+    StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager, IAlicaLogger& logger);
     ~StaticRoleAssignment() = default;
 
     void init() override;
@@ -25,8 +27,10 @@ public:
 
 private:
     bool _updateRoles;
-    const AlicaEngine* _ae;
     IAlicaLogger& _logger;
+    const IAlicaCommunication& _communicator;
+    const PlanRepository& _planRepository;
+    TeamManager& _tm;
 };
 
 } /* namespace alica */

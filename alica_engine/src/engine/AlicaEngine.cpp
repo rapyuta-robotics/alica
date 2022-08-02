@@ -38,24 +38,25 @@ void AlicaEngine::abort(const std::string& msg)
  * The main class.
  */
 AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams)
-        : _ctx(ctx)
-        , _configChangeListener(config)
+        : _configChangeListener(config)
+        , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _log(this, _ctx.getLogger())
-        , _planRepository(_ctx.getLogger())
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository, _ctx.getLogger())
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
+        , _planRepository(_ctx.getLogger())
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
-        , _teamManager(this, alicaContextParams.agentID, _ctx.getLogger())
+        , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
+                  getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID, _ctx.getLogger())
+        , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName(), _ctx.getLogger())
         , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _ctx.getLogger())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getLogger())
-        , _roleAssignment(std::make_unique<StaticRoleAssignment>(this, _ctx.getLogger()))
+        , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager(), _ctx.getLogger()))
         , _planBase(this, ctx.getLogger())
-        , _teamObserver(_configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(),
-                  editTeamManager(), _ctx.getLogger())
+        , _teamObserver(
+                  _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager(), _ctx.getLogger())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -236,28 +237,6 @@ void AlicaEngine::stepNotify()
 {
     setStepCalled(true);
     _planBase.getStepModeCV()->notify_all();
-}
-
-/**
- * If present, returns the ID corresponding to the given prototype.
- * Otherwise, it creates a new one, stores and returns it.
- *
- * This method can be used, e.g., for passing a part of a ROS
- * message and receiving a pointer to a corresponding Identifier object.
- */
-
-/**
- * Generates random ID.
- * @return The ID
- */
-
-AgentId AlicaEngine::generateID()
-{
-    std::random_device device;
-    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
-    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    id = (id << 32) | (distribution(device));
-    return id;
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

@@ -14,7 +14,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class DomainVariable;
 class Variable;
 class SuccessMarks;
@@ -25,6 +24,11 @@ class ActiveAgentView;
 class ActiveAgentIterator;
 class IAlicaLogger;
 struct AgentQuery;
+class ConfigChangeListener;
+class PlanRepository;
+class IAlicaCommunication;
+class Logger;
+class ModelManager;
 
 // A read optimized cache for multi writer and readers.
 class AgentsCache
@@ -47,7 +51,9 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(AlicaEngine* engine, AgentId agentID, IAlicaLogger& logger);
+    TeamManager(ConfigChangeListener& configChangeListener, const ModelManager& modelManager, const PlanRepository& planRepository,
+            const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId,
+            const std::string& localAgentName, AgentId agentID, IAlicaLogger& logger);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
@@ -91,10 +97,19 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
-    AlicaEngine* _engine;
+    const ModelManager& _modelManager;
+    const PlanRepository& _planRepository;
+    const IAlicaCommunication& _communicator;
+    const AlicaClock& _clock;
+    Logger& _log;
     bool _useAutoDiscovery;
     AgentId _localAgentID;
     IAlicaLogger& _logger;
+    int _version;
+    uint64_t _masterPlanId;
+    std::string _localAgentName;
+
+    static alica::AgentId generateID();
 };
 
 class ActiveAgentBaseIterator : public std::iterator<std::forward_iterator_tag, AgentId>

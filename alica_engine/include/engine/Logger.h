@@ -21,6 +21,8 @@ class EntryPoint;
 class AlicaEngine;
 class TeamManager;
 class IAlicaLogger;
+class ConfigChangeListener;
+class PlanRepository;
 
 /**
  * The Plan Logger will write a log file according to the settings in the Alica.conf file.
@@ -56,7 +58,8 @@ struct StringBuilder<First>
 class Logger
 {
 public:
-    Logger(AlicaEngine* ae, IAlicaLogger& logger);
+    Logger(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const TeamObserver& teamObserver, const PlanRepository& planRepository,
+            const AlicaClock& clock, const std::string& localAgentName, IAlicaLogger& logger);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -82,7 +85,11 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    AlicaEngine* _ae;
+    const TeamManager& _teamManager;
+    const TeamObserver& _teamObserver;
+    const PlanRepository& _planRepository;
+    const AlicaClock& _clock;
+    const std::string& _localAgentName;
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;
