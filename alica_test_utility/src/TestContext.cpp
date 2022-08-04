@@ -27,7 +27,7 @@ int TestContext::init(AlicaCreators& creatorCtx)
 
 int TestContext::init(AlicaCreators&& creatorCtx)
 {
-    return AlicaContext::init(std::move(creatorCtx));
+    return AlicaContext::init(std::move(creatorCtx), true);
 }
 
 void TestContext::startEngine()
