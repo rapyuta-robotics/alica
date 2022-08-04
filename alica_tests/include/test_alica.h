@@ -120,7 +120,7 @@ protected:
 
     alicaTests::TestLogger& getLogger()
     {
-        IAlicaLogger& logger = ae->getLogger();
+        IAlicaLogger& logger = ac->getLogger();
         return dynamic_cast<alicaTests::TestLogger&>(logger);
     }
 
