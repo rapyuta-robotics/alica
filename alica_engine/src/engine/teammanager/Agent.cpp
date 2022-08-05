@@ -11,15 +11,16 @@
 namespace alica
 {
 
-Agent::Agent(const AlicaEngine* engine, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa)
+Agent::Agent(const ModelManager& modelManager, const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole,
+        const AgentAnnouncement& aa)
         : _id(aa.senderID)
         , _token(aa.token)
         , _name(aa.senderName)
         , _planHash(aa.planHash)
         , _sdk(aa.senderSdk)
-        , _engine(engine)
-        , _properties(engine, defaultRole, aa)
-        , _engineData(engine, aa.senderID)
+        , _clock(clock)
+        , _properties(planRepository, defaultRole, aa)
+        , _engineData(modelManager, planRepository, aa.senderID)
         , _timeout(timeout)
         , _active(false)
         , _ignored(false)
@@ -67,14 +68,14 @@ bool Agent::update()
     if (_local) {
         return false;
     }
-    if (_active && _timeLastMsgReceived + _timeout < _engine->getAlicaClock().now()) {
+    if (_active && _timeLastMsgReceived + _timeout < _clock.now()) {
         // timeout triggered
         _engineData.clearSuccessMarks();
         _active = false;
         return true;
     }
 
-    if (!_active && _timeLastMsgReceived + _timeout > _engine->getAlicaClock().now()) {
+    if (!_active && _timeLastMsgReceived + _timeout > _clock.now()) {
         // reactivate because of new messages
         _active = true;
         return true;

@@ -11,13 +11,13 @@
 namespace alica
 {
 
-class AlicaEngine;
+class PlanRepository;
 struct AgentAnnouncement;
 
 class RobotProperties
 {
 public:
-    RobotProperties(const AlicaEngine* ae, const std::string& defaultRole, const AgentAnnouncement& aa);
+    RobotProperties(const PlanRepository& planRepository, const std::string& defaultRole, const AgentAnnouncement& aa);
     ~RobotProperties();
 
     const std::string& getDefaultRole() const { return _defaultRole; }
@@ -30,6 +30,7 @@ public:
 
 private:
     std::string _defaultRole;
+    const PlanRepository& _planRepository;
 };
 
 } /* namespace alica */

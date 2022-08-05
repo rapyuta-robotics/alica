@@ -9,7 +9,8 @@
 
 namespace alica
 {
-class AlicaEngine;
+class ModelManager;
+class PlanRepository;
 
 /**
  * Basic plan execution information relating to a robot within the team.
@@ -17,7 +18,7 @@ class AlicaEngine;
 class RobotEngineData
 {
 public:
-    RobotEngineData(const AlicaEngine* engine, AgentId agentId);
+    RobotEngineData(const ModelManager& modelManager, const PlanRepository& planRepository, AgentId agentId);
     ~RobotEngineData();
     void initDomainVariables();
 
@@ -36,7 +37,8 @@ private:
      */
     int64_t makeUniqueId(const std::string& s) const;
 
-    const AlicaEngine* _engine;
+    const ModelManager& _modelManager;
+    const PlanRepository& _planRepository;
     AgentId _agentId;
     /**
      * The SuccessMarks of the robot, indicating which EntryPoints are completed.
