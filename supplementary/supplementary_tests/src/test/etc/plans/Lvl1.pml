@@ -110,7 +110,7 @@
   "transitions": [
     {
       "comment": "Lvl1 Transition",
-      "condition": "conditions/conditions.cnd#295816226925111421",
+      "condition": "conditions/ConditionRepository.cnd#295816226925111421",
       "id": 1524453490345,
       "inState": 1524453481856,
       "keyMapping": {
