@@ -81,7 +81,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#4547372457936774346",
+      "condition": "conditions/ConditionRepository.cnd#4547372457936774346",
       "id": 3626189722064037094,
       "inState": 2832176823961443072,
       "keyMapping": {
