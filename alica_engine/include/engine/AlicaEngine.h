@@ -137,17 +137,15 @@ private:
     const Plan* _masterPlan; /**< Pointing to the top level plan of the loaded ALICA program.*/
     const RoleSet* _roleSet; /**< Pointing to the current set of known roles.*/
     TeamManager _teamManager;
+    SyncModule _syncModul;
     Logger _log;
     std::unique_ptr<IRoleAssignment> _roleAssignment;
     TeamObserver _teamObserver;
-    SyncModule _syncModul;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
-    PlanBase _planBase;
-    bool _initialized{false};
 
     /**
      * TODO: Make VariableSyncModule a stack variable.
@@ -157,6 +155,9 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
+    PlanBase _planBase;
+    bool _initialized{false};
+
     Blackboard _Blackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */

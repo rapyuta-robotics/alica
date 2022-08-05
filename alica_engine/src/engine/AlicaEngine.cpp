@@ -42,6 +42,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
+        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), this))
+        , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(_ctx.getWorldModel(), this))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -53,9 +55,11 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
-        , _planBase(this)
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
+                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -95,8 +99,8 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
-    _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
+    _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
+    _planFactory->init(std::move(creatorCtx.planCreator));
 
     _stepCalled = false;
     _roleAssignment->init();

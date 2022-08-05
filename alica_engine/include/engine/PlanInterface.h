@@ -73,8 +73,6 @@ public:
     // Non locked thread safe reads:
     // Reads of const members are thread safe (rp's lifetime is deemed long enough):
 
-    AlicaEngine* getAlicaEngine() const { return _rp->getAlicaEngine(); }
-
     // Obtain scoped lock:
     ReadLockedPlanPointer getRunningPlan() const { return ReadLockedPlanPointer(_rp); }
 

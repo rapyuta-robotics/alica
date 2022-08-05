@@ -22,10 +22,11 @@ class EntryPoint;
 class ConditionStore;
 class CycleManager;
 class UtilityFunction;
-class AlicaEngine;
 class TeamObserver;
 class TeamManager;
 class IAlicaWorldModel;
+class ConfigChangeListener;
+class PlanRepository;
 
 /**
  * Defines the operational semantics of the used ALICA dialect.
@@ -33,7 +34,8 @@ class IAlicaWorldModel;
 class RuleBook
 {
 public:
-    RuleBook(AlicaEngine* ae, PlanBase* pb);
+    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
+            const PlanRepository& planRepository, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
     PlanChange visit(RunningPlan& r);
@@ -45,11 +47,12 @@ public:
     void init(const IAlicaWorldModel* wm);
 
 private:
-    const TeamManager& _tm;
-    SyncModule& _sm;
+    Logger& _logger;
+    SyncModule& _syncModule;
+    const TeamManager& _teamManager;
     std::unique_ptr<PlanSelector> _ps;
     PlanBase* _pb;
-    Logger& _log;
+
     int _maxConsecutiveChanges;
     bool _autoFailureHandlingEnabled;
     bool _changeOccurred;
