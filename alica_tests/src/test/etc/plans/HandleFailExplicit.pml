@@ -170,7 +170,7 @@
   "transitions": [
     {
       "comment": "From A to B, isset(0)",
-      "condition": "conditions/conditions.cnd#3787001793582633602",
+      "condition": "conditions/ConditionRepository.cnd#3787001793582633602",
       "id": 1530004992551,
       "inState": 1530004915641,
       "keyMapping": {
@@ -199,7 +199,7 @@
     },
     {
       "comment": "AnyChildFail",
-      "condition": "conditions/conditions.cnd#711536493236439192",
+      "condition": "conditions/ConditionRepository.cnd#711536493236439192",
       "id": 1530004993680,
       "inState": 1530004973591,
       "keyMapping": {
@@ -223,7 +223,7 @@
     },
     {
       "comment": "C to D, isset(2)",
-      "condition": "conditions/conditions.cnd#3787001793582633602",
+      "condition": "conditions/ConditionRepository.cnd#3787001793582633602",
       "id": 1532424092280,
       "inState": 1530004975275,
       "keyMapping": {
@@ -252,7 +252,7 @@
     },
     {
       "comment": "AnyChildFail",
-      "condition": "conditions/conditions.cnd#711536493236439192",
+      "condition": "conditions/ConditionRepository.cnd#711536493236439192",
       "id": 1532424112331,
       "inState": 1532424087894,
       "keyMapping": {
