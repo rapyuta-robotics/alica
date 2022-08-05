@@ -6,6 +6,7 @@
 #include "AbstractPlan.h"
 #include "engine/Types.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
+#include "engine/BehaviourRegister.h"
 
 namespace alica
 {
