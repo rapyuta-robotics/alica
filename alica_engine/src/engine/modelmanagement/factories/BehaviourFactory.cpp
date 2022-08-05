@@ -14,7 +14,7 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
 {
     Behaviour* behaviour = new Behaviour(ae);
     Factory::setAttributes(node, behaviour);
-    Factory::storeElement(behaviour, alica::Strings::behaviour);
+    //Factory::storeElement(behaviour, alica::Strings::behaviour);luca removed only temporary
     AbstractPlanFactory::setVariables(node, behaviour);
 
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);

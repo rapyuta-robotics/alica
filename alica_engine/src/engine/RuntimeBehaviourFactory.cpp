@@ -22,7 +22,9 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(
     reload(configChangeListener.getConfig());
 }
 
-void RuntimeBehaviourFactory::reload(const YAML::Node& config) {}
+void RuntimeBehaviourFactory::reload(const YAML::Node& config) {
+    _customerLibraryFolder=config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+}
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
@@ -32,7 +34,7 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     if (forceLoad) {
         std::cerr << "Info: FORCE LOAD name:" << behaviourModel->getLibraryName() << " company:" << behaviourModel->getCompanyName() << std::endl;
         LibraryLoader loader;
-        loader.load(behaviourModel->getLibraryName(), behaviourModel->getCompanyName(), "");
+        loader.load(behaviourModel->getLibraryName(), behaviourModel->getCompanyName(), _customerLibraryFolder);
         return nullptr;
     }
 

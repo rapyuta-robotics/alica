@@ -28,7 +28,7 @@ bool LibraryLoader::load(const std::string& libraryName, const std::string& comp
               << "LibraryLoader load" << std::endl;
 
     // std::string libraryPath{additionalPath + "/" + companyname + "/" + name + ".so"};
-    std::string libraryPath{"/tmp/customer/lib" + libraryName + ".so"};
+    std::string libraryPath{additionalPath+"/" + companyName + "/lib" + libraryName + ".so"};
     if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;

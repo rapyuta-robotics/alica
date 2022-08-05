@@ -1,8 +1,10 @@
 #include "TestBehaviour.h"
 
 #include <map>
-
-TestBehaviour::TestBehaviour() {}
+namespace alica
+{
+TestBehaviour::TestBehaviour(BehaviourContext& context):BasicBehaviour(context) {}
+} // namespace alica
 
 extern "C" void Start(char*, char*){};
 extern "C" void Stop(char*, char*){};

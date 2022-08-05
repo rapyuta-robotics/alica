@@ -12,42 +12,36 @@ namespace alica
 {
 namespace
 {
-
-class AlicaRuntimeBehaviour : public AlicaTestMultiAgentFixture
+TEST(ForceLoad, simple_load)
 {
-protected:
-    const int agentCount = 2;
-    const char* getRoleSetName() const override { return "RolesetTA"; }
-    const char* getMasterPlanName() const override { return "MultiAgentTestMaster"; }
-    int getAgentCount() const override { return agentCount; }
-    const char* getHostName(int agentNumber) const override
-    {
-        if (agentNumber) {
-            return "hairy";
-        } else {
-            return "nase";
-        }
-    }
-};
+    std::cerr << "BEGIN**************************************" << std::endl;
 
-TEST_F(AlicaRuntimeBehaviour, scheduling)
-{
     ros::NodeHandle nh;
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
 
     YAML::Node node;
     try {
-        node = YAML::LoadFile(path+"/etc/plans/behaviours/ForceLoad.beh");
+        node = YAML::LoadFile(path + "/etc/plans/behaviours/ForceLoad.beh");
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
+        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
+
+    YAML::Node alicaConfig;
+    try {
+        alicaConfig = YAML::LoadFile(path + "/etc/hairy/Alica.yaml");
+    } catch (YAML::BadFile& badFile) {
+        AlicaEngine::abort("MM: Could not parse Alica.yaml file: ", badFile.msg);
+    }
+
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(nullptr, node);
-    
-    RuntimeBehaviourFactory rtbf(std::make_unique<alica::BehaviourCreator>(), nullptr, nullptr);
+
+    ConfigChangeListener configChangeListener(alicaConfig);
+    RuntimeBehaviourFactory rtbf(configChangeListener, std::make_unique<alica::BehaviourCreator>(), nullptr, nullptr);
     rtbf.create(1234, behaviourModel);
-    std::cerr<<"END**************************************"<<std::endl;
+
+    std::cerr << "END**************************************" << std::endl;
 }
 } // namespace
 } // namespace alica

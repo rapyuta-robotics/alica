@@ -22,6 +22,7 @@ class RuntimeBehaviourFactory
 {
 public:
     // TODO: remove engine reference later
+    //todo luca add another  RuntimeBehaviourFactory without creator
     RuntimeBehaviourFactory(ConfigChangeListener& configChangeListener, std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine);
     ~RuntimeBehaviourFactory() = default;
 
@@ -33,6 +34,7 @@ private:
     std::unique_ptr<IBehaviourCreator> _creator;
     IAlicaWorldModel* _wm;
     AlicaEngine* _engine;
+    std::string _customerLibraryFolder;
 };
 
 } /* namespace alica */

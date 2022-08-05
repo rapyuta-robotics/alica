@@ -1,10 +1,12 @@
 #pragma once
 
+#include "engine/BasicBehaviour.h"
 
-
-class TestBehaviour
+namespace alica
 {
-    public:
-    TestBehaviour();
-
+class TestBehaviour : public BasicBehaviour
+{
+public:
+    TestBehaviour(BehaviourContext& context);
 };
+}; // namespace alica
