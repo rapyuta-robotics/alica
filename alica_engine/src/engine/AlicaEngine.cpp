@@ -95,7 +95,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
+    _behaviourFactory = std::make_unique<RuntimeBehaviourFactory>(_configChangeListener,std::move(creatorCtx.behaviourCreator), _ctx.getWorldModel(), this);
     _planFactory = std::make_unique<RuntimePlanFactory>(std::move(creatorCtx.planCreator), _ctx.getWorldModel(), this);
 
     _stepCalled = false;

@@ -2,6 +2,7 @@
 #include <engine/RuntimeBehaviourFactory.h>
 
 #include "engine/BasicBehaviour.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/LibraryLoader.h"
 
@@ -10,29 +11,34 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(
+        ConfigChangeListener& configChangeListener, std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
         : _creator(std::move(bc))
         , _engine(engine)
         , _wm(wm)
 {
+    auto reloadFunctionPtr = std::bind(&RuntimeBehaviourFactory::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
+
+void RuntimeBehaviourFactory::reload(const YAML::Node& config) {}
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
 
-    bool forceLoad=ctx.behaviourModel->isForceLoad();//luca
-    if(forceLoad)
-    {
-        std::cerr<<"Info: FORCE LOAD name:"<<behaviourModel->getLibraryName()<<" company:"<<behaviourModel->getCompanyName()<<std::endl;
+    bool forceLoad = ctx.behaviourModel->isForceLoad(); // luca
+    if (forceLoad) {
+        std::cerr << "Info: FORCE LOAD name:" << behaviourModel->getLibraryName() << " company:" << behaviourModel->getCompanyName() << std::endl;
         LibraryLoader loader;
         loader.load(behaviourModel->getLibraryName(), behaviourModel->getCompanyName(), "");
         return nullptr;
     }
-    
+
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        std::cerr<<"Errro: RuntimeBehaviourFactory: Behaviour creation failed: " << id<<std::endl;
+        std::cerr << "Errro: RuntimeBehaviourFactory: Behaviour creation failed: " << id << std::endl;
         return nullptr;
     }
 
