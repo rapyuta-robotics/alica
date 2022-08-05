@@ -36,8 +36,8 @@ MasterSyncTransition1418825395939::~MasterSyncTransition1418825395939()
  * Task: DefaultTask  -> EntryPoint-ID: 1418825402617
  */
 
-UtilityFunction1418825395939::UtilityFunction1418825395939(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1418825395939::UtilityFunction1418825395939()
+        : BasicUtilityFunction()
 {
 }
 
@@ -45,7 +45,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
 {
     /*PROTECTED REGION ID(1418825395939) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

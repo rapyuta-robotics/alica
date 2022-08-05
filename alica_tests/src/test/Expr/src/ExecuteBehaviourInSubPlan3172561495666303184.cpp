@@ -31,15 +31,15 @@ ExecuteBehaviourInSubPlan3172561495666303184::~ExecuteBehaviourInSubPlan31725614
  * Task: Attack  -> EntryPoint-ID: 560547937773733569
  */
 
-UtilityFunction3172561495666303184::UtilityFunction3172561495666303184(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction3172561495666303184::UtilityFunction3172561495666303184()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction3172561495666303184::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(3172561495666303184) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

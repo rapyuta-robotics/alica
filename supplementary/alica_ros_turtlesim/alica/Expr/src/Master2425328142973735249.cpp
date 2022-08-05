@@ -32,15 +32,15 @@ Master2425328142973735249::~Master2425328142973735249()
  * Task: DefaultTask  -> EntryPoint-ID: 2741715629576575326
  */
 
-UtilityFunction2425328142973735249::UtilityFunction2425328142973735249(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction2425328142973735249::UtilityFunction2425328142973735249()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(2425328142973735249) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

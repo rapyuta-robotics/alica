@@ -39,7 +39,7 @@ private:
 class UtilityFunction691392966514374878 : public BasicUtilityFunction
 {
 public:
-    UtilityFunction691392966514374878(IAlicaLogger& logger);
+    UtilityFunction691392966514374878();
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 } /* namespace alica */

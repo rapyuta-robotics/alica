@@ -38,7 +38,7 @@ UtilityFunction1479557664989::UtilityFunction1479557664989(IAlicaLogger& logger)
 std::shared_ptr<UtilityFunction> UtilityFunction1479557664989::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1479557664989) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

@@ -32,15 +32,15 @@ TestTracingMasterPlan691392966514374878::~TestTracingMasterPlan69139296651437487
  * Task: DefaultTask  -> EntryPoint-ID: 4059536593953041663
  */
 
-UtilityFunction691392966514374878::UtilityFunction691392966514374878(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction691392966514374878::UtilityFunction691392966514374878()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction691392966514374878::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(691392966514374878) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

@@ -40,7 +40,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1479556022226::getUtilityFunctio
 {
     /*PROTECTED REGION ID(1479556022226) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

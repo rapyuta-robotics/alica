@@ -37,15 +37,15 @@ MasterPlanTaskAssignment1407152758497::~MasterPlanTaskAssignment1407152758497()
  * Task: DefendTask  -> EntryPoint-ID: 1407152902493
  */
 
-UtilityFunction1407152758497::UtilityFunction1407152758497(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1407152758497::UtilityFunction1407152758497()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction1407152758497::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407152758497) ENABLED START*/
-    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan, _logger);
+    std::shared_ptr<UtilityFunction> function = std::make_shared<UtilityFunction>(0.1, 0.1, plan);
     SwitchEntryPointsSummand* us = new SwitchEntryPointsSummand(1.0);
     us->addEntryPoint(plan->getEntryPointByID(1407152894887)); // attack
     us->addEntryPoint(plan->getEntryPointByID(1407152902493)); // defend

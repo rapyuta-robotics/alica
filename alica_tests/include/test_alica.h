@@ -16,6 +16,8 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
+#include <engine/logging/IAlicaLogger.h>
+#include <engine/logging/AlicaLogger.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -120,7 +122,7 @@ protected:
 
     alicaTests::TestLogger& getLogger()
     {
-        IAlicaLogger& logger = ac->getLogger();
+        IAlicaLogger& logger = *AlicaLogger::instance();
         return dynamic_cast<alicaTests::TestLogger&>(logger);
     }
 

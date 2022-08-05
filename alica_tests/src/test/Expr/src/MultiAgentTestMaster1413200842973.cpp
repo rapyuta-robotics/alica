@@ -34,8 +34,8 @@ MultiAgentTestMaster1413200842973::~MultiAgentTestMaster1413200842973()
  * Task: DefaultTask  -> EntryPoint-ID: 1413200842975
  */
 
-UtilityFunction1413200842973::UtilityFunction1413200842973(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1413200842973::UtilityFunction1413200842973()
+        : BasicUtilityFunction()
 {
 }
 
@@ -43,7 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
 {
     /*PROTECTED REGION ID(1413200842973) ENABLED START*/
 
-    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan, _logger);
+    shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
     /*PROTECTED REGION END*/

@@ -18,7 +18,7 @@ GoTo::GoTo(BehaviourContext& context)
 {
     /*PROTECTED REGION ID(con4054297592460872311) ENABLED START*/
     // Add additional options here
-    _query = std::make_unique<alica::Query>(context.logger);
+    _query = std::make_unique<alica::Query>();
     /*PROTECTED REGION END*/
 }
 GoTo::~GoTo()

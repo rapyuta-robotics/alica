@@ -47,7 +47,6 @@ void ConstraintUsingBehaviour::initialiseParameters()
     _callCounter = 0;
     _query.clearStaticVariables();
     _query.addStaticVariable(getVariable("Y"));
-
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1414068597716) ENABLED START*/

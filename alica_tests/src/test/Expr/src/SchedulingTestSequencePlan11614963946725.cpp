@@ -35,15 +35,15 @@ SchedulingTestSequencePlan11614963946725::~SchedulingTestSequencePlan11614963946
  * Task: SchedulerTestSubPlanEntrypoint  -> EntryPoint-ID: 1614963977287
  */
 
-UtilityFunction1614963946725::UtilityFunction1614963946725(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1614963946725::UtilityFunction1614963946725()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction1614963946725::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1614963946725) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }

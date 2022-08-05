@@ -48,15 +48,15 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Task: DefaultTask  -> EntryPoint-ID: 1418042796753
  */
 
-UtilityFunction1418042796751::UtilityFunction1418042796751(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1418042796751::UtilityFunction1418042796751()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction1418042796751::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418042796751) ENABLED START*/
-    shared_ptr<UtilityFunction> function = make_shared<UtilityFunction>(0.5, 0.1, plan, _logger);
+    shared_ptr<UtilityFunction> function = make_shared<UtilityFunction>(0.5, 0.1, plan);
     function->editUtilSummands().emplace_back(new TestConstantValueSummand(0.5, 1.0));
     return function;
     /*PROTECTED REGION END*/

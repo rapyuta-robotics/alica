@@ -33,15 +33,15 @@ AdjacentSuccessSubPlan1682631238618360548::~AdjacentSuccessSubPlan16826312386183
  * Task: DefaultTask  -> EntryPoint-ID: 3470417373268048093
  */
 
-UtilityFunction1682631238618360548::UtilityFunction1682631238618360548(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1682631238618360548::UtilityFunction1682631238618360548()
+        : BasicUtilityFunction()
 {
 }
 
 std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1682631238618360548) ENABLED START*/
-    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan, _logger);
+    std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
     /*PROTECTED REGION END*/
 }
