@@ -3,8 +3,7 @@
 #include <map>
 using namespace alica;
 
-//BEHAVIOURREGISTER_DEF_TYPE(AcmeBehaviour, "testbehaviour");
-DerivedBehaviourRegister<AcmeBehaviour> AcmeBehaviour::reg_("testbehaviour");
+BEHAVIOURREGISTER_DEF_TYPE(AcmeBehaviour, "testbehaviour");
 
 namespace alica
 {
@@ -12,6 +11,7 @@ namespace alica
 AcmeBehaviour::AcmeBehaviour(BehaviourContext& context)
         : BasicBehaviour(context)
 {
+    std::cerr << "AcmeBehaviour created" << std::endl;
 }
 } // namespace alica
 

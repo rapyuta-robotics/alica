@@ -11,6 +11,10 @@
 namespace alica
 {
 
+#define BEHAVIOURREGISTER_DEC_TYPE(CLASS) static DerivedBehaviourRegister<CLASS> reg_;
+#define BEHAVIOURREGISTER_DEF_TYPE(CLASS, NAME) DerivedBehaviourRegister<CLASS> CLASS::reg_(NAME);
+
+
 class BehaviourRegister
 {
 public:

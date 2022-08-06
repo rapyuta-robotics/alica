@@ -10,8 +10,6 @@ public:
     AcmeBehaviour(BehaviourContext& context);
     void run(void* msg) override{};
 
-
-    //BEHAVIOURREGISTER_DEC_TYPE(AcmeBehaviour)    
-    static DerivedBehaviourRegister<AcmeBehaviour> reg_;
+    BEHAVIOURREGISTER_DEC_TYPE(AcmeBehaviour);
 };
 }; // namespace alica
