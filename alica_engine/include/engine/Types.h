@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+#include <map>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -34,6 +36,8 @@ class Task;
 class Transition;
 class TransitionCondition;
 class Variable;
+class BasicBehaviour;
+struct BehaviourContext;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using ConfAbstractPlanWrapperGrp = std::vector<const ConfAbstractPlanWrapper*>;
@@ -62,6 +66,9 @@ using VariableGrp = std::vector<const Variable*>;
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 using TransitionConditionCallback = std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)>;
+
+using CreationFunction = std::function<std::unique_ptr<BasicBehaviour>(BehaviourContext&)>;
+using CreationFuncDepot = std::map<std::string, CreationFunction>;
 
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 

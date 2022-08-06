@@ -31,10 +31,6 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
-message("${catkin_INCLUDE_DIRS}")
-message("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-message("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-message("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 file(GLOB_RECURSE sources "src/*.cpp")
 
