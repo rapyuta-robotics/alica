@@ -39,7 +39,8 @@ TEST(ForceLoad, simple_load)
 
     ConfigChangeListener configChangeListener(alicaConfig);
     RuntimeBehaviourFactory rtbf(configChangeListener, std::make_unique<alica::BehaviourCreator>(), nullptr, nullptr);
-    rtbf.create(1234, behaviourModel);
+    auto behaviour=rtbf.create(1234, behaviourModel);
+    ASSERT_EQ("AcmeBehaviour",behaviour->getName());
 
     std::cerr << "END**************************************" << std::endl;
 }
