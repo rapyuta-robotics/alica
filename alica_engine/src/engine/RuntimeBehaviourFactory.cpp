@@ -22,8 +22,9 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(
     reload(configChangeListener.getConfig());
 }
 
-void RuntimeBehaviourFactory::reload(const YAML::Node& config) {
-    _customerLibraryFolder=config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+void RuntimeBehaviourFactory::reload(const YAML::Node& config)
+{
+    _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
 }
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
@@ -35,7 +36,11 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
         std::cerr << "Info: FORCE LOAD name:" << behaviourModel->getLibraryName() << " company:" << behaviourModel->getCompanyName() << std::endl;
         LibraryLoader loader;
         loader.load(behaviourModel->getLibraryName(), behaviourModel->getCompanyName(), _customerLibraryFolder);
-        return nullptr;
+        auto call = BehaviourRegister::getCreatorFunction(behaviourModel->getName());
+        std::unique_ptr<BasicBehaviour> basicBeh = (call) (ctx);
+        std::cerr << "Created:" << behaviourModel->getLibraryName() << " company:" << behaviourModel->getCompanyName() << std::endl;
+        basicBeh->setEngine(_engine);
+        return basicBeh;
     }
 
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);

@@ -22,7 +22,7 @@ TEST(ForceLoad, simple_load)
 
     YAML::Node node;
     try {
-        node = YAML::LoadFile(path + "/etc/plans/behaviours/ForceLoad.beh");
+        node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
     } catch (YAML::BadFile& badFile) {
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }

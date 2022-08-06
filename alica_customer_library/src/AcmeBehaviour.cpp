@@ -3,7 +3,7 @@
 #include <map>
 using namespace alica;
 
-BEHAVIOURREGISTER_DEF_TYPE(AcmeBehaviour, "testbehaviour");
+BEHAVIOURREGISTER_DEF_TYPE(AcmeBehaviour, "AcmeBehaviour");
 
 namespace alica
 {
