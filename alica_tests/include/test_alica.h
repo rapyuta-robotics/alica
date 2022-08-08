@@ -16,8 +16,8 @@
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <engine/logging/IAlicaLogger.h>
 #include <engine/logging/AlicaLogger.h>
+#include <engine/logging/IAlicaLogger.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -239,9 +239,10 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate();
+            ac->terminate(true);
             delete ac;
         }
+        AlicaLogger::destroy();
     }
 };
 
@@ -424,9 +425,10 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate();
+            ac->terminate(true);
             delete ac;
         }
+        AlicaLogger::destroy();
     }
 };
 } // namespace alica
