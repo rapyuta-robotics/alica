@@ -9,6 +9,7 @@
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -24,7 +25,7 @@ namespace alica
 using std::to_string;
 
 Logger::Logger(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const TeamObserver& teamObserver,
-        const PlanRepository& planRepository, const AlicaClock& clock, const std::string& localAgentName, IAlicaLogger& logger)
+        const PlanRepository& planRepository, const AlicaClock& clock, const std::string& localAgentName)
         : _teamManager(teamManager)
         , _teamObserver(teamObserver)
         , _planRepository(planRepository)
@@ -36,7 +37,6 @@ Logger::Logger(ConfigChangeListener& configChangeListener, const TeamManager& te
         , _receivedEvent(false)
         , _inIteration(false)
         , _logging(false)
-        , _logger(logger)
 {
     auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
@@ -82,7 +82,7 @@ void Logger::processString(const std::string& event)
         _eventStrings.push_back(event + "(FP)");
     }
     _receivedEvent = true;
-    _logger.log(Verbosity::DEBUG, "Logger: ", _eventStrings.back());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Logger: ", _eventStrings.back());
 }
 
 /**

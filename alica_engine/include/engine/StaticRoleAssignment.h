@@ -12,7 +12,7 @@ class TeamManager;
 class StaticRoleAssignment : public IRoleAssignment
 {
 public:
-    StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager, IAlicaLogger& logger);
+    StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager);
     ~StaticRoleAssignment() = default;
 
     void init() override;
@@ -27,7 +27,6 @@ public:
 
 private:
     bool _updateRoles;
-    IAlicaLogger& _logger;
     const IAlicaCommunication& _communicator;
     const PlanRepository& _planRepository;
     TeamManager& _tm;

@@ -40,7 +40,6 @@ class IPlanTreeVisitor;
 class SimplePlanTree;
 class Blackboard;
 class KeyMapping;
-class IAlicaLogger;
 class IAlicaWorldModel;
 
 struct PlanStateTriple
@@ -100,10 +99,10 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration, IAlicaLogger& logger);
-    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration, IAlicaLogger& logger);
-    RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration, IAlicaLogger& logger);
-    RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration, IAlicaLogger& logger);
+    explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
+    RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -235,7 +234,6 @@ private:
     Assignment _assignment;
     CycleManager _cycleManagement;
     ConditionStore _constraintStore;
-    IAlicaLogger& _logger;
 
     // Type info
     const PlanType* const _planType;

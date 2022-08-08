@@ -13,7 +13,6 @@ class PlanType;
 class Plan;
 class PlanBase;
 class AlicaEngine;
-class IAlicaLogger;
 
 /**
  * Implements the task allocation algorithm
@@ -21,7 +20,7 @@ class IAlicaLogger;
 class PlanSelector
 {
 public:
-    PlanSelector(AlicaEngine* ae, PlanBase* pb, IAlicaLogger& logger);
+    PlanSelector(AlicaEngine* ae, PlanBase* pb);
     virtual ~PlanSelector();
 
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
@@ -41,7 +40,6 @@ private:
     AlicaEngine* _ae;
     PlanBase* _pb;
     const IAlicaWorldModel* _wm;
-    IAlicaLogger& _logger;
 };
 
 } /* namespace alica */

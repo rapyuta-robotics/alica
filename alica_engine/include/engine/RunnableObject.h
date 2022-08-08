@@ -27,10 +27,9 @@ class IAlicaLogger;
 class TraceRunnableObject
 {
 public:
-    TraceRunnableObject(IAlicaLogger& logger)
+    TraceRunnableObject()
             : _tracingType(TracingType::DEFAULT)
             , _runTraced(false)
-            , _logger(logger)
     {
     }
 
@@ -62,7 +61,6 @@ private:
     // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
     IAlicaTraceFactory* _traceFactory;
-    IAlicaLogger& _logger;
 };
 
 /**
@@ -73,7 +71,7 @@ class RunnableObject
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObject(IAlicaWorldModel* wm, IAlicaLogger& logger, const std::string& name = "");
+    RunnableObject(IAlicaWorldModel* wm, const std::string& name = "");
     virtual ~RunnableObject() = default;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
@@ -90,7 +88,6 @@ protected:
     RunningPlan* getPlanContext() const { return _runningplanContext; }
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
     IAlicaWorldModel* getWorldModel() { return _wm; };
-    IAlicaLogger& getLogger() { return _logger; };
 
     void start(RunningPlan* rp);
     void stop();
@@ -102,7 +99,6 @@ protected:
     bool getInheritBlackboard() const { return _blackboardBlueprint == nullptr; };
     void setBlackboardBlueprint(const BlackboardBlueprint* blackboard) { _blackboardBlueprint = blackboard; }
     const KeyMapping* getKeyMapping(int64_t id) const { return _keyMappings.at(id); }
-    IAlicaLogger& getLogger() const;
 
     AlicaEngine* _engine;
     TraceRunnableObject _runnableObjectTracer;
@@ -121,7 +117,6 @@ private:
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
-    IAlicaLogger& _logger;
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these
     std::unordered_map<int64_t, const KeyMapping*> _keyMappings;

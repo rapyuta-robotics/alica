@@ -27,10 +27,7 @@
 namespace alica
 {
 
-Query::Query(IAlicaLogger& logger)
-        : _logger(logger)
-{
-}
+Query::Query() {}
 
 void Query::addStaticVariable(const Variable* v)
 {
@@ -97,20 +94,20 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
     // insert _queried_ variables of this query into the _relevant_ variables
     fillBufferFromQuery();
 
-    _logger.log(Verbosity::DEBUG, "Query: Initial static buffer Size: ", _staticVars.getCurrent().size());
-    _logger.log(Verbosity::DEBUG, "Query: Initial domain buffer Size: ", _domainVars.getCurrent().size());
-    _logger.log(Verbosity::DEBUG, "Query: Starting Query with static Vars:\n", _uniqueVarStore);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Initial static buffer Size: ", _staticVars.getCurrent().size());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Initial domain buffer Size: ", _domainVars.getCurrent().size());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Starting Query with static Vars:\n", _uniqueVarStore);
     {
         const RunningPlan* rp = pi;
         // Goes recursive upwards in the plan tree and does three steps on each level.
         while (rp && (_staticVars.hasCurrentlyAny() || _domainVars.hasCurrentlyAny())) {
-            _logger.log(Verbosity::DEBUG, "Query: Plantree-LVL of ", rp->getActivePlan()->getName(), "\n", _uniqueVarStore);
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Plantree-LVL of ", rp->getActivePlan()->getName(), "\n", _uniqueVarStore);
 
             // 1. fill the query's static and domain variables, as well as its problem parts
             rp->getConstraintStore().acceptQuery(*this, rp);
             // next should be empty, current full
 
-            _logger.log(Verbosity::DEBUG, "Query: Size of problemParts is ", _problemParts.size());
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Size of problemParts is ", _problemParts.size());
 
             // 2. process bindings for plantype
             if (rp->getPlanType() != nullptr) {
@@ -150,14 +147,14 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
         }
     }
 
-    _logger.log(Verbosity::DEBUG, "Query: ", _uniqueVarStore);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: ", _uniqueVarStore);
     // now we have a vector<ProblemPart> in problemParts ready to be queried together with a store of unifications
     if (_problemParts.empty()) {
-        _logger.log(Verbosity::DEBUG, "Query: Empty Query!");
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Empty Query!");
         return false;
     }
 
-    _logger.log(Verbosity::DEBUG, "Query: Size of problemParts is ", _problemParts.size());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Size of problemParts is ", _problemParts.size());
     if (_context.get() == nullptr) {
         _context = solver.createSolverContext();
     } else {
@@ -181,10 +178,10 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
         _relevantVariables.insert(_relevantVariables.end(), _domainVars.getCurrent().begin(), _domainVars.getCurrent().end());
     }
 
-    _logger.log(Verbosity::DEBUG, "Query: Number of relevant static variables: ", domOffset);
-    _logger.log(Verbosity::DEBUG, "Query: Number of relevant domain variables: ", _domainVars.getCurrent().size());
-    _logger.log(Verbosity::DEBUG, "Query: Total number of relevant variables: ", _relevantVariables.size());
-    _logger.log(Verbosity::DEBUG, "Query: PrepTime: ", (pi->getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds(), "us");
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Number of relevant static variables: ", domOffset);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Number of relevant domain variables: ", _domainVars.getCurrent().size());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Total number of relevant variables: ", _relevantVariables.size());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: PrepTime: ", (pi->getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds(), "us");
 
     return true;
 }
@@ -197,7 +194,7 @@ void Query::addProblemPart(ProblemPart&& pp)
     for (const AgentVariables& avars : pp.getAllVariables()) {
         for (const DomainVariable* domainvariable : avars.getVars()) {
             if (!_domainVars.has(domainvariable)) {
-                _logger.log(Verbosity::DEBUG, "Query: Adding DomVar: ", *domainvariable);
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "Query: Adding DomVar: ", *domainvariable);
                 _domainVars.editCurrent().push_back(domainvariable);
             }
         }

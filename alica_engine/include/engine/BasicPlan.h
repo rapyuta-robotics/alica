@@ -20,7 +20,6 @@ struct PlanContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Plan* planModel;
-    IAlicaLogger& logger;
 };
 
 class BasicPlan : private RunnableObject
@@ -34,7 +33,6 @@ public:
     using RunnableObject::getBlackboard;
     using RunnableObject::getInheritBlackboard;
     using RunnableObject::getKeyMapping;
-    using RunnableObject::getLogger;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTrace;

@@ -17,7 +17,6 @@ class RunningPlan;
 class PlanRepository;
 class Assignment;
 class AlicaEngine;
-class IAlicaLogger;
 
 /**
  * Responsibile for detecting cycles in assignment updates and reactions to these
@@ -25,7 +24,7 @@ class IAlicaLogger;
 class CycleManager
 {
 public:
-    CycleManager(AlicaEngine* ae, RunningPlan* p, IAlicaLogger& logger);
+    CycleManager(AlicaEngine* ae, RunningPlan* p);
     ~CycleManager();
     void update();
     bool isOverridden() const;
@@ -66,7 +65,6 @@ private:
     CycleState _state;
     RunningPlan* _rp;
     AllocationAuthorityInfo _fixedAllocation;
-    IAlicaLogger& _logger;
 };
 
 } // namespace alica

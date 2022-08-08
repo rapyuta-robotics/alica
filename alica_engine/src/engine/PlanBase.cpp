@@ -5,13 +5,14 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -30,15 +31,14 @@ namespace alica
  * Constructs the PlanBase given a top-level plan to execute
  * @param masterplan A Plan
  */
-PlanBase::PlanBase(AlicaEngine* ae, IAlicaLogger& logger)
+PlanBase::PlanBase(AlicaEngine* ae)
         : _ae(ae)
-        , _logger(logger)
         , _rootNode(nullptr)
         , _deepestNode(nullptr)
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(ae, this, logger)
+        , _ruleBook(ae, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -86,8 +86,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    _logger.log(Verbosity::INFO, "PB: Engine loop time is ", _loopTime.inMilliseconds(), "ms, broadcast interval is ", _minSendInterval.inMilliseconds(),
-            "ms - ", _maxSendInterval.inMilliseconds(), "ms");
+    Logging::LoggingUtil::log(Verbosity::INFO, "PB: Engine loop time is ", _loopTime.inMilliseconds(), "ms, broadcast interval is ",
+            _minSendInterval.inMilliseconds(), "ms - ", _maxSendInterval.inMilliseconds(), "ms");
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -116,7 +116,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    _logger.log(Verbosity::DEBUG, "PB: Run-Method of PlanBase started.");
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: Run-Method of PlanBase started.");
     const AlicaClock& alicaClock = _ae->getAlicaClock();
     IRoleAssignment& ra = _ae->editRoleAssignment();
     Logger& log = _ae->editLog();
@@ -131,13 +131,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_ae->getStepEngine()) {
 #ifdef ALICA_DEBUG_ENABLED
-            _logger.log(Verbosity::DEBUG, "PB: ===CUR TREE===");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: ===CUR TREE===");
             if (_rootNode == nullptr) {
-                _logger.log(Verbosity::DEBUG, "PB: NULL");
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: NULL");
             } else {
                 _rootNode->printRecursive();
             }
-            _logger.log(Verbosity::DEBUG, "PB: ===END CUR TREE===");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: ===END CUR TREE===");
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -166,7 +166,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            _logger.log(Verbosity::INFO, "PB: MasterPlan Failed");
+            Logging::LoggingUtil::log(Verbosity::INFO, "PB: MasterPlan Failed");
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -197,8 +197,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        _logger.log(Verbosity::DEBUG, "PlanBase: ", (totalCount - inActiveCount - retiredCount), " active ", retiredCount, " retired ", inActiveCount,
-                " inactive deleted: ", deleteCount);
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "PlanBase: ", (totalCount - inActiveCount - retiredCount), " active ", retiredCount, " retired ",
+                inActiveCount, " inactive deleted: ", deleteCount);
 #endif
         // lock for fpEvents
         {
@@ -209,7 +209,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = alicaClock.now();
 
         if (now < _lastSendTime) {
-            _logger.log(Verbosity::WARNING, "PB: lastSendTime is in the future of the current system time, did the system time change?");
+            Logging::LoggingUtil::log(Verbosity::WARNING, "PB: lastSendTime is in the future of the current system time, did the system time change?");
             _lastSendTime = now;
         }
 
@@ -305,7 +305,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = alicaClock.now();
         availTime = _loopTime - (now - beginTime);
 
-        _logger.log(Verbosity::WARNING, "PB: availTime ", availTime);
+        Logging::LoggingUtil::log(Verbosity::WARNING, "PB: availTime ", availTime);
 
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             alicaClock.sleep(availTime);
@@ -358,17 +358,17 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration, _logger));
+    _runningPlans.emplace_back(new RunningPlan(_ae, plan, configuration));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration, _logger));
+    _runningPlans.emplace_back(new RunningPlan(_ae, b, configuration));
     return _runningPlans.back().get();
 }
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration, _logger));
+    _runningPlans.emplace_back(new RunningPlan(_ae, pt, configuration));
     return _runningPlans.back().get();
 }
 

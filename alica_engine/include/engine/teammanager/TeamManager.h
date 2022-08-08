@@ -53,7 +53,7 @@ class TeamManager
 public:
     TeamManager(ConfigChangeListener& configChangeListener, const ModelManager& modelManager, const PlanRepository& planRepository,
             const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId,
-            const std::string& localAgentName, AgentId agentID, IAlicaLogger& logger);
+            const std::string& localAgentName, AgentId agentID);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
@@ -104,7 +104,6 @@ private:
     Logger& _log;
     bool _useAutoDiscovery;
     AgentId _localAgentID;
-    IAlicaLogger& _logger;
     int _version;
     uint64_t _masterPlanId;
     std::string _localAgentName;

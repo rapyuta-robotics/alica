@@ -1,8 +1,8 @@
 #include "engine/AlicaContext.h"
-#include "engine/AlicaDefaultLogger.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
+#include "engine/logging/AlicaDefaultLogger.h"
 
 #include <essentials/FileSystem.h>
 
@@ -23,6 +23,7 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
+        , _localAgentName(alicaContextParams.agentName)
 {
 }
 
@@ -41,7 +42,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
-        _logger->log(Verbosity::WARNING, "AC: Context already initialized.");
+        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized.");
         return -1;
     }
 
@@ -52,12 +53,9 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         AlicaEngine::abort("AC: TimerFactory not set");
     }
 
-    if (!_logger) {
+    if (!Logging::LoggingUtil::isInitialized()) {
         setLogger<AlicaDefaultLogger>();
     }
-
-    // Creator requires logger to pass it to utility functions
-    creatorCtx.utilityCreator->setLogger(*(_logger.get()));
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
 
@@ -74,12 +72,12 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     return -1;
 }
 
-int AlicaContext::terminate()
+int AlicaContext::terminate(bool preventSingletonDestruction)
 {
     if (_communicator) {
         _communicator->stopCommunication();
     }
-    _engine->terminate();
+    _engine->terminate(preventSingletonDestruction);
     _initialized = false;
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
@@ -123,10 +121,10 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configFile);
         return node;
     } catch (YAML::BadFile& badFile) {
-        if (!_logger) {
-            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
+        if (Logging::LoggingUtil::isInitialized()) {
+            Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Could not parse file: ", configFile, " - ", badFile.msg);
         } else {
-            _logger->log(Verbosity::WARNING, "AC: Could not parse file: ", configFile, " - ", badFile.msg);
+            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
         }
     }
 

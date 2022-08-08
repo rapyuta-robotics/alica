@@ -2,8 +2,9 @@
 
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/KeyMapping.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 
-#include <alica_common_config/debug_output.h>
 #include <iostream>
 
 namespace alica
@@ -15,9 +16,9 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
             childBb.set(childKey, lockedParentBb.get(parentKey));
-            std::cout << "passing " << parentKey << " into " << childKey << std::endl;
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "passing ", parentKey, " into ", childKey);
         } catch (std::exception& e) {
-            std::cerr << "Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what() << std::endl;
+            Logging::LoggingUtil::log(Verbosity::ERROR, "Blackboard error passing ", parentKey, " into ", childKey, ". ", e.what());
         }
     }
 }
@@ -29,9 +30,9 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
             lockedParentBb.set(parentKey, childBb.get(childKey));
-            std::cout << "passing " << childKey << " into " << parentKey << std::endl;
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "passing ", childKey, " into ", parentKey);
         } catch (std::exception& e) {
-            std::cerr << "Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what() << std::endl;
+            Logging::LoggingUtil::log(Verbosity::ERROR, "Blackboard error passing ", childKey, " into ", parentKey, ". ", e.what());
         }
     }
 }

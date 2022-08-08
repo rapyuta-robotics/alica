@@ -28,7 +28,6 @@ namespace alica
 class ProblemPart;
 class RunningPlan;
 class SolverContext;
-class IAlicaLogger;
 
 template <class T>
 class BufferedSet
@@ -73,7 +72,7 @@ using BufferedDomainVariableGrp = BufferedSet<const DomainVariable*>;
 class Query
 {
 public:
-    Query(IAlicaLogger& logger);
+    Query();
 
     void addStaticVariable(const alica::Variable* v);
     void addDomainVariable(const DomainVariable* domainVariable);
@@ -112,7 +111,6 @@ private:
 
     VariableGrp _relevantVariables;
     std::unique_ptr<SolverContext> _context;
-    IAlicaLogger& _logger;
 };
 
 template <class SolverType>
@@ -138,7 +136,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     int domOffset;
 
     if (!pi->getAlicaEngine()->existSolver<SolverType>()) {
-        _logger.log(Verbosity::ERROR, "Query::getSolution: The engine does not have a suitable solver for the given type available.");
+        Logging::LoggingUtil::log(Verbosity::ERROR, "Query::getSolution: The engine does not have a suitable solver for the given type available.");
         return false;
     }
 

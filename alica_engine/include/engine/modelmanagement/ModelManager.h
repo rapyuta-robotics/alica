@@ -22,7 +22,6 @@ class RoleSet;
 class Factory;
 class AlicaEngine;
 class ConfigChangeListener;
-class IAlicaLogger;
 
 /**
  * Parse the plan tree from disk and writes it back. Fills the PlanRepository and holds all existing elements.
@@ -31,8 +30,8 @@ class ModelManager
 {
 public:
     //[[deprecated("It will be removed in the last PR")]]
-    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder, IAlicaLogger& logger); // TOBE removed
-    ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository, IAlicaLogger& logger);
+    ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder); // TOBE removed
+    ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -51,7 +50,6 @@ private:
     std::list<std::string> filesToParse;
     std::list<std::string> filesParsed;
 
-    IAlicaLogger& _logger;
     PlanRepository& _planRepository;
     std::map<int64_t, AlicaElement*> elements;
 

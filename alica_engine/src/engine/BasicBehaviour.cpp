@@ -24,7 +24,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.logger, context.name)
+        : RunnableObject(context.worldModel, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
@@ -57,7 +57,7 @@ void BasicBehaviour::doInit()
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
-        getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-INIT of: ", getName(), ": ", e.what());
+        Logging::LoggingUtil::log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-INIT of: ", getName(), ": ", e.what());
     }
 }
 
@@ -77,7 +77,7 @@ void BasicBehaviour::doTerminate()
     try {
         onTermination();
     } catch (const std::exception& e) {
-        getLogger().log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-TERMINATE of: ", getName(), ": ", e.what());
+        Logging::LoggingUtil::log(Verbosity::ERROR, "[BasicBehaviour] Exception in Behaviour-TERMINATE of: ", getName(), ": ", e.what());
     }
 
     _behResult.store(BehResult::UNKNOWN);

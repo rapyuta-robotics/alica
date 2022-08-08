@@ -22,13 +22,12 @@ struct SyncTalk;
 class IAlicaCommunication;
 class TeamManager;
 class AlicaClock;
-class IAlicaLogger;
 
 class SyncModule
 {
 public:
     SyncModule(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const PlanRepository& planRepository,
-            const IAlicaCommunication& communicator, const AlicaClock& clock, IAlicaLogger& logger);
+            const IAlicaCommunication& communicator, const AlicaClock& clock);
 
     ~SyncModule();
     void init();
@@ -54,7 +53,6 @@ private:
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
-    IAlicaLogger& _logger;
     unsigned long _ticks;
     std::mutex _lomutex; /**< Guards the access to the _synchProcessMapping */
     std::map<const Synchronisation*, SynchronisationProcess*>

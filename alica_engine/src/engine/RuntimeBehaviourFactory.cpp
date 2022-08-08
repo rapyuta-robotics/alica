@@ -2,26 +2,26 @@
 #include <engine/RuntimeBehaviourFactory.h>
 
 #include "engine/BasicBehaviour.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/IBehaviourCreator.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine, IAlicaLogger& logger)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
         : _creator(std::move(bc))
         , _engine(engine)
-        , _logger(logger)
         , _wm(wm)
 {
 }
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _logger};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        _logger.log(Verbosity::ERROR, "RuntimeBehaviourFactory: Behaviour creation failed: ", id);
+        Logging::LoggingUtil::log(Verbosity::ERROR, "RuntimeBehaviourFactory: Behaviour creation failed: ", id);
         return nullptr;
     }
 

@@ -3,22 +3,22 @@
 #include "engine/StaticRoleAssignment.h"
 #include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/RoleSwitch.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/teammanager/TeamManager.h"
 
 namespace alica
 {
 
-StaticRoleAssignment::StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager, IAlicaLogger& logger)
+StaticRoleAssignment::StaticRoleAssignment(const IAlicaCommunication& communicator, const PlanRepository& planRepository, TeamManager& teamManager)
         : IRoleAssignment()
         , _communicator(communicator)
         , _planRepository(planRepository)
         , _tm(teamManager)
         , _updateRoles(false)
-        , _logger(logger)
 {
 }
 
@@ -68,7 +68,7 @@ void StaticRoleAssignment::calculateRoles()
         for (const Role* role : roles) {
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
-                _logger.log(Verbosity::DEBUG, "Static RA: Setting Role ", role->getName(), " for robot ID ", agent->getId());
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "Static RA: Setting Role ", role->getName(), " for robot ID ", agent->getId());
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me

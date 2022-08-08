@@ -2,8 +2,9 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/PlanRepository.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Plan.h"
@@ -29,9 +30,8 @@
 namespace alica
 {
 
-ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder, IAlicaLogger& logger)
+ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, const std::string& domainConfigFolder)
         : _planRepository(planRepository)
-        , _logger(logger)
         , _configChangeListener(ae->getConfigChangeListener()) // tmp only for compilation
         , domainConfigFolder(domainConfigFolder)
 {
@@ -41,10 +41,8 @@ ModelManager::ModelManager(PlanRepository& planRepository, AlicaEngine* ae, cons
     Factory::setModelManager(this);
 }
 
-ModelManager::ModelManager(
-        ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository, IAlicaLogger& logger)
+ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository)
         : _configChangeListener(configChangeListener)
-        , _logger(logger)
         , domainConfigFolder(domainConfigFolder)
         , _planRepository(planRepository)
 {
@@ -83,7 +81,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
         AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
     }
 
-    _logger.log(Verbosity::INFO, "MM: Config key '" + configKey + "' maps to '" + basePath + "'");
+    Logging::LoggingUtil::log(Verbosity::INFO, "MM: Config key '" + configKey + "' maps to '" + basePath + "'");
     return basePath;
 }
 
@@ -100,7 +98,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         std::string fileToParse = filesToParse.front();
         filesToParse.pop_front();
 
-        _logger.log(Verbosity::DEBUG, "MM: fileToParse: ", fileToParse);
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "MM: fileToParse: ", fileToParse);
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
@@ -128,7 +126,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
-        _logger.log(Verbosity::INFO, "MM: ", beh->toString());
+        Logging::LoggingUtil::log(Verbosity::INFO, "MM: ", beh->toString());
     }
 
     return masterPlan;
@@ -147,7 +145,7 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 
     RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
     RoleSetFactory::attachReferences();
-    _logger.log(Verbosity::INFO, "MM: Parsed the following role set: \n", roleSet->toString());
+    Logging::LoggingUtil::log(Verbosity::INFO, "MM: Parsed the following role set: \n", roleSet->toString());
     return roleSet;
 }
 

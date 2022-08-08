@@ -25,10 +25,9 @@ using std::mutex;
 using std::pair;
 
 TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
-        const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager, IAlicaLogger& alicaLogger)
+        const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
         : _configChangeListener(configChangeListener)
         , _logger(logger)
-        , _alicaLogger(alicaLogger)
         , _roleAssignment(roleAssigment)
         , _communicator(communicator)
         , _clock(clock)
@@ -82,7 +81,7 @@ bool TeamObserver::updateTeamPlanTrees()
 void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = _clock.now();
-    _alicaLogger.log(Verbosity::DEBUG, "TO: tick(..) called at ", time);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: tick(..) called at ", time);
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
@@ -105,14 +104,14 @@ void TeamObserver::tick(RunningPlan* root)
 
             if (ele.second->isNewSimplePlanTree()) {
                 updatespts.push_back(ele.second.get());
-                _alicaLogger.log(Verbosity::DEBUG, "TO: added to update");
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: added to update");
                 ele.second->setProcessed();
             } else {
-                _alicaLogger.log(Verbosity::DEBUG, "TO: added to noupdate");
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: added to noupdate");
                 noUpdates.push_back(ele.second->getAgentId());
             }
         }
-        _alicaLogger.log(Verbosity::DEBUG, "TO: spts size ", updatespts.size());
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: spts size ", updatespts.size());
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
             _logger.eventOccurred("MsgUpdate");
@@ -122,7 +121,7 @@ void TeamObserver::tick(RunningPlan* root)
 
 void TeamObserver::close()
 {
-    _alicaLogger.log(Verbosity::INFO, "TO: Closed Team Observer");
+    Logging::LoggingUtil::log(Verbosity::INFO, "TO: Closed Team Observer");
 }
 
 /**
@@ -140,7 +139,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _communicator.sendPlanTreeInfo(pti);
-    _alicaLogger.log(Verbosity::DEBUG, "TO: Sending Plan Message: ", msg);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: Sending Plan Message: ", msg);
 }
 
 /**
@@ -284,7 +283,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
     }
 
     lock_guard<mutex> lock(_msgQueueMutex);
-    _alicaLogger.log(Verbosity::DEBUG, "TO: Message received ", _clock.now());
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TO: Message received ", _clock.now());
     _msgQueue.emplace_back(std::move(incoming), _clock.now());
 }
 
@@ -296,11 +295,11 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  */
 std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, const IdGrp& ids, AlicaTime time) const
 {
-    _alicaLogger.log(Verbosity::DEBUG, "Spt from robot ", agentId);
-    _alicaLogger.log(Verbosity::DEBUG, ids);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "Spt from robot ", agentId);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, ids);
 
     if (ids.empty()) {
-        _alicaLogger.log(Verbosity::ERROR, "TO: Empty state list for agent ", agentId);
+        Logging::LoggingUtil::log(Verbosity::ERROR, "TO: Empty state list for agent ", agentId);
         return nullptr;
     }
 
@@ -330,7 +329,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
         } else if (id == -2) {
             cur = curParent;
             if (cur == nullptr) {
-                _alicaLogger.log(Verbosity::WARNING, "TO: Malformed SptMessage from ", agentId);
+                Logging::LoggingUtil::log(Verbosity::WARNING, "TO: Malformed SptMessage from ", agentId);
                 return nullptr;
             }
             curParent = cur->getParent();
@@ -345,7 +344,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
                 cur->setState(s2);
                 cur->setEntryPoint(s2->getEntryPoint());
             } else {
-                _alicaLogger.log(Verbosity::WARNING, "Unknown State (", id, ") received from ", agentId);
+                Logging::LoggingUtil::log(Verbosity::WARNING, "Unknown State (", id, ") received from ", agentId);
                 return nullptr;
             }
         }

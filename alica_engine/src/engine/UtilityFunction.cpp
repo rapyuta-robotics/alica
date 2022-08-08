@@ -3,13 +3,14 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/IAlicaWorldModel.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/TaskRoleStruct.h"
 #include "engine/USummand.h"
 #include "engine/UtilityInterval.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
@@ -22,12 +23,11 @@ namespace alica
 
 using std::pair;
 
-UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan, IAlicaLogger& logger)
+UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan)
         : _plan(plan)
         , _ae(nullptr)
         , _priorityWeight(priorityWeight)
         , _similarityWeight(similarityWeight)
-        , _logger(logger)
 {
 }
 
@@ -168,23 +168,22 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
             }
             priResult.setMin(priResult.getMin() + curPrio);
 
-            _logger.log(Verbosity::DEBUG, "UF: taskId:", taskId, " roleId:", roleId, " prio: ", curPrio);
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: taskId:", taskId, " roleId:", roleId, " prio: ", curPrio);
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
-    // TODO: fix
-    _logger.log(Verbosity::DEBUG, "##\n", "UF: prioUI = ", priResult);
-    _logger.log(Verbosity::DEBUG, "UF: denum = ", denum);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "##\n", "UF: prioUI = ", priResult);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: denum = ", denum);
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    _logger.log(Verbosity::DEBUG, "UF: prioUI = ", priResult);
-    _logger.log(Verbosity::DEBUG, "##");
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: prioUI = ", priResult);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "##");
     return priResult;
 }
 

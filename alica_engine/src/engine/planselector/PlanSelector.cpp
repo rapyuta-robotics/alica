@@ -1,13 +1,14 @@
 #include "engine/planselector/PlanSelector.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/Output.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessCollection.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
@@ -32,11 +33,10 @@ namespace
 constexpr int POOL_SIZE = 10100;
 }
 
-PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb, IAlicaLogger& logger)
+PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb)
         : _pap(POOL_SIZE)
         , _ae(ae)
         , _pb(pb)
-        , _logger(logger)
 {
     assert(_ae && _pb);
 }
@@ -71,7 +71,7 @@ RunningPlan* PlanSelector::getBestSimilarAssignment(const RunningPlan& rp, const
             return createRunningPlan(rp.getParent(), rp.getPlanType()->getPlans(), rp.getConfiguration(), robots, &rp, rp.getPlanType(), o_currentUtility);
         }
     } catch (const PoolExhaustedException& pee) {
-        _logger.log(Verbosity::ERROR, pee.what());
+        Logging::LoggingUtil::log(Verbosity::ERROR, pee.what());
         _pap.increaseSize();
         return nullptr;
     }
@@ -87,7 +87,7 @@ bool PlanSelector::getPlansForState(
     try {
         return getPlansForStateInternal(planningParent, wrappers, robotIDs, o_plans);
     } catch (const PoolExhaustedException& pee) {
-        _logger.log(Verbosity::ERROR, pee.what());
+        Logging::LoggingUtil::log(Verbosity::ERROR, pee.what());
         _pap.increaseSize();
         return false;
     }
@@ -101,7 +101,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
-            _logger.log(Verbosity::DEBUG, "PS: AgentIds: ", robotIDs, " = ", robotIDs.size(), " IDs are not enough for the plan ", plan->getName(), "!");
+            Logging::LoggingUtil::log(
+                    Verbosity::DEBUG, "PS: AgentIds: ", robotIDs, " = ", robotIDs.size(), " IDs are not enough for the plan ", plan->getName(), "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
@@ -112,7 +113,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         return nullptr;
     }
 
-    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap, _wm, _logger);
+    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap, _wm);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {
@@ -148,13 +149,13 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         rp->setAssignment(ta.getNextBestAssignment(oldAss));
 
         if (rp->getAssignment().getPlan() == nullptr) {
-            _logger.log(Verbosity::DEBUG, "PS: No good assignment found!!!!");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: No good assignment found!!!!");
             return nullptr;
         }
         // PLAN (needed for Conditionchecks)
         rp->usePlan(rp->getAssignment().getPlan());
 
-        _logger.log(Verbosity::DEBUG, "PS: rp.Assignment of Plan ", rp->getActivePlan()->getName(), " is: ", rp->getAssignment());
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: rp.Assignment of Plan ", rp->getActivePlan()->getName(), " is: ", rp->getAssignment());
 
         // CONDITIONCHECK
         if (!rp->evalPreCondition()) {
@@ -168,8 +169,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            _logger.log(Verbosity::DEBUG, "PS: The agent ", "(Id: ", localAgentID, ") is not assigned to enter the plan ", rp->getActivePlan()->getName(),
-                    " and will IDLE!");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: The agent ", "(Id: ", localAgentID, ") is not assigned to enter the plan ",
+                    rp->getActivePlan()->getName(), " and will IDLE!");
 
             rp->useState(nullptr);
             rp->useEntryPoint(nullptr);
@@ -186,7 +187,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 
             found = getPlansForStateInternal(rp, rp->getActiveState()->getConfAbstractPlanWrappers(), agents, rpChildren);
         } else {
-            _logger.log(Verbosity::DEBUG, "PS: no recursion due to utilitycheck");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: no recursion due to utilitycheck");
             // Don't calculate children, because we have an
             // oldRp -> we just replace the oldRp
             // (not its children -> this will happen in an extra call)
@@ -196,11 +197,11 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
     // VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
     if (found && !rpChildren.empty()) {
-        _logger.log(Verbosity::DEBUG, "PS: Set child -> parent reference");
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: Set child -> parent reference");
         rp->addChildren(rpChildren);
     }
 
-    _logger.log(Verbosity::DEBUG, "PS: Created RunningPlan: \n", *rp);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: Created RunningPlan: \n", *rp);
 
     return rp; // If we return here, this robot is normal assigned
 }
@@ -208,7 +209,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
-    _logger.log(Verbosity::DEBUG, "<######PS: GetPlansForState: Parent: ", (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null"),
+    Logging::LoggingUtil::log(Verbosity::DEBUG,
+            "<######PS: GetPlansForState: Parent: ", (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null"),
             " Plan count: ", wrappers.size(), " Robot count: ", robotIDs.size(), " ######>");
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
@@ -218,12 +220,12 @@ bool PlanSelector::getPlansForStateInternal(
             rp->usePlan(beh);
             o_plans.push_back(rp);
             rp->setParent(planningParent);
-            _logger.log(Verbosity::DEBUG, "PS: Added Behaviour ", beh->getName());
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: Added Behaviour ", beh->getName());
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;
             RunningPlan* rp = createRunningPlan(planningParent, {p}, wrapper->getConfiguration(), robotIDs, nullptr, nullptr, zeroValue);
             if (!rp) {
-                _logger.log(Verbosity::DEBUG, "PS: It was not possible to create a RunningPlan for the Plan ", p->getName(), "!");
+                Logging::LoggingUtil::log(Verbosity::DEBUG, "PS: It was not possible to create a RunningPlan for the Plan ", p->getName(), "!");
                 return false;
             }
             o_plans.push_back(rp);
@@ -231,7 +233,7 @@ bool PlanSelector::getPlansForStateInternal(
             double zeroVal;
             RunningPlan* rp = createRunningPlan(planningParent, pt->getPlans(), wrapper->getConfiguration(), robotIDs, nullptr, pt, zeroVal);
             if (!rp) {
-                _logger.log(Verbosity::INFO, "PS: It was not possible to create a RunningPlan for the Plan ", pt->getName(), "!");
+                Logging::LoggingUtil::log(Verbosity::INFO, "PS: It was not possible to create a RunningPlan for the Plan ", pt->getName(), "!");
                 return false;
             }
             o_plans.push_back(rp);

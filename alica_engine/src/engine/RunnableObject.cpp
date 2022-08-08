@@ -11,7 +11,7 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(IAlicaWorldModel* wm, IAlicaLogger& logger, const std::string& name)
+RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
         , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
@@ -19,8 +19,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, IAlicaLogger& logger, const
         , _wm(wm)
         , _blackboard(nullptr)
         , _started(false)
-        , _runnableObjectTracer(logger)
-        , _logger(logger)
+        , _runnableObjectTracer()
 {
 }
 
@@ -115,11 +114,6 @@ void RunnableObject::runJob()
     doRun();
 }
 
-IAlicaLogger& RunnableObject::getLogger() const
-{
-    return _logger;
-}
-
 void RunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
     _runnableObjectTracer.setTracing(type, customTraceContextGetter);
@@ -131,7 +125,7 @@ void TraceRunnableObject::setTracing(TracingType type, std::function<std::option
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        _logger.log(
+        Logging::LoggingUtil::log(
                 Verbosity::ERROR, "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
         _tracingType = TracingType::DEFAULT;
     }

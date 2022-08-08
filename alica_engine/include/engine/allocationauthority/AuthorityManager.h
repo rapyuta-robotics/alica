@@ -15,15 +15,13 @@ namespace alica
 {
 class IAlicaCommunication;
 class AlicaEngine;
-class IAlicaLogger;
 /**
  * Manages communication wrt. conflict resolution.
  */
 class AuthorityManager
 {
 public:
-    AuthorityManager(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager,
-            IAlicaLogger& logger);
+    AuthorityManager(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager);
     ~AuthorityManager();
     void init();
     void close();
@@ -45,6 +43,5 @@ private:
     AgentId _localAgentID;
     bool _maySendMessages;
     std::mutex _mutex;
-    IAlicaLogger& _logger;
 };
 } /* namespace alica */

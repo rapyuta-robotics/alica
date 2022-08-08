@@ -1,6 +1,5 @@
 #include "engine/teammanager/TeamManager.h"
 
-#include "engine/IAlicaLogger.h"
 #include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
@@ -9,6 +8,8 @@
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 
 #include <chrono>
 #include <functional>
@@ -58,9 +59,8 @@ bool AgentsCache::addAgent(Agent* agent)
 
 TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const ModelManager& modelManager, const PlanRepository& planRepository,
         const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName,
-        AgentId agentID, IAlicaLogger& logger)
+        AgentId agentID)
         : _localAgent(nullptr)
-        , _logger(logger)
         , _modelManager(modelManager)
         , _planRepository(planRepository)
         , _communicator(communicator)
@@ -77,7 +77,7 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
     reload(configChangeListener.getConfig());
-    _logger.log(Verbosity::INFO, "[TeamManager] Own ID is ", _localAnnouncement.senderID);
+    Logging::LoggingUtil::log(Verbosity::INFO, "[TeamManager] Own ID is ", _localAnnouncement.senderID);
 }
 
 TeamManager::~TeamManager() {}
@@ -115,7 +115,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = generateID();
-            _logger.log(Verbosity::DEBUG, "TM: Auto generated id ", _localAnnouncement.senderID);
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "TM: Auto generated id ", _localAnnouncement.senderID);
         }
     } else {
         _localAnnouncement.senderID = _localAgentID;
@@ -283,11 +283,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        _logger.log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aq.senderID, " sdk: ", aq.senderSdk, " ph: ", aq.planHash);
+        Logging::LoggingUtil::log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aq.senderID, " sdk: ", aq.senderSdk, " ph: ", aq.planHash);
         return;
     }
 
-    _logger.log(Verbosity::DEBUG, "TM: Responding to agent: ", aq.senderID);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TM: Responding to agent: ", aq.senderID);
     announcePresence();
 }
 
@@ -296,7 +296,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            _logger.log(Verbosity::ERROR, "Duplicate Agent(", aa.senderID, ") discovered");
+            Logging::LoggingUtil::log(Verbosity::ERROR, "Duplicate Agent(", aa.senderID, ") discovered");
         }
         return;
     }
@@ -307,7 +307,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        _logger.log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aa.senderID, " sdk: ", aa.senderSdk, " ph: ", aa.planHash);
+        Logging::LoggingUtil::log(Verbosity::WARNING, "TM: Version mismatch ignoring: ", aa.senderID, " sdk: ", aa.senderSdk, " ph: ", aa.planHash);
         return;
     }
 
@@ -345,7 +345,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    _logger.log(Verbosity::DEBUG, "TM: Announcing presence ", _localAnnouncement.senderID);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TM: Announcing presence ", _localAnnouncement.senderID);
     for (int i = 0; i < _announcementRetries; ++i) {
         _communicator.sendAgentAnnouncement(_localAnnouncement);
     }

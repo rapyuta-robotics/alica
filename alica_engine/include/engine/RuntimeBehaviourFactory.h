@@ -11,7 +11,6 @@ class Behaviour;
 class BasicBehaviour;
 class IBehaviourCreator;
 class IAlicaWorldModel;
-class IAlicaLogger;
 
 /**
  * Construct a runtime BasicBehaviour instance based on the Behaviour model
@@ -20,7 +19,7 @@ class RuntimeBehaviourFactory
 {
 public:
     // TODO: remove engine reference later
-    RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine, IAlicaLogger& logger);
+    RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine);
     ~RuntimeBehaviourFactory() = default;
 
     std::unique_ptr<BasicBehaviour> create(int64_t id, const Behaviour* behaviourModel) const;
@@ -29,7 +28,6 @@ private:
     std::unique_ptr<IBehaviourCreator> _creator;
     IAlicaWorldModel* _wm;
     AlicaEngine* _engine;
-    IAlicaLogger& _logger;
 };
 
 } /* namespace alica */

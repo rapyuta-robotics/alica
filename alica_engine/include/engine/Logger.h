@@ -59,7 +59,7 @@ class Logger
 {
 public:
     Logger(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const TeamObserver& teamObserver, const PlanRepository& planRepository,
-            const AlicaClock& clock, const std::string& localAgentName, IAlicaLogger& logger);
+            const AlicaClock& clock, const std::string& localAgentName);
     ~Logger();
     template <typename... Args>
     void eventOccurred(Args... args)
@@ -93,7 +93,6 @@ private:
     AlicaTime _startTime;
     AlicaTime _endTime;
     AlicaTime _time;
-    IAlicaLogger& _logger;
     std::ofstream _fileWriter;
     std::stringstream _sBuild;
     std::list<std::string> _eventStrings;

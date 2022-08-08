@@ -16,15 +16,14 @@ class AlicaEngine;
 class IRoleAssignment;
 class USummand;
 class IAssignment;
-class IAlicaLogger;
 class IAlicaWorldModel;
 struct TaskRoleStruct;
 
 class UtilityFunction
 {
 public:
-    UtilityFunction(IAlicaLogger& logger);
-    UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan, IAlicaLogger& logger);
+    UtilityFunction();
+    UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan);
     ~UtilityFunction();
     const std::vector<std::unique_ptr<USummand>>& getUtilSummands() const { return _utilSummands; };
     std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
@@ -58,7 +57,6 @@ private:
     double _similarityWeight;
 
     AlicaEngine* _ae;
-    IAlicaLogger& _logger;
 };
 
 std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);

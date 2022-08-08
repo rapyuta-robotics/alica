@@ -64,6 +64,7 @@ void Log(const char* file, const char* function, int line, LogData<List>&& data)
     std::cout << std::endl;
 }
 
-#define LOG(msg) (alica::logging::Log(basename(__FILE__), __FUNCTION__, __LINE__, alica::logging::LogData<alica::logging::None>() << msg))
+#define LOG(msg)                                                                                                                                               \
+    (alica::Logging::LoggingUtil::log(basename(__FILE__), __FUNCTION__, __LINE__, alica::Logging::LoggingUtil::logData<alica::logging::None>() << msg))
 } // namespace logging
 } // namespace alica

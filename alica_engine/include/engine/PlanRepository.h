@@ -27,7 +27,6 @@ class ModelFactory;
 class Factory;
 class ExpressionHandler;
 class ModelManager;
-class IAlicaLogger;
 class TransitionCondition;
 class TransitionConditionRepository;
 
@@ -39,7 +38,7 @@ class TransitionConditionRepository;
 class PlanRepository
 {
 public:
-    PlanRepository(IAlicaLogger& logger);
+    PlanRepository();
     virtual ~PlanRepository();
 
     template <typename T>
@@ -153,7 +152,6 @@ private:
     MapType<TaskRepository> _taskRepositories;
     MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
     MapType<Configuration> _configurationRepository;
-    IAlicaLogger& _logger;
     MapType<TransitionCondition> _transitionConditions;
     MapType<TransitionConditionRepository> _transitionConditionRepositories;
 };

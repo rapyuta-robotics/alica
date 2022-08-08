@@ -1,6 +1,7 @@
 #include "engine/PlanRepository.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/Types.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
@@ -58,10 +59,7 @@ bool checkVarsInPlan(const Plan* p)
 }
 } // namespace
 
-PlanRepository::PlanRepository(IAlicaLogger& logger)
-        : _logger(logger)
-{
-}
+PlanRepository::PlanRepository() {}
 PlanRepository::~PlanRepository() {}
 
 bool PlanRepository::verifyPlanBase() const
@@ -69,7 +67,7 @@ bool PlanRepository::verifyPlanBase() const
     // Every entrypoint has a task:
     for (const EntryPoint* ep : getEntryPoints()) {
         if (ep->getTask() == nullptr) {
-            _logger.log(Verbosity::ERROR, "EntryPoint ", ep->toString(), " does not have a task.");
+            Logging::LoggingUtil::log(Verbosity::ERROR, "EntryPoint ", ep->toString(), " does not have a task.");
             assert(false);
             return false;
         }
@@ -78,7 +76,7 @@ bool PlanRepository::verifyPlanBase() const
     for (const Plan* p : getPlans()) {
         for (int i = 0; i < static_cast<int>(p->getEntryPoints().size()) - 1; ++i) {
             if (p->getEntryPoints()[i]->getId() >= p->getEntryPoints()[i + 1]->getId()) {
-                _logger.log(Verbosity::ERROR, "Wrong sorting of entrypoints in plan ", p->toString());
+                Logging::LoggingUtil::log(Verbosity::ERROR, "Wrong sorting of entrypoints in plan ", p->toString());
                 assert(false);
                 return false;
             }

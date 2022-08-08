@@ -2,9 +2,10 @@
 
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
-#include "engine/IAlicaLogger.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include <engine/collections/SuccessCollection.h>
@@ -33,7 +34,7 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(
-        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm, IAlicaLogger& logger)
+        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
         , _wm(wm)
@@ -42,7 +43,6 @@ TaskAssignmentProblem::TaskAssignmentProblem(
 #endif
         , _to(engine->getTeamObserver())
         , _tm(engine->getTeamManager())
-        , _logger(logger)
         , _pool(pool)
 {
     // sort agent ids ascending
@@ -95,18 +95,18 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    _logger.log(Verbosity::DEBUG, "TA: Calculating next best PartialAssignment...");
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: Calculating next best PartialAssignment...");
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    _logger.log(Verbosity::DEBUG, "TA: ... calculated this PartialAssignment:\n", *calculatedPa);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: ... calculated this PartialAssignment:\n", *calculatedPa);
 
     Assignment newAss = Assignment(*calculatedPa);
 
-    _logger.log(Verbosity::DEBUG, "TA: Return this Assignment to PS:", newAss);
+    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: Return this Assignment to PS:", newAss);
 
     return newAss;
 }
@@ -117,17 +117,17 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        _logger.log(Verbosity::DEBUG, "<--- TA: NEXT PA from fringe:");
-        _logger.log(Verbosity::DEBUG, *curPa, "--->");
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: NEXT PA from fringe:");
+        Logging::LoggingUtil::log(Verbosity::DEBUG, *curPa, "--->");
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            _logger.log(Verbosity::DEBUG, "<--- TA: BEFORE fringe exp:");
-            _logger.log(Verbosity::DEBUG, _fringe, "--->");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: BEFORE fringe exp:");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, _fringe, "--->");
             curPa->expand(_fringe, _pool, oldAss, _wm);
-            _logger.log(Verbosity::DEBUG, "<--- TA: AFTER fringe exp:\n", "TA: fringe size ", _fringe.size());
-            _logger.log(Verbosity::DEBUG, _fringe, "--->");
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: AFTER fringe exp:\n", "TA: fringe size ", _fringe.size());
+            Logging::LoggingUtil::log(Verbosity::DEBUG, _fringe, "--->");
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;
