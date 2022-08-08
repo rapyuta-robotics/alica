@@ -27,15 +27,7 @@ int TestContext::init(AlicaCreators& creatorCtx)
 
 int TestContext::init(AlicaCreators&& creatorCtx)
 {
-    _initCalled = true;
-    if (_communicator) {
-        _communicator->startCommunication();
-    }
-
-    if (_engine->init(std::move(creatorCtx))) {
-        return 0;
-    }
-    return -1;
+    return AlicaContext::init(std::move(creatorCtx), true);
 }
 
 void TestContext::startEngine()
