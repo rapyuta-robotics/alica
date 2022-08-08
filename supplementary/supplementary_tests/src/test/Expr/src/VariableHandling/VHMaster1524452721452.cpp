@@ -43,8 +43,8 @@ bool RunTimeCondition1524463006078::evaluate(std::shared_ptr<RunningPlan> rp, co
  * Task: DefaultTask  -> EntryPoint-ID: 1524452721454
  */
 
-UtilityFunction1524452721452::UtilityFunction1524452721452(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1524452721452::UtilityFunction1524452721452()
+        : BasicUtilityFunction()
 {
 }
 

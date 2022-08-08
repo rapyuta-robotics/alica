@@ -30,8 +30,8 @@ GSolverMaster1417423751087::~GSolverMaster1417423751087()
  * Task: DefaultTask  -> EntryPoint-ID: 1417423751089
  */
 
-UtilityFunction1417423751087::UtilityFunction1417423751087(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1417423751087::UtilityFunction1417423751087()
+        : BasicUtilityFunction()
 {
 }
 

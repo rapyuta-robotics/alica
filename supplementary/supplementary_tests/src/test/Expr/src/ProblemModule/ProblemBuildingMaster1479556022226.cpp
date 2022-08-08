@@ -31,8 +31,8 @@ ProblemBuildingMaster1479556022226::~ProblemBuildingMaster1479556022226()
  * Task: DefaultTask  -> EntryPoint-ID: 1479556022228
  */
 
-UtilityFunction1479556022226::UtilityFunction1479556022226(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1479556022226::UtilityFunction1479556022226()
+        : BasicUtilityFunction()
 {
 }
 

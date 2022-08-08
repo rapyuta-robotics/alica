@@ -30,8 +30,8 @@ ProbBuildingLevel11479557378264::~ProbBuildingLevel11479557378264()
  * Task: DefaultTask  -> EntryPoint-ID: 1479557378266
  */
 
-UtilityFunction1479557378264::UtilityFunction1479557378264(IAlicaLogger& logger)
-        : BasicUtilityFunction(logger)
+UtilityFunction1479557378264::UtilityFunction1479557378264()
+        : BasicUtilityFunction()
 {
 }
 

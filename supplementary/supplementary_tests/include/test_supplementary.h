@@ -158,9 +158,10 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate();
+            ac->terminate(true);
             delete ac;
         }
+        AlicaLogger::destroy();
     }
 };
 } // namespace supplementary
