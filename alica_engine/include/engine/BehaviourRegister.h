@@ -11,9 +11,14 @@
 namespace alica
 {
 
+class BasicBehaviour;
+struct BehaviourContext;
+
+using CreationFunction = std::function<std::unique_ptr<BasicBehaviour>(BehaviourContext&)>;
+using CreationFuncDepot = std::map<std::string, CreationFunction>;
+
 #define BEHAVIOURREGISTER_DEC_TYPE(CLASS) static DerivedBehaviourRegister<CLASS> reg_;
 #define BEHAVIOURREGISTER_DEF_TYPE(CLASS, NAME) DerivedBehaviourRegister<CLASS> CLASS::reg_(NAME);
-
 
 class BehaviourRegister
 {

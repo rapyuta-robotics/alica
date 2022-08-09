@@ -42,6 +42,7 @@ TEST(ForceLoad, simple_load)
     auto behaviour=rtbf.create(1234, behaviourModel);
     ASSERT_EQ("AcmeBehaviour",behaviour->getName());
 
+    behaviour.release();
     std::cerr << "END**************************************" << std::endl;
 }
 } // namespace

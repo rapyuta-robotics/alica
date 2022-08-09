@@ -67,9 +67,6 @@ using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 using TransitionConditionCallback = std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)>;
 
-using CreationFunction = std::function<std::unique_ptr<BasicBehaviour>(BehaviourContext&)>;
-using CreationFuncDepot = std::map<std::string, CreationFunction>;
-
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 
 } // namespace alica
