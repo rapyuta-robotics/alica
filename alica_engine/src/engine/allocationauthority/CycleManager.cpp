@@ -27,7 +27,7 @@ using std::mutex;
  * @param p A RunningPlan
  */
 CycleManager::CycleManager(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const TeamManager& teamManager,
-        const PlanRepository& planRepository, RunningPlan* p)
+        const PlanRepository& planRepository, RunningPlan* rp)
         : _state(CycleState::observing)
         , _configChangeListener(configChangeListener)
         , _clock(clock)
@@ -35,9 +35,10 @@ CycleManager::CycleManager(ConfigChangeListener& configChangeListener, const Ali
         , _planRepository(planRepository)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
+        , _rp(rp)
+        , _myID(_teamManager.getLocalAgentID())
+
 {
-    _rp = p;
-    _myID = _teamManager.getLocalAgentID();
     auto reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
     reload(_configChangeListener.getConfig());

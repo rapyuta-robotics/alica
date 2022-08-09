@@ -156,11 +156,4 @@ AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
             [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
 }
 
-ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
-{
-    auto cit = _solvers.find(solverType.hash_code());
-    assert(cit != _solvers.end());
-    return (*(cit->second));
-}
-
 } // namespace alica

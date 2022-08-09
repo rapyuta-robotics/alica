@@ -302,7 +302,6 @@ public:
      */
     template <class SolverType>
     SolverType& getSolver() const;
-    ISolverBase& getSolverBase(const std::type_info& solverType) const;
 
     /**
      * Check whether a particular solver is associated with this alica instance.

@@ -231,16 +231,12 @@ public:
     const AlicaClock& getAlicaClock() const { return _clock; };
     VariableSyncModule& editResultStore() const { return _resultStore; }
 
-    //[[deprecated("temporary method")]]
     template <class SolverType>
     SolverType& getSolver() const;
-    ISolverBase& getSolverBase(const std::type_info& solverType) const;
 
-    //[[deprecated("temporary method")]]
     template <class SolverType>
     bool existSolver() const;
 
-    //[[deprecated("temporary method")]]
     TeamManager& getTeamManager() const;
 
 private:
