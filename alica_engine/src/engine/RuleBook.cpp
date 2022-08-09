@@ -26,8 +26,6 @@
 namespace alica
 {
 
-using std::cout;
-using std::endl;
 /**
  * Basic constructor
  */

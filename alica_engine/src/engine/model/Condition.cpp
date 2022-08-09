@@ -3,6 +3,8 @@
 #include "engine/BasicCondition.h"
 #include "engine/BasicConstraint.h"
 #include "engine/RunningPlan.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/Quantifier.h"
 
 namespace alica
@@ -30,7 +32,7 @@ void Condition::setConditionString(const std::string& conditionString)
 bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const
 {
     if (_basicCondition == nullptr) {
-        std::cerr << "Condition: Missing implementation of condition: ID " << getId() << std::endl;
+        Logging::LoggingUtil::log(Verbosity::DEBUG, "Condition: Missing implementation of condition: ID ", getId());
         return false;
     } else {
         bool ret = false;
@@ -38,7 +40,7 @@ bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) cons
             // TODO: fix const cast below
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), wm);
         } catch (const std::exception& e) {
-            std::cerr << "Condition: Exception during evaluation catched: " << std::endl << e.what() << std::endl;
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "Condition: Exception during evaluation catched:\n", e.what());
         }
         return ret;
     }

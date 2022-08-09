@@ -4,8 +4,8 @@
 /*PROTECTED REGION ID(inc1417424455986) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
-#include <vector>
 #include <memory>
+#include <vector>
 /*PROTECTED REGION END*/
 
 namespace alica

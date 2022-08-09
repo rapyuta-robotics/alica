@@ -30,7 +30,7 @@ namespace alica
  */
 void AlicaEngine::abort(const std::string& msg)
 {
-    std::cerr << "ABORT: " << msg << std::endl;
+    Logging::LoggingUtil::log(Verbosity::FATAL, "ABORT: ", msg);
     exit(EXIT_FAILURE);
 }
 

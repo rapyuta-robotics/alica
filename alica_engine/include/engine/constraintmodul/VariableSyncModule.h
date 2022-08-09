@@ -3,6 +3,8 @@
 #include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 
 #include <alica_solver_interface/Interval.h>
 
@@ -109,15 +111,17 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
     }
 #ifdef RS_DEBUG
-    std::cout << "RS: Generated " << seeds.size() << "seeds";
+    std::stringstream ss;
+    ss << "RS: Generated " << seeds.size() << "seeds";
 
     for (int i = 0; i < seeds.size(); ++i) {
-        cout << "Seed " << i << ": "; // (sup:{1}): ",i);
+        ss << "Seed " << i << ": "; // (sup:{1}): ",i);
         for (auto j = 0; j < dim; ++j) {
             cout << seeds[i].values[j] << "\t";
         }
-        cout << endl;
+        ss << endl;
     }
+    Logging::LoggingUtil::log(Verbosity::DEBUG, ss.str());
 #endif
 
     std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {

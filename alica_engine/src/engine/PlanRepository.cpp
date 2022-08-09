@@ -24,8 +24,8 @@ bool checkVarsInCondition(const Condition* c, const Plan* p)
     const VariableGrp& pvars = p->getVariables();
     for (const Variable* v : c->getVariables()) {
         if (std::find(pvars.begin(), pvars.end(), v) == pvars.end()) {
-            std::cerr << "Variable " << v->toString() << " used in Condition " << c->toString() << " in Plan " << p->toString()
-                      << " is not properly contained in the plan." << std::endl;
+            Logging::LoggingUtil::log(Verbosity::ERROR, "Variable ", v->toString(), " used in Condition ", c->toString(), " in Plan ", p->toString(),
+                    " is not properly contained in the plan.");
             assert(false);
             return false;
         }
@@ -39,8 +39,8 @@ bool checkVarsInVariableBindings(const Plan* p)
     for (const State* s : p->getStates()) {
         for (const VariableBinding* pr : s->getParametrisation()) {
             if (std::find(pvars.begin(), pvars.end(), pr->getVar()) == pvars.end()) {
-                std::cerr << "Variable " << pr->getVar()->toString() << " used in Parametrisation of state " << s->toString() << " in Plan " << p->toString()
-                          << " is not properly contained in the plan." << std::endl;
+                Logging::LoggingUtil::log(Verbosity::ERROR, "Variable ", pr->getVar()->toString(), " used in Parametrisation of state ", s->toString(),
+                        " in Plan ", p->toString(), " is not properly contained in the plan.");
                 assert(false);
                 return false;
             }

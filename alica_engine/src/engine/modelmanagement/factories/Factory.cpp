@@ -1,6 +1,8 @@
 #include "engine/modelmanagement/factories/Factory.h"
 
 #include "engine/PlanRepository.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/LoggingUtil.h"
 #include "engine/model/AlicaElement.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
@@ -58,7 +60,7 @@ int64_t Factory::getReferencedId(const std::string& idString)
         } else if (essentials::FileSystem::endsWith(locator, alica::Strings::configuration_extension)) {
             fileReferenced = essentials::FileSystem::combinePaths(modelManager->basePlanPath, locator);
         } else {
-            std::cout << "Factory: Unknown file extension: " << locator << std::endl;
+            Logging::LoggingUtil::log(Verbosity::DEBUG, "Factory: Unknown file extension: ", locator);
         }
 
         if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileReferenced) == std::end(modelManager->filesParsed) &&
@@ -159,7 +161,7 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._transitionConditionRepositories.emplace(ael->getId(), (TransitionConditionRepository*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
-        std::cout << "Factory: INFO: Element type " << type << " is not stored in plan repository." << std::endl;
+        Logging::LoggingUtil::log(Verbosity::INFO, "Factory: INFO: Element type ", type, " is not stored in plan repository.");
     } else {
         AlicaEngine::abort("Factory: Element type unhandled for storing: Type is '" + type + "'");
     }

@@ -12,9 +12,6 @@
 
 namespace alica
 {
-using std::cerr;
-using std::cout;
-using std::endl;
 using std::list;
 using std::lock_guard;
 using std::map;

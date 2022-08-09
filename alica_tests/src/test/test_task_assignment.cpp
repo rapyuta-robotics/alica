@@ -8,6 +8,7 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 
 #include <engine/AlicaClock.h>
+#include <engine/AlicaDefaultLogger.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IRoleAssignment.h>
 #include <engine/PlanBase.h>
@@ -23,7 +24,6 @@
 #include <engine/planselector/PlanSelector.h>
 #include <engine/teammanager/Agent.h>
 #include <engine/teammanager/TeamManager.h>
-#include <engine/AlicaDefaultLogger.h>
 
 #include <gtest/gtest.h>
 
