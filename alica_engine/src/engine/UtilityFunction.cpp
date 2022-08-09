@@ -173,7 +173,8 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
-    Logging::LoggingUtil::logDebug() << "##\n" << "UF: prioUI = " << priResult;
+    Logging::LoggingUtil::logDebug() << "##\n"
+                                     << "UF: prioUI = " << priResult;
     Logging::LoggingUtil::logDebug() << "UF: denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());

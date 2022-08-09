@@ -111,7 +111,7 @@ void TeamObserver::tick(RunningPlan* root)
                 noUpdates.push_back(ele.second->getAgentId());
             }
         }
-        Logging::LoggingUtil::logDebug() << "TO: spts size "<< updatespts.size();
+        Logging::LoggingUtil::logDebug() << "TO: spts size " << updatespts.size();
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
             _logger.eventOccurred("MsgUpdate");

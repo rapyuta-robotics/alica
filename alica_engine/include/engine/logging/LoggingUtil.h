@@ -7,7 +7,7 @@ namespace Logging
 {
 class LogEntry
 {
-    public:
+public:
     LogEntry(Verbosity v);
     LogEntry(LogEntry&& entry);
     ~LogEntry();
@@ -19,7 +19,7 @@ class LogEntry
         return *this;
     }
 
-    private:
+private:
     std::stringstream _ss;
     Verbosity _v;
 };

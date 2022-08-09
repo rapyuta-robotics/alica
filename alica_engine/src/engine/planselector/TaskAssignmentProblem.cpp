@@ -125,7 +125,8 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
             Logging::LoggingUtil::logDebug() << "<--- TA: BEFORE fringe exp:";
             Logging::LoggingUtil::logDebug() << _fringe << "--->";
             curPa->expand(_fringe, _pool, oldAss, _wm);
-            Logging::LoggingUtil::logDebug() << "<--- TA: AFTER fringe exp:\n" << "TA: fringe size " << _fringe.size();
+            Logging::LoggingUtil::logDebug() << "<--- TA: AFTER fringe exp:\n"
+                                             << "TA: fringe size " << _fringe.size();
             Logging::LoggingUtil::logDebug() << _fringe << "--->";
         }
 #ifdef EXPANSIONEVAL

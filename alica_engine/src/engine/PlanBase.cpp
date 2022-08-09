@@ -85,8 +85,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    Logging::LoggingUtil::logInfo() << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " <<
-            _minSendInterval.inMilliseconds() << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
+    Logging::LoggingUtil::logInfo() << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is "
+                                    << _minSendInterval.inMilliseconds() << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -196,8 +196,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        Logging::LoggingUtil::logDebug() << "PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " <<
-                inActiveCount << " inactive deleted: " << deleteCount;
+        Logging::LoggingUtil::logDebug() << "PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired "
+                                         << inActiveCount << " inactive deleted: " << deleteCount;
 #endif
         // lock for fpEvents
         {

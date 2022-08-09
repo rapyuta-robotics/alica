@@ -20,7 +20,7 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        Logging::LoggingUtil::logError() << "RuntimeBehaviourFactory: Behaviour creation failed: " <<  id;
+        Logging::LoggingUtil::logError() << "RuntimeBehaviourFactory: Behaviour creation failed: " << id;
         return nullptr;
     }
 

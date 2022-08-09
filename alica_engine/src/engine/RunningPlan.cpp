@@ -191,7 +191,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
-        Logging::LoggingUtil::logError() << "Exception in precondition: " <<  e.what();
+        Logging::LoggingUtil::logError() << "Exception in precondition: " << e.what();
         return false;
     }
 }

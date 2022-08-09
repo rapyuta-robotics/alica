@@ -172,13 +172,15 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
-    Logging::LoggingUtil::logDebug() << "RB: Old U " << curUtil << " | " << " New U:" << possibleUtil;
+    Logging::LoggingUtil::logDebug() << "RB: Old U " << curUtil << " | "
+                                     << " New U:" << possibleUtil;
 
     if (curUtil < -0.99) {
         Logging::LoggingUtil::logDebug() << "#############Assignment is valid?: " << r.getAssignment().isValid() << "\n" << r;
     }
 
-    Logging::LoggingUtil::logDebug() << "RB: New Assignment" << newr->getAssignment() << "\n" << "RB: Old Assignment" << r.getAssignment();
+    Logging::LoggingUtil::logDebug() << "RB: New Assignment" << newr->getAssignment() << "\n"
+                                     << "RB: Old Assignment" << r.getAssignment();
 
     if (possibleUtil - curUtil > p->getUtilityThreshold()) {
         // cout, "RB: AllocationDifference::Reason::utility ", endl;
@@ -189,8 +191,10 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
             r.setAllocationNeeded(true);
         }
 
-        Logging::LoggingUtil::logInfo() << "RB: B4 dynChange: Util is " << curUtil << " | " << " suggested is " << possibleUtil << " | " << " threshold " <<
-                p->getUtilityThreshold() << "\n" << "RB: DynAlloc in " << p->getName();
+        Logging::LoggingUtil::logInfo() << "RB: B4 dynChange: Util is " << curUtil << " | "
+                                        << " suggested is " << possibleUtil << " | "
+                                        << " threshold " << p->getUtilityThreshold() << "\n"
+                                        << "RB: DynAlloc in " << p->getName();
 
         _log.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
@@ -273,8 +277,8 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
     if (r.getActiveState() == r.getActiveEntryPoint()->getState()) {
         r.addFailure();
-        Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule not executed for " << r.getActivePlan()->getName() <<
-                "- Unable to repair, as the current state is already the initial state.";
+        Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule not executed for " << r.getActivePlan()->getName()
+                                         << "- Unable to repair, as the current state is already the initial state.";
 
         return PlanChange::FailChange;
     }

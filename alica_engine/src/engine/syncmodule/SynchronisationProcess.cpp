@@ -195,7 +195,8 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             // late acks...
             if (_readyForSync) {
                 if (allSyncReady()) {
-                    Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_clock.now() - _syncStartTime);
+                    Logging::LoggingUtil::logDebug() << "[SP (" << _myID
+                                                     << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_clock.now() - _syncStartTime);
                     // notify sync module
                     _syncModule->synchronisationDone(_synchronisation);
                     _synchronisationDone = true;
@@ -227,7 +228,8 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
     if (_readyForSync) {
         if (allSyncReady()) {
             // notify _syncModul
-            Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_clock.now() - _syncStartTime);
+            Logging::LoggingUtil::logDebug() << "[SP (" << _myID
+                                             << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_clock.now() - _syncStartTime);
             _syncModule->synchronisationDone(_synchronisation);
             _synchronisationDone = true;
         }

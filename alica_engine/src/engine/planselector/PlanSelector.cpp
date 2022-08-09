@@ -100,7 +100,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
         if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
-            Logging::LoggingUtil::logDebug() << "PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!";
+            Logging::LoggingUtil::logDebug() << "PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan "
+                                             << plan->getName() << "!";
         } else {
             // this plan was ok according to its cardinalities, so we can add it
             newPlanList.push_back(plan);
@@ -167,8 +168,9 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         const EntryPoint* ep = rp->getAssignment().getEntryPointOfAgent(localAgentID);
 
         if (ep == nullptr) {
-            Logging::LoggingUtil::logDebug() << "PS: The agent " << "(Id: " << localAgentID << ") is not assigned to enter the plan " <<
-                    rp->getActivePlan()->getName() << " and will IDLE!";
+            Logging::LoggingUtil::logDebug() << "PS: The agent "
+                                             << "(Id: " << localAgentID << ") is not assigned to enter the plan " << rp->getActivePlan()->getName()
+                                             << " and will IDLE!";
 
             rp->useState(nullptr);
             rp->useEntryPoint(nullptr);
@@ -207,9 +209,9 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
-    Logging::LoggingUtil::logDebug() <<
-            "<######PS: GetPlansForState: Parent: " << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null") <<
-            " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>";
+    Logging::LoggingUtil::logDebug() << "<######PS: GetPlansForState: Parent: "
+                                     << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null") << " Plan count: " << wrappers.size()
+                                     << " Robot count: " << robotIDs.size() << " ######>";
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {

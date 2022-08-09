@@ -306,7 +306,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        Logging::LoggingUtil::logWarn() << "TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk <<" ph: " << aa.planHash;
+        Logging::LoggingUtil::logWarn() << "TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
         return;
     }
 
