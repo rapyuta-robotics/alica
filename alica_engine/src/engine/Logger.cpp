@@ -82,7 +82,7 @@ void Logger::processString(const std::string& event)
         _eventStrings.push_back(event + "(FP)");
     }
     _receivedEvent = true;
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "Logger: ", _eventStrings.back());
+    Logging::LoggingUtil::logDebug() << "Logger: " << _eventStrings.back();
 }
 
 /**

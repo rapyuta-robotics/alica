@@ -4,7 +4,6 @@
 #include "engine/Assignment.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
@@ -76,7 +75,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         }
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AM: Received AAI Assignment: ", aai);
+    Logging::LoggingUtil::logDebug() << "AM: Received AAI Assignment: " << aai;
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
@@ -88,7 +87,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AM: Tick called!");
+    Logging::LoggingUtil::logDebug() << "AM: Tick called!";
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {
@@ -107,11 +106,11 @@ void AuthorityManager::processPlan(RunningPlan& rp)
         rp.editCycleManagement().sent();
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AM: Queue size of AuthorityInfos is ", _queue.size());
+    Logging::LoggingUtil::logDebug() << "AM: Queue size of AuthorityInfos is " << _queue.size();
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "AM: Found AuthorityInfo, which matches the plan ", rp.getActivePlan()->getName());
+            Logging::LoggingUtil::logDebug() << "AM: Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName();
             rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
             _queue.erase(_queue.begin() + i);
             --i;
@@ -147,7 +146,7 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.senderID = _localAgentID;
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AM: Sending AAI Assignment: ", aai);
+    Logging::LoggingUtil::logDebug() << "AM: Sending AAI Assignment: " << aai;
     _communicator.sendAllocationAuthority(aai);
 }
 

@@ -22,7 +22,6 @@ class TestContext;
 }
 class Variable;
 class EntryPoint;
-class IAlicaLogger;
 
 struct BehaviourContext
 {

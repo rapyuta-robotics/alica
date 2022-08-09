@@ -22,7 +22,6 @@ class ActiveAgentIdView;
 class ActiveAgentIdIterator;
 class ActiveAgentView;
 class ActiveAgentIterator;
-class IAlicaLogger;
 struct AgentQuery;
 class ConfigChangeListener;
 class PlanRepository;

@@ -9,7 +9,6 @@
 #include "engine/TaskRoleStruct.h"
 #include "engine/USummand.h"
 #include "engine/UtilityInterval.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
@@ -168,22 +167,22 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
             }
             priResult.setMin(priResult.getMin() + curPrio);
 
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: taskId:", taskId, " roleId:", roleId, " prio: ", curPrio);
+            Logging::LoggingUtil::logDebug() << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "##\n", "UF: prioUI = ", priResult);
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: denum = ", denum);
+    Logging::LoggingUtil::logDebug() << "##\n" << "UF: prioUI = " << priResult;
+    Logging::LoggingUtil::logDebug() << "UF: denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "UF: prioUI = ", priResult);
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "##");
+    Logging::LoggingUtil::logDebug() << "UF: prioUI = " << priResult;
+    Logging::LoggingUtil::logDebug() << "##";
     return priResult;
 }
 

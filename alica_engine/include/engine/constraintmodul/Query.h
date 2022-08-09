@@ -136,7 +136,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     int domOffset;
 
     if (!pi->getAlicaEngine()->existSolver<SolverType>()) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "Query::getSolution: The engine does not have a suitable solver for the given type available.");
+        Logging::LoggingUtil::logError() << "Query::getSolution: The engine does not have a suitable solver for the given type available.";
         return false;
     }
 

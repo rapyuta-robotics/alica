@@ -12,7 +12,6 @@ namespace alica
 {
 
 class Plan;
-class IAlicaLogger;
 class Transition;
 
 struct PlanContext

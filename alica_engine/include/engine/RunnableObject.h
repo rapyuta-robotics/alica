@@ -22,7 +22,6 @@ class TestContext;
 class RunningPlan;
 class AlicaEngine;
 class IAlicaWorldModel;
-class IAlicaLogger;
 
 class TraceRunnableObject
 {

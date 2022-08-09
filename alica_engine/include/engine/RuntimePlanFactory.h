@@ -11,7 +11,6 @@ class Plan;
 class BasicPlan;
 class IPlanCreator;
 class IAlicaWorldModel;
-class IAlicaLogger;
 
 /**
  * Construct a runtime BasicPlan instance based

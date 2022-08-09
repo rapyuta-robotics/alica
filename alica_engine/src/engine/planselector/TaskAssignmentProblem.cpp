@@ -4,7 +4,6 @@
 #include "engine/Assignment.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
@@ -95,18 +94,18 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: Calculating next best PartialAssignment...");
+    Logging::LoggingUtil::logDebug() << "TA: Calculating next best PartialAssignment...";
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: ... calculated this PartialAssignment:\n", *calculatedPa);
+    Logging::LoggingUtil::logDebug() << "TA: ... calculated this PartialAssignment:\n" << *calculatedPa;
 
     Assignment newAss = Assignment(*calculatedPa);
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "TA: Return this Assignment to PS:", newAss);
+    Logging::LoggingUtil::logDebug() << "TA: Return this Assignment to PS:" << newAss;
 
     return newAss;
 }
@@ -117,17 +116,17 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: NEXT PA from fringe:");
-        Logging::LoggingUtil::log(Verbosity::DEBUG, *curPa, "--->");
+        Logging::LoggingUtil::logDebug() << "<--- TA: NEXT PA from fringe:";
+        Logging::LoggingUtil::logDebug() << *curPa << "--->";
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: BEFORE fringe exp:");
-            Logging::LoggingUtil::log(Verbosity::DEBUG, _fringe, "--->");
+            Logging::LoggingUtil::logDebug() << "<--- TA: BEFORE fringe exp:";
+            Logging::LoggingUtil::logDebug() << _fringe << "--->";
             curPa->expand(_fringe, _pool, oldAss, _wm);
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "<--- TA: AFTER fringe exp:\n", "TA: fringe size ", _fringe.size());
-            Logging::LoggingUtil::log(Verbosity::DEBUG, _fringe, "--->");
+            Logging::LoggingUtil::logDebug() << "<--- TA: AFTER fringe exp:\n" << "TA: fringe size " << _fringe.size();
+            Logging::LoggingUtil::logDebug() << _fringe << "--->";
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

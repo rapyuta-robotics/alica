@@ -125,8 +125,7 @@ void TraceRunnableObject::setTracing(TracingType type, std::function<std::option
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        Logging::LoggingUtil::log(
-                Verbosity::ERROR, "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+        Logging::LoggingUtil::logError() << "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead";
         _tracingType = TracingType::DEFAULT;
     }
 }

@@ -42,7 +42,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized.");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized.";
         return -1;
     }
 
@@ -122,7 +122,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         return node;
     } catch (YAML::BadFile& badFile) {
         if (Logging::LoggingUtil::isInitialized()) {
-            Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Could not parse file: ", configFile, " - ", badFile.msg);
+            Logging::LoggingUtil::logWarn() << "AC: Could not parse file: " << configFile << " - " << badFile.msg;
         } else {
             std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
         }

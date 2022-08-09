@@ -111,7 +111,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Synchronisation successful for ID: ", sync->getId());
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId();
     _successfulSynchronisations.push_back(sync);
 }
 /**
@@ -141,19 +141,19 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _teamManager.isAgentIgnored(st->senderID)) {
         return;
     }
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Received SyncTalk\n", *st);
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Received SyncTalk\n" << *st;
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
         const Transition* trans = _planRepository.getTransitions().find(sd.transitionID);
         if (trans == nullptr) {
-            Logging::LoggingUtil::log(Verbosity::ERROR, "[SM (", _myId, ")]: Could not find Transition ", sd.transitionID);
+            Logging::LoggingUtil::logError() << "[SM (" << _myId << ")]: Could not find Transition " << sd.transitionID;
             return;
         }
 
         const Synchronisation* synchronisation = trans->getSynchronisation();
         if (synchronisation == nullptr) {
-            Logging::LoggingUtil::log(Verbosity::ERROR, "[SM (", _myId, ")]: Transition ", trans->getId(), " is not connected to a Synchronisation");
+            Logging::LoggingUtil::logError() << "[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation";
             return;
         }
 
@@ -189,11 +189,11 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     if (!_running || sr->senderID == _myId || _teamManager.isAgentIgnored(sr->senderID)) {
         return;
     }
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Received SyncReady\n", *sr);
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Received SyncReady\n" << *sr;
 
     const Synchronisation* synchronisation = _planRepository.getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "[SM (", _myId, ")]: Unable to find synchronisation ", sr->synchronisationID, " send by ", sr->senderID);
+        Logging::LoggingUtil::logError() << "[SM (" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID;
         return;
     }
 
@@ -211,7 +211,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_maySendMessages)
         return;
     st.senderID = _myId;
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending SyncTalk \n", st);
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Sending SyncTalk \n" << st;
     _communicator.sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
@@ -219,7 +219,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_maySendMessages)
         return;
     sr.senderID = _myId;
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending SyncReady\n", sr);
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Sending SyncReady\n" << sr;
     _communicator.sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
@@ -229,7 +229,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "[SM (", _myId, ")]: Sending Acknowledgements\n", st);
+    Logging::LoggingUtil::logDebug() << "[SM (" << _myId << ")]: Sending Acknowledgements\n" << st;
     _communicator.sendSyncTalk(st);
 }
 

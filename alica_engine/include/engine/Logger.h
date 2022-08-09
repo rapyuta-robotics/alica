@@ -20,7 +20,6 @@ class TeamObserver;
 class EntryPoint;
 class AlicaEngine;
 class TeamManager;
-class IAlicaLogger;
 class ConfigChangeListener;
 class PlanRepository;
 

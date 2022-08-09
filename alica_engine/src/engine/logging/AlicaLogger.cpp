@@ -1,5 +1,4 @@
 #include "engine/logging/AlicaLogger.h"
-#include "engine/logging/IAlicaLogger.h"
 
 #include <cassert>
 #include <type_traits>
@@ -7,6 +6,8 @@
 
 namespace alica
 {
+class IAlicaLogger;
+
 IAlicaLogger* AlicaLogger::instance()
 {
     assert(_logger);

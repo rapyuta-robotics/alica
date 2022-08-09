@@ -11,7 +11,6 @@
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/AuthorityManager.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
@@ -86,8 +85,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    Logging::LoggingUtil::log(Verbosity::INFO, "PB: Engine loop time is ", _loopTime.inMilliseconds(), "ms, broadcast interval is ",
-            _minSendInterval.inMilliseconds(), "ms - ", _maxSendInterval.inMilliseconds(), "ms");
+    Logging::LoggingUtil::logInfo() << "PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " <<
+            _minSendInterval.inMilliseconds() << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -116,7 +115,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: Run-Method of PlanBase started.");
+    Logging::LoggingUtil::logDebug() << "PB: Run-Method of PlanBase started.";
     const AlicaClock& alicaClock = _ae->getAlicaClock();
     IRoleAssignment& ra = _ae->editRoleAssignment();
     Logger& log = _ae->editLog();
@@ -131,13 +130,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_ae->getStepEngine()) {
 #ifdef ALICA_DEBUG_ENABLED
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: ===CUR TREE===");
+            Logging::LoggingUtil::logDebug() << "PB: ===CUR TREE===";
             if (_rootNode == nullptr) {
-                Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: NULL");
+                Logging::LoggingUtil::logDebug() << "PB: NULL";
             } else {
                 _rootNode->printRecursive();
             }
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "PB: ===END CUR TREE===");
+            Logging::LoggingUtil::logDebug() << "PB: ===END CUR TREE===";
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -166,7 +165,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            Logging::LoggingUtil::log(Verbosity::INFO, "PB: MasterPlan Failed");
+            Logging::LoggingUtil::logInfo() << "PB: MasterPlan Failed";
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -197,8 +196,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        Logging::LoggingUtil::log(Verbosity::DEBUG, "PlanBase: ", (totalCount - inActiveCount - retiredCount), " active ", retiredCount, " retired ",
-                inActiveCount, " inactive deleted: ", deleteCount);
+        Logging::LoggingUtil::logDebug() << "PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " <<
+                inActiveCount << " inactive deleted: " << deleteCount;
 #endif
         // lock for fpEvents
         {
@@ -209,7 +208,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = alicaClock.now();
 
         if (now < _lastSendTime) {
-            Logging::LoggingUtil::log(Verbosity::WARNING, "PB: lastSendTime is in the future of the current system time, did the system time change?");
+            Logging::LoggingUtil::logWarn() << "PB: lastSendTime is in the future of the current system time, did the system time change?";
             _lastSendTime = now;
         }
 
@@ -305,7 +304,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = alicaClock.now();
         availTime = _loopTime - (now - beginTime);
 
-        Logging::LoggingUtil::log(Verbosity::WARNING, "PB: availTime ", availTime);
+        Logging::LoggingUtil::logWarn() << "PB: availTime " << availTime;
 
         if (availTime > AlicaTime::microseconds(100) && !_ae->getStepEngine()) {
             alicaClock.sleep(availTime);

@@ -3,7 +3,6 @@
 
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 #include "engine/model/Plan.h"
 
@@ -22,7 +21,7 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
     PlanContext ctx{_wm, planModel->getName(), planModel};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "RuntimePlanFactory: Plan creation failed: ", id);
+        Logging::LoggingUtil::logError() << "RuntimePlanFactory: Plan creation failed: " << id;
         return nullptr;
     }
 

@@ -38,7 +38,7 @@ void BasicPlan::doInit()
     try {
         onInit();
     } catch (const std::exception& e) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "[BasicPlan] Exception in Plan-INIT: ", e.what());
+        Logging::LoggingUtil::logError() << "[BasicPlan] Exception in Plan-INIT: " << e.what();
     }
 }
 
@@ -57,7 +57,7 @@ void BasicPlan::doTerminate()
     try {
         onTerminate();
     } catch (const std::exception& e) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "[BasicPlan] Exception in Plan-TERMINATE: ", e.what());
+        Logging::LoggingUtil::logError() << "[BasicPlan] Exception in Plan-TERMINATE: " << e.what();
     }
 }
 

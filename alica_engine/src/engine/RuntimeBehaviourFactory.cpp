@@ -3,7 +3,6 @@
 
 #include "engine/BasicBehaviour.h"
 #include "engine/IBehaviourCreator.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 
 namespace alica
@@ -21,7 +20,7 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        Logging::LoggingUtil::log(Verbosity::ERROR, "RuntimeBehaviourFactory: Behaviour creation failed: ", id);
+        Logging::LoggingUtil::logError() << "RuntimeBehaviourFactory: Behaviour creation failed: " <<  id;
         return nullptr;
     }
 

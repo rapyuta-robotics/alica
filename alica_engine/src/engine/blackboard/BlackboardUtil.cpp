@@ -2,7 +2,6 @@
 
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/KeyMapping.h"
-#include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/LoggingUtil.h"
 
 #include <iostream>
@@ -16,9 +15,9 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
             childBb.set(childKey, lockedParentBb.get(parentKey));
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "passing ", parentKey, " into ", childKey);
+            Logging::LoggingUtil::logDebug() << "passing " << parentKey << " into " << childKey;
         } catch (std::exception& e) {
-            Logging::LoggingUtil::log(Verbosity::ERROR, "Blackboard error passing ", parentKey, " into ", childKey, ". ", e.what());
+            Logging::LoggingUtil::logError() << "Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what();
         }
     }
 }
@@ -30,9 +29,9 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
             lockedParentBb.set(parentKey, childBb.get(childKey));
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "passing ", childKey, " into ", parentKey);
+            Logging::LoggingUtil::logDebug() << "passing " << childKey << " into " << parentKey;
         } catch (std::exception& e) {
-            Logging::LoggingUtil::log(Verbosity::ERROR, "Blackboard error passing ", childKey, " into ", parentKey, ". ", e.what());
+            Logging::LoggingUtil::logError() << "Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what();
         }
     }
 }

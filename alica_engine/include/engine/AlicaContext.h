@@ -471,7 +471,7 @@ template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new clock");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new clock";
         return;
     }
 
@@ -487,7 +487,7 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new communicator");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new communicator";
         return;
     }
 
@@ -530,7 +530,7 @@ template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new timerfactory");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new timerfactory";
         return;
     }
 
@@ -546,7 +546,7 @@ template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new tracefactory");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new tracefactory";
         return;
     }
 
@@ -562,7 +562,7 @@ template <class WorldModelType, class... Args>
 void AlicaContext::setWorldModel(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new worldmodeltype");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new worldmodeltype";
         return;
     }
 
@@ -578,7 +578,7 @@ template <class LoggerType, class... Args>
 void AlicaContext::setLogger(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Context already initialized. Can not set new loggertype");
+        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new loggertype";
         return;
     }
 
@@ -617,7 +617,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         if (!Logging::LoggingUtil::isInitialized()) {
             std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
         } else {
-            Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Could not set config value: ", e.msg);
+            Logging::LoggingUtil::logWarn() << "AC: Could not set config value: " << e.msg;
         }
 
         return false;
@@ -654,7 +654,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         if (!Logging::LoggingUtil::isInitialized()) {
             std::cerr << "AC: Could not set config values: " << e.msg << std::endl;
         } else {
-            Logging::LoggingUtil::log(Verbosity::WARNING, "AC: Could not set config values: ", e.msg);
+            Logging::LoggingUtil::logWarn() << "AC: Could not set config values: " << e.msg;
         }
 
         // revert changes

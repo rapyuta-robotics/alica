@@ -66,7 +66,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         AlicaEngine::abort("Error in parsed plans.");
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AE: Constructor finished!");
+    Logging::LoggingUtil::logDebug() << "AE: Constructor finished!";
 }
 
 AlicaEngine::~AlicaEngine()
@@ -92,7 +92,7 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
-        Logging::LoggingUtil::log(Verbosity::WARNING, "AE: Already initialized.");
+        Logging::LoggingUtil::logWarn() << "AE: Already initialized.";
         return true; // todo false?
     }
 
@@ -120,7 +120,7 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan, _ctx.getWorldModel());
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "AE: Engine started!");
+    Logging::LoggingUtil::logDebug() << "AE: Engine started!";
 }
 /**
  * Closes the engine for good.
