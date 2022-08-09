@@ -36,8 +36,6 @@ class Task;
 class Transition;
 class TransitionCondition;
 class Variable;
-class BasicBehaviour;
-struct BehaviourContext;
 
 using AbstractPlanGrp = std::vector<const AbstractPlan*>;
 using ConfAbstractPlanWrapperGrp = std::vector<const ConfAbstractPlanWrapper*>;
