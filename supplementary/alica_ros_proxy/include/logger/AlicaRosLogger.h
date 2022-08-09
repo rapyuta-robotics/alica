@@ -13,7 +13,6 @@ class AlicaRosLogger : public alica::IAlicaLogger
 {
 public:
     AlicaRosLogger(Verbosity verbosity, std::string localAgentName, int64_t localAgentId);
-    virtual ~AlicaRosLogger() = default;
     void log(const std::string& msg, Verbosity verbosity) override;
 
 private:
