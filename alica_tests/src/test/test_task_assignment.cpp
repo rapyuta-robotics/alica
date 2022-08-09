@@ -8,6 +8,7 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 
 #include <engine/AlicaClock.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/AlicaEngine.h>
 #include <engine/IRoleAssignment.h>
 #include <engine/PlanBase.h>
