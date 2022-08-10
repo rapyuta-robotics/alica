@@ -29,8 +29,8 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory,
+        const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
@@ -371,17 +371,18 @@ RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* co
             _resultStore, _solvers, plan, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
+
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _runTimeBehaviourFactory, _resultStore, _solvers, b, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, nullptr, _teamObserver, _teamManager, _planRepository,
+            _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, pt, configuration));
+            _resultStore, _solvers, planType, configuration));
     return _runningPlans.back().get();
 }
 

@@ -55,8 +55,8 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
-    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
+    const std::unique_ptr<RuntimeBehaviourFactory>& getRuntimeBehaviourFactory() const { return _behaviourFactory; }
+    const std::unique_ptr<RuntimePlanFactory>& getRuntimePlanFactory() const { return _planFactory; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }

@@ -45,8 +45,8 @@ class PlanBase
 public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-            const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory,
+            const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
             const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
@@ -64,8 +64,8 @@ public:
 
     // factory functions
     RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
 
@@ -92,8 +92,8 @@ private:
     bool _stepEngine;
     bool _stepCalled;
     IAlicaWorldModel* _worldModel;
-    const RuntimePlanFactory& _runTimePlanFactory;
-    const RuntimeBehaviourFactory& _runTimeBehaviourFactory;
+    const std::unique_ptr<RuntimePlanFactory>& _runTimePlanFactory;
+    const std::unique_ptr<RuntimeBehaviourFactory>& _runTimeBehaviourFactory;
     VariableSyncModule& _resultStore;
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
     RunningPlan* _rootNode;
