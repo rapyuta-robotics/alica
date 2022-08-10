@@ -41,7 +41,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         : _configChangeListener(config)
         , _ctx(ctx)
         , _stepCalled(false)
-        , _stepEngine(alicaContextParams.stepEngine)
         , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), this))
         , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(_ctx.getWorldModel(), this))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
@@ -58,8 +57,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
-                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), alicaContextParams.stepEngine, _stepCalled, getWorldModel(),
+                  getRuntimePlanFactory(), getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -198,16 +197,6 @@ void AlicaEngine::setStepCalled(bool stepCalled)
 bool AlicaEngine::getStepCalled() const
 {
     return _stepCalled;
-}
-
-bool AlicaEngine::getStepEngine() const
-{
-    return _stepEngine;
-}
-
-void AlicaEngine::setStepEngine(bool stepEngine)
-{
-    _stepEngine = stepEngine;
 }
 
 const YAML::Node& AlicaEngine::getConfig() const
