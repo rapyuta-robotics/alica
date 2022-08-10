@@ -40,7 +40,6 @@ void AlicaEngine::abort(const std::string& msg)
 AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams)
         : _configChangeListener(config)
         , _ctx(ctx)
-        , _stepCalled(false)
         , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), this))
         , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(_ctx.getWorldModel(), this))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
@@ -57,8 +56,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), alicaContextParams.stepEngine, _stepCalled, getWorldModel(),
-                  getRuntimePlanFactory(), getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), alicaContextParams.stepEngine, getWorldModel(), getRuntimePlanFactory(),
+                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -101,7 +100,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
     _planFactory->init(std::move(creatorCtx.planCreator));
 
-    _stepCalled = false;
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);
@@ -189,16 +187,6 @@ int AlicaEngine::getVersion() const
     return _ctx.getVersion();
 }
 
-void AlicaEngine::setStepCalled(bool stepCalled)
-{
-    _stepCalled = stepCalled;
-}
-
-bool AlicaEngine::getStepCalled() const
-{
-    return _stepCalled;
-}
-
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
@@ -222,7 +210,6 @@ void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reload
  */
 void AlicaEngine::stepNotify()
 {
-    setStepCalled(true);
     _planBase.getStepModeCV()->notify_all();
 }
 

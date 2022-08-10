@@ -45,7 +45,7 @@ class PlanBase
 public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-            const PlanRepository& planRepository, bool stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel,
+            const PlanRepository& planRepository, bool stepEngine,IAlicaWorldModel* worldModel,
             const RuntimePlanFactory& runTimePlanFactory, const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
             const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
     ~PlanBase();
@@ -90,7 +90,7 @@ private:
     TeamManager& _teamManager;
     const PlanRepository& _planRepository;
     bool _stepEngine;
-    bool& _stepCalled;
+    bool _stepCalled;
     IAlicaWorldModel* _worldModel;
     const RuntimePlanFactory& _runTimePlanFactory;
     const RuntimeBehaviourFactory& _runTimeBehaviourFactory;

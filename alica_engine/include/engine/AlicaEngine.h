@@ -93,8 +93,6 @@ public:
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
-    void setStepCalled(bool stepCalled);
-    bool getStepCalled() const;
     void iterationComplete();
     int getVersion() const;
 
@@ -161,7 +159,6 @@ private:
     Blackboard _Blackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
-    bool _stepCalled;      /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 template <typename T>
