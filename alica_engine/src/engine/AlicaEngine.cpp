@@ -1,7 +1,6 @@
 #include "engine/AlicaEngine.h"
 
 #include "engine/IRoleAssignment.h"
-#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
@@ -56,11 +55,10 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
-        , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(
-                  _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
-                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
+                  editResultStore(), _ctx.getSolvers(), _ctx.getWorldModel(), getTimerFactory(), getTraceFactory())
+
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -100,7 +98,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
+    _planBase.init(std::move(creatorCtx.behaviourCreator));
     _planFactory->init(std::move(creatorCtx.planCreator));
 
     _roleAssignment->init();
