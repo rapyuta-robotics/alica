@@ -5,7 +5,6 @@
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
-#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/RuntimePlanFactory.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
@@ -54,7 +53,6 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
     const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
 
     const Logger& getLog() const { return _log; }
@@ -150,7 +148,6 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     PlanBase _planBase;
 
     bool _initialized{false};
