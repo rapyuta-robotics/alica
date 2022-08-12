@@ -39,7 +39,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), getTraceFactory(), getTeamManager(), getTimerFactory()))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -53,8 +52,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
-                  editResultStore(), _ctx.getSolvers(), _ctx.getWorldModel(), getTimerFactory(), getTraceFactory())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), editResultStore(), _ctx.getSolvers(),
+                  _ctx.getWorldModel(), getTimerFactory(), getTraceFactory())
 
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
@@ -95,8 +94,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _planBase.init(std::move(creatorCtx.behaviourCreator));
-    _planFactory->init(std::move(creatorCtx.planCreator));
+    _planBase.init(std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
 
     _stepCalled = false;
     _roleAssignment->init();

@@ -29,9 +29,9 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& synchModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, IAlicaWorldModel* wm,
-        const IAlicaTimerFactory& timerFactory, const IAlicaTraceFactory* traceFactory)
+        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, VariableSyncModule& resultStore,
+        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, IAlicaWorldModel* wm, const IAlicaTimerFactory& timerFactory,
+        const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
         , _logger(log)
@@ -45,7 +45,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _stepEngine(stepEngine)
         , _stepCalled(stepCalled)
         , _worldModel(worldModel)
-        , _runTimePlanFactory(runTimePlanFactory)
+        , _runTimePlanFactory(wm, traceFactory, teamManager, timerFactory)
         , _runTimeBehaviourFactory(wm, teamManager, *this, communicator, traceFactory, timerFactory)
         , _resultStore(resultStore)
         , _solvers(solvers)
@@ -385,9 +385,10 @@ RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* 
     return _runningPlans.back().get();
 }
 
-void PlanBase::init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator)
+void PlanBase::init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator,std::unique_ptr<IPlanCreator>&& planCreator)
 {
     _runTimeBehaviourFactory.init(std::move(behaviourCreator));
+    _runTimePlanFactory.init(std::move(planCreator));
 }
 
 const AlicaTime PlanBase::getLoopInterval() const

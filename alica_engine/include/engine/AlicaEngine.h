@@ -53,8 +53,6 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
-
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
 
@@ -139,7 +137,6 @@ private:
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    std::unique_ptr<RuntimePlanFactory> _planFactory;
     /**
      * TODO: Make VariableSyncModule a stack variable.
      * Currently, it has circular dependency with engine header, because it needs to access
