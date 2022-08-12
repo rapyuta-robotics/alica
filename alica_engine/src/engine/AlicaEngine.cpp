@@ -56,8 +56,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), alicaContextParams.stepEngine, getWorldModel(), _planFactory,
-                  _behaviourFactory, editResultStore(), _ctx.getSolvers())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), alicaContextParams.stepEngine, getWorldModel(), _planFactory, _behaviourFactory,
+                  editResultStore(), _ctx.getSolvers())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
