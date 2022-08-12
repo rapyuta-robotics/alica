@@ -3,7 +3,7 @@
 
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Plan.h"
 
 namespace alica
@@ -21,7 +21,7 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
     PlanContext ctx{_wm, planModel->getName(), planModel};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
-        Logging::LoggingUtil::logError() << "RuntimePlanFactory: Plan creation failed: " << id;
+        Logging::logError("RuntimePlanFactory") << "Plan creation failed: " << id;
         return nullptr;
     }
 

@@ -5,7 +5,7 @@
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -96,7 +96,7 @@ void SynchronisationProcess::changeOwnData(int64_t transitionID, bool conditionH
     if (maySendTalk) {
         std::lock_guard<mutex> lock(_syncMutex);
         if (isSyncComplete()) {
-            Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready";
+            Logging::logDebug("SP") << "[(" << _myID << ")]: ChangedOwnData: Synchronisation " << _synchronisation->getId() << " ready";
             sendSyncReady();
             _readyForSync = true;
         } else {
@@ -116,10 +116,10 @@ bool SynchronisationProcess::isValid(uint64_t curTick)
         // notify others if I am part of the synchronisation already (i.e. have an own row)
         if (_myRow != nullptr) {
             _myRow->editSyncData().conditionHolds = false;
-            Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: isValid(): Failed due to Sync Timeout!";
+            Logging::logDebug("SP") << "[(" << _myID << ")]: isValid(): Failed due to Sync Timeout!";
             sendTalk(_myRow->getSyncData());
         }
-        Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: isValid(): Not active!!";
+        Logging::logDebug("SP") << "[(" << _myID << ")]: isValid(): Not active!!";
         return false;
     }
 
@@ -136,7 +136,7 @@ bool SynchronisationProcess::isValid(uint64_t curTick)
 
     if (_synchronisation->isFailOnSyncTimeOut()) {
         if (now > _synchronisation->getSyncTimeOut() + _syncStartTime) {
-            Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Failed due to Sync Timeout!";
+            Logging::logDebug("SP") << "[(" << _myID << ")]: Failed due to Sync Timeout!";
             return false;
         }
     }
@@ -157,7 +157,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
         return false;
     }
 
-    Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Integrate SyncTalk in synchronisation";
+    Logging::logDebug("SP") << "[(" << _myID << ")]: Integrate SyncTalk in synchronisation";
 
     for (const SyncData& sd : talk->syncData) {
         std::lock_guard<mutex> lock(_syncMutex);
@@ -183,11 +183,11 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             }
 
             if (isSyncComplete()) {
-                Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " ready";
+                Logging::logDebug("SP") << "[(" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " ready";
                 sendSyncReady();
                 _readyForSync = true;
             } else {
-                Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " not ready";
+                Logging::logDebug("SP") << "[(" << _myID << ")]: Synchronisation " << _synchronisation->getId() << " not ready";
                 // always reset this in case someone revokes his commitment
                 _readyForSync = false;
             }
@@ -195,8 +195,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             // late acks...
             if (_readyForSync) {
                 if (allSyncReady()) {
-                    Logging::LoggingUtil::logDebug() << "[SP (" << _myID
-                                                     << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_clock.now() - _syncStartTime);
+                    Logging::logDebug("SP") << "[(" << _myID << ")]: Synchronisation successful (IntTalk) - elapsed time: " << (_clock.now() - _syncStartTime);
                     // notify sync module
                     _syncModule->synchronisationDone(_synchronisation);
                     _synchronisationDone = true;
@@ -204,7 +203,7 @@ bool SynchronisationProcess::integrateSyncTalk(std::shared_ptr<SyncTalk> talk, u
             }
         }
     }
-    Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Process after integrating SyncTalk:\n" << *this;
+    Logging::logDebug("SP") << "[(" << _myID << ")]: Process after integrating SyncTalk:\n" << *this;
     return true;
 }
 
@@ -223,13 +222,12 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
         _receivedSyncReadys.push_back(ready);
     }
 
-    Logging::LoggingUtil::logDebug() << "[SP (" << _myID << ")]: Process after integrating SyncReady:\n" << *this;
+    Logging::logDebug("SP") << "[(" << _myID << ")]: Process after integrating SyncReady:\n" << *this;
     // check if all robots are ready
     if (_readyForSync) {
         if (allSyncReady()) {
             // notify _syncModul
-            Logging::LoggingUtil::logDebug() << "[SP (" << _myID
-                                             << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_clock.now() - _syncStartTime);
+            Logging::logDebug("SP") << "[(" << _myID << ")]: Synchronisation successful (IntReady) - elapsed time: " << (_clock.now() - _syncStartTime);
             _syncModule->synchronisationDone(_synchronisation);
             _synchronisationDone = true;
         }

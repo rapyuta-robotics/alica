@@ -9,7 +9,7 @@
 #include "engine/TaskRoleStruct.h"
 #include "engine/USummand.h"
 #include "engine/UtilityInterval.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
@@ -167,23 +167,23 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
             }
             priResult.setMin(priResult.getMin() + curPrio);
 
-            Logging::LoggingUtil::logDebug() << "UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
+            Logging::logDebug("UF") << "taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
-    Logging::LoggingUtil::logDebug() << "##\n"
-                                     << "UF: prioUI = " << priResult;
-    Logging::LoggingUtil::logDebug() << "UF: denum = " << denum;
+    Logging::logDebug("UF") << "##\n"
+                            << "prioUI = " << priResult;
+    Logging::logDebug("UF") << "denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    Logging::LoggingUtil::logDebug() << "UF: prioUI = " << priResult;
-    Logging::LoggingUtil::logDebug() << "##";
+    Logging::logDebug("UF") << "prioUI = " << priResult << "\n"
+                            << "##";
     return priResult;
 }
 

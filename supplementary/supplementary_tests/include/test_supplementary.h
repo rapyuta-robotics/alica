@@ -84,6 +84,7 @@ protected:
         spinner->stop();
         ac->terminate();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;

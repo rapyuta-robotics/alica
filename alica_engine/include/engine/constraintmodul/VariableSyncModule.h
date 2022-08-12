@@ -4,7 +4,7 @@
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 #include "engine/logging/IAlicaLogger.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 
 #include <alica_solver_interface/Interval.h>
 
@@ -112,7 +112,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     }
 #ifdef RS_DEBUG
     std::stringstream ss;
-    ss << "RS: Generated " << seeds.size() << "seeds";
+    ss << "Generated " << seeds.size() << "seeds";
 
     for (int i = 0; i < seeds.size(); ++i) {
         ss << "Seed " << i << ": "; // (sup:{1}): ",i);
@@ -121,16 +121,16 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
         ss << endl;
     }
-    Logging::LoggingUtil::log(Verbosity::DEBUG, ss.str());
+    Logging::logDebug("RS", ss.str())
 #endif
 
-    std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
-        if (a._totalSupCount != b._totalSupCount) {
-            return a._totalSupCount > b._totalSupCount;
-        } else {
-            return a._hash > b._hash;
-        }
-    });
+            std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
+                if (a._totalSupCount != b._totalSupCount) {
+                    return a._totalSupCount > b._totalSupCount;
+                } else {
+                    return a._hash > b._hash;
+                }
+            });
 
     int maxNum = std::min(static_cast<int>(seeds.size()), dim);
     o_seeds.resize(dim * maxNum);

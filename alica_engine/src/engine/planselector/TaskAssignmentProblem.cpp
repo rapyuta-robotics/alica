@@ -4,7 +4,7 @@
 #include "engine/Assignment.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/planselector/PartialAssignmentPool.h"
 #include <engine/collections/SuccessCollection.h>
@@ -94,18 +94,18 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    Logging::LoggingUtil::logDebug() << "TA: Calculating next best PartialAssignment...";
+    Logging::logDebug("TA") << "Calculating next best PartialAssignment...";
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    Logging::LoggingUtil::logDebug() << "TA: ... calculated this PartialAssignment:\n" << *calculatedPa;
+    Logging::logDebug("TA") << "... calculated this PartialAssignment:\n" << *calculatedPa;
 
     Assignment newAss = Assignment(*calculatedPa);
 
-    Logging::LoggingUtil::logDebug() << "TA: Return this Assignment to PS:" << newAss;
+    Logging::logDebug("TA") << "Return this Assignment to PS:" << newAss;
 
     return newAss;
 }
@@ -116,18 +116,17 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        Logging::LoggingUtil::logDebug() << "<--- TA: NEXT PA from fringe:";
-        Logging::LoggingUtil::logDebug() << *curPa << "--->";
+        Logging::logDebug("TA") << "<--- NEXT PA from fringe:"
+                                << "\n"
+                                << *curPa << "--->";
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            Logging::LoggingUtil::logDebug() << "<--- TA: BEFORE fringe exp:";
-            Logging::LoggingUtil::logDebug() << _fringe << "--->";
+            Logging::logDebug("TA") << "<--- TA: BEFORE fringe exp:" << _fringe << "--->";
             curPa->expand(_fringe, _pool, oldAss, _wm);
-            Logging::LoggingUtil::logDebug() << "<--- TA: AFTER fringe exp:\n"
-                                             << "TA: fringe size " << _fringe.size();
-            Logging::LoggingUtil::logDebug() << _fringe << "--->";
+            Logging::logDebug("TA") << "<--- TA: AFTER fringe exp:\n"
+                                    << "TA: fringe size " << _fringe.size() << _fringe << "--->";
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

@@ -3,7 +3,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/ConfigChangeListener.h"
 #include "engine/PlanRepository.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/Plan.h"
@@ -80,7 +80,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
         AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
     }
 
-    Logging::LoggingUtil::logInfo() << "MM: Config key '" << configKey << "' maps to '" << basePath << "'";
+    Logging::logInfo("MM") << "Config key '" << configKey << "' maps to '" << basePath << "'";
     return basePath;
 }
 
@@ -97,7 +97,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         std::string fileToParse = filesToParse.front();
         filesToParse.pop_front();
 
-        Logging::LoggingUtil::logDebug() << "MM: fileToParse: " << fileToParse;
+        Logging::logDebug("MM") << "fileToParse: " << fileToParse;
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
             AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
@@ -125,7 +125,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     computeReachabilities();
 
     for (const Behaviour* beh : _planRepository.getBehaviours()) {
-        Logging::LoggingUtil::logInfo() << "MM: " << beh->toString();
+        Logging::logInfo("MM") << beh->toString();
     }
 
     return masterPlan;
@@ -144,7 +144,7 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 
     RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
     RoleSetFactory::attachReferences();
-    Logging::LoggingUtil::logInfo() << "MM: Parsed the following role set: \n" << roleSet->toString();
+    Logging::logInfo("MM") << "Parsed the following role set: \n" << roleSet->toString();
     return roleSet;
 }
 

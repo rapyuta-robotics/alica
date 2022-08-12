@@ -30,7 +30,7 @@ namespace alica
  */
 void AlicaEngine::abort(const std::string& msg)
 {
-    Logging::LoggingUtil::log(Verbosity::FATAL, "ABORT: ", msg);
+    Logging::logFatal("AE") << "ABORT: " << msg;
     exit(EXIT_FAILURE);
 }
 
@@ -42,9 +42,9 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
+        , _planRepository()
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
-        , _planRepository()
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
                   getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
@@ -66,7 +66,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         AlicaEngine::abort("Error in parsed plans.");
     }
 
-    Logging::LoggingUtil::logDebug() << "AE: Constructor finished!";
+    Logging::logDebug("AE") << "Constructor finished!";
 }
 
 AlicaEngine::~AlicaEngine()
@@ -92,7 +92,7 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AE: Already initialized.";
+        Logging::logWarn("AE") << "Already initialized.";
         return true; // todo false?
     }
 
@@ -120,12 +120,12 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan, _ctx.getWorldModel());
-    Logging::LoggingUtil::logDebug() << "AE: Engine started!";
+    Logging::logDebug("AE") << "Engine started!";
 }
 /**
  * Closes the engine for good.
  */
-void AlicaEngine::terminate(bool preventSingletonDestruction)
+void AlicaEngine::terminate()
 {
     _maySendMessages = false;
     _planBase.stop();
@@ -135,10 +135,6 @@ void AlicaEngine::terminate(bool preventSingletonDestruction)
     _log.close();
     _variableSyncModule->close();
     _initialized = false;
-
-    if (!preventSingletonDestruction) {
-        AlicaLogger::destroy();
-    }
 }
 
 void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)

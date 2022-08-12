@@ -23,7 +23,7 @@ class IAlicaLogger
 public:
     virtual ~IAlicaLogger() = default;
 
-    virtual void log(const std::string& msg, Verbosity verbosity) = 0;
+    virtual void log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace = "") = 0;
 };
 
 } // namespace alica

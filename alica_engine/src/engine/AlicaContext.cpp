@@ -42,7 +42,7 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized.";
+        Logging::logWarn("AC") << "Context already initialized.";
         return -1;
     }
 
@@ -53,7 +53,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         AlicaEngine::abort("AC: TimerFactory not set");
     }
 
-    if (!Logging::LoggingUtil::isInitialized()) {
+    if (!Logging::isInitialized()) {
         setLogger<AlicaDefaultLogger>();
     }
 
@@ -72,16 +72,19 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     return -1;
 }
 
-int AlicaContext::terminate(bool preventSingletonDestruction)
+int AlicaContext::terminate()
 {
     if (_communicator) {
         _communicator->stopCommunication();
     }
-    _engine->terminate(preventSingletonDestruction);
+    _engine->terminate();
     _initialized = false;
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
+
+const std::unordered_map<std::string, Verbosity> AlicaContext::_verbosityStringToVerbosityMap = {{"DEBUG", alica::Verbosity::DEBUG},
+        {"INFO", alica::Verbosity::INFO}, {"WARNING", alica::Verbosity::WARNING}, {"ERROR", alica::Verbosity::ERROR}, {"FATAL", alica::Verbosity::FATAL}};
 
 bool AlicaContext::isValid() const
 {
@@ -121,8 +124,8 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configFile);
         return node;
     } catch (YAML::BadFile& badFile) {
-        if (Logging::LoggingUtil::isInitialized()) {
-            Logging::LoggingUtil::logWarn() << "AC: Could not parse file: " << configFile << " - " << badFile.msg;
+        if (Logging::isInitialized()) {
+            Logging::logWarn("AC") << "Could not parse file: " << configFile << " - " << badFile.msg;
         } else {
             std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
         }

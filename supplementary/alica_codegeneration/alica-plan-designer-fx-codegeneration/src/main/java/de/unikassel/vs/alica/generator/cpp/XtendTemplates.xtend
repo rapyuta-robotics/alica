@@ -1000,8 +1000,6 @@ namespace alica
 
     class UtilityFunction«plan.id» : public BasicUtilityFunction
     {
-    public:
-        UtilityFunction«plan.id»();
         std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
     };
     «IF (plan.preCondition !== null)»
@@ -1084,10 +1082,6 @@ namespace alica
 * Task: «entryPoint.task.name»  -> EntryPoint-ID: «entryPoint.id»
 «ENDFOR»
 */
-
-UtilityFunction«plan.id»::UtilityFunction«plan.id»()
-        : BasicUtilityFunction()
-{}
 
 std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(Plan* plan)
 {

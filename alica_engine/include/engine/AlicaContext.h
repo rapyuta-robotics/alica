@@ -18,7 +18,7 @@
 #include "engine/Types.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/logging/IAlicaLogger.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/util/ConfigPathParser.h"
 
 #include <cassert>
@@ -212,11 +212,9 @@ public:
      * Terminate alica framework and related modules. This function must be called for safe termination before
      * deleting Context.
      *
-     * @param preventSingletonDestruction Prevents the destruction of singletons during the termination. Used for tests only.
-     *
      * @return Return code '0' stands for success, any other for corresponding error
      */
-    int terminate(bool preventSingletonDestruction = false);
+    int terminate();
 
     /**
      * Set Alica Clock choose between RosClock or systemClock (std::chrono)
@@ -442,6 +440,7 @@ private:
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
     std::unique_ptr<IAlicaWorldModel> _worldModel;
     const AlicaContextParams _alicaContextParams;
+    static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
     bool _initialized = false;
 
@@ -471,7 +470,7 @@ template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new clock";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new clock";
         return;
     }
 
@@ -487,7 +486,7 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new communicator";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new communicator";
         return;
     }
 
@@ -530,7 +529,7 @@ template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new timerfactory";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new timerfactory";
         return;
     }
 
@@ -546,7 +545,7 @@ template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new tracefactory";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new tracefactory";
         return;
     }
 
@@ -562,7 +561,7 @@ template <class WorldModelType, class... Args>
 void AlicaContext::setWorldModel(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new worldmodeltype";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new worldmodeltype";
         return;
     }
 
@@ -578,24 +577,17 @@ template <class LoggerType, class... Args>
 void AlicaContext::setLogger(Args&&... args)
 {
     if (_initialized) {
-        Logging::LoggingUtil::logWarn() << "AC: Context already initialized. Can not set new loggertype";
+        Logging::logWarn("AC") << "Context already initialized. Can not set new loggertype";
         return;
     }
 
     std::string verbosityString = _configRootNode["Alica"]["Logging"]["Verbosity"].as<std::string>();
     Verbosity verbosity;
-    if (verbosityString == "DEBUG") {
-        verbosity = Verbosity::DEBUG;
-    } else if (verbosityString == "INFO") {
+    if (_verbosityStringToVerbosityMap.find(verbosityString) != _verbosityStringToVerbosityMap.end()) {
+        verbosity = _verbosityStringToVerbosityMap.at(verbosityString);
+    } else {
         verbosity = Verbosity::INFO;
-    } else if (verbosityString == "WARNING") {
-        verbosity = Verbosity::WARNING;
-    } else if (verbosityString == "ERROR") {
-        verbosity = Verbosity::ERROR;
-    } else if (verbosityString == "FATAL") {
-        verbosity = Verbosity::FATAL;
     }
-
     AlicaLogger::create<LoggerType>(verbosity, _localAgentName, std::forward<Args>(args)...);
 }
 
@@ -614,10 +606,10 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         }
         currentNode = value;
     } catch (const YAML::Exception& e) {
-        if (!Logging::LoggingUtil::isInitialized()) {
-            std::cerr << "AC: Could not set config value: " << e.msg << std::endl;
+        if (!Logging::isInitialized()) {
+            std::cerr << "AC: Could not set config value: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
         } else {
-            Logging::LoggingUtil::logWarn() << "AC: Could not set config value: " << e.msg;
+            Logging::logWarn("AC") << "Could not set config value: " << e.msg;
         }
 
         return false;
@@ -651,10 +643,10 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
             oldKeyValuePairs.push_back(oldKeyValuePair);
         }
     } catch (const YAML::Exception& e) {
-        if (!Logging::LoggingUtil::isInitialized()) {
-            std::cerr << "AC: Could not set config values: " << e.msg << std::endl;
+        if (!Logging::isInitialized()) {
+            std::cerr << "AC: Could not set config values: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
         } else {
-            Logging::LoggingUtil::logWarn() << "AC: Could not set config values: " << e.msg;
+            Logging::logWarn("AC") << "Could not set config values: " << e.msg;
         }
 
         // revert changes

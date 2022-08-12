@@ -93,6 +93,7 @@ protected:
         spinner->stop();
         ac->terminate();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -157,6 +158,7 @@ protected:
         spinner->stop();
         ac->terminate();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -276,6 +278,7 @@ protected:
     {
         spinner->stop();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -322,6 +325,7 @@ protected:
         spinner->stop();
         ac->terminate();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -368,6 +372,7 @@ protected:
         spinner->stop();
         ac->terminate();
         delete ac;
+        AlicaLogger::destroy();
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;

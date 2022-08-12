@@ -1,6 +1,6 @@
 #include "engine/RunningPlan.h"
 #include "engine/logging/IAlicaLogger.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
@@ -68,8 +68,8 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 
-    Logging::LoggingUtil::log(
-            Verbosity::DEBUG, "CS: Added condition in ", con->getAbstractPlan()->getName(), " with ", con->getVariables().size(), " variables. CS: ", this);
+    Logging::logDebug("CS") << "Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
+                            << " variables. CS: " << this;
 }
 
 /**
@@ -103,8 +103,7 @@ void ConditionStore::removeCondition(const Condition* con)
         }
     }
 
-    Logging::LoggingUtil::log(
-            Verbosity::DEBUG, "CS: Removed condition in ", con->getAbstractPlan()->getName(), " with ", con->getVariables().size(), " variables.");
+    Logging::logDebug("CS") << "Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.";
 }
 
 /**
@@ -112,7 +111,7 @@ void ConditionStore::removeCondition(const Condition* con)
  */
 void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
 {
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "ConditionStore: Accepting Query - Active conditions in store is ", _activeConditions.size(), " CS: ", this);
+    Logging::logDebug("CS") << "Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this;
     if (_activeConditions.empty()) {
         return;
     }
@@ -123,7 +122,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
         return; // nothing to do
     }
 
-    Logging::LoggingUtil::log(Verbosity::DEBUG, "ConditionStore: Query contains static variables: ", staticVarBuffer.getCurrent());
+    Logging::logDebug("CS") << "Query contains static variables: " << staticVarBuffer.getCurrent();
 
     const int previousPartCount = query.getPartCount();
 
@@ -135,7 +134,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
             staticVarBuffer.editCurrent().pop_back();
             staticVarBuffer.editNext().push_back(curStaticVariable);
 
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "ConditionStore: Checking static variable: ", *curStaticVariable);
+            Logging::logDebug("CS") << "Checking static variable: " << *curStaticVariable;
 
             auto activeVar2CondMapEntry = _activeVar2CondMap.find(curStaticVariable);
             if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
@@ -143,8 +142,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
                 continue;
             }
 
-            Logging::LoggingUtil::log(Verbosity::DEBUG, "ConditionStore: Conditions active under variable ", *activeVar2CondMapEntry->first, ": ",
-                    activeVar2CondMapEntry->second.size());
+            Logging::logDebug("CS") << "Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size();
 
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),

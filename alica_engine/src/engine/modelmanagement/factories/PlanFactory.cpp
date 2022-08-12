@@ -70,7 +70,7 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
             } else if (stateType.compare(alica::Strings::normalStateType) == 0) {
                 state = StateFactory::create(*it);
             } else {
-                Logging::LoggingUtil::log(Verbosity::ERROR, "[PlanFactory] Unknown state type encountered: '", stateType);
+                Logging::logError("PlanFactory") << "Unknown state type encountered: '" << stateType;
             }
             plan->_states.push_back(state);
             if (state->isFailureState()) {
@@ -160,7 +160,7 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
             } else if (stateType.compare(alica::Strings::normalStateType) == 0) {
                 state = StateFactory::create(*it);
             } else {
-                Logging::LoggingUtil::log(Verbosity::ERROR, "[PlanFactory] Unknown state type encountered: '", stateType);
+                Logging::logError("PlanFactory") << "Unknown state type encountered: '" << stateType;
             }
             plan->_states.push_back(state);
             if (state->isFailureState()) {

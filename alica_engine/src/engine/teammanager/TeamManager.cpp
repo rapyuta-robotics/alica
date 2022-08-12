@@ -8,7 +8,7 @@
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 
 #include <chrono>
 #include <functional>
@@ -76,7 +76,7 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
     reload(configChangeListener.getConfig());
-    Logging::LoggingUtil::logInfo() << "[TeamManager] Own ID is " << _localAnnouncement.senderID;
+    Logging::logInfo("TM") << "Own ID is " << _localAnnouncement.senderID;
 }
 
 TeamManager::~TeamManager() {}
@@ -114,7 +114,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = generateID();
-            Logging::LoggingUtil::logDebug() << "TM: Auto generated id " << _localAnnouncement.senderID;
+            Logging::logDebug("TM") << "Auto generated id " << _localAnnouncement.senderID;
         }
     } else {
         _localAnnouncement.senderID = _localAgentID;
@@ -282,11 +282,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        Logging::LoggingUtil::logWarn() << "TM: Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash;
+        Logging::logWarn("TM") << "Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash;
         return;
     }
 
-    Logging::LoggingUtil::logDebug() << "TM: Responding to agent: " << aq.senderID;
+    Logging::logDebug("TM") << "Responding to agent: " << aq.senderID;
     announcePresence();
 }
 
@@ -295,7 +295,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            Logging::LoggingUtil::logError() << "Duplicate Agent(" << aa.senderID << ") discovered";
+            Logging::logError("TM") << "Duplicate Agent(" << aa.senderID << ") discovered";
         }
         return;
     }
@@ -306,7 +306,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        Logging::LoggingUtil::logWarn() << "TM: Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
+        Logging::logWarn("TM") << "Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
         return;
     }
 
@@ -344,7 +344,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    Logging::LoggingUtil::logDebug() << "TM: Announcing presence " << _localAnnouncement.senderID;
+    Logging::logDebug("TM") << "Announcing presence " << _localAnnouncement.senderID;
     for (int i = 0; i < _announcementRetries; ++i) {
         _communicator.sendAgentAnnouncement(_localAnnouncement);
     }

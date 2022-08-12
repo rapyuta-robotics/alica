@@ -19,7 +19,7 @@ public:
 
     virtual ~TestLogger() = default;
 
-    void log(const std::string& msg, alica::Verbosity verbosity) { logs.emplace_back(verbosity, msg); }
+    void log(const std::string& msg, const alica::Verbosity verbosity, const std::string& logSpace) { logs.emplace_back(verbosity, msg); }
 
     std::vector<std::pair<alica::Verbosity, std::string>> logs;
 

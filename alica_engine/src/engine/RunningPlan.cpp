@@ -17,7 +17,7 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
-#include "engine/logging/LoggingUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
@@ -174,7 +174,7 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        Logging::LoggingUtil::logError() << "Cannot Eval Condition, Plan is null";
+        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
         assert(false);
     }
 
@@ -191,7 +191,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _ae->getWorldModel());
     } catch (const std::exception& e) {
-        Logging::LoggingUtil::logError() << "Exception in precondition: " << e.what();
+        Logging::logError("RP") << "Exception in precondition: " << e.what();
         return false;
     }
 }
@@ -203,7 +203,7 @@ bool RunningPlan::evalPreCondition() const
 bool RunningPlan::evalRuntimeCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        Logging::LoggingUtil::logError() << "Cannot Eval Condition, Plan is null";
+        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
         throw std::exception();
     }
     const RuntimeCondition* runtimeCondition = nullptr;
@@ -222,7 +222,7 @@ bool RunningPlan::evalRuntimeCondition() const
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        Logging::LoggingUtil::logError() << "Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what();
+        Logging::logError("RP") << "Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what();
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -273,7 +273,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        Logging::LoggingUtil::logInfo() << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName());
+        Logging::logInfo("RP") << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName());
     }
 }
 

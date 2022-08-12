@@ -2,30 +2,17 @@
 
 #include <iostream>
 #include <ros/callback_queue.h>
-#include <ros/console.h>
-#include <ros/ros.h>
 #include <sstream>
 
 using namespace alica;
 
 namespace alicaRosLogger
 {
-AlicaRosLogger::AlicaRosLogger(Verbosity verbosity, std::string localAgentName, int64_t localAgentId)
+AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
         : _localAgentName(localAgentName)
         , _localAgentId(localAgentId)
 {
-    ros::console::Level level;
-    if (verbosity == alica::Verbosity::DEBUG) {
-        level = ros::console::levels::Debug;
-    } else if (verbosity == alica::Verbosity::INFO) {
-        level = ros::console::levels::Info;
-    } else if (verbosity == alica::Verbosity::WARNING) {
-        level = ros::console::levels::Warn;
-    } else if (verbosity == alica::Verbosity::ERROR) {
-        level = ros::console::levels::Error;
-    } else if (verbosity == alica::Verbosity::FATAL) {
-        level = ros::console::levels::Fatal;
-    }
+    ros::console::Level level = _verbosityRosLevelMap.at(verbosity);
 
     std::stringstream streamName;
     streamName << ROSCONSOLE_DEFAULT_NAME << ".[ALICA] "
@@ -35,7 +22,7 @@ AlicaRosLogger::AlicaRosLogger(Verbosity verbosity, std::string localAgentName, 
     }
 }
 
-void AlicaRosLogger::log(const std::string& msg, Verbosity verbosity)
+void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
     std::stringstream streamName;
     streamName << "[ALICA] "
@@ -52,5 +39,9 @@ void AlicaRosLogger::log(const std::string& msg, Verbosity verbosity)
         ROS_FATAL_STREAM_NAMED(streamName.str(), msg);
     }
 }
+
+const std::unordered_map<alica::Verbosity, ros::console::Level> AlicaRosLogger::_verbosityRosLevelMap = {{alica::Verbosity::DEBUG, ros::console::levels::Debug},
+        {alica::Verbosity::INFO, ros::console::levels::Info}, {alica::Verbosity::WARNING, ros::console::levels::Warn},
+        {alica::Verbosity::ERROR, ros::console::levels::Error}, {alica::Verbosity::FATAL, ros::console::levels::Fatal}};
 
 } // namespace alicaRosLogger

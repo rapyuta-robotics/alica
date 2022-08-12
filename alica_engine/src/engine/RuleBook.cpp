@@ -64,9 +64,9 @@ void RuleBook::reload(const YAML::Node& config)
  */
 RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
 {
-    Logging::LoggingUtil::logDebug() << "RB: Init-Rule called.";
+    Logging::logDebug("RB") << "Init-Rule called.";
     if (masterPlan->getEntryPoints().size() != 1) {
-        AlicaEngine::abort("RB: Masterplan does not have exactly one task!");
+        AlicaEngine::abort("Masterplan does not have exactly one task!");
     }
 
     RunningPlan* main = _pb->makeRunningPlan(masterPlan, nullptr);
@@ -147,8 +147,8 @@ PlanChange RuleBook::visit(RunningPlan& r)
 PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: dynAlloc-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: dynAlloc RP \n" << r;
+    Logging::logDebug("RB") << "dynAlloc-Rule called.";
+    Logging::logDebug("RB") << "dynAlloc RP \n" << r;
 
     if (r.isAllocationNeeded() || r.isBehaviour()) {
         return PlanChange::NoChange;
@@ -172,18 +172,18 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
-    Logging::LoggingUtil::logDebug() << "RB: Old U " << curUtil << " | "
-                                     << " New U:" << possibleUtil;
+    Logging::logDebug("RB") << "Old U " << curUtil << " | "
+                            << " New U:" << possibleUtil;
 
     if (curUtil < -0.99) {
-        Logging::LoggingUtil::logDebug() << "#############Assignment is valid?: " << r.getAssignment().isValid() << "\n" << r;
+        Logging::logDebug("RB") << "#############Assignment is valid?: " << r.getAssignment().isValid() << "\n" << r;
     }
 
-    Logging::LoggingUtil::logDebug() << "RB: New Assignment" << newr->getAssignment() << "\n"
-                                     << "RB: Old Assignment" << r.getAssignment();
+    Logging::logDebug("RB") << "New Assignment" << newr->getAssignment() << "\n"
+                            << "Old Assignment" << r.getAssignment();
 
     if (possibleUtil - curUtil > p->getUtilityThreshold()) {
-        // cout, "RB: AllocationDifference::Reason::utility ", endl;
+        // cout, "AllocationDifference::Reason::utility ", endl;
         r.editCycleManagement().setNewAllocDiff(r.getAssignment(), newr->getAssignment(), AllocationDifference::Reason::utility);
         const State* before = r.getActiveState();
         r.adaptAssignment(*newr);
@@ -191,10 +191,10 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
             r.setAllocationNeeded(true);
         }
 
-        Logging::LoggingUtil::logInfo() << "RB: B4 dynChange: Util is " << curUtil << " | "
-                                        << " suggested is " << possibleUtil << " | "
-                                        << " threshold " << p->getUtilityThreshold() << "\n"
-                                        << "RB: DynAlloc in " << p->getName();
+        Logging::logInfo("RB") << "B4 dynChange: Util is " << curUtil << " | "
+                               << " suggested is " << possibleUtil << " | "
+                               << " threshold " << p->getUtilityThreshold() << "\n"
+                               << "DynAlloc in " << p->getName();
 
         _log.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
@@ -209,17 +209,17 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: AuthorityOverride-Rule called.";
+    Logging::logDebug("RB") << "AuthorityOverride-Rule called.";
 
     if (r.isBehaviour()) {
         return PlanChange::NoChange;
     }
-    Logging::LoggingUtil::logDebug() << "RB: AuthorityOverride RP \n" << r;
+    Logging::logDebug("RB") << "AuthorityOverride RP \n" << r;
 
     if (r.getCycleManagement().isOverridden()) {
         if (r.editCycleManagement().applyAssignment()) {
             _log.eventOccurred("AuthorityOverride(", r.getActivePlan()->getName(), ")");
-            Logging::LoggingUtil::logDebug() << "RB: Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment();
+            Logging::logDebug("RB") << "Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment();
             return PlanChange::InternalChange;
         }
     }
@@ -245,9 +245,9 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
 
     if ((r.getActiveState() != nullptr && r.getActiveState()->isFailureState()) || !r.getAssignment().isValid() || !r.isRuntimeConditionValid()) {
 
-        Logging::LoggingUtil::logDebug() << "RB: PlanAbort-Rule called.";
-        Logging::LoggingUtil::logDebug() << "RB: PlanAbort RP \n" << r;
-        Logging::LoggingUtil::logDebug() << "RB: PlanAbort " << r.getActivePlan()->getName();
+        Logging::logDebug("RB") << "PlanAbort-Rule called.";
+        Logging::logDebug("RB") << "PlanAbort RP \n" << r;
+        Logging::logDebug("RB") << "PlanAbort " << r.getActivePlan()->getName();
         r.addFailure();
         _log.eventOccurred("PAbort(", r.getActivePlan()->getName(), ")");
         return PlanChange::FailChange;
@@ -266,8 +266,8 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule RP \n" << r;
+    Logging::logDebug("RB") << "PlanRedoRule-Rule called.";
+    Logging::logDebug("RB") << "PlanRedoRule RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -277,8 +277,8 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
     if (r.getActiveState() == r.getActiveEntryPoint()->getState()) {
         r.addFailure();
-        Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule not executed for " << r.getActivePlan()->getName()
-                                         << "- Unable to repair, as the current state is already the initial state.";
+        Logging::logDebug("RB") << "PlanRedoRule not executed for " << r.getActivePlan()->getName()
+                                << "- Unable to repair, as the current state is already the initial state.";
 
         return PlanChange::FailChange;
     }
@@ -290,7 +290,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
     r.useState(r.getActiveEntryPoint()->getState());
     r.setAllocationNeeded(true);
 
-    Logging::LoggingUtil::logDebug() << "RB: PlanRedoRule executed for " << r.getActivePlan()->getName();
+    Logging::logDebug("RB") << "PlanRedoRule executed for " << r.getActivePlan()->getName();
 
     _log.eventOccurred("PRedo(", r.getActivePlan()->getName(), ")");
     return PlanChange::InternalChange;
@@ -307,8 +307,8 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: PlanReplace-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: PlanReplace RP \n" << r;
+    Logging::logDebug("RB") << "PlanReplace-Rule called.";
+    Logging::logDebug("RB") << "PlanReplace RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -324,7 +324,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
     }
     r.setFailureHandlingNeeded(false);
 
-    Logging::LoggingUtil::logDebug() << "RB: PlanReplace" << r.getActivePlan()->getName();
+    Logging::logDebug("RB") << "PlanReplace" << r.getActivePlan()->getName();
 
     _log.eventOccurred("PReplace(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
@@ -340,8 +340,8 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: PlanPropagation-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: PlanPropagation RP \n" << r;
+    Logging::logDebug("RB") << "PlanPropagation-Rule called.";
+    Logging::logDebug("RB") << "PlanPropagation RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -350,7 +350,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
     r.getParent()->addFailure();
     r.setFailureHandlingNeeded(false);
 
-    Logging::LoggingUtil::logDebug() << "RB: PlanPropagation " << r.getActivePlan()->getName();
+    Logging::logDebug("RB") << "PlanPropagation " << r.getActivePlan()->getName();
 
     _log.eventOccurred("PProp(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
@@ -364,8 +364,8 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 PlanChange RuleBook::allocationRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: Allocation-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: Allocation RP \n" << rp;
+    Logging::logDebug("RB") << "Allocation-Rule called.";
+    Logging::logDebug("RB") << "Allocation RP \n" << rp;
 
     if (!rp.isAllocationNeeded()) {
         return PlanChange::NoChange;
@@ -375,19 +375,19 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     AgentGrp agents;
     rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
 
-    Logging::LoggingUtil::logDebug() << rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName();
+    Logging::logDebug("RB") << rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName();
 
     std::vector<RunningPlan*> children;
     bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
     if (!ok || children.size() < rp.getActiveState()->getConfAbstractPlanWrappers().size()) {
         rp.addFailure();
-        Logging::LoggingUtil::logDebug() << "RB: PlanAllocFailed " << rp.getActivePlan()->getName();
+        Logging::logDebug("RB") << "PlanAllocFailed " << rp.getActivePlan()->getName();
         return PlanChange::FailChange;
     }
     rp.addChildren(children);
 
-    Logging::LoggingUtil::logDebug() << "RB: after add children";
-    Logging::LoggingUtil::logDebug() << "RB: PlanAlloc " << rp.getActivePlan()->getName();
+    Logging::logDebug("RB") << "after add children";
+    Logging::logDebug("RB") << "PlanAlloc " << rp.getActivePlan()->getName();
 
     if (!children.empty()) {
         _log.eventOccurred("PAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
@@ -407,8 +407,8 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: TopFail-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: TopFail RP \n" << r;
+    Logging::logDebug("RB") << "TopFail-Rule called.";
+    Logging::logDebug("RB") << "TopFail RP \n" << r;
 
     if (r.getParent())
         return PlanChange::NoChange;
@@ -427,7 +427,7 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         r.useState(ep->getState());
         r.clearFailedChildren();
 
-        Logging::LoggingUtil::logDebug() << "RB: PlanTopFail " << r.getActivePlan()->getName();
+        Logging::logDebug("RB") << "PlanTopFail " << r.getActivePlan()->getName();
 
         _log.eventOccurred("TopFail");
         return PlanChange::InternalChange;
@@ -445,8 +445,8 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 PlanChange RuleBook::transitionRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: Transition-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: Transition RP \n" << r;
+    Logging::logDebug("RB") << "Transition-Rule called.";
+    Logging::logDebug("RB") << "Transition RP \n" << r;
 
     if (r.getActiveState() == nullptr)
         return PlanChange::NoChange;
@@ -470,7 +470,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
         return PlanChange::NoChange;
     }
 
-    Logging::LoggingUtil::logDebug() << "RB: Transition " << r.getActivePlan()->getName();
+    Logging::logDebug("RB") << "Transition " << r.getActivePlan()->getName();
 
     r.moveState(nextState);
 
@@ -492,8 +492,8 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
 PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    Logging::LoggingUtil::logDebug() << "RB: Sync-Rule called.";
-    Logging::LoggingUtil::logDebug() << "RB: Sync RP \n" << rp;
+    Logging::logDebug("RB") << "Sync-Rule called.";
+    Logging::logDebug("RB") << "Sync RP \n" << rp;
 
     if (rp.getActiveState() == nullptr) {
         return PlanChange::NoChange;
@@ -528,7 +528,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
     rp.moveState(nextState);
     rp.setAllocationNeeded(true);
 
-    Logging::LoggingUtil::logDebug() << "RB: Follow synchronised transition in plan " << rp.getActivePlan()->getName();
+    Logging::logDebug("RB") << "Follow synchronised transition in plan " << rp.getActivePlan()->getName();
     _log.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
 
     if (rp.getActiveState()->isSuccessState())

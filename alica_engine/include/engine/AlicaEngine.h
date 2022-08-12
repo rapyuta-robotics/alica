@@ -44,7 +44,7 @@ public:
     // State modifiers:
     bool init(AlicaCreators&& creatorCtx);
     void start();
-    void terminate(bool preventSingletonDestruction = false);
+    void terminate();
     void stepNotify();
 
     // Parameter Access:
