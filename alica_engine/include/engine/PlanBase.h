@@ -4,6 +4,7 @@
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/containers/AlicaEngineInfo.h"
 #include <algorithm>
 #include <condition_variable>
@@ -46,9 +47,8 @@ class PlanBase
 public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-            const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel,
-            const RuntimePlanFactory& runTimePlanFactory, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, IAlicaWorldModel* wm, const IAlicaTimerFactory& timerFactory,
+            const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
             const IAlicaTraceFactory* traceFactory);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
@@ -68,7 +68,9 @@ public:
     RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
-    void init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator);
+    void init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator);
+
+    const RuntimePlanFactory& getRuntimePlanFactory() const { return _runTimePlanFactory; }
 
     void stepNotify();
 
@@ -95,7 +97,7 @@ private:
     bool& _stepEngine;
     bool& _stepCalled;
     IAlicaWorldModel* _worldModel;
-    const RuntimePlanFactory& _runTimePlanFactory;
+    RuntimePlanFactory _runTimePlanFactory;
     RuntimeBehaviourFactory _runTimeBehaviourFactory;
     VariableSyncModule& _resultStore;
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
