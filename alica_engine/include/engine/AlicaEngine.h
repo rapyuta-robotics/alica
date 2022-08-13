@@ -5,7 +5,6 @@
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
-#include "engine/RuntimePlanFactory.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AuthorityManager.h"
