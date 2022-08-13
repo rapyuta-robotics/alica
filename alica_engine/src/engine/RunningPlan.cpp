@@ -921,7 +921,7 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
     return _basicPlan->getKeyMapping(wrapperId);
 }
 
-TeamManager& RunningPlan::getTeamManager() const
+const TeamManager& RunningPlan::getTeamManager() const
 {
     return _teamManager;
 }

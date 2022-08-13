@@ -82,10 +82,10 @@ public:
     void clearStaticVariables();
 
     template <class SolverType>
-    bool existsSolution(const RunningPlan* pi);
+    bool existsSolution(const RunningPlan* runningPlan);
 
     template <class SolverType, typename ResultType>
-    bool getSolution(const RunningPlan* pi, std::vector<ResultType>& result);
+    bool getSolution(const RunningPlan* runningPlan, std::vector<ResultType>& result);
 
     BufferedVariableGrp& editStaticVariableBuffer() { return _staticVars; }
     BufferedDomainVariableGrp& editDomainVariableBuffer() { return _domainVars; }
@@ -98,7 +98,7 @@ public:
 private:
     void clearTemporaries();
     void fillBufferFromQuery();
-    bool collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
+    bool collectProblemStatement(const RunningPlan* runningPlan, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
 
     VariableGrp _queriedStaticVariables;
     DomainVariableGrp _queriedDomainVariables;
@@ -114,20 +114,20 @@ private:
 };
 
 template <class SolverType>
-bool Query::existsSolution(const RunningPlan* pi)
+bool Query::existsSolution(const RunningPlan* runningPlan)
 {
-    SolverType& solver = pi->getSolver<SolverType>();
+    SolverType& solver = runningPlan->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
-    if (!collectProblemStatement(pi, solver, cds, domOffset)) {
+    if (!collectProblemStatement(runningPlan, solver, cds, domOffset)) {
         return false;
     }
     return solver->existsSolution(_context.get(), cds);
 }
 
 template <class SolverType, typename ResultType>
-bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
+bool Query::getSolution(const RunningPlan* runningPlan, std::vector<ResultType>& result)
 {
     result.clear();
 
@@ -135,13 +135,13 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
 
-    if (!pi->existSolver<SolverType>()) {
+    if (!runningPlan->existSolver<SolverType>()) {
         std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
         return false;
     }
 
-    SolverType& solver = pi->getSolver<SolverType>();
-    if (!collectProblemStatement(pi, solver, cds, domOffset)) {
+    SolverType& solver = runningPlan->getSolver<SolverType>();
+    if (!collectProblemStatement(runningPlan, solver, cds, domOffset)) {
         return false;
     }
 
@@ -154,7 +154,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule& rs = pi->editResultStore();
+        VariableSyncModule& rs = runningPlan->editResultStore();
         for (const ResultType& value : solverResult) {
             rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;

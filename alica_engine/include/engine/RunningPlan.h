@@ -232,18 +232,13 @@ public:
     const AlicaClock& getAlicaClock() const { return _clock; };
     VariableSyncModule& editResultStore() const { return _resultStore; }
 
-    //[[deprecated("temporary method")]] 
     template <class SolverType>
     SolverType& getSolver() const;
-    ISolverBase& getSolverBase(const std::type_info& solverType) const;
 
-    //[[deprecated("temporary method")]] 
     template <class SolverType>
     bool existSolver() const;
 
-    //[[deprecated("temporary method")]] 
-    TeamManager& getTeamManager() const;
-
+    const TeamManager& getTeamManager() const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -281,7 +276,7 @@ private:
     mutable std::mutex _accessMutex;
 };
 
-  template <class SolverType>
+template <class SolverType>
 SolverType& RunningPlan::getSolver() const
 {
     auto cit = _solvers.find(typeid(SolverType).hash_code());
