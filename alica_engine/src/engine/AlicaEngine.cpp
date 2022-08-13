@@ -57,7 +57,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
 
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
-    subscribe(reloadFunctionPtr);
+    _configChangeListener.subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
@@ -200,11 +200,6 @@ IAlicaWorldModel* AlicaEngine::getWorldModel() const
 {
     return _ctx.getWorldModel();
 }
-
-void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
-{
-    _configChangeListener.subscribe(reloadFunction);
-};
 
 /**
  * Triggers the engine to run one iteration.
