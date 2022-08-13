@@ -495,10 +495,10 @@ void AlicaContext::addSolver(Args&&... args)
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _solvers.emplace(typeid(SolverType).hash_code(),
-            std::make_unique<SolverType>(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...));
+            std::make_unique<SolverType>(_engine->editBlackboard(), _engine->getResultStore(), getConfig(), std::forward<Args>(args)...));
 #else
     _solvers.emplace(typeid(SolverType).hash_code(),
-            std::unique_ptr<SolverType>(new SolverType(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...)));
+            std::unique_ptr<SolverType>(new SolverType(_engine->editBlackboard(), _engine->getResultStore(), getConfig(), std::forward<Args>(args)...)));
 #endif
 }
 

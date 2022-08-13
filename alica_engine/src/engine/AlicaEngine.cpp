@@ -191,11 +191,6 @@ void AlicaEngine::setStepEngine(bool stepEngine)
     _stepEngine = stepEngine;
 }
 
-const YAML::Node& AlicaEngine::getConfig() const
-{
-    return _ctx.getConfig();
-}
-
 IAlicaWorldModel* AlicaEngine::getWorldModel() const
 {
     return _ctx.getWorldModel();

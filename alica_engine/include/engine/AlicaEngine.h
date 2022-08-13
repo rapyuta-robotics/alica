@@ -107,9 +107,6 @@ public:
     bool existSolver() const;
 
     void reload(const YAML::Node& config);
-    //[[deprecated("It will be removed in the last PR")]]
-    const YAML::Node& getConfig() const;
-
     ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
 
     /**
