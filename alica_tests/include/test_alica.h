@@ -10,8 +10,8 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
-#include <alica_tests/TestTracing.h>
 #include <alica_tests/TestLogger.h>
+#include <alica_tests/TestTracing.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
