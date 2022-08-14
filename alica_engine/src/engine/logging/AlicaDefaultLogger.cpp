@@ -25,14 +25,14 @@ void AlicaDefaultLogger::log(const std::string& msg, Verbosity verbosity, const 
         std::cout << _verbosityStringAndColorMap.at(verbosity).second << "[" << _verbosityStringAndColorMap.at(verbosity).first << "][" << _localAgentName
                   << "]";
         if (!logSpace.empty()) {
-            std::cout << "[" << logSpace << "]" << std::endl;
+            std::cout << "[" << logSpace << "]";
         }
         std::cout << ": " << msg << RESET << std::endl;
     } else {
         std::cerr << _verbosityStringAndColorMap.at(verbosity).second << "[" << _verbosityStringAndColorMap.at(verbosity).first << "][" << _localAgentName
                   << "]";
         if (!logSpace.empty()) {
-            std::cerr << "[" << logSpace << "]" << std::endl;
+            std::cerr << "[" << logSpace << "]";
         }
         std::cerr << ": " << msg << RESET << std::endl;
     }

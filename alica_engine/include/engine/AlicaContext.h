@@ -581,12 +581,15 @@ void AlicaContext::setLogger(Args&&... args)
         return;
     }
 
-    std::string verbosityString = _configRootNode["Alica"]["Logging"]["Verbosity"].as<std::string>();
-    Verbosity verbosity;
-    if (_verbosityStringToVerbosityMap.find(verbosityString) != _verbosityStringToVerbosityMap.end()) {
-        verbosity = _verbosityStringToVerbosityMap.at(verbosityString);
-    } else {
-        verbosity = Verbosity::INFO;
+    Verbosity verbosity = Verbosity::INFO;
+    // check if config value exists
+    if (_configRootNode["Alica"]["Logging"]["Verbosity"]) {
+        std::string verbosityString = _configRootNode["Alica"]["Logging"]["Verbosity"].as<std::string>();
+
+        // check if verbosity level in config is valid
+        if (_verbosityStringToVerbosityMap.find(verbosityString) != _verbosityStringToVerbosityMap.end()) {
+            verbosity = _verbosityStringToVerbosityMap.at(verbosityString);
+        }
     }
     AlicaLogger::create<LoggerType>(verbosity, _localAgentName, std::forward<Args>(args)...);
 }
