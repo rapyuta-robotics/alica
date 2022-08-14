@@ -316,9 +316,13 @@ namespace alica
 namespace alica
 {
 
-    UtilityFunctionCreator::~UtilityFunctionCreator() {};
+    UtilityFunctionCreator::~UtilityFunctionCreator()
+    {
+    }
 
-    UtilityFunctionCreator::UtilityFunctionCreator() {};
+    UtilityFunctionCreator::UtilityFunctionCreator()
+    {
+    }
 
     std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
     {
