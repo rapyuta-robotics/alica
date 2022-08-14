@@ -11,13 +11,12 @@
 #include <alica_tests/test_sched_world_model.h>
 
 #include <alica_tests/TestTracing.h>
+#include <alica_tests/TestLogger.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
-#include <engine/logging/AlicaLogger.h>
-#include <engine/logging/IAlicaLogger.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -83,7 +82,6 @@ protected:
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
-
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
     }
@@ -239,7 +237,7 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate(true);
+            ac->terminate();
             delete ac;
         }
         AlicaLogger::destroy();
@@ -425,7 +423,7 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate(true);
+            ac->terminate();
             delete ac;
         }
         AlicaLogger::destroy();
