@@ -151,7 +151,7 @@ int AlicaContext::getVersion()
 
 void AlicaContext::reloadConfig()
 {
-    _engine->reloadConfig(_configRootNode);
+    _engine->getConfigChangeListener().reloadConfig(_configRootNode);
 }
 
 AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()

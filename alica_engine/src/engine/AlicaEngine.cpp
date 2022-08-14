@@ -208,11 +208,6 @@ void AlicaEngine::stepNotify()
     _planBase.getStepModeCV()->notify_all();
 }
 
-void AlicaEngine::reloadConfig(const YAML::Node& config)
-{
-    _configChangeListener.reloadConfig(config);
-}
-
 ConfigChangeListener& AlicaEngine::getConfigChangeListener()
 {
     return _configChangeListener;

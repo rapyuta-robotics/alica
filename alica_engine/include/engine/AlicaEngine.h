@@ -109,12 +109,6 @@ public:
     void reload(const YAML::Node& config);
     ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
 
-    /**
-     * Call reload() of all subscribed components. Each component does reload using the
-     * updated config.
-     */
-    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
-
 private:
     void setStepEngine(bool stepEngine);
     // WARNING: Initialization order dependencies!
