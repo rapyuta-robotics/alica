@@ -43,7 +43,7 @@ TEST_F(AlicaLoggerTest, testLogging)
 {
     ASSERT_NO_SIGNAL
     ae->start();
-    ae->getAlicaClock().sleep(alica::AlicaTime::seconds(1));
+    ae->getAlicaClock().sleep(alica::AlicaTime::seconds(2));
 
     alicaTests::TestLogger* logger = dynamic_cast<alicaTests::TestLogger*>(AlicaLogger::instance());
 

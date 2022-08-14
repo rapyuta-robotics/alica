@@ -63,7 +63,7 @@ Alica:
     LogFolder: /tmp/log
 
   Logging:
-    Verbosity: DEBUG
+    Verbosity: INFO
 
   CycleDetection:
     Enabled: true
