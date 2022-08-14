@@ -210,7 +210,7 @@ void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reload
  */
 void AlicaEngine::stepNotify()
 {
-    _planBase.getStepModeCV()->notify_all();
+    _planBase.stepNotify();
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

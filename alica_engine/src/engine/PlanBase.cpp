@@ -413,4 +413,9 @@ const RunningPlan* PlanBase::getDeepestNode() const
     return _deepestNode;
 }
 
+void PlanBase::stepNotify()
+{
+    getStepModeCV()->notify_all();
+}
+
 } // namespace alica

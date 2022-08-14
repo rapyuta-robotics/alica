@@ -68,6 +68,7 @@ public:
     RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
+    void stepNotify();
 
 private:
     void run(const Plan* masterPlan);
