@@ -4,7 +4,6 @@
 /*PROTECTED REGION ID(inc1414068597716) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
-#include <memory>
 #include <vector>
 /*PROTECTED REGION END*/
 
@@ -25,8 +24,8 @@ protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1414068597716) ENABLED START*/
     // Add additional protected methods here
+    Query _query;
     int _callCounter;
-    std::unique_ptr<Query> _query;
     /*PROTECTED REGION END*/
 private:
     /*PROTECTED REGION ID(prv1414068597716) ENABLED START*/

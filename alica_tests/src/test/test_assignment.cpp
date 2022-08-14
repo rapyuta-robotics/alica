@@ -1,5 +1,4 @@
 #include <engine/AlicaContext.h>
-#include <engine/AlicaDefaultLogger.h>
 #include <engine/Assignment.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/State.h>
@@ -46,10 +45,9 @@ TEST(Assignment, RobotsInserted)
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
 
-    alica::AlicaDefaultLogger logger(alica::Verbosity::DEBUG, "nase");
-    PlanRepository repo(logger);
+    PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
-    ModelManager modelManager(repo, ae, path + "/etc/", logger);
+    ModelManager modelManager(repo, ae, path + "/etc/");
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");
 

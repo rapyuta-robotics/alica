@@ -62,9 +62,6 @@ Alica:
     Enabled: true
     LogFolder: /tmp/log
 
-  Logging:
-    Verbosity: DEBUG
-
   CycleDetection:
     Enabled: true
     CycleCount: 5

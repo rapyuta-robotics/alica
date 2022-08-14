@@ -6,10 +6,6 @@
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
-<<<<<<< Updated upstream
-#include <engine/AlicaDefaultLogger.h>
-=======
->>>>>>> Stashed changes
 #include <engine/AlicaEngine.h>
 #include <engine/Assignment.h>
 #include <engine/PlanBase.h>
@@ -87,8 +83,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     std::vector<double> result1;
     bool ok;
 
-    alica::AlicaDefaultLogger logger(alica::Verbosity::DEBUG, "nase");
-    alica::Query q1(logger);
+    alica::Query q1;
 
     q1.addDomainVariable(aes[0]->getTeamManager().getDomainVariable(id1, "X"));
     ok = q1.getSolution<CGSolver, double>(rp1, result1);
@@ -148,7 +143,9 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
      * This part of the test is deactivated for now because new transition conditions dont support
      * constraints anymore.
      */
-    // Query q2(logger);
+    // EXPECT_EQ(4, q1.getPartCount());
+
+    // Query q2;
     // q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "X"));
     // q2.addDomainVariable(aes[1]->getTeamManager().getDomainVariable(id2, "Y"));
 

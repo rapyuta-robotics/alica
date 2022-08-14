@@ -37,7 +37,7 @@ void ConstraintUsingBehaviour::run(void* msg)
     if (result.size() > 0) {
         return;
     }
-    _query->getSolution<reasoner::ConstraintTestPlanDummySolver, int64_t>(getPlanContext(), result);
+    _query.getSolution<reasoner::ConstraintTestPlanDummySolver, int64_t>(getPlanContext(), result);
     /*PROTECTED REGION END*/
 }
 void ConstraintUsingBehaviour::initialiseParameters()
@@ -45,9 +45,8 @@ void ConstraintUsingBehaviour::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1414068597716) ENABLED START*/
     // Add additional options here
     _callCounter = 0;
-    _query = std::make_unique<Query>(getLogger());
-    _query->clearStaticVariables();
-    _query->addStaticVariable(getVariable("Y"));
+    _query.clearStaticVariables();
+    _query.addStaticVariable(getVariable("Y"));
 
     /*PROTECTED REGION END*/
 }

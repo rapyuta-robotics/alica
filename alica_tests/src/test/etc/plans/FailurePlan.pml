@@ -91,7 +91,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1770682125085719690",
+      "condition": "conditions/ConditionRepository.cnd#1770682125085719690",
       "id": 1023566846009251524,
       "inState": 3487518754011112127,
       "keyMapping": {
@@ -120,7 +120,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/conditions.cnd#1291995818541962959",
+      "condition": "conditions/ConditionRepository.cnd#1291995818541962959",
       "id": 1446293122737278544,
       "inState": 1171453089016322268,
       "keyMapping": {

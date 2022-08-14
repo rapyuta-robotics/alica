@@ -4,7 +4,6 @@
 /*PROTECTED REGION ID(inc1417424455986) ENABLED START*/
 // Add additional includes here
 #include <engine/constraintmodul/Query.h>
-#include <memory>
 #include <vector>
 /*PROTECTED REGION END*/
 
@@ -25,7 +24,7 @@ protected:
     virtual void initialiseParameters();
     /*PROTECTED REGION ID(pro1417424455986) ENABLED START*/
     // Add additional protected methods here
-    std::unique_ptr<alica::Query> _query;
+    alica::Query _query;
     int callCounter;
 
     /*PROTECTED REGION END*/

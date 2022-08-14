@@ -19,7 +19,6 @@ QueryBehaviour1::QueryBehaviour1(BehaviourContext& context)
     /*PROTECTED REGION ID(con1479556104511) ENABLED START*/
     // Add additional options here
     this->callCounter = 0;
-    _logger = &(context.logger);
     /*PROTECTED REGION END*/
 }
 QueryBehaviour1::~QueryBehaviour1()
@@ -45,7 +44,7 @@ void QueryBehaviour1::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1479556104511) ENABLED START*/
     // Add additional options here
-    this->query = make_shared<alica::Query>(*_logger);
+    this->query = make_shared<alica::Query>();
     query->clearStaticVariables();
     query->addStaticVariable(getVariable("QBX"));
     query->addStaticVariable(getVariable("QBY"));
