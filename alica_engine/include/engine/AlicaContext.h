@@ -412,6 +412,7 @@ public:
     /**
      * Set logger to be used by this alica framework instance.
      * Example usage: setLogger<alica::AlicaDefaultLogger>();
+     * The logger is static and limited to 1 instance per process.
      *
      * @note LoggerType must be a derived class of IAlicaLogger
      * @note This must be called before initializing context
