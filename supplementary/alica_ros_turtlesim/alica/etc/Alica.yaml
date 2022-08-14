@@ -45,7 +45,7 @@ Alica:
     LogFolder: log/temp
 
   Logging:
-    Verbosity: DEBUG
+    Verbosity: INFO
 
   CycleDetection:
     Enabled: true

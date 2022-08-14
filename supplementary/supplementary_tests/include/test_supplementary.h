@@ -158,7 +158,7 @@ protected:
             spinner->stop();
         }
         for (alica::AlicaContext* ac : acs) {
-            ac->terminate(true);
+            ac->terminate();
             delete ac;
         }
         AlicaLogger::destroy();
