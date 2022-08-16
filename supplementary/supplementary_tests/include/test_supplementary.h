@@ -161,6 +161,7 @@ protected:
             ac->terminate();
             delete ac;
         }
+        AlicaLogger::destroy();
     }
 };
 } // namespace supplementary
