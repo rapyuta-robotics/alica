@@ -37,7 +37,6 @@ TEST_F(AlicaLoggerTest, testSettingCustomLogger)
 TEST_F(AlicaDefaultLoggerTest, testSettingDefaultLogger)
 {
     ASSERT_NO_SIGNAL
-    std::cerr << "###################" << std::endl;
     // check that AlicaDefaultLogger is set when no logger is set.
     AlicaDefaultLogger* logger = dynamic_cast<AlicaDefaultLogger*>(AlicaLogger::instance());
     EXPECT_NE(logger, nullptr);
