@@ -36,12 +36,6 @@ MasterPlanTaskAssignment1407152758497::~MasterPlanTaskAssignment1407152758497()
  * Task: MidFieldTask  -> EntryPoint-ID: 1407152900425
  * Task: DefendTask  -> EntryPoint-ID: 1407152902493
  */
-
-UtilityFunction1407152758497::UtilityFunction1407152758497()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1407152758497::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407152758497) ENABLED START*/

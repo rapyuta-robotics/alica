@@ -33,12 +33,6 @@ MultiAgentTestMaster1413200842973::~MultiAgentTestMaster1413200842973()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1413200842975
  */
-
-UtilityFunction1413200842973::UtilityFunction1413200842973()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1413200842973) ENABLED START*/

@@ -31,12 +31,6 @@ PlanFour1407153683051::~PlanFour1407153683051()
  * Task: DefaultTask  -> EntryPoint-ID: 1407153696703
  * Task: AttackTask  -> EntryPoint-ID: 1407153949327
  */
-
-UtilityFunction1407153683051::UtilityFunction1407153683051()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1407153683051::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1407153683051) ENABLED START*/

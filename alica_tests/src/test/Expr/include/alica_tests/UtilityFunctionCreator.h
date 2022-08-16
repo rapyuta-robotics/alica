@@ -5,6 +5,7 @@
 
 namespace alica
 {
+
 class UtilityFunctionCreator : public IUtilityCreator
 {
 public:

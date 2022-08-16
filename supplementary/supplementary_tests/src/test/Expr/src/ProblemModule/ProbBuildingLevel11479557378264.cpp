@@ -29,12 +29,6 @@ ProbBuildingLevel11479557378264::~ProbBuildingLevel11479557378264()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1479557378266
  */
-
-UtilityFunction1479557378264::UtilityFunction1479557378264()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1479557378264::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1479557378264) ENABLED START*/

@@ -29,12 +29,6 @@ BehaviourTriggerTestPlan1428508768572::~BehaviourTriggerTestPlan1428508768572()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1428508768574
  */
-
-UtilityFunction1428508768572::UtilityFunction1428508768572()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1428508768572::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1428508768572) ENABLED START*/

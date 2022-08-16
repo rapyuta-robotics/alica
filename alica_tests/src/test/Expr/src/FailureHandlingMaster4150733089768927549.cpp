@@ -31,12 +31,6 @@ FailureHandlingMaster4150733089768927549::~FailureHandlingMaster4150733089768927
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 722203880690238135
  */
-
-UtilityFunction4150733089768927549::UtilityFunction4150733089768927549()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction4150733089768927549::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(4150733089768927549) ENABLED START*/

@@ -31,12 +31,6 @@ PlanB1629895853508::~PlanB1629895853508()
 /**
  * Task: SchedulerTestEntrypoint  -> EntryPoint-ID: 1629896055805
  */
-
-UtilityFunction1629895853508::UtilityFunction1629895853508()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1629895853508::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1629895853508) ENABLED START*/

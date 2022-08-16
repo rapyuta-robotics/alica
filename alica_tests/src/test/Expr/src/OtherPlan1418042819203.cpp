@@ -32,12 +32,6 @@ OtherPlan1418042819203::~OtherPlan1418042819203()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1418042819206
  */
-
-UtilityFunction1418042819203::UtilityFunction1418042819203()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1418042819203::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418042819203) ENABLED START*/

@@ -35,12 +35,6 @@ MasterSyncTransition1418825395939::~MasterSyncTransition1418825395939()
  * Task: AttackTask  -> EntryPoint-ID: 1418825395941
  * Task: DefaultTask  -> EntryPoint-ID: 1418825402617
  */
-
-UtilityFunction1418825395939::UtilityFunction1418825395939()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1418825395939) ENABLED START*/

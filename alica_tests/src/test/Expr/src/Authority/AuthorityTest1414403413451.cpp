@@ -34,12 +34,6 @@ AuthorityTest1414403413451::~AuthorityTest1414403413451()
  * Task: DefaultTask  -> EntryPoint-ID: 1414403429951
  * Task: AttackTask  -> EntryPoint-ID: 1414403522424
  */
-
-UtilityFunction1414403413451::UtilityFunction1414403413451()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1414403413451::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1414403413451) ENABLED START*/

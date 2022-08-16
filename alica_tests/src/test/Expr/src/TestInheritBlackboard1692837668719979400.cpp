@@ -29,12 +29,6 @@ TestInheritBlackboard1692837668719979400::~TestInheritBlackboard1692837668719979
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 58084702421574700
  */
-
-UtilityFunction1692837668719979400::UtilityFunction1692837668719979400()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979400::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1692837668719979400) ENABLED START*/

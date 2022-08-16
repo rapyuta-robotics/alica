@@ -29,12 +29,6 @@ TestTracingSubPlan1482512794732634139::~TestTracingSubPlan1482512794732634139()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1733191353578191428
  */
-
-UtilityFunction1482512794732634139::UtilityFunction1482512794732634139()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1482512794732634139::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1482512794732634139) ENABLED START*/

@@ -38,8 +38,6 @@ private:
 
 class UtilityFunction1524452793378 : public BasicUtilityFunction
 {
-public:
-    UtilityFunction1524452793378();
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
 class RunTimeCondition1524453266123 : public DomainCondition

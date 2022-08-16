@@ -30,12 +30,6 @@ BehaviorSuccessSpamMaster1522377375148::~BehaviorSuccessSpamMaster1522377375148(
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1522377375150
  */
-
-UtilityFunction1522377375148::UtilityFunction1522377375148()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1522377375148) ENABLED START*/

@@ -32,12 +32,6 @@ AdjacentSuccessSubPlan1682631238618360548::~AdjacentSuccessSubPlan16826312386183
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 3470417373268048093
  */
-
-UtilityFunction1682631238618360548::UtilityFunction1682631238618360548()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1682631238618360548) ENABLED START*/

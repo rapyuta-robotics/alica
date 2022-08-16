@@ -29,12 +29,6 @@ GSolverMaster1417423751087::~GSolverMaster1417423751087()
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1417423751089
  */
-
-UtilityFunction1417423751087::UtilityFunction1417423751087()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1417423751087::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1417423751087) ENABLED START*/

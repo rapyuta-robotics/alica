@@ -31,12 +31,6 @@ SchedulingTestPlan31613378433623::~SchedulingTestPlan31613378433623()
 /**
  * Task: SchedulerTestSubPlanEntrypoint  -> EntryPoint-ID: 1613378578364
  */
-
-UtilityFunction1613378433623::UtilityFunction1613378433623()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1613378433623::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1613378433623) ENABLED START*/

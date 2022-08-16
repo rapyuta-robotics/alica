@@ -43,12 +43,6 @@ bool RunTimeCondition1524453470580::evaluate(std::shared_ptr<RunningPlan> rp, co
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 1524452759601
  */
-
-UtilityFunction1524452759599::UtilityFunction1524452759599()
-        : BasicUtilityFunction()
-{
-}
-
 std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunction(Plan* plan)
 {
     /*PROTECTED REGION ID(1524452759599) ENABLED START*/
