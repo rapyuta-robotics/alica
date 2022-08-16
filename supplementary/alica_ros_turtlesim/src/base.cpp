@@ -5,7 +5,6 @@
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
-#include <engine/logging/AlicaDefaultLogger.h>
 
 #include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>

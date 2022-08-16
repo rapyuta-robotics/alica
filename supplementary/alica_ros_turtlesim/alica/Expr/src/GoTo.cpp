@@ -18,7 +18,6 @@ GoTo::GoTo(BehaviourContext& context)
 {
     /*PROTECTED REGION ID(con4054297592460872311) ENABLED START*/
     // Add additional options here
-    _query = std::make_unique<alica::Query>();
     /*PROTECTED REGION END*/
 }
 GoTo::~GoTo()
@@ -31,7 +30,7 @@ void GoTo::run(void* msg)
 {
     /*PROTECTED REGION ID(run4054297592460872311) ENABLED START*/
     // solve constraints and get value
-    if (!_query->getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
+    if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
         std::cout << getName() << " - Solution to query not found." << std::endl;
         return;
     }
@@ -45,9 +44,9 @@ void GoTo::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters4054297592460872311) ENABLED START*/
     // Add additional options here
-    _query->clearDomainVariables();
-    _query->addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "x"));
-    _query->addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "y"));
+    _query.clearDomainVariables();
+    _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "x"));
+    _query.addDomainVariable(getEngine()->getTeamManager().getDomainVariable(getOwnId(), "y"));
 
     /*PROTECTED REGION END*/
 }
