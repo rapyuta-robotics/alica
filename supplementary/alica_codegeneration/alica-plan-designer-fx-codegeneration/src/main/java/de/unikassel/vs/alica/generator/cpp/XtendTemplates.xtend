@@ -1086,7 +1086,6 @@ namespace alica
 * Task: «entryPoint.task.name»  -> EntryPoint-ID: «entryPoint.id»
 «ENDFOR»
 */
-
 std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(Plan* plan)
 {
    /*PROTECTED REGION ID(«plan.id») ENABLED START*/
