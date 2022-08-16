@@ -396,15 +396,6 @@ void PlanBase::setLoopInterval(AlicaTime loopInterval)
     _loopInterval = loopInterval;
 }
 
-std::condition_variable* PlanBase::getStepModeCV()
-{
-    _stepCalled = true;
-    if (!_stepEngine) {
-        return nullptr;
-    }
-    return &_stepModeCV;
-}
-
 /**
  * Returns the deepest ALICA node
  */
@@ -415,7 +406,13 @@ const RunningPlan* PlanBase::getDeepestNode() const
 
 void PlanBase::stepNotify()
 {
-    getStepModeCV()->notify_all();
+    _stepCalled = true;
+    if (!_stepEngine) {
+        return;
+    }
+    _stepModeCV.notify_all();
+
+    // getStepModeCV()->notify_all();
 }
 
 } // namespace alica
