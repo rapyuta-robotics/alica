@@ -22,7 +22,6 @@
 namespace alica
 {
 class AbstractPlan;
-class AlicaEngine;
 class BasicBehaviour;
 class BasicPlan;
 class Configuration;
@@ -41,6 +40,10 @@ class SimplePlanTree;
 class Blackboard;
 class KeyMapping;
 class IAlicaWorldModel;
+class RuntimePlanFactory;
+class RuntimeBehaviourFactory;
+class VariableSyncModule;
+class ISolverBase;
 
 struct PlanStateTriple
 {
@@ -99,10 +102,22 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(AlicaEngine* ae, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration);
+    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+            const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+            const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+            const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+            const Plan* plan, const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+            const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+            const PlanType* pt, const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+            const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -215,8 +230,17 @@ public:
     AgentId getOwnID() const;
     bool getParameter(const std::string& key, std::string& valueOut) const;
     const Configuration* getConfiguration() const;
-    AlicaEngine* getAlicaEngine() const { return _ae; }
     int64_t getParentWrapperId(const RunningPlan* rp) const;
+    const AlicaClock& getAlicaClock() const { return _clock; };
+    VariableSyncModule& editResultStore() const { return _resultStore; }
+
+    template <class SolverType>
+    SolverType& getSolver() const;
+
+    template <class SolverType>
+    bool existSolver() const;
+
+    TeamManager& getTeamManager() const;
 
 private:
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
@@ -240,13 +264,34 @@ private:
     const bool _behaviour; // TODO: get rid of this, the behaviour pointer should not be null for behaviors (currently it can be)
 
     // engine Pointer
-    AlicaEngine* const _ae;
+    const AlicaClock& _clock;
+    IAlicaWorldModel* _worldModel;
+    const std::unique_ptr<RuntimePlanFactory>& _runTimePlanFactory;
+    TeamObserver& _teamObserver;
+    TeamManager& _teamManager;
+    VariableSyncModule& _resultStore;
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
 
     // iffy stuff
     std::map<const AbstractPlan*, int> _failedSubPlans;
 
     mutable std::mutex _accessMutex;
 };
+
+template <class SolverType>
+SolverType& RunningPlan::getSolver() const
+{
+    auto cit = _solvers.find(typeid(SolverType).hash_code());
+    assert(cit != _solvers.end());
+    return static_cast<SolverType&>(*(cit->second));
+}
+
+template <class SolverType>
+bool RunningPlan::existSolver() const
+{
+    auto cit = _solvers.find(typeid(SolverType).hash_code());
+    return (cit != _solvers.end());
+}
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
 

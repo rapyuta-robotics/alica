@@ -1,7 +1,6 @@
 #include "engine/RunningPlan.h"
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
@@ -9,6 +8,7 @@
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
 #include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"
@@ -54,12 +54,21 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+        const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
+        , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -72,38 +81,65 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Plan* plan, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+        const Plan* plan, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
+        , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(nullptr)
         , _behaviour(false)
         , _assignment(plan)
-        , _cycleManagement(ae, this)
-        , _basicPlan(ae->getRuntimePlanFactory().create(plan->getId(), plan))
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
+        , _basicPlan(runTimePlanFactory->create(plan->getId(), plan))
         , _parent(nullptr)
         , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const PlanType* pt, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
+        const PlanType* pt, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
+        , _resultStore(resultStore)
+        , _solvers(solvers)
         , _planType(pt)
         , _behaviour(false)
         , _assignment()
-        , _cycleManagement(ae, this)
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
 }
 
-RunningPlan::RunningPlan(AlicaEngine* ae, const Behaviour* b, const Configuration* configuration)
-        : _ae(ae)
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
+        : _clock(clock)
+        , _worldModel(worldModel)
+        , _runTimePlanFactory(runTimePlanFactory)
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _planType(nullptr)
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(ae->getRuntimeBehaviourFactory().create(b->getId(), b))
-        , _cycleManagement(ae, this)
+        , _basicBehaviour(runTimeBehaviourFactory->create(b->getId(), b))
+        , _resultStore(resultStore)
+        , _solvers(solvers)
+        , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -189,7 +225,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this, _ae->getWorldModel());
+        return preCondition->evaluate(*this, _worldModel);
     } catch (const std::exception& e) {
         ALICA_ERROR_MSG("Exception in precondition: " << e.what());
         return false;
@@ -218,7 +254,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this, _ae->getWorldModel());
+        bool ret = runtimeCondition->evaluate(*this, _worldModel);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
@@ -280,11 +316,11 @@ void RunningPlan::printRecursive() const
 void RunningPlan::usePlan(const AbstractPlan* plan)
 {
     if (_activeTriple.abstractPlan != plan) {
-        _status.planStartTime = _ae->getAlicaClock().now();
+        _status.planStartTime = _clock.now();
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
-        _basicPlan = _ae->getRuntimePlanFactory().create(plan->getId(), dynamic_cast<const Plan*>(plan));
+        _basicPlan = _runTimePlanFactory->create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
@@ -306,14 +342,14 @@ void RunningPlan::useState(const State* s)
     if (_activeTriple.state != s) {
         ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
-        _status.stateStartTime = _ae->getAlicaClock().now();
+        _status.stateStartTime = _clock.now();
         if (s != nullptr) {
             if (s->isFailureState()) {
                 _status.status = PlanStatus::Failed;
             } else if (s->isSuccessState()) {
                 AgentId mid = getOwnID();
                 _assignment.editSuccessData(_activeTriple.entryPoint).push_back(mid);
-                _ae->editTeamManager().setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
+                _teamManager.setSuccess(mid, _activeTriple.abstractPlan, _activeTriple.entryPoint);
             }
         }
     }
@@ -478,7 +514,7 @@ void RunningPlan::deactivate()
     if (isBehaviour()) {
         _basicBehaviour->stop();
     } else {
-        _ae->getTeamObserver().notifyRobotLeftPlan(_activeTriple.abstractPlan);
+        _teamObserver.notifyRobotLeftPlan(_activeTriple.abstractPlan);
         _basicPlan->stop();
     }
 }
@@ -543,7 +579,7 @@ bool RunningPlan::amISuccessful() const
     if (isBehaviour()) { // behaviors only have a simple success flag
         return getStatus() == PlanStatus::Success;
     }
-    return getAssignment().isAgentSuccessful(_ae->getTeamManager().getLocalAgentID(), _activeTriple.entryPoint);
+    return getAssignment().isAgentSuccessful(_teamManager.getLocalAgentID(), _activeTriple.entryPoint);
 }
 
 bool RunningPlan::amISuccessfulInAnyChild() const
@@ -727,7 +763,7 @@ bool RunningPlan::recursiveUpdateAssignment(const std::vector<const SimplePlanTr
     aldif.setReason(AllocationDifference::Reason::message);
 
     // Update Success Collection:
-    _ae->editTeamObserver().updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
+    _teamObserver.updateSuccessCollection(static_cast<const Plan*>(getActivePlan()), _assignment.editSuccessData());
 
     // If Assignment Protection Time for newly started plans is over, limit available robots to those in this active
     // state.
@@ -796,7 +832,7 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
 
 AgentId RunningPlan::getOwnID() const
 {
-    return _ae->getTeamManager().getLocalAgentID();
+    return _teamManager.getLocalAgentID();
 }
 
 /**
@@ -903,6 +939,11 @@ int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
     assert(it != wrappers.end());
     int64_t wrapperId = (*it)->getId();
     return wrapperId;
+}
+
+TeamManager& RunningPlan::getTeamManager() const
+{
+    return _teamManager;
 }
 
 } /* namespace alica */

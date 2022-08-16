@@ -1,5 +1,4 @@
 #include "engine/planselector/PlanSelector.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/Output.h"
 #include "engine/PlanBase.h"
@@ -34,12 +33,13 @@ namespace
 constexpr int POOL_SIZE = 10100;
 }
 
-PlanSelector::PlanSelector(AlicaEngine* ae, PlanBase* pb)
+PlanSelector::PlanSelector(const TeamObserver& teamObserver, const TeamManager& teamManager, PlanBase* pb)
         : _pap(POOL_SIZE)
-        , _ae(ae)
+        , _teamManager(teamManager)
+        , _teamObserver(teamObserver)
         , _pb(pb)
 {
-    assert(_ae && _pb);
+    assert(_pb);
 }
 
 PlanSelector::~PlanSelector() {}
@@ -101,7 +101,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // REMOVE EVERY PLAN WITH TOO GREAT MIN CARDINALITY
     for (const Plan* plan : plans) {
         // CHECK: number of robots < minimum cardinality of this plan
-        if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _ae->getTeamObserver().successesInPlan(plan))) {
+        if (plan->getMinCardinality() > (static_cast<int>(robotIDs.size()) + _teamObserver.successesInPlan(plan))) {
             ALICA_DEBUG_MSG("PS: AgentIds: " << robotIDs << " = " << robotIDs.size() << " IDs are not enough for the plan " << plan->getName() << "!");
         } else {
             // this plan was ok according to its cardinalities, so we can add it
@@ -113,7 +113,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         return nullptr;
     }
 
-    TaskAssignmentProblem ta(_ae, newPlanList, robotIDs, _pap, _wm);
+    TaskAssignmentProblem ta(_teamObserver, _teamManager, newPlanList, robotIDs, _pap, _wm);
     const Assignment* oldAss = nullptr;
     RunningPlan* rp;
     if (oldRp == nullptr) {
@@ -137,7 +137,7 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     }
 
     // some variables for the do while loop
-    const AgentId localAgentID = _ae->getTeamManager().getLocalAgentID();
+    const AgentId localAgentID = _teamManager.getLocalAgentID();
     // PLANNINGPARENT
     rp->setParent(planningParent);
     std::vector<RunningPlan*> rpChildren;

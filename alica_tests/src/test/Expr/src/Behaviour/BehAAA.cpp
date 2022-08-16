@@ -3,7 +3,6 @@
 
 /*PROTECTED REGION ID(inccpp1629895901559) ENABLED START*/
 // Add additional includes here
-#include "engine/PlanInterface.h"
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
