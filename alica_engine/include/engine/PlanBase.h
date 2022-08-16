@@ -18,7 +18,6 @@ namespace alica
 {
 class Plan;
 
-class AlicaEngine;
 class TeamObserver;
 class IRoleAssignment;
 class Logger;
@@ -30,10 +29,13 @@ class State;
 class EntryPoint;
 class Assignment;
 class StateCollection;
-class AlicaEngine;
 class PlanType;
 class Plan;
 class IAlicaWorldModel;
+class RuntimePlanFactory;
+class RuntimeBehaviourFactory;
+class VariableSyncModule;
+class ISolverBase;
 /**
  * A PlanBase holds the internal representation of the plan graph and issues all operations on it.
  * It is the most central object within the ALICA Engine.
@@ -41,13 +43,15 @@ class IAlicaWorldModel;
 class PlanBase
 {
 public:
-    PlanBase(AlicaEngine* ae);
+    PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
+            IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
+            const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory,
+            const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
     const RunningPlan* getDeepestNode() const;
-
-    std::condition_variable* getStepModeCV();
 
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
@@ -58,10 +62,11 @@ public:
 
     // factory functions
     RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
+    void stepNotify();
 
 private:
     void run(const Plan* masterPlan);
@@ -73,7 +78,23 @@ private:
      * List of RunningPlans scheduled for out-of-loop evaluation.
      */
 
-    AlicaEngine* _ae;
+    ConfigChangeListener& _configChangeListener;
+    const AlicaClock& _clock;
+    Logger& _logger;
+    const IAlicaCommunication& _communicator;
+    IRoleAssignment& _roleAssignment;
+    SyncModule& _syncModule;
+    AuthorityManager& _authorityManager;
+    TeamObserver& _teamObserver;
+    TeamManager& _teamManager;
+    const PlanRepository& _planRepository;
+    bool _stepEngine;
+    bool _stepCalled;
+    IAlicaWorldModel* _worldModel;
+    const std::unique_ptr<RuntimePlanFactory>& _runTimePlanFactory;
+    const std::unique_ptr<RuntimeBehaviourFactory>& _runTimeBehaviourFactory;
+    VariableSyncModule& _resultStore;
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& _solvers;
     RunningPlan* _rootNode;
 
     const RunningPlan* _deepestNode;
