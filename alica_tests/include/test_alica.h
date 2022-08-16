@@ -90,6 +90,7 @@ protected:
     {
         spinner->stop();
         ac->terminate();
+        AlicaLogger::destroy();
         delete ac;
     }
 
@@ -155,6 +156,7 @@ protected:
     {
         spinner->stop();
         ac->terminate();
+        AlicaLogger::destroy();
         delete ac;
     }
 
@@ -321,6 +323,7 @@ protected:
     {
         spinner->stop();
         ac->terminate();
+        AlicaLogger::destroy();
         delete ac;
     }
 
@@ -367,6 +370,7 @@ protected:
     {
         spinner->stop();
         ac->terminate();
+        AlicaLogger::destroy();
         delete ac;
     }
 
