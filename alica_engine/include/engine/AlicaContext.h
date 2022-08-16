@@ -423,6 +423,9 @@ public:
     template <class LoggerType, class... Args>
     void setLogger(Args&&... args);
 
+    //[[deprecated("temporary method")]]
+    const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& getSolvers() const { return _solvers; };
+
 private:
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;

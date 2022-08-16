@@ -9,11 +9,15 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, AlicaEngine* engine)
-        : _creator(std::move(pc))
-        , _engine(engine)
+RuntimePlanFactory::RuntimePlanFactory(IAlicaWorldModel* wm, AlicaEngine* engine)
+        : _engine(engine)
         , _wm(wm)
 {
+}
+
+void RuntimePlanFactory::init(std::unique_ptr<IPlanCreator>&& pc)
+{
+    _creator = std::move(pc);
 }
 
 std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* planModel) const

@@ -85,7 +85,7 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
 {
     AlicaTime time;
 #ifdef ALICA_DEBUG_ENABLED
-    time = pi->getAlicaEngine()->getAlicaClock().now();
+    time = pi->getAlicaClock().now();
 #endif
 
     clearTemporaries();
@@ -179,7 +179,7 @@ bool Query::collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, 
     Logging::logDebug("Query") << "Number of relevant static variables: " << domOffset;
     Logging::logDebug("Query") << "Number of relevant domain variables: " << _domainVars.getCurrent().size();
     Logging::logDebug("Query") << "Total number of relevant variables: " << _relevantVariables.size();
-    Logging::logDebug("Query") << "PrepTime: " << (pi->getAlicaEngine()->getAlicaClock().now() - time).inMicroseconds() << "us";
+    Logging::logDebug("Query") << "PrepTime: " << (pi->getAlicaClock().now() - time).inMicroseconds() << "us";
 
     return true;
 }

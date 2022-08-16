@@ -1,6 +1,5 @@
 #include "engine/planselector/TaskAssignmentProblem.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
@@ -32,16 +31,16 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(
-        AlicaEngine* engine, const PlanGrp& planList, const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
         , _wm(wm)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
-        , _to(engine->getTeamObserver())
-        , _tm(engine->getTeamManager())
+        , _teamObserver(teamObserver)
+        , _teamManager(teamManager)
         , _pool(pool)
 {
     // sort agent ids ascending
@@ -52,7 +51,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(
 
     for (const Plan* curPlan : _plans) {
         // prep successinfo for this plan
-        _successData.push_back(_to.createSuccessCollection(curPlan));
+        _successData.push_back(_teamObserver.createSuccessCollection(curPlan));
         // allow caching of eval data
         curPlan->getUtilityFunction()->cacheEvalData(_wm);
         // seed the fringe with a partial assignment
@@ -68,7 +67,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(
 void TaskAssignmentProblem::preassignOtherAgents()
 {
     // TODO: fix this call
-    const auto& simplePlanTreeMap = _to.getTeamPlanTrees();
+    const auto& simplePlanTreeMap = _teamObserver.getTeamPlanTrees();
     // this call should only be made before the search starts
     assert(_fringe.size() == _plans.size());
     // ASSIGN PREASSIGNED OTHER ROBOTS
@@ -142,7 +141,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
  */
 bool TaskAssignmentProblem::addAlreadyAssignedRobots(PartialAssignment* pa, const std::map<AgentId, std::unique_ptr<SimplePlanTree>>& simplePlanTreeMap)
 {
-    AgentId ownAgentId = _tm.getLocalAgentID();
+    AgentId ownAgentId = _teamManager.getLocalAgentID();
     bool haveToRevalute = false;
 
     for (int i = 0; i < static_cast<int>(_agents.size()); ++i) {
@@ -177,7 +176,6 @@ std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
     }
     out << "}" << std::endl;
     out << "-------------------------------------------" << std::endl;
-    ;
     return out;
 }
 

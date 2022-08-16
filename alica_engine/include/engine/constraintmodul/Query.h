@@ -1,8 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
-#include "engine/PlanInterface.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/ConditionStore.h"
@@ -28,6 +26,7 @@ namespace alica
 class ProblemPart;
 class RunningPlan;
 class SolverContext;
+class AlicaEngine;
 
 template <class T>
 class BufferedSet
@@ -116,7 +115,7 @@ private:
 template <class SolverType>
 bool Query::existsSolution(const RunningPlan* pi)
 {
-    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getSolver<SolverType>();
 
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
@@ -135,12 +134,12 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     std::vector<std::shared_ptr<ProblemDescriptor>> cds;
     int domOffset;
 
-    if (!pi->getAlicaEngine()->existSolver<SolverType>()) {
+    if (!pi->existSolver<SolverType>()) {
         Logging::logError("Query::getSolution") << "The engine does not have a suitable solver for the given type available.";
         return false;
     }
 
-    SolverType& solver = pi->getAlicaEngine()->getSolver<SolverType>();
+    SolverType& solver = pi->getSolver<SolverType>();
     if (!collectProblemStatement(pi, solver, cds, domOffset)) {
         return false;
     }
@@ -154,7 +153,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
 
     if (ret && solverResult.size() > 0) {
         int i = 0;
-        VariableSyncModule& rs = pi->getAlicaEngine()->editResultStore();
+        VariableSyncModule& rs = pi->editResultStore();
         for (const ResultType& value : solverResult) {
             rs.postResult(_relevantVariables[i]->getId(), Variant(value));
             ++i;

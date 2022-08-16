@@ -8,11 +8,15 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(std::unique_ptr<IBehaviourCreator>&& bc, IAlicaWorldModel* wm, AlicaEngine* engine)
-        : _creator(std::move(bc))
-        , _engine(engine)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(IAlicaWorldModel* wm, AlicaEngine* engine)
+        : _engine(engine)
         , _wm(wm)
 {
+}
+
+void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
+{
+    _creator = std::move(bc);
 }
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const

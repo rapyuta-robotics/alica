@@ -1,6 +1,7 @@
 #include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaWorldModel.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
@@ -29,17 +30,18 @@ namespace alica
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(AlicaEngine* ae, PlanBase* pb)
-        : _tm(ae->getTeamManager())
-        , _ps(new PlanSelector(ae, pb))
-        , _log(ae->editLog())
+RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
+        const PlanRepository& planRepository, PlanBase* pb)
+        : _logger(log)
+        , _syncModule(syncModule)
+        , _teamManager(teamManager)
         , _pb(pb)
-        , _sm(ae->editSyncModul())
+        , _ps(std::make_unique<PlanSelector>(teamObserver, teamManager, pb))
         , _changeOccurred(true)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
-    ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     assert(_ps && _pb);
 }
 
@@ -74,11 +76,11 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
     main->setAllocationNeeded(true);
 
     const EntryPoint* defep = masterPlan->getEntryPoints()[0];
-    ActiveAgentIdView agents = _tm.getActiveAgentIds();
+    ActiveAgentIdView agents = _teamManager.getActiveAgentIds();
     main->editAssignment().setAllToInitialState(agents.begin(), agents.end(), defep);
     main->activate();
     main->useEntryPoint(defep);
-    _log.eventOccurred("Init");
+    _logger.eventOccurred("Init");
     return main;
 }
 
@@ -196,7 +198,7 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
                                << " threshold " << p->getUtilityThreshold() << "\n"
                                << "DynAlloc in " << p->getName();
 
-        _log.eventOccurred("DynAlloc(", p->getName(), ")");
+        _logger.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -218,7 +220,7 @@ PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 
     if (r.getCycleManagement().isOverridden()) {
         if (r.editCycleManagement().applyAssignment()) {
-            _log.eventOccurred("AuthorityOverride(", r.getActivePlan()->getName(), ")");
+            _logger.eventOccurred("AuthorityOverride(", r.getActivePlan()->getName(), ")");
             Logging::logDebug("RB") << "Authorative set assignment of " << r.getActivePlan()->getName() << " is:" << r.getAssignment();
             return PlanChange::InternalChange;
         }
@@ -249,7 +251,7 @@ PlanChange RuleBook::planAbortRule(RunningPlan& r)
         Logging::logDebug("RB") << "PlanAbort RP \n" << r;
         Logging::logDebug("RB") << "PlanAbort " << r.getActivePlan()->getName();
         r.addFailure();
-        _log.eventOccurred("PAbort(", r.getActivePlan()->getName(), ")");
+        _logger.eventOccurred("PAbort(", r.getActivePlan()->getName(), ")");
         return PlanChange::FailChange;
     }
     return PlanChange::NoChange;
@@ -292,7 +294,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
 
     Logging::logDebug("RB") << "PlanRedoRule executed for " << r.getActivePlan()->getName();
 
-    _log.eventOccurred("PRedo(", r.getActivePlan()->getName(), ")");
+    _logger.eventOccurred("PRedo(", r.getActivePlan()->getName(), ")");
     return PlanChange::InternalChange;
 }
 
@@ -326,7 +328,7 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
 
     Logging::logDebug("RB") << "PlanReplace" << r.getActivePlan()->getName();
 
-    _log.eventOccurred("PReplace(", r.getActivePlan()->getName(), ")");
+    _logger.eventOccurred("PReplace(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
 }
 /**
@@ -352,7 +354,7 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 
     Logging::logDebug("RB") << "PlanPropagation " << r.getActivePlan()->getName();
 
-    _log.eventOccurred("PProp(", r.getActivePlan()->getName(), ")");
+    _logger.eventOccurred("PProp(", r.getActivePlan()->getName(), ")");
     return PlanChange::FailChange;
 }
 
@@ -390,7 +392,7 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     Logging::logDebug("RB") << "PlanAlloc " << rp.getActivePlan()->getName();
 
     if (!children.empty()) {
-        _log.eventOccurred("PAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
+        _logger.eventOccurred("PAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -422,14 +424,14 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 
         r.setAllocationNeeded(true);
         r.editAssignment().clear();
-        ActiveAgentIdView agents = _tm.getActiveAgentIds();
+        ActiveAgentIdView agents = _teamManager.getActiveAgentIds();
         r.editAssignment().setAllToInitialState(agents.begin(), agents.end(), ep);
         r.useState(ep->getState());
         r.clearFailedChildren();
 
         Logging::logDebug("RB") << "PlanTopFail " << r.getActivePlan()->getName();
 
-        _log.eventOccurred("TopFail");
+        _logger.eventOccurred("TopFail");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -475,7 +477,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     r.moveState(nextState);
 
     r.setAllocationNeeded(true);
-    _log.eventOccurred("Transition(", r.getActivePlan()->getName(), " to State ", r.getActiveState()->getName(), ")");
+    _logger.eventOccurred("Transition(", r.getActivePlan()->getName(), " to State ", r.getActiveState()->getName(), ")");
     if (r.getActiveState()->isSuccessState())
         return PlanChange::SuccesChange;
     else if (r.getActiveState()->isFailureState())
@@ -505,7 +507,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
         if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_sm.isTransitionSuccessfullySynchronised(t)) {
+        if (_syncModule.isTransitionSuccessfullySynchronised(t)) {
             if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
@@ -514,11 +516,11 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
                 break;
             } else {
                 // adds a new synchronisation process or updates existing
-                _sm.setSynchronisation(t, false);
+                _syncModule.setSynchronisation(t, false);
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _sm.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
+            _syncModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {
@@ -529,7 +531,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
     rp.setAllocationNeeded(true);
 
     Logging::logDebug("RB") << "Follow synchronised transition in plan " << rp.getActivePlan()->getName();
-    _log.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
+    _logger.eventOccurred("SynchTrans(", rp.getActivePlan()->getName(), ")");
 
     if (rp.getActiveState()->isSuccessState())
         return PlanChange::SuccesChange;

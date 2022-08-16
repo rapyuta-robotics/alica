@@ -1,7 +1,6 @@
 #include <alica_tests/PlanBA1629895873188.h>
 /*PROTECTED REGION ID(eph1629895873188) ENABLED START*/
 // Add additional options here
-#include "engine/PlanInterface.h"
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
