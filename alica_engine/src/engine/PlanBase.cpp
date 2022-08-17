@@ -379,7 +379,6 @@ RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configu
     return _runningPlans.back().get();
 }
 
-
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
