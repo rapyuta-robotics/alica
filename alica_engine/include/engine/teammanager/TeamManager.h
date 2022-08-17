@@ -96,7 +96,6 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
-    ConfigChangeListener& _configChangeListener;
     const ModelManager& _modelManager;
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;

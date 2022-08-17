@@ -27,8 +27,7 @@ using std::pair;
 
 TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
         const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
-        : _configChangeListener(configChangeListener)
-        , _logger(logger)
+        : _logger(logger)
         , _roleAssignment(roleAssigment)
         , _communicator(communicator)
         , _clock(clock)
@@ -37,8 +36,8 @@ TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& l
         , _me(_tm.editLocalAgent())
 {
     auto reloadFunctionPtr = std::bind(&TeamObserver::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 };
 
 TeamObserver::~TeamObserver() {}
@@ -132,8 +131,7 @@ void TeamObserver::close()
  */
 void TeamObserver::doBroadCast(const IdGrp& msg) const
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages) {
+    if (!_maySendMessages) {
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();

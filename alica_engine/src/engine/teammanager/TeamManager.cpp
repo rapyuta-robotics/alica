@@ -4,6 +4,7 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
+#include "engine/PlanRepository.h"
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"

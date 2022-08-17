@@ -61,7 +61,7 @@ private:
     const PlanRepository& _planRepository;
     TeamManager& _tm;
     Agent* _me;
-
+    bool _maySendMessages;
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;
 
