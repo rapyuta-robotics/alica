@@ -51,7 +51,6 @@ private:
     };
     bool detectAllocationCycle();
 
-    ConfigChangeListener& _configChangeListener;
     const AlicaClock& _clock;
     const TeamManager& _teamManager;
     const PlanRepository& _planRepository;

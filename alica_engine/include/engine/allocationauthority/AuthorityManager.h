@@ -36,7 +36,6 @@ private:
     bool authorityMatchesPlan(const AllocationAuthorityInfo& aai, const RunningPlan& p) const;
 
     std::vector<AllocationAuthorityInfo> _queue;
-    ConfigChangeListener& _configChangeListener;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     TeamManager& _tm;

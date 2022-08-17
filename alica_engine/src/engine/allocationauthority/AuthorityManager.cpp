@@ -22,14 +22,13 @@ namespace alica
 AuthorityManager::AuthorityManager(
         ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager)
         : _localAgentID(InvalidAgentID)
-        , _configChangeListener(configChangeListener)
         , _communicator(communicator)
         , _clock(clock)
         , _tm(teamManager)
 {
     auto reloadFunctionPtr = std::bind(&AuthorityManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 AuthorityManager::~AuthorityManager() {}

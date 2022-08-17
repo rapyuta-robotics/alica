@@ -33,8 +33,7 @@ using std::endl;
  */
 RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,
         const PlanRepository& planRepository, PlanBase* pb)
-        : _configChangeListener(configChangeListener)
-        , _logger(log)
+        : _logger(log)
         , _synchModule(synchModule)
         , _teamManager(teamManager)
         , _pb(pb)
@@ -42,8 +41,8 @@ RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, Sync
         , _changeOccurred(true)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     assert(_ps && _pb);
 }
 

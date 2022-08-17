@@ -48,7 +48,6 @@ public:
     void init(const IAlicaWorldModel* wm);
 
 private:
-    ConfigChangeListener& _configChangeListener;
     Logger& _logger;
     SyncModule& _synchModule;
     const TeamManager& _teamManager;
