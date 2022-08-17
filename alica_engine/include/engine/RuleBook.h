@@ -22,7 +22,6 @@ class EntryPoint;
 class ConditionStore;
 class CycleManager;
 class UtilityFunction;
-class AlicaEngine;
 class TeamObserver;
 class TeamManager;
 class IAlicaWorldModel;
@@ -35,7 +34,7 @@ class PlanRepository;
 class RuleBook
 {
 public:
-    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,
+    RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
             const PlanRepository& planRepository, PlanBase* pb);
     ~RuleBook();
     bool hasChangeOccurred() const { return _changeOccurred; }
@@ -49,7 +48,7 @@ public:
 
 private:
     Logger& _logger;
-    SyncModule& _synchModule;
+    SyncModule& _syncModule;
     const TeamManager& _teamManager;
     std::unique_ptr<PlanSelector> _ps;
     PlanBase* _pb;

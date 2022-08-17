@@ -28,22 +28,22 @@ namespace alica
  * @param masterplan A Plan
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
-        IRoleAssignment& roleAssignment, SyncModule& synchModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
+        const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory,
+        const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
         , _logger(log)
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
-        , _synchModule(synchModule)
+        , _syncModule(syncModule)
         , _authorityManager(authorityManager)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
         , _planRepository(planRepository)
         , _stepEngine(stepEngine)
-        , _stepCalled(stepCalled)
+        , _stepCalled(false)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _runTimeBehaviourFactory(runTimeBehaviourFactory)
@@ -54,7 +54,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(configChangeListener, log, synchModule, teamObserver, teamManager, planRepository, this)
+        , _ruleBook(configChangeListener, log, syncModule, teamObserver, teamManager, planRepository, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -164,11 +164,11 @@ void PlanBase::run(const Plan* masterPlan)
 
         // Send tick to other modules
         //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
-        _teamObserver.tick(_rootNode);
-        _roleAssignment.tick();
-        _synchModule.tick();
-        _authorityManager.tick(_rootNode);
-        _teamManager.tick();
+        to.tick(_rootNode);
+        ra.tick();
+        sm.tick();
+        auth.tick(_rootNode);
+        tm.tick();
 
         if (_rootNode == nullptr) {
             _rootNode = _ruleBook.initialisationRule(masterPlan);
@@ -260,7 +260,7 @@ void PlanBase::run(const Plan* masterPlan)
 
         log.iterationEnds(_rootNode);
 
-        //_ae->iterationComplete();
+        //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
 
         now = _clock.now();
 
@@ -371,17 +371,19 @@ RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* co
             _resultStore, _solvers, plan, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
+
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _runTimeBehaviourFactory, _resultStore, _solvers, b, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, nullptr, _teamObserver, _teamManager, _planRepository,
+            _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
+
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, pt, configuration));
+            _resultStore, _solvers, planType, configuration));
     return _runningPlans.back().get();
 }
 
@@ -395,20 +397,23 @@ void PlanBase::setLoopInterval(AlicaTime loopInterval)
     _loopInterval = loopInterval;
 }
 
-std::condition_variable* PlanBase::getStepModeCV()
-{
-    if (!_stepEngine) {
-        return nullptr;
-    }
-    return &_stepModeCV;
-}
-
 /**
  * Returns the deepest ALICA node
  */
 const RunningPlan* PlanBase::getDeepestNode() const
 {
     return _deepestNode;
+}
+
+void PlanBase::stepNotify()
+{
+    _stepCalled = true;
+    if (!_stepEngine) {
+        return;
+    }
+    _stepModeCV.notify_all();
+
+    // getStepModeCV()->notify_all();
 }
 
 } // namespace alica

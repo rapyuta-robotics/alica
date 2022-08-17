@@ -16,7 +16,6 @@ namespace alica
 class RunningPlan;
 class PlanRepository;
 class Assignment;
-class AlicaEngine;
 class ConfigChangeListener;
 class TeamManager;
 

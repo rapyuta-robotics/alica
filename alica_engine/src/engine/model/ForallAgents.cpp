@@ -1,5 +1,4 @@
 #include "engine/model/ForallAgents.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"

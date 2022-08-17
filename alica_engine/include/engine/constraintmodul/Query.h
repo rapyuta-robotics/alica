@@ -1,8 +1,6 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
-#include "engine/PlanInterface.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/ConditionStore.h"
@@ -28,6 +26,7 @@ namespace alica
 class ProblemPart;
 class RunningPlan;
 class SolverContext;
+class AlicaEngine;
 
 template <class T>
 class BufferedSet

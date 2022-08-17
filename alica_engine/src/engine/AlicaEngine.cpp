@@ -104,7 +104,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
     _planFactory->init(std::move(creatorCtx.planCreator));
 
-    _stepCalled = false;
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);
@@ -190,26 +189,6 @@ void AlicaEngine::iterationComplete()
 int AlicaEngine::getVersion() const
 {
     return _ctx.getVersion();
-}
-
-void AlicaEngine::setStepCalled(bool stepCalled)
-{
-    _stepCalled = stepCalled;
-}
-
-bool AlicaEngine::getStepCalled() const
-{
-    return _stepCalled;
-}
-
-bool AlicaEngine::getStepEngine() const
-{
-    return _stepEngine;
-}
-
-void AlicaEngine::setStepEngine(bool stepEngine)
-{
-    _stepEngine = stepEngine;
 }
 
 const YAML::Node& AlicaEngine::getConfig() const

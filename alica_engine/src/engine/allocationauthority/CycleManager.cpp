@@ -1,8 +1,10 @@
 #include "engine/allocationauthority/CycleManager.h"
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
+#include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/EntryPointRobots.h"
