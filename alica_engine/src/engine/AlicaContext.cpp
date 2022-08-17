@@ -101,7 +101,7 @@ void AlicaContext::stepEngine()
         if (std::chrono::system_clock::now() > start + timeout) {
             throw std::runtime_error("Got stuck trying to step engine");
         }
-    } while (!_engine->editPlanBase().isWaiting()); //<<<-----edit instedad of get
+    } while (!_engine->getPlanBase().isWaiting());
 }
 
 AgentId AlicaContext::getLocalAgentId() const

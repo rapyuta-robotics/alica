@@ -141,6 +141,7 @@ private:
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
 
