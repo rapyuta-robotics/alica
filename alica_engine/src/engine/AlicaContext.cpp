@@ -41,6 +41,10 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
+    if (!Logging::isInitialized()) {
+        setLogger<AlicaDefaultLogger>();
+    }
+    
     if (_initialized) {
         Logging::logWarn("AC") << "Context already initialized.";
         return -1;
@@ -51,10 +55,6 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     }
     if (!_timerFactory) {
         AlicaEngine::abort("AC: TimerFactory not set");
-    }
-
-    if (!Logging::isInitialized()) {
-        setLogger<AlicaDefaultLogger>();
     }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
