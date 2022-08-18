@@ -25,7 +25,6 @@ public:
     }
 
     static IAlicaLogger* instance();
-    static void destroy();
     static bool isInitialized();
 
 private:

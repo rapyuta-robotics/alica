@@ -14,14 +14,6 @@ IAlicaLogger* AlicaLogger::instance()
     return _logger.get();
 }
 
-void AlicaLogger::destroy()
-{
-    if (!_logger) {
-        return;
-    }
-    _logger.reset();
-}
-
 bool AlicaLogger::isInitialized()
 {
     return _logger != nullptr;
