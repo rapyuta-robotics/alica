@@ -44,7 +44,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     if (!Logging::isInitialized()) {
         setLogger<AlicaDefaultLogger>();
     }
-    
+
     if (_initialized) {
         Logging::logWarn("AC") << "Context already initialized.";
         return -1;
