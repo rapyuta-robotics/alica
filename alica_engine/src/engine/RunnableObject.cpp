@@ -40,8 +40,8 @@ void RunnableObject::stop()
 
     stopRunCalls();
     doTerminate();
-    cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+    cleanupBlackboard();
 
     _started = false;
 }
@@ -55,9 +55,10 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
+    setupBlackboard();
+    // setup the trace context after setting up the blackboard so that the blackboard can be used for setting up custom tracing
     // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
     _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _engine->getTraceFactory());
-    setupBlackboard();
     doInit();
     scheduleRunCalls();
 }
