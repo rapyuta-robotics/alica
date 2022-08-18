@@ -32,7 +32,8 @@ services:
       - SOCIAL_APP_SECRET=${SOCIAL_APP_SECRET}
       - OAUTH_APPLICATION_URL=${OAUTH_APPLICATION_URL:-http://localhost:3030}
       - NATIVE_MODE=false
-
+    volumes:
+      - ./defaults:/code/coreplans/defaults
     command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - ${BACKEND_PORT:-9000}:8000

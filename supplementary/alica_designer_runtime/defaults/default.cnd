@@ -1,0 +1,36 @@
+{
+  "id": 0,
+  "name": "conditions",
+  "comment": "",
+  "relativeDirectory": "conditions",
+  "conditions": [
+    {
+      "blackboard": [],
+      "comment": "AnyChildSuccess",
+      "id": 1,
+      "name": "AnyChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildSuccess",
+      "id": 2,
+      "name": "AllChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AnyChildFailure",
+      "id": 3,
+      "name": "AnyChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildFailure",
+      "id": 4,
+      "name": "AllChildFailure",
+      "relativeDirectory": "conditions"
+    }
+  ]
+}
