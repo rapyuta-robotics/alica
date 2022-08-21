@@ -40,8 +40,8 @@ void RunnableObject::stop()
 
     stopRunCalls();
     doTerminate();
-    cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+    cleanupBlackboard();
 
     _started = false;
 }
@@ -57,6 +57,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
+
     doInit();
     scheduleRunCalls();
 }

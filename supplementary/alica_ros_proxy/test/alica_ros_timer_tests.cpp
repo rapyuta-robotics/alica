@@ -63,7 +63,7 @@ TEST(SyncStopTimerRosTest, CbFrequencyCheck)
         double period = i / 1000.0, totDuration = 1.1, sleepBuffer = 0.1 * totDuration;
         int expCbCnt = totDuration / period;
         expCbCnt = expCbCnt - 0.2 * expCbCnt;
-        double periodUpperLimit = 0.3 * period + period, periodLowerLimit = period - 0.1 * period;
+        double periodUpperLimit = 0.3 * period + period, periodLowerLimit = period - 0.2 * period;
 
         ros::Time lastCbTime;
         bool freqLess = false, freqMore = false;
