@@ -67,7 +67,7 @@ private:
     AlicaTime _overrideWaitInterval;
     AlicaTime _overrideShoutTime;
     CycleState _state;
-    RunningPlan* _rp;
+    RunningPlan* _runningPlan;
     AllocationAuthorityInfo _fixedAllocation;
 };
 

@@ -13,7 +13,6 @@ namespace alica
 {
 class Transition;
 class SynchronisationProcess;
-class AlicaEngine;
 class PlanRepository;
 class Synchronisation;
 struct SyncData;

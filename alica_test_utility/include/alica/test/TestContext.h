@@ -2,7 +2,6 @@
 
 #include <engine/AlicaContext.h>
 
-#include <engine/AlicaEngine.h>
 #include <engine/BasicBehaviour.h>
 #include <engine/PlanRepository.h>
 #include <engine/model/Behaviour.h>

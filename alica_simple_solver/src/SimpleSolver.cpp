@@ -3,7 +3,6 @@
 #include "alica/reasoner/SimpleVariable.h"
 #include "alica_solver_interface/SimpleContext.h"
 
-#include <engine/AlicaEngine.h>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>

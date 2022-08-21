@@ -1,9 +1,11 @@
 #include "engine/TeamObserver.h"
 
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
+#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/containers/PlanTreeInfo.h"

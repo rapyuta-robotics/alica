@@ -1,7 +1,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/AbstractPlan.h"

@@ -4,6 +4,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"

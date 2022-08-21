@@ -1,6 +1,5 @@
 #include "engine/model/TransitionCondition.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/BasicPlan.h"
 #include "engine/RunningPlan.h"
 #include "engine/blackboard/Blackboard.h"

@@ -14,7 +14,7 @@
 namespace alica
 {
 class IAlicaCommunication;
-class AlicaEngine;
+
 /**
  * Manages communication wrt. conflict resolution.
  */

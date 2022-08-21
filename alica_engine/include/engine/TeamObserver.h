@@ -12,7 +12,6 @@ namespace alica
 {
 
 class Logger;
-class AlicaEngine;
 class SuccessCollection;
 class TeamManager;
 class Agent;
