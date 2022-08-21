@@ -6,6 +6,7 @@
 #include <engine/blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
+#include <engine/AlicaEngine.h>
 
 namespace alica
 {
