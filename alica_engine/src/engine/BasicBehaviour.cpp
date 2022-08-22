@@ -1,5 +1,4 @@
 #include "engine/BasicBehaviour.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"

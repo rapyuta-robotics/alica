@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
@@ -28,8 +29,7 @@ using std::to_string;
 
 Logger::Logger(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const TeamObserver& teamObserver,
         const PlanRepository& planRepository, const AlicaClock& clock, const std::string& localAgentName)
-        : _configChangeListener(configChangeListener)
-        , _teamManager(teamManager)
+        : _teamManager(teamManager)
         , _teamObserver(teamObserver)
         , _planRepository(planRepository)
         , _clock(clock)
@@ -42,8 +42,8 @@ Logger::Logger(ConfigChangeListener& configChangeListener, const TeamManager& te
         , _logging(false)
 {
     auto reloadFunctionPtr = std::bind(&Logger::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 Logger::~Logger() {}

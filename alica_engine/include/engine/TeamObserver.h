@@ -12,7 +12,6 @@ namespace alica
 {
 
 class Logger;
-class AlicaEngine;
 class SuccessCollection;
 class TeamManager;
 class Agent;
@@ -54,7 +53,6 @@ private:
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;
 
-    ConfigChangeListener& _configChangeListener;
     Logger& _logger;
     IRoleAssignment& _roleAssignment;
     const IAlicaCommunication& _communicator;
@@ -63,7 +61,6 @@ private:
     TeamManager& _tm;
     Agent* _me;
     bool _maySendMessages;
-
     std::mutex _msgQueueMutex;
     mutable std::mutex _successMarkMutex;
 
