@@ -58,7 +58,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(
                   _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
-        ,_planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
+        , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
                   getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
 {
