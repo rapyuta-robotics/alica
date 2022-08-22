@@ -176,6 +176,7 @@ public:
      * @note Can throw an exception if some necessary configurations dont exist in the config file.
      */
     AlicaContext(const AlicaContextParams& alicaContextParams);
+    AlicaContext(const AlicaContextParams&& alicaContextParams);
 
     /**
      * Destroys AlicaContext object.
@@ -302,6 +303,7 @@ public:
      */
     template <class SolverType>
     SolverType& getSolver() const;
+    ISolverBase& getSolverBase(const std::type_info& solverType) const;
 
     /**
      * Check whether a particular solver is associated with this alica instance.

@@ -1,6 +1,5 @@
 #pragma once
 //#define RS_DEBUG
-#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 
@@ -14,11 +13,12 @@ namespace alica
 class Variable;
 class ResultEntry;
 class IAlicaCommunication;
-class AlicaEngine;
 class IAlicaTimer;
 class AlicaClock;
 class TeamManager;
 class TimerFactory;
+class IAlicaTimerFactory;
+class ConfigChangeListener;
 
 class VariableSyncModule
 {

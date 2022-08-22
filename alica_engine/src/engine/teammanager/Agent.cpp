@@ -1,6 +1,5 @@
 #include "engine/teammanager/Agent.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/collections/SuccessMarks.h"

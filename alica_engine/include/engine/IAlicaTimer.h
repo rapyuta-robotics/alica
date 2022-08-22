@@ -28,7 +28,7 @@ public:
 class IAlicaTimerFactory
 {
 public:
-    virtual std::unique_ptr<IAlicaTimer> createTimer(IAlicaTimer::TimerCb timerCb, AlicaTime period) = 0;
+    virtual std::unique_ptr<IAlicaTimer> createTimer(IAlicaTimer::TimerCb timerCb, AlicaTime period) const = 0;
     virtual ~IAlicaTimerFactory() = default;
 };
 

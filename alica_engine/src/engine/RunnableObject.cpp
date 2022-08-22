@@ -1,7 +1,8 @@
 #include "engine/RunnableObject.h"
-#include "engine/AlicaEngine.h"
 // TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
 #include "engine/BasicPlan.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/RunningPlan.h"
 #include "engine/blackboard/BlackboardUtil.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
@@ -13,7 +14,6 @@ namespace alica
 {
 RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
         : _name(name)
-        , _engine(nullptr)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
@@ -24,7 +24,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
 
 void RunnableObject::sendLogMessage(int level, const std::string& message) const
 {
-    _engine->getCommunicator().sendLogMessage(level, message);
+    _communication->sendLogMessage(level, message);
 }
 
 void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
@@ -55,10 +55,9 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
-    // setup the trace context after setting up the blackboard so that the blackboard can be used for setting up custom tracing
-    // TODO cleanup: pass trace factory in constructor. can't do now as _engine isn't available
-    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _engine->getTraceFactory());
+
     doInit();
     scheduleRunCalls();
 }
@@ -67,7 +66,7 @@ void RunnableObject::scheduleRunCalls()
 {
     // Do not schedule repeatable run job when frequency is 0.
     if (_msInterval > AlicaTime::milliseconds(0)) {
-        _activeRunTimer = _engine->getTimerFactory().createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
+        _activeRunTimer = _timerFactory->createTimer(std::bind(&RunnableObject::runJob, this), _msInterval);
     }
 }
 
@@ -112,6 +111,32 @@ void RunnableObject::runJob()
 {
     _runnableObjectTracer.traceRunCall();
     doRun();
+}
+
+void RunnableObject::setAlicaCommunication(const IAlicaCommunication* communication)
+{
+    _communication = communication;
+}
+void RunnableObject::setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory)
+{
+    _traceFactory = traceFactory;
+}
+void RunnableObject::setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory)
+{
+    _timerFactory = timerFactory;
+}
+void RunnableObject::setPlanBase(PlanBase* planBase)
+{
+    _planBase = planBase;
+}
+void RunnableObject::setTeamManager(const TeamManager* teamManager)
+{
+    _teamManager = teamManager;
+}
+
+const TeamManager& RunnableObject::getTeamManager() const
+{
+    return *_teamManager;
 }
 
 // Tracing methods
@@ -165,4 +190,5 @@ void TraceRunnableObject::traceRunCall()
         _runTraced = true;
     }
 }
+
 } /* namespace alica */
