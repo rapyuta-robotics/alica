@@ -2,6 +2,7 @@
 #include <engine/RuntimeBehaviourFactory.h>
 
 #include "engine/BasicBehaviour.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IBehaviourCreator.h"
 
 #include <alica_common_config/debug_output.h>
@@ -9,8 +10,8 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
-        const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase,
+        const IAlicaCommunication& communication, const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
         : _wm(wm)
         , _teamManager(teamManager)
         , _planBase(planBase)
@@ -18,6 +19,15 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(IAlicaWorldModel* wm, TeamManag
         , _traceFactory(traceFactory)
         , _timerFactory(timerFactory)
 {
+    auto reloadFunctionPtr = std::bind(&RuntimeBehaviourFactory::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
+}
+
+void RuntimeBehaviourFactory::reload(const YAML::Node& config)
+{
+    _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+    std::cerr<<_customerLibraryFolder<<"Library folder"<<std::endl;
 }
 
 void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
@@ -27,7 +37,7 @@ void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel,_customerLibraryFolder};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);

@@ -1,0 +1,18 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1234,
+  "inheritBlackboard": false,
+  "name": "AcmeBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": [],
+  "forceLoad": true,
+  "companyName": "Acme",
+  "libraryName": "alica_customer_library"
+}

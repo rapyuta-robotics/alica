@@ -18,6 +18,12 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
+set(BOOST_MIN_VERSION "1.71.0")
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+
+##Yaml
+find_package(yaml-cpp REQUIRED)
+
 include_directories(include)
 
 catkin_package(
@@ -29,7 +35,11 @@ catkin_package(
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES})
+target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} 
+                                                        Boost::system
+                                                        Boost::filesystem
+                                                        ${CMAKE_DL_LIBS}
+                                                        ${YAML_CPP_LIBRARIES})
 
 if (CATKIN_ENABLE_TESTING)
 
@@ -38,10 +48,11 @@ if (CATKIN_ENABLE_TESTING)
     set(test_supplementary_SOURCES
         src/test_supplementary.cpp
         src/test/test_main.cpp
-        src/test/test_alica_problem_composition.cpp
-        src/test/test_alica_ros_proxy.cpp
-        src/test/test_variable_handling.cpp
-        src/test/test_alica_gsolver_plan.cpp
+        #src/test/test_alica_problem_composition.cpp
+        #src/test/test_alica_ros_proxy.cpp
+        #src/test/test_variable_handling.cpp
+        #src/test/test_alica_gsolver_plan.cpp
+        src/test/test_alica_dynamicloadcreator.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})

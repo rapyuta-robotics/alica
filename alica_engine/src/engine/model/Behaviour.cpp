@@ -18,6 +18,7 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _eventDriven(false)
         , AbstractPlan(ae)
         , _blackboardBlueprint(nullptr)
+        ,_libraryName("alica_customer_library")
 {
 }
 
@@ -30,6 +31,7 @@ Behaviour::Behaviour()
         , _eventDriven(false)
         , AbstractPlan()
         , _blackboardBlueprint(nullptr)
+        ,_libraryName("alica_customer_library")
 {
 }
 
@@ -51,6 +53,7 @@ std::string Behaviour::toString(std::string indent) const
     if (this->_postCondition != nullptr) {
         ss << this->_postCondition->toString(indent + "\t");
     }
+    ss << indent << "\alica_customer_library: " << _libraryName << std::endl;
     ss << indent << "#EndBehaviour" << std::endl;
     return ss.str();
 }
