@@ -10,7 +10,6 @@
 
 namespace alica
 {
-class AlicaEngine;
 struct SolverVar;
 class Variable;
 

@@ -1,6 +1,5 @@
 #include "engine/syncmodule/SynchronisationProcess.h"
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/TeamObserver.h"
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"

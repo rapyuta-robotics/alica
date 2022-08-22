@@ -8,7 +8,7 @@ namespace alica::test
 {
 BasicBehaviour* Util::getBasicBehaviour(alica::AlicaEngine* ae, int64_t behaviourID, [[maybe_unused]] int64_t configurationID)
 {
-    return getBasicBehaviourHelper(ae->getPlanBase().getRootNode(), behaviourID);
+    return getBasicBehaviourHelper(ae->editPlanBase().getRootNode(), behaviourID);
 }
 
 BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t behaviourId)
