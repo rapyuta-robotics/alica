@@ -16,25 +16,32 @@ DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
+    if (context.behaviourModel->getLibraryName() == "") {
+        std::cerr << "Error:"
+                  << "Empty library name for" << context.behaviourModel->getName() << std::endl;
+        return nullptr;
+    }
+
     std::string libraryPath = context.libraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
     if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;
         return nullptr;
-    } else
+    } else {
         std::cerr << "Debug:"
                   << "Lib exixts in this path:" << libraryPath << std::endl;
+    }
 
     typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);
-    std::function<behaviourCreatorType> creator;
-    creator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
-            libraryPath,                                      // path to library
-            context.behaviourModel->getName(),                // symbol to import
-            boost::dll::load_mode::append_decorations         // do append extensions and prefixes
+    std::function<behaviourCreatorType> behaviourCreator;
+    behaviourCreator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
+            libraryPath,                                               // complete path to library also with file name
+            context.behaviourModel->getName(),                         // symbol to import
+            boost::dll::load_mode::append_decorations                  // do append extensions and prefixes
     );
 
-    std::unique_ptr<BasicBehaviour> plugin = creator(context);
+    std::unique_ptr<BasicBehaviour> createdBehaviour = behaviourCreator(context);
 
-    return plugin;
+    return createdBehaviour;
 }
 } // namespace alica
