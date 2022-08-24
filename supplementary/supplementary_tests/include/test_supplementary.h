@@ -2,9 +2,9 @@
 
 #include "ConstraintTestPlanDummySolver.h"
 #include "supplementary_tests/BehaviourCreator.h"
-#include "supplementary_tests/DynamicBehaviourCreator.h"
 #include "supplementary_tests/ConditionCreator.h"
 #include "supplementary_tests/ConstraintCreator.h"
+#include "supplementary_tests/DynamicBehaviourCreator.h"
 #include "supplementary_tests/PlanCreator.h"
 #include "supplementary_tests/TransitionConditionCreator.h"
 #include "supplementary_tests/UtilityFunctionCreator.h"
@@ -201,7 +201,6 @@ protected:
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
 };
-
 
 } // namespace supplementary
 extern std::jmp_buf restore_point;

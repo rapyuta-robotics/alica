@@ -18,7 +18,7 @@ Behaviour::Behaviour(AlicaEngine* ae)
         , _eventDriven(false)
         , AbstractPlan(ae)
         , _blackboardBlueprint(nullptr)
-        ,_libraryName("alica_customer_library")
+        , _libraryName("alica_customer_library")
 {
 }
 
@@ -31,7 +31,7 @@ Behaviour::Behaviour()
         , _eventDriven(false)
         , AbstractPlan()
         , _blackboardBlueprint(nullptr)
-        ,_libraryName("alica_customer_library")
+        , _libraryName("alica_customer_library")
 {
 }
 

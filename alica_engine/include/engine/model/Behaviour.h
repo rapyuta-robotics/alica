@@ -42,7 +42,7 @@ public:
     const PreCondition* getPreCondition() const { return _preCondition; }
     const PostCondition* getPostCondition() const { return _postCondition; }
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
-    std::string getLibraryName() const {return _libraryName;};
+    std::string getLibraryName() const { return _libraryName; };
 
 private:
     friend ModelFactory;
