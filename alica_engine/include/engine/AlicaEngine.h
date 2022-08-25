@@ -48,7 +48,7 @@ public:
     void stepNotify();
 
     // Parameter Access:
-    bool getStepEngine() const;
+    // bool getStepEngine() const;
     bool maySendMessages() const { return _maySendMessages; }
 
     // Module Access:
@@ -93,8 +93,6 @@ public:
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
-    void setStepCalled(bool stepCalled);
-    bool getStepCalled() const;
     void iterationComplete();
     int getVersion() const;
 
@@ -126,9 +124,10 @@ public:
     void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
-    void setStepEngine(bool stepEngine);
+    // void setStepEngine(bool stepEngine);
     void initTransitionConditions(ITransitionConditionCreator* creator);
-    // WARNING: Initialization order dependencies!
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
@@ -162,8 +161,6 @@ private:
     Blackboard _Blackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
-    bool _stepEngine;      /**< Set to have the engine's main loop wait on a signal via MayStep*/
-    bool _stepCalled;      /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 template <typename T>

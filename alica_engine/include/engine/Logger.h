@@ -18,7 +18,6 @@ namespace alica
 class RunningPlan;
 class TeamObserver;
 class EntryPoint;
-class AlicaEngine;
 class TeamManager;
 class ConfigChangeListener;
 class PlanRepository;
@@ -83,7 +82,6 @@ private:
     void evaluationAssignmentsToString(std::stringstream& ss, const RunningPlan& rp);
     std::stringstream& createTreeLog(std::stringstream& ss, const RunningPlan& r);
 
-    ConfigChangeListener& _configChangeListener;
     const TeamManager& _teamManager;
     const TeamObserver& _teamObserver;
     const PlanRepository& _planRepository;

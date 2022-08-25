@@ -18,7 +18,6 @@ namespace alica
 {
 class Plan;
 
-class AlicaEngine;
 class TeamObserver;
 class IRoleAssignment;
 class Logger;
@@ -30,7 +29,6 @@ class State;
 class EntryPoint;
 class Assignment;
 class StateCollection;
-class AlicaEngine;
 class PlanType;
 class Plan;
 class IAlicaWorldModel;
@@ -55,8 +53,6 @@ public:
     PlanSelector* getPlanSelector() const { return _ruleBook.getPlanSelector(); }
     const RunningPlan* getDeepestNode() const;
 
-    std::condition_variable* getStepModeCV();
-
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
@@ -66,10 +62,11 @@ public:
 
     // factory functions
     RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const Behaviour* b, const Configuration* configuration);
-    RunningPlan* makeRunningPlan(const PlanType* pt, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
+    void stepNotify();
 
 private:
     void run(const Plan* masterPlan);

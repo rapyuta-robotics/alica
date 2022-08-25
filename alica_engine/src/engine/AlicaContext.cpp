@@ -25,6 +25,15 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 {
 }
 
+AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
+        : _validTag(ALICA_CTX_GOOD)
+        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
+        , _worldModel(nullptr)
+        , _alicaContextParams(alicaContextParams)
+        , _clock(std::make_unique<AlicaClock>())
+{
+}
+
 AlicaContext::~AlicaContext()
 {
     _validTag = ALICA_CTX_BAD;
@@ -92,7 +101,7 @@ void AlicaContext::stepEngine()
         if (std::chrono::system_clock::now() > start + timeout) {
             throw std::runtime_error("Got stuck trying to step engine");
         }
-    } while (!_engine->editPlanBase().isWaiting()); //<<<-----edit instedad of get
+    } while (!_engine->getPlanBase().isWaiting());
 }
 
 AgentId AlicaContext::getLocalAgentId() const

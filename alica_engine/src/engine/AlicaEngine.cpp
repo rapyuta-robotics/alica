@@ -48,8 +48,8 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
                   getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
-        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
+        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
@@ -61,7 +61,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
                   getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
-
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -104,7 +103,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
     _planFactory->init(std::move(creatorCtx.planCreator));
 
-    _stepCalled = false;
     _roleAssignment->init();
 
     _expressionHandler.attachAll(this, _planRepository, creatorCtx);
@@ -192,26 +190,6 @@ int AlicaEngine::getVersion() const
     return _ctx.getVersion();
 }
 
-void AlicaEngine::setStepCalled(bool stepCalled)
-{
-    _stepCalled = stepCalled;
-}
-
-bool AlicaEngine::getStepCalled() const
-{
-    return _stepCalled;
-}
-
-bool AlicaEngine::getStepEngine() const
-{
-    return _stepEngine;
-}
-
-void AlicaEngine::setStepEngine(bool stepEngine)
-{
-    _stepEngine = stepEngine;
-}
-
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
@@ -235,8 +213,7 @@ void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reload
  */
 void AlicaEngine::stepNotify()
 {
-    setStepCalled(true);
-    _planBase.getStepModeCV()->notify_all();
+    _planBase.stepNotify();
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

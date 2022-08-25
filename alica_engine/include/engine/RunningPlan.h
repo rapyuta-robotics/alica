@@ -22,7 +22,6 @@
 namespace alica
 {
 class AbstractPlan;
-class AlicaEngine;
 class BasicBehaviour;
 class BasicPlan;
 class Configuration;

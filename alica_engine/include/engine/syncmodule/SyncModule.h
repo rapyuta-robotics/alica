@@ -13,7 +13,6 @@ namespace alica
 {
 class Transition;
 class SynchronisationProcess;
-class AlicaEngine;
 class PlanRepository;
 class Synchronisation;
 struct SyncData;
@@ -48,7 +47,6 @@ public:
 private:
     bool _running;
     AgentId _myId;
-    ConfigChangeListener& _configChangeListener;
     const TeamManager& _teamManager;
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;

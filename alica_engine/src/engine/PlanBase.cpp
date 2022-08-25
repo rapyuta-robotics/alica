@@ -4,6 +4,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/Logger.h"
@@ -260,7 +261,7 @@ void PlanBase::run(const Plan* masterPlan)
 
         log.iterationEnds(_rootNode);
 
-        //_ae->iterationComplete();
+        //_ae->iterationComplete(); TODO modify when AlicaEngine::iterationComplete will be written
 
         now = _clock.now();
 
@@ -274,7 +275,8 @@ void PlanBase::run(const Plan* masterPlan)
         if (checkFp) {
             std::queue<RunningPlan*> nextFpEvents;
             {
-                // move fath path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking _loMutex
+                // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
+                // _loMutex
                 std::lock_guard<std::mutex> lock(_lomutex);
                 nextFpEvents.swap(_fpEvents);
             }
@@ -371,10 +373,11 @@ RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* co
             _resultStore, _solvers, plan, configuration));
     return _runningPlans.back().get();
 }
-RunningPlan* PlanBase::makeRunningPlan(const Behaviour* b, const Configuration* configuration)
+
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _runTimeBehaviourFactory, _resultStore, _solvers, b, configuration));
+            _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
 
@@ -395,20 +398,23 @@ void PlanBase::setLoopInterval(AlicaTime loopInterval)
     _loopInterval = loopInterval;
 }
 
-std::condition_variable* PlanBase::getStepModeCV()
-{
-    if (!_stepEngine) {
-        return nullptr;
-    }
-    return &_stepModeCV;
-}
-
 /**
  * Returns the deepest ALICA node
  */
 const RunningPlan* PlanBase::getDeepestNode() const
 {
     return _deepestNode;
+}
+
+void PlanBase::stepNotify()
+{
+    _stepCalled = true;
+    if (!_stepEngine) {
+        return;
+    }
+    _stepModeCV.notify_all();
+
+    // getStepModeCV()->notify_all();
 }
 
 } // namespace alica

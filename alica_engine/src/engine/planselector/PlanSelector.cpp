@@ -1,5 +1,4 @@
 #include "engine/planselector/PlanSelector.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/Output.h"
 #include "engine/PlanBase.h"
@@ -34,7 +33,7 @@ namespace
 constexpr int POOL_SIZE = 10100;
 }
 
-PlanSelector::PlanSelector(const TeamObserver& teamObserver, TeamManager& teamManager, PlanBase* pb)
+PlanSelector::PlanSelector(const TeamObserver& teamObserver, const TeamManager& teamManager, PlanBase* pb)
         : _pap(POOL_SIZE)
         , _teamManager(teamManager)
         , _teamObserver(teamObserver)

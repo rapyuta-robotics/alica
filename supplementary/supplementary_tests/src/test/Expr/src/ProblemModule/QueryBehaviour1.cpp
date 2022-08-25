@@ -44,7 +44,7 @@ void QueryBehaviour1::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1479556104511) ENABLED START*/
     // Add additional options here
-    this->query = make_shared<alica::Query>();
+    this->query = std::make_shared<alica::Query>();
     query->clearStaticVariables();
     query->addStaticVariable(getVariable("QBX"));
     query->addStaticVariable(getVariable("QBY"));

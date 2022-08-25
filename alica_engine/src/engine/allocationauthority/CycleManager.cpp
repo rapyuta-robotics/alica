@@ -1,8 +1,10 @@
 #include "engine/allocationauthority/CycleManager.h"
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
+#include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AllocationDifference.h"
 #include "engine/containers/EntryPointRobots.h"
@@ -25,20 +27,19 @@ using std::mutex;
  * @param p A RunningPlan
  */
 CycleManager::CycleManager(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const TeamManager& teamManager,
-        const PlanRepository& planRepository, RunningPlan* p)
+        const PlanRepository& planRepository, RunningPlan* rp)
         : _state(CycleState::observing)
-        , _configChangeListener(configChangeListener)
         , _clock(clock)
         , _teamManager(teamManager)
         , _planRepository(planRepository)
         , _fixedAllocation()
         , _newestAllocationDifference(0)
+        , _runningPlan(rp)
+        , _myID(_teamManager.getLocalAgentID())
 {
-    _rp = p;
-    _myID = _teamManager.getLocalAgentID();
     auto reloadFunctionPtr = std::bind(&CycleManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 CycleManager::~CycleManager() {}
@@ -68,11 +69,11 @@ void CycleManager::update()
     if (!_enabled) {
         return;
     }
-    if (_rp->isBehaviour()) {
+    if (_runningPlan->isBehaviour()) {
         return;
     }
 
-    const Plan* plan = dynamic_cast<const Plan*>(_rp->getActivePlan());
+    const Plan* plan = dynamic_cast<const Plan*>(_runningPlan->getActivePlan());
 
     if (_state == CycleState::observing) {
         if (detectAllocationCycle()) {
@@ -174,7 +175,7 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
         return;
     }
 
-    if (_rp->isBehaviour()) {
+    if (_runningPlan->isBehaviour()) {
         return;
     }
 
@@ -185,16 +186,16 @@ void CycleManager::handleAuthorityInfo(const AllocationAuthorityInfo& aai)
     if (rid < _myID) {
         std::cout << "CM: Rcv: Rejecting Authority!" << std::endl;
         if (_state != CycleState::overriding) {
-            ALICA_DEBUG_MSG("CM: Overriding assignment of " << _rp->getActivePlan()->getName());
+            ALICA_DEBUG_MSG("CM: Overriding assignment of " << _runningPlan->getActivePlan()->getName());
 
             _state = CycleState::overriding;
-            const Plan* plan = dynamic_cast<const Plan*>(_rp->getActivePlan());
+            const Plan* plan = dynamic_cast<const Plan*>(_runningPlan->getActivePlan());
             plan->setAuthorityTimeInterval(std::min(_maximalOverrideTimeInterval, (plan->getAuthorityTimeInterval() * _intervalIncFactor)));
             _overrideTimestamp = _clock.now();
             _overrideShoutTime = AlicaTime::zero();
         }
     } else {
-        ALICA_DEBUG_MSG("CM: Assignment overridden in " << _rp->getActivePlan()->getName());
+        ALICA_DEBUG_MSG("CM: Assignment overridden in " << _runningPlan->getActivePlan()->getName());
         _state = CycleState::overridden;
         _overrideShoutTime = _clock.now();
         _fixedAllocation = aai;
@@ -221,7 +222,7 @@ void CycleManager::sent()
  */
 bool CycleManager::applyAssignment()
 {
-    ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << _rp->getActivePlan()->getName());
+    ALICA_DEBUG_MSG("CM: Setting authorative assignment for plan " << _runningPlan->getActivePlan()->getName());
 
     if (_fixedAllocation.authority == InvalidAgentID) {
         return false;
@@ -229,21 +230,21 @@ bool CycleManager::applyAssignment()
     const EntryPoint* myEntryPoint = nullptr;
     bool modifiedSelf = false;
     bool modified = false;
-    if (_fixedAllocation.planId != _rp->getActivePlan()->getId()) { // Plantype case
-        if (_rp->getPlanType()->getId() != _fixedAllocation.planType) {
+    if (_fixedAllocation.planId != _runningPlan->getActivePlan()->getId()) { // Plantype case
+        if (_runningPlan->getPlanType()->getId() != _fixedAllocation.planType) {
             return false;
         }
-        const Plan* newPlan = _rp->getPlanType()->getPlanById(_fixedAllocation.planId);
+        const Plan* newPlan = _runningPlan->getPlanType()->getPlanById(_fixedAllocation.planId);
         assert(newPlan != nullptr);
-        _rp->usePlan(newPlan);
-        _rp->setAssignment(Assignment(newPlan, _fixedAllocation));
-        myEntryPoint = _rp->getAssignment().getEntryPointOfAgent(_myID);
+        _runningPlan->usePlan(newPlan);
+        _runningPlan->setAssignment(Assignment(newPlan, _fixedAllocation));
+        myEntryPoint = _runningPlan->getAssignment().getEntryPointOfAgent(_myID);
         modifiedSelf = true;
     } else {
         for (EntryPointRobots epr : _fixedAllocation.entryPointRobots) {
             for (AgentId robot : epr.robots) {
                 const EntryPoint* e = _planRepository.getEntryPoints()[epr.entrypoint];
-                bool changed = _rp->editAssignment().updateAgent(robot, e);
+                bool changed = _runningPlan->editAssignment().updateAgent(robot, e);
                 if (changed) {
                     if (robot == _myID) {
                         modifiedSelf = true;
@@ -256,16 +257,16 @@ bool CycleManager::applyAssignment()
         }
     }
     if (modifiedSelf) {
-        _rp->useEntryPoint(myEntryPoint);
-        _rp->deactivateChildren();
-        _rp->clearChildren();
-        _rp->clearFailedChildren();
-        _rp->setAllocationNeeded(true);
+        _runningPlan->useEntryPoint(myEntryPoint);
+        _runningPlan->deactivateChildren();
+        _runningPlan->clearChildren();
+        _runningPlan->clearFailedChildren();
+        _runningPlan->setAllocationNeeded(true);
     } else {
-        if (_rp->getActiveState() != nullptr) {
+        if (_runningPlan->getActiveState() != nullptr) {
             AgentGrp robotsJoined;
-            _rp->getAssignment().getAgentsInState(_rp->getActiveState(), robotsJoined);
-            for (RunningPlan* c : _rp->getChildren()) {
+            _runningPlan->getAssignment().getAgentsInState(_runningPlan->getActiveState(), robotsJoined);
+            for (RunningPlan* c : _runningPlan->getChildren()) {
                 c->limitToRobots(robotsJoined);
             }
         }
