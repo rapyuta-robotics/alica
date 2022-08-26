@@ -19,6 +19,7 @@ struct PlanContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Plan* planModel;
+    const std::string libraryPath;
 };
 
 class BasicPlan : private RunnableObject

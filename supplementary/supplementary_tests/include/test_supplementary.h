@@ -4,7 +4,6 @@
 #include "supplementary_tests/BehaviourCreator.h"
 #include "supplementary_tests/ConditionCreator.h"
 #include "supplementary_tests/ConstraintCreator.h"
-#include "supplementary_tests/DynamicBehaviourCreator.h"
 #include "supplementary_tests/PlanCreator.h"
 #include "supplementary_tests/TransitionConditionCreator.h"
 #include "supplementary_tests/UtilityFunctionCreator.h"
@@ -161,45 +160,6 @@ protected:
             delete ac;
         }
     }
-};
-
-class AlicaDynamicLoadTestFixture : public AlicaTestFixtureBase
-{
-private:
-    alica::AlicaCreators creators;
-
-protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
-    virtual const char* getMasterPlanName() const = 0;
-    virtual bool stepEngine() const { return true; }
-    void SetUp() override
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("rootPath", path, ".");
-        ac = new alica::AlicaContext(AlicaContextParams("nase", path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
-        ASSERT_TRUE(ac->isValid());
-        spinner = std::make_unique<ros::AsyncSpinner>(4);
-        ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
-        ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac);
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        spinner->start();
-    }
-
-    void TearDown() override
-    {
-        spinner->stop();
-        ac->terminate();
-        delete ac;
-    }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 } // namespace supplementary
