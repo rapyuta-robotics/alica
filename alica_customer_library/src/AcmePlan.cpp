@@ -3,7 +3,7 @@
 namespace alica
 {
 
-AcmePlan::AcmePlan(BehaviourContext& context)
+AcmePlan::AcmePlan(PlanContext& context)
         : BasicBehaviour(context)
 {
     std::cerr << "AcmePlan created" << std::endl;
