@@ -17,7 +17,6 @@ class ExpressionHandler;
 class PlanFactory;
 class PreCondition;
 class RuntimeCondition;
-class AlicaEngine;
 class BlackboardBlueprint;
 class ConfigChangeListener;
 /**

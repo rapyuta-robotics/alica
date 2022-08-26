@@ -20,7 +20,6 @@ class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
 class PostCondition;
-class AlicaEngine;
 
 /**
  * Represents a Behaviour within the plan tree

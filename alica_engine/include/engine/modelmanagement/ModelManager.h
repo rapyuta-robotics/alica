@@ -20,7 +20,6 @@ class AlicaElement;
 class Plan;
 class RoleSet;
 class Factory;
-class AlicaEngine;
 class ConfigChangeListener;
 
 /**
