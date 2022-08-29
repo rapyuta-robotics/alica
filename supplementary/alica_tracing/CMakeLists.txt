@@ -14,7 +14,7 @@ find_package(yaml-cpp REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS alica_engine roscpp ${PKG_DEPS}
-  LIBRARIES ${PROJECT_NAME}
+  LIBRARIES ${PROJECT_NAME} jaegertracing
 )
 
 include_directories(
