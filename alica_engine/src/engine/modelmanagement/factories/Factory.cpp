@@ -112,6 +112,10 @@ const AlicaElement* Factory::getElement(const int64_t id)
 
 void Factory::storeElement(AlicaElement* ael, const std::string& type)
 {
+    if(!modelManager)
+    {
+        return;
+    }
     // insert into general element map
     if (modelManager->elements.find(ael->getId()) != modelManager->elements.end()) {
         std::stringstream ss;

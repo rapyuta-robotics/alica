@@ -1,12 +1,12 @@
 #pragma once
 
-#include "engine/BasicBehaviour.h"
+#include "engine/BasicPlan.h"
 #include <boost/dll/alias.hpp>
 #include <boost/make_shared.hpp>
 
 namespace alica
 {
-class AcmePlan : public BasicBehaviour
+class AcmePlan : public BasicPlan
 {
 public:
     AcmePlan(PlanContext& context);

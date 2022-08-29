@@ -7,10 +7,6 @@ set(CMAKE_BUILD_TYPE Debug)
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
-##Boost
-set(BOOST_MIN_VERSION "1.70.0")
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS system filesystem)
-
 ##ROS/Catkin
 find_package(catkin QUIET)
 if (catkin_FOUND)
