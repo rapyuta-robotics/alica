@@ -20,8 +20,9 @@ Behaviour* BehaviourFactory::create(AlicaEngine* ae, const YAML::Node& node)
     behaviour->_frequency = Factory::getValue<int>(node, alica::Strings::frequency, 1);
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
-    behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
-
+    if (Factory::isValid(node[alica::Strings::libraryName])) {
+        behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+    }
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
     }
@@ -54,7 +55,9 @@ Behaviour* BehaviourFactory::create(const YAML::Node& node)
     behaviour->_deferring = Factory::getValue<int>(node, alica::Strings::deferring, 0);
     behaviour->_eventDriven = Factory::getValue<bool>(node, alica::Strings::eventDriven, false);
 
-    behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+    if (Factory::isValid(node[alica::Strings::libraryName])) {
+        behaviour->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+    }
     if (Factory::isValid(node[alica::Strings::preCondition])) {
         behaviour->_preCondition = PreConditionFactory::create(node[alica::Strings::preCondition], behaviour);
     }

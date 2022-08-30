@@ -31,6 +31,9 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
     Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);
 
+    if (Factory::isValid(node[alica::Strings::libraryName])) {
+        plan->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+    }
     if (Factory::isValid(node[alica::Strings::masterPlan])) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();
     }
@@ -121,6 +124,9 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
     Factory::setAttributes(node, plan);
     Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);
+    if (Factory::isValid(node[alica::Strings::libraryName])) {
+        plan->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
+    }
     if (Factory::isValid(node[alica::Strings::masterPlan])) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();
     }

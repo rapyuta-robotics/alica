@@ -3,6 +3,7 @@
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
 #include "engine/model/Plan.h"
+#include "engine/modelmanagement/factories/Factory.h"
 #include <alica_common_config/debug_output.h>
 #include <engine/RuntimePlanFactory.h>
 
@@ -20,8 +21,10 @@ RuntimePlanFactory::RuntimePlanFactory(ConfigChangeListener& configChangeListene
 
 void RuntimePlanFactory::reload(const YAML::Node& config)
 {
-    _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-    std::cerr << _customerLibraryFolder << "Library folder" << std::endl;
+    if (Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
+        _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+        std::cerr << _customerLibraryFolder << "Library folder" << std::endl;
+    }
 }
 
 void RuntimePlanFactory::init(std::unique_ptr<IPlanCreator>&& pc)

@@ -4,6 +4,7 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/ConfigChangeListener.h"
 #include "engine/IBehaviourCreator.h"
+#include "engine/modelmanagement/factories/Factory.h"
 
 #include <alica_common_config/debug_output.h>
 
@@ -26,8 +27,10 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(ConfigChangeListener& configCha
 
 void RuntimeBehaviourFactory::reload(const YAML::Node& config)
 {
-    _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-    std::cerr<<_customerLibraryFolder<<"Library folder"<<std::endl;
+    if (Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
+        _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+        std::cerr << _customerLibraryFolder << "Library folder" << std::endl;
+    }
 }
 
 void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
@@ -37,7 +40,7 @@ void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel,_customerLibraryFolder};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
