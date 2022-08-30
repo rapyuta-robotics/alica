@@ -38,7 +38,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _logger(log)
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
-        , _synchModule(synchModule)
+        , _syncModule(synchModule)
         , _authorityManager(authorityManager)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -167,7 +167,7 @@ void PlanBase::run(const Plan* masterPlan)
         //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
         _teamObserver.tick(_rootNode);
         _roleAssignment.tick();
-        _synchModule.tick();
+        _syncModule.tick();
         _authorityManager.tick(_rootNode);
         _teamManager.tick();
 
