@@ -117,9 +117,9 @@ Plan* PlanFactory::create(AlicaEngine* ae, const YAML::Node& node)
 Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML::Node& node)
 {
     Plan* plan = new Plan(configChangeListener, Factory::getValue<int64_t>(node, alica::Strings::id));
-    
+
     Factory::setAttributes(node, plan);
-    //Factory::storeElement(plan, alica::Strings::plan); luca
+    Factory::storeElement(plan, alica::Strings::plan);
     AbstractPlanFactory::setVariables(node, plan);
     if (Factory::isValid(node[alica::Strings::masterPlan])) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();

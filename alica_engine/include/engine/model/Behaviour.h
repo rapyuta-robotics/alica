@@ -85,7 +85,7 @@ private:
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 
-    std::string _libraryName; // luca
+    std::string _libraryName;
 };
 
 } // namespace alica

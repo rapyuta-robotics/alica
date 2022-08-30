@@ -112,10 +112,11 @@ const AlicaElement* Factory::getElement(const int64_t id)
 
 void Factory::storeElement(AlicaElement* ael, const std::string& type)
 {
-    if(!modelManager)
-    {
+    if (!modelManager || !ael) {
+        ALICA_DEBUG_MSG("Factory: INFO: Element type " << type << " can not be stored. Is this a unittest?");
         return;
     }
+
     // insert into general element map
     if (modelManager->elements.find(ael->getId()) != modelManager->elements.end()) {
         std::stringstream ss;

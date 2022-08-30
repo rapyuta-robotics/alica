@@ -123,7 +123,7 @@ private:
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 
-    std::string _libraryName; // luca
+    std::string _libraryName;
 
     // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;
