@@ -43,7 +43,7 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
+        std::cerr << "Errro: RuntimeBehaviourFactory: Behaviour creation failed: " << id << std::endl;
         return nullptr;
     }
 
