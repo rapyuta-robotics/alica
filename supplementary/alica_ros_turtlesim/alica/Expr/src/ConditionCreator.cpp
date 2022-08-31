@@ -22,4 +22,10 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     }
 }
+
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(const ConditionContext& conditionContext)
+{
+    return nullptr;
+}
+
 } // namespace alica
