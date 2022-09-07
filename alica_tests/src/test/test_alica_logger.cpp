@@ -1,6 +1,7 @@
 #include "test_alica.h"
 
 #include <engine/logging/AlicaDefaultLogger.h>
+#include <logger/AlicaRosLogger.h>
 
 #include <gtest/gtest.h>
 
@@ -17,11 +18,11 @@ protected:
     bool stepEngine() const override { return false; }
 };
 
-TEST_F(AlicaDefaultLoggerTest, testSettingDefaultLogger)
+TEST_F(AlicaDefaultLoggerTest, testSettingRosLogger)
 {
     ASSERT_NO_SIGNAL
-    // check that AlicaDefaultLogger is set when no logger is set.
-    AlicaDefaultLogger* logger = dynamic_cast<AlicaDefaultLogger*>(AlicaLogger::instance());
+    // check that AlicaRosLogger is set.
+    alicaRosLogger::AlicaRosLogger* logger = dynamic_cast<alicaRosLogger::AlicaRosLogger*>(AlicaLogger::instance());
     EXPECT_NE(logger, nullptr);
 }
 } // namespace
