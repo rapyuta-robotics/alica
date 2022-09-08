@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/AlicaClock.h"
+#include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/ConditionStore.h"

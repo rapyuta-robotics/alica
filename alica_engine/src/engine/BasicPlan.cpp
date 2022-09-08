@@ -1,6 +1,5 @@
 #include "engine/BasicPlan.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/logging/Logging.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Transition.h"
@@ -63,7 +62,7 @@ void BasicPlan::doTerminate()
 
 void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
-    if (_engine->getTraceFactory() && getTrace()) {
+    if (_traceFactory && getTrace()) {
         getTrace()->setLog(
                 {"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
                                                  "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});

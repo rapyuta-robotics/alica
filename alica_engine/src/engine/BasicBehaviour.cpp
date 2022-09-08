@@ -1,9 +1,9 @@
 #include "engine/BasicBehaviour.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
@@ -44,7 +44,7 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
  */
 AgentId BasicBehaviour::getOwnId() const
 {
-    return _engine->getTeamManager().getLocalAgentID();
+    return getTeamManager().getLocalAgentID();
 }
 
 bool BasicBehaviour::isTriggeredRunFinished()
@@ -106,7 +106,7 @@ void BasicBehaviour::setResult(BehResult result)
 {
     auto prev = _behResult.exchange(result);
     if (prev != result) {
-        _engine->editPlanBase().addFastPathEvent(getPlanContext());
+        _planBase->addFastPathEvent(getPlanContext());
         if (getTrace()) {
             getTrace()->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
         }

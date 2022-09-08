@@ -18,7 +18,6 @@ class RunningPlan;
 struct SyncData;
 struct SyncReady;
 struct SyncTalk;
-class AlicaEngine;
 
 class SynchronisationProcess
 {

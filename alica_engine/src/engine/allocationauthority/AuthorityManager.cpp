@@ -1,7 +1,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/logging/Logging.h"
@@ -21,14 +21,13 @@ namespace alica
 AuthorityManager::AuthorityManager(
         ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager)
         : _localAgentID(InvalidAgentID)
-        , _configChangeListener(configChangeListener)
         , _communicator(communicator)
         , _clock(clock)
         , _tm(teamManager)
 {
     auto reloadFunctionPtr = std::bind(&AuthorityManager::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 AuthorityManager::~AuthorityManager() {}

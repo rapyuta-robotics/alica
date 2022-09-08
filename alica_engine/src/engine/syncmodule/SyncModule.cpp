@@ -1,9 +1,10 @@
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanRepository.h"
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
 #include "engine/teammanager/TeamManager.h"
@@ -25,15 +26,14 @@ SyncModule::SyncModule(ConfigChangeListener& configChangeListener, const TeamMan
         : _myId(0)
         , _running(false)
         , _ticks(0)
-        , _configChangeListener(configChangeListener)
         , _teamManager(teamManager)
         , _planRepository(planRepository)
         , _communicator(communicator)
         , _clock(clock)
 {
     auto reloadFunctionPtr = std::bind(&SyncModule::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 SyncModule::~SyncModule()

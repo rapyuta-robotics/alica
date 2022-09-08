@@ -1,6 +1,7 @@
 
 #include <engine/RuntimePlanFactory.h>
 
+#include "engine/AlicaEngine.h"
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
 #include "engine/logging/Logging.h"
@@ -30,7 +31,10 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
     }
 
     // TODO Cleanup: get rid of this later, behaviour only needs traceFactory, teamManager and not entire engine
-    basicPlan->setEngine(_engine);
+    basicPlan->setAlicaTraceFactory(_engine->getTraceFactory());
+    basicPlan->setTeamManager(&_engine->getTeamManager());
+    basicPlan->setAlicaTimerFactory(&_engine->getTimerFactory());
+
     return basicPlan;
 }
 

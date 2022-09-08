@@ -36,7 +36,9 @@ public:
     using RunnableObject::getPlanContext;
     using RunnableObject::getTrace;
     using RunnableObject::getWorldModel;
-    using RunnableObject::setEngine;
+    using RunnableObject::setAlicaTimerFactory;
+    using RunnableObject::setAlicaTraceFactory;
+    using RunnableObject::setTeamManager;
     using RunnableObject::start;
     using RunnableObject::stop;
     using RunnableObject::TracingType;

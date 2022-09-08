@@ -50,7 +50,6 @@ private:
     };
     bool detectAllocationCycle();
 
-    ConfigChangeListener& _configChangeListener;
     const AlicaClock& _clock;
     const TeamManager& _teamManager;
     const PlanRepository& _planRepository;
@@ -68,7 +67,7 @@ private:
     AlicaTime _overrideWaitInterval;
     AlicaTime _overrideShoutTime;
     CycleState _state;
-    RunningPlan* _rp;
+    RunningPlan* _runningPlan;
     AllocationAuthorityInfo _fixedAllocation;
 };
 
