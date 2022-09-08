@@ -16,6 +16,9 @@ set(PKG_DEPS
     geometry_msgs
 )
 
+set(BOOST_MIN_VERSION "1.71.0")
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
 catkin_package(
@@ -46,7 +49,10 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+                        Boost::system
+                        Boost::filesystem
+                        ${CMAKE_DL_LIBS}
+                        ${catkin_LIBRARIES}
 )
 
 #############
