@@ -14,6 +14,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
+#include "engine/modelmanagement/factories/Factory.h"
 
 namespace alica
 {
@@ -21,10 +22,22 @@ namespace alica
 /**
  * Constructor, loads the assembly containing expressions and constraints.
  */
-ExpressionHandler::ExpressionHandler() {}
+ExpressionHandler::ExpressionHandler(ConfigChangeListener& configChangeListener)
+{
+    auto reloadFunctionPtr = std::bind(&ExpressionHandler::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
+}
 
 ExpressionHandler::~ExpressionHandler() {}
 
+void ExpressionHandler::reload(const YAML::Node& config)
+{
+    if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
+        _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
+        std::cerr << _customerLibraryFolder << "Library folder" << std::endl;
+    }
+}
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */

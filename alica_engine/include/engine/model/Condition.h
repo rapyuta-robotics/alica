@@ -77,5 +77,7 @@ private:
 
     std::string _conditionString;
     std::string _plugInName; // TODO: is this needed?!
+
+    std::string _libraryName; // luca
 };
 } // namespace alica

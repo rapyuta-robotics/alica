@@ -40,7 +40,7 @@ void AlicaEngine::abort(const std::string& msg)
 AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams)
         : _configChangeListener(config)
         , _ctx(ctx)
-        , _planFactory(std::make_unique<RuntimePlanFactory>(_configChangeListener,_ctx.getWorldModel(), this))
+        , _planFactory(std::make_unique<RuntimePlanFactory>(_configChangeListener, _ctx.getWorldModel(), this))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -51,6 +51,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _expressionHandler(_configChangeListener)
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
 
         , _variableSyncModule(std::make_unique<VariableSyncModule>(

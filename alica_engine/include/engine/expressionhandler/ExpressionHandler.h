@@ -1,5 +1,7 @@
 #pragma once
 
+#include <yaml-cpp/yaml.h>
+
 namespace alica
 {
 class RunningPlan;
@@ -9,6 +11,7 @@ class PlanRepository;
 class AlicaCreators;
 class IConstraintCreator;
 class AlicaEngine;
+class ConfigChangeListener;
 
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
@@ -16,12 +19,16 @@ class AlicaEngine;
 class ExpressionHandler
 {
 public:
-    ExpressionHandler();
+    ExpressionHandler(ConfigChangeListener& configChangeListener);
     virtual ~ExpressionHandler();
     void attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx);
 
+    void reload(const YAML::Node& config);
+
 private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);
+
+    std::string _customerLibraryFolder;
 };
 
 } // namespace alica
