@@ -82,3 +82,6 @@ Alica:
     SeedTTL4Usage: 5000
     MaxSolveTime: 10
     MaxFunctionEvaluations: 100000000
+
+  CustomerLibrary:
+    Folder: /var/tmp/customers
