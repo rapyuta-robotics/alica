@@ -14,10 +14,6 @@ class IAlicaTraceFactory;
 class TeamManager;
 class IAlicaTimerFactory;
 
-/**
- * @brief
- *
- */
 class RuntimePlanFactory
 {
 public:

@@ -377,18 +377,4 @@ void TeamManager::tick()
     }
 }
 
-/**
- * Generates random ID.
- * @return The ID
- */
-
-alica::AgentId TeamManager::generateID()
-{
-    std::random_device device;
-    std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
-    uint64_t id = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    id = (id << 32) | (distribution(device));
-    return id;
-}
-
 } /* namespace alica */

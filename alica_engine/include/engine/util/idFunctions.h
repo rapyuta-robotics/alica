@@ -18,7 +18,7 @@
  * @return The ID
  */
 
-inline alica::AgentId GenerateID()
+inline alica::AgentId generateID()
 {
     std::random_device device;
     std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());
