@@ -43,7 +43,7 @@ TEST(ForceLoad, simple_behaviour_load)
     ASSERT_EQ("acmebehaviour", behaviour->getName());
     behaviour.release();
 }
-/*
+
 TEST(ForceLoad, simple_plan_load)
 {
     ros::NodeHandle nh;
@@ -73,12 +73,13 @@ TEST(ForceLoad, simple_plan_load)
     // Create plan form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
+    // PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
+    PlanContext ctx{&wm, planModel->getName(), planModel, path + "/../../../../../../devel/lib"};
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
 
     ASSERT_EQ("acmeplan", plan->getName());
     plan.release();
 }
-*/
+
 } // namespace
 } // namespace alica
