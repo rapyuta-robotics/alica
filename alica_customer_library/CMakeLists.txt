@@ -3,15 +3,27 @@ project(alica_customer_library)
 
 add_compile_options(-std=c++17)
 
-find_package(catkin QUIET)
-if (catkin_FOUND)
-    find_package(catkin REQUIRED COMPONENTS
-      alica_engine
-      alica_common_config
-    )
-else (catkin_FOUND)
-   	set(catkin_LIBRARIES "alica_engine" alica_common_config)
-endif(catkin_FOUND)
+set(PKG_DEPS
+    roscpp
+    alica_engine
+    alica_common_config
+    alica_ros_proxy
+    constraintsolver
+    turtlesim
+    geometry_msgs
+)
+
+find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
+
+#find_package(catkin QUIET)
+#if (catkin_FOUND)
+#    find_package(catkin REQUIRED COMPONENTS
+#      alica_engine
+#      alica_common_config
+#    )
+#else (catkin_FOUND)
+#   	set(catkin_LIBRARIES "alica_engine" alica_common_config)
+#endif(catkin_FOUND)
 
 
 if(catkin_FOUND)
