@@ -29,7 +29,7 @@ void RuntimeBehaviourFactory::reload(const YAML::Node& config)
 {
     if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
         _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        std::cerr << _customerLibraryFolder << "Library folder" << std::endl;
+        std::cerr << _customerLibraryFolder << " Library folder" << std::endl;
     }
 }
 

@@ -17,7 +17,6 @@
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
 
-
 #include <gtest/gtest.h>
 #include <ros/ros.h>
 #include <yaml-cpp/yaml.h>

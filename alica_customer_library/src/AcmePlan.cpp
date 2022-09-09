@@ -9,4 +9,3 @@ AcmePlan::AcmePlan(PlanContext& context)
     std::cerr << "AcmePlan created" << std::endl;
 }
 } // namespace alica
-    

@@ -18,6 +18,7 @@
   <depend>constraintsolver</depend>
   <depend>autodiff</depend>
   <depend>alica_ros_proxy</depend>
+  <depend>alica_custom_library</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 

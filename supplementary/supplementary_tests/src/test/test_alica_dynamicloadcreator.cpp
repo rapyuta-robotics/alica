@@ -36,13 +36,14 @@ TEST(ForceLoad, simple_behaviour_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "/var/tmp/customers"};
+    // BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "/var/tmp/customers"};
+    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, path + "/../../../../../../devel/lib"};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
     behaviour.release();
 }
-
+/*
 TEST(ForceLoad, simple_plan_load)
 {
     ros::NodeHandle nh;
@@ -78,6 +79,6 @@ TEST(ForceLoad, simple_plan_load)
     ASSERT_EQ("acmeplan", plan->getName());
     plan.release();
 }
-
+*/
 } // namespace
 } // namespace alica
