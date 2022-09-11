@@ -42,8 +42,6 @@ file(GLOB_RECURSE autogen_SOURCES "alica/Expr/src/*.cpp")
 
 add_executable(${PROJECT_NAME}
     ${autogen_SOURCES}
-    src/turtle.cpp
-    src/world_model.cpp
     src/base_node.cpp
     src/base.cpp
 )

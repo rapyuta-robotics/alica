@@ -43,6 +43,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
+message(${catkin_INCLUDE_DIRS})
 
 file(GLOB_RECURSE sources "src/*.cpp")
 
@@ -55,6 +56,11 @@ target_link_libraries(alica_customer_library ${catkin_LIBRARIES})
 if (NOT catkin_FOUND)
  target_include_directories(alica_customer_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
+
+##How to solve this??
+#target_include_directories(alica_customer_library PUBLIC
+#    /media/triccyx/dc8f96a2-ec0d-4174-beb5-88c82cc0d2e7/catkin-dll2/src/alica/supplementary/alica_ros_turtlesim/alica/Expr/include/alica
+#)
 
 
 install(TARGETS ${PROJECT_NAME}

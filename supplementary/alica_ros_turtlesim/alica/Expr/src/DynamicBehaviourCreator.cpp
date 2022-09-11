@@ -29,7 +29,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
         return nullptr;
     } else {
         std::cerr << "Debug:"
-                  << "Lib exixts in this path:" << libraryPath << std::endl;
+                  << "Lib exixts in this path:" << libraryPath << " for:" << context.behaviourModel->getName() << " for:" << behaviourId << std::endl;
     }
 
     typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);

@@ -4,7 +4,6 @@
 #include <thread>
 
 #include <alica_ros_turtlesim/base.hpp>
-#include <alica_ros_turtlesim/world_model.hpp>
 #include <turtlesim/Kill.h>
 #include <turtlesim/Spawn.h>
 

@@ -2,6 +2,7 @@
 #define ALICA_TURTLE_WORLD_MODEL_WORLD_MODEL_HPP
 
 #include "turtle.hpp"
+#include <boost/dll/alias.hpp>
 #include <engine/AlicaEngine.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
@@ -34,6 +35,9 @@ private:
     ros::Subscriber _initTriggerSub;                                 // user input for initialize,
     bool _initTrigger;                                               // become true when /init topic published
 };
+
+BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::init, ALICATurtleWorldModelInit)
+BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::del, ALICATurtleWorldModelDel)
 
 } // namespace turtlesim
 

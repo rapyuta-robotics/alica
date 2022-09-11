@@ -19,5 +19,5 @@ protected:
 
 private:
 };
-BOOST_DLL_ALIAS(alica::Go2RandomPosition::create, go2randomposition)
+BOOST_DLL_ALIAS(alica::Go2RandomPosition::create, Go2RandomPosition)
 } /* namespace alica */

@@ -9,7 +9,10 @@ namespace alica
 GoTo::GoTo(BehaviourContext& context)
         : BasicBehaviour(context)
 {
+    std::cerr << "Debug:"
+              << "GoTo created" << std::endl;
 }
+
 GoTo::~GoTo() {}
 void GoTo::run(void* msg)
 {

@@ -1,7 +1,6 @@
 #include <alica/constraints/Move1889749086610694100Constraints.h>
 /*PROTECTED REGION ID(ch1889749086610694100) ENABLED START*/
 // Add additional options here
-#include <alica_ros_turtlesim/world_model.hpp>
 #include <autodiff/AutoDiff.h>
 #include <engine/RunningPlan.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>

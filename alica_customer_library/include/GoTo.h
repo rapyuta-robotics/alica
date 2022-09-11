@@ -22,5 +22,5 @@ private:
     alica::Query _query;
     std::vector<double> _results;
 };
-BOOST_DLL_ALIAS(alica::GoTo::create, gotobeh)
+BOOST_DLL_ALIAS(alica::GoTo::create, GoTo)
 } /* namespace alica */

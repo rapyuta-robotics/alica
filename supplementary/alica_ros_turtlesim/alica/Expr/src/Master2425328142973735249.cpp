@@ -1,7 +1,6 @@
 #include <alica/Master2425328142973735249.h>
 /*PROTECTED REGION ID(eph2425328142973735249) ENABLED START*/
 // Add additional options here
-#include <alica_ros_turtlesim/world_model.hpp>
 /*PROTECTED REGION END*/
 
 namespace alica
