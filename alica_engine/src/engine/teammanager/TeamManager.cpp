@@ -8,7 +8,7 @@
 #include "engine/Types.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/AgentQuery.h"
-#include "engine/util/idFunctions.h"
+#include "engine/util/IdFunctions.h"
 
 #include <alica_common_config/debug_output.h>
 
