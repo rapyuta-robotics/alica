@@ -11,7 +11,7 @@ Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
 {
     std::cerr << "Debug:"
               << "Go2RandomPosition created" << std::endl;
-               // create world model
+    // create world model
 }
 
 Go2RandomPosition::~Go2RandomPosition() {}
@@ -33,7 +33,7 @@ void Go2RandomPosition::run(void* msg)
               << "33333333333" << std::endl;
     // teleport turtle to random place
     turtlesim::ALICATurtleWorldModel::get()->turtle.teleport(dist(engine), dist(engine));
-        std::cerr << "Debug:"
+    std::cerr << "Debug:"
               << "444444444" << std::endl;
     turtlesim::ALICATurtleWorldModel::get()->setInit(false);
     setSuccess();

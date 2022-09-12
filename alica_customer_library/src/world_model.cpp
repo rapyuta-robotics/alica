@@ -13,7 +13,7 @@ ALICATurtleWorldModel* ALICATurtleWorldModel::get()
 
 void ALICATurtleWorldModel::init(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    std::cerr<<"ALICATurtleWorldModel::init"<<std::endl;
+    std::cerr << "ALICATurtleWorldModel::init" << std::endl;
     if (!instance) {
         instance = new ALICATurtleWorldModel(nh, priv_nh);
     }

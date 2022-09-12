@@ -25,7 +25,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
         : spinner(0)
 {
     // create world model
-    //ALICATurtleWorldModel::init(nh, priv_nh);
+    // ALICATurtleWorldModel::init(nh, priv_nh);
     ALICATurtleWorldModelCallInit(nh, priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
@@ -57,12 +57,12 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
     */
     typedef void(InitType)(ros::NodeHandle&, ros::NodeHandle&);
     std::function<InitType> wminit;
-    wminit = boost::dll::import_alias<InitType>(        // type of imported symbol must be explicitly specified
+    wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
             libraryPath,                              // complete path to library also with file name
             "ALICATurtleWorldModelInit",              // symbol to import
             boost::dll::load_mode::append_decorations // do append extensions and prefixes
     );
-    wminit(nh,priv_nh);
+    wminit(nh, priv_nh);
 }
 
 void Base::start()
@@ -85,7 +85,7 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    //ALICATurtleWorldModel::del(); luca
+    // ALICATurtleWorldModel::del(); luca
 }
 
 } // namespace turtlesim
