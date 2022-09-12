@@ -721,8 +721,8 @@ follow the standard ros build step.
 ```
 cd catkin_ws
 source /opt/ros/$(ls /opt/ros)/setup.bash
-source ./devel/setup.bash
 catkin build alica_ros_turtlesim
+source ./devel/setup.bash
 ```
 ### 8.2 Run
 Run application with roslaunch. video
