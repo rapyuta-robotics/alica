@@ -81,5 +81,46 @@ TEST(ForceLoad, simple_plan_load)
     plan.release();
 }
 
+
+TEST(ForceLoad, simple_condition_load)
+{
+    ros::NodeHandle nh;
+    std::string path;
+    nh.param<std::string>("/rootPath", path, ".");
+
+    YAML::Node globalNode;
+    try {
+        globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml");
+    } catch (YAML::BadFile& badFile) {
+        std::cerr << path + "/etc/hairy/Alica.yaml" << std::endl;
+        AlicaEngine::abort("MM: Could not parse global config file: ", badFile.msg);
+    }
+
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeConditionRepository.cnd");
+    } catch (YAML::BadFile& badFile) {
+        std::cerr << path + "/etc/plans/conditions/AcmeConditionRepository.cnd" << std::endl;
+        AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
+    }
+    // Load model
+    ConfigChangeListener configChangeListener(globalNode);
+    Condition* conditionModel;
+    /*
+    TODO TODO
+    conditionModel = ConditionFactory::fillCondition(configChangeListener, node);
+
+    // Create condition form dll
+    IAlicaWorldModel wm;
+    auto creator = std::make_unique<alica::DynamicConditionCreator>();
+    // PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
+    ConditionContext ctx{&wm, conditionModel->getName(), conditionModel, path + "/../../../../../../devel/lib"};
+    std::unique_ptr<BasicCondition> condition = creator->createCondition(10, ctx);
+
+    ASSERT_EQ("acmecondition", condition->getName());
+    condition.release();
+    */
+}
+
 } // namespace
 } // namespace alica
