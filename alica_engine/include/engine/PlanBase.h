@@ -83,7 +83,7 @@ private:
     Logger& _logger;
     const IAlicaCommunication& _communicator;
     IRoleAssignment& _roleAssignment;
-    SyncModule& _synchModule;
+    SyncModule& _syncModule;
     AuthorityManager& _authorityManager;
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;

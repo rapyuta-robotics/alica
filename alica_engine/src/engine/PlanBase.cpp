@@ -38,7 +38,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _logger(log)
         , _communicator(communicator)
         , _roleAssignment(roleAssignment)
-        , _synchModule(synchModule)
+        , _syncModule(syncModule)
         , _authorityManager(authorityManager)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -55,7 +55,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _mainThread(nullptr)
         , _statusMessage(nullptr)
         , _stepModeCV()
-        , _ruleBook(configChangeListener, log, synchModule, teamObserver, teamManager, planRepository, this)
+        , _ruleBook(configChangeListener, log, syncModule, teamObserver, teamManager, planRepository, this)
         , _treeDepth(0)
         , _running(false)
         , _isWaiting(false)
@@ -167,7 +167,7 @@ void PlanBase::run(const Plan* masterPlan)
         //_ae->getCommunicator().tick(); // not implemented as ros works asynchronous
         _teamObserver.tick(_rootNode);
         _roleAssignment.tick();
-        _synchModule.tick();
+        _syncModule.tick();
         _authorityManager.tick(_rootNode);
         _teamManager.tick();
 
@@ -381,10 +381,10 @@ RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configu
     return _runningPlans.back().get();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* pt, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, pt, configuration));
+            _resultStore, _solvers, planType, configuration));
     return _runningPlans.back().get();
 }
 
