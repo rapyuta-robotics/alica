@@ -55,9 +55,8 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
-        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
-        const Configuration* configuration)
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -82,9 +81,9 @@ RunningPlan::~RunningPlan()
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
-        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
-        const Plan* plan, const Configuration* configuration)
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
+        const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -96,7 +95,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _behaviour(false)
         , _assignment(plan)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
-        , _basicPlan(runTimePlanFactory->create(plan->getId(), plan))
+        , _basicPlan(runTimePlanFactory.create(plan->getId(), plan))
         , _parent(nullptr)
         , _configuration(configuration)
 {
@@ -104,9 +103,9 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
-        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers,
-        const PlanType* pt, const Configuration* configuration)
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+        const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -124,8 +123,8 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
-        const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
         , _worldModel(worldModel)
@@ -136,7 +135,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _activeTriple(b, nullptr, nullptr)
         , _behaviour(true)
         , _assignment()
-        , _basicBehaviour(runTimeBehaviourFactory->create(b->getId(), b))
+        , _basicBehaviour(runTimeBehaviourFactory.create(b->getId(), b))
         , _resultStore(resultStore)
         , _solvers(solvers)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
@@ -320,7 +319,7 @@ void RunningPlan::usePlan(const AbstractPlan* plan)
         revokeAllConstraints();
         _activeTriple.abstractPlan = plan;
         _status.runTimeConditionStatus = EvalStatus::Unknown;
-        _basicPlan = _runTimePlanFactory->create(plan->getId(), dynamic_cast<const Plan*>(plan));
+        _basicPlan = _runTimePlanFactory.create(plan->getId(), dynamic_cast<const Plan*>(plan));
     }
 }
 
