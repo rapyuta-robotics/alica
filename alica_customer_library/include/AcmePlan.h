@@ -2,7 +2,6 @@
 
 #include "engine/BasicPlan.h"
 #include <boost/dll/alias.hpp>
-#include <boost/make_shared.hpp>
 
 namespace alica
 {

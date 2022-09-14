@@ -2,7 +2,6 @@
 #include <alica/DynamicBehaviourCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <boost/filesystem.hpp>
-#include <boost/function.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
