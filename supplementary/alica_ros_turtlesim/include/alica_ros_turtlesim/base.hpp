@@ -20,6 +20,9 @@ private:
     ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
     void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
+
+    std::string _libraryPath;
+
     void ALICATurtleWorldModelCallDel();
 };
 
