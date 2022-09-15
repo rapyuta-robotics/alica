@@ -2,7 +2,7 @@
 #include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
 #include <alica/DynamicBehaviourCreator.h>
-#include <alica/PlanCreator.h>
+#include <alica/DynamicPlanCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
@@ -59,7 +59,7 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
 void Base::start()
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context

@@ -155,5 +155,6 @@
     }
   ],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "libraryName": "alica_customer_library"
 }
