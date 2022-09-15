@@ -12,9 +12,12 @@ class BasicBehaviour;
 class DynamicBehaviourCreator : public IBehaviourCreator
 {
 public:
-    DynamicBehaviourCreator();
+    DynamicBehaviourCreator(const std::string& defaultLibraryPath);
     virtual ~DynamicBehaviourCreator();
     virtual std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
+
+private:
+    std::string _defaultLibraryPath;
 };
 
 } /* namespace alica */

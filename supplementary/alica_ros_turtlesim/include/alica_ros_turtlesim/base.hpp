@@ -22,6 +22,7 @@ private:
     void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
 
     std::string _libraryPath;
+    std::string _path;
 
     void ALICATurtleWorldModelCallDel();
 };

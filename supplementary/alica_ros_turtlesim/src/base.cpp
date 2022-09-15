@@ -23,8 +23,11 @@ namespace turtlesim
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
         const std::string& master_plan, const std::string& path)
         : spinner(0)
+        , _path(path)
 {
-    _libraryPath = path + "/../../../../../devel/lib/libalica_customer_library.so";
+    //_libraryPath = path + "/../../../../../devel/lib/libalica_customer_library.so";
+    _libraryPath = path + "/../../../lib/libalica_customer_library.so";
+    std::cerr << "PATH:" << path << std::endl;
 
     // create world model
     ALICATurtleWorldModelCallInit(nh, priv_nh);
@@ -59,8 +62,8 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
 void Base::start()
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
-            std::make_unique<alica::TransitionConditionCreator>());
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(_path),
+            std::make_unique<alica::DynamicPlanCreator>(_path), std::make_unique<alica::TransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));

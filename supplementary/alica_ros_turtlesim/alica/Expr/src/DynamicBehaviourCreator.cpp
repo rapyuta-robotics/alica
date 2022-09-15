@@ -9,19 +9,31 @@
 namespace alica
 {
 
-DynamicBehaviourCreator::DynamicBehaviourCreator() {}
+DynamicBehaviourCreator::DynamicBehaviourCreator(const std::string& defaultLibraryPath)
+        : _defaultLibraryPath(defaultLibraryPath + "/../../../lib/")
+{
+}
 
 DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
+    if (context.libraryPath != "") {
+        _defaultLibraryPath = context.libraryPath;
+        std::cerr << "Debug:"
+                  << "folder:" << _defaultLibraryPath << std::endl;
+    } else {
+        std::cerr << "Debug:"
+                  << "folder default:" << _defaultLibraryPath << std::endl;
+    }
+
     if (context.behaviourModel->getLibraryName() == "") {
         std::cerr << "Error:"
                   << "Empty library name for" << context.behaviourModel->getName() << std::endl;
         return nullptr;
     }
 
-    std::string libraryPath = context.libraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
+    std::string libraryPath = _defaultLibraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
     if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;

@@ -65,5 +65,5 @@ Alica:
     MaxSolveTime: 10
     MaxFunctionEvaluations: 100000000
 
-  CustomerLibrary:
-    Folder: /var/tmp/customers    
+  #CustomerLibrary:
+  #  Folder: /var/tmp/customers    
