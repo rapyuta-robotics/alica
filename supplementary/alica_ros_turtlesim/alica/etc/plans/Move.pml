@@ -126,5 +126,5 @@
   "transitions": [],
   "utilityThreshold": 0.0,
   "variables": [],
-  "libraryName": "alica_customer_library"
+  "libraryName": "alica_turtlesim_library"
 }

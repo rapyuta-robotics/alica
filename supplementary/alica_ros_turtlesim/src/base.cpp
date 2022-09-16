@@ -25,8 +25,8 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
         : spinner(0)
         , _path(path)
 {
-    //_libraryPath = path + "/../../../../../devel/lib/libalica_customer_library.so";
-    _libraryPath = path + "/../../../lib/libalica_customer_library.so";
+    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so";
+    _libraryPath = path + "/../../../lib/libalica_turtlesim_library.so";
     std::cerr << "PATH:" << path << std::endl;
 
     // create world model
