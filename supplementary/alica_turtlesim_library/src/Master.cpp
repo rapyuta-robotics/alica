@@ -15,9 +15,6 @@ Master::Master(PlanContext& context)
 {
     std::cerr << "Master created" << std::endl;
 }
-Master::~Master()
-{
-}
-
+Master::~Master() {}
 
 } // namespace alica
