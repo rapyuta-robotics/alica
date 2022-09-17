@@ -20,7 +20,7 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
     }
 }
 
-std::shared_ptr<BasicCondition> ConditionCreator::createConditions(const ConditionContext& conditionContext)
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(ConditionContext& conditionContext)
 {
     return nullptr;
 }
