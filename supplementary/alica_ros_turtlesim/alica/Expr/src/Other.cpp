@@ -14,13 +14,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityF
     /*PROTECTED REGION END*/
 }
 
-bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1288817888979746811) ENABLED START*/
-    return true;
-    /*PROTECTED REGION END*/
-}
-
 /**
  * Task: Follower  -> EntryPoint-ID: 3277312192440194145
  * Task: Leader  -> EntryPoint-ID: 4346694000146342467

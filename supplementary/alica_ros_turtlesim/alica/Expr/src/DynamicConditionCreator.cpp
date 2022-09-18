@@ -32,13 +32,13 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
                   << "folder default:" << _defaultLibraryPath << std::endl;
     }
 
-    if (context.libraryPath == "") {
+    if (context.libraryName == "") {
         std::cerr << "Error:"
                   << "Empty library name for" << context.name << std::endl;
         return nullptr;
     }
 
-    std::string libraryPath = _defaultLibraryPath + "/lib" + context.libraryPath + ".so";
+    std::string libraryPath = _defaultLibraryPath + "/lib" + context.libraryName + ".so";
     if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;

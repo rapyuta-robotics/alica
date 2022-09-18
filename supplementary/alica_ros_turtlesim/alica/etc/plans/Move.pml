@@ -62,7 +62,8 @@
         ]
       }
     ],
-    "variables": []
+    "variables": [],
+    "libraryName": "alica_turtlesim_library"
   },
   "states": [
     {

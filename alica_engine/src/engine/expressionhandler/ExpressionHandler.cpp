@@ -59,7 +59,9 @@ void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCrea
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
+            //p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(/*luca name*/p->getRuntimeCondition()->getId()));
+            ConditionContext context{p->getRuntimeCondition()->getName(),_customerLibraryFolder,p->getRuntimeCondition()->_libraryName,p->getRuntimeCondition()->getId()};
+            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
         }
     }

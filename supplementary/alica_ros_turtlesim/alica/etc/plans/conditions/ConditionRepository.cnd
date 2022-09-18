@@ -8,7 +8,6 @@
       "id": 748720375848597116,
       "name": "Move2Init",
       "relativeDirectory": "conditions"
-      "libraryName": "alica_turtlesim_library"
     },
     {
       "blackboard": [],
@@ -17,7 +16,6 @@
       "id": 974606107671315045,
       "name": "Init2Move",
       "relativeDirectory": "conditions"
-      "libraryName": "alica_turtlesim_library"
     },
     {
       "blackboard": [],
@@ -26,7 +24,6 @@
       "id": 2190266318562141841,
       "name": "DefaultCondition",
       "relativeDirectory": "conditions"
-      "libraryName": "alica_turtlesim_library"
     }
   ],
   "id": 1,

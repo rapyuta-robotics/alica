@@ -26,8 +26,6 @@ void Go2RandomPosition::run(void* msg)
     std::uniform_real_distribution<> dist(0, 10.0);
     // teleport turtle to random place
     turtlesim::ALICATurtleWorldModel::get()->turtle.teleport(dist(engine), dist(engine));
-    std::cerr << "Debug:"
-              << "444444444" << std::endl;
     turtlesim::ALICATurtleWorldModel::get()->setInit(false);
     setSuccess();
 }

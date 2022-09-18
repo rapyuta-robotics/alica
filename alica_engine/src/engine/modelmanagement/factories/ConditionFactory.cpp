@@ -15,6 +15,7 @@ void ConditionFactory::fillCondition(const YAML::Node& conditionNode, Condition*
     condition->_conditionString = Factory::getValue<std::string>(conditionNode, alica::Strings::conditionString, "");
     condition->_plugInName = Factory::getValue<std::string>(conditionNode, alica::Strings::pluginName);
 
+    std::cerr<<"111111111111111111111"<<condition->getName()<<std::endl;
     if (Factory::isValid(conditionNode[alica::Strings::libraryName]))
         condition->_libraryName = Factory::getValue<std::string>(conditionNode, alica::Strings::libraryName);
 
@@ -30,6 +31,7 @@ void ConditionFactory::fillCondition(const YAML::Node& conditionNode, Condition*
             condition->_quantifiers.push_back(QuantifierFactory::create(*it));
         }
     }
+    std::cerr<<"222222222222222222222"<<std::endl;
 }
 
 void ConditionFactory::attachReferences()

@@ -1,8 +1,9 @@
 //#include <alica/BehaviourCreator.h>
-#include <alica/ConditionCreator.h>
+//#include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
 #include <alica/DynamicBehaviourCreator.h>
 #include <alica/DynamicPlanCreator.h>
+#include <alica/DynamicConditionCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
@@ -61,7 +62,7 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
 
 void Base::start()
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+    alica::AlicaCreators creators(std::make_unique/*<alica::ConditionCreator>()*/<DynamicConditionCreator>(_path), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(_path),
             std::make_unique<alica::DynamicPlanCreator>(_path), std::make_unique<alica::TransitionConditionCreator>());
 
