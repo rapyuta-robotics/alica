@@ -20,7 +20,6 @@ class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
 class PostCondition;
-class AlicaEngine;
 
 /**
  * Represents a Behaviour within the plan tree
@@ -28,8 +27,6 @@ class AlicaEngine;
 class Behaviour : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    Behaviour(AlicaEngine* ae); // TOBE removed
     Behaviour();
     virtual ~Behaviour();
 

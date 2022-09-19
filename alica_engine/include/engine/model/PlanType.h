@@ -13,13 +13,10 @@ class Plan;
 class VariableBinding;
 class ModelFactory;
 class PlanTypeFactory;
-class AlicaEngine;
 
 class PlanType : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    PlanType(AlicaEngine* ae); // TOBE removed
     PlanType();
     virtual ~PlanType();
 
