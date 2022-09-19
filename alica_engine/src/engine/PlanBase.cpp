@@ -275,7 +275,8 @@ void PlanBase::run(const Plan* masterPlan)
         if (checkFp) {
             std::queue<RunningPlan*> nextFpEvents;
             {
-                // move fath path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking _loMutex
+                // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
+                // _loMutex
                 std::lock_guard<std::mutex> lock(_lomutex);
                 nextFpEvents.swap(_fpEvents);
             }

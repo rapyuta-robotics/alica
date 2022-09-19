@@ -1,5 +1,4 @@
 #include "engine/model/Plan.h"
-#include "engine/AlicaEngine.h"
 
 #include <assert.h>
 

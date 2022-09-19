@@ -126,7 +126,8 @@ public:
 private:
     // void setStepEngine(bool stepEngine);
     void initTransitionConditions(ITransitionConditionCreator* creator);
-    // WARNING: Initialization order dependencies!
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;

@@ -6,7 +6,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class Plan;
 class BasicPlan;
 class IPlanCreator;
@@ -15,10 +14,7 @@ class IAlicaTraceFactory;
 class TeamManager;
 class IAlicaTimerFactory;
 
-/**
- * @brief
- *
- */
+
 class RuntimePlanFactory
 {
 public:
