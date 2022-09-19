@@ -51,7 +51,8 @@ void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCrea
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getPreCondition()->getId()));
+                ConditionContext context{p->getPreCondition()->getName(),_customerLibraryFolder,p->getPreCondition()->_libraryName,p->getPreCondition()->getId()};
+                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
                 attachConstraint(p->_preCondition, *creatorCtx.constraintCreator);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());

@@ -16,11 +16,6 @@ DynamicConditionCreator::DynamicConditionCreator(const std::string& defaultLibra
 
 DynamicConditionCreator::~DynamicConditionCreator() {}
 
-std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_t conditionConfId)
-{
-    return nullptr;
-}
-
 std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(ConditionContext& context)
 {
     if (context.libraryPath != "") {
