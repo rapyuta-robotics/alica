@@ -9,7 +9,6 @@
 
 namespace alica
 {
-class AlicaEngine;
 class ModelManager;
 class PlanRepository;
 

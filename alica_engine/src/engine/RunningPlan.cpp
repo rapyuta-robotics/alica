@@ -1,7 +1,6 @@
 #include "engine/RunningPlan.h"
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
@@ -9,6 +8,7 @@
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
 #include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"

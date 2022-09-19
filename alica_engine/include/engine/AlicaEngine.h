@@ -48,7 +48,7 @@ public:
     void stepNotify();
 
     // Parameter Access:
-    bool getStepEngine() const;
+    // bool getStepEngine() const;
     bool maySendMessages() const { return _maySendMessages; }
 
     // Module Access:
@@ -93,8 +93,6 @@ public:
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
-    void setStepCalled(bool stepCalled);
-    bool getStepCalled() const;
     void iterationComplete();
     int getVersion() const;
 
@@ -126,7 +124,7 @@ public:
     void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
-    void setStepEngine(bool stepEngine);
+    // void setStepEngine(bool stepEngine);
     void initTransitionConditions(ITransitionConditionCreator* creator);
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.

@@ -1,5 +1,4 @@
 #include "engine/model/Quantifier.h"
-#include "engine/AlicaEngine.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"

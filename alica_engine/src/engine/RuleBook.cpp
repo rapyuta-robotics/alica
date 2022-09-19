@@ -1,6 +1,7 @@
 #include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaWorldModel.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
@@ -31,19 +32,18 @@ using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver, TeamManager& teamManager,
+RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
         const PlanRepository& planRepository, PlanBase* pb)
-        : _configChangeListener(configChangeListener)
-        , _logger(log)
-        , _synchModule(synchModule)
+        : _logger(log)
+        , _syncModule(syncModule)
         , _teamManager(teamManager)
         , _pb(pb)
         , _ps(new PlanSelector(teamObserver, teamManager, pb))
         , _changeOccurred(true)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     assert(_ps && _pb);
 }
 
@@ -504,7 +504,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
         if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_synchModule.isTransitionSuccessfullySynchronised(t)) {
+        if (_syncModule.isTransitionSuccessfullySynchronised(t)) {
             if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
@@ -513,11 +513,11 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
                 break;
             } else {
                 // adds a new synchronisation process or updates existing
-                _synchModule.setSynchronisation(t, false);
+                _syncModule.setSynchronisation(t, false);
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _synchModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
+            _syncModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {

@@ -1,6 +1,4 @@
 #include "engine/BasicCondition.h"
-
-#include "engine/AlicaEngine.h"
 #include "engine/RunningPlan.h"
 
 namespace alica

@@ -1,7 +1,8 @@
 #include "engine/RunnableObject.h"
-#include "engine/AlicaEngine.h"
 // TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
 #include "engine/BasicPlan.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/RunningPlan.h"
 #include "engine/blackboard/BlackboardUtil.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
@@ -39,8 +40,8 @@ void RunnableObject::stop()
 
     stopRunCalls();
     doTerminate();
-    cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+    cleanupBlackboard();
 
     _started = false;
 }
@@ -56,6 +57,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
+
     doInit();
     scheduleRunCalls();
 }

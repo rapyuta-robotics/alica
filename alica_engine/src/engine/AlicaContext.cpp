@@ -25,6 +25,15 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 {
 }
 
+AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
+        : _validTag(ALICA_CTX_GOOD)
+        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
+        , _worldModel(nullptr)
+        , _alicaContextParams(alicaContextParams)
+        , _clock(std::make_unique<AlicaClock>())
+{
+}
+
 AlicaContext::~AlicaContext()
 {
     _validTag = ALICA_CTX_BAD;

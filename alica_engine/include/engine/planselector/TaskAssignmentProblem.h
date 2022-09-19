@@ -14,10 +14,8 @@
 
 namespace alica
 {
-class AlicaEngine;
 class Assignment;
 class PartialAssignment;
-
 class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
@@ -30,7 +28,7 @@ class IAlicaWorldModel;
 class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
-    TaskAssignmentProblem(const TeamObserver& teamObserver, TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
+    TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
             PartialAssignmentPool& pool, const IAlicaWorldModel* wm);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();

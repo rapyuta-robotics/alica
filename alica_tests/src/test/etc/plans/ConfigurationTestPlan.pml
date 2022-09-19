@@ -146,7 +146,7 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
-      "condition": "conditions/conditions.cnd#2163654295690873706",
+      "condition": "conditions/ConditionRepository.cnd#2163654295690873706",
       "id": 1588253347211,
       "inState": 1588060991102,
       "keyMapping": {
