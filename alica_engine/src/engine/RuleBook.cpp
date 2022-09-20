@@ -38,7 +38,7 @@ RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, Sync
         , _syncModule(syncModule)
         , _teamManager(teamManager)
         , _pb(pb)
-        , _ps(new PlanSelector(teamObserver, teamManager, pb))
+        , _ps(std::make_unique<PlanSelector>(teamObserver, teamManager, pb))
         , _changeOccurred(true)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
