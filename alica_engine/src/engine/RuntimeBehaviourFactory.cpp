@@ -34,7 +34,6 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
         return nullptr;
     }
 
-    // TODO Cleanup: get rid of this later, behaviour only needs traceFactory, teamManager and not entire engine
     basicBeh->setTeamManager(&_teamManager);
     basicBeh->setPlanBase(&_planBase);
     basicBeh->setAlicaCommunication(&_communication);
