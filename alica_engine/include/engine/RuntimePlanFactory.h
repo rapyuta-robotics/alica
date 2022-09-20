@@ -14,7 +14,6 @@ class IAlicaTraceFactory;
 class TeamManager;
 class IAlicaTimerFactory;
 
-
 class RuntimePlanFactory
 {
 public:

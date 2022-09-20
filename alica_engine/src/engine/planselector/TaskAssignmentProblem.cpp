@@ -28,8 +28,8 @@ std::ostream& operator<<(std::ostream& out, const std::vector<PartialAssignment*
 TaskAssignmentProblem::~TaskAssignmentProblem() {}
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  * @param planList Plans to build an assignment for
  * @param paraAgents agents to build an assignment for
  * @param a bool
