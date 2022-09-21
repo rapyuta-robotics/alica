@@ -1,7 +1,6 @@
 
 #include <engine/RuntimePlanFactory.h>
 
-#include "engine/AlicaEngine.h"
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
 #include "engine/model/Plan.h"
