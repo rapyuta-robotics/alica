@@ -16,6 +16,7 @@ BasicBehaviour* Util::getBasicBehaviourHelper(const RunningPlan* rp, int64_t beh
     if (!rp) {
         return nullptr;
     }
+    
     BasicBehaviour* beh = rp->getBasicBehaviour();
     if (beh && beh->getId() == behaviourId) {
         return beh;
