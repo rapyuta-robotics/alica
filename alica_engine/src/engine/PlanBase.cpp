@@ -413,8 +413,6 @@ void PlanBase::stepNotify()
         return;
     }
     _stepModeCV.notify_all();
-
-    // getStepModeCV()->notify_all();
 }
 
 } // namespace alica

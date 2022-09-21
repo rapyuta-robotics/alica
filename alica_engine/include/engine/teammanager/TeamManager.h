@@ -87,6 +87,7 @@ private:
     void announcePresence() const;
     void queryPresence() const;
     Agent* getAgent(AgentId agentId) const;
+    alica::AgentId generateID() const;
 
     AlicaTime _teamTimeOut;
     AlicaTime _agentAnnouncementTimeInterval;

@@ -28,7 +28,7 @@ ExpressionHandler::~ExpressionHandler() {}
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */
-void ExpressionHandler::attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx)
+void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 {
     for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
