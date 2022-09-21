@@ -18,7 +18,7 @@ class ExpressionHandler
 public:
     ExpressionHandler();
     virtual ~ExpressionHandler();
-    void attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx);
+    void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
 
 private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);
