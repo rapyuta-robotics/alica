@@ -7,7 +7,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class ProblemDescriptor;
 class Variable;
 class SolverVariable;

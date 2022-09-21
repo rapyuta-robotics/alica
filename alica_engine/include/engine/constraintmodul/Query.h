@@ -27,7 +27,6 @@ namespace alica
 class ProblemPart;
 class RunningPlan;
 class SolverContext;
-class AlicaEngine;
 
 template <class T>
 class BufferedSet

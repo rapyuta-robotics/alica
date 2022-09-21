@@ -12,7 +12,6 @@
 
 namespace alica
 {
-class AlicaEngine;
 class IVariableSyncModule;
 class SolverContext;
 

@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
@@ -32,7 +31,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class IAlicaCommunication;
 class AlicaTestsEngineGetter;
 struct SyncTalk;
@@ -40,6 +38,7 @@ struct SyncReady;
 struct AllocationAuthorityInfo;
 struct PlanTreeInfo;
 struct SolverResult;
+class AlicaEngine;
 struct AgentQuery;
 struct AgentAnnouncement;
 
