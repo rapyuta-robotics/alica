@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "engine/AlicaEngine.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
@@ -500,8 +501,8 @@ void AlicaContext::addSolver(Args&&... args)
     _solvers.emplace(typeid(SolverType).hash_code(),
             std::make_unique<SolverType>(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...));
 #else
-    _solvers.emplace(typeid(SolverType).hash_code(),
-            std::unique_ptr<SolverType>(new SolverType(_engine->editBlackboard(), _engine->getResultStore(), _engine->getConfig(), std::forward<Args>(args)...)));
+    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine->editBlackboard(), _engine->getResultStore(),
+                                                             _engine->getConfig(), std::forward<Args>(args)...)));
 #endif
 }
 
