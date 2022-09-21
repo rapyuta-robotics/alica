@@ -12,7 +12,7 @@
       "plan": 1613378382024,
       "positionWeb": {
         "x": 200,
-        "y": 412
+        "y": 612
       },
       "state": 1615797271229,
       "successRequired": false,
@@ -54,7 +54,7 @@
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 686,
+        "x": 944,
         "y": 200
       },
       "type": "State",
@@ -75,8 +75,8 @@
       "outTransitions": [],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 944,
-        "y": 600
+        "x": 1202,
+        "y": 1000
       },
       "type": "State",
       "variableBindings": []
@@ -97,7 +97,7 @@
       "parentPlan": 1613378382024,
       "positionWeb": {
         "x": 428,
-        "y": 400
+        "y": 600
       },
       "type": "State",
       "variableBindings": []
@@ -128,7 +128,7 @@
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 686,
+        "x": 944,
         "y": 400
       },
       "type": "State",
@@ -160,7 +160,7 @@
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 686,
+        "x": 944,
         "y": 600
       },
       "type": "State",
@@ -193,8 +193,8 @@
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 705.7425742574258,
-        "y": 45.94059405940594
+        "x": 686,
+        "y": 1000
       },
       "type": "State",
       "variableBindings": []
@@ -226,8 +226,8 @@
       ],
       "parentPlan": 1613378382024,
       "positionWeb": {
-        "x": 1152.4752475247526,
-        "y": 94.25742574257426
+        "x": 944,
+        "y": 1000
       },
       "type": "State",
       "variableBindings": []
@@ -237,11 +237,21 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#2711102114821139213",
       "id": 1613530643879,
       "inState": 1613378474109,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo EndTest",
       "outState": 1613530614559,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 1102,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -256,11 +266,29 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#1311087067347475449",
       "id": 1615797316170,
       "inState": 1615797271229,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo InitTest",
       "outState": 1613378474109,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        },
+        {
+          "x": 715,
+          "y": 229
+        },
+        {
+          "x": 844,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -275,11 +303,29 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#3726136276355540527",
       "id": 1615797327076,
       "inState": 1615797271229,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1615797319003,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 429
+        },
+        {
+          "x": 715,
+          "y": 429
+        },
+        {
+          "x": 844,
+          "y": 429
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -294,11 +340,21 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#1013158988206959873",
       "id": 1615797365363,
       "inState": 1615797319003,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo EndTest",
       "outState": 1613530614559,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 1102,
+          "y": 429
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -313,11 +369,29 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#2619422076497988080",
       "id": 1629895598464,
       "inState": 1615797271229,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1629895593451,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 629
+        },
+        {
+          "x": 715,
+          "y": 629
+        },
+        {
+          "x": 844,
+          "y": 629
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -332,11 +406,21 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1629895607017,
       "inState": 1629895593451,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromDefault NameTo EndTest",
       "outState": 1613530614559,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 1102,
+          "y": 629
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -351,11 +435,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#4244459279660861567",
       "id": 383854659955639601,
       "inState": 1206766322278521913,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "ExecuteBehaviourToExecuteBehaviourInSubPlan",
       "outState": 3802371674214346622,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 829
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -370,11 +464,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1506708037135242126,
       "inState": 3802371674214346622,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 1613530614559,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 1102,
+          "y": 1029
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -389,11 +493,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2205566100638019970",
       "id": 1773144683253207826,
       "inState": 3802371674214346622,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "ExecuteBehaviourInSubPlanToExecuteBehaviour",
       "outState": 1206766322278521913,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 1029
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -408,11 +522,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2452554857659522052",
       "id": 3351673290341906102,
       "inState": 1615797271229,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 1206766322278521913,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1029
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

@@ -1,7 +1,6 @@
 #include "engine/RunningPlan.h"
 
 #include "engine/AlicaClock.h"
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
 #include "engine/BasicPlan.h"
@@ -9,6 +8,7 @@
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/RuleBook.h"
 #include "engine/RuntimeBehaviourFactory.h"
+#include "engine/RuntimePlanFactory.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/CycleManager.h"
@@ -18,6 +18,7 @@
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
 #include "engine/model/AbstractPlan.h"
+#include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Parameter.h"
@@ -919,6 +920,24 @@ const KeyMapping* RunningPlan::getKeyMapping(int64_t wrapperId) const
 {
     assert(!isBehaviour());
     return _basicPlan->getKeyMapping(wrapperId);
+}
+
+int64_t RunningPlan::getParentWrapperId(const RunningPlan* rp) const
+{
+    const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
+    std::string name = isBehaviour() ? rp->getBasicBehaviour()->getName() : rp->getBasicPlan()->getName();
+
+    auto it = std::find_if(wrappers.begin(), wrappers.end(), [name](const auto& wrapper_ptr) {
+        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
+            const auto& plans = planType->getPlans();
+            return std::find_if(plans.begin(), plans.end(), [name](const auto& plan) { return plan->getName() == name; }) != plans.end();
+        } else {
+            return wrapper_ptr->getAbstractPlan()->getName() == name;
+        }
+    });
+    assert(it != wrappers.end());
+    int64_t wrapperId = (*it)->getId();
+    return wrapperId;
 }
 
 TeamManager& RunningPlan::getTeamManager() const

@@ -1,7 +1,6 @@
 #include <alica_tests/OrderedSchedulingTestPlan1629895582410.h>
 /*PROTECTED REGION ID(eph1629895582410) ENABLED START*/
 // Add additional options here
-#include "engine/PlanInterface.h"
 #include <alica_tests/test_sched_world_model.h>
 /*PROTECTED REGION END*/
 
@@ -37,52 +36,6 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895582410::getUtilityFunctio
     /*PROTECTED REGION ID(1629895582410) ENABLED START*/
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: FromPlanATo PlanB (1629895758611)
- *   - Comment: MISSING_COMMENT
- *   - Source2Dest: PlanA --> PlanB
- *
- * Precondition: 1629895758612 (1629895758612)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in PlanA:
- *   - PlanA (1629895837159)
- */
-bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1629895758611) ENABLED START*/
-    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
-    return worldModel->planA2PlanB;
-    /*PROTECTED REGION END*/
-}
-
-/**
- * Transition: FromPlanBTo PlanA (1629895768181)
- *   - Comment: MISSING_COMMENT
- *   - Source2Dest: PlanB --> PlanA
- *
- * Precondition: 1629895768182 (1629895768182)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in PlanB:
- *   - PlanB (1629895853508)
- */
-bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(1629895768181) ENABLED START*/
-    auto* worldModel = dynamic_cast<const alica_test::SchedWM*>(wm);
-    return worldModel->planB2PlanA;
     /*PROTECTED REGION END*/
 }
 

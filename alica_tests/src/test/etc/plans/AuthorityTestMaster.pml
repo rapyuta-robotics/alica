@@ -81,11 +81,21 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2872265442510628524",
       "id": 1414403840950,
       "inState": 1414403820806,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1414403840950",
       "outState": 1414403396329,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",

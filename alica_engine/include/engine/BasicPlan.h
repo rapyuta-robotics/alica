@@ -2,14 +2,17 @@
 
 #include "engine/IPlanCreator.h"
 #include "engine/RunnableObject.h"
+#include "engine/Types.h"
 #include "engine/blackboard/KeyMapping.h"
 
+#include <memory>
 #include <unordered_map>
 
 namespace alica
 {
 
 class Plan;
+class Transition;
 
 struct PlanContext
 {

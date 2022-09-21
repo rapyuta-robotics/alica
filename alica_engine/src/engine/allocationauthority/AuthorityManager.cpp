@@ -1,7 +1,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
 #include "engine/model/AbstractPlan.h"
@@ -19,16 +19,24 @@ namespace alica
 /**
  * Constructor
  */
-AuthorityManager::AuthorityManager(const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager)
+AuthorityManager::AuthorityManager(
+        ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager)
         : _localAgentID(InvalidAgentID)
-        , _config(config)
         , _communicator(communicator)
         , _clock(clock)
         , _tm(teamManager)
 {
+    auto reloadFunctionPtr = std::bind(&AuthorityManager::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 AuthorityManager::~AuthorityManager() {}
+
+void AuthorityManager::reload(const YAML::Node& config)
+{
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+}
 
 /**
  * Initialises this engine module
@@ -117,8 +125,7 @@ void AuthorityManager::processPlan(RunningPlan& rp)
  */
 void AuthorityManager::sendAllocation(const RunningPlan& p)
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages) {
+    if (!_maySendMessages) {
         return;
     }
     AllocationAuthorityInfo aai{};

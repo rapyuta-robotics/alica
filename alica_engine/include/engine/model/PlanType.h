@@ -13,7 +13,6 @@ class Plan;
 class VariableBinding;
 class ModelFactory;
 class PlanTypeFactory;
-class AlicaEngine;
 
 class PlanType : public AbstractPlan
 {

@@ -11,8 +11,8 @@
       "name": "EntryPoint",
       "plan": 3254486013443203397,
       "positionWeb": {
-        "x": 267,
-        "y": 226
+        "x": 200,
+        "y": 212
       },
       "state": 338845808462999166,
       "successRequired": false,
@@ -54,8 +54,8 @@
       ],
       "parentPlan": 3254486013443203397,
       "positionWeb": {
-        "x": 726,
-        "y": 247.23917828319884
+        "x": 319.0441826215022,
+        "y": 308.9558173784978
       },
       "type": "State",
       "variableBindings": []
@@ -86,8 +86,8 @@
       ],
       "parentPlan": 3254486013443203397,
       "positionWeb": {
-        "x": 1067,
-        "y": 276
+        "x": 686,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -97,14 +97,19 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#330238006348384830",
       "id": 1914245867924544479,
       "inState": 1114306208475690481,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 338845808462999166,
       "pointsWeb": [
         {
-          "x": 930.6830520909759,
-          "y": 301.56859867938374
+          "x": 586,
+          "y": 229
         }
       ],
       "preCondition": {
@@ -121,14 +126,19 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#330238006348384830",
       "id": 3345031375302716643,
       "inState": 338845808462999166,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 1114306208475690481,
       "pointsWeb": [
         {
-          "x": 932.4438738077771,
-          "y": 214.40792369772558
+          "x": 586,
+          "y": 29
         }
       ],
       "preCondition": {

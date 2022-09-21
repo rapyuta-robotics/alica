@@ -225,8 +225,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489257607,
       "inState": 1402488787818,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1402489237914,
       "pointsWeb": [],
@@ -244,8 +249,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489276995,
       "inState": 1402488787818,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1402489273401,
       "pointsWeb": [],
@@ -263,8 +273,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402500843072,
       "inState": 1402500830885,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1402500833246,
       "pointsWeb": [],

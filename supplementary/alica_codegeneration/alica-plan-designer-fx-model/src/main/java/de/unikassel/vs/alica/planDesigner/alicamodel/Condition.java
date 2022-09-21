@@ -15,6 +15,7 @@ public class Condition extends PlanElement {
     protected final SimpleStringProperty pluginName = new SimpleStringProperty(this, "pluginName", null);
     protected final ArrayList<Variable> variables = new ArrayList<>();
     protected final ArrayList<Quantifier> quantifiers = new ArrayList<>();
+    protected final SimpleStringProperty relativeDirectory = new SimpleStringProperty();
     private ChangeListenerForDirtyFlag listenerForDirtyFlag;
 
     public boolean getEnabled () {
@@ -100,5 +101,15 @@ public class Condition extends PlanElement {
 
     public boolean hasConstraint() {
         return !variables.isEmpty() || !quantifiers.isEmpty();
+    }
+
+    public String getRelativeDirectory() {
+        // TODO: read value from file once plan designer changes are ready
+        return "conditions";
+        // return relativeDirectory.get();
+    }
+
+    public void setRelativeDirectory(String relativeDirectory) {
+        this.relativeDirectory.set(relativeDirectory);
     }
 }

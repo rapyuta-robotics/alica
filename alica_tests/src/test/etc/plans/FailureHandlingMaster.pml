@@ -30,26 +30,6 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 4449850763179483831,
-      "inTransitions": [
-        3194919312481305139
-      ],
-      "name": "FailureHandled",
-      "outTransitions": [],
-      "parentPlan": 4150733089768927549,
-      "positionWeb": {
-        "x": 925.7482517482517,
-        "y": 398.65034965034965
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [
         {
           "abstractPlan": "FailurePlan.pml#631515556091266493",
@@ -77,14 +57,39 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 4449850763179483831,
+      "inTransitions": [
+        3194919312481305139
+      ],
+      "name": "FailureHandled",
+      "outTransitions": [],
+      "parentPlan": 4150733089768927549,
+      "positionWeb": {
+        "x": 925.7482517482517,
+        "y": 398.65034965034965
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#190171326790683374",
       "id": 3194919312481305139,
       "inState": 198406198808981916,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "",
       "outState": 4449850763179483831,
       "pointsWeb": [],

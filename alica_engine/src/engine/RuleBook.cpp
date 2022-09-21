@@ -1,6 +1,7 @@
 #include "engine/RuleBook.h"
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaWorldModel.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
@@ -14,6 +15,7 @@
 #include "engine/model/PreCondition.h"
 #include "engine/model/State.h"
 #include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/planselector/PlanSelector.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
@@ -30,18 +32,18 @@ using std::endl;
 /**
  * Basic constructor
  */
-RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& synchModule, TeamObserver& teamObserver,TeamManager& teamManager,const PlanRepository& planRepository, PlanBase* pb)
-        : _configChangeListener(configChangeListener)
-        , _logger(log)
-        , _synchModule(synchModule)
+RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, SyncModule& syncModule, TeamObserver& teamObserver, const TeamManager& teamManager,
+        const PlanRepository& planRepository, PlanBase* pb)
+        : _logger(log)
+        , _syncModule(syncModule)
         , _teamManager(teamManager)
         , _pb(pb)
-        , _ps(new PlanSelector(teamObserver, teamManager, pb))
+        , _ps(std::make_unique<PlanSelector>(teamObserver, teamManager, pb))
         , _changeOccurred(true)
 {
     auto reloadFunctionPtr = std::bind(&RuleBook::reload, this, std::placeholders::_1);
-    _configChangeListener.subscribe(reloadFunctionPtr);
-    reload(_configChangeListener.getConfig());
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
     assert(_ps && _pb);
 }
 
@@ -454,11 +456,12 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     }
 
     for (const Transition* t : r.getActiveState()->getOutTransitions()) {
-        if (t->getSynchronisation() != nullptr)
+        if (t->getSynchronisation() != nullptr) {
             continue;
-        if (t->evalCondition(r, _wm)) {
+        }
+
+        if (t->getTransitionCondition()->evaluate(&r, _wm, t->getKeyMapping())) {
             nextState = t->getOutState();
-            r.editConstraintStore().addCondition(t->getPreCondition());
             break;
         }
     }
@@ -501,19 +504,20 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
         if (t->getSynchronisation() == nullptr) {
             continue;
         }
-        if (_synchModule.isTransitionSuccessfullySynchronised(t)) {
-            if (t->evalCondition(rp, _wm)) {
+        if (_syncModule.isTransitionSuccessfullySynchronised(t)) {
+            if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
-                rp.editConstraintStore().addCondition(t->getPreCondition());
+                // TODO: Find solution for constraints with new transition conditions
+                // rp.editConstraintStore().addCondition(t->getPreCondition());
                 break;
             } else {
                 // adds a new synchronisation process or updates existing
-                _synchModule.setSynchronisation(t, false);
+                _syncModule.setSynchronisation(t, false);
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _synchModule.setSynchronisation(t, t->evalCondition(rp, _wm));
+            _syncModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {

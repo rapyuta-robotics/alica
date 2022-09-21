@@ -12,6 +12,7 @@
 #include "engine/allocationauthority/AuthorityManager.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
+#include "engine/default/DefaultTransitionConditionCreator.h"
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -47,7 +48,7 @@ public:
     void stepNotify();
 
     // Parameter Access:
-    bool getStepEngine() const;
+    // bool getStepEngine() const;
     bool maySendMessages() const { return _maySendMessages; }
 
     // Module Access:
@@ -92,8 +93,6 @@ public:
     const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
-    void setStepCalled(bool stepCalled);
-    bool getStepCalled() const;
     void iterationComplete();
     int getVersion() const;
 
@@ -125,8 +124,10 @@ public:
     void reloadConfig(const YAML::Node& config); // to be removed in the last PR
 
 private:
-    void setStepEngine(bool stepEngine);
-    // WARNING: Initialization order dependencies!
+    // void setStepEngine(bool stepEngine);
+    void initTransitionConditions(ITransitionConditionCreator* creator);
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
@@ -142,6 +143,8 @@ private:
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
+    DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
+
     /**
      * TODO: Make VariableSyncModule a stack variable.
      * Currently, it has circular dependency with engine header, because it needs to access
@@ -158,8 +161,6 @@ private:
     Blackboard _Blackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
-    bool _stepEngine;      /**< Set to have the engine's main loop wait on a signal via MayStep*/
-    bool _stepCalled;      /**< Flag against spurious wakeups on the condition variable for step mode*/
 };
 
 template <typename T>

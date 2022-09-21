@@ -1,5 +1,14 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 2539111367556229723,
+      "key": "numberOfCalls",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -137,11 +146,26 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#2163654295690873706",
       "id": 1588253347211,
       "inState": 1588060991102,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "numberOfCalls",
+            "parentKey": "numberOfCalls"
+          }
+        ],
+        "output": []
+      },
       "name": "FromDefault NameTo Default Name",
       "outState": 1588253341545,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,

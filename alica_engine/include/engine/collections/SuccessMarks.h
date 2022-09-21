@@ -6,7 +6,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class PlanRepository;
 
 /**

@@ -113,8 +113,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2208457928613785430",
       "id": 1413201226246,
       "inState": 1413200842974,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1413201226246",
       "outState": 1413201213955,
       "pointsWeb": [],
@@ -132,8 +137,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1648591654803570403",
       "id": 1413201388722,
       "inState": 1413201213955,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "1413201388722",
       "outState": 1413201380359,
       "pointsWeb": [],

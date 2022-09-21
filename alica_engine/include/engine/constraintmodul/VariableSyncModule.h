@@ -1,6 +1,5 @@
 #pragma once
 //#define RS_DEBUG
-#include "engine/AlicaEngine.h"
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 
@@ -14,17 +13,18 @@ namespace alica
 class Variable;
 class ResultEntry;
 class IAlicaCommunication;
-class AlicaEngine;
 class IAlicaTimer;
 class AlicaClock;
 class TeamManager;
 class TimerFactory;
+class IAlicaTimerFactory;
+class ConfigChangeListener;
 
 class VariableSyncModule
 {
 public:
-    VariableSyncModule(ConfigChangeListener& configChangeListener, const YAML::Node& config, const IAlicaCommunication& communicator, const AlicaClock& clock,
-            TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
+    VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock, TeamManager& teamManager,
+            IAlicaTimerFactory& timerFactory);
     ~VariableSyncModule();
 
     void init();
@@ -70,11 +70,11 @@ private:
     AlicaTime _ttl4Usage;
     ResultEntry* _ownResults;
     ConfigChangeListener& _configChangeListener;
-    const YAML::Node& _config;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     TeamManager& _teamManager;
-    const IAlicaTimerFactory& _timerFactory;
+    IAlicaTimerFactory& _timerFactory;
+    bool _maySendMessages;
 
     mutable std::mutex _mutex;
 };

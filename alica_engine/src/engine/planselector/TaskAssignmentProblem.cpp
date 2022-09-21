@@ -1,6 +1,5 @@
 #include "engine/planselector/TaskAssignmentProblem.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/TeamObserver.h"
 #include "engine/UtilityFunction.h"
@@ -30,12 +29,13 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
 
 /**
  * Constructor of a new TaskAssignment
+ *
  * @param planList Plans to build an assignment for
  * @param paraAgents agents to build an assignment for
  * @param a bool
  */
-TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
-        PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
         : _agents(paraAgents)
         , _plans(planList)
         , _wm(wm)
@@ -179,7 +179,6 @@ std::ostream& operator<<(std::ostream& out, const TaskAssignmentProblem& tap)
     }
     out << "}" << std::endl;
     out << "-------------------------------------------" << std::endl;
-    ;
     return out;
 }
 

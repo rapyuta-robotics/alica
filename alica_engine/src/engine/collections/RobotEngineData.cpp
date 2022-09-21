@@ -1,6 +1,5 @@
 #include "engine/collections/RobotEngineData.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/model/AlicaElement.h"

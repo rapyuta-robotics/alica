@@ -17,7 +17,6 @@ class ModelFactory;
 class ExpressionHandler;
 class ModelManager;
 class AbstractPlanFactory;
-class AlicaEngine;
 
 /**
  * Super class of plans, plantypes and behaviours.

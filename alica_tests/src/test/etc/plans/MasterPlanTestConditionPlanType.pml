@@ -81,8 +81,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2872265442510628524",
       "id": 1418042682960,
       "inState": 1418042656595,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "MISSING_NAME",
       "outState": 1418042674811,
       "pointsWeb": [],

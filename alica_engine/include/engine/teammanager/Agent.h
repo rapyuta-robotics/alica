@@ -12,7 +12,6 @@
 namespace alica
 {
 
-class AlicaEngine;
 class TeamManager;
 class TeamObserver;
 class AbstractPlan;

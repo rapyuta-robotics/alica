@@ -42,7 +42,7 @@ AlicaContext::~AlicaContext()
 int AlicaContext::init(AlicaCreators& creatorCtx)
 {
     AlicaCreators creators(std::move(creatorCtx.conditionCreator), std::move(creatorCtx.utilityCreator), std::move(creatorCtx.constraintCreator),
-            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
+            std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator), std::move(creatorCtx.transitionConditionCreator));
     return init(std::move(creators));
 }
 
@@ -101,7 +101,7 @@ void AlicaContext::stepEngine()
         if (std::chrono::system_clock::now() > start + timeout) {
             throw std::runtime_error("Got stuck trying to step engine");
         }
-    } while (!_engine->editPlanBase().isWaiting()); //<<<-----edit instedad of get
+    } while (!_engine->editPlanBase().isWaiting());
 }
 
 AgentId AlicaContext::getLocalAgentId() const

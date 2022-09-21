@@ -97,11 +97,21 @@
   "transitions": [
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#682216470625774387",
       "id": 1629895758611,
       "inState": 1629895681520,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromPlanATo PlanB",
       "outState": 1629895684249,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 29
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,
@@ -116,11 +126,21 @@
     },
     {
       "comment": "MISSING_COMMENT",
+      "condition": "conditions/ConditionRepository.cnd#655002160731734731",
       "id": 1629895768181,
       "inState": 1629895684249,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FromPlanBTo PlanA",
       "outState": 1629895681520,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": null,

@@ -1,9 +1,11 @@
 #include "engine/TeamObserver.h"
 
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/IRoleAssignment.h"
+#include "engine/Logger.h"
 #include "engine/PlanRepository.h"
+#include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
 #include "engine/collections/SuccessCollection.h"
 #include "engine/containers/PlanTreeInfo.h"
@@ -25,18 +27,27 @@ using std::map;
 using std::mutex;
 using std::pair;
 
-TeamObserver::TeamObserver(Logger& logger, IRoleAssignment& roleAssigment, const YAML::Node& config, const IAlicaCommunication& communicator,
+TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& logger, IRoleAssignment& roleAssigment, const IAlicaCommunication& communicator,
         const AlicaClock& clock, const PlanRepository& planRepository, TeamManager& teamManager)
         : _logger(logger)
         , _roleAssignment(roleAssigment)
-        , _config(config)
         , _communicator(communicator)
         , _clock(clock)
         , _planRepository(planRepository)
         , _tm(teamManager)
-        , _me(_tm.editLocalAgent()){};
+        , _me(_tm.editLocalAgent())
+{
+    auto reloadFunctionPtr = std::bind(&TeamObserver::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
+};
 
 TeamObserver::~TeamObserver() {}
+
+void TeamObserver::reload(const YAML::Node& config)
+{
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+}
 
 bool TeamObserver::updateTeamPlanTrees()
 {
@@ -122,8 +133,7 @@ void TeamObserver::close()
  */
 void TeamObserver::doBroadCast(const IdGrp& msg) const
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages) {
+    if (!_maySendMessages) {
         return;
     }
     PlanTreeInfo pti = PlanTreeInfo();

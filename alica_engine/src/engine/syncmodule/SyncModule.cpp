@@ -1,4 +1,4 @@
-#include "engine/AlicaEngine.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanRepository.h"
 #include "engine/containers/SyncData.h"
@@ -26,17 +26,19 @@ using std::pair;
 using std::shared_ptr;
 using std::vector;
 
-SyncModule::SyncModule(const TeamManager& teamManager, const PlanRepository& planRepository, const YAML::Node& config, const IAlicaCommunication& communicator,
-        const AlicaClock& clock)
+SyncModule::SyncModule(ConfigChangeListener& configChangeListener, const TeamManager& teamManager, const PlanRepository& planRepository,
+        const IAlicaCommunication& communicator, const AlicaClock& clock)
         : _myId(0)
         , _running(false)
         , _ticks(0)
         , _teamManager(teamManager)
         , _planRepository(planRepository)
-        , _config(config)
         , _communicator(communicator)
         , _clock(clock)
 {
+    auto reloadFunctionPtr = std::bind(&SyncModule::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
 }
 
 SyncModule::~SyncModule()
@@ -45,6 +47,12 @@ SyncModule::~SyncModule()
         delete iter.second;
     }
 }
+
+void SyncModule::reload(const YAML::Node& config)
+{
+    _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
+}
+
 void SyncModule::init()
 {
     lock_guard<mutex> lock(_lomutex);
@@ -205,8 +213,7 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
 
 void SyncModule::sendSyncTalk(SyncTalk& st)
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages)
+    if (!_maySendMessages)
         return;
     st.senderID = _myId;
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncTalk " << std::endl << st);
@@ -214,8 +221,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages)
+    if (!_maySendMessages)
         return;
     sr.senderID = _myId;
     ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr);
@@ -223,8 +229,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
 {
-    bool maySendMessages = !_config["Alica"]["SilentStart"].as<bool>();
-    if (!maySendMessages)
+    if (!_maySendMessages)
         return;
     SyncTalk st;
     st.senderID = _myId;

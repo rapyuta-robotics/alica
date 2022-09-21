@@ -4,7 +4,6 @@
 
 namespace alica
 {
-class AlicaEngine;
 class PlanRepository;
 class TeamManager;
 

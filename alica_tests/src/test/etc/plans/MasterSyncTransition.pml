@@ -163,8 +163,13 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2171152220550556375",
       "id": 1418825425833,
       "inState": 1418825395940,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "FirstTaskTran",
       "outState": 1418825409988,
       "pointsWeb": [],
@@ -182,8 +187,13 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1221637895518338620",
       "id": 1418825427469,
       "inState": 1418825404963,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "SecondTaskTran",
       "outState": 1418825411686,
       "pointsWeb": [],

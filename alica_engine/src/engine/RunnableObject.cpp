@@ -1,7 +1,9 @@
 #include "engine/RunnableObject.h"
-#include "engine/AlicaEngine.h"
 // TODO cleanup: remove reference to BasicPlan when blackboard setup is moved to RunnningPlan
 #include "engine/BasicPlan.h"
+#include "engine/IAlicaCommunication.h"
+#include "engine/RunningPlan.h"
+#include "engine/blackboard/BlackboardUtil.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
 
@@ -54,8 +56,8 @@ void RunnableObject::stop()
 
     stopRunCalls();
     doTerminate();
-    cleanupBlackboard();
     _runnableObjectTracer.cleanupTraceContext();
+    cleanupBlackboard();
 
     _started = false;
 }
@@ -71,6 +73,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
     setupBlackboard();
+
     doInit();
     scheduleRunCalls();
 }
@@ -100,10 +103,10 @@ void RunnableObject::setupBlackboard()
         }
     } else if (!getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
-        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(_runningplanContext));
+        auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
 
         _blackboard = std::make_shared<Blackboard>(_blackboardBlueprint); // Potentially heavy operation. TBD optimize
-        setInput(parentPlan->getBlackboard().get(), keyMapping);
+        BlackboardUtil::setInput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
     } else {
         // Inherit blackboard
         BasicPlan* parentPlan = _runningplanContext->getParent()->getBasicPlan();
@@ -115,8 +118,8 @@ void RunnableObject::cleanupBlackboard()
 {
     if (_runningplanContext->getParent() && !getInheritBlackboard()) {
         auto parentPlan = _runningplanContext->getParent();
-        auto keyMapping = parentPlan->getKeyMapping(getParentWrapperId(_runningplanContext));
-        setOutput(parentPlan->getBlackboard().get(), keyMapping);
+        auto keyMapping = parentPlan->getKeyMapping(_runningplanContext->getParentWrapperId(_runningplanContext));
+        BlackboardUtil::setOutput(parentPlan->getBlackboard().get(), _blackboard.get(), keyMapping);
     }
 }
 
@@ -124,6 +127,32 @@ void RunnableObject::runJob()
 {
     _runnableObjectTracer.traceRunCall();
     doRun();
+}
+
+void RunnableObject::setAlicaCommunication(const IAlicaCommunication* communication)
+{
+    _communication = communication;
+}
+void RunnableObject::setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory)
+{
+    _traceFactory = traceFactory;
+}
+void RunnableObject::setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory)
+{
+    _timerFactory = timerFactory;
+}
+void RunnableObject::setPlanBase(PlanBase* planBase)
+{
+    _planBase = planBase;
+}
+void RunnableObject::setTeamManager(const TeamManager* teamManager)
+{
+    _teamManager = teamManager;
+}
+
+const TeamManager& RunnableObject::getTeamManager() const
+{
+    return *_teamManager;
 }
 
 void RunnableObject::setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping)
@@ -152,32 +181,6 @@ void RunnableObject::setOutput(Blackboard* parent_bb, const KeyMapping* keyMappi
             ALICA_WARNING_MSG("Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what());
         }
     }
-}
-
-void RunnableObject::setAlicaCommunication(const IAlicaCommunication* communication)
-{
-    _communication = communication;
-}
-void RunnableObject::setAlicaTraceFactory(const IAlicaTraceFactory* traceFactory)
-{
-    _traceFactory = traceFactory;
-}
-void RunnableObject::setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory)
-{
-    _timerFactory = timerFactory;
-}
-void RunnableObject::setPlanBase(PlanBase* planBase)
-{
-    _planBase = planBase;
-}
-void RunnableObject::setTeamManager(const TeamManager* teamManager)
-{
-    _teamManager = teamManager;
-}
-
-const TeamManager& RunnableObject::getTeamManager() const
-{
-    return *_teamManager;
 }
 
 // Tracing methods

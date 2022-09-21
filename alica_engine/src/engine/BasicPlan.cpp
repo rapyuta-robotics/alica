@@ -1,7 +1,7 @@
 #include "engine/BasicPlan.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Transition.h"
 
 namespace alica
 {

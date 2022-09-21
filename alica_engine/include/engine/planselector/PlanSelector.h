@@ -12,7 +12,6 @@ class AbstractPlan;
 class PlanType;
 class Plan;
 class PlanBase;
-class AlicaEngine;
 
 /**
  * Implements the task allocation algorithm
@@ -20,7 +19,7 @@ class AlicaEngine;
 class PlanSelector
 {
 public:
-    PlanSelector(const TeamObserver& teamObserver, TeamManager& teamManager, PlanBase* pb);
+    PlanSelector(const TeamObserver& teamObserver, const TeamManager& teamManager, PlanBase* pb);
     virtual ~PlanSelector();
 
     virtual RunningPlan* getBestSimilarAssignment(const RunningPlan& rp);
@@ -38,7 +37,7 @@ private:
 
     PartialAssignmentPool _pap;
     const TeamObserver& _teamObserver;
-    TeamManager& _teamManager;
+    const TeamManager& _teamManager;
 
     PlanBase* _pb;
     const IAlicaWorldModel* _wm;

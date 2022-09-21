@@ -14,7 +14,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
-#include "engine/model/Transition.h"
 
 namespace alica
 {
@@ -49,17 +48,6 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
         if (p->getRuntimeCondition() != nullptr) {
             p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
-        }
-
-        for (const Transition* t : p->_transitions) {
-            if (t->getPreCondition() != nullptr) {
-                if (t->getPreCondition()->isEnabled()) {
-                    t->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(t->getPreCondition()->getId()));
-                    attachConstraint(t->_preCondition, *creatorCtx.constraintCreator);
-                } else {
-                    t->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
-                }
-            }
         }
     }
 }

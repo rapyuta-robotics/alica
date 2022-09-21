@@ -145,7 +145,6 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
             ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
 
     // fake inform the team observer about roles of none existing robots
-    // alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
     ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));

@@ -8,6 +8,8 @@
 #include "engine/constraintmodul/VariableSyncModule.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
+#include "engine/model/Transition.h"
+#include "engine/model/TransitionCondition.h"
 #include "engine/modelmanagement/ModelManager.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
@@ -46,19 +48,19 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
         , _teamManager(_configChangeListener, _modelManager, getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock(), _log, getVersion(),
                   getMasterPlanId(), _ctx.getLocalAgentName(), alicaContextParams.agentID)
-        , _syncModul(getTeamManager(), getPlanRepository(), config, _ctx.getCommunicator(), _ctx.getAlicaClock())
+        , _syncModul(_configChangeListener, getTeamManager(), getPlanRepository(), _ctx.getCommunicator(), _ctx.getAlicaClock())
         , _log(_configChangeListener, getTeamManager(), _teamObserver, getPlanRepository(), _ctx.getAlicaClock(), _ctx.getLocalAgentName())
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
-        , _teamObserver(editLog(), editRoleAssignment(), config, _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
-        , _auth(config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
+        , _teamObserver(
+                  _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
+        , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
-                  _configChangeListener, config, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
+                  _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(
                   _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
                   getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
-
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     subscribe(reloadFunctionPtr);
@@ -101,7 +103,6 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
     _planFactory->init(std::move(creatorCtx.planCreator));
 
-    _stepCalled = false;
     _roleAssignment->init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
@@ -112,6 +113,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _syncModul.init();
     _variableSyncModule->init();
     _auth.init();
+    initTransitionConditions(creatorCtx.transitionConditionCreator.get());
 
     _initialized = true;
     return true;
@@ -136,6 +138,18 @@ void AlicaEngine::terminate()
     _log.close();
     _variableSyncModule->close();
     _initialized = false;
+}
+
+void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
+{
+    for (const Transition* transition : _planRepository.getTransitions()) {
+        TransitionCondition* transitionCondition = transition->getTransitionCondition();
+        if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
+            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
+        } else {
+            transitionCondition->setEvalCallback(creator->createConditions(transitionCondition->getId()));
+        }
+    }
 }
 
 const IAlicaCommunication& AlicaEngine::getCommunicator() const
@@ -176,26 +190,6 @@ int AlicaEngine::getVersion() const
     return _ctx.getVersion();
 }
 
-void AlicaEngine::setStepCalled(bool stepCalled)
-{
-    _stepCalled = stepCalled;
-}
-
-bool AlicaEngine::getStepCalled() const
-{
-    return _stepCalled;
-}
-
-bool AlicaEngine::getStepEngine() const
-{
-    return _stepEngine;
-}
-
-void AlicaEngine::setStepEngine(bool stepEngine)
-{
-    _stepEngine = stepEngine;
-}
-
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
@@ -219,8 +213,7 @@ void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reload
  */
 void AlicaEngine::stepNotify()
 {
-    setStepCalled(true);
-    _planBase.getStepModeCV()->notify_all();
+    _planBase.stepNotify();
 }
 
 void AlicaEngine::reloadConfig(const YAML::Node& config)

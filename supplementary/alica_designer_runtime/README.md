@@ -79,6 +79,7 @@ You can create the following elements:
 - Configuration
 - Task & Task Repository
 - Role & Role Repository
+- Conditions
 
 #### 2.4.1 Plan
 ![create_plan](./doc/create_plan.png)
@@ -115,7 +116,7 @@ You can create a RoleSet by switching the tab from "Role" to "Role Set".
 will be used as its priority.
 - Default Role Set: Check this box to use this RoleSet as your default one.
 
-#### 2.4.4 Plan Type, Configuration & TaskRepository
+#### 2.4.4 Plan Type, Configuration, TaskRepository & Conditions
 For the remaining elements of plans you only need to provide a name.
 
 ![create_plantype](./doc/create_plantype.png)
@@ -201,6 +202,11 @@ Clicking on the edit button of a role will open its properties tab.
 You can set task priorities for a role by clicking on "Apply Task Priority", selecting a task
 and setting a value for priority.
 
+#### 2.6.10 Blackboard
+In the blackboard tab you can setup the blackboard of an element. By clicking on "Setup Blackboard", you can
+add items to the blackboard and set their keys.
+![setup_blackboard](./doc/setup_blackboard.png)
+
 ### 2.7 Create Plan Space
 
 The plan designer has an empty space in which you can create your plans. Selecting a plan in the
@@ -249,8 +255,16 @@ Move your cursor to the circle appearing at the top of the state / entry point. 
 drop your cursor to your destination node. Wait with dropping until a circle appears on top
 of your destination node and drop in the middle of that circle.
 
-Click on a transition with the selection tool to adjust properties and precondition
-of a transition. A connection from an entry point to a state does not have a precondition.
+By default, the condition "Default Condition" will be attached to the transition. You can select a condition in the selection menu and attach it to a transition with drag & drop.
+
+Click on a transition with the selection tool to adjust properties and blackboard
+of a transition. A connection from an entry point to a state does not have a transition condition.
+
+![transition_condition](./doc/transition_condition.png)
+
+If a transition condition has a red grid, it means that the blackboard items of the condition are not fully mapped. By clicking on the red grid, you can setup the key mapping between the condition and the current plan.
+
+![keymapping](./doc/keymapping.png)
 
 To learn more about transitions have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/finite-state_machines.html).
@@ -387,7 +401,7 @@ Branch Name: You can also enter a branch name, if kept blank, remote’s default
 
 Plans Path: It is also recommended to provide the path to the plan elements (relative to repo root), in case your repo contains many different folders each organising an ALICA designer project.
 
-E.g.  If your plans are in the lbc-repo , then the path for plans would be `lbc/etc`, since that’s where the plans are located remotely.
+E.g.  If your plans are in the `di_core`-repo , then the path for plans would be `robot/lbc/etc`, since that’s where the plans are located remotely.
 
 NOTE: If the repository contains duplicate plans, but in different sub paths of the repo, providing Plans Path is necessary or else, the import process will fail.
 

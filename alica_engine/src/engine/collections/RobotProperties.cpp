@@ -1,4 +1,3 @@
-#include <engine/AlicaEngine.h>
 #include <engine/PlanRepository.h>
 #include <engine/collections/RobotProperties.h>
 #include <engine/containers/AgentAnnouncement.h>

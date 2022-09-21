@@ -149,11 +149,21 @@
   "transitions": [
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402488990761,
       "inState": 1402488959965,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "TackleToGetBall",
       "outState": 1402488903549,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 29
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -168,11 +178,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402488991762,
       "inState": 1402488903549,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "TackleToGetBall",
       "outState": 1402488959965,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -187,11 +207,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489064693,
       "inState": 1402488959965,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "GetBallToTryToDefendGoal",
       "outState": 1402489037735,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 429
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -206,11 +236,21 @@
     },
     {
       "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1678986049909129132",
       "id": 1402489071510,
       "inState": 1402489037735,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
       "name": "TryToDefendGoalToGetGoal",
       "outState": 1402488910751,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 844,
+          "y": 429
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
