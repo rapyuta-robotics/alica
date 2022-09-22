@@ -81,7 +81,7 @@ TEST(ForceLoad, simple_plan_load)
     plan.release();
 }
 
-
+/*
 TEST(ForceLoad, simple_condition_load)
 {
     ros::NodeHandle nh;
@@ -106,7 +106,7 @@ TEST(ForceLoad, simple_condition_load)
     // Load model
     ConfigChangeListener configChangeListener(globalNode);
     Condition* conditionModel;
-    /*
+    
     TODO TODO
     conditionModel = ConditionFactory::fillCondition(configChangeListener, node);
 
@@ -119,8 +119,8 @@ TEST(ForceLoad, simple_condition_load)
 
     ASSERT_EQ("acmecondition", condition->getName());
     condition.release();
-    */
+    
 }
-
+*/
 } // namespace
 } // namespace alica
