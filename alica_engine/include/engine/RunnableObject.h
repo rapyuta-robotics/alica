@@ -122,8 +122,6 @@ protected:
     const IAlicaTimerFactory* _timerFactory{nullptr};
 
 private:
-    void setInput(const Blackboard* parent_bb, const KeyMapping* keyMapping);
-    void setOutput(Blackboard* parent_bb, const KeyMapping* keyMapping) const;
     int64_t getParentWrapperId(RunningPlan* rt) const;
     void setupBlackboard();
     void scheduleRunCalls();
