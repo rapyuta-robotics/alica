@@ -30,8 +30,8 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool stepEngine, IAlicaWorldModel* worldModel, const std::unique_ptr<RuntimePlanFactory>& runTimePlanFactory,
-        const std::unique_ptr<RuntimeBehaviourFactory>& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
+        const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
@@ -44,7 +44,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _teamManager(teamManager)
         , _planRepository(planRepository)
         , _stepEngine(stepEngine)
-        , _stepCalled(false)
+        , _stepCalled(stepCalled)
         , _worldModel(worldModel)
         , _runTimePlanFactory(runTimePlanFactory)
         , _runTimeBehaviourFactory(runTimeBehaviourFactory)
@@ -275,7 +275,8 @@ void PlanBase::run(const Plan* masterPlan)
         if (checkFp) {
             std::queue<RunningPlan*> nextFpEvents;
             {
-                // move fath path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking _loMutex
+                // move fast path events to a local variable. Prevents calling visit() on a RunningPlan which can add a fast path event double locking
+                // _loMutex
                 std::lock_guard<std::mutex> lock(_lomutex);
                 nextFpEvents.swap(_fpEvents);
             }
@@ -375,7 +376,7 @@ RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* co
 
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, nullptr, _teamObserver, _teamManager, _planRepository,
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
             _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
@@ -412,8 +413,6 @@ void PlanBase::stepNotify()
         return;
     }
     _stepModeCV.notify_all();
-
-    // getStepModeCV()->notify_all();
 }
 
 } // namespace alica

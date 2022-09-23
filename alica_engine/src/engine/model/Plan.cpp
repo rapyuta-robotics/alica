@@ -1,5 +1,4 @@
 #include "engine/model/Plan.h"
-#include "engine/AlicaEngine.h"
 
 #include <assert.h>
 
@@ -16,23 +15,6 @@
 
 namespace alica
 {
-Plan::Plan(AlicaEngine* ae, int64_t id)
-        : AbstractPlan(ae, id)
-        , _minCardinality(0)
-        , _maxCardinality(0)
-        , _masterPlan(false)
-        , _utilityFunction(nullptr)
-        , _utilityThreshold(1.0)
-        , _runtimeCondition(nullptr)
-        , _preCondition(nullptr)
-        , _frequency(0)
-        , _blackboardBlueprint(nullptr)
-        , _libraryName("alica_customer_library")
-{
-    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
-    ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfigChangeListener().getConfig());
-}
 
 Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         : AbstractPlan(id)

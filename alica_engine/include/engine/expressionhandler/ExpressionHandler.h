@@ -21,7 +21,7 @@ class ExpressionHandler
 public:
     ExpressionHandler(ConfigChangeListener& configChangeListener);
     virtual ~ExpressionHandler();
-    void attachAll(AlicaEngine* ae, PlanRepository& pr, AlicaCreators& creatorCtx);
+    void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
 
     void reload(const YAML::Node& config);
 

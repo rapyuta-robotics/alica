@@ -7,21 +7,20 @@
 namespace alica
 {
 
-class AlicaEngine;
 class Plan;
 class BasicPlan;
 class IPlanCreator;
 class IAlicaWorldModel;
 class ConfigChangeListener;
+class IAlicaTraceFactory;
+class TeamManager;
+class IAlicaTimerFactory;
 
-/**
- * Construct a runtime BasicPlan instance based
- */
 class RuntimePlanFactory
 {
 public:
-    // TODO: remove engine reference later
-    RuntimePlanFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, AlicaEngine* engine);
+    RuntimePlanFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager,
+            const IAlicaTimerFactory& timerFactory);
     ~RuntimePlanFactory() = default;
     void init(std::unique_ptr<IPlanCreator>&& pc);
 
@@ -32,7 +31,9 @@ public:
 private:
     std::unique_ptr<IPlanCreator> _creator;
     IAlicaWorldModel* _wm;
-    AlicaEngine* _engine;
+    const IAlicaTraceFactory* _traceFactory;
+    const TeamManager& _teamManager;
+    const IAlicaTimerFactory& _timerFactory;
 
     std::string _customerLibraryFolder;
 };

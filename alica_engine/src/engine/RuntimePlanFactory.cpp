@@ -1,5 +1,4 @@
 
-#include "engine/AlicaEngine.h"
 #include "engine/BasicPlan.h"
 #include "engine/IPlanCreator.h"
 #include "engine/model/Plan.h"
@@ -10,8 +9,11 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, AlicaEngine* engine)
-        : _engine(engine)
+RuntimePlanFactory::RuntimePlanFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory,
+        const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+        : _traceFactory(traceFactory)
+        , _teamManager(teamManager)
+        , _timerFactory(timerFactory)
         , _wm(wm)
 {
     auto reloadFunctionPtr = std::bind(&RuntimePlanFactory::reload, this, std::placeholders::_1);
@@ -41,10 +43,9 @@ std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* pl
         return nullptr;
     }
 
-    // TODO Cleanup: get rid of this later, behaviour only needs traceFactory, teamManager and not entire engine
-    basicPlan->setAlicaTraceFactory(_engine->getTraceFactory());
-    basicPlan->setTeamManager(&_engine->getTeamManager());
-    basicPlan->setAlicaTimerFactory(&_engine->getTimerFactory());
+    basicPlan->setAlicaTraceFactory(_traceFactory);
+    basicPlan->setTeamManager(&_teamManager);
+    basicPlan->setAlicaTimerFactory(&_timerFactory);
 
     return basicPlan;
 }
