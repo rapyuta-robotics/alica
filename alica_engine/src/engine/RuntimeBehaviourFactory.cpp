@@ -29,7 +29,7 @@ void RuntimeBehaviourFactory::reload(const YAML::Node& config)
 {
     if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
         _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        std::cerr << _customerLibraryFolder << " Library folder" << std::endl;
+        ALICA_DEBUG_MSG("RuntimeBehaviourFactory: Library folder: " << _customerLibraryFolder);
     }
 }
 
@@ -43,7 +43,7 @@ std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, cons
     BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        std::cerr << "Errro: RuntimeBehaviourFactory: Behaviour creation failed: " << id << std::endl;
+        ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
         return nullptr;
     }
 

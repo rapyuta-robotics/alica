@@ -35,7 +35,7 @@ void ExpressionHandler::reload(const YAML::Node& config)
 {
     if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
         _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        std::cerr << _customerLibraryFolder << " Library folder" << std::endl;
+        ALICA_DEBUG_MSG("ExpressionHandler: Library folder: " << _customerLibraryFolder);
     }
 }
 /**
@@ -60,7 +60,6 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            //p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(/*luca name*/p->getRuntimeCondition()->getId()));
             ConditionContext context{p->getRuntimeCondition()->getName(),_customerLibraryFolder,p->getRuntimeCondition()->_libraryName,p->getRuntimeCondition()->getId()};
             p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
