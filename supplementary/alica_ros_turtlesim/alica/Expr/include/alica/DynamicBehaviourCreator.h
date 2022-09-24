@@ -17,7 +17,7 @@ public:
 
 private:
     const std::string _libraryRelativePath{"/../../../lib/"};
-    std::string _defaultLibraryPath;
+    std::string _currentLibraryPath;
 };
 
 } /* namespace alica */

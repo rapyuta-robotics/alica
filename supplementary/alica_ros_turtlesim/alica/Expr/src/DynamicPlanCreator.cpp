@@ -11,7 +11,7 @@ namespace alica
 {
 
 DynamicPlanCreator::DynamicPlanCreator(const std::string& defaultLibraryPath)
-        : _defaultLibraryPath(defaultLibraryPath + _libraryRelativePath)
+        : _currentLibraryPath(defaultLibraryPath + _libraryRelativePath)
 {
 }
 
@@ -20,12 +20,12 @@ DynamicPlanCreator::~DynamicPlanCreator() {}
 std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanContext& context)
 {
     if (context.libraryPath != "") {
-        _defaultLibraryPath = context.libraryPath;
+        _currentLibraryPath = context.libraryPath;
         std::cerr << "Debug:"
-                  << "use library path from Alica.yaml:" << _defaultLibraryPath << std::endl;
+                  << "use library path from Alica.yaml:" << _currentLibraryPath << std::endl;
     } else {
         std::cerr << "Debug:"
-                  << "library path:" << _defaultLibraryPath << std::endl;
+                  << "library path:" << _currentLibraryPath << std::endl;
     }
 
     if (context.planModel->getLibraryName() == "") {
@@ -34,7 +34,7 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
         return nullptr;
     }
 
-    std::string libraryPath = _defaultLibraryPath + "/lib" + context.planModel->getLibraryName() + ".so";
+    std::string libraryPath = _currentLibraryPath + "/lib" + context.planModel->getLibraryName() + ".so";
     if (!std::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;

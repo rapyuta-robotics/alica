@@ -10,7 +10,7 @@ namespace alica
 {
 
 DynamicBehaviourCreator::DynamicBehaviourCreator(const std::string& defaultLibraryPath)
-        : _defaultLibraryPath(defaultLibraryPath + _libraryRelativePath)
+        : _currentLibraryPath(defaultLibraryPath + _libraryRelativePath)
 {
 }
 
@@ -19,12 +19,12 @@ DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     if (context.libraryPath != "") {
-        _defaultLibraryPath = context.libraryPath;
+        _currentLibraryPath = context.libraryPath;
         std::cerr << "Debug:"
-                  << "use library path from Alica.yaml:" << _defaultLibraryPath << std::endl;
+                  << "use library path from Alica.yaml:" << _currentLibraryPath << std::endl;
     } else {
         std::cerr << "Debug:"
-                  << "library path:" << _defaultLibraryPath << std::endl;
+                  << "library path:" << _currentLibraryPath << std::endl;
     }
 
     if (context.behaviourModel->getLibraryName() == "") {
@@ -33,7 +33,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
         return nullptr;
     }
 
-    std::string libraryPath = _defaultLibraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
+    std::string libraryPath = _currentLibraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
     if (!std::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;
