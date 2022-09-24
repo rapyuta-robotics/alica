@@ -1,7 +1,7 @@
 #include "engine/BasicCondition.h"
 #include <alica/DynamicConditionCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -10,7 +10,7 @@ namespace alica
 {
 
 DynamicConditionCreator::DynamicConditionCreator(const std::string& defaultLibraryPath)
-        : _defaultLibraryPath(defaultLibraryPath + "/../../../lib/")
+        : _defaultLibraryPath(defaultLibraryPath + _libraryRelativePath)
 {
 }
 
@@ -21,10 +21,10 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
     if (context.libraryPath != "") {
         _defaultLibraryPath = context.libraryPath;
         std::cerr << "Debug:"
-                  << "folder:" << _defaultLibraryPath << std::endl;
+                  << "use library path from Alica.yaml:" << _defaultLibraryPath << std::endl;
     } else {
         std::cerr << "Debug:"
-                  << "folder default:" << _defaultLibraryPath << std::endl;
+                  << "library path:" << _defaultLibraryPath << std::endl;
     }
 
     if (context.libraryName == "") {
@@ -34,7 +34,7 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
     }
 
     std::string libraryPath = _defaultLibraryPath + "/lib" + context.libraryName + ".so";
-    if (!boost::filesystem::exists(libraryPath)) {
+    if (!std::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;
         return nullptr;

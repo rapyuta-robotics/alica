@@ -35,8 +35,8 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& path)
 {
     std::string libraryPath;
-    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so";
-    libraryPath = path + "/../../../lib/libalica_turtlesim_library.so";
+    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so"; //For devel configuration
+    libraryPath = path + "/../../../lib/libalica_turtlesim_library.so"; // For install configuration
 
     if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"

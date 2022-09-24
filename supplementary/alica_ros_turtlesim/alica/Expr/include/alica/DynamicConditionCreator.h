@@ -1,7 +1,6 @@
 #pragma once
 #include <engine/IConditionCreator.h>
 
-#include <iostream>
 #include <memory>
 
 namespace alica
@@ -17,6 +16,7 @@ public:
     std::shared_ptr<BasicCondition> createConditions(ConditionContext& conditionContext) override;
 
 private:
+    const std::string _libraryRelativePath{"/../../../lib/"};
     std::string _defaultLibraryPath;
 };
 

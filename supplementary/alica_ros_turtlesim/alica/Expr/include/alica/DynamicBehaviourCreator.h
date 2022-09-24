@@ -1,7 +1,6 @@
 #pragma once
 #include <engine/IBehaviourCreator.h>
 
-#include <iostream>
 #include <memory>
 
 namespace alica
@@ -14,9 +13,10 @@ class DynamicBehaviourCreator : public IBehaviourCreator
 public:
     DynamicBehaviourCreator(const std::string& defaultLibraryPath);
     virtual ~DynamicBehaviourCreator();
-    virtual std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
+    std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
 
 private:
+    const std::string _libraryRelativePath{"/../../../lib/"};
     std::string _defaultLibraryPath;
 };
 
