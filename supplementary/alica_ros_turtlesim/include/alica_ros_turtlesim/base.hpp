@@ -14,15 +14,12 @@ public:
     Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
             const std::string& path);
     ~Base();
-    void start();
+    void start(const std::string& path);
 
 private:
     ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
-    void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
-
-    std::string _libraryPath;
-    std::string _path;
+    void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& path);
 
     void ALICATurtleWorldModelCallDel();
 };

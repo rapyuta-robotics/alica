@@ -1,7 +1,7 @@
 #include <alica/ConstraintCreator.h>
 #include <alica/DynamicBehaviourCreator.h>
-#include <alica/DynamicPlanCreator.h>
 #include <alica/DynamicConditionCreator.h>
+#include <alica/DynamicPlanCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
@@ -22,14 +22,9 @@ namespace turtlesim
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
         const std::string& master_plan, const std::string& path)
         : spinner(0)
-        , _path(path)
 {
-    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so";
-    _libraryPath = path + "/../../../lib/libalica_turtlesim_library.so";
-    std::cerr << "PATH:" << path << std::endl;
-
     // create world model
-    ALICATurtleWorldModelCallInit(nh, priv_nh);
+    ALICATurtleWorldModelCallInit(nh, priv_nh, path);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
@@ -37,32 +32,36 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
 }
 
-void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
+void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& path)
 {
-    if (!boost::filesystem::exists(_libraryPath)) {
+    std::string libraryPath;
+    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so";
+    libraryPath = path + "/../../../lib/libalica_turtlesim_library.so";
+
+    if (!boost::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
-                  << "Lib not exixts in this path:" << _libraryPath << std::endl;
+                  << "Lib not exixts in this path:" << libraryPath << std::endl;
         return;
     } else {
         std::cerr << "Debug:"
-                  << "Lib exixts in this path:" << _libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
+                  << "Lib exixts in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
     }
 
     typedef void(InitType)(ros::NodeHandle&, ros::NodeHandle&);
     std::function<InitType> wminit;
     wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
-            _libraryPath,                             // complete path to library also with file name
+            libraryPath,                              // complete path to library also with file name
             "ALICATurtleWorldModelInit",              // symbol to import
             boost::dll::load_mode::append_decorations // do append extensions and prefixes
     );
     wminit(nh, priv_nh);
 }
 
-void Base::start()
+void Base::start(const std::string& path)
 {
-    alica::AlicaCreators creators(std::make_unique/*<alica::ConditionCreator>()*/<DynamicConditionCreator>(_path), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(_path),
-            std::make_unique<alica::DynamicPlanCreator>(_path), std::make_unique<alica::TransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(path), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(path),
+            std::make_unique<alica::DynamicPlanCreator>(path), std::make_unique<alica::TransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));
