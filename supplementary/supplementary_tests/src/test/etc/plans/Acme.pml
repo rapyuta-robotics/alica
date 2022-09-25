@@ -19,7 +19,8 @@
     "variables": [
       1524453326397,
       1524453331530
-    ]
+    ],
+    "libraryName": "alica_customer_library"
   },
   "synchronisations": [],
   "utilityThreshold": 0.1,

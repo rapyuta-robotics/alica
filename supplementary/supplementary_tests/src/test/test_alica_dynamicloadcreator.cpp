@@ -1,12 +1,16 @@
 #include "supplementary_tests/DynamicBehaviourCreator.h"
+#include "supplementary_tests/DynamicConditionCreator.h"
 #include "supplementary_tests/DynamicPlanCreator.h"
 #include <test_supplementary.h>
 
 #include "communication/AlicaRosCommunication.h"
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
+#include <engine/model/RuntimeCondition.h>
 #include <engine/modelmanagement/factories/BehaviourFactory.h>
+#include <engine/modelmanagement/factories/ConditionFactory.h>
 #include <engine/modelmanagement/factories/PlanFactory.h>
+#include <engine/modelmanagement/factories/RuntimeConditionFactory.h>
 
 #include <gtest/gtest.h>
 
@@ -35,8 +39,7 @@ TEST(ForceLoad, simple_behaviour_load)
 
     // Create behaviour form dll
     IAlicaWorldModel wm;
-    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    // BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "/var/tmp/customers"};
+    auto creator = std::make_unique<alica::DynamicBehaviourCreator>("");
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, path + "/../../../../../../devel/lib"};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
@@ -72,8 +75,7 @@ TEST(ForceLoad, simple_plan_load)
 
     // Create plan form dll
     IAlicaWorldModel wm;
-    auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    // PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
+    auto creator = std::make_unique<alica::DynamicPlanCreator>("");
     PlanContext ctx{&wm, planModel->getName(), planModel, path + "/../../../../../../devel/lib"};
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
 
@@ -81,7 +83,7 @@ TEST(ForceLoad, simple_plan_load)
     plan.release();
 }
 
-/*
+#if 0
 TEST(ForceLoad, simple_condition_load)
 {
     ros::NodeHandle nh;
@@ -98,29 +100,25 @@ TEST(ForceLoad, simple_condition_load)
 
     YAML::Node node;
     try {
-        node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeConditionRepository.cnd");
+        node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/conditions/AcmeConditionRepository.cnd" << std::endl;
+        std::cerr << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd" << std::endl;
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
     // Load model
     ConfigChangeListener configChangeListener(globalNode);
-    Condition* conditionModel;
-    
-    TODO TODO
-    conditionModel = ConditionFactory::fillCondition(configChangeListener, node);
+
+    RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
 
     // Create condition form dll
     IAlicaWorldModel wm;
-    auto creator = std::make_unique<alica::DynamicConditionCreator>();
+    auto creator = std::make_unique<alica::DynamicConditionCreator>("");
     // PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
-    ConditionContext ctx{&wm, conditionModel->getName(), conditionModel, path + "/../../../../../../devel/lib"};
-    std::unique_ptr<BasicCondition> condition = creator->createCondition(10, ctx);
+    ConditionContext ctx{conditionModel->getName(), path + "/../../../../../../devel/lib", conditionModel->getLibraryName(), 0};
+    std::shared_ptr<BasicCondition> condition = creator->createConditions(ctx);
 
-    ASSERT_EQ("acmecondition", condition->getName());
-    condition.release();
-    
+    ASSERT_EQ(true, condition->evaluate(nullptr, nullptr));
 }
-*/
+#endif
 } // namespace
 } // namespace alica

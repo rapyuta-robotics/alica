@@ -1,34 +1,46 @@
 #include "engine/BasicBehaviour.h"
+#include <supplementary_tests/DynamicBehaviourCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
-#include <supplementary_tests/DynamicBehaviourCreator.h>
 
 namespace alica
 {
 
-DynamicBehaviourCreator::DynamicBehaviourCreator() {}
+DynamicBehaviourCreator::DynamicBehaviourCreator(const std::string& defaultLibraryPath)
+        : _currentLibraryPath(defaultLibraryPath + _libraryRelativePath)
+{
+}
 
 DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
+    if (context.libraryPath != "") {
+        _currentLibraryPath = context.libraryPath;
+        std::cerr << "Debug:"
+                  << "use library path from Alica.yaml:" << _currentLibraryPath << std::endl;
+    } else {
+        std::cerr << "Debug:"
+                  << "library path:" << _currentLibraryPath << std::endl;
+    }
+
     if (context.behaviourModel->getLibraryName() == "") {
         std::cerr << "Error:"
                   << "Empty library name for" << context.behaviourModel->getName() << std::endl;
         return nullptr;
     }
 
-    std::string libraryPath = context.libraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
-    if (!boost::filesystem::exists(libraryPath)) {
+    std::string libraryPath = _currentLibraryPath + "/lib" + context.behaviourModel->getLibraryName() + ".so";
+    if (!std::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;
         return nullptr;
     } else {
         std::cerr << "Debug:"
-                  << "Lib exixts in this path:" << libraryPath << std::endl;
+                  << "Lib exixts in this path:" << libraryPath << " for:" << context.behaviourModel->getName() << " for:" << behaviourId << std::endl;
     }
 
     typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);

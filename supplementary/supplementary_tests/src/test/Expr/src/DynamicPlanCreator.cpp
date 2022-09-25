@@ -1,29 +1,41 @@
 #include "engine/BasicPlan.h"
 #include "engine/model/Plan.h"
+#include <supplementary_tests/DynamicPlanCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
-#include <supplementary_tests/DynamicPlanCreator.h>
 
 namespace alica
 {
 
-DynamicPlanCreator::DynamicPlanCreator() {}
+DynamicPlanCreator::DynamicPlanCreator(const std::string& defaultLibraryPath)
+        : _currentLibraryPath(defaultLibraryPath + _libraryRelativePath)
+{
+}
 
 DynamicPlanCreator::~DynamicPlanCreator() {}
 
 std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanContext& context)
 {
+    if (context.libraryPath != "") {
+        _currentLibraryPath = context.libraryPath;
+        std::cerr << "Debug:"
+                  << "use library path from Alica.yaml:" << _currentLibraryPath << std::endl;
+    } else {
+        std::cerr << "Debug:"
+                  << "library path:" << _currentLibraryPath << std::endl;
+    }
+
     if (context.planModel->getLibraryName() == "") {
         std::cerr << "Error:"
                   << "Empty library name for" << context.planModel->getName() << std::endl;
         return nullptr;
     }
 
-    std::string libraryPath = context.libraryPath + "/lib" + context.planModel->getLibraryName() + ".so";
-    if (!boost::filesystem::exists(libraryPath)) {
+    std::string libraryPath = _currentLibraryPath + "/lib" + context.planModel->getLibraryName() + ".so";
+    if (!std::filesystem::exists(libraryPath)) {
         std::cerr << "Error:"
                   << "Lib not exixts in this path:" << libraryPath << std::endl;
         return nullptr;
