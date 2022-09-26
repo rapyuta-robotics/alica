@@ -49,7 +49,7 @@ protected:
 /**
  * Tests whether it is possible to use multiple agents.
  */
-TEST_F(AlicaMultiAgent, runMultiAgentPlan)
+TEST_F(AlicaMultiAgent, DISABLED_runMultiAgentPlan)
 {
     ASSERT_NO_SIGNAL
     aes[0]->start();

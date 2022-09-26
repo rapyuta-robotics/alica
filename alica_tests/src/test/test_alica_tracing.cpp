@@ -79,7 +79,7 @@ TEST_F(AlicaTracingTest, runTracing)
     EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["TestTracingSubPlan"], "TestTracingMasterPlan");
 }
 
-TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
+TEST_F(AlicaAuthorityTracingTest, DISABLED_taskAssignmentTracing)
 {
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

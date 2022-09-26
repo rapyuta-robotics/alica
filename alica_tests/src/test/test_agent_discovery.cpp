@@ -47,7 +47,7 @@ protected:
     }
 };
 
-TEST_F(AlicaEngineAgentDiscoveryTest, AgentDiscovered)
+TEST_F(AlicaEngineAgentDiscoveryTest, DISABLED_AgentDiscovered)
 {
     ASSERT_NO_SIGNAL
     ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0]));

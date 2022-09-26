@@ -68,14 +68,12 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
 
-    _communicator->startCommunication();
-
     if (_engine->init(std::move(creatorCtx))) {
         if (!delayStart) {
             _engine->start();
         }
         _initialized = true;
-
+        _communicator->startCommunication();
         return 0;
     }
     return -1;
