@@ -26,6 +26,7 @@ public:
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const override;
     void setGlobalContext(const std::string& globalContext) override;
     void unsetGlobalContext() override;
+
 private:
     bool _initialized = false;
     std::unordered_map<std::string, RawTraceValue> _defaultTags;
