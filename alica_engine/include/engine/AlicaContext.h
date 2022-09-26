@@ -511,8 +511,8 @@ void AlicaContext::addSolver(Args&&... args)
         exit(EXIT_FAILURE);
     }
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _solvers.emplace(
-            typeid(SolverType).hash_code(), std::make_unique<SolverType>(editBlackboard(), getResultStore(), getConfigChangeListener(), std::forward<Args>(args)...));
+    _solvers.emplace(typeid(SolverType).hash_code(),
+            std::make_unique<SolverType>(editBlackboard(), getResultStore(), getConfigChangeListener(), std::forward<Args>(args)...));
 #else
     _solvers.emplace(typeid(SolverType).hash_code(),
             std::unique_ptr<SolverType>(new SolverType(editBlackboard(), getResultStore(), _configRootNode, std::forward<Args>(args)...)));

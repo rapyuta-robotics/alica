@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/Types.h"
 #include "engine/ConfigChangeListener.h"
+#include "engine/Types.h"
 #include <memory>
 
 namespace alica
@@ -19,7 +19,6 @@ public:
     ISolverBase(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
             : _blackboard(blackboard)
             , _resultStore(resultStore)
-
     {
     }
     virtual ~ISolverBase() {}
