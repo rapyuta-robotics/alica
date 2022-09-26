@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/Types.h"
+#include "engine/ConfigChangeListener.h"
 #include <memory>
 
 namespace alica
@@ -15,10 +16,10 @@ class VariableSyncModule;
 class ISolverBase
 {
 public:
-    ISolverBase(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
+    ISolverBase(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
             : _blackboard(blackboard)
             , _resultStore(resultStore)
-            , _config(config)
+
     {
     }
     virtual ~ISolverBase() {}
@@ -28,20 +29,18 @@ public:
 protected:
     Blackboard& editBlackboard() { return _blackboard; };
     const VariableSyncModule& getResultStore() { return _resultStore; };
-    //const YAML::Node& getConfig() const { return _config; };
 
 private:
     Blackboard& _blackboard;
     const VariableSyncModule& _resultStore;
-    const YAML::Node& _config;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
 public:
-    ISolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
-            : ISolverBase(blackboard, resultStore, config)
+    ISolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+            : ISolverBase(blackboard, resultStore, configChangeListener)
     {
     }
     virtual ~ISolver() {}

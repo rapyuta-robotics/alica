@@ -42,6 +42,7 @@ class AlicaEngine;
 struct AgentQuery;
 struct AgentAnnouncement;
 class VariableSyncModule;
+class ConfigChangeListener;
 
 namespace test
 {
@@ -461,6 +462,7 @@ private:
 
     Blackboard& editBlackboard();
     const VariableSyncModule& getResultStore();
+    ConfigChangeListener& getConfigChangeListener();
 };
 
 template <class ClockType, class... Args>
@@ -510,7 +512,7 @@ void AlicaContext::addSolver(Args&&... args)
     }
 #if (defined __cplusplus && __cplusplus >= 201402L)
     _solvers.emplace(
-            typeid(SolverType).hash_code(), std::make_unique<SolverType>(editBlackboard(), getResultStore(), _configRootNode, std::forward<Args>(args)...));
+            typeid(SolverType).hash_code(), std::make_unique<SolverType>(editBlackboard(), getResultStore(), getConfigChangeListener(), std::forward<Args>(args)...));
 #else
     _solvers.emplace(typeid(SolverType).hash_code(),
             std::unique_ptr<SolverType>(new SolverType(editBlackboard(), getResultStore(), _configRootNode, std::forward<Args>(args)...)));

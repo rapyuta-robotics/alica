@@ -22,8 +22,8 @@ namespace reasoner
 int ConstraintTestPlanDummySolver::s_existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::s_getSolutionCallCounter = 0;
 
-ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
-        : ISolver(blackboard, resultStore, config)
+ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+        : ISolver(blackboard, resultStore, configChangeListener)
 {
 }
 

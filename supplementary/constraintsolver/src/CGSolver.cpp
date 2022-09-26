@@ -23,13 +23,13 @@ using alica::VariableGrp;
 using autodiff::TermHolder;
 using autodiff::TermPtr;
 
-CGSolver::CGSolver(Blackboard& blackboard, const VariableSyncModule& resultStore, const YAML::Node& config)
-        : ISolver(blackboard, resultStore, config)
+CGSolver::CGSolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+        : ISolver(blackboard, resultStore, configChangeListener)
         , _lastUtil(0.0)
         , _lastFEvals(0.0)
         , _lastRuns(0.0)
-        , _gs(config)
-        , _sgs(config)
+        , _gs(configChangeListener)
+        , _sgs(configChangeListener)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);

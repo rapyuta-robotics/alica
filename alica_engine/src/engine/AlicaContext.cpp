@@ -182,4 +182,9 @@ const VariableSyncModule& AlicaContext::getResultStore()
     return _engine->getResultStore();
 }
 
+ConfigChangeListener& AlicaContext::getConfigChangeListener()
+{
+    return _engine->getConfigChangeListener();
+}
+
 } // namespace alica
