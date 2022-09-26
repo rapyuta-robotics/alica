@@ -26,6 +26,8 @@ class DummyAlicaTestTraceFactory : public alica::IAlicaTraceFactory
 public:
     DummyAlicaTestTraceFactory(){};
     ~DummyAlicaTestTraceFactory() = default;
+    void setGlobalContext(const std::string& globalContext) override {}
+    void unsetGlobalContext() override {}
 
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const
     {
