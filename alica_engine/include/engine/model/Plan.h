@@ -17,7 +17,6 @@ class ExpressionHandler;
 class PlanFactory;
 class PreCondition;
 class RuntimeCondition;
-class AlicaEngine;
 class BlackboardBlueprint;
 class ConfigChangeListener;
 /**
@@ -26,8 +25,6 @@ class ConfigChangeListener;
 class Plan : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    Plan(AlicaEngine* ae, int64_t id); // TOBE removed
     Plan(ConfigChangeListener& configChangeListener, int64_t id);
     virtual ~Plan();
 

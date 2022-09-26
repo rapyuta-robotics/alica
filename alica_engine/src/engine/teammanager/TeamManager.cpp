@@ -380,7 +380,7 @@ void TeamManager::tick()
  * @return The ID
  */
 
-alica::AgentId TeamManager::generateID()
+inline alica::AgentId TeamManager::generateID() const
 {
     std::random_device device;
     std::uniform_int_distribution<int32_t> distribution(1, std::numeric_limits<int32_t>::max());

@@ -55,8 +55,8 @@ public:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
 
-    const std::unique_ptr<RuntimeBehaviourFactory>& getRuntimeBehaviourFactory() const { return _behaviourFactory; }
-    const std::unique_ptr<RuntimePlanFactory>& getRuntimePlanFactory() const { return _planFactory; }
+    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
+    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
@@ -126,7 +126,8 @@ public:
 private:
     // void setStepEngine(bool stepEngine);
     void initTransitionConditions(ITransitionConditionCreator* creator);
-    // WARNING: Initialization order dependencies!
+    bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
+    bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
     AlicaContext& _ctx;
@@ -141,7 +142,6 @@ private:
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     std::unique_ptr<RuntimePlanFactory> _planFactory;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
 
@@ -153,7 +153,9 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
+    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     PlanBase _planBase;
+
     bool _initialized{false};
 
     Blackboard _Blackboard;

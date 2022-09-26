@@ -27,6 +27,7 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
 
 /**
  * Constructor of a new TaskAssignment
+ *
  * @param planList Plans to build an assignment for
  * @param paraAgents agents to build an assignment for
  * @param a bool

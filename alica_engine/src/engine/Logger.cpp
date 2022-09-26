@@ -4,6 +4,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
+#include "engine/ConfigChangeListener.h"
 #include "engine/PlanRepository.h"
 #include "engine/RunningPlan.h"
 #include "engine/SimplePlanTree.h"
