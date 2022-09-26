@@ -10,16 +10,17 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, AlicaEngine* engine)
+RuntimePlanFactory::RuntimePlanFactory(std::unique_ptr<IPlanCreator>&& pc, IAlicaWorldModel* wm, const IAlicaTraceFactory* tf, AlicaEngine* engine)
         : _creator(std::move(pc))
         , _engine(engine)
         , _wm(wm)
+        , _tf(tf)
 {
 }
 
 std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* planModel) const
 {
-    PlanContext ctx{_wm, planModel->getName(), planModel};
+    PlanContext ctx{_wm, planModel->getName(), planModel, _tf};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
         ALICA_ERROR_MSG("RuntimePlanFactory: Plan creation failed: " << id);

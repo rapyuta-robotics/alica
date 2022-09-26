@@ -28,6 +28,7 @@ struct BehaviourContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Behaviour* behaviourModel;
+    const IAlicaTraceFactory* traceFactory;
 };
 
 /**

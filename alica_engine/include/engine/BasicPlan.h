@@ -16,6 +16,7 @@ struct PlanContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Plan* planModel;
+    const IAlicaTraceFactory* traceFactory;
 };
 
 class BasicPlan : private RunnableObject
