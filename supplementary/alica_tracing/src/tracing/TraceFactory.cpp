@@ -45,7 +45,7 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
     std::optional<std::string> applicableParent = parent;
     if(!applicableParent) {
         std::lock_guard<std::mutex> lck(_mutex);
-        applicableParent = _globalContext;    // Note: _currentGlobalContext can expectedly be empty
+        applicableParent = _globalContext;    // Note: _globalContext may be intentionally empty
     }
 
     std::unique_ptr<Trace> trace = std::make_unique<Trace>(opName, applicableParent);
