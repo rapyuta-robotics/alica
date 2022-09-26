@@ -28,7 +28,7 @@ public:
 protected:
     Blackboard& editBlackboard() { return _blackboard; };
     const VariableSyncModule& getResultStore() { return _resultStore; };
-    const YAML::Node& getConfig() const { return _config; };
+    //const YAML::Node& getConfig() const { return _config; };
 
 private:
     Blackboard& _blackboard;

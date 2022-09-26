@@ -27,22 +27,6 @@ void RunnableObject::sendLogMessage(int level, const std::string& message) const
     _communication->sendLogMessage(level, message);
 }
 
-int64_t RunnableObject::getParentWrapperId(RunningPlan* rp) const
-{
-    const auto& wrappers = rp->getParent()->getActiveState()->getConfAbstractPlanWrappers();
-    auto it = std::find_if(wrappers.begin(), wrappers.end(), [this](const auto& wrapper_ptr) {
-        if (const auto planType = dynamic_cast<const PlanType*>(wrapper_ptr->getAbstractPlan()); planType) {
-            const auto& plans = planType->getPlans();
-            return std::find_if(plans.begin(), plans.end(), [this](const auto& plan) { return plan->getName() == _name; }) != plans.end();
-        } else {
-            return wrapper_ptr->getAbstractPlan()->getName() == _name;
-        }
-    });
-    assert(it != wrappers.end());
-    int64_t wrapperId = (*it)->getId();
-    return wrapperId;
-}
-
 void RunnableObject::addKeyMapping(int64_t wrapperId, const KeyMapping* keyMapping)
 {
     _keyMappings.emplace(wrapperId, keyMapping);

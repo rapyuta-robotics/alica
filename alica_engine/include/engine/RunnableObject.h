@@ -122,7 +122,6 @@ protected:
     const IAlicaTimerFactory* _timerFactory{nullptr};
 
 private:
-    int64_t getParentWrapperId(RunningPlan* rt) const;
     void setupBlackboard();
     void scheduleRunCalls();
     void stopRunCalls();
