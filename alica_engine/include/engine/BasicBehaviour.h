@@ -76,6 +76,7 @@ public:
 
 protected:
     using RunnableObject::getTrace;
+    using RunnableObject::getTraceFactory;
 
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }

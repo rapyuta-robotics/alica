@@ -43,6 +43,8 @@ public:
     int64_t getId() const;
 
 protected:
+    using RunnableObject::getTraceFactory;
+
     void setTracing(TracingType type, std::function<std::optional<std::string>(const BasicPlan*)> customTraceContextGetter = {})
     {
         if (customTraceContextGetter) {
