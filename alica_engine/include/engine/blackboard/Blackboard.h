@@ -108,6 +108,28 @@ public:
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
 
+    void initDefaultValues()
+    {
+        for (YAML::Node entry : node) {
+            YAML::Node defaultValue = entry[Strings::defaultValue];
+            if (defaultValue.Type() != YAML::NodeType::Null) {
+                std::string key = entry[Strings::key].as<std::string>();
+                std::string typeString = entry[Strings::stateType].as<std::string>();
+                if (typeString == "int64_t") {
+                    set<int64_t>(key, defaultValue.as<int64_t>());
+                } else if (typeString == "bool") {
+                    set<bool>(key, defaultValue.as<bool>());
+                } else if (typeString == "std::string") {
+                    set<std::string>(key, defaultValue.as<std::string>());
+                } else if (typeString == "double") {
+                    set<double>(key, defaultValue.as<double>());
+                } else {
+                    set<std::any>(key, defaultValue.as<std::string>());
+                }
+            }
+        }
+    }
+
     void clear() { vals.clear(); }
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
@@ -153,6 +175,7 @@ public:
     {
         _impl.vals = blueprint->vals;
         _impl.node = blueprint->node;
+        _impl.initDefaultValues();
     };
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
