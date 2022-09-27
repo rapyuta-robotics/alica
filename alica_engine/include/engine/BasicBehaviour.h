@@ -28,6 +28,7 @@ struct BehaviourContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Behaviour* behaviourModel;
+    const IAlicaTraceFactory* traceFactory;
 };
 
 /**
@@ -75,6 +76,7 @@ public:
 
 protected:
     using RunnableObject::getTrace;
+    using RunnableObject::getTraceFactory;
 
     AgentId getOwnId() const;
     const AlicaEngine* getEngine() const { return _engine; }
