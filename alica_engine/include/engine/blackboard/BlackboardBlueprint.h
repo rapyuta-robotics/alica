@@ -6,6 +6,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -17,10 +18,12 @@ public:
     {
         vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...));
     }
+    void setBlackboardNode(const YAML::Node& node) { this->node = node; }
     friend class Blackboard;
 
 private:
     std::unordered_map<std::string, std::any> vals;
+    YAML::Node node;
 };
 
 } // namespace alica

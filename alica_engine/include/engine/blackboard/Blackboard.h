@@ -1,15 +1,60 @@
 #pragma once
 
 #include "BlackboardBlueprint.h"
+#include "engine/modelmanagement/Strings.h"
 #include <any>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
+
+class BlackboardTypesDontMatchException : public std::exception
+{
+public:
+    BlackboardTypesDontMatchException(const std::string& typeToSet, const std::string& typeDefinedInPml)
+            : _typeToSet(typeToSet)
+            , _typeDefinedInPml(typeDefinedInPml)
+    {
+    }
+
+    std::string what()
+    {
+        std::stringstream ss;
+        ss << "Type " << _typeToSet << " does not match the type defined in the pml file: " << _typeDefinedInPml;
+        return ss.str();
+    }
+
+private:
+    std::string _typeToSet;
+    std::string _typeDefinedInPml;
+};
+
+class BadBlackboardAccessType : public std::exception
+{
+public:
+    BadBlackboardAccessType(const std::string& key, const std::string& type)
+            : _key(key)
+            , _type(type)
+    {
+    }
+
+    std::string what()
+    {
+        std::stringstream ss;
+        ss << "The blackboard value " << _key << "is not of type " << _type << "!";
+        return ss.str();
+    }
+
+private:
+    std::string _key;
+    std::string _type;
+};
+
 class BlackboardImpl
 {
 public:
@@ -23,17 +68,42 @@ public:
     template <typename T>
     const T& get(const std::string& key) const
     {
-        return std::any_cast<const T&>(vals.at(key));
+        try {
+            return std::any_cast<const T&>(vals.at(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BadBlackboardAccessType(key, getNameFromType<T>());
+        }
     }
     template <typename T>
     T& get(const std::string& key)
     {
-        return std::any_cast<T&>(vals.at(key));
+        try {
+            return std::any_cast<T&>(vals.at(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BadBlackboardAccessType(key, getNameFromType<T>());
+        }
     }
     std::any& get(const std::string& key) { return vals.at(key); }
     const std::any& get(const std::string& key) const { return vals.at(key); }
 
-    void set(const std::string& key, const std::any& value) { vals.at(key) = value; }
+    template <class T>
+    void set(const std::string& key, const T& value)
+    {
+        YAML::Node entry = getBlackboardValueNode(key);
+        if (entry[Strings::key].as<std::string>() != key) {
+            // value is not predefined in pml file
+            vals.at(key) = value;
+        } else {
+            // value is predefined in pml file
+            std::string typeString = getNameFromType<T>();
+            if (entry[Strings::stateType].as<std::string>() == typeString) {
+                vals.at(key) = value;
+            } else {
+                // types dont match, throw exception
+                throw BlackboardTypesDontMatchException(typeString, entry[Strings::stateType].as<std::string>());
+            }
+        }
+    }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
@@ -42,6 +112,34 @@ public:
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
+    YAML::Node node;
+
+private:
+    YAML::Node getBlackboardValueNode(std::string key) const
+    {
+        for (const auto& entry : node) {
+            if (entry[Strings::key].as<std::string>() == key) {
+                return entry;
+            }
+        }
+        return YAML::Node();
+    }
+
+    template <class T>
+    std::string getNameFromType() const
+    {
+        if (std::is_same<T, int64_t>::value) {
+            return "int64_t";
+        } else if (std::is_same<T, bool>::value) {
+            return "bool";
+        } else if (std::is_same<T, double>::value) {
+            return "double";
+        } else if (std::is_same<T, std::string>::value) {
+            return "std::string";
+        }
+        // treat as std::any by default
+        return "std::any";
+    }
 };
 
 class Blackboard
@@ -51,7 +149,11 @@ public:
     Blackboard(Blackboard&&) = delete;
     Blackboard& operator&=(const Blackboard&) = delete;
     Blackboard& operator&=(Blackboard&&) = delete;
-    Blackboard(const BlackboardBlueprint* blueprint) { _impl.vals = blueprint->vals; };
+    Blackboard(const BlackboardBlueprint* blueprint)
+    {
+        _impl.vals = blueprint->vals;
+        _impl.node = blueprint->node;
+    };
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
