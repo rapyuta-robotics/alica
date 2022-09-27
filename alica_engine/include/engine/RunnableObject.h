@@ -32,9 +32,10 @@ class IAlicaTimerFactory;
 class TraceRunnableObject
 {
 public:
-    TraceRunnableObject()
+    TraceRunnableObject(const IAlicaTraceFactory* tf)
             : _tracingType(TracingType::DEFAULT)
             , _runTraced(false)
+            , _tf(tf)
     {
     }
 
@@ -51,21 +52,22 @@ public:
     };
 
     IAlicaTrace* getTrace() const { return _trace ? _trace.get() : nullptr; };
+    const IAlicaTraceFactory* getTraceFactory() const { return _tf; }
 
     // Set the tracing type for this runnable object. customTraceContextGetter is required for custom tracing
     // & this method will be called to get the parent trace context before initialiseParameters is called
     void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
-    void setupTraceContext(const std::string& name, RunningPlan* rp, const IAlicaTraceFactory* traceFactory);
+    void setupTraceContext(const std::string& name, RunningPlan* rp);
     void cleanupTraceContext();
     void traceRunCall();
 
 private:
     TracingType _tracingType;
+    const IAlicaTraceFactory* _tf;
     std::function<std::optional<std::string>()> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
     // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
-    IAlicaTraceFactory* _traceFactory;
 };
 
 /**
@@ -76,7 +78,7 @@ class RunnableObject
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObject(IAlicaWorldModel* wm, const std::string& name = "");
+    RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* tf, const std::string& name = "");
     virtual ~RunnableObject() = default;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
@@ -91,6 +93,8 @@ protected:
     }
     const std::string& getName() { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
+    // Helper to allow applications to generate their own trace.
+    const IAlicaTraceFactory* getTraceFactory() const { return _runnableObjectTracer.getTraceFactory(); }
 
     void sendLogMessage(int level, const std::string& message) const;
     RunningPlan* getPlanContext() const { return _runningplanContext; }
@@ -135,6 +139,7 @@ private:
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
     IAlicaWorldModel* _wm;
+
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these
     std::unordered_map<int64_t, const KeyMapping*> _keyMappings;
