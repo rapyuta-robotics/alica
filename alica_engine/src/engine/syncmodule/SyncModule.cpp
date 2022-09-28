@@ -4,20 +4,15 @@
 #include "engine/containers/SyncData.h"
 #include "engine/containers/SyncReady.h"
 #include "engine/containers/SyncTalk.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Synchronisation.h"
 #include "engine/model/Transition.h"
 #include "engine/teammanager/TeamManager.h"
 #include <engine/syncmodule/SyncModule.h>
 #include <engine/syncmodule/SynchronisationProcess.h>
 
-//#define ALICA_DEBUG_LEVEL_DEBUG
-#include <alica_common_config/debug_output.h>
-
 namespace alica
 {
-using std::cerr;
-using std::cout;
-using std::endl;
 using std::list;
 using std::lock_guard;
 using std::map;
@@ -116,7 +111,7 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
  */
 void SyncModule::synchronisationDone(const Synchronisation* sync)
 {
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Synchronisation successful for ID: " << sync->getId());
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Synchronisation successful for ID: " << sync->getId();
     _successfulSynchronisations.push_back(sync);
 }
 /**
@@ -146,19 +141,19 @@ void SyncModule::onSyncTalk(shared_ptr<SyncTalk> st)
     if (!_running || st->senderID == _myId || _teamManager.isAgentIgnored(st->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncTalk" << std::endl << *st);
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Received SyncTalk\n" << *st;
 
     std::vector<SyncData> toAck;
     for (const SyncData& sd : st->syncData) {
         const Transition* trans = _planRepository.getTransitions().find(sd.transitionID);
         if (trans == nullptr) {
-            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Could not find Transition " << sd.transitionID);
+            Logging::logError("SM") << "[(" << _myId << ")]: Could not find Transition " << sd.transitionID;
             return;
         }
 
         const Synchronisation* synchronisation = trans->getSynchronisation();
         if (synchronisation == nullptr) {
-            ALICA_ERROR_MSG("[SM (" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation");
+            Logging::logError("SM") << "[(" << _myId << ")]: Transition " << trans->getId() << " is not connected to a Synchronisation";
             return;
         }
 
@@ -194,11 +189,11 @@ void SyncModule::onSyncReady(shared_ptr<SyncReady> sr)
     if (!_running || sr->senderID == _myId || _teamManager.isAgentIgnored(sr->senderID)) {
         return;
     }
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Received SyncReady " << std::endl << *sr);
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Received SyncReady\n" << *sr;
 
     const Synchronisation* synchronisation = _planRepository.getSynchronisations().find(sr->synchronisationID);
     if (synchronisation == nullptr) {
-        ALICA_ERROR_MSG("[SM (" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID);
+        Logging::logError("SM") << "[(" << _myId << ")]: Unable to find synchronisation " << sr->synchronisationID << " send by " << sr->senderID;
         return;
     }
 
@@ -216,7 +211,7 @@ void SyncModule::sendSyncTalk(SyncTalk& st)
     if (!_maySendMessages)
         return;
     st.senderID = _myId;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncTalk " << std::endl << st);
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Sending SyncTalk \n" << st;
     _communicator.sendSyncTalk(st);
 }
 void SyncModule::sendSyncReady(SyncReady& sr)
@@ -224,7 +219,7 @@ void SyncModule::sendSyncReady(SyncReady& sr)
     if (!_maySendMessages)
         return;
     sr.senderID = _myId;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending SyncReady " << std::endl << sr);
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Sending SyncReady\n" << sr;
     _communicator.sendSyncReady(sr);
 }
 void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
@@ -234,7 +229,7 @@ void SyncModule::sendAcks(const std::vector<SyncData>& syncDataList) const
     SyncTalk st;
     st.senderID = _myId;
     st.syncData = syncDataList;
-    ALICA_DEBUG_MSG("[SM (" << _myId << ")]: Sending Acknowledgements " << std::endl << st);
+    Logging::logDebug("SM") << "[(" << _myId << ")]: Sending Acknowledgements\n" << st;
     _communicator.sendSyncTalk(st);
 }
 

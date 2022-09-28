@@ -29,6 +29,7 @@ include_directories(
 add_library(alica_ros_proxy
 	src/clock/AlicaROSClock.cpp
 	src/communication/AlicaRosCommunication.cpp
+  src/logger/AlicaRosLogger.cpp
 )
 
 add_dependencies(alica_ros_proxy alica_msgs_generate_messages_cpp)

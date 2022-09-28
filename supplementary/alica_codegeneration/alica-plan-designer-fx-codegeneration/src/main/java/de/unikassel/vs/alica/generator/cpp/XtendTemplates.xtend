@@ -324,7 +324,6 @@ namespace alica
     {
     }
 
-
     std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
     {
         switch(utilityfunctionConfId)

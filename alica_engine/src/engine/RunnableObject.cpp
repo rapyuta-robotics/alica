@@ -4,6 +4,7 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/RunningPlan.h"
 #include "engine/blackboard/BlackboardUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
 
@@ -20,6 +21,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* t
         , _runnableObjectTracer(tf)
         , _blackboard(nullptr)
         , _started(false)
+        , _runnableObjectTracer()
 {
 }
 
@@ -146,7 +148,7 @@ void TraceRunnableObject::setTracing(TracingType type, std::function<std::option
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        ALICA_ERROR_MSG("Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+        Logging::logError("RO") << "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead";
         _tracingType = TracingType::DEFAULT;
     }
 }
