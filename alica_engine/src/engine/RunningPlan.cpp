@@ -17,6 +17,7 @@
 #include "engine/collections/SuccessCollection.h"
 #include "engine/collections/SuccessMarks.h"
 #include "engine/constraintmodul/ConditionStore.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
@@ -31,7 +32,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <alica_common_config/common_defines.h>
-#include <alica_common_config/debug_output.h>
 
 #include <cstddef>
 #include <iostream>
@@ -209,7 +209,7 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
+        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
         assert(false);
     }
 
@@ -226,7 +226,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, _worldModel);
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in precondition: " << e.what());
+        Logging::logError("RP") << "Exception in precondition: " << e.what();
         return false;
     }
 }
@@ -238,7 +238,7 @@ bool RunningPlan::evalPreCondition() const
 bool RunningPlan::evalRuntimeCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        ALICA_ERROR_MSG("Cannot Eval Condition, Plan is null");
+        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
         throw std::exception();
     }
     const RuntimeCondition* runtimeCondition = nullptr;
@@ -257,7 +257,7 @@ bool RunningPlan::evalRuntimeCondition() const
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what());
+        Logging::logError("RP") << "Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what();
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -308,7 +308,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        std::cout << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName()) << std::endl;
+        Logging::logInfo("RP") << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName());
     }
 }
 

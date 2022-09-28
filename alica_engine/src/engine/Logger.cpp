@@ -10,6 +10,7 @@
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -17,9 +18,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <essentials/FileSystem.h>
-
-//#define ALICA_DEBUG_LEVEL_ALL
-#include <alica_common_config/debug_output.h>
 
 using std::endl;
 
@@ -85,7 +83,7 @@ void Logger::processString(const std::string& event)
         _eventStrings.push_back(event + "(FP)");
     }
     _receivedEvent = true;
-    ALICA_DEBUG_MSG("Logger: " << _eventStrings.back());
+    Logging::logDebug("Logger") << _eventStrings.back();
 }
 
 /**

@@ -135,7 +135,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     int domOffset;
 
     if (!pi->existSolver<SolverType>()) {
-        std::cerr << "Query::getSolution: The engine does not have a suitable solver for the given type available." << std::endl;
+        Logging::logError("Query::getSolution") << "The engine does not have a suitable solver for the given type available.";
         return false;
     }
 

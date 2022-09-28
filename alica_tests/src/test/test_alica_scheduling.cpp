@@ -129,7 +129,8 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     wm->execOrderTest = true;
     ac->stepEngine();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    SLEEP_UNTIL(alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0) != nullptr);
     auto behAAA = alica::test::Util::getBasicBehaviour(ae, 1629895901559, 0);
     ASSERT_FALSE(wm->behAAASuccessInInit);
     ASSERT_FALSE(wm->behAAAFailureInInit);

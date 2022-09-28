@@ -4,7 +4,6 @@
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/TransitionConditionFactory.h"
 
-#include <alica_common_config/debug_output.h>
 #include <iostream>
 #include <string>
 

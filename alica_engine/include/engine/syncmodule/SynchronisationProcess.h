@@ -3,6 +3,7 @@
 #include "engine/AlicaClock.h"
 #include "engine/Types.h"
 
+#include <iostream>
 #include <memory>
 #include <mutex>
 #include <ostream>
