@@ -24,6 +24,8 @@ class IAlicaTraceFactory
 {
 public:
     virtual std::unique_ptr<IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const = 0;
+    virtual void setGlobalContext(const std::string& globalContext) = 0;
+    virtual void unsetGlobalContext() = 0;
     virtual ~IAlicaTraceFactory() = default;
 };
 
