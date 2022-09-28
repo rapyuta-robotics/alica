@@ -1,11 +1,11 @@
 #include "engine/BasicCondition.h"
 #include "engine/model/Condition.h"
-#include <supplementary_tests/DynamicConditionCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <supplementary_tests/DynamicConditionCreator.h>
 
 namespace alica
 {
@@ -15,7 +15,11 @@ DynamicConditionCreator::DynamicConditionCreator(const std::string& defaultLibra
 {
 }
 
-DynamicConditionCreator::~DynamicConditionCreator() {}
+DynamicConditionCreator::~DynamicConditionCreator()
+{
+    std::cerr << "Debug:"
+              << "DynamicConditionCreator destroyed" << std::endl;
+}
 
 std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(ConditionContext& context)
 {
@@ -44,15 +48,13 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
                   << "Lib exixts in this path:" << libraryPath << " for:" << context.name << std::endl;
     }
 
-    typedef std::unique_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);
-    std::function<conditionCreatorType> conditionCreator;
-    conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
-            libraryPath,                                               // complete path to library also with file name
-            context.name,                                              // symbol to import
-            boost::dll::load_mode::append_decorations                  // do append extensions and prefixes
+    _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
+            libraryPath,                                                // complete path to library also with file name
+            context.name,                                               // symbol to import
+            boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
     );
 
-    std::unique_ptr<BasicCondition> createdCondition = conditionCreator(context);
+    std::shared_ptr<BasicCondition> createdCondition = _conditionCreator(context);
 
     return createdCondition;
 }

@@ -11,20 +11,16 @@ namespace alica
 class AcmeRuntimeCondition : public BasicCondition
 {
 public:
-    AcmeRuntimeCondition()
-    {
-        std::cerr << "Debug:"
-                  << "AcmeRuntimeCondition created" << std::endl;
-    }
+    AcmeRuntimeCondition();
 
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
     // Factory method
-    static std::unique_ptr<AcmeRuntimeCondition> create()
+    static std::shared_ptr<AcmeRuntimeCondition> create()
     {
         std::cerr << "Debug:"
                   << "AcmeRuntimeCondition created static" << std::endl;
 
-        return std::unique_ptr<AcmeRuntimeCondition>(new AcmeRuntimeCondition());
+        return std::make_shared<AcmeRuntimeCondition>();
     }
     ~AcmeRuntimeCondition() override{};
 };

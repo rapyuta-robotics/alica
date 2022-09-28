@@ -13,7 +13,7 @@ public:
     void run(void* msg) override{};
 
     // Factory method
-    static std::unique_ptr<AcmeBehaviour> create(BehaviourContext& context) { return std::unique_ptr<AcmeBehaviour>(new AcmeBehaviour(context)); }
+    static std::unique_ptr<AcmeBehaviour> create(BehaviourContext& context) { return std::make_unique<AcmeBehaviour>(context); }
 };
 BOOST_DLL_ALIAS(alica::AcmeBehaviour::create, acmebehaviour)
 }; // namespace alica

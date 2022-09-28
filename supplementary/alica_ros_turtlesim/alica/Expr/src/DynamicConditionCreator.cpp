@@ -43,15 +43,13 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
                   << "Lib exixts in this path:" << libraryPath << " for:" << context.name << std::endl;
     }
 
-    typedef std::unique_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);
-    std::function<conditionCreatorType> conditionCreator;
-    conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
-            libraryPath,                                               // complete path to library also with file name
-            context.name,                                              // symbol to import
-            boost::dll::load_mode::append_decorations                  // do append extensions and prefixes
+    _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
+            libraryPath,                                                // complete path to library also with file name
+            context.name,                                               // symbol to import
+            boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
     );
 
-    std::unique_ptr<BasicCondition> createdCondition = conditionCreator(context);
+    std::shared_ptr<BasicCondition> createdCondition = _conditionCreator(context);
 
     return createdCondition;
 }

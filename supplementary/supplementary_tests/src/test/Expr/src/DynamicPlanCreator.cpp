@@ -44,15 +44,13 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
                   << "Lib exixts in this path:" << libraryPath << std::endl;
     }
 
-    typedef std::unique_ptr<BasicPlan>(PlanCreatorType)(PlanContext&);
-    std::function<PlanCreatorType> PlanCreator;
-    PlanCreator = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
+    _planCreator = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
             libraryPath,                                     // complete path to library also with file name
             context.planModel->getName(),                    // symbol to import
             boost::dll::load_mode::append_decorations        // do append extensions and prefixes
     );
 
-    std::unique_ptr<BasicPlan> createdPlan = PlanCreator(context);
+    std::unique_ptr<BasicPlan> createdPlan = _planCreator(context);
 
     return createdPlan;
 }

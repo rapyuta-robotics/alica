@@ -13,7 +13,7 @@ public:
     void run(void* msg) override{};
 
     // Factory method
-    static std::unique_ptr<AcmePlan> create(PlanContext& context) { return std::unique_ptr<AcmePlan>(new AcmePlan(context)); }
+    static std::unique_ptr<AcmePlan> create(PlanContext& context) { return std::make_unique<AcmePlan>(context); }
 };
 BOOST_DLL_ALIAS(alica::AcmePlan::create, acmeplan)
 }; // namespace alica

@@ -44,15 +44,14 @@ target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
 if (CATKIN_ENABLE_TESTING)
 
     find_package(rostest REQUIRED)
-    #file(GLOB_RECURSE test_supplementary_SOURCES "src/test/*.cpp" src/test_supplementary.cpp)
     set(test_supplementary_SOURCES
         src/test_supplementary.cpp
         src/test/test_main.cpp
         src/test/test_alica_dynamicloadcreator.cpp
-        #src/test/test_alica_problem_composition.cpp
-        #src/test/test_alica_ros_proxy.cpp
-        #src/test/test_variable_handling.cpp
-        #src/test/test_alica_gsolver_plan.cpp
+        src/test/test_alica_problem_composition.cpp
+        src/test/test_alica_ros_proxy.cpp
+        src/test/test_variable_handling.cpp
+        src/test/test_alica_gsolver_plan.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})

@@ -1,6 +1,7 @@
 #pragma once
 #include <engine/IBehaviourCreator.h>
 
+#include <functional>
 #include <memory>
 
 namespace alica
@@ -18,6 +19,9 @@ public:
 private:
     const std::string _libraryRelativePath{"/../../../lib/"};
     std::string _currentLibraryPath;
+
+    typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);
+    std::function<behaviourCreatorType> _behaviourCreator;
 };
 
 } /* namespace alica */
