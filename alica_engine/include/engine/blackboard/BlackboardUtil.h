@@ -1,8 +1,9 @@
-#include "engine/blackboard/Blackboard.h"
-#include "engine/blackboard/KeyMapping.h"
 
 namespace alica
 {
+class Blackboard;
+class KeyMapping;
+
 class BlackboardUtil
 {
 public:

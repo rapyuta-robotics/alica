@@ -12,15 +12,17 @@
 #include "engine/RunningPlan.h"
 #include "engine/TeamObserver.h"
 #include "engine/allocationauthority/AuthorityManager.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/debug_output.h>
 #include <functional>
 #include <math.h>
+
+#include <string>
 
 namespace alica
 {
@@ -103,8 +105,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    ALICA_INFO_MSG("PB: Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds() << "ms - "
-                                              << _maxSendInterval.inMilliseconds() << "ms");
+    Logging::logInfo("PB") << "Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds()
+                           << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -133,7 +135,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    ALICA_DEBUG_MSG("PB: Run-Method of PlanBase started. ");
+    Logging::logDebug("PB") << "Run-Method of PlanBase started.";
     Logger& log = _logger;
 
     while (_running) {
@@ -142,13 +144,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
-            ALICA_DEBUG_MSG("PB: ===CUR TREE===");
+            Logging::logDebug("PB") << "===CUR TREE===";
             if (_rootNode == nullptr) {
-                ALICA_DEBUG_MSG("PB: NULL");
+                Logging::logDebug("PB") << "NULL";
             } else {
                 _rootNode->printRecursive();
             }
-            ALICA_DEBUG_MSG("PB: ===END CUR TREE===");
+            Logging::logDebug("PB") << "===END CUR TREE===";
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -176,7 +178,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            ALICA_INFO_MSG("PB: MasterPlan Failed");
+            Logging::logInfo("PB") << "MasterPlan Failed";
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -207,8 +209,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        ALICA_DEBUG_MSG("PlanBase: " << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
-                                     << " inactive deleted: " << deleteCount);
+        Logging::logDebug("PB") << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                                << " inactive deleted: " << deleteCount;
 #endif
         // lock for fpEvents
         {
@@ -219,7 +221,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = _clock.now();
 
         if (now < _lastSendTime) {
-            ALICA_WARNING_MSG("PB: lastSendTime is in the future of the current system time, did the system time change?");
+            Logging::logWarn("PB") << "lastSendTime is in the future of the current system time, did the system time change?";
             _lastSendTime = now;
         }
 
@@ -316,7 +318,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = _clock.now();
         availTime = _loopTime - (now - beginTime);
 
-        ALICA_DEBUG_MSG("PB: availTime " << availTime);
+        Logging::logWarn("PB") << "availTime " << availTime;
 
         if (availTime > AlicaTime::microseconds(100) && !_stepEngine) {
             _clock.sleep(availTime);

@@ -1,5 +1,6 @@
 #include "engine/BasicPlan.h"
 
+#include "engine/logging/Logging.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Transition.h"
 
@@ -36,7 +37,7 @@ void BasicPlan::doInit()
     try {
         onInit();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-INIT" << std::endl << e.what());
+        Logging::logError("BasicPlan") << "Exception in Plan-INIT: " << e.what();
     }
 }
 
@@ -55,7 +56,7 @@ void BasicPlan::doTerminate()
     try {
         onTerminate();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicPlan] Exception in Plan-TERMINATE" << std::endl << e.what());
+        Logging::logError("BasicPlan") << "Exception in Plan-TERMINATE: " << e.what();
     }
 }
 

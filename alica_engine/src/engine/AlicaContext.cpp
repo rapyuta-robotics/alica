@@ -2,6 +2,7 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Types.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
+#include "engine/logging/AlicaDefaultLogger.h"
 
 #include <essentials/FileSystem.h>
 
@@ -22,6 +23,7 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
+        , _localAgentName(alicaContextParams.agentName)
 {
 }
 
@@ -48,8 +50,12 @@ int AlicaContext::init(AlicaCreators& creatorCtx)
 
 int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 {
+    if (!Logging::isInitialized()) {
+        setLogger<AlicaDefaultLogger>();
+    }
+
     if (_initialized) {
-        ALICA_WARNING_MSG("AC: Context already initialized.");
+        Logging::logWarn("AC") << "Context already initialized.";
         return -1;
     }
 
@@ -85,6 +91,9 @@ int AlicaContext::terminate()
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
+
+const std::unordered_map<std::string, Verbosity> AlicaContext::_verbosityStringToVerbosityMap = {{"DEBUG", alica::Verbosity::DEBUG},
+        {"INFO", alica::Verbosity::INFO}, {"WARNING", alica::Verbosity::WARNING}, {"ERROR", alica::Verbosity::ERROR}, {"FATAL", alica::Verbosity::FATAL}};
 
 bool AlicaContext::isValid() const
 {
@@ -124,7 +133,11 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         node = YAML::LoadFile(configFile);
         return node;
     } catch (YAML::BadFile& badFile) {
-        ALICA_WARNING_MSG("AC: Could not parse file: " << configFile << " - " << badFile.msg);
+        if (Logging::isInitialized()) {
+            Logging::logWarn("AC") << "Could not parse file: " << configFile << " - " << badFile.msg;
+        } else {
+            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
+        }
     }
 
     try {

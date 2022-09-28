@@ -1,4 +1,6 @@
 #include "engine/RunningPlan.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/Condition.h"
 #include "engine/model/DomainVariable.h"
@@ -7,8 +9,6 @@
 #include <engine/constraintmodul/ConditionStore.h>
 #include <engine/constraintmodul/ProblemPart.h>
 #include <engine/constraintmodul/Query.h>
-
-#include <alica_common_config/debug_output.h>
 
 #include <iostream>
 
@@ -68,7 +68,8 @@ void ConditionStore::addCondition(const Condition* con)
         }
     }
 
-    ALICA_DEBUG_MSG("CS: Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables. CS: " << this);
+    Logging::logDebug("CS") << "Added condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size()
+                            << " variables. CS: " << this;
 }
 
 /**
@@ -102,7 +103,7 @@ void ConditionStore::removeCondition(const Condition* con)
         }
     }
 
-    ALICA_DEBUG_MSG("CS: Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.");
+    Logging::logDebug("CS") << "Removed condition in " << con->getAbstractPlan()->getName() << " with " << con->getVariables().size() << " variables.";
 }
 
 /**
@@ -110,7 +111,7 @@ void ConditionStore::removeCondition(const Condition* con)
  */
 void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
 {
-    ALICA_DEBUG_MSG("ConditionStore: Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this);
+    Logging::logDebug("CS") << "Accepting Query - Active conditions in store is " << _activeConditions.size() << " CS: " << this;
     if (_activeConditions.empty()) {
         return;
     }
@@ -121,7 +122,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
         return; // nothing to do
     }
 
-    ALICA_DEBUG_MSG("ConditionStore: Query contains static variables: " << staticVarBuffer.getCurrent());
+    Logging::logDebug("CS") << "Query contains static variables: " << staticVarBuffer.getCurrent();
 
     const int previousPartCount = query.getPartCount();
 
@@ -133,7 +134,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
             staticVarBuffer.editCurrent().pop_back();
             staticVarBuffer.editNext().push_back(curStaticVariable);
 
-            ALICA_DEBUG_MSG("ConditionStore: Checking static variable: " << *curStaticVariable);
+            Logging::logDebug("CS") << "Checking static variable: " << *curStaticVariable;
 
             auto activeVar2CondMapEntry = _activeVar2CondMap.find(curStaticVariable);
             if (activeVar2CondMapEntry == _activeVar2CondMap.end()) {
@@ -141,8 +142,7 @@ void ConditionStore::acceptQuery(Query& query, const RunningPlan* rp) const
                 continue;
             }
 
-            ALICA_DEBUG_MSG(
-                    "ConditionStore: Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size());
+            Logging::logDebug("CS") << "Conditions active under variable " << *activeVar2CondMapEntry->first << ": " << activeVar2CondMapEntry->second.size();
 
             for (const Condition* c : activeVar2CondMapEntry->second) {
                 if (std::find_if(query.getProblemParts().begin() + previousPartCount, query.getProblemParts().end(),

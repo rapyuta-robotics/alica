@@ -9,14 +9,13 @@
 #include "engine/TaskRoleStruct.h"
 #include "engine/USummand.h"
 #include "engine/UtilityInterval.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/Role.h"
 #include "engine/model/RoleSet.h"
 #include "engine/model/Task.h"
 #include "engine/planselector/IAssignment.h"
-
-#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -168,22 +167,23 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
             }
             priResult.setMin(priResult.getMin() + curPrio);
 
-            ALICA_DEBUG_MSG("UF: taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio);
+            Logging::logDebug("UF") << "taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
 
-    ALICA_DEBUG_MSG("##" << std::endl << "UF: prioUI = " << priResult);
-    ALICA_DEBUG_MSG("UF: denum = " << denum);
+    Logging::logDebug("UF") << "##\n"
+                            << "prioUI = " << priResult;
+    Logging::logDebug("UF") << "denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    ALICA_DEBUG_MSG("UF: prioUI = " << priResult);
-    ALICA_DEBUG_MSG("##");
+    Logging::logDebug("UF") << "prioUI = " << priResult << "\n"
+                            << "##";
     return priResult;
 }
 

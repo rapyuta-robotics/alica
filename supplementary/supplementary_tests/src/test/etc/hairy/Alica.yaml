@@ -44,6 +44,9 @@ Alica:
     Enabled: true
     LogFolder: /tmp/log
 
+  Logging:
+    Verbosity: INFO
+
   CycleDetection:
     Enabled: true
     CycleCount: 5
