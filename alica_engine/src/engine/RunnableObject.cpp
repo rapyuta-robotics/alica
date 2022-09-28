@@ -21,7 +21,6 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* t
         , _runnableObjectTracer(tf)
         , _blackboard(nullptr)
         , _started(false)
-        , _runnableObjectTracer()
 {
 }
 
