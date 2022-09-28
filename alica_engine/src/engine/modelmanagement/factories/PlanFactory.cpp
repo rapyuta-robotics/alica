@@ -70,7 +70,7 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
             } else if (stateType.compare(alica::Strings::normalStateType) == 0) {
                 state = StateFactory::create(*it);
             } else {
-                std::cerr << "[PlanFactory] Unknown state type encountered: '" << stateType << std::endl;
+                Logging::logError("PlanFactory") << "Unknown state type encountered: '" << stateType;
             }
             plan->_states.push_back(state);
             if (state->isFailureState()) {

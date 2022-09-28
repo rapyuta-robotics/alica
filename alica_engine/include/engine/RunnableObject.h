@@ -3,8 +3,6 @@
 #include "engine/AlicaClock.h"
 #include "engine/IAlicaTrace.h"
 
-#include <alica_common_config/debug_output.h>
-
 #include "engine/IAlicaTimer.h"
 #include "engine/blackboard/Blackboard.h"
 #include "engine/blackboard/BlackboardBlueprint.h"
@@ -85,10 +83,7 @@ protected:
     virtual void doRun() = 0;
     virtual void doTerminate() = 0;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {})
-    {
-        _runnableObjectTracer.setTracing(type, customTraceContextGetter);
-    }
+    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
     const std::string& getName() { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
 

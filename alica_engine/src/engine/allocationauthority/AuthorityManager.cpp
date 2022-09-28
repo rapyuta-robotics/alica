@@ -4,13 +4,12 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/CycleManager.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/State.h"
 #include "engine/teammanager/TeamManager.h"
-
-#include <alica_common_config/debug_output.h>
 
 #include <assert.h>
 
@@ -75,7 +74,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
         }
     }
 
-    ALICA_DEBUG_MSG("AM: Received AAI Assignment: " << aai);
+    Logging::logDebug("AM") << "Received AAI Assignment: " << aai;
     {
         std::lock_guard<std::mutex> lock(_mutex);
         _queue.push_back(aai);
@@ -87,7 +86,7 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    ALICA_DEBUG_MSG("AM: Tick called!");
+    Logging::logDebug("AM") << "Tick called!";
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {
@@ -106,11 +105,11 @@ void AuthorityManager::processPlan(RunningPlan& rp)
         rp.editCycleManagement().sent();
     }
 
-    ALICA_DEBUG_MSG("AM: Queue size of AuthorityInfos is " << _queue.size());
+    Logging::logDebug("AM") << "Queue size of AuthorityInfos is " << _queue.size();
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
-            ALICA_DEBUG_MSG("AM: Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName());
+            Logging::logDebug("AM") << "Found AuthorityInfo, which matches the plan " << rp.getActivePlan()->getName();
             rp.editCycleManagement().handleAuthorityInfo(_queue[i]);
             _queue.erase(_queue.begin() + i);
             --i;
@@ -146,7 +145,7 @@ void AuthorityManager::sendAllocation(const RunningPlan& p)
     aai.senderID = _localAgentID;
     aai.planType = (p.getPlanType() ? p.getPlanType()->getId() : -1);
 
-    ALICA_DEBUG_MSG("AM: Sending AAI Assignment: " << aai);
+    Logging::logDebug("AM") << "Sending AAI Assignment: " << aai;
     _communicator.sendAllocationAuthority(aai);
 }
 

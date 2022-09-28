@@ -2,6 +2,8 @@
 
 #include "engine/Types.h"
 #include "engine/default/DefaultConditions.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/Logging.h"
 #include <iostream>
 
 namespace alica
@@ -12,7 +14,7 @@ TransitionConditionCallback DefaultTransitionConditionCreator::createConditions(
     if (name == "DefaultCondition") {
         return std::bind(defaultCondition, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     }
-    std::cerr << "DefaultTransitionConditionCreator: Unknown condition requested: " << name << std::endl;
+    Logging::logError("DefaultTransitionConditionCreator") << "Unknown condition requested: " << name;
     throw new std::exception();
 }
 

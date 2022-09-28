@@ -3,9 +3,9 @@
 #include "engine/BasicCondition.h"
 #include "engine/BasicConstraint.h"
 #include "engine/RunningPlan.h"
+#include "engine/logging/IAlicaLogger.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Quantifier.h"
-
-#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -32,7 +32,7 @@ void Condition::setConditionString(const std::string& conditionString)
 bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const
 {
     if (_basicCondition == nullptr) {
-        ALICA_ERROR_MSG("Condition: Missing implementation of condition: ID " << getId());
+        Logging::logDebug("Condition") << "Condition: Missing implementation of condition: ID " << getId();
         return false;
     } else {
         bool ret = false;
@@ -40,7 +40,7 @@ bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) cons
             // TODO: fix const cast below
             ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), wm);
         } catch (const std::exception& e) {
-            ALICA_ERROR_MSG("Condition: Exception during evaluation catched: " << std::endl << e.what());
+            Logging::logDebug("Condition") << "Condition: Exception during evaluation catched:\n" << e.what();
         }
         return ret;
     }
