@@ -42,7 +42,13 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
         return std::make_unique<Trace>();
     }
 
-    std::unique_ptr<Trace> trace = std::make_unique<Trace>(opName, parent);
+    std::optional<std::string> applicableParent = parent;
+    if (!applicableParent) {
+        std::lock_guard<std::mutex> lck(_mutex);
+        applicableParent = _globalContext; // Note: _globalContext may be intentionally empty
+    }
+
+    std::unique_ptr<Trace> trace = std::make_unique<Trace>(opName, applicableParent);
     for (const auto& defaultTag : _defaultTags) {
         trace->setTag(defaultTag.first, defaultTag.second);
     }
@@ -50,4 +56,15 @@ std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opNa
     return trace;
 }
 
+void TraceFactory::setGlobalContext(const std::string& globalContext)
+{
+    std::lock_guard<std::mutex> lck(_mutex);
+    _globalContext = globalContext;
+}
+
+void TraceFactory::unsetGlobalContext()
+{
+    std::lock_guard<std::mutex> lck(_mutex);
+    _globalContext.reset();
+}
 } // namespace alicaTracing
