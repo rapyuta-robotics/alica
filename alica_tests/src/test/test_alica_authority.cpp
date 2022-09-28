@@ -94,7 +94,7 @@ TEST(AllocationDifference, MessageCancelsUtil)
     EXPECT_TRUE(result.isEmpty());
 }
 
-TEST_F(AlicaEngineAuthorityManager, DISABLED_authority)
+TEST_F(AlicaEngineAuthorityManager, authority)
 {
     // ASSERT_NO_SIGNAL
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);

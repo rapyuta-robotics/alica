@@ -49,7 +49,7 @@ protected:
 /**
  * Test for SyncTransition
  */
-TEST_F(AlicaSyncTransition, DISABLED_syncTransitionTest)
+TEST_F(AlicaSyncTransition, syncTransitionTest)
 {
     ASSERT_NO_SIGNAL
     aes[0]->start();

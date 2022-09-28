@@ -46,7 +46,7 @@ inline TestClock& getTestClock(AlicaContext* ac)
     return static_cast<TestClock&>(const_cast<AlicaClock&>(ac->getAlicaClock()));
 }
 
-TEST_F(AlicaEngineAgentDiesTest, DISABLED_AgentIsRemoved)
+TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 {
     ASSERT_NO_SIGNAL
 

@@ -1,6 +1,6 @@
 #include "test_alica.h"
 
-#include <engine/logging/AlicaDefaultLogger.h>
+#include <logger/AlicaRosLogger.h>
 
 #include <gtest/gtest.h>
 
@@ -20,8 +20,8 @@ protected:
 TEST_F(AlicaDefaultLoggerTest, testSettingDefaultLogger)
 {
     ASSERT_NO_SIGNAL
-    // check that AlicaDefaultLogger is set.
-    AlicaDefaultLogger* logger = dynamic_cast<AlicaDefaultLogger*>(AlicaLogger::instance());
+    // check that AlicaRosLogger is set.
+    alicaRosLogger::AlicaRosLogger* logger = dynamic_cast<alicaRosLogger::AlicaRosLogger*>(AlicaLogger::instance());
     EXPECT_NE(logger, nullptr);
 }
 } // namespace
