@@ -27,7 +27,7 @@ Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         , _preCondition(nullptr)
         , _frequency(0)
         , _blackboardBlueprint(nullptr)
-        , _libraryName("alica_customer_library")
+        , _libraryName("")
 {
     auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
@@ -140,7 +140,7 @@ std::string Plan::toString(std::string indent) const
     for (const Variable* var : this->getVariables()) {
         ss << var->toString(indent + "\t");
     }
-    ss << indent << "\alica_customer_library: " << _libraryName << std::endl;
+    ss << indent << "\tlibraryname: " << _libraryName << std::endl;
 
     ss << indent << "#EndPlan:" << std::endl;
     return ss.str();

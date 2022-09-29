@@ -57,12 +57,6 @@ if (NOT catkin_FOUND)
  target_include_directories(alica_customer_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 endif (NOT catkin_FOUND)
 
-##How to solve this??
-#target_include_directories(alica_customer_library PUBLIC
-#    /media/triccyx/dc8f96a2-ec0d-4174-beb5-88c82cc0d2e7/catkin-dll2/src/alica/supplementary/alica_ros_turtlesim/alica/Expr/include/alica
-#)
-
-
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
