@@ -5,7 +5,7 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    fsystem
+    
     alica_engine
     alica_dummy_proxy
     alica_ros_proxy
@@ -17,8 +17,8 @@ find_package(catkin REQUIRED COMPONENTS
     autodiff
     alica_ros_proxy
 )
-
-include_directories(include)
+find_package(fsystem)
+include_directories(include ${fsystem_INCLUDE_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include src/test/Expr/include

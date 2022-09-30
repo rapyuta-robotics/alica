@@ -6,7 +6,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    fsystem
+    
     alica_engine
     alica_dummy_proxy
     alica_simple_solver
@@ -18,8 +18,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 # #Yaml
 find_package(yaml-cpp REQUIRED)
-
-include_directories(include ${YAML_CPP_INCLUDE_DIR})
+find_package(fsystem REQUIRED)
+include_directories(include ${YAML_CPP_INCLUDE_DIR} ${fsystem_INCLUDE_DIRS})
 
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include
