@@ -7,8 +7,9 @@ find_package(catkin QUIET)
 if (catkin_FOUND)
     find_package(catkin REQUIRED COMPONENTS
       alica_engine
-      alica_common_config
+      
     )
+    find_package(alica_common_config)
 else (catkin_FOUND)
    	set(catkin_LIBRARIES "alica_engine" alica_common_config)
 endif(catkin_FOUND)
@@ -25,6 +26,7 @@ endif(catkin_FOUND)
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${alica_common_config_INCLUDE_DIRS}
 )
 file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
 add_library(alica_dummy_proxy ${alica_dummy_sources})

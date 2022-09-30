@@ -8,9 +8,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   message_generation
   alica_msgs
-  alica_common_config
+  
 )
-
+find_package(alica_common_config REQUIRED)
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
@@ -24,6 +24,7 @@ catkin_package(
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
+  ${alica_common_config_INCLUDE_DIRS}
 )
 
 add_library(alica_ros_proxy
