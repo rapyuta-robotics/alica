@@ -9,7 +9,7 @@
 
 # define INCLUDE_DIRS and LIBRARIES, required for catkin_package
 set_and_check(fsystem_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
-set(fsystem_LIBRARIES fsystem::fsystem_lib)
+set(fsystem_LIBRARIES fsystem::fsystem)
 
 
 

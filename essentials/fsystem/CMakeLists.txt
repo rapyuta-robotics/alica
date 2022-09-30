@@ -17,13 +17,17 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 include_directories(include)
 
-add_library(fsystem
+add_library(fsystem SHARED
   src/FileSystem.cpp
 )
 
 # if (NOT catkin_FOUND)
-  target_include_directories(fsystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+  target_include_directories(fsystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
 # endif(NOT catkin_FOUND)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC)
+
 
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION lib 
