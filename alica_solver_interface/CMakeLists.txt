@@ -13,7 +13,8 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS alica_common_config)
+  find_package(catkin REQUIRED)
+  find_package(alica_common_config REQUIRED)
 else (catkin_FOUND)
   set(catkin_LIBRARIES "alica_common_config")
 endif(catkin_FOUND)
@@ -29,7 +30,7 @@ endif(catkin_FOUND)
 ## Build ##
 ###########
 
-include_directories(include include/${PROJECT_NAME} ${catkin_INCLUDE_DIRS})
+include_directories(include include/${PROJECT_NAME} ${catkin_INCLUDE_DIRS} ${alica_common_config_INCLUDE_DIRS})
 
 file(GLOB_RECURSE sources "src/*.cpp")
 

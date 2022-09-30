@@ -10,16 +10,21 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin REQUIRED COMPONENTS
  alica_solver_interface
- alica_common_config
+ 
 )
+
+find_package(alica_common_config)
 
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES autodiff
- CATKIN_DEPENDS alica_solver_interface alica_common_config
-)
+ CATKIN_DEPENDS alica_solver_interface 
+  DEPENDS alica_common_config
+ )
 
-include_directories(include include/autodiff ${catkin_INCLUDE_DIRS})
+include_directories(include include/autodiff ${catkin_INCLUDE_DIRS}
+  ${alica_common_config_INCLUDE_DIRS}
+)
 
 add_library(autodiff
   src/Abs.cpp

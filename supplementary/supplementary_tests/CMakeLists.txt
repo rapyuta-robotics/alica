@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_dummy_proxy
     alica_ros_proxy
     alica_simple_solver
-    alica_common_config
+    
     alica_solver_interface
     alica_test_utility
     constraintsolver
@@ -18,7 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 find_package(fsystem)
-include_directories(include ${fsystem_INCLUDE_DIRS})
+find_package(alica_common_config REQUIRED)
+include_directories(include ${fsystem_INCLUDE_DIRS}
+${alica_common_config_INCLUDE_DIRS})
 
 catkin_package(
   INCLUDE_DIRS include src/test/Expr/include

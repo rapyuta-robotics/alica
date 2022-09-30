@@ -1,0 +1,17 @@
+
+
+# required by CMakePackageConfigHelpers
+# https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html
+@PACKAGE_INIT@
+
+# forward the targets
+
+
+# define INCLUDE_DIRS and LIBRARIES, required for catkin_package
+set_and_check(alica_common_config_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+
+
+
+# labels the packages as found or not
+check_required_components(alica_common_config)
