@@ -6,6 +6,8 @@ bin/
 lib/
 build/
 devel/
+install/
+log/
 .libs/
 .deps/
 *.exe

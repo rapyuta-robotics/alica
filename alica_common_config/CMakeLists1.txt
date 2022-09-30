@@ -1,0 +1,107 @@
+cmake_minimum_required(VERSION 3.5.1)
+project(alica_common_config)
+add_compile_options(-std=c++14)
+
+
+
+#find_package(catkin REQUIRED)
+
+# catkin_package(
+#   INCLUDE_DIRS include
+#   CFG_EXTRAS cflags.cmake
+# )
+
+set(WARNING "-Wall -Wuninitialized -Wmissing-field-initializers -Wno-reorder")
+set(C_ERROR "-Werror=implicit-function-declaration -Werror=return-type -Werror=pointer-arith")
+set(CPP_ERROR "-Werror=return-type -Werror=pointer-arith")
+set(C_WARNING "-Wbad-function-cast -Wstrict-prototypes")
+set(CPP_WARNING "")
+set(C_STD "-std=c11")
+set(CPP_STD "-std=c++14")
+set(OPTIMIZATION "-O2 -finline-functions -fomit-frame-pointer -funroll-loops -ffast-math -ftree-vectorize")
+
+if(${SANITATION})
+    set(OPTIMIZATION "-O0") # For memory sanitation we turn off optimization.
+    set(SANITIZE "-fsanitize=memory -fPIE -fno-omit-frame-pointer -fsanitize-memory-track-origins=2")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SANITIZE}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZE}")
+endif()
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_STD} ${WARNING} ${C_ERROR} ${C_WARNING}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CPP_STD} ${WARNING} ${CPP_ERROR} ${CPP_WARNING}")
+
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -DNDEBUG ${C_STD} ${OPTIMIZATION} ${WARNING} ${C_ERROR} ${C_WARNING}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG ${CPP_STD} ${OPTIMIZATION} ${WARNING} ${CPP_ERROR} ${CPP_WARNING}")
+
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -g -DNDEBUG ${C_STD} ${OPTIMIZATION} ${WARNING} ${C_ERROR} ${C_WARNING}")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -g -DNDEBUG ${CPP_STD} ${OPTIMIZATION} ${WARNING} ${CPP_ERROR} ${CPP_WARNING}")
+
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -fnon-call-exceptions -ggdb ${C_STD} ${WARNING} ${C_ERROR} ${C_WARNING}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -fnon-call-exceptions -ggdb ${CPP_STD} ${WARNING} ${CPP_ERROR} ${CPP_WARNING}")
+
+include_directories(include include/${PROJECT_NAME} ${catkin_INCLUDE_DIRS})
+
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# install(DIRECTORY include/${PROJECT_NAME}/
+#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+#   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+#   PATTERN ".svn" EXCLUDE
+# )
+install(
+  FILES
+${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
+DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+)
+
+install(
+TARGETS ${PROJECT_NAME}
+EXPORT export_${PROJECT_NAME}
+ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+include(CMakePackageConfigHelpers)
+# Create the ${PROJECT_NAME}Config.cmake.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+  "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY
+)
+
+# Create the ${PROJECT_NAME}ConfigVersion.cmake.
+# write_basic_package_version_file(
+#   ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+#   COMPATIBILITY AnyNewerVersion
+# )
+
+install(
+  FILES
+    "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+)
+
+# Export targets.
+set(export_targets ${export_targets};${PROJECT_NAME})
+export(
+  EXPORT export_${PROJECT_NAME}
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+  NAMESPACE ${PROJECT_NAME}::
+)
+
+install(
+  EXPORT export_${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+)
