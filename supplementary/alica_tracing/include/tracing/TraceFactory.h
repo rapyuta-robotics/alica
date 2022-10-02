@@ -23,12 +23,17 @@ public:
     TraceFactory&& operator=(TraceFactory&&) = delete;
 
     ~TraceFactory();
-    std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const;
+    std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const override;
+    void setGlobalContext(const std::string& globalContext) override;
+    void unsetGlobalContext() override;
 
 private:
     bool _initialized = false;
     std::unordered_map<std::string, RawTraceValue> _defaultTags;
     std::string _serviceName;
+
+    mutable std::mutex _mutex;
+    std::optional<std::string> _globalContext;
 };
 
 } // namespace alicaTracing

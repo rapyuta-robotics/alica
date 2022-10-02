@@ -24,7 +24,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObject(context.worldModel, context.traceFactory, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
