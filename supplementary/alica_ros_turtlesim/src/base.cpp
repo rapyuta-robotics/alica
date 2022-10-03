@@ -57,11 +57,11 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
     wminit(nh, priv_nh);
 }
 
-void Base::start(const std::string& path)
+void Base::start()
 {
-    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(path), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(path),
-            std::make_unique<alica::DynamicPlanCreator>(path), std::make_unique<alica::TransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
+            std::make_unique<alica::TransitionConditionCreator>());
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));

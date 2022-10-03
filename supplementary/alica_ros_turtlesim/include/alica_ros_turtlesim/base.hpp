@@ -14,7 +14,7 @@ public:
     Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
             const std::string& path);
     ~Base();
-    void start(const std::string& path);
+    void start();
 
 private:
     ros::AsyncSpinner spinner;

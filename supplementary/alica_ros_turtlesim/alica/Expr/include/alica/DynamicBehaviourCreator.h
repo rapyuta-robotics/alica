@@ -12,14 +12,11 @@ class BasicBehaviour;
 class DynamicBehaviourCreator : public IBehaviourCreator
 {
 public:
-    DynamicBehaviourCreator(const std::string& defaultLibraryPath);
+    DynamicBehaviourCreator();
     virtual ~DynamicBehaviourCreator();
     std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
 
 private:
-    const std::string _libraryRelativePath{"/../../../lib/"};
-    std::string _currentLibraryPath;
-
     typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);
     std::function<behaviourCreatorType> _behaviourCreator;
 };
