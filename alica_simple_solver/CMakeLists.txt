@@ -34,8 +34,8 @@ add_library(${PROJECT_NAME}
 
  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+install(DIRECTORY include/alica/reasoner
+  DESTINATION include/alica
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )

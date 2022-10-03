@@ -8,23 +8,27 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 
-find_package(catkin REQUIRED)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+
+# find_package(catkin REQUIRED)
 
 find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
-catkin_package(
- INCLUDE_DIRS include
- LIBRARIES autodiff
-  DEPENDS alica_common_config alica_solver_interface 
- )
+# catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES autodiff
+#   DEPENDS alica_common_config alica_solver_interface 
+#  )
 
 include_directories(include include/autodiff ${catkin_INCLUDE_DIRS}
   ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
 )
 
-add_library(autodiff
+add_library(autodiff SHARED
   src/Abs.cpp
   src/And.cpp
   src/Atan2.cpp
@@ -56,34 +60,97 @@ add_library(autodiff
   src/Variable.cpp
 )
 
+target_sources(autodiff PRIVATE
+  src/Abs.cpp
+  src/And.cpp
+  src/Atan2.cpp
+  src/Constant.cpp
+  src/ConstPower.cpp
+  src/ConstraintBuilder.cpp
+  src/ConstraintUtility.cpp
+  src/Cos.cpp
+  src/Exp.cpp
+  src/LinSigmoid.cpp
+  src/Log.cpp
+  src/LTConstraint.cpp
+  src/LTEConstraint.cpp
+  src/Max.cpp
+  src/Min.cpp
+  src/Or.cpp
+  src/Product.cpp
+  src/Reification.cpp
+  src/Sigmoid.cpp
+  src/Sin.cpp
+  src/Sum.cpp
+  src/Tape.cpp
+  src/Term.cpp
+  src/TermBuilder.cpp
+  src/TermList.cpp
+  src/TermHolder.cpp
+  src/TermPower.cpp
+  src/TermPtr.cpp
+  src/Variable.cpp
+)
+target_include_directories(autodiff PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
 target_link_libraries(autodiff ${catkin_LIBRARIES})
 
 add_executable(sine_benchmark test/test_benchmark.cpp)
 
 target_link_libraries(sine_benchmark ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-if(CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
-    if(TARGET ${PROJECT_NAME}-test)
-    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-    endif()
-else(CATKIN_ENABLE_TESTING)
+# if(CATKIN_ENABLE_TESTING)
+#     catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
+#     if(TARGET ${PROJECT_NAME}-test)
+#     target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
+#     endif()
+# else(CATKIN_ENABLE_TESTING)
     # AUTODIFF TESTS
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
     find_package(GTest REQUIRED)
     include_directories(BEFORE
     ${GTEST_INCLUDE_DIRS}
     )
     add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
-    target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
-endif(CATKIN_ENABLE_TESTING)
+    target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
+    add_test(NAME autodiff-tests COMMAND ./autodiff-tests)
+# endif(CATKIN_ENABLE_TESTING)
 
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+EXPORT ${CMAKE_PROJECT_NAME}Targets
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )
+
+export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+)
+# exported targets
+install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+  DESTINATION ${ConfigPackageLocation})
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  VERSION 0.5.0
+  COMPATIBILITY SameMajorVersion)
+
+  set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+configure_package_config_file(
+  ${CMAKE_PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${ConfigPackageLocation}
+  PATH_VARS INCLUDE_INSTALL_DIR)
+
+  install(FILES 
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${ConfigPackageLocation})
