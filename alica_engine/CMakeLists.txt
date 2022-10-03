@@ -10,9 +10,10 @@ find_package(yaml-cpp REQUIRED)
 ##ROS/Catkin
 find_package(catkin QUIET)
 if (catkin_FOUND)
-  find_package(catkin REQUIRED COMPONENTS   alica_solver_interface)
+  find_package(catkin REQUIRED)
   find_package(fsystem REQUIRED)
-  find_package(alica_common_config)
+  find_package(alica_common_config REQUIRED)
+  find_package(alica_solver_interface REQUIRED)
 else (catkin_FOUND)
   set(catkin_LIBRARIES "fsystem" "alica_common_config" "alica_solver_interface")
 endif(catkin_FOUND)
@@ -21,8 +22,7 @@ if(catkin_FOUND)
   catkin_package(
     INCLUDE_DIRS include
     LIBRARIES alica_engine
-    CATKIN_DEPENDS   alica_solver_interface
-    DEPENDS fsystem alica_common_config
+    DEPENDS fsystem alica_common_config alica_solver_interface
   )
 endif(catkin_FOUND)
 
@@ -35,6 +35,7 @@ include_directories(include
   ${fsystem_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDE_DIR}
   ${alica_common_config_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
 )
 
 

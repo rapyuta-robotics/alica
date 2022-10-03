@@ -11,17 +11,18 @@ find_package(catkin REQUIRED COMPONENTS
   autodiff
   alica_engine
   alica_ros_proxy
-  alica_solver_interface
+ 
   
   roslib
 )
-find_package(fsystem)
-find_package(alica_common_config)
+find_package(fsystem REQUIRED)
+find_package(alica_common_config REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS  autodiff roslib alica_solver_interface 
- DEPENDS fsystem alica_common_config
+ CATKIN_DEPENDS  autodiff roslib 
+ DEPENDS fsystem alica_common_config alica_solver_interface 
 )
 
 include_directories(
@@ -30,6 +31,7 @@ include_directories(
   ${YAML_CPP_INCLUDE_DIR}
   ${fsystem_INCLUDE_DIRS}
   ${alica_common_config_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
 )
 
 add_library(constraintsolver
