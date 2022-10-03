@@ -8,7 +8,7 @@ find_package(yaml-cpp REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   
-  autodiff
+  
   alica_engine
   alica_ros_proxy
  
@@ -18,11 +18,12 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(fsystem REQUIRED)
 find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
+find_package(autodiff REQUIRED)
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
- CATKIN_DEPENDS  autodiff roslib 
- DEPENDS fsystem alica_common_config alica_solver_interface 
+ CATKIN_DEPENDS   roslib 
+ DEPENDS fsystem alica_common_config alica_solver_interface autodiff
 )
 
 include_directories(
@@ -32,7 +33,9 @@ include_directories(
   ${fsystem_INCLUDE_DIRS}
   ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
+  ${autodiff_INCLUDE_DIRS}
 )
+
 
 add_library(constraintsolver
   src/intervals/DownwardPropagator.cpp
@@ -55,7 +58,7 @@ add_library(constraintsolver
   src/GSolver.cpp
 )
 
-target_link_libraries(constraintsolver ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries(constraintsolver PUBLIC autodiff ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 catkin_add_gtest(${PROJECT_NAME}-test
  test/test_constraintsolver.cpp
