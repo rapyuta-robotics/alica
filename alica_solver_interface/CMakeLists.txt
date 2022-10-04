@@ -76,7 +76,9 @@ find_package(Threads REQUIRED)
     test/test_intervals.cpp
     test/test_main.cpp
     )
+    include(CTest)
     target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
+    add_test(NAME alica_solver_interface-tests COMMAND alica_solver_interface-tests)
 # endif(CATKIN_ENABLE_TESTING)
 
 install(TARGETS ${PROJECT_NAME}

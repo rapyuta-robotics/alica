@@ -114,8 +114,9 @@ find_package(Threads REQUIRED)
     ${GTEST_INCLUDE_DIRS}
     )
     add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
+    include(CTest)
     target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
-    add_test(NAME autodiff-tests COMMAND ./autodiff-tests)
+    add_test(NAME autodiff-tests COMMAND autodiff-tests)
 # endif(CATKIN_ENABLE_TESTING)
 
 install(TARGETS ${PROJECT_NAME}

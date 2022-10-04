@@ -7,7 +7,7 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     
-    alica_dummy_proxy
+    
     alica_simple_solver
     alica_test_utility
     alica_ros_proxy
@@ -19,16 +19,18 @@ find_package(fsystem REQUIRED)
 find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
+find_package(alica_dummy_proxy REQUIRED)
 include_directories(include ${YAML_CPP_INCLUDE_DIR} ${fsystem_INCLUDE_DIRS} ${alica_common_config_INCLUDE_DIRS}
     ${alica_solver_interface_INCLUDE_DIRS}
     ${alica_engine_INCLUDE_DIRS}
+    ${alica_dummy_proxy_INCLUDE_DIRS}
 )
 
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include
     LIBRARIES autogen_code_alica_tests
-    CATKIN_DEPENDS  alica_dummy_proxy alica_simple_solver alica_ros_proxy
-    DEPENDS fsystem alica_solver_interface alica_engine
+    CATKIN_DEPENDS   alica_simple_solver alica_ros_proxy
+    DEPENDS fsystem alica_solver_interface alica_engine alica_dummy_proxy
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
