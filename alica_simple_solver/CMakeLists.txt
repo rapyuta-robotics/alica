@@ -9,14 +9,14 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED COMPONENTS alica_engine)
+find_package(catkin REQUIRED)
+find_package(alica_engine REQUIRED)
 find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES alica_simple_solver
-  CATKIN_DEPENDS alica_engine  
-  DEPENDS alica_common_config alica_solver_interface
+  DEPENDS alica_common_config alica_solver_interface alica_engine
 )
 
 include_directories(
@@ -24,6 +24,7 @@ include_directories(
  ${catkin_INCLUDE_DIRS}
  ${alica_common_config_INCLUDE_DIRS}
  ${alica_solver_interface_INCLUDE_DIRS}
+ ${alica_engine_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}

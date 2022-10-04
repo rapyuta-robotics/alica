@@ -5,9 +5,8 @@ add_compile_options(-std=c++17)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-    find_package(catkin REQUIRED COMPONENTS
-      alica_engine
-    )
+    find_package(catkin REQUIRED )
+    find_package(alica_engine REQUIRED)
 else (catkin_FOUND)
    	set(catkin_LIBRARIES "alica_engine")
 endif(catkin_FOUND)
@@ -15,7 +14,7 @@ endif(catkin_FOUND)
 if(catkin_FOUND)
  catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
-  CATKIN_DEPENDS alica_engine
+  DEPENDS alica_engine
   #DEPENDS
  )
 endif(catkin_FOUND)
@@ -23,6 +22,7 @@ endif(catkin_FOUND)
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${alica_engine_INCLUDE_DIRS}
 )
 
 if (NOT catkin_FOUND)

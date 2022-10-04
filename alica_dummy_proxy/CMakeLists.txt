@@ -5,11 +5,10 @@ add_compile_options(-std=c++17)
 
 find_package(catkin QUIET)
 if (catkin_FOUND)
-    find_package(catkin REQUIRED COMPONENTS
-      alica_engine
-      
-    )
-    find_package(alica_common_config)
+    find_package(catkin REQUIRED)
+    find_package(alica_common_config REQUIRED)
+    find_package(alica_solver_interface REQUIRED)
+    find_package(alica_engine REQUIRED)
 else (catkin_FOUND)
    	set(catkin_LIBRARIES "alica_engine" alica_common_config)
 endif(catkin_FOUND)
@@ -18,7 +17,7 @@ if(catkin_FOUND)
  catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_dummy_proxy
-  CATKIN_DEPENDS alica_engine
+  DEPENDS alica_engine alica_solver_interface
   #DEPENDS
  )
 endif(catkin_FOUND)
@@ -27,6 +26,9 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${alica_common_config_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
+  ${alica_engine_INCLUDE_DIRS}
+
 )
 file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
 add_library(alica_dummy_proxy ${alica_dummy_sources})

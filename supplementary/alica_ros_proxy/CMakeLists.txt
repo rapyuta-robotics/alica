@@ -4,12 +4,14 @@ project(alica_ros_proxy)
 add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
-  alica_engine
+  
   roscpp
   message_generation
   alica_msgs
   
 )
+find_package(alica_engine REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 find_package(alica_common_config REQUIRED)
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
@@ -17,7 +19,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_ros_proxy
-  CATKIN_DEPENDS alica_engine roscpp
+  CATKIN_DEPENDS roscpp
+  DEPENDS  alica_solver_interface alica_engine 
   #DEPENDS system_lib
 )
 
@@ -25,6 +28,8 @@ include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
   ${alica_common_config_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
+  ${alica_engine_INCLUDE_DIRS}
 )
 
 add_library(alica_ros_proxy
