@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     
     alica_ros_proxy
     
-    alica_test_utility
+    
     constraintsolver
     
     alica_ros_proxy
@@ -21,6 +21,7 @@ find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
+find_package(alica_test_utility REQUIRED)
 include_directories(include ${fsystem_INCLUDE_DIRS}
     ${alica_common_config_INCLUDE_DIRS}
     ${alica_solver_interface_INCLUDE_DIRS}
@@ -28,6 +29,7 @@ include_directories(include ${fsystem_INCLUDE_DIRS}
     ${alica_engine_INCLUDE_DIRS}
     ${alica_dummy_proxy_INCLUDE_DIRS}
     ${alica_simple_solver_INCLUDE_DIRS}
+    ${alica_test_utility_INCLUDE_DIRS}
 )
 
 catkin_package(
@@ -40,7 +42,7 @@ catkin_package(
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES})
+target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} alica_test_utility)
 
 if (CATKIN_ENABLE_TESTING)
 
