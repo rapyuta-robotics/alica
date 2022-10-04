@@ -40,13 +40,19 @@ file(GLOB_RECURSE sources "src/*.cpp")
 add_library(alica_solver_interface SHARED
     ${sources};
 )
+
+target_sources(alica_solver_interface PRIVATE
+  ${sources})
+
+  target_include_directories(alica_solver_interface PUBLIC 
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>
+  )
+
 target_link_libraries(alica_solver_interface PUBLIC)
 
 # if (NOT catkin_FOUND)
- target_include_directories(alica_solver_interface PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
- $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
- )
+ 
 # endif (NOT catkin_FOUND)
 
 
@@ -74,6 +80,7 @@ find_package(Threads REQUIRED)
 # endif(CATKIN_ENABLE_TESTING)
 
 install(TARGETS ${PROJECT_NAME}
+EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
@@ -83,6 +90,14 @@ install(DIRECTORY include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )
+
+export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+ )
+# exported targets
+install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+  DESTINATION ${ConfigPackageLocation})
 
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake

@@ -21,8 +21,11 @@ add_library(fsystem SHARED
   src/FileSystem.cpp
 )
 
+target_sources(fsystem PRIVATE
+  src/FileSystem.cpp)
+
 # if (NOT catkin_FOUND)
-  target_include_directories(fsystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+  target_include_directories(fsystem PUBLIC 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 # endif(NOT catkin_FOUND)
@@ -30,9 +33,19 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC)
 
 
 install(TARGETS ${PROJECT_NAME}
+EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib 
   LIBRARY DESTINATION lib 
 )
+
+export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+  )
+# exported targets
+install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+  DESTINATION ${ConfigPackageLocation})
+
 
 install(DIRECTORY include/
   DESTINATION include/
