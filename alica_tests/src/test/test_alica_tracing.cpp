@@ -71,16 +71,20 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
 
-    alicaTests::TestWorldModel::getOne()->setPreCondition1840401110297459509(true);
+    twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
-    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["EmptyBehaviour"], "TestTracingSubPlan");
-    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["TestTracingSubPlan"], "TestTracingMasterPlan");
+    EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "TestTracingSubPlan");
+    EXPECT_EQ(twm1->tracingParents["TestTracingSubPlan"], "TestTracingMasterPlan");
 }
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
     ASSERT_NE(plan->getUtilityFunction(), nullptr) << "UtilityFunction is null!";
@@ -100,11 +104,11 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     aes[1]->start();
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(0);
-    alicaTests::TestWorldModel::getOne()->robotsXPos.push_back(2000);
+    twm1->robotsXPos.push_back(0);
+    twm1->robotsXPos.push_back(2000);
 
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(2000);
-    alicaTests::TestWorldModel::getTwo()->robotsXPos.push_back(0);
+    twm2->robotsXPos.push_back(2000);
+    twm2->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
         acs[0]->stepEngine();
@@ -121,7 +125,7 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
         }
     }
 
-    auto logs = alicaTests::TestWorldModel::getOne()->tracingLogs;
+    auto logs = twm1->tracingLogs;
 
     bool foundTaskAssignmentChangeLog = false;
     for (auto log : logs) {
@@ -131,7 +135,7 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
         }
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
-    EXPECT_EQ(alicaTests::TestWorldModel::getOne()->tracingParents["EmptyBehaviour"], "AuthorityTest");
+    EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
 }
 } // namespace
 } // namespace alica
