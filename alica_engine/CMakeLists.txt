@@ -4,6 +4,7 @@ project(alica_engine)
 add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
 
+# Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
@@ -12,63 +13,52 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
-##ROS/Catkin
-# find_package(catkin QUIET)
-# if (catkin_FOUND)
-#   find_package(catkin REQUIRED)
-  find_package(fsystem REQUIRED)
-  find_package(alica_common_config REQUIRED)
-  find_package(alica_solver_interface REQUIRED)
-# else (catkin_FOUND)
-  #set(catkin_LIBRARIES "fsystem" "alica_common_config" "alica_solver_interface")
-# endif(catkin_FOUND)
+# Imports
+find_package(fsystem REQUIRED)
+find_package(alica_common_config REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 
-# if(catkin_FOUND)
-#   catkin_package(
-#     INCLUDE_DIRS include
-#     LIBRARIES alica_engine
-#     DEPENDS fsystem alica_common_config alica_solver_interface
-#   )
-# endif(catkin_FOUND)
 
 ###########
 ## Build ##
 ###########
 
 include_directories(include 
-  ${catkin_INCLUDE_DIRS} 
   ${fsystem_INCLUDE_DIRS} 
   ${YAML_CPP_INCLUDE_DIR}
   ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
 )
 
-
-
-
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")
 
 add_library(${PROJECT_NAME} SHARED ${alica_SOURCES})
+
 target_sources(alica_engine PRIVATE
-  ${alica_SOURCES})
+  ${alica_SOURCES}
+)
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 
-
-# if (NOT catkin_FOUND)
- target_include_directories(${PROJECT_NAME} PUBLIC
- $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
- )
-# endif (NOT catkin_FOUND)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES} fsystem)
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+  ${YAML_CPP_LIBRARIES} 
+  fsystem 
+  alica_solver_interface
+)
+
 
 #############
 ## Install ##
 #############
 
 install(TARGETS ${PROJECT_NAME}
-EXPORT ${CMAKE_PROJECT_NAME}Targets
+  EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
@@ -78,30 +68,38 @@ install(DIRECTORY include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
+
+# Export targets to make package libraries
 export(EXPORT ${CMAKE_PROJECT_NAME}Targets
   FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
- )
-# exported targets
+)
+
 install(EXPORT ${CMAKE_PROJECT_NAME}Targets
   FILE ${CMAKE_PROJECT_NAME}Targets.cmake
-  DESTINATION ${ConfigPackageLocation})
+  DESTINATION ${ConfigPackageLocation}
+)
 
+# Installing files to make a find_package()-able package
 write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   VERSION 0.9.1
-  COMPATIBILITY SameMajorVersion)
+  COMPATIBILITY SameMajorVersion
+)
 
-  set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+
 configure_package_config_file(
   ${CMAKE_PROJECT_NAME}Config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
-  PATH_VARS INCLUDE_INSTALL_DIR)
+  PATH_VARS INCLUDE_INSTALL_DIR
+)
 
-  install(FILES 
+install(FILES 
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION ${ConfigPackageLocation})
+  DESTINATION ${ConfigPackageLocation}
+)
 
 
 #############
