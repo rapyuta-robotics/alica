@@ -278,7 +278,7 @@ protected:
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
 {
-private:
+protected:
     alica::AlicaCreators creators;
 
 protected:
@@ -325,7 +325,7 @@ protected:
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
 {
-private:
+protected:
     alica::AlicaCreators creators;
 
 protected:
@@ -357,6 +357,11 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
+            
+            auto tf=ac->getTraceFactory();
+            auto attf=dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+            attf->setWorldModel(ac->getWorldModel());
+            
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alicaRosLogger::AlicaRosLogger>(ac->getConfig()["Local"]["ID"].as<int>());
             ac->init(std::move(creators), true);
