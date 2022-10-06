@@ -196,6 +196,8 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     }
 
 #if 0
+    // this won't work Luca
+    // ask to Veeraj
     auto logs = twm1->tracingLogs;
 
     bool foundTaskAssignmentChangeLog = false;
