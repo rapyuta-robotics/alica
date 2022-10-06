@@ -35,12 +35,12 @@ public:
     }
     void finish() {}
 
-    void setWorldModel(alica_test::SchedWM* wm) { _wm = wm; };
+    void setWorldModel(alicaTests::TestWorldModel* wm) { _wm = wm; };
     std::string context() const { return _opName; }
 
     std::string _opName;
     std::string _parent;
-    alica_test::SchedWM* _wm;
+    alicaTests::TestWorldModel* _wm;
 };
 
 class AlicaTestTraceFactory : public alica::IAlicaTraceFactory
@@ -50,8 +50,8 @@ public:
     ~AlicaTestTraceFactory() = default;
     void setGlobalContext(const std::string& globalContext) override {}
     void unsetGlobalContext() override {}
-    void setWorldModel(alica::IAlicaWorldModel* wm) { _wm = dynamic_cast<alica_test::SchedWM*>(wm); };
-    alica_test::SchedWM* _wm;
+    void setWorldModel(alica::IAlicaWorldModel* wm) { _wm = dynamic_cast<alicaTests::TestWorldModel*>(wm); };
+    alicaTests::TestWorldModel* _wm;
 
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const
     {

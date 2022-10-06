@@ -36,6 +36,8 @@
 
 #include <gtest/gtest.h>
 
+#include <iostream>
+
 namespace alica
 {
 namespace
@@ -62,7 +64,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
 
         auto tf = ac->getTraceFactory();
@@ -115,7 +117,7 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alica_test::SchedWM>();
+            ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
 
             auto tf = ac->getTraceFactory();
@@ -139,20 +141,19 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    auto twm1 = dynamic_cast<alica_test::SchedWM*>(ac->getWorldModel());
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
 
-    twm1->preCondition1840401110297459509=true;
+    twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
 
     EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "TestTracingSubPlan");
     EXPECT_EQ(twm1->tracingParents["TestTracingSubPlan"], "TestTracingMasterPlan");
 }
 
-#if 0
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    auto twm1 = dynamic_cast<alica_test::SchedWM*>(acs[0]->getWorldModel());
-    auto twm2 = dynamic_cast<alica_test::SchedWM*>(acs[1]->getWorldModel());
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
@@ -194,19 +195,22 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
         }
     }
 
+#if 0
     auto logs = twm1->tracingLogs;
 
     bool foundTaskAssignmentChangeLog = false;
     for (auto log : logs) {
-        // std::cerr<<log<<std::endl;
+        std::cerr<<log.first<<std::endl;
         if (log.first == "TaskAssignmentChange") {
             foundTaskAssignmentChangeLog = true;
             break;
         }
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
-    EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
-}
 #endif
+    EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
+    EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest"); // added by Luca
+}
+
 } // namespace
 } // namespace alica
