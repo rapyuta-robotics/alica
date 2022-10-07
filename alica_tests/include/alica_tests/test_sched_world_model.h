@@ -40,7 +40,7 @@ public:
 
         executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan = transitionToEndTest = transitionToExecuteBehaviour = false;
 
-        preCondition1840401110297459509=false;
+        preCondition1840401110297459509 = false;
     }
 
     bool execOrderTest;

@@ -89,7 +89,7 @@ bool conditionSecondCall2FirstCall1237521027685048666(const Blackboard* input, c
 {
     /*PROTECTED REGION ID(condition1237521027685048666) ENABLED START*/
     LockedBlackboardRO bb(*(rp->getBasicPlan()->getBlackboard()));
-    auto*testWm = const_cast<alicaTests::TestWorldModel*>(dynamic_cast<const alicaTests::TestWorldModel*>(wm));
+    auto* testWm = const_cast<alicaTests::TestWorldModel*>(dynamic_cast<const alicaTests::TestWorldModel*>(wm));
     testWm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
     return false;
     /*PROTECTED REGION END*/
