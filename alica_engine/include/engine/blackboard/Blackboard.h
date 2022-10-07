@@ -8,51 +8,70 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <variant>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
 {
 
-class BlackboardTypesDontMatchException : public std::exception
+class BlackboardImpl;
+
+struct Converter
+{
+    static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string"};
+    using Types = std::variant<bool, int64_t, double, std::string>;
+
+    // convert from type to name as string
+    template <class T>
+    static constexpr const char* typeName()
+    {
+        return typeNames[Types{T{}}.index()];
+    }
+
+    // set the value given the type name as a string
+    static void setDefaultValue(const std::string& key, const std::string& typeName, const YAML::Node& defaultValue, BlackboardImpl& bb);
+
+    template <class T>
+    struct YamlAs
+    {
+        static T as(const YAML::Node& value) { return value.as<T>(); }
+    };
+
+    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
+    struct makeAnyIfEqual
+    {
+        static std::any make(std::size_t index, const YAML::Node& value) { return index == INDEX ? std::any{Parser<T>::as(value)} : std::any{}; }
+    };
+
+    template <class... Ts, std::size_t... Is>
+    static std::any makeAnyFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
+    {
+        std::any typeValues[] = {makeAnyIfEqual<Ts, Is>::make(index, value)...};
+        return typeValues[index];
+    }
+};
+
+class BlackboardTypeMismatch : public std::exception
 {
 public:
-    BlackboardTypesDontMatchException(const std::string& typeToSet, const std::string& typeDefinedInPml)
-            : _typeToSet(typeToSet)
+    BlackboardTypeMismatch(const std::string& type, const std::string& typeDefinedInPml)
+            : _inputType(type)
             , _typeDefinedInPml(typeDefinedInPml)
     {
     }
 
-    std::string what()
+    const char* what() const throw() override { return "The type of the blackboard value does not match the type in the pml file."; }
+
+    std::string detailedError()
     {
         std::stringstream ss;
-        ss << "Type " << _typeToSet << " does not match the type defined in the pml file: " << _typeDefinedInPml;
+        ss << "Type " << _inputType << " does not match the type defined in the pml file: " << _typeDefinedInPml;
         return ss.str();
     }
 
 private:
-    std::string _typeToSet;
+    std::string _inputType;
     std::string _typeDefinedInPml;
-};
-
-class BadBlackboardAccessType : public std::exception
-{
-public:
-    BadBlackboardAccessType(const std::string& key, const std::string& type)
-            : _key(key)
-            , _type(type)
-    {
-    }
-
-    std::string what()
-    {
-        std::stringstream ss;
-        ss << "The blackboard value " << _key << "is not of type " << _type << "!";
-        return ss.str();
-    }
-
-private:
-    std::string _key;
-    std::string _type;
 };
 
 class BlackboardImpl
@@ -71,7 +90,7 @@ public:
         try {
             return std::any_cast<const T&>(vals.at(key));
         } catch (const std::bad_any_cast& e) {
-            throw BadBlackboardAccessType(key, getNameFromType<T>());
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         }
     }
     template <typename T>
@@ -80,7 +99,7 @@ public:
         try {
             return std::any_cast<T&>(vals.at(key));
         } catch (const std::bad_any_cast& e) {
-            throw BadBlackboardAccessType(key, getNameFromType<T>());
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         }
     }
     std::any& get(const std::string& key) { return vals.at(key); }
@@ -95,12 +114,13 @@ public:
             vals.at(key) = value;
         } else {
             // value is predefined in pml file
-            std::string typeString = getNameFromType<T>();
-            if (entry[Strings::stateType].as<std::string>() == typeString) {
+            std::string inputType = getNameFromType<T>();
+            std::string pmlType = getBlackboardValueType(key);
+            if (pmlType == inputType) {
                 vals.at(key) = value;
             } else {
                 // types dont match, throw exception
-                throw BlackboardTypesDontMatchException(typeString, entry[Strings::stateType].as<std::string>());
+                throw BlackboardTypeMismatch(inputType, pmlType);
             }
         }
     }
@@ -115,17 +135,7 @@ public:
             if (defaultValue.Type() != YAML::NodeType::Null) {
                 std::string key = entry[Strings::key].as<std::string>();
                 std::string typeString = entry[Strings::stateType].as<std::string>();
-                if (typeString == "int64_t") {
-                    set<int64_t>(key, defaultValue.as<int64_t>());
-                } else if (typeString == "bool") {
-                    set<bool>(key, defaultValue.as<bool>());
-                } else if (typeString == "std::string") {
-                    set<std::string>(key, defaultValue.as<std::string>());
-                } else if (typeString == "double") {
-                    set<double>(key, defaultValue.as<double>());
-                } else {
-                    set<std::any>(key, defaultValue.as<std::string>());
-                }
+                Converter::setDefaultValue(key, typeString, defaultValue, *this);
             }
         }
     }
@@ -145,6 +155,12 @@ private:
             }
         }
         return YAML::Node();
+    }
+
+    std::string getBlackboardValueType(const std::string& key) const
+    {
+        YAML::Node entry = getBlackboardValueNode(key);
+        return entry[Strings::stateType].as<std::string>();
     }
 
     template <class T>
