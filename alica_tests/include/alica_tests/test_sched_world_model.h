@@ -2,8 +2,6 @@
 
 #include <atomic>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include <engine/IAlicaWorldModel.h>
 
@@ -17,17 +15,8 @@ public:
     SchedWM(const SchedWM&) = delete;
     ~SchedWM() = default;
 
-    std::vector<double> robotsXPos;
-    std::vector<std::pair<std::string, std::string>> tracingTags;
-    std::vector<std::pair<std::string, std::string>> tracingLogs;
-    std::unordered_map<std::string, std::string> tracingParents;
-
     void reset()
     {
-        tracingLogs.clear();
-        tracingTags.clear();
-        tracingParents.clear();
-
         execOrderTest = planA2PlanB = planB2PlanA = false;
         execOrder.clear();
 
@@ -39,8 +28,6 @@ public:
         behAAASuccessInInit = behAAAFailureInInit = behAAASuccessInTerminate = behAAAFailureInTerminate = false;
 
         executeBehaviourRunCalled = execBehaviourTest = transitionToExecuteBehaviourInSubPlan = transitionToEndTest = transitionToExecuteBehaviour = false;
-
-        preCondition1840401110297459509 = false;
     }
 
     bool execOrderTest;
@@ -68,8 +55,6 @@ public:
     std::atomic<bool> transitionToExecuteBehaviourInSubPlan;
     std::atomic<bool> transitionToExecuteBehaviour;
     std::atomic<bool> transitionToEndTest;
-
-    std::atomic<bool> preCondition1840401110297459509;
 
 private:
 };

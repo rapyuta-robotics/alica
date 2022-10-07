@@ -47,7 +47,7 @@ if(CATKIN_ENABLE_TESTING)
         src/TestConstantValueSummand.cpp
         src/TestWorldModel.cpp
         src/test_alica.cpp
-        rc/test/test_main.cpp
+        src/test/test_main.cpp
         src/test/test_alica_authority.cpp
         src/test/test_alica_behaviourtrigger.cpp
         src/test/test_alica_condition_plan.cpp
