@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>alica_common_config</name>
-  <version>0.0.0</version>
+  <version>0.9.4</version>
   <description>The alica_common_config package</description>
 
   <maintainer email="hendrik.skubch@rapyuta-robotics.com">hendrik</maintainer>
