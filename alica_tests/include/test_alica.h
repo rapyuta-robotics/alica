@@ -62,9 +62,6 @@ protected:
     virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -147,8 +144,6 @@ protected:
 
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -202,9 +197,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -240,9 +232,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -287,8 +276,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -338,8 +325,6 @@ protected:
 
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;

@@ -51,9 +51,6 @@ protected:
     bool stepEngine() const override { return false; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -100,8 +97,6 @@ protected:
     }
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
