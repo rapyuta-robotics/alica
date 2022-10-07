@@ -5,32 +5,20 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    
-    
-    alica_ros_proxy
-    
-    
+    alica_ros_proxy    
     constraintsolver
-    
     alica_ros_proxy
 )
+
 find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
-include_directories(include ${fsystem_INCLUDE_DIRS}
-    ${alica_common_config_INCLUDE_DIRS}
-    ${alica_solver_interface_INCLUDE_DIRS}
-    ${autodiff_INCLUDE_DIRS}
-    ${alica_engine_INCLUDE_DIRS}
-    ${alica_dummy_proxy_INCLUDE_DIRS}
-    ${alica_simple_solver_INCLUDE_DIRS}
-    ${alica_test_utility_INCLUDE_DIRS}
-)
+
+include_directories(include)
 
 catkin_package(
   INCLUDE_DIRS include src/test/Expr/include

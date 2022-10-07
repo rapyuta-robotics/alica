@@ -24,10 +24,7 @@ find_package(alica_solver_interface REQUIRED)
 ###########
 
 include_directories(include 
-  ${fsystem_INCLUDE_DIRS} 
-  ${YAML_CPP_INCLUDE_DIR}
   ${alica_common_config_INCLUDE_DIRS}
-  ${alica_solver_interface_INCLUDE_DIRS}
 )
 
 file(GLOB_RECURSE alica_SOURCES "src/*.cpp")

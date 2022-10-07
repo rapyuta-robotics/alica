@@ -26,8 +26,6 @@ find_package(alica_solver_interface REQUIRED)
 include_directories(
   include
   ${alica_common_config_INCLUDE_DIRS}
-  ${alica_solver_interface_INCLUDE_DIRS}
-  ${alica_engine_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}

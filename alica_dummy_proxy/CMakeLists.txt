@@ -20,8 +20,6 @@ find_package(alica_engine REQUIRED)
 include_directories(
   include
   ${alica_common_config_INCLUDE_DIRS}
-  ${alica_solver_interface_INCLUDE_DIRS}
-  ${alica_engine_INCLUDE_DIRS}
 )
 
 file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")

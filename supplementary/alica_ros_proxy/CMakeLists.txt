@@ -4,12 +4,11 @@ project(alica_ros_proxy)
 add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
-  
   roscpp
   message_generation
   alica_msgs
-  
 )
+
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_common_config REQUIRED)

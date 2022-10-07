@@ -20,10 +20,7 @@ find_package(alica_solver_interface REQUIRED)
 # Build 
 include_directories(
 	include
-	${alica_solver_interface_INCLUDE_DIRS}
-	${alica_dummy_proxy_INCLUDE_DIRS}
 	${alica_common_config_INCLUDE_DIRS}
-	${alica_engine_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}
