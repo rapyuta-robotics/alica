@@ -1,5 +1,3 @@
-#pragma once
-
 #include "CircleRuntimeCondition.h"
 
 namespace alica
