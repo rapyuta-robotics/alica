@@ -1,6 +1,6 @@
+#include <alica/Other.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <iostream>
-#include <alica/Other.h>
 
 namespace alica
 {

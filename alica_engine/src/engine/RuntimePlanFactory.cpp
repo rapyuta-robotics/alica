@@ -4,7 +4,6 @@
 #include "engine/logging/Logging.h"
 #include "engine/model/Plan.h"
 #include "engine/modelmanagement/factories/Factory.h"
-#include <alica_common_config/debug_output.h>
 #include <engine/RuntimePlanFactory.h>
 
 namespace alica
@@ -26,7 +25,7 @@ void RuntimePlanFactory::reload(const YAML::Node& config)
 {
     if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
         _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        ALICA_DEBUG_MSG("RuntimePlanFactory: Library folder: " << _customerLibraryFolder);
+        Logging::logDebug("AE") << "RuntimePlanFactory: Library folder: " << _customerLibraryFolder;
     }
 }
 
@@ -37,7 +36,7 @@ void RuntimePlanFactory::init(std::unique_ptr<IPlanCreator>&& pc)
 
 std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* planModel) const
 {
-    PlanContext ctx{_wm, planModel->getName(), planModel, _customerLibraryFolder,_traceFactory};
+    PlanContext ctx{_wm, planModel->getName(), planModel, _customerLibraryFolder, _traceFactory};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
         Logging::logError("RuntimePlanFactory") << "Plan creation failed: " << id;

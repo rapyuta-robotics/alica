@@ -35,7 +35,7 @@ void ExpressionHandler::reload(const YAML::Node& config)
 {
     if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
         _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        ALICA_DEBUG_MSG("ExpressionHandler: Library folder: " << _customerLibraryFolder);
+        Logging::logDebug("AE") << "ExpressionHandler: Library folder: " << _customerLibraryFolder;
     }
 }
 /**
@@ -51,7 +51,8 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                ConditionContext context{p->getPreCondition()->getName(),_customerLibraryFolder,p->getPreCondition()->_libraryName,p->getPreCondition()->getId()};
+                ConditionContext context{
+                        p->getPreCondition()->getName(), _customerLibraryFolder, p->getPreCondition()->_libraryName, p->getPreCondition()->getId()};
                 p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
                 attachConstraint(p->_preCondition, *creatorCtx.constraintCreator);
             } else {
@@ -60,7 +61,8 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            ConditionContext context{p->getRuntimeCondition()->getName(),_customerLibraryFolder,p->getRuntimeCondition()->_libraryName,p->getRuntimeCondition()->getId()};
+            ConditionContext context{
+                    p->getRuntimeCondition()->getName(), _customerLibraryFolder, p->getRuntimeCondition()->_libraryName, p->getRuntimeCondition()->getId()};
             p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
         }
