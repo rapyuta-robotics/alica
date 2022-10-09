@@ -17,6 +17,7 @@
 #include <engine/collections/RobotEngineData.h>
 #include <engine/collections/RobotProperties.h>
 #include <engine/containers/AgentAnnouncement.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/model/AbstractPlan.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Plan.h>

@@ -6,9 +6,8 @@
 #include "engine/PlanRepository.h"
 #include "engine/collections/RobotProperties.h"
 #include "engine/containers/RoleSwitch.h"
+#include "engine/logging/Logging.h"
 #include "engine/teammanager/TeamManager.h"
-
-#include <alica_common_config/debug_output.h>
 
 namespace alica
 {
@@ -68,7 +67,7 @@ void StaticRoleAssignment::calculateRoles()
         for (const Role* role : roles) {
             // make entry in the map if the roles match
             if (role->getName() == prop.getDefaultRole()) {
-                ALICA_DEBUG_MSG("Static RA: Setting Role " << role->getName() << " for robot ID " << agent->getId());
+                Logging::logDebug("Static RA") << "Setting Role " << role->getName() << " for robot ID " << agent->getId();
                 _robotRoleMapping.emplace(agent->getId(), role);
 
                 // set own role, if its me

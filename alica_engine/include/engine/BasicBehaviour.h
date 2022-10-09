@@ -29,6 +29,7 @@ struct BehaviourContext
     const std::string name;
     const Behaviour* behaviourModel;
     const std::string libraryPath;
+    const IAlicaTraceFactory* traceFactory;
 };
 
 /**
@@ -81,6 +82,7 @@ public:
 
 protected:
     using RunnableObject::getTrace;
+    using RunnableObject::getTraceFactory;
 
     AgentId getOwnId() const;
 

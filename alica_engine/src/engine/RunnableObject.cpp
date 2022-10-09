@@ -4,6 +4,7 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/RunningPlan.h"
 #include "engine/blackboard/BlackboardUtil.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/PlanType.h"
 
@@ -12,11 +13,12 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(IAlicaWorldModel* wm, const std::string& name)
+RunnableObject::RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* tf, const std::string& name)
         : _name(name)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
+        , _runnableObjectTracer(tf)
         , _blackboard(nullptr)
         , _started(false)
 {
@@ -55,7 +57,7 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
-    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext, _traceFactory);
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext);
     setupBlackboard();
 
     doInit();
@@ -145,14 +147,14 @@ void TraceRunnableObject::setTracing(TracingType type, std::function<std::option
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        ALICA_ERROR_MSG("Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead");
+        Logging::logError("RO") << "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead";
         _tracingType = TracingType::DEFAULT;
     }
 }
 
-void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan* rp, const IAlicaTraceFactory* traceFactory)
+void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan* rp)
 {
-    if (!traceFactory) {
+    if (!_tf) {
         return;
     }
 
@@ -161,18 +163,18 @@ void TraceRunnableObject::setupTraceContext(const std::string& name, RunningPlan
         auto parent = rp->getParent();
         for (; parent && (!parent->getBasicPlan() || !parent->getBasicPlan()->getTrace()); parent = parent->getParent())
             ;
-        _trace = traceFactory->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
+        _trace = _tf->create(name, (parent ? std::optional<std::string>(parent->getBasicPlan()->getTrace()->context()) : std::nullopt));
         break;
     }
     case TracingType::SKIP: {
         break;
     }
     case TracingType::ROOT: {
-        _trace = traceFactory->create(name);
+        _trace = _tf->create(name);
         break;
     }
     case TracingType::CUSTOM: {
-        _trace = traceFactory->create(name, _customTraceContextGetter());
+        _trace = _tf->create(name, _customTraceContextGetter());
         break;
     }
     }

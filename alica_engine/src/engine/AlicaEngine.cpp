@@ -6,6 +6,7 @@
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
 #include "engine/constraintmodul/VariableSyncModule.h"
+#include "engine/logging/AlicaDefaultLogger.h"
 #include "engine/model/Plan.h"
 #include "engine/model/RoleSet.h"
 #include "engine/model/Transition.h"
@@ -16,7 +17,6 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <algorithm>
-#include <alica_common_config/debug_output.h>
 #include <chrono>
 #include <functional>
 #include <random>
@@ -30,7 +30,7 @@ namespace alica
  */
 void AlicaEngine::abort(const std::string& msg)
 {
-    std::cerr << "ABORT: " << msg << std::endl;
+    Logging::logFatal("AE") << "ABORT: " << msg;
     exit(EXIT_FAILURE);
 }
 
@@ -71,7 +71,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         AlicaEngine::abort("Error in parsed plans.");
     }
 
-    ALICA_DEBUG_MSG("AE: Constructor finished!");
+    Logging::logDebug("AE") << "Constructor finished!";
 }
 
 AlicaEngine::~AlicaEngine()
@@ -97,7 +97,7 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
-        ALICA_WARNING_MSG("AE: Already initialized.");
+        Logging::logWarn("AE") << "Already initialized.";
         return true; // todo false?
     }
 
@@ -124,7 +124,7 @@ void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
     _planBase.start(_masterPlan, _ctx.getWorldModel());
-    ALICA_DEBUG_MSG("AE: Engine started!");
+    Logging::logDebug("AE") << "Engine started!";
 }
 /**
  * Closes the engine for good.

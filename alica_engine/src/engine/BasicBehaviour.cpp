@@ -3,6 +3,7 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/PlanBase.h"
 #include "engine/TeamObserver.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
 #include "engine/model/Configuration.h"
@@ -11,8 +12,6 @@
 #include "engine/model/Plan.h"
 #include "engine/model/Variable.h"
 #include "engine/teammanager/TeamManager.h"
-
-#include <alica_common_config/debug_output.h>
 
 #include <assert.h>
 #include <iostream>
@@ -25,7 +24,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.name)
+        : RunnableObject(context.worldModel, context.traceFactory, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
@@ -58,7 +57,7 @@ void BasicBehaviour::doInit()
     try {
         initialiseParameters();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-INIT of: " << getName() << std::endl << e.what());
+        Logging::logError("BasicBehaviour") << "Exception in Behaviour-INIT of: " << getName() << ": " << e.what();
     }
 }
 
@@ -78,7 +77,7 @@ void BasicBehaviour::doTerminate()
     try {
         onTermination();
     } catch (const std::exception& e) {
-        ALICA_ERROR_MSG("[BasicBehaviour] Exception in Behaviour-TERMINATE of: " << getName() << std::endl << e.what());
+        Logging::logError("BasicBehaviour") << "Exception in Behaviour-TERMINATE of: " << getName() << ": " << e.what();
     }
 
     _behResult.store(BehResult::UNKNOWN);

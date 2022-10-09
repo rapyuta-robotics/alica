@@ -10,6 +10,7 @@
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
+#include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
 
 #include <boost/dll/import.hpp> // for import_alias
@@ -30,6 +31,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+    ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 }
 
 void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& path)

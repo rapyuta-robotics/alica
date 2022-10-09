@@ -5,8 +5,8 @@
 #include "engine/ConfigChangeListener.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/modelmanagement/factories/Factory.h"
-
 #include <alica_common_config/debug_output.h>
+#include "engine/logging/Logging.h"
 
 namespace alica
 {
@@ -40,10 +40,10 @@ void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder,_traceFactory};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
-        ALICA_ERROR_MSG("RuntimeBehaviourFactory: Behaviour creation failed: " << id);
+        Logging::logError("RuntimeBehaviourFactory") << "Behaviour creation failed: " << id;
         return nullptr;
     }
 
