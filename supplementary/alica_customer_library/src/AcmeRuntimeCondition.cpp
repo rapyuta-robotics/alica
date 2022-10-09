@@ -1,5 +1,3 @@
-#pragma once
-
 #include "AcmeRuntimeCondition.h"
 
 namespace alica
