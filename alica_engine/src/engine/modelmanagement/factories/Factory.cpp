@@ -114,7 +114,6 @@ const AlicaElement* Factory::getElement(const int64_t id)
 void Factory::storeElement(AlicaElement* ael, const std::string& type)
 {
     if (!modelManager || !ael) {
-        Logging::logDebug("AE") << "Factory: INFO: Element type " << type << " can not be stored. Is this a unittest?";
         return;
     }
 
