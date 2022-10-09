@@ -1,12 +1,12 @@
 #include "engine/BasicBehaviour.h"
-#include <supplementary_tests/DynamicBehaviourCreator.h>
-#include <supplementary_tests/DynamicLoadingUtils.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <supplementary_tests/DynamicBehaviourCreator.h>
+#include <supplementary_tests/DynamicLoadingUtils.h>
 #include <vector>
 
 namespace alica

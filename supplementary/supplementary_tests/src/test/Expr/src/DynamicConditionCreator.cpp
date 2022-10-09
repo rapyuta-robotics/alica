@@ -1,11 +1,11 @@
 #include "engine/BasicCondition.h"
-#include <supplementary_tests/DynamicConditionCreator.h>
-#include <supplementary_tests/DynamicLoadingUtils.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <supplementary_tests/DynamicConditionCreator.h>
+#include <supplementary_tests/DynamicLoadingUtils.h>
 
 namespace alica
 {
