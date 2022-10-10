@@ -52,7 +52,7 @@ TEST(ForceLoad, simple_behaviour_load)
             // return;
         }
     }
-
+    libraryPathFromAlicaYaml="/root/catkin_ws/install/lib/";
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, libraryPathFromAlicaYaml, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
