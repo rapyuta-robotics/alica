@@ -89,7 +89,7 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    char* env = &rosPackagePath[0];
+    //char* env = &rosPackagePath[0];
     //putenv(env);
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "", nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
