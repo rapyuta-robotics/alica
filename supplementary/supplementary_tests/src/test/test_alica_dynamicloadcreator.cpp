@@ -47,6 +47,10 @@ TEST(ForceLoad, simple_behaviour_load)
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+            std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << " pwd:" << std::filesystem::current_path().string() << std::endl;
+            return;
+        }
     }
 
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, libraryPathFromAlicaYaml, nullptr};
@@ -79,6 +83,10 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
     std::string rosPackagePath = path + "/../../../../../../install/share/";
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/share/";
+        if (!std::filesystem::exists(rosPackagePath)) {
+            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+            return;
+        }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
     char* env = &rosPackagePath[0];
@@ -121,6 +129,10 @@ TEST(ForceLoad, simple_plan_load)
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+            std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
+            return;
+        }
     }
     PlanContext ctx{&wm, planModel->getName(), planModel, libraryPathFromAlicaYaml, nullptr};
 
@@ -160,6 +172,10 @@ TEST(ForceLoad, simple_plan_withROS_load)
     std::string rosPackagePath = path + "/../../../../../../install/share/";
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/share/";
+        if (!std::filesystem::exists(rosPackagePath)) {
+            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+            return;
+        }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
     char* env = &rosPackagePath[0];
@@ -203,6 +219,10 @@ TEST(ForceLoad, simple_condition_load)
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+            std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
+            return;
+        }
     }
 
     ConditionContext ctx{conditionModel->getName(), libraryPathFromAlicaYaml, conditionModel->getLibraryName(), 0};
@@ -245,6 +265,10 @@ TEST(ForceLoad, simple_condition_withROS_load)
     std::string rosPackagePath = path + "/../../../../../../install/share/";
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/share/";
+        if (!std::filesystem::exists(rosPackagePath)) {
+            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+            return;
+        }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
     char* env = &rosPackagePath[0];
