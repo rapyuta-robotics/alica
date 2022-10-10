@@ -12,6 +12,8 @@
 #include <engine/modelmanagement/factories/PlanFactory.h>
 #include <engine/modelmanagement/factories/RuntimeConditionFactory.h>
 
+#include <filesystem>
+
 #include <gtest/gtest.h>
 
 namespace alica
@@ -40,7 +42,11 @@ TEST(ForceLoad, simple_behaviour_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, path + "/../../../../../../devel/lib", nullptr};
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
+    if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+    }
+    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, libraryPathFromAlicaYaml, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
@@ -75,7 +81,11 @@ TEST(ForceLoad, simple_plan_load)
     // Create plan form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    PlanContext ctx{&wm, planModel->getName(), planModel, path + "/../../../../../../devel/lib", nullptr};
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
+    if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+    }
+    PlanContext ctx{&wm, planModel->getName(), planModel, libraryPathFromAlicaYaml, nullptr};
 
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
     ASSERT_EQ("acmeplan", plan->getName());
@@ -110,8 +120,13 @@ TEST(ForceLoad, simple_condition_load)
     // Create condition form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
-    // PlanContext ctx{&wm, planModel->getName(), planModel, "/var/tmp/customers"};
-    ConditionContext ctx{conditionModel->getName(), path + "/../../../../../../devel/lib", conditionModel->getLibraryName(), 0};
+
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
+    if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+    }
+
+    ConditionContext ctx{conditionModel->getName(), libraryPathFromAlicaYaml, conditionModel->getLibraryName(), 0};
 
     std::shared_ptr<BasicCondition> condition1 = creator->createConditions(ctx);
     std::shared_ptr<BasicCondition> condition2 = creator->createConditions(ctx);
