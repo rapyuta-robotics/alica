@@ -22,7 +22,7 @@ namespace alica
 {
 namespace
 {
-/*
+
 TEST(ForceLoad, simple_behaviour_load)
 {
     ros::NodeHandle nh;
@@ -58,7 +58,7 @@ TEST(ForceLoad, simple_behaviour_load)
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
-*/
+/*
 TEST(ForceLoad, simple_behaviour_withROS_load)
 {
     ros::NodeHandle nh;
@@ -89,14 +89,14 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    //char* env = &rosPackagePath[0];
-    //putenv(env);
+    char* env = &rosPackagePath[0];
+    putenv(env);
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "", nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
-/*
+
 TEST(ForceLoad, simple_plan_load)
 {
     ros::NodeHandle nh;
