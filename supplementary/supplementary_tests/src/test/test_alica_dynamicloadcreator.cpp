@@ -49,10 +49,9 @@ TEST(ForceLoad, simple_behaviour_load)
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << " pwd:" << std::filesystem::current_path().string() << std::endl;
-            // return;
+            libraryPathFromAlicaYaml="/root/catkin_ws/install/lib/";
         }
     }
-    libraryPathFromAlicaYaml="/root/catkin_ws/install/lib/";
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, libraryPathFromAlicaYaml, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
