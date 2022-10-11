@@ -49,7 +49,7 @@ TEST(ForceLoad, simple_behaviour_load)
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << " pwd:" << std::filesystem::current_path().string() << std::endl;
-            libraryPathFromAlicaYaml="/root/catkin_ws/install/lib/";
+            libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
         }
     }
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, libraryPathFromAlicaYaml, nullptr};
@@ -57,7 +57,7 @@ TEST(ForceLoad, simple_behaviour_load)
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
-/*
+
 TEST(ForceLoad, simple_behaviour_withROS_load)
 {
     ros::NodeHandle nh;
@@ -84,7 +84,7 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
         rosPackagePath = path + "/../../../../../../devel/share/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // return;
+            rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
@@ -130,7 +130,7 @@ TEST(ForceLoad, simple_plan_load)
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
-            // return;
+            libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
         }
     }
     PlanContext ctx{&wm, planModel->getName(), planModel, libraryPathFromAlicaYaml, nullptr};
@@ -173,7 +173,7 @@ TEST(ForceLoad, simple_plan_withROS_load)
         rosPackagePath = path + "/../../../../../../devel/share/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // return;
+            rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
@@ -220,7 +220,7 @@ TEST(ForceLoad, simple_condition_load)
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
-            // return;
+            libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
         }
     }
 
@@ -266,7 +266,7 @@ TEST(ForceLoad, simple_condition_withROS_load)
         rosPackagePath = path + "/../../../../../../devel/share/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // return;
+            rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
@@ -280,6 +280,6 @@ TEST(ForceLoad, simple_condition_withROS_load)
     ASSERT_EQ(true, condition1->evaluate(nullptr, nullptr));
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
-*/
+
 } // namespace
 } // namespace alica
