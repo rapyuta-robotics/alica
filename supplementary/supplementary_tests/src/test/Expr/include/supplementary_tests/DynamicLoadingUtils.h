@@ -104,7 +104,7 @@ inline std::string simplifyPath(const std::string& toSimplify)
         myStack.pop();
     }
 
-    //Revert and create out string
+    // Revert and create out string
     while (!myStackReverted.empty()) {
         std::string temp = myStackReverted.top();
         if (myStackReverted.size() != 1)
