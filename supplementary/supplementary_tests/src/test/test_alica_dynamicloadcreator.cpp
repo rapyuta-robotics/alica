@@ -79,9 +79,9 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/share/";
+    std::string rosPackagePath = path + "/../../../../../../install/lib/";
     if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/share/";
+        rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
             rosPackagePath = "/root/catkin_ws/install/lib/";
@@ -168,9 +168,9 @@ TEST(ForceLoad, simple_plan_withROS_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/share/";
+    std::string rosPackagePath = path + "/../../../../../../install/lib/";
     if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/share/";
+        rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
             rosPackagePath = "/root/catkin_ws/install/lib/";
@@ -261,9 +261,9 @@ TEST(ForceLoad, simple_condition_withROS_load)
     // Create condition form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/share/";
+    std::string rosPackagePath = path + "/../../../../../../install/lib/";
     if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/share/";
+        rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
             rosPackagePath = "/root/catkin_ws/install/lib/";

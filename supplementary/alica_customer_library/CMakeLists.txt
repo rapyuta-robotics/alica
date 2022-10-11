@@ -57,19 +57,7 @@ endif(NOT catkin_FOUND)
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
-
-
-execute_process(COMMAND bash -c "ls -la"
-                OUTPUT_VARIABLE outVar
-                WORKING_DIRECTORY /triccyx)               
-message("xxxxxxxxxxxxxxxxxxxxxxxx") 
-message(${CATKIN_PACKAGE_LIB_DESTINATION}) 
-message(${CMAKE_INSTALL_PREFIX})
-#message(${outVar})
-message("xxxxxxxxxxxxxxxxxxxxxxxx") 
-                
-
+)            
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
