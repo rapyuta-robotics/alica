@@ -14,42 +14,7 @@
 namespace alica
 {
 
-class BlackboardImpl;
-
-struct Converter
-{
-    static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string"};
-    using Types = std::variant<bool, int64_t, double, std::string>;
-
-    // convert from type to name as string
-    template <class T>
-    static constexpr const char* typeName()
-    {
-        return typeNames[Types{T{}}.index()];
-    }
-
-    // set the value given the type name as a string
-    static void setDefaultValue(const std::string& key, const std::string& typeName, const YAML::Node& defaultValue, BlackboardImpl& bb);
-
-    template <class T>
-    struct YamlAs
-    {
-        static T as(const YAML::Node& value) { return value.as<T>(); }
-    };
-
-    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
-    struct makeAnyIfEqual
-    {
-        static std::any make(std::size_t index, const YAML::Node& value) { return index == INDEX ? std::any{Parser<T>::as(value)} : std::any{}; }
-    };
-
-    template <class... Ts, std::size_t... Is>
-    static std::any makeAnyFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
-    {
-        std::any typeValues[] = {makeAnyIfEqual<Ts, Is>::make(index, value)...};
-        return typeValues[index];
-    }
-};
+class BlackboardUtil;
 
 class BlackboardTypeMismatch : public std::exception
 {
@@ -128,17 +93,7 @@ public:
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
 
-    void initDefaultValues()
-    {
-        for (YAML::Node entry : node) {
-            YAML::Node defaultValue = entry[Strings::defaultValue];
-            if (defaultValue.Type() != YAML::NodeType::Null) {
-                std::string key = entry[Strings::key].as<std::string>();
-                std::string typeString = entry[Strings::stateType].as<std::string>();
-                Converter::setDefaultValue(key, typeString, defaultValue, *this);
-            }
-        }
-    }
+    void initDefaultValues();
 
     void clear() { vals.clear(); }
     bool empty() const { return vals.empty(); }
@@ -147,6 +102,7 @@ public:
     YAML::Node node;
 
 private:
+    friend BlackboardUtil;
     YAML::Node getBlackboardValueNode(std::string key) const
     {
         for (const auto& entry : node) {
@@ -164,20 +120,73 @@ private:
     }
 
     template <class T>
-    std::string getNameFromType() const
-    {
-        if (std::is_same<T, int64_t>::value) {
-            return "int64_t";
-        } else if (std::is_same<T, bool>::value) {
-            return "bool";
-        } else if (std::is_same<T, double>::value) {
-            return "double";
-        } else if (std::is_same<T, std::string>::value) {
-            return "std::string";
-        }
-        // treat as std::any by default
-        return "std::any";
+    std::string getNameFromType() const;
+};
+
+struct Converter
+{
+    static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string", "std::any"};
+    using Types = std::variant<bool, int64_t, double, std::string, std::any>;
+
+    // YAML doesnt support std::any, needs a separate list of types for iteration
+    static constexpr const char* typeNamesYAML[] = {"bool", "int64", "double", "std::string"};
+    using TypesYAML = std::variant<bool, int64_t, double, std::string>;
+
+    // convert from type to name as string
+    template <class T>
+    static constexpr const char* typeName() {
+        return typeNames[Types{T{}}.index()];
     }
+
+    // set the value given the type name as a string
+    static void setDefaultValue(const std::string& key, const std::string& typeName, const YAML::Node& defaultValue, BlackboardImpl& bb);
+
+    // used to set the value without a yaml node
+    template <class T>
+    static void setValue(const std::string& key, const T& value, const std::string& typeName, BlackboardImpl& bb);
+
+    template <class T>
+    struct YamlAs
+    {
+        static T as(const YAML::Node& value) { return value.as<T>(); }
+    };
+
+    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
+    struct makeAnyIfEqual
+    {
+        static std::any make(std::size_t index, const YAML::Node& value) { return index == INDEX ? std::any{Parser<T>::as(value)} : std::any{}; }
+    };
+
+    template <class... Ts, std::size_t... Is>
+    static std::any makeAnyFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
+    {
+        std::any typeValues[] = {makeAnyIfEqual<Ts, Is>::make(index, value)...};
+        return typeValues[index];
+    };
+
+    template <class T, std::size_t INDEX>
+    struct setAnyIfEqual
+    {
+        static bool set(std::size_t index, const std::string& key, const std::any& value, BlackboardImpl& bb)
+        {
+            if (index != INDEX) {
+                return false;
+            }
+            const T& val = std::any_cast<const T&>(value);
+            bb.set<T>(key, val);
+            return true;
+        }
+    };
+
+    /**
+    * Set an std::any value on the blackboard. The std::any value will be cast with any_cast to the correct type
+    * before setting it on the blackboard.
+    */
+    template <class... Ts, std::size_t... Is>
+    static void setBlackboardValue(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const std::string& key, const std::any& value, BlackboardImpl& bb)
+    {
+        bool vals[] = {setAnyIfEqual<Ts, Is>::set(index, key, value, bb)...};
+    };
 };
 
 class Blackboard
@@ -258,7 +267,8 @@ public:
     }
     std::any& get(const std::string& key) { return _impl->get(key); }
 
-    void set(const std::string& key, const std::any& value) { _impl->set(key, value); }
+    template <typename T>
+    void set(const std::string& key, const T& value) { _impl->set<T>(key, value); }
 
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
@@ -268,5 +278,27 @@ private:
     std::unique_lock<std::shared_mutex> _lk;
     BlackboardImpl* _impl;
 };
+
+template <class T>
+std::string BlackboardImpl::getNameFromType() const
+{
+    return Converter::typeName<T>();
+}
+
+template <class T>
+void Converter::setValue(const std::string& key, const T& value, const std::string& typeName, BlackboardImpl& bb)
+{
+    if (typeName == "std::any") {
+        bb.set<std::any>(key, value);
+        return;
+    }
+    static constexpr std::size_t numTypes = sizeof(typeNamesYAML) / sizeof(const char*);
+    for (std::size_t i = 0; i < numTypes; ++i) {
+        if (typeName == typeNamesYAML[i]) {
+            setBlackboardValue(TypesYAML{}, std::make_index_sequence<numTypes>{}, i, key, std::any{value}, bb);
+            break;
+        }
+    }
+}
 
 } // namespace alica
