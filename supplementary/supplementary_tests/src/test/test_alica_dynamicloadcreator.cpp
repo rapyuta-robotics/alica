@@ -90,12 +90,12 @@ TEST(ForceLoad, simple_behaviour_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
-    std::string tmp = simplify(libraryPathFromAlicaYaml);
-    std::cerr << "SIMPLIFIED:" << tmp << std::endl;
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
+    libraryPathFromAlicaYaml = simplify(libraryPathFromAlicaYaml);
+    std::cerr << "SIMPLIFIED:" << libraryPathFromAlicaYaml << std::endl;
 
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
-        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << " pwd:" << std::filesystem::current_path().string() << std::endl;
             libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
@@ -175,9 +175,9 @@ TEST(ForceLoad, simple_plan_load)
     // Create plan form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
-        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
             libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
@@ -265,9 +265,9 @@ TEST(ForceLoad, simple_condition_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
 
-    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib";
+    std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
-        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib";
+        libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
             libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
