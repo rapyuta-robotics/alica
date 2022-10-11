@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <sstream>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -66,6 +67,53 @@ inline bool checkLibraryCompleteName(const std::string& libraryCompleteName, con
                   << "Lib exixts in this path:" << libraryCompleteName << " for:" << entityName << std::endl;
     }
     return true;
+}
+
+// Algorithm from internet
+inline std::string simplifyPath(const std::string& toSimplify)
+{
+    std::stack<std::string> myStack;
+    std::string dir;
+    std::string outPath;
+
+    outPath.append("/");
+
+    int toSimpliftLen = toSimplify.length();
+    for (int i = 0; i < toSimpliftLen; i++) {
+        dir.clear();
+        while (toSimplify[i] == '/')
+            i++;
+
+        while (i < toSimpliftLen && toSimplify[i] != '/') {
+            dir.push_back(toSimplify[i]);
+            i++;
+        }
+
+        if (dir.compare("..") == 0) {
+            if (!myStack.empty())
+                myStack.pop();
+        } else if (dir.compare(".") == 0)
+            continue;
+        else if (dir.length() != 0)
+            myStack.push(dir);
+    }
+
+    std::stack<std::string> myStackReverted;
+    while (!myStack.empty()) {
+        myStackReverted.push(myStack.top());
+        myStack.pop();
+    }
+
+    // Revert and create out string
+    while (!myStackReverted.empty()) {
+        std::string temp = myStackReverted.top();
+        if (myStackReverted.size() != 1)
+            outPath.append(temp + "/");
+        else
+            outPath.append(temp);
+        myStackReverted.pop();
+    }
+    return outPath;
 }
 
 } // namespace alica

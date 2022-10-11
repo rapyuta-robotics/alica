@@ -1,5 +1,6 @@
 #include "supplementary_tests/DynamicBehaviourCreator.h"
 #include "supplementary_tests/DynamicConditionCreator.h"
+#include "supplementary_tests/DynamicLoadingUtils.h"
 #include "supplementary_tests/DynamicPlanCreator.h"
 #include <test_supplementary.h>
 
@@ -12,7 +13,6 @@
 #include <engine/modelmanagement/factories/PlanFactory.h>
 #include <engine/modelmanagement/factories/RuntimeConditionFactory.h>
 
-#include <bits/stdc++.h>
 #include <cstdlib>
 #include <filesystem>
 #include <stdlib.h>
@@ -23,52 +23,6 @@ namespace alica
 {
 namespace
 {
-
-std::string simplify(std::string A)
-{
-    std::stack<std::string> st;
-    std::string dir;
-    std::string res;
-
-    res.append("/");
-
-    int len_A = A.length();
-    for (int i = 0; i < len_A; i++) {
-        dir.clear();
-        while (A[i] == '/')
-            i++;
-
-        while (i < len_A && A[i] != '/') {
-            dir.push_back(A[i]);
-            i++;
-        }
-
-        if (dir.compare("..") == 0) {
-            if (!st.empty())
-                st.pop();
-        } else if (dir.compare(".") == 0)
-            continue;
-        else if (dir.length() != 0)
-            st.push(dir);
-    }
-
-    std::stack<std::string> st1;
-    while (!st.empty()) {
-        st1.push(st.top());
-        st.pop();
-    }
-
-    while (!st1.empty()) {
-        std::string temp = st1.top();
-        if (st1.size() != 1)
-            res.append(temp + "/");
-        else
-            res.append(temp);
-        st1.pop();
-    }
-    return res;
-}
-
 TEST(ForceLoad, simple_behaviour_load)
 {
     ros::NodeHandle nh;
@@ -91,7 +45,7 @@ TEST(ForceLoad, simple_behaviour_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
-    libraryPathFromAlicaYaml = simplify(libraryPathFromAlicaYaml);
+    libraryPathFromAlicaYaml = simplifyPath(libraryPathFromAlicaYaml);
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
@@ -128,12 +82,11 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
     std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplify(rosPackagePath);
+    rosPackagePath = simplifyPath(rosPackagePath);
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
@@ -175,7 +128,7 @@ TEST(ForceLoad, simple_plan_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
-    libraryPathFromAlicaYaml = simplify(libraryPathFromAlicaYaml);
+    libraryPathFromAlicaYaml = simplifyPath(libraryPathFromAlicaYaml);
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
@@ -219,12 +172,11 @@ TEST(ForceLoad, simple_plan_withROS_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
     std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplify(rosPackagePath);
+    rosPackagePath = simplifyPath(rosPackagePath);
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
@@ -267,12 +219,11 @@ TEST(ForceLoad, simple_condition_load)
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
 
     std::string libraryPathFromAlicaYaml = path + "/../../../../../../install/lib/";
-    libraryPathFromAlicaYaml = simplify(libraryPathFromAlicaYaml);
+    libraryPathFromAlicaYaml = simplifyPath(libraryPathFromAlicaYaml);
     if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << std::endl;
-            // libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
         }
     }
 
@@ -314,12 +265,11 @@ TEST(ForceLoad, simple_condition_withROS_load)
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
     std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplify(rosPackagePath);
+    rosPackagePath = simplifyPath(rosPackagePath);
     if (!std::filesystem::exists(rosPackagePath)) {
         rosPackagePath = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(rosPackagePath)) {
             std::cerr << "Library path not found:" << rosPackagePath << std::endl;
-            // rosPackagePath = "/root/catkin_ws/install/lib/";
         }
     }
     rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
