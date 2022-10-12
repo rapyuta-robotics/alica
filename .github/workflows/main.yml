@@ -1,0 +1,27 @@
+name: Build and Test
+on:
+  push:
+    branches:
+      - rr_devel
+  pull_request:
+    branches:
+      - rr_devel
+  workflow_dispatch:
+jobs:
+  ROS2_build_test:
+    runs-on: "${{ matrix.os }}"
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Pull ROS2
+        run: docker pull ros
+      - name: Build ROS2 Container
+        uses: ./ # Uses an action in the root directory
+    

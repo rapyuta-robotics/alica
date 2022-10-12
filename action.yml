@@ -1,0 +1,6 @@
+# action.yml
+name: 'ROS2 Build Test'
+description: 'Test Builds on ROS2'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
