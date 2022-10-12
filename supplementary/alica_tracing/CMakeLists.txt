@@ -5,21 +5,24 @@ add_compile_options(-std=c++17)
 set(PKG_DEPS
 )
 
-find_package(catkin REQUIRED COMPONENTS alica_engine roscpp ${PKG_DEPS})
+find_package(catkin REQUIRED COMPONENTS  roscpp ${PKG_DEPS})
 find_package(yaml-cpp REQUIRED)
+find_package(alica_engine REQUIRED)
 
 #SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_ROOT}/Modules" "/usr/local/lib/cmake/" )
 #find_package(jaegertracing CONFIG REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS alica_engine roscpp ${PKG_DEPS}
+  CATKIN_DEPENDS  roscpp ${PKG_DEPS}
   LIBRARIES ${PROJECT_NAME} jaegertracing
+  DEPENDS alica_engine
 )
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${alica_engine_INCLUDE_DIRS}
   SYSTEM
 )
 
