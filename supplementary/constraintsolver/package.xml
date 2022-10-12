@@ -8,7 +8,7 @@
 
   <license>MIT</license>
 
-  <build_depend>fsystem</build_depend>
+  <!-- <build_depend>fsystem</build_depend> -->
   <build_depend>autodiff</build_depend>
   <build_depend>alica_engine</build_depend>
   <build_depend>alica_ros_proxy</build_depend>
@@ -17,7 +17,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>fsystem</run_depend>
+  <!-- <run_depend>fsystem</run_depend> -->
   <run_depend>autodiff</run_depend>
   <run_depend>alica_engine</run_depend>
   <run_depend>alica_ros_proxy</run_depend>

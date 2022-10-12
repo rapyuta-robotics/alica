@@ -16,7 +16,7 @@
   </export>
   <depend>alica_common_config</depend>
   <depend>alica_solver_interface</depend>
-  <depend>fsystem</depend>
+  <!-- <depend>fsystem</depend> -->
 
   <test_depend>gtest</test_depend>
 </package>

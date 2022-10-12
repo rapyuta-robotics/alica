@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
-find_package(fsystem REQUIRED)
+# find_package(fsystem REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)

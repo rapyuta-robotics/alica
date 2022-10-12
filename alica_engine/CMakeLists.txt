@@ -14,7 +14,7 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 find_package(yaml-cpp REQUIRED)
 
 # Imports
-find_package(fsystem REQUIRED)
+# find_package(fsystem REQUIRED)
 find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/BasicUtilityFunction.cpp
   src/engine/ConfigChangeListener.cpp
   src/engine/DefaultUtilityFunction.cpp
+  src/engine/FileSystem.cpp
   src/engine/IAlicaCommunication.cpp
   src/engine/IRoleAssignment.cpp
   src/engine/Logger.cpp
@@ -161,7 +162,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC 
   ${YAML_CPP_LIBRARIES} 
-  fsystem 
   alica_solver_interface
 )
 
