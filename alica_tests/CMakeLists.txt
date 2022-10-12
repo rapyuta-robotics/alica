@@ -6,31 +6,33 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    fsystem
-    alica_engine
-    alica_dummy_proxy
-    alica_simple_solver
-    alica_common_config
-    alica_solver_interface
-    alica_test_utility
     alica_ros_proxy
 )
 
 # #Yaml
 find_package(yaml-cpp REQUIRED)
-
-include_directories(include ${YAML_CPP_INCLUDE_DIR})
+find_package(fsystem REQUIRED)
+find_package(alica_common_config REQUIRED)
+find_package(alica_solver_interface REQUIRED)
+find_package(alica_engine REQUIRED)
+find_package(alica_dummy_proxy REQUIRED)
+find_package(alica_simple_solver REQUIRED)
+find_package(alica_test_utility REQUIRED)
+include_directories(include 
+    ${alica_common_config_INCLUDE_DIRS}
+)
 
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include
     LIBRARIES autogen_code_alica_tests
-    CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver alica_ros_proxy
+    CATKIN_DEPENDS    alica_ros_proxy
+    DEPENDS fsystem alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
-target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES})
+target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} fsystem alica_test_utility alica_dummy_proxy)
 
 if(CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
