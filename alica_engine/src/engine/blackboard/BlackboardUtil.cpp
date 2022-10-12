@@ -14,7 +14,6 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
     auto& childBb = child_bb->impl(); // Child not started yet, no other user exists, dont' use lock
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
-            // get correct type, set bb value
             Converter::setValue(childKey, lockedParentBb.get(parentKey), childBb.getBlackboardValueType(childKey), childBb);
             ALICA_DEBUG_MSG("passing " << parentKey << " into " << childKey);
         } catch (std::exception& e) {
@@ -29,7 +28,6 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
     const auto& childBb = child_bb->impl(); // Child is terminated, no other users exists, don't use lock
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
-            // get correct type, set bb value
             Converter::setValue(parentKey, childBb.get(childKey), parentBb.getBlackboardValueType(parentKey), parentBb);
             ALICA_DEBUG_MSG("passing " << childKey << " into " << parentKey);
         } catch (std::exception& e) {

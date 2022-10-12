@@ -1,4 +1,5 @@
 #include "engine/blackboard/Blackboard.h"
+#include <iostream>
 
 namespace alica
 {
@@ -15,7 +16,6 @@ void BlackboardImpl::initDefaultValues()
     }
 }
 
-
 void Converter::setDefaultValue(const std::string& key, const std::string& typeName, const YAML::Node& defaultValue, BlackboardImpl& bb)
 {
     if (typeName == "std::any") {
@@ -25,8 +25,23 @@ void Converter::setDefaultValue(const std::string& key, const std::string& typeN
     static constexpr std::size_t numTypes = sizeof(typeNamesYAML) / sizeof(const char*);
     for (std::size_t i = 0; i < numTypes; ++i) {
         if (typeName == typeNamesYAML[i]) {
-            auto value = makeAnyFromIndex(TypesYAML{}, std::make_index_sequence<numTypes>{}, i, defaultValue);
+            auto value = makeVariantFromIndex(TypesYAML{}, std::make_index_sequence<numTypes>{}, i, defaultValue);
             // store value on the blackboard
+            setBlackboardValue(TypesYAML{}, std::make_index_sequence<numTypes>{}, i, key, value, bb);
+            break;
+        }
+    }
+}
+
+void Converter::setValue(const std::string& key, const Types& value, const std::string& typeName, BlackboardImpl& bb)
+{
+    if (typeName == "std::any") {
+        bb.set<std::any>(key, std::get<std::any>(value));
+        return;
+    }
+    static constexpr std::size_t numTypes = sizeof(typeNamesYAML) / sizeof(const char*);
+    for (std::size_t i = 0; i < numTypes; ++i) {
+        if (typeName == typeNamesYAML[i]) {
             setBlackboardValue(TypesYAML{}, std::make_index_sequence<numTypes>{}, i, key, value, bb);
             break;
         }
