@@ -43,10 +43,23 @@ include_directories(
 )
 message(${catkin_INCLUDE_DIRS})
 
-file(GLOB_RECURSE sources "src/*.cpp")
+set(alica_customer_library_SOURCES
+  src/AcmeBehaviour.cpp
+  src/AcmePlan.cpp
+  src/AcmeRuntimeCondition.cpp
+  src/WaitBehaviour.cpp
+)
 
-add_library(alica_customer_library
-  ${sources};
+set(alica_customer_library_HEADER
+  include/AcmeBehaviour.h
+  include/AcmePlan.h
+  include/AcmeRuntimeCondition.h
+  include/WaitBehaviour.h
+)
+
+add_library(alica_customer_library SHARED
+  ${alica_customer_library_SOURCES};
+  ${alica_customer_library_HEADER};
 )
 target_link_libraries(alica_customer_library ${catkin_LIBRARIES})
 
@@ -57,7 +70,7 @@ endif(NOT catkin_FOUND)
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)            
+)
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

@@ -284,5 +284,45 @@ TEST(ForceLoad, simple_condition_withROS_load)
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
 
+TEST(ForceLoad, simple_waitbehaviour_withROS_load)
+{
+    ros::NodeHandle nh;
+    std::string path;
+    nh.param<std::string>("/rootPath", path, ".");
+
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh");
+    } catch (YAML::BadFile& badFile) {
+        std::cerr << path + "/etc/plans/behaviours/WaitBehaviour.beh" << std::endl;
+        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
+    }
+
+    // Load model
+    Behaviour* behaviourModel;
+    behaviourModel = BehaviourFactory::create(node);
+
+    // Create behaviour form dll
+    IAlicaWorldModel wm;
+    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
+    std::string rosPackagePath = path + "/../../../../../../install/lib/";
+    rosPackagePath = simplifyPath(rosPackagePath);
+    if (!std::filesystem::exists(rosPackagePath)) {
+        rosPackagePath = path + "/../../../../../../devel/lib/";
+        if (!std::filesystem::exists(rosPackagePath)) {
+            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+        }
+    }
+    rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
+    char* env = &rosPackagePath[0];
+    putenv(env);
+    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, "", nullptr};
+    std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
+
+    ASSERT_EQ("waitbehaviour", behaviour->getName());
+    //behaviour->start(nullptr);
+    //behaviour->run(nullptr);
+}
+
 } // namespace
 } // namespace alica
