@@ -57,38 +57,6 @@ add_library(autodiff SHARED
   src/Variable.cpp
 )
 
-target_sources(autodiff PRIVATE
-  src/Abs.cpp
-  src/And.cpp
-  src/Atan2.cpp
-  src/Constant.cpp
-  src/ConstPower.cpp
-  src/ConstraintBuilder.cpp
-  src/ConstraintUtility.cpp
-  src/Cos.cpp
-  src/Exp.cpp
-  src/LinSigmoid.cpp
-  src/Log.cpp
-  src/LTConstraint.cpp
-  src/LTEConstraint.cpp
-  src/Max.cpp
-  src/Min.cpp
-  src/Or.cpp
-  src/Product.cpp
-  src/Reification.cpp
-  src/Sigmoid.cpp
-  src/Sin.cpp
-  src/Sum.cpp
-  src/Tape.cpp
-  src/Term.cpp
-  src/TermBuilder.cpp
-  src/TermList.cpp
-  src/TermHolder.cpp
-  src/TermPower.cpp
-  src/TermPtr.cpp
-  src/Variable.cpp
-)
-
 target_include_directories(autodiff PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>

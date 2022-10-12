@@ -15,9 +15,7 @@ find_package(alica_engine REQUIRED)
 
 
 # Build
-include_directories(
-  include
-)
+include_directories(include)
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/

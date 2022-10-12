@@ -33,11 +33,6 @@ add_library(alica_solver_interface SHARED
  src/SolverVariable.cpp
 )
 
-target_sources(alica_solver_interface PRIVATE
-src/SolverTerm.cpp
-src/SolverVariable.cpp
-)
-
 target_include_directories(alica_solver_interface PUBLIC 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
