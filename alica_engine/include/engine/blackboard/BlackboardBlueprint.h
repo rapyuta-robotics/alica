@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/Types.h"
 #include <any>
 #include <mutex>
 #include <shared_mutex>
@@ -14,8 +15,6 @@ namespace alica
 
 class BlackboardBlueprint
 {
-    using Types = std::variant<bool, int64_t, double, std::string, std::any>;
-
 public:
     template <class... Args>
     void registerValue(const std::string& key, Args&&... args)
@@ -26,7 +25,7 @@ public:
     friend class Blackboard;
 
 private:
-    std::unordered_map<std::string, Types> vals;
+    std::unordered_map<std::string, BlackboardValue> vals;
     YAML::Node node;
 };
 

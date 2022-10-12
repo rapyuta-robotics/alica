@@ -1,5 +1,4 @@
 #include "engine/blackboard/Blackboard.h"
-#include <iostream>
 
 namespace alica
 {
@@ -33,7 +32,7 @@ void Converter::setDefaultValue(const std::string& key, const std::string& typeN
     }
 }
 
-void Converter::setValue(const std::string& key, const Types& value, const std::string& typeName, BlackboardImpl& bb)
+void Converter::setValue(const std::string& key, const BlackboardValue& value, const std::string& typeName, BlackboardImpl& bb)
 {
     if (typeName == "std::any") {
         bb.set<std::any>(key, std::get<std::any>(value));

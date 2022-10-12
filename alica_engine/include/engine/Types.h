@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <variant>
+#include <any>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -62,6 +64,7 @@ using VariableGrp = std::vector<const Variable*>;
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 using TransitionConditionCallback = std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)>;
+using BlackboardValue = std::variant<bool, int64_t, double, std::string, std::any>;
 
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 

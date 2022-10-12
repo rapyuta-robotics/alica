@@ -2,6 +2,7 @@
 
 #include "BlackboardBlueprint.h"
 #include "engine/modelmanagement/Strings.h"
+#include "engine/Types.h"
 #include <any>
 #include <mutex>
 #include <shared_mutex>
@@ -15,7 +16,7 @@ namespace alica
 {
 
 class BlackboardUtil;
-using Types = std::variant<bool, int64_t, double, std::string, std::any>;
+
 
 class BlackboardTypeMismatch : public std::exception
 {
@@ -68,8 +69,8 @@ public:
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         }
     }
-    Types& get(const std::string& key) { return vals.at(key); }
-    const Types& get(const std::string& key) const { return vals.at(key); }
+    BlackboardValue& get(const std::string& key) { return vals.at(key); }
+    const BlackboardValue& get(const std::string& key) const { return vals.at(key); }
 
     template <class T>
     void set(const std::string& key, const T& value)
@@ -99,7 +100,7 @@ public:
     void clear() { vals.clear(); }
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
-    std::unordered_map<std::string, Types> vals;
+    std::unordered_map<std::string, BlackboardValue> vals;
     YAML::Node node;
 
 private:
@@ -136,14 +137,14 @@ struct Converter
     template <class T>
     static constexpr const char* typeName()
     {
-        return typeNames[Types{T{}}.index()];
+        return typeNames[BlackboardValue{T{}}.index()];
     }
 
     // set the value given the type name as a string
     static void setDefaultValue(const std::string& key, const std::string& typeName, const YAML::Node& defaultValue, BlackboardImpl& bb);
 
     // used to set the value without a yaml node
-    static void setValue(const std::string& key, const Types& value, const std::string& typeName, BlackboardImpl& bb);
+    static void setValue(const std::string& key, const BlackboardValue& value, const std::string& typeName, BlackboardImpl& bb);
 
     template <class T>
     struct YamlAs
@@ -154,10 +155,9 @@ struct Converter
     template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
     struct makeVariantIfEqual
     {
-        static Types make(std::size_t index, const YAML::Node& value)
+        static BlackboardValue make(std::size_t index, const YAML::Node& value)
         {
             if (index == INDEX) {
-                auto val = Parser<T>::as(value);
                 return Parser<T>::as(value);
             }
             return index == INDEX ? Parser<T>::as(value) : std::any{};
@@ -165,16 +165,16 @@ struct Converter
     };
 
     template <class... Ts, std::size_t... Is>
-    static Types makeVariantFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
+    static BlackboardValue makeVariantFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
     {
-        Types typeValues[] = {makeVariantIfEqual<Ts, Is>::make(index, value)...};
+        BlackboardValue typeValues[] = {makeVariantIfEqual<Ts, Is>::make(index, value)...};
         return typeValues[index];
     };
 
     template <class T, std::size_t INDEX>
     struct setVariantIfEqual
     {
-        static bool set(std::size_t index, const std::string& key, const Types& value, BlackboardImpl& bb)
+        static bool set(std::size_t index, const std::string& key, const BlackboardValue& value, BlackboardImpl& bb)
         {
             if (index != INDEX) {
                 return false;
@@ -187,7 +187,7 @@ struct Converter
 
     template <class... Ts, std::size_t... Is>
     static void setBlackboardValue(
-            std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const std::string& key, const Types& value, BlackboardImpl& bb)
+            std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const std::string& key, const BlackboardValue& value, BlackboardImpl& bb)
     {
         bool vals[] = {setVariantIfEqual<Ts, Is>::set(index, key, value, bb)...};
     };
@@ -238,7 +238,7 @@ public:
     {
         return _impl->get<T>(key);
     }
-    const Types& get(const std::string& key) const { return _impl->get(key); }
+    const BlackboardValue& get(const std::string& key) const { return _impl->get(key); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -269,7 +269,7 @@ public:
     {
         return _impl->get<T>(key);
     }
-    Types& get(const std::string& key) { return _impl->get(key); }
+    BlackboardValue& get(const std::string& key) { return _impl->get(key); }
 
     template <typename T>
     void set(const std::string& key, const T& value)
