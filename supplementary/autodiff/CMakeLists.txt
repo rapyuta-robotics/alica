@@ -8,20 +8,24 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 
-find_package(catkin REQUIRED COMPONENTS
- alica_solver_interface
- alica_common_config
+# Set up utils to allow Colcon/catkin to find the packages
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+
+
+# Imports
+find_package(alica_common_config REQUIRED)
+find_package(alica_solver_interface REQUIRED)
+
+
+# Install
+include_directories(include/autodiff 
+  ${alica_common_config_INCLUDE_DIRS}
+  ${alica_solver_interface_INCLUDE_DIRS}
 )
 
-catkin_package(
- INCLUDE_DIRS include
- LIBRARIES autodiff
- CATKIN_DEPENDS alica_solver_interface alica_common_config
-)
-
-include_directories(include include/autodiff ${catkin_INCLUDE_DIRS})
-
-add_library(autodiff
+add_library(autodiff SHARED
   src/Abs.cpp
   src/And.cpp
   src/Atan2.cpp
@@ -53,34 +57,80 @@ add_library(autodiff
   src/Variable.cpp
 )
 
-target_link_libraries(autodiff ${catkin_LIBRARIES})
+target_include_directories(autodiff PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(autodiff alica_solver_interface)
 
 add_executable(sine_benchmark test/test_benchmark.cpp)
 
-target_link_libraries(sine_benchmark ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(sine_benchmark ${PROJECT_NAME} alica_solver_interface)
 
-if(CATKIN_ENABLE_TESTING)
-    catkin_add_gtest(${PROJECT_NAME}-test test/test_autodiff.cpp)
-    if(TARGET ${PROJECT_NAME}-test)
-    target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
-    endif()
-else(CATKIN_ENABLE_TESTING)
-    # AUTODIFF TESTS
-    find_package(GTest REQUIRED)
-    include_directories(BEFORE
-    ${GTEST_INCLUDE_DIRS}
-    )
-    add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
-    target_link_libraries(${PROJECT_NAME}-tests ${PROJECT_NAME} pthread ${GTEST_LIBRARIES})
-endif(CATKIN_ENABLE_TESTING)
 
+# AUTODIFF TESTS
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
+find_package(Threads REQUIRED)
+
+find_package(GTest REQUIRED)
+
+include(CTest)
+
+include_directories(BEFORE
+  ${GTEST_INCLUDE_DIRS}
+)
+
+add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
+
+target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
+
+add_test(NAME autodiff-tests COMMAND autodiff-tests)
+
+
+# Install
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+EXPORT ${CMAKE_PROJECT_NAME}Targets
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
+)
+
+# Export targets to make package libraries
+export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+)
+
+install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+  DESTINATION ${ConfigPackageLocation}
+)
+
+
+# Installing files to make a find_package()-able package
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  VERSION 0.5.0
+  COMPATIBILITY SameMajorVersion
+)
+
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+
+configure_package_config_file(
+  ${CMAKE_PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${ConfigPackageLocation}
+  PATH_VARS INCLUDE_INSTALL_DIR
+)
+
+install(FILES 
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${ConfigPackageLocation}
 )
