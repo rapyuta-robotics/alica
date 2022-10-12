@@ -62,7 +62,8 @@ bool conditionIsAnyChildStatus843443485857038179(const Blackboard* input, const 
 {
     /*PROTECTED REGION ID(condition843443485857038179) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return rp->isAnyChildStatus(bb.get<PlanStatus>("childStatus"));
+    PlanStatus status = std::any_cast<PlanStatus>(bb.get<std::any>("childStatus"));
+    return rp->isAnyChildStatus(status);
     /*PROTECTED REGION END*/
 }
 bool conditionDefault2EndTest1013158988206959873(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -221,7 +222,7 @@ bool conditionCounterCalled2901825906319407673(const Blackboard* input, const Ru
 {
     /*PROTECTED REGION ID(condition2901825906319407673) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return CounterClass::called == bb.get<int>("numberOfCalls");
+    return CounterClass::called == bb.get<int64_t>("numberOfCalls");
     /*PROTECTED REGION END*/
 }
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
