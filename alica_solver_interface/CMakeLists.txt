@@ -28,14 +28,14 @@ include_directories(include include/${PROJECT_NAME}
   ${alica_common_config_INCLUDE_DIRS}
 )
 
-file(GLOB_RECURSE sources "src/*.cpp")
-
 add_library(alica_solver_interface SHARED
-  ${sources};
+ src/SolverTerm.cpp
+ src/SolverVariable.cpp
 )
 
 target_sources(alica_solver_interface PRIVATE
-  ${sources}
+src/SolverTerm.cpp
+src/SolverVariable.cpp
 )
 
 target_include_directories(alica_solver_interface PUBLIC 

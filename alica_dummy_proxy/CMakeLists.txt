@@ -22,9 +22,9 @@ include_directories(
   ${alica_common_config_INCLUDE_DIRS}
 )
 
-file(GLOB_RECURSE alica_dummy_sources "src/*.cpp")
-
-add_library(alica_dummy_proxy SHARED ${alica_dummy_sources})
+add_library(alica_dummy_proxy SHARED 
+  src/communication/AlicaDummyCommunication.cpp
+)
 
 target_include_directories(alica_dummy_proxy PUBLIC 
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

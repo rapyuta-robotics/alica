@@ -20,7 +20,7 @@ find_package(alica_solver_interface REQUIRED)
 
 
 # Install
-include_directories(include include/autodiff 
+include_directories(include/autodiff 
   ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
 )
