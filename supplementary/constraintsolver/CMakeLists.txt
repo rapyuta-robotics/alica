@@ -90,7 +90,15 @@ file(COPY test/etc/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/etc/)
 
 target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} alica_engine ${GTEST_LIBRARIES})
 
-add_test(NAME ${PROJECT_NAME}-tests COMMAND ${PROJECT_NAME}-tests)
+add_test(NAME AutoDiffTest.GSOLVER COMMAND ${PROJECT_NAME}-tests --gtest_filter=AutoDiffTest.GSOLVER --gtest_also_run_disabled_tests)
+add_test(NAME AutoDiffTest.GSOLVER_UTIL COMMAND ${PROJECT_NAME}-tests --gtest_filter=AutoDiffTest.GSOLVER_UTIL --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSAT0 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAT0 --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSATaim_50_1_6_yes1_4 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSATaim_50_1_6_yes1_4 --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSATpar8_1_c_cnf COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSATpar8_1_c_cnf --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSAT1_aim_100_1_6_no_1cnf COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAT1_aim_100_1_6_no_1cnf --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSAT1dubois22 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAT1dubois22 --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSAThole6 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAThole6 --gtest_also_run_disabled_tests)
+add_test(NAME CNSatTest.CNSAT1_dubois20 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAT1_dubois20 --gtest_also_run_disabled_tests)
 
 
 install(TARGETS ${PROJECT_NAME}
