@@ -15,6 +15,7 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <iostream>
 #include <stdlib.h>
 
 #include <gtest/gtest.h>
@@ -50,7 +51,6 @@ TEST(ForceLoad, simple_behaviour_load)
         libraryPathFromAlicaYaml = path + "/../../../../../../devel/lib/";
         if (!std::filesystem::exists(libraryPathFromAlicaYaml)) {
             std::cerr << "Library path not found:" << libraryPathFromAlicaYaml << " pwd:" << std::filesystem::current_path().string() << std::endl;
-            // libraryPathFromAlicaYaml = "/root/catkin_ws/install/lib/";
         }
     }
 
@@ -320,8 +320,8 @@ TEST(ForceLoad, simple_waitbehaviour_withROS_load)
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("waitbehaviour", behaviour->getName());
-    //behaviour->start(nullptr);
-    //behaviour->run(nullptr);
+    // behaviour->start(nullptr);
+    // behaviour->run(nullptr);
 }
 
 } // namespace

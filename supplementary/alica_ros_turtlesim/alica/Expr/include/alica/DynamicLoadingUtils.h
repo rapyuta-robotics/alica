@@ -69,7 +69,8 @@ inline bool checkLibraryCompleteName(const std::string& libraryCompleteName, con
     return true;
 }
 
-// Algorithm from internet
+// This simply remove ../.. from path, creating a simpler version of the input path
+// Travis seems doesn't work correctly with ../.. path
 inline std::string simplifyPath(const std::string& toSimplify)
 {
     std::stack<std::string> myStack;
