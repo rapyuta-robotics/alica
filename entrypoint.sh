@@ -1,7 +1,7 @@
 #!/bin/sh -l
 . /opt/ros/humble/setup.sh
 
-colcon build --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests 2> result.txt
+colcon build --packages-skip alica_ros_proxy alica_ros_turtlesim alica_tests supplementary_tests 2> result.txt
 
 # colcon test
 
