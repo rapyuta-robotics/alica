@@ -13,7 +13,6 @@ class IAlicaWorldModel;
 struct ConditionContext
 {
     const std::string name;
-    const std::string libraryPath;
     const std::string libraryName;
     int64_t conditionConfId;
 };

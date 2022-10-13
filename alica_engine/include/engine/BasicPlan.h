@@ -19,7 +19,6 @@ struct PlanContext
     IAlicaWorldModel* worldModel;
     const std::string name;
     const Plan* planModel;
-    const std::string libraryPath;
     const IAlicaTraceFactory* traceFactory;
 };
 

@@ -23,14 +23,8 @@ inline std::vector<std::string> tokenizeStr(const std::string& toTokenize, char 
     return tokens;
 }
 
-inline std::string calculateLibraryPath(const std::string& libraryPathFromConfigFile)
+inline std::string calculateLibraryPath()
 {
-    if (libraryPathFromConfigFile != "") {
-        std::cerr << "Debug:"
-                  << "use library path from Alica.yaml:" << libraryPathFromConfigFile << std::endl;
-        return libraryPathFromConfigFile;
-    }
-
     const char* rosPackagePath = std::getenv("ROS_PACKAGE_PATH");
     auto tokens = tokenizeStr(rosPackagePath, ':');
     if (tokens.size() < 1) {

@@ -40,8 +40,6 @@ private:
     const IAlicaCommunication& _communication;
     const IAlicaTraceFactory* _traceFactory;
     const IAlicaTimerFactory& _timerFactory;
-
-    std::string _customerLibraryFolder;
 };
 
 } /* namespace alica */

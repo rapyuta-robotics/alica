@@ -24,13 +24,7 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(ConfigChangeListener& configCha
     reload(configChangeListener.getConfig());
 }
 
-void RuntimeBehaviourFactory::reload(const YAML::Node& config)
-{
-    if (Factory::isValid(config["Alica"]["CustomerLibrary"]) && Factory::isValid(config["Alica"]["CustomerLibrary"]["Folder"])) {
-        _customerLibraryFolder = config["Alica"]["CustomerLibrary"]["Folder"].as<std::string>();
-        Logging::logDebug("AE") << "RuntimeBehaviourFactory: Library folder: " << _customerLibraryFolder;
-    }
-}
+void RuntimeBehaviourFactory::reload(const YAML::Node& config) {}
 
 void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 {
@@ -39,7 +33,7 @@ void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _customerLibraryFolder, _traceFactory};
+    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _traceFactory};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         Logging::logError("RuntimeBehaviourFactory") << "Behaviour creation failed: " << id;

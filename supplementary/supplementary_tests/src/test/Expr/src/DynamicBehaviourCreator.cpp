@@ -18,7 +18,7 @@ DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
-    std::string libraryPath = calculateLibraryPath(context.libraryPath);
+    std::string libraryPath = calculateLibraryPath();
     std::string completeLibraryName = calculateLibraryCompleteName(libraryPath, context.behaviourModel->getLibraryName());
     if (!checkLibraryCompleteName(completeLibraryName, context.behaviourModel->getName())) {
         return nullptr;

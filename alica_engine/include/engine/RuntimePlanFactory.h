@@ -34,8 +34,6 @@ private:
     const IAlicaTraceFactory* _traceFactory;
     const TeamManager& _teamManager;
     const IAlicaTimerFactory& _timerFactory;
-
-    std::string _customerLibraryFolder;
 };
 
 } /* namespace alica */

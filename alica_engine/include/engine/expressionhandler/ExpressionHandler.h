@@ -27,8 +27,6 @@ public:
 
 private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);
-
-    std::string _customerLibraryFolder;
 };
 
 } // namespace alica

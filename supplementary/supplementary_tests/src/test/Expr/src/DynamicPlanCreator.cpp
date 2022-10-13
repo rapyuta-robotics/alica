@@ -15,7 +15,7 @@ DynamicPlanCreator::~DynamicPlanCreator() {}
 
 std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanContext& context)
 {
-    std::string libraryPath = calculateLibraryPath(context.libraryPath);
+    std::string libraryPath = calculateLibraryPath();
     std::string completeLibraryName = calculateLibraryCompleteName(libraryPath, context.planModel->getLibraryName());
     if (!checkLibraryCompleteName(completeLibraryName, context.planModel->getName())) {
         return nullptr;
