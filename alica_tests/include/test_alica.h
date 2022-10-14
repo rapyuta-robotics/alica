@@ -274,6 +274,8 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+
     virtual void SetUp() override
     {
 
@@ -287,8 +289,8 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
+        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -321,6 +323,7 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
@@ -340,9 +343,8 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-
+            manageWorldModel(ac);
             auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(ac->getWorldModel());

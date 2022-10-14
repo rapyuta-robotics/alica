@@ -49,34 +49,12 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "TestTracingMasterPlan"; }
     bool stepEngine() const override { return false; }
-    virtual void SetUp() override
+    void manageWorldModel(alica::AlicaContext* ac) override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
-
-        ASSERT_TRUE(ac->isValid());
-        const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
-        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
-        ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
         attf->setWorldModel(ac->getWorldModel());
-
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        ac->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
-        ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac);
-        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        spinner->start();
     }
 };
 
@@ -87,46 +65,19 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "AuthorityTestMaster"; }
     int getAgentCount() const override { return agentCount; }
+    void manageWorldModel(alica::AlicaContext* ac) override
+    {
+        ac->setWorldModel<alicaTests::TestWorldModel>();
+        auto tf = ac->getTraceFactory();
+        auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+        attf->setWorldModel(ac->getWorldModel());
+    }
     const char* getHostName(int agentNumber) const override
     {
         if (agentNumber) {
             return "hairy";
         } else {
             return "nase";
-        }
-    }
-    void SetUp() override
-    {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        for (int i = 0; i < getAgentCount(); ++i) {
-            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
-
-            alica::AlicaContext* ac =
-                    new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
-            ASSERT_TRUE(ac->isValid());
-            cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
-            spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
-            ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alicaTests::TestWorldModel>();
-            ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-
-            auto tf = ac->getTraceFactory();
-            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(ac->getWorldModel());
-
-            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
-            ac->setLogger<alicaRosLogger::AlicaRosLogger>(ac->getConfig()["Local"]["ID"].as<int>());
-            ac->init(std::move(creators), true);
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            spinners.back()->start();
-            acs.push_back(ac);
-            aes.push_back(ae);
         }
     }
 };
