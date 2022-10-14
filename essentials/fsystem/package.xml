@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>fsystem</name>
-  <version>0.0.0</version>
+  <version>0.9.4</version>
   <description>The fsystem package</description>
 
   <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
@@ -10,8 +10,9 @@
 
   <author email="opfer@vs.uni-kassel.de">Stephan Opfer</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>cmake</buildtool_depend>
 
   <export>
+    <build_type>cmake</build_type>
   </export>
 </package>

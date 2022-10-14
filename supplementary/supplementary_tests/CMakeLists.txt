@@ -5,31 +5,32 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    fsystem
-    alica_engine
-    alica_dummy_proxy
-    alica_ros_proxy
-    alica_simple_solver
-    alica_common_config
-    alica_solver_interface
-    alica_test_utility
+    alica_ros_proxy    
     constraintsolver
-    autodiff
     alica_ros_proxy
 )
+
+find_package(fsystem REQUIRED)
+find_package(alica_solver_interface REQUIRED)
+find_package(autodiff REQUIRED)
+find_package(alica_engine REQUIRED)
+find_package(alica_dummy_proxy REQUIRED)
+find_package(alica_simple_solver REQUIRED)
+find_package(alica_test_utility REQUIRED)
 
 include_directories(include)
 
 catkin_package(
   INCLUDE_DIRS include src/test/Expr/include
   LIBRARIES autogen_code_supplementary_tests
-  CATKIN_DEPENDS alica_engine alica_dummy_proxy alica_solver_interface alica_simple_solver constraintsolver alica_ros_proxy
+  CATKIN_DEPENDS     constraintsolver alica_ros_proxy
+  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES})
+target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} alica_test_utility)
 
 if (CATKIN_ENABLE_TESTING)
 
