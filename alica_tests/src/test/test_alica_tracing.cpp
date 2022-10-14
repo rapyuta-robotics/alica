@@ -190,21 +190,16 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
         }
     }
 
-#if 0
-    // this won't work Luca
-    // ask to Veeraj
-    auto logs = twm1->tracingLogs;
+    auto logs = twm2->tracingLogs;
 
     bool foundTaskAssignmentChangeLog = false;
     for (auto log : logs) {
-        std::cerr<<log.first<<std::endl;
         if (log.first == "TaskAssignmentChange") {
             foundTaskAssignmentChangeLog = true;
             break;
         }
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
-#endif
     EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
     EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest"); // added by Luca
 }

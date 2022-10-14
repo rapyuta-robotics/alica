@@ -72,7 +72,7 @@ if(CATKIN_ENABLE_TESTING)
         src/test/test_config_change.cpp
         src/test/test_alica_scheduling.cpp
         src/test/test_adjacent_plans_success.cpp
-        src/test/test_alica_tracing.cpp # still some problem luca
+        src/test/test_alica_tracing.cpp
         src/test/test_blackboard.cpp
         src/test/test_inherit_blackboard.cpp
         src/test/test_failure_handling.cpp
