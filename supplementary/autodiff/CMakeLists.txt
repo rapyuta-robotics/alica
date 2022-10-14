@@ -15,13 +15,11 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 
 # Imports
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
 # Install
 include_directories(include/autodiff 
-  ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
 )
 

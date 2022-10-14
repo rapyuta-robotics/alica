@@ -9,12 +9,9 @@
   <license>MIT</license>
 
   <depend>alica_engine</depend>
-  <depend>alica_common_config</depend>
   <depend>alica_solver_interface</depend>
   
-
-
-<buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>cmake</buildtool_depend>
 
   <export>
     <build_type>cmake</build_type>

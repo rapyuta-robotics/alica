@@ -14,8 +14,6 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 find_package(yaml-cpp REQUIRED)
 
 # Imports
-# find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
@@ -23,9 +21,7 @@ find_package(alica_solver_interface REQUIRED)
 ## Build ##
 ###########
 
-include_directories(include 
-  ${alica_common_config_INCLUDE_DIRS}
-)
+include_directories(include)
 
 add_library(${PROJECT_NAME} SHARED 
   src/engine/AlicaClock.cpp

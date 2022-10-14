@@ -31,8 +31,6 @@
 #include "engine/model/Task.h"
 #include "engine/teammanager/TeamManager.h"
 
-#include <alica_common_config/common_defines.h>
-
 #include <cstddef>
 #include <iostream>
 
@@ -339,7 +337,6 @@ void RunningPlan::useEntryPoint(const EntryPoint* value)
 void RunningPlan::useState(const State* s)
 {
     if (_activeTriple.state != s) {
-        ALICA_ASSERT(s == nullptr || (_activeTriple.entryPoint && _activeTriple.entryPoint->isStateReachable(s)));
         _activeTriple.state = s;
         _status.stateStartTime = _clock.now();
         if (s != nullptr) {

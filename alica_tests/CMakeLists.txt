@@ -11,16 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
 
 # #Yaml
 find_package(yaml-cpp REQUIRED)
-# find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
-include_directories(include 
-    ${alica_common_config_INCLUDE_DIRS}
-)
+include_directories(include)
 
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include

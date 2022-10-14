@@ -12,27 +12,14 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
-# find_package(catkin REQUIRED COMPONENTS
-#   # alica_ros_proxy  
-#   roslib
-# )
 
-# find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)
 
-# catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES constraintsolver
-#  CATKIN_DEPENDS   roslib 
-#  DEPENDS alica_common_config alica_solver_interface autodiff alica_engine
-# )
 
 include_directories(
   include
-  ${alica_common_config_INCLUDE_DIRS}
   ${alica_engine_INCLUDE_DIRS}
 )
 
@@ -63,13 +50,9 @@ target_include_directories(constraintsolver PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(constraintsolver PUBLIC autodiff alica_engine ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries(constraintsolver PUBLIC autodiff alica_engine ${YAML_CPP_LIBRARIES})
 
-# catkin_add_gtest(${PROJECT_NAME}-test
-#  test/test_constraintsolver.cpp
-#  test/test_cnsat.cpp
-#  test/test_cnsmtgsolver.cpp
-# )
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 include(CTest)
 find_package(Threads REQUIRED)

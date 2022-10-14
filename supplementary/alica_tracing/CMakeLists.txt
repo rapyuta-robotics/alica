@@ -7,23 +7,12 @@ include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
 
 
-# find_package(catkin REQUIRED COMPONENTS  roscpp ${PKG_DEPS})
 find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
-#SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_ROOT}/Modules" "/usr/local/lib/cmake/" )
-#find_package(jaegertracing CONFIG REQUIRED)
-
-# catkin_package(
-#   INCLUDE_DIRS include
-#   CATKIN_DEPENDS  roscpp ${PKG_DEPS}
-#   LIBRARIES ${PROJECT_NAME} jaegertracing
-#   DEPENDS alica_engine
-# )
 
 include_directories(
   include
-  # ${catkin_INCLUDE_DIRS}
   ${alica_engine_INCLUDE_DIRS}
   SYSTEM
 )
@@ -48,7 +37,6 @@ target_include_directories(alica_tracing PUBLIC
 # Specify libraries to link a library or executable target against
 target_link_libraries(
   ${PROJECT_NAME}
-  # ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"

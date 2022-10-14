@@ -10,17 +10,12 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 
 # Imports
-find_package(alica_common_config REQUIRED)
-# find_package(fsystem REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 
 
 # Build
-include_directories(
-  include
-  ${alica_common_config_INCLUDE_DIRS}
-)
+include_directories(include)
 
 add_library(alica_dummy_proxy SHARED 
   src/communication/AlicaDummyCommunication.cpp
@@ -31,7 +26,7 @@ target_include_directories(alica_dummy_proxy PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(alica_dummy_proxy alica_engine)
+target_link_libraries(alica_dummy_proxy alica_engine alica_solver_interface)
 
 
 install(TARGETS ${PROJECT_NAME}

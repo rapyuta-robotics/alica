@@ -17,9 +17,7 @@
   <depend>turtlesim</depend>
   <depend>geometry_msgs</depend>
 
-  <depend>alica_common_config</depend>
   <depend>alica_engine</depend>
-
   <depend>alica_ros_proxy</depend>
   <depend>constraintsolver</depend>
 </package>
