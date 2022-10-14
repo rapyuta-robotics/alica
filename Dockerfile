@@ -5,7 +5,5 @@ FROM ros:humble
 COPY entrypoint.sh /entrypoint.sh
 
 
-RUN apt-get update
-RUN apt-get install -q -y libboost-all-dev
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
