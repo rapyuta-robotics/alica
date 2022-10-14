@@ -1,6 +1,6 @@
 #include "tracing/TraceFactory.h"
-#include "tracing/Trace.h"
 #include "engine/logging/Logging.h"
+#include "tracing/Trace.h"
 
 #include <exception>
 #include <jaegertracing/Tracer.h>
@@ -11,7 +11,7 @@ namespace alicaTracing
 TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, RawTraceValue>& defaultTags)
         : _defaultTags(defaultTags)
 {
-    alica::Logging::logInfo("AlicaTracing") << __func__ <<  " Initializing tracing for service " << serviceName;
+    alica::Logging::logInfo("AlicaTracing") << __func__ << " Initializing tracing for service " << serviceName;
     _serviceName = serviceName;
     try {
         auto configYAML = YAML::LoadFile(configFilePath);

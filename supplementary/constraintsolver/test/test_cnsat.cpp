@@ -2,17 +2,15 @@
 
 #include "constraintsolver/CNSMTGSolver.h"
 #include "constraintsolver/CNSat.h"
+#include "engine/AlicaClock.h"
 #include "engine/FileSystem.h"
 #include "types/Clause.h"
 #include "types/Lit.h"
 #include "types/Var.h"
-#include "engine/AlicaClock.h"
 
 #include <fstream>
 #include <iostream>
 #include <memory>
-// #include <ros/package.h>
-// #include <ros/ros.h>
 #include <string>
 
 using namespace std;
