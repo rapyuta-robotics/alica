@@ -37,7 +37,6 @@ target_include_directories(alica_tracing PUBLIC
 # Specify libraries to link a library or executable target against
 target_link_libraries(
   ${PROJECT_NAME}
-  ${Boost_LIBRARIES}
   ${YAML_CPP_LIBRARIES}
   "-Wl,-rpath=/usr/local/lib/,--disable-new-dtags"
   jaegertracing
