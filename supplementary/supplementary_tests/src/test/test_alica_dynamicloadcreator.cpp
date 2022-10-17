@@ -22,6 +22,7 @@
 
 namespace alica
 {
+
 namespace
 {
 
@@ -193,9 +194,9 @@ TEST(ForceLoad, simple_waitbehaviour_load)
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
-    ASSERT_EQ("waitbehaviour", behaviour->getName());
+    ASSERT_EQ("waitbehaviour", behaviour_mock->getName());
     // behaviour->start(nullptr);
-    // behaviour->run(nullptr);
+    behaviour_mock->run(nullptr);
 }
 
 } // namespace
