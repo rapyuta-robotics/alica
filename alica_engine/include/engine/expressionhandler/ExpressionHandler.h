@@ -1,7 +1,5 @@
 #pragma once
 
-#include <yaml-cpp/yaml.h>
-
 namespace alica
 {
 class RunningPlan;
@@ -21,8 +19,6 @@ public:
     ExpressionHandler();
     virtual ~ExpressionHandler();
     void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
-
-    void reload(const YAML::Node& config);
 
 private:
     void attachConstraint(Condition* c, IConstraintCreator& crc);

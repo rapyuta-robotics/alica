@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-#include <yaml-cpp/yaml.h>
 
 namespace alica
 {

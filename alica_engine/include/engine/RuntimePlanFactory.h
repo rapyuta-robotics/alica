@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
@@ -23,8 +22,6 @@ public:
     void init(std::unique_ptr<IPlanCreator>&& pc);
 
     std::unique_ptr<BasicPlan> create(int64_t id, const Plan* planModel) const;
-
-    void reload(const YAML::Node& config);
 
 private:
     std::unique_ptr<IPlanCreator> _creator;
