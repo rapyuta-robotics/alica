@@ -25,8 +25,28 @@ namespace alica
 
 namespace
 {
+class AlicaDynamicLoading : public ::testing::Test
+{
+public:
+    std::string _ldLibraryPath;
 
-TEST(ForceLoad, simple_behaviour_load)
+    void exportLdLibraryPath(const std::string& rootPath)
+    {
+        _ldLibraryPath = rootPath + "/../../../../../../install/lib/";
+        _ldLibraryPath = simplifyPath(_ldLibraryPath);
+        if (!std::filesystem::exists(_ldLibraryPath)) {
+            _ldLibraryPath = rootPath + "/../../../../../../devel/lib/";
+            if (!std::filesystem::exists(_ldLibraryPath)) {
+                std::cerr << "Library path not found:" << _ldLibraryPath << std::endl;
+            }
+        }
+        _ldLibraryPath = "LD_LIBRARY_PATH=" + _ldLibraryPath;
+        char* env = &_ldLibraryPath[0];
+        putenv(env);
+    }
+};
+
+TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -44,27 +64,19 @@ TEST(ForceLoad, simple_behaviour_load)
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(node);
 
+    exportLdLibraryPath(path);
+
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
-    ldLibraryPath = simplifyPath(ldLibraryPath);
-    if (!std::filesystem::exists(ldLibraryPath)) {
-        ldLibraryPath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(ldLibraryPath)) {
-            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
-        }
-    }
-    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
-    char* env = &ldLibraryPath[0];
-    putenv(env);
+
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
 
-TEST(ForceLoad, simple_plan_load)
+TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -90,27 +102,19 @@ TEST(ForceLoad, simple_plan_load)
     Plan* planModel;
     planModel = PlanFactory::create(configChangeListener, node);
 
+    exportLdLibraryPath(path);
+
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
-    ldLibraryPath = simplifyPath(ldLibraryPath);
-    if (!std::filesystem::exists(ldLibraryPath)) {
-        ldLibraryPath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(ldLibraryPath)) {
-            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
-        }
-    }
-    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
-    char* env = &ldLibraryPath[0];
-    putenv(env);
+
     PlanContext ctx{&wm, planModel->getName(), planModel, nullptr};
 
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
     ASSERT_EQ("acmeplan", plan->getName());
 }
 
-TEST(ForceLoad, simple_condition_load)
+TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -136,20 +140,10 @@ TEST(ForceLoad, simple_condition_load)
 
     RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
 
+    exportLdLibraryPath(path);
+
     // Create condition form dll
-    IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
-    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
-    ldLibraryPath = simplifyPath(ldLibraryPath);
-    if (!std::filesystem::exists(ldLibraryPath)) {
-        ldLibraryPath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(ldLibraryPath)) {
-            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
-        }
-    }
-    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
-    char* env = &ldLibraryPath[0];
-    putenv(env);
 
     ConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
 
@@ -159,7 +153,7 @@ TEST(ForceLoad, simple_condition_load)
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
 
-TEST(ForceLoad, simple_waitbehaviour_load)
+TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -177,26 +171,18 @@ TEST(ForceLoad, simple_waitbehaviour_load)
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(node);
 
+    exportLdLibraryPath(path);
+
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
-    ldLibraryPath = simplifyPath(ldLibraryPath);
-    if (!std::filesystem::exists(ldLibraryPath)) {
-        ldLibraryPath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(ldLibraryPath)) {
-            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
-        }
-    }
-    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
-    char* env = &ldLibraryPath[0];
-    putenv(env);
+
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
-    ASSERT_EQ("waitbehaviour", behaviour_mock->getName());
+    ASSERT_EQ("waitbehaviour", behaviour->getName());
     // behaviour->start(nullptr);
-    behaviour_mock->run(nullptr);
+    behaviour->run(nullptr);
 }
 
 } // namespace
