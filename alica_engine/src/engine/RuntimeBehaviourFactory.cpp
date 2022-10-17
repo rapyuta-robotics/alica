@@ -2,7 +2,6 @@
 #include <engine/RuntimeBehaviourFactory.h>
 
 #include "engine/BasicBehaviour.h"
-#include "engine/ConfigChangeListener.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/logging/Logging.h"
 #include "engine/modelmanagement/factories/Factory.h"
