@@ -42,8 +42,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _planFactory(
-                  std::make_unique<RuntimePlanFactory>(_configChangeListener, _ctx.getWorldModel(), getTraceFactory(), getTeamManager(), getTimerFactory()))
+        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), getTraceFactory(), getTeamManager(), getTimerFactory()))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -54,12 +53,12 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _roleAssignment(std::make_unique<StaticRoleAssignment>(_ctx.getCommunicator(), getPlanRepository(), editTeamManager()))
         , _teamObserver(
                   _configChangeListener, editLog(), editRoleAssignment(), _ctx.getCommunicator(), _ctx.getAlicaClock(), getPlanRepository(), editTeamManager())
-        , _expressionHandler(_configChangeListener)
+        , _expressionHandler()
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(
-                  _configChangeListener, _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
+                  _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
                   editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
                   getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())

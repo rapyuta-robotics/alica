@@ -22,16 +22,10 @@ namespace alica
 /**
  * Constructor, loads the assembly containing expressions and constraints.
  */
-ExpressionHandler::ExpressionHandler(ConfigChangeListener& configChangeListener)
-{
-    auto reloadFunctionPtr = std::bind(&ExpressionHandler::reload, this, std::placeholders::_1);
-    configChangeListener.subscribe(reloadFunctionPtr);
-    reload(configChangeListener.getConfig());
-}
+ExpressionHandler::ExpressionHandler() {}
 
 ExpressionHandler::~ExpressionHandler() {}
 
-void ExpressionHandler::reload(const YAML::Node& config) {}
 /**
  * Attaches expressions and constraints to the plans. Called by the AlicaEngine during start up.
  */

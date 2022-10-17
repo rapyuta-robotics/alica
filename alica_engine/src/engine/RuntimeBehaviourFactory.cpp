@@ -10,8 +10,8 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase,
-        const IAlicaCommunication& communication, const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
+        const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
         : _wm(wm)
         , _teamManager(teamManager)
         , _planBase(planBase)
@@ -19,12 +19,7 @@ RuntimeBehaviourFactory::RuntimeBehaviourFactory(ConfigChangeListener& configCha
         , _traceFactory(traceFactory)
         , _timerFactory(timerFactory)
 {
-    auto reloadFunctionPtr = std::bind(&RuntimeBehaviourFactory::reload, this, std::placeholders::_1);
-    configChangeListener.subscribe(reloadFunctionPtr);
-    reload(configChangeListener.getConfig());
 }
-
-void RuntimeBehaviourFactory::reload(const YAML::Node& config) {}
 
 void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 {

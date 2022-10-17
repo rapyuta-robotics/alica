@@ -11,7 +11,6 @@ class PlanRepository;
 class AlicaCreators;
 class IConstraintCreator;
 class AlicaEngine;
-class ConfigChangeListener;
 
 /**
  * The ExpressionHandler attaches expressions and constraints to plans during start-up of the engine.
@@ -19,7 +18,7 @@ class ConfigChangeListener;
 class ExpressionHandler
 {
 public:
-    ExpressionHandler(ConfigChangeListener& configChangeListener);
+    ExpressionHandler();
     virtual ~ExpressionHandler();
     void attachAll(PlanRepository& pr, AlicaCreators& creatorCtx);
 

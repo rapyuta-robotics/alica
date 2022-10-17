@@ -9,19 +9,14 @@
 namespace alica
 {
 
-RuntimePlanFactory::RuntimePlanFactory(ConfigChangeListener& configChangeListener, IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory,
-        const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+RuntimePlanFactory::RuntimePlanFactory(
+        IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
         : _traceFactory(traceFactory)
         , _teamManager(teamManager)
         , _timerFactory(timerFactory)
         , _wm(wm)
 {
-    auto reloadFunctionPtr = std::bind(&RuntimePlanFactory::reload, this, std::placeholders::_1);
-    configChangeListener.subscribe(reloadFunctionPtr);
-    reload(configChangeListener.getConfig());
 }
-
-void RuntimePlanFactory::reload(const YAML::Node& config) {}
 
 void RuntimePlanFactory::init(std::unique_ptr<IPlanCreator>&& pc)
 {
