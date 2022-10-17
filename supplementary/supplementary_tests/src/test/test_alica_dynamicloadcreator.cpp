@@ -25,7 +25,7 @@ namespace alica
 namespace
 {
 
-TEST(ForceLoad, simple_behaviour_withROS_load)
+TEST(ForceLoad, simple_behaviour_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -46,16 +46,16 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplifyPath(rosPackagePath);
-    if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(rosPackagePath)) {
-            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
+    ldLibraryPath = simplifyPath(ldLibraryPath);
+    if (!std::filesystem::exists(ldLibraryPath)) {
+        ldLibraryPath = path + "/../../../../../../devel/lib/";
+        if (!std::filesystem::exists(ldLibraryPath)) {
+            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
         }
     }
-    rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    char* env = &rosPackagePath[0];
+    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
+    char* env = &ldLibraryPath[0];
     putenv(env);
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
@@ -63,7 +63,7 @@ TEST(ForceLoad, simple_behaviour_withROS_load)
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
 
-TEST(ForceLoad, simple_plan_withROS_load)
+TEST(ForceLoad, simple_plan_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -92,16 +92,16 @@ TEST(ForceLoad, simple_plan_withROS_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplifyPath(rosPackagePath);
-    if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(rosPackagePath)) {
-            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
+    ldLibraryPath = simplifyPath(ldLibraryPath);
+    if (!std::filesystem::exists(ldLibraryPath)) {
+        ldLibraryPath = path + "/../../../../../../devel/lib/";
+        if (!std::filesystem::exists(ldLibraryPath)) {
+            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
         }
     }
-    rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    char* env = &rosPackagePath[0];
+    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
+    char* env = &ldLibraryPath[0];
     putenv(env);
     PlanContext ctx{&wm, planModel->getName(), planModel, nullptr};
 
@@ -109,7 +109,7 @@ TEST(ForceLoad, simple_plan_withROS_load)
     ASSERT_EQ("acmeplan", plan->getName());
 }
 
-TEST(ForceLoad, simple_condition_withROS_load)
+TEST(ForceLoad, simple_condition_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -138,16 +138,16 @@ TEST(ForceLoad, simple_condition_withROS_load)
     // Create condition form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplifyPath(rosPackagePath);
-    if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(rosPackagePath)) {
-            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
+    ldLibraryPath = simplifyPath(ldLibraryPath);
+    if (!std::filesystem::exists(ldLibraryPath)) {
+        ldLibraryPath = path + "/../../../../../../devel/lib/";
+        if (!std::filesystem::exists(ldLibraryPath)) {
+            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
         }
     }
-    rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    char* env = &rosPackagePath[0];
+    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
+    char* env = &ldLibraryPath[0];
     putenv(env);
 
     ConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
@@ -158,7 +158,7 @@ TEST(ForceLoad, simple_condition_withROS_load)
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
 
-TEST(ForceLoad, simple_waitbehaviour_withROS_load)
+TEST(ForceLoad, simple_waitbehaviour_load)
 {
     ros::NodeHandle nh;
     std::string path;
@@ -179,16 +179,16 @@ TEST(ForceLoad, simple_waitbehaviour_withROS_load)
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-    std::string rosPackagePath = path + "/../../../../../../install/lib/";
-    rosPackagePath = simplifyPath(rosPackagePath);
-    if (!std::filesystem::exists(rosPackagePath)) {
-        rosPackagePath = path + "/../../../../../../devel/lib/";
-        if (!std::filesystem::exists(rosPackagePath)) {
-            std::cerr << "Library path not found:" << rosPackagePath << std::endl;
+    std::string ldLibraryPath = path + "/../../../../../../install/lib/";
+    ldLibraryPath = simplifyPath(ldLibraryPath);
+    if (!std::filesystem::exists(ldLibraryPath)) {
+        ldLibraryPath = path + "/../../../../../../devel/lib/";
+        if (!std::filesystem::exists(ldLibraryPath)) {
+            std::cerr << "Library path not found:" << ldLibraryPath << std::endl;
         }
     }
-    rosPackagePath = "ROS_PACKAGE_PATH=" + rosPackagePath;
-    char* env = &rosPackagePath[0];
+    ldLibraryPath = "LD_LIBRARY_PATH=" + ldLibraryPath;
+    char* env = &ldLibraryPath[0];
     putenv(env);
     BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);

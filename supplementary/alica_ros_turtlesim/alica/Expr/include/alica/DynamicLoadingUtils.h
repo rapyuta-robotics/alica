@@ -25,18 +25,18 @@ inline std::vector<std::string> tokenizeStr(const std::string& toTokenize, char 
 
 inline std::string calculateLibraryPath()
 {
-    const char* rosPackagePath = std::getenv("ROS_PACKAGE_PATH");
-    auto tokens = tokenizeStr(rosPackagePath, ':');
+    const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
+    auto tokens = tokenizeStr(ldLibraryPath, ':');
     if (tokens.size() < 1) {
         std::cerr << "Error:"
-                  << "Missing ROS_PACKAGE_PATH" << std::endl;
+                  << "Missing LD_LIBRARY_PATH" << std::endl;
         return "";
     }
 
     std::cerr << "Debug:"
-              << "use library path from ROS_PACKAGE_PATH:" << tokens[0] + "/../lib/" << std::endl;
+              << "use library path from LD_LIBRARY_PATH:" << tokens[0] << std::endl;
 
-    return tokens[0] + "/../lib/";
+    return tokens[0];
 }
 
 inline std::string calculateLibraryCompleteName(const std::string& libraryPath, const std::string& libraryName)
@@ -63,8 +63,7 @@ inline bool checkLibraryCompleteName(const std::string& libraryCompleteName, con
     return true;
 }
 
-// This simply remove ../.. from path, creating a simpler version of the input path
-// Travis seems doesn't work correctly with ../.. path
+// Algorithm from internet
 inline std::string simplifyPath(const std::string& toSimplify)
 {
     std::stack<std::string> myStack;
