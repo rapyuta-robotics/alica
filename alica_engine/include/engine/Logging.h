@@ -4,16 +4,17 @@
 
 #pragma once
 
-#include "engine/AlicaEngine.h"
+#include <chrono>
 #include <iostream>
 #include <string>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
 namespace logging
 {
-std::string getLogFilename(AlicaEngine* ae, const std::string& file);
-std::string getErrLogFilename(AlicaEngine* ae, const std::string& file);
+std::string getLogFilename(YAML::Node& config, const std::string& file);
+std::string getErrLogFilename(YAML::Node& config, const std::string& file);
 
 struct None
 {
