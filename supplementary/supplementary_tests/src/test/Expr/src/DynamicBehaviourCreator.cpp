@@ -12,8 +12,6 @@
 namespace alica
 {
 
-DynamicBehaviourCreator::DynamicBehaviourCreator() {}
-
 DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)

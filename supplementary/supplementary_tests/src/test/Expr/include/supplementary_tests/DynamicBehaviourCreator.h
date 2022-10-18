@@ -12,7 +12,6 @@ class BasicBehaviour;
 class DynamicBehaviourCreator : public IBehaviourCreator
 {
 public:
-    DynamicBehaviourCreator();
     virtual ~DynamicBehaviourCreator();
     std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourId, BehaviourContext& context) override;
 
