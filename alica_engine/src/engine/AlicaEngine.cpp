@@ -106,7 +106,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
     _roleAssignment->init();
 
     _expressionHandler.attachAll(_planRepository, creatorCtx);
-    UtilityFunction::initDataStructures(this);
+    UtilityFunction::initDataStructures(getPlanRepository(), getRoleSet(), getRoleAssignment(), getTeamManager());
 
     RunningPlan::init(_ctx.getConfig());
     _teamManager.init();
