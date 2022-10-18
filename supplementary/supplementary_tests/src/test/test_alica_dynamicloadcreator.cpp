@@ -44,13 +44,19 @@ public:
         char* env = &_ldLibraryPath[0];
         putenv(env);
     }
+
+    std::string getRootPath() const
+    {
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        return path;
+    }
 };
 
 TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+    std::string path = getRootPath();
 
     YAML::Node node;
     try {
@@ -78,9 +84,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 
 TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+    std::string path = getRootPath();
 
     YAML::Node globalNode;
     try {
@@ -116,17 +120,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
 
 TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
-
-    YAML::Node globalNode;
-    try {
-        globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml");
-    } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/hairy/Alica.yaml" << std::endl;
-        AlicaEngine::abort("MM: Could not parse global config file: ", badFile.msg);
-    }
+    std::string path = getRootPath();
 
     YAML::Node node;
     try {
@@ -135,9 +129,8 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
         std::cerr << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd" << std::endl;
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
-    // Load model
-    ConfigChangeListener configChangeListener(globalNode);
 
+    // Load model
     RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
 
     exportLdLibraryPath(path);
@@ -155,9 +148,7 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+    std::string path = getRootPath();
 
     YAML::Node node;
     try {
