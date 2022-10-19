@@ -18,6 +18,8 @@ class USummand;
 class IAssignment;
 class IAlicaWorldModel;
 struct TaskRoleStruct;
+class RoleSet;
+class TeamManager;
 
 class UtilityFunction
 {
@@ -32,9 +34,10 @@ public:
     UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel* wm) const;
     // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
     void cacheEvalData(const IAlicaWorldModel* wm);
-    void init(AlicaEngine* ae);
+    void init(const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager);
 
-    static void initDataStructures(AlicaEngine* ae);
+    static void initDataStructures(
+            const PlanRepository& planRepository, const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager);
 
     const Plan* getPlan() const { return _plan; }
     // const std::map<TaskRoleStruct, double>& getPriorityMartix() const { return priorityMatrix; }
@@ -56,7 +59,9 @@ private:
     double _priorityWeight;
     double _similarityWeight;
 
-    AlicaEngine* _ae;
+    const RoleSet* _roleSet;
+    const IRoleAssignment* _roleAssignment;
+    const TeamManager* _teamManager;
 };
 
 std::stringstream& operator<<(std::stringstream& ss, const UtilityFunction& uf);
