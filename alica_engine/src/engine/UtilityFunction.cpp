@@ -24,7 +24,9 @@ using std::pair;
 
 UtilityFunction::UtilityFunction(double priorityWeight, double similarityWeight, const Plan* plan)
         : _plan(plan)
-        , _ae(nullptr)
+        , _roleSet(nullptr)
+        , _roleAssignment(nullptr)
+        , _teamManager(nullptr)
         , _priorityWeight(priorityWeight)
         , _similarityWeight(similarityWeight)
 {
@@ -94,15 +96,18 @@ void UtilityFunction::cacheEvalData(const IAlicaWorldModel* wm)
  * 'Role -> Highest Priority'-Dictionary for each role of the current roleset.
  * @return void
  */
-void UtilityFunction::init(AlicaEngine* ae)
+void UtilityFunction::init(const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager)
 {
+    _roleSet = roleSet;
+    _roleAssignment = &roleAssignment;
+    _teamManager = &teamManager;
+
     // CREATE MATRIX && HIGHEST PRIORITY ARRAY
     // init dicts
     _roleHighestPriorityMap.clear();
     _priorityMatrix.clear();
-    const RoleSet* roleSet = ae->getRoleSet();
 
-    for (const Role* role : roleSet->getRoles()) {
+    for (const Role* role : _roleSet->getRoles()) {
         const int64_t roleId = role->getId();
         int64_t taskId;
         _roleHighestPriorityMap.insert(std::pair<int64_t, double>(roleId, 0.0));
@@ -117,7 +122,6 @@ void UtilityFunction::init(AlicaEngine* ae)
         // Add Priority for Idle-EntryPoint
         _priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(Task::IDLEID, roleId), 0.0));
     }
-    _ae = ae;
 }
 
 /**
@@ -125,10 +129,11 @@ void UtilityFunction::init(AlicaEngine* ae)
  * Is called and the end of AlicaEngine.Init(..), because it
  * needs the current roleset (circular dependency otherwise).
  */
-void UtilityFunction::initDataStructures(AlicaEngine* ae)
+void UtilityFunction::initDataStructures(
+        const PlanRepository& planRepository, const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager)
 {
-    for (const Plan* p : ae->getPlanRepository().getPlans()) {
-        p->getUtilityFunction()->init(ae);
+    for (const Plan* p : planRepository.getPlans()) {
+        p->getUtilityFunction()->init(roleSet, roleAssignment, teamManager);
     }
 }
 
@@ -144,7 +149,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
     }
     // SUM UP HEURISTIC PART OF PRIORITY UTILITY
     for (AgentId agentID : ass.getUnassignedAgents()) {
-        const auto highestPriority = _roleHighestPriorityMap.find(_ae->getRoleAssignment().getRole(agentID)->getId());
+        const auto highestPriority = _roleHighestPriorityMap.find(_roleAssignment->getRole(agentID)->getId());
         assert(highestPriority != _roleHighestPriorityMap.end());
         priResult.setMax(priResult.getMax() + highestPriority->second);
     }
@@ -156,7 +161,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
 
         for (AgentId agent : ass.getUniqueAgentsWorkingAndFinished(ep)) {
             double curPrio = 0;
-            const int64_t roleId = _ae->getRoleAssignment().getRole(agent)->getId();
+            const int64_t roleId = _roleAssignment->getRole(agent)->getId();
             const auto mit = _priorityMatrix.find(TaskRoleStruct{taskId, roleId});
             if (mit != _priorityMatrix.end()) {
                 curPrio = mit->second;
@@ -171,7 +176,7 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
         }
     }
     // for better comparability of different utility functions
-    int denum = std::min(_plan->getMaxCardinality(), _ae->getTeamManager().getTeamSize());
+    int denum = std::min(_plan->getMaxCardinality(), _teamManager->getTeamSize());
 
     Logging::logDebug("UF") << "##\n"
                             << "prioUI = " << priResult;
