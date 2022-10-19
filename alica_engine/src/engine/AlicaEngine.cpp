@@ -211,8 +211,4 @@ void AlicaEngine::reloadConfig(const YAML::Node& config)
     _configChangeListener.reloadConfig(config);
 }
 
-ConfigChangeListener& AlicaEngine::getConfigChangeListener()
-{
-    return _configChangeListener;
-}
 } // namespace alica
