@@ -14,10 +14,10 @@ void WaitBehaviour::run(void* msg)
 {
     int myTime = 1;
 
-    //if (!getBlackboard()) {
-    //    std::cerr << "Blackboard null" << std::endl;
-    //}
-    // LockedBlackboardRW bb(*(getBlackboard()));
+    // if (!getBlackboard()) {
+    //     std::cerr << "Blackboard null" << std::endl;
+    // }
+    //  LockedBlackboardRW bb(*(getBlackboard()));
     /*
     int myTime=bb.get<int>("masterKey");
     std::cerr<<"Wait for:"<<myTime<<std::endl;
