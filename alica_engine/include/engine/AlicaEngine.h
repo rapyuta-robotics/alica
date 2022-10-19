@@ -108,8 +108,6 @@ public:
     //[[deprecated("It will be removed in the last PR")]]
     const YAML::Node& getConfig() const;
 
-    ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
-
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
