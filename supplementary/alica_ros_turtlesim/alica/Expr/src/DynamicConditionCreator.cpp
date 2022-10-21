@@ -30,4 +30,9 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
 
     return createdCondition;
 }
+
+std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_t conditionConfId)
+{
+    return nullptr;
+}
 } // namespace alica

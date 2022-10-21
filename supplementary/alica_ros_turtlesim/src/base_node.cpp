@@ -43,6 +43,7 @@ int main(int argc, char** argv)
     ROS_INFO("Started Turtle Base Node.");
     std::string name, roleset, master_plan, alica_path;
     int agent_id;
+    std::string dynamic;
 
     ros::NodeHandle nh, priv_nh("~");
     priv_nh.getParam("name", name);
@@ -50,12 +51,14 @@ int main(int argc, char** argv)
     priv_nh.getParam("master_plan", master_plan);
     priv_nh.getParam("alica_path", alica_path);
     priv_nh.getParam("agent_id", agent_id);
+    priv_nh.getParam("dynamic", dynamic);
 
     ROS_INFO_STREAM("HostName    : " << name);
     ROS_INFO_STREAM("Roleset     : " << (roleset.empty() ? "Default" : roleset));
     ROS_INFO_STREAM("Master Plan : " << master_plan);
     ROS_INFO_STREAM("ALICA Path  : " << alica_path);
     ROS_INFO_STREAM("Agent ID    : " << agent_id);
+    ROS_INFO_STREAM("Dynamic     : " << dynamic);
 
     if (master_plan.size() == 0) {
         ROS_ERROR_STREAM("Master plan or roleset location is not available");
