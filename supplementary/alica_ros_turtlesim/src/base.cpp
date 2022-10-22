@@ -1,7 +1,10 @@
+#include <alica/BehaviourCreator.h>
+#include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
 #include <alica/DynamicBehaviourCreator.h>
 #include <alica/DynamicConditionCreator.h>
 #include <alica/DynamicPlanCreator.h>
+#include <alica/PlanCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
@@ -21,11 +24,15 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path)
+        const std::string& master_plan, const std::string& path, bool doDynamic)
         : spinner(0)
+        , _doDynamic(doDynamic)
 {
     // create world model
-    ALICATurtleWorldModelCallInit(nh, priv_nh, path);
+    if (_doDynamic)
+        ALICATurtleWorldModelCallInit(nh, priv_nh, path);
+    else
+        ALICATurtleWorldModel::init(nh, priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
@@ -61,13 +68,22 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
 
 void Base::start()
 {
-    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
-            std::make_unique<alica::TransitionConditionCreator>());
+    if (_doDynamic) {
+        alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>());
 
-    spinner.start(); // start spinner before initializing engine, but after setting context
-    ac->init(std::move(creators));
-    ac->addSolver<alica::reasoner::CGSolver>();
+        spinner.start(); // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators));
+        ac->addSolver<alica::reasoner::CGSolver>();
+    } else {
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>());
+        spinner.start(); // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators));
+        ac->addSolver<alica::reasoner::CGSolver>();
+    }
 }
 
 Base::~Base()
@@ -75,7 +91,8 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    // ALICATurtleWorldModel::del(); luca
+    if (_doDynamic)
+        ALICATurtleWorldModel::del();
 }
 
 } // namespace turtlesim

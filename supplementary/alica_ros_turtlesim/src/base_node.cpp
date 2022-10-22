@@ -4,6 +4,7 @@
 #include <thread>
 
 #include <alica_ros_turtlesim/base.hpp>
+#include <alica_ros_turtlesim/world_model.hpp>
 #include <turtlesim/Kill.h>
 #include <turtlesim/Spawn.h>
 
@@ -72,8 +73,13 @@ int main(int argc, char** argv)
     if (!spawnMyTurtle(name, priv_nh))
         return 1;
 
-    ROS_INFO("Creating ALICA turtle Base.......");
-    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path);
+    bool doDynamic = false;
+    if (dynamic == "YES") {
+        doDynamic = true;
+        ROS_INFO("Creating ALICA turtle Base in dynamic loading mode.......");
+    } else
+        ROS_INFO("Creating ALICA turtle Base.......");
+    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, doDynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();
