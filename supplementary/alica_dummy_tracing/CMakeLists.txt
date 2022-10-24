@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_dummy_tracing)
 
-add_compile_options(-std=c++17)
+add_compile_options(-std=c++17 -Werror)
 
 
 # Set up utils to allow Colcon/catkin to find the packages

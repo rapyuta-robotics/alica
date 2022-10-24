@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(supplementary_tests)
 
-add_compile_options(-std=c++17)
+add_compile_options(-std=c++17 -Werror)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp

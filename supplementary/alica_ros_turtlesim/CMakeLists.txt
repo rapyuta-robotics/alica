@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros_turtlesim)
-add_compile_options(-std=c++17)
+add_compile_options(-std=c++17 -Werror)
 
 ##################
 ## Dependencies ##
