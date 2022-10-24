@@ -105,14 +105,15 @@ public:
     bool existSolver() const;
 
     void reload(const YAML::Node& config);
-    //[[deprecated("It will be removed in the last PR")]]
+    //[[deprecated("temporary method tobe removed in last PR")]]
     const YAML::Node& getConfig() const;
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
+    void reloadConfig(const YAML::Node& config);     // to be removed in the last PR
+    ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
 
 private:
     // void setStepEngine(bool stepEngine);
