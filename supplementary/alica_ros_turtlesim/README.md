@@ -1,5 +1,5 @@
-# Turtlesim Tutorial
-## 1. Overview
+# 1. Turtlesim Tutorial
+## 1.1. Overview
 This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn
 - some of the core concepts of the ALICA language
 - how to achieve multi-agent collaboration with the ALICA framework
@@ -9,37 +9,37 @@ In this tutorial, you will create an application as shown in the picture below. 
 ![overview](./doc/overview.png)
 ![alica_ros_turtlesim](./doc/alica_ros_turtlesim.gif)
 
-## 2. Prerequisite
+## 1.2. Prerequisite
 You need to be familiar with following topics and tools:
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
-## 3. The ALICA Language - Basics and Core Concepts
+## 1.3. The ALICA Language - Basics and Core Concepts
 We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the [documentation](https://rapyuta-robotics.github.io/alica/) of the ALICA framework for more detailed information.
-### Plan
+### 1.3.1. Plan
 A plan is a state machine in tree structure. Plans can include plans and states and each state can include `Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
 The ALICA engine manages state transitions based on the developers code. The ALICA plan designer generates method stubs that a developer will fill with state transition logic. The developer can create plans using the ALICA plan designer.
 
-### Behaviour
+### 1.3.2. Behaviour
 The developer can write robot behaviours in C++ for each state. The ALICA plan designer generates method stubs and the developer implements the behaviour logic in these stubs. In this tutorial, there are the `Go2RandomPosition` and `GoTo` behaviour.
 The turtles are teleported to random position with `Go2RandomPosition` and they go to their target position with  the `GoTo` behaviour.
 
-### Role
+### 1.3.3. Role
 
 A role is a task preference of the agent and it describes physical difference among agents , e.g., differences between a robotic arm and an AGV. In this tutorial all agent have same role:  `Turtle`
 
-### Task
+### 1.3.4. Task
 A task is assigned to an agent based on the `Role` of that agent and based on the `Utility function` of the plan. A task identifies an entry point of a state machine. The ALICA engine realises multi-agent collaboration by assigning tasks to agents. In this tutorial, there are the `Leader` and the `Follower` task. One turtle is assigned the `Leader` task and it moves to the centre. The other turtles are assigned the `Follower` task and they align in a circle.
-### Constraints
+### 1.3.5. Constraints
 Developers can set constraints to plans. The ALICA engine can solve constraints and return corresponding answers. In this tutorial, the turtles align in a circle defined by distance constraints.
 
-### Worldmodel
+### 1.3.6. Worldmodel
 
 The world model represents the model of the world from the perspective of an agent. Further, the world model can be an interface between the ALICA engine and other software, e.g., ROS and lower API.
 
 ![coreconcept](doc/coreconcept.png)
 
-## 4. Setup of the Catkin Workspace
+## 1.4. Setup of the Catkin Workspace
 We need to create a catkin workspace by executing the following steps in an Ubuntu18.04 terminal.
 
 1. Check out the required repositories:
@@ -66,9 +66,9 @@ rm -r alica_ros_turtlesim/alica/etc/roles
 mkdir -p alica_ros_turtlesim/alica/etc
 ```
 
-## 5. Setup of the ALICA Plan Designer
+## 1.5. Setup of the ALICA Plan Designer
 The ALICA plan designer is a user interface to design applications with the ALICA framework.
-### 5.1 Start the ALICA plan designer by following steps
+### 1.5.1. Start the ALICA plan designer by following steps
 
 The Plan Designer is a web application and can be started by using docker-compose.
 
@@ -88,7 +88,7 @@ http://localhost:3030.
 
 
 
-## 6. Create the Tutorial Plans with the Plan Designer
+## 1.6. Create the Tutorial Plans with the Plan Designer
 In this section, you will create plans using the ALICA plan designer.
 In this tutorial there are two plans, `Master` and `Move`. The `Master`
 plan has an `Init` and `Move` state.  The `Move` plan includes the
@@ -98,7 +98,7 @@ transitions to the `Move` state.
 
 ![plan](doc/plan.png)
 
-### 6.1 Create the TaskRepository
+### 1.6.1. Create the TaskRepository
 1. In the top right corner, click on "More" and select "Task".
 2. Go to the tab "Task Repository", enter `TaskRepository` as the name of your
 TaskRepository and click on "Create New".
@@ -106,7 +106,7 @@ TaskRepository and click on "Create New".
 4. In the tab "Task", enter `DefaultTask` for the Task Name, select the TaskRepository `TaskRepository` in the
 drop down menu and click on "Create New".
 
-### 6.2 Create the Master Plan
+### 1.6.2. Create the Master Plan
 ![master_plan](doc/master_plan.png)
 1. Click on the menu button "Plan" in the top right corner. This will open a window
 for creating a new plan on the right side of your browser window.
@@ -136,7 +136,7 @@ On the top left you will see a tab for your newly created Master Plan.
 11. Create a plan with the name `Move`. Do not check the "Master Plan" checkbox.
 12. Select the "Plans" tab, click on `Move` and drag and drop it on the `Move` state.
 
-### 6.3 Move plan
+### 1.6.3. Move plan
 ![move_plan](doc/move_plan.png)
 1. Open the `Move` plan by selecting it in the "Plans" tab.
 2. Create two states `Move2Center` and `AlignCircle`.
@@ -151,7 +151,7 @@ On the top left you will see a tab for your newly created Master Plan.
 and click on "Create New".
 11. Close the edit window of CircleRuntimeConditon.
 
-### 6.4 Create the RoleSet
+### 1.6.4. Create the RoleSet
 
 1. In the top right corner click on "More" and select "Role".
 2. Select the "Roleset" tab and create a RoleSet with the name `RoleSet` and check the
@@ -160,7 +160,7 @@ and click on "Create New".
 4. Go to the tab `Task Priorities`, click on `Apply Task Priority`. Select the task `Follower` and set the
 priority to 0.1.
 
-### 6.5 Export files and generate code
+### 1.6.5. Export files and generate code
 
 1. In the top left corner click on the plus symbol and select `Export`. The browser will start a download of
 the file `web_designer_program.zip`.
@@ -179,20 +179,20 @@ After the ALICA plan designer generated the method stubs, you need to modify/imp
 We will explain only `base.cpp` which is related to ALICA.
 
 ```c++
-#include <BehaviourCreator.h>
-#include <ConditionCreator.h>
-#include <ConstraintCreator.h>
-#include <PlanCreator.h>
-#include <UtilityFunctionCreator.h>
-#include <engine/AlicaContext.h>
+# 2. include <BehaviourCreator.h>
+# 3. include <ConditionCreator.h>
+# 4. include <ConstraintCreator.h>
+# 5. include <PlanCreator.h>
+# 6. include <UtilityFunctionCreator.h>
+# 7. include <engine/AlicaContext.h>
 
-#include <constraintsolver/CGSolver.h>
-#include <clock/AlicaROSClock.h>
-#include <communication/AlicaRosCommunication.h>
-#include <clock/AlicaRosTimer.h>
-#include <ros/ros.h>
+# 8. include <constraintsolver/CGSolver.h>
+# 9. include <clock/AlicaROSClock.h>
+# 10. include <communication/AlicaRosCommunication.h>
+# 11. include <clock/AlicaRosTimer.h>
+# 12. include <ros/ros.h>
 
-#include <alica_ros_turtlesim/base.hpp>
+# 13. include <alica_ros_turtlesim/base.hpp>
 
 namespace turtlesim
 {
@@ -246,10 +246,10 @@ ALICA plan designer.
 In this file, you need to implement state transition logic.
 
 ```c++
-#include "Master2425328142973735249.h"
+# 14. include "Master2425328142973735249.h"
 /*PROTECTED REGION ID(eph2425328142973735249) ENABLED START*/
 // Add additional options here
-#include <alica_ros_turtlesim/world_model.hpp>
+# 15. include <alica_ros_turtlesim/world_model.hpp>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -343,7 +343,7 @@ bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp)
 #### alica/Expr/src/Move<id>.cpp
 
 ```c++
-#include "Move1889749086610694100.h"
+# 16. include "Move1889749086610694100.h"
 /*PROTECTED REGION ID(eph1889749086610694100) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
@@ -411,14 +411,14 @@ In this file, you need to set the runtime condition to always return true.
 In this file, you need to implement constraints logic.
 
 ```c++
-#include "constraints/Move1889749086610694100Constraints.h"
+# 17. include "constraints/Move1889749086610694100Constraints.h"
 /*PROTECTED REGION ID(ch1889749086610694100) ENABLED START*/
 // Add additional options here
-#include <alica_ros_turtlesim/world_model.hpp>
-#include <autodiff/AutoDiff.h>
-#include <engine/RunningPlan.h>
-#include <engine/constraintmodul/ProblemDescriptor.h>
-#include <engine/model/Task.h>
+# 18. include <alica_ros_turtlesim/world_model.hpp>
+# 19. include <autodiff/AutoDiff.h>
+# 20. include <engine/RunningPlan.h>
+# 21. include <engine/constraintmodul/ProblemDescriptor.h>
+# 22. include <engine/model/Task.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -545,13 +545,13 @@ The auto-generated <behaviour_name>.cpp files under alica/Expr/src  have a `run`
 In this file, you need to implement the teleportation of the  turtles:
 
 ```c++
-#include "Go2RandomPosition.h"
-#include <memory>
+# 23. include "Go2RandomPosition.h"
+# 24. include <memory>
 
 /*PROTECTED REGION ID(inccpp4085572422059465423) ENABLED START*/
 // Add additional includes here
-#include <alica_ros_turtlesim/world_model.hpp>
-#include <random>
+# 25. include <alica_ros_turtlesim/world_model.hpp>
+# 26. include <random>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -613,12 +613,12 @@ void Go2RandomPosition::initialiseParameters()
 #### alica/Expr/include/GoTo.h
 
 ```c++
-#pragma once
+# 27. pragma once
 
-#include "DomainBehaviour.h"
+# 28. include "DomainBehaviour.h"
 /*PROTECTED REGION ID(inc4054297592460872311) ENABLED START*/
 // Add additional includes here
-#include <engine/constraintmodul/Query.h>
+# 29. include <engine/constraintmodul/Query.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -652,13 +652,13 @@ private:
 #### alica/Expr/src/GoTo.cpp
 
 ```c++
-#include "GoTo.h"
-#include <memory>
+# 30. include "GoTo.h"
+# 31. include <memory>
 
 /*PROTECTED REGION ID(inccpp4054297592460872311) ENABLED START*/
 // Add additional includes here
-#include <alica_ros_turtlesim/world_model.hpp>
-#include <constraintsolver/CGSolver.h>
+# 32. include <alica_ros_turtlesim/world_model.hpp>
+# 33. include <constraintsolver/CGSolver.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -718,7 +718,7 @@ void GoTo::initialiseParameters()
 ## 8. Build and Run
 ### 8.1 Build
 follow the standard ros build step.
-```
+```bash
 cd catkin_ws
 source /opt/ros/$(ls /opt/ros)/setup.bash
 catkin build alica_ros_turtlesim
@@ -732,6 +732,19 @@ Run application with roslaunch. video
 `roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
 - Start moving.
 `rostopic pub /init std_msgs/Empty "{}" `
+
+### 8.3 Run with Dynamic loading
+Is it possible to run Turtlesim using a dynamic library that contains all the Plan/Behaviour/Runtimecondition with:  
+`roslaunch alica_ros_turtlesim turtle.launch turtles:=2 dynamic:=YES`
+
+The file that contains the `dynamic` parameter is:
+`launch/turtle.launch`
+
+```xml
+    <arg name="dynamic"        default="NO" />
+```
+
+
 
 
 ## 9. Troubleshooting
