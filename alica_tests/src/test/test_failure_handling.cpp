@@ -62,29 +62,29 @@ protected:
 TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
 {
     // Checks if the FailurePlan is restarted on failure i.e. the redo plan rule should be applied if a plan fails once
-    auto wm = alicaTests::TestWorldModel::getOne();
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
-    wm->setTransitionCondition1446293122737278544(true);
+    twm1->setTransitionCondition1446293122737278544(true);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
 
     // Transition to plan failure state, which will redo the plan & we should end up in the init state again
-    wm->setTransitionCondition1023566846009251524(true);
-    wm->setTransitionCondition1446293122737278544(false);
+    twm1->setTransitionCondition1023566846009251524(true);
+    twm1->setTransitionCondition1446293122737278544(false);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
-    ASSERT_EQ(wm->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
 {
     // Checks if nothing is done when a plan failure occurs when auto failure handling is disabled
-    auto wm = alicaTests::TestWorldModel::getTwo();
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
@@ -93,12 +93,12 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
-    wm->setTransitionCondition1446293122737278544(true);
+    twm2->setTransitionCondition1446293122737278544(true);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
 
-    wm->setTransitionCondition1446293122737278544(false);
-    wm->setTransitionCondition1023566846009251524(true);
+    twm2->setTransitionCondition1446293122737278544(false);
+    twm2->setTransitionCondition1023566846009251524(true);
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
@@ -109,18 +109,18 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
-    wm->enableTransitionCondition3194919312481305139();
+    twm2->enableTransitionCondition3194919312481305139();
     STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    ASSERT_EQ(wm->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm2->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent)
 {
     // Checks if the FailurePlan is restarted on failure i.e. the redo plan rule should be applied if a plan fails once
     // The rule should only be applied for the robot that had the failure
-    auto wm0 = alicaTests::TestWorldModel::getOne();
-    auto wm1 = alicaTests::TestWorldModel::getTwo();
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
@@ -131,8 +131,8 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
 
-    wm0->setTransitionCondition1446293122737278544(true);
-    wm1->setTransitionCondition1446293122737278544(true);
+    twm1->setTransitionCondition1446293122737278544(true);
+    twm2->setTransitionCondition1446293122737278544(true);
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
@@ -140,22 +140,22 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
 
     // Transition to plan failure state, which will redo the plan for agent 0 & we should end up in the init state again
     // For agent 1 we should remain in the same state i.e. the plan redo rule should not be applied
-    wm0->setTransitionCondition1023566846009251524(true);
-    wm0->setTransitionCondition1446293122737278544(false);
-    wm1->setTransitionCondition1446293122737278544(false);
+    twm1->setTransitionCondition1023566846009251524(true);
+    twm1->setTransitionCondition1446293122737278544(false);
+    twm2->setTransitionCondition1446293122737278544(false);
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
-    ASSERT_EQ(wm0->failurePlanInitCallCount(), 1);
-    ASSERT_EQ(wm1->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm2->failurePlanInitCallCount(), 1);
 }
 
 TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisabledMultiAgentTest)
 {
     // Checks if nothing is done when a plan failure occurs when auto failure handling is disabled for both agents
-    auto wm0 = alicaTests::TestWorldModel::getOne();
-    auto wm1 = alicaTests::TestWorldModel::getTwo();
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
@@ -168,17 +168,17 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
 
-    wm0->setTransitionCondition1446293122737278544(true);
-    wm1->setTransitionCondition1446293122737278544(true);
+    twm1->setTransitionCondition1446293122737278544(true);
+    twm2->setTransitionCondition1446293122737278544(true);
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
 
-    wm0->setTransitionCondition1446293122737278544(false);
-    wm0->setTransitionCondition1023566846009251524(true);
-    wm1->setTransitionCondition1446293122737278544(false);
-    wm1->setTransitionCondition1023566846009251524(true);
+    twm1->setTransitionCondition1446293122737278544(false);
+    twm1->setTransitionCondition1023566846009251524(true);
+    twm2->setTransitionCondition1446293122737278544(false);
+    twm2->setTransitionCondition1023566846009251524(true);
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
@@ -193,14 +193,14 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
-    wm0->enableTransitionCondition3194919312481305139();
-    wm1->enableTransitionCondition3194919312481305139();
+    twm1->enableTransitionCondition3194919312481305139();
+    twm2->enableTransitionCondition3194919312481305139();
     STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    ASSERT_EQ(wm0->failurePlanInitCallCount(), 1);
-    ASSERT_EQ(wm1->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
+    ASSERT_EQ(twm2->failurePlanInitCallCount(), 1);
 }
 
 } // namespace

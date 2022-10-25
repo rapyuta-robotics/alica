@@ -35,10 +35,11 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
             pos = 1;
         }
 
+        auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
         if (this->robotId == agentID8) {
-            curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos[pos];
+            curPosition = worldModel->robotsXPos[pos];
         } else {
-            curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos[pos];
+            curPosition = worldModel->robotsXPos[pos];
         }
         // if no opp is near ball
         ui.setMin(std::max(ui.getMin(), 1 - std::abs(sb - curPosition) / 18000));
@@ -48,10 +49,11 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
     if (_relevantEntryPoints[0]->getMaxCardinality() > numAssignedRobots && ass.getUnAssignedAgentCount() > 0) {
         for (int i = 0; i < ass.getUnAssignedAgentCount(); ++i) {
             // curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
+            auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
             if (this->robotId == agentID8) {
-                curPosition = alicaTests::TestWorldModel::getOne()->robotsXPos.at(i);
+                curPosition = worldModel->robotsXPos.at(i);
             } else {
-                curPosition = alicaTests::TestWorldModel::getTwo()->robotsXPos.at(i);
+                curPosition = worldModel->robotsXPos.at(i);
             }
             ui.setMax(std::max(ui.getMax(), 1 - std::abs(sb - curPosition) / 18000));
         }

@@ -15,8 +15,6 @@ class TestWorldModel : public alica::IAlicaWorldModel
 public:
     TestWorldModel();
     virtual ~TestWorldModel();
-    static TestWorldModel* getOne();
-    static TestWorldModel* getTwo();
     bool isTransitionCondition1413201227586() const;
     void setTransitionCondition1413201227586(bool transitionCondition1413201227586);
     bool isTransitionCondition1413201389955() const;
