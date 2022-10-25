@@ -56,6 +56,8 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     aes[1]->start();
     // Allow agents to discover each other
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
 
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << acs[0]->getLocalAgentId() << std::endl;
@@ -65,12 +67,12 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
         acs[1]->stepEngine();
 
         if (i == 2) {
-            alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825427317(true);
-            alicaTests::TestWorldModel::getTwo()->setTransitionCondition1418825427317(true);
+            twm1->setTransitionCondition1418825427317(true);
+            twm2->setTransitionCondition1418825427317(true);
         }
         if (i == 3) {
-            alicaTests::TestWorldModel::getTwo()->setTransitionCondition1418825428924(true);
-            alicaTests::TestWorldModel::getOne()->setTransitionCondition1418825428924(true);
+            twm2->setTransitionCondition1418825428924(true);
+            twm1->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
             EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1418825395940));
