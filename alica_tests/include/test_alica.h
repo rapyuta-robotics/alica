@@ -62,9 +62,6 @@ protected:
     virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -147,8 +144,6 @@ protected:
 
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -202,9 +197,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -240,9 +232,6 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
-
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -278,17 +267,17 @@ protected:
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
 {
-private:
+protected:
     alica::AlicaCreators creators;
 
 protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+
     virtual void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
 
         // determine the path to the test config
         ros::NodeHandle nh;
@@ -300,8 +289,8 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
+        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -325,7 +314,7 @@ protected:
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
 {
-private:
+protected:
     alica::AlicaCreators creators;
 
 protected:
@@ -334,12 +323,11 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
     {
-        alicaTests::TestWorldModel::getOne()->reset();
-        alicaTests::TestWorldModel::getTwo()->reset();
         // determine the path to the test config
         ros::NodeHandle nh;
         std::string path;
@@ -355,8 +343,12 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alica_test::SchedWM>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
+            manageWorldModel(ac);
+            auto tf = ac->getTraceFactory();
+            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+            attf->setWorldModel(ac->getWorldModel());
+
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alicaRosLogger::AlicaRosLogger>(ac->getConfig()["Local"]["ID"].as<int>());
             ac->init(std::move(creators), true);

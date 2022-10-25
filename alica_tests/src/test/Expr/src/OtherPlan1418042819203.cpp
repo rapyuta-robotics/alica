@@ -2,7 +2,6 @@
 /*PROTECTED REGION ID(eph1418042819203) ENABLED START*/
 // Add additional using directives here
 #include "engine/USummand.h"
-#include <alica_tests/DistXContourTest.h>
 #include <alica_tests/TestConstantValueSummand.h>
 /*PROTECTED REGION END*/
 
