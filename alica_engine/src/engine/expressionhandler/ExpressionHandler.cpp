@@ -1,6 +1,5 @@
 #include "engine/expressionhandler/ExpressionHandler.h"
 #include "engine/AlicaContext.h"
-#include "engine/AlicaEngine.h"
 #include "engine/BasicUtilityFunction.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
