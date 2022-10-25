@@ -1,7 +1,6 @@
 #include "engine/AlicaEngine.h"
 
 #include "engine/IRoleAssignment.h"
-#include "engine/RuntimeBehaviourFactory.h"
 #include "engine/StaticRoleAssignment.h"
 #include "engine/Types.h"
 #include "engine/UtilityFunction.h"
@@ -42,7 +41,6 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _ctx(ctx)
         , _stepCalled(false)
         , _stepEngine(alicaContextParams.stepEngine)
-        , _planFactory(std::make_unique<RuntimePlanFactory>(_ctx.getWorldModel(), getTraceFactory(), getTeamManager(), getTimerFactory()))
         , _modelManager(_configChangeListener, alicaContextParams.configPath, _planRepository)
         , _masterPlan(_modelManager.loadPlanTree(alicaContextParams.masterPlanName))
         , _roleSet(_modelManager.loadRoleSet(alicaContextParams.roleSetName))
@@ -56,14 +54,12 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _auth(_configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager())
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
-        , _behaviourFactory(std::make_unique<RuntimeBehaviourFactory>(
-                  _ctx.getWorldModel(), editTeamManager(), editPlanBase(), _ctx.getCommunicator(), getTraceFactory(), getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), getRuntimePlanFactory(),
-                  getRuntimeBehaviourFactory(), editResultStore(), _ctx.getSolvers())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), editResultStore(), _ctx.getSolvers(),
+                  getTimerFactory(), getTraceFactory())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
-    subscribe(reloadFunctionPtr);
+    _configChangeListener.subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
@@ -100,8 +96,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
         return true; // todo false?
     }
 
-    _behaviourFactory->init(std::move(creatorCtx.behaviourCreator));
-    _planFactory->init(std::move(creatorCtx.planCreator));
+    _planBase.init(std::move(creatorCtx.behaviourCreator), std::move(creatorCtx.planCreator));
 
     _roleAssignment->init();
 
@@ -200,11 +195,6 @@ IAlicaWorldModel* AlicaEngine::getWorldModel() const
     return _ctx.getWorldModel();
 }
 
-void AlicaEngine::subscribe(std::function<void(const YAML::Node& config)> reloadFunction)
-{
-    _configChangeListener.subscribe(reloadFunction);
-};
-
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
@@ -225,4 +215,5 @@ ConfigChangeListener& AlicaEngine::getConfigChangeListener()
 {
     return _configChangeListener;
 }
+
 } // namespace alica

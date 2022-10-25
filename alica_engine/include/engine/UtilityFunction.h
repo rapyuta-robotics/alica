@@ -12,7 +12,6 @@
 namespace alica
 {
 class Plan;
-class AlicaEngine;
 class IRoleAssignment;
 class USummand;
 class IAssignment;

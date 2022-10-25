@@ -3,18 +3,6 @@
 namespace alicaTests
 {
 
-TestWorldModel* TestWorldModel::getOne()
-{
-    static TestWorldModel instance;
-    return &instance;
-}
-
-TestWorldModel* TestWorldModel::getTwo()
-{
-    static TestWorldModel instance;
-    return &instance;
-}
-
 TestWorldModel::TestWorldModel()
 {
     reset();
