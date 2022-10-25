@@ -5,7 +5,6 @@
 #include <queue>
 #include <thread>
 
-#include "engine/AlicaEngine.h"
 #include "engine/Types.h"
 #include "engine/containers/AgentAnnouncement.h"
 #include "engine/containers/AgentQuery.h"
