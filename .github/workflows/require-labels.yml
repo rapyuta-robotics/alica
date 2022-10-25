@@ -1,0 +1,15 @@
+# https://github.com/marketplace/actions/require-labels
+name: Pull Request Labels
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    branches: [devel]
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/github-action-required-labels@v2
+        with:
+          mode: exactly
+          count: 1
+          labels: "Added, Fixed, Improved, Deprecated, Refactored, No changelog"
