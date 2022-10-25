@@ -25,8 +25,8 @@ DistXContourTest::~DistXContourTest() {}
 
 void DistXContourTest::cacheEvalData(const IAlicaWorldModel* wm)
 {
-    xAlloBall = alicaTests::TestWorldModel::getOne()->x;
-    xAlloBall = alicaTests::TestWorldModel::getTwo()->x;
+    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    xAlloBall = worldModel->x;
 }
 
 double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) const

@@ -55,6 +55,9 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     aes[0]->start();
     aes[1]->start();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
+    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
+    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
@@ -71,8 +74,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         }
         if (i == 10) {
             std::cout << "1--------- Initial State passed ---------" << std::endl;
-            alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(true);
-            alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(true);
+            twm1->setTransitionCondition1413201227586(true);
+            twm2->setTransitionCondition1413201227586(true);
         }
         if (i > 11 && i < 15) {
             ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
@@ -83,10 +86,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         if (i == 15) {
             ASSERT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter, 5);
             if (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter > 3) {
-                alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201052549(true);
-                alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201052549(true);
-                alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201370590(true);
-                alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201370590(true);
+                twm1->setTransitionCondition1413201052549(true);
+                twm2->setTransitionCondition1413201052549(true);
+                twm1->setTransitionCondition1413201370590(true);
+                twm2->setTransitionCondition1413201370590(true);
             }
             std::cout << "2--------- Engagement to cooperative plan passed ---------" << std::endl;
         }
@@ -102,8 +105,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
                     << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
                     << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
                     << std::endl;
-            alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201227586(false);
-            alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201227586(false);
+            twm1->setTransitionCondition1413201227586(false);
+            twm2->setTransitionCondition1413201227586(false);
             std::cout << "3--------- Passed transitions in subplan passed ---------" << std::endl;
         }
         if (i >= 17 && i <= 18) {
@@ -119,8 +122,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
                     << std::endl;
             if (i == 18) {
                 std::cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << std::endl;
-                alicaTests::TestWorldModel::getOne()->setTransitionCondition1413201389955(true);
-                alicaTests::TestWorldModel::getTwo()->setTransitionCondition1413201389955(true);
+                twm1->setTransitionCondition1413201389955(true);
+                twm2->setTransitionCondition1413201389955(true);
             }
         }
         if (i == 19) {

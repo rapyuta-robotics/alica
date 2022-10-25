@@ -44,8 +44,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction631515556091266493::getUtilityFu
 // Add additional options here
 void FailurePlan631515556091266493::onInit()
 {
-    auto twm = getPlanContext()->getOwnID() == 8 ? alicaTests::TestWorldModel::getOne() : alicaTests::TestWorldModel::getTwo();
-    twm->failurePlanInitCalled();
+    auto* worldModel = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+    worldModel->failurePlanInitCalled();
 }
 /*PROTECTED REGION END*/
 } // namespace alica
