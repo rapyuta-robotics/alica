@@ -5,8 +5,6 @@
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/PlanRepository.h"
-#include "engine/RuntimeBehaviourFactory.h"
-#include "engine/RuntimePlanFactory.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
 #include "engine/allocationauthority/AuthorityManager.h"
@@ -54,9 +52,6 @@ public:
     // Module Access:
     const AuthorityManager& getAuth() const { return _auth; }
     AuthorityManager& editAuth() { return _auth; }
-
-    const RuntimeBehaviourFactory& getRuntimeBehaviourFactory() const { return *_behaviourFactory; }
-    const RuntimePlanFactory& getRuntimePlanFactory() const { return *_planFactory; }
 
     const Logger& getLog() const { return _log; }
     Logger& editLog() { return _log; }
@@ -110,18 +105,15 @@ public:
     bool existSolver() const;
 
     void reload(const YAML::Node& config);
-    //[[deprecated("It will be removed in the last PR")]]
+    //[[deprecated("temporary method tobe removed in last PR")]]
     const YAML::Node& getConfig() const;
-    //[[deprecated("It will be removed in the last PR")]]
-    void subscribe(ConfigChangeListener::ReloadFunction reloadFunction);
-    //[[deprecated("It will be removed in the last PR")]]
-    ConfigChangeListener& getConfigChangeListener();
 
     /**
      * Call reload() of all subscribed components. Each component does reload using the
      * updated config.
      */
-    void reloadConfig(const YAML::Node& config); // to be removed in the last PR
+    void reloadConfig(const YAML::Node& config);     // to be removed in the last PR
+    ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
 
 private:
     // void setStepEngine(bool stepEngine);
@@ -142,7 +134,6 @@ private:
     TeamObserver _teamObserver;
     ExpressionHandler _expressionHandler;
     AuthorityManager _auth;
-    std::unique_ptr<RuntimePlanFactory> _planFactory;
     DefaultTransitionConditionCreator _defaultTransitionConditionCreator;
 
     /**
@@ -153,7 +144,6 @@ private:
      * alica context interface. This happens, e.g., in some alica_tests cases.
      */
     std::unique_ptr<VariableSyncModule> _variableSyncModule;
-    std::unique_ptr<RuntimeBehaviourFactory> _behaviourFactory;
     PlanBase _planBase;
 
     bool _initialized{false};

@@ -1,6 +1,5 @@
 #include "engine/UtilityFunction.h"
 
-#include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
 #include "engine/IAlicaWorldModel.h"
