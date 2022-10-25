@@ -1,3 +1,4 @@
+#include "alica/DynamicLoadingUtils.h"
 #include <alica/BehaviourCreator.h>
 #include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
@@ -30,7 +31,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 {
     // create world model
     if (_doDynamic)
-        ALICATurtleWorldModelCallInit(nh, priv_nh, path);
+        ALICATurtleWorldModelCallInit(nh, priv_nh);
     else
         ALICATurtleWorldModel::init(nh, priv_nh);
     // Initialize Alica
@@ -41,19 +42,18 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 }
 
-void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& path)
+void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    std::string libraryPath;
-    //_libraryPath = path + "/../../../../../devel/lib/libalica_turtlesim_library.so"; //For devel configuration
-    libraryPath = path + "/../../../lib/libalica_turtlesim_library.so"; // For install configuration
+    std::string tmp = calculateLibraryPath();
+    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
 
-    if (!boost::filesystem::exists(libraryPath)) {
+    if (!checkLibraryCompleteName(libraryPath, "BASE")) {
         std::cerr << "Error:"
-                  << "Lib not exixts in this path:" << libraryPath << std::endl;
+                  << "Lib not exists in this path:" << libraryPath << std::endl;
         return;
     } else {
         std::cerr << "Debug:"
-                  << "Lib exixts in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
+                  << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
     }
 
     typedef void(InitType)(ros::NodeHandle&, ros::NodeHandle&);
