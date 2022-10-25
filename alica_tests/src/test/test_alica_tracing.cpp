@@ -36,8 +36,6 @@
 
 #include <gtest/gtest.h>
 
-#include <iostream>
-
 namespace alica
 {
 namespace
