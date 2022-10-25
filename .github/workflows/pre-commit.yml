@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - devel
+      - rr_devel
       - release/**
   pull_request:
     types: [opened, synchronize, reopened]

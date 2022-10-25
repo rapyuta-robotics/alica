@@ -3,7 +3,9 @@ name: Pull Request Labels
 on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
-    branches: [devel]
+    branches:
+      - rr_devel
+      - release/**
 jobs:
   label:
     runs-on: ubuntu-latest
