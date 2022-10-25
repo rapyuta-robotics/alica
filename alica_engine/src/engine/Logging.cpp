@@ -11,9 +11,9 @@ namespace logging
  * @param file is the suffix for the absolute path.
  * @return An absolute log filename.
  */
-std::string getLogFilename(AlicaEngine* ae, const std::string& file)
+std::string getLogFilename(YAML::Node& config, const std::string& file)
 {
-    std::string logPath = ae->getConfig()["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
+    std::string logPath = config["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
     auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     char mbstr[100];
     // strcpy(mbstr, "CheckManagedExecutable_CPP"); // what was this for???
@@ -27,10 +27,10 @@ std::string getLogFilename(AlicaEngine* ae, const std::string& file)
  * @param file is the suffix for the absolute path.
  * @return An absolute error log filename.
  */
-std::string getErrLogFilename(AlicaEngine* ae, const std::string& file)
+std::string getErrLogFilename(YAML::Node& config, const std::string& file)
 {
     std::string errFile = file + "Err";
-    return getLogFilename(ae, errFile);
+    return getLogFilename(config, errFile);
 }
 } // namespace logging
 } // namespace alica
