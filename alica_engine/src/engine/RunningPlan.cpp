@@ -1,5 +1,4 @@
 #include "engine/RunningPlan.h"
-
 #include "engine/AlicaClock.h"
 #include "engine/Assignment.h"
 #include "engine/BasicBehaviour.h"
