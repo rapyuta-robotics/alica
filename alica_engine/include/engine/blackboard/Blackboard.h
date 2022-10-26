@@ -40,6 +40,57 @@ private:
     const std::string _typeDefinedInPml;
 };
 
+template <class Val, class... Ts>
+struct FindImpl {
+    static constexpr bool result = false;
+};
+
+template <class Val, class T, class... Ts>
+struct FindImpl<Val, T, Ts...> {
+    static constexpr bool result = FindImpl<Val, Ts...>::result;
+};
+
+template <class Val, class... Ts>
+struct FindImpl<Val, Val, Ts...> {
+    static constexpr bool result = true;
+};
+
+template <class Val, class Variant>
+struct Find;
+
+template <class Val, template <class...> class Tp, class... Ts>
+struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...> {};
+
+// using BlackboardValueType = std::variant<bool, int, std::string, std::any>;
+
+template <class T, class = void>
+struct convert {
+    static auto& get(const BlackboardValueType& val) {
+        return std::any_cast<const T&>(std::get<std::any>(val));
+    }
+};
+
+template <class T>
+struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>> {
+    static auto& get(const BlackboardValueType& val) {
+        return std::get<T>(val);
+    }
+};
+
+template <class T, class = void>
+struct convertConst {
+    static const auto& get(const BlackboardValueType& val) {
+        return std::any_cast<const T&>(std::get<std::any>(val));
+    }
+};
+
+template <class T>
+struct convertConst<T, std::enable_if_t<Find<T, BlackboardValueType>::result>> {
+    static const auto& get(const BlackboardValueType& val) {
+        return std::get<T>(val);
+    }
+};
+
 class BlackboardImpl
 {
 public:
@@ -51,14 +102,10 @@ public:
     }
 
     template <typename T>
-    const T& get(const std::string& key) const
+    T& get(const std::string& key) const
     {
         try {
-            if (getBlackboardValueNode(key).Type() != YAML::NodeType::Null && getBlackboardValueType(key) == "std::any" && getNameFromType<T>() != "std::any") {
-                // std::anycast to T, return T
-                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
-            }
-            return std::get<T>(vals.at(key));
+            return convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -66,14 +113,10 @@ public:
         }
     }
     template <typename T>
-    T& get(const std::string& key)
+    const T& get(const std::string& key)
     {
         try {
-            if (getBlackboardValueNode(key).Type() != YAML::NodeType::Null && getBlackboardValueType(key) == "std::any" && getNameFromType<T>() != "std::any") {
-                // std::anycast to T, return T
-                return std::any_cast<T&>(std::get<std::any>(vals.at(key)));
-            }
-            return std::get<T>(vals.at(key));
+            return convertConst<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -82,26 +125,6 @@ public:
     }
     BlackboardValueType& get(const std::string& key) { return vals.at(key); }
     const BlackboardValueType& get(const std::string& key) const { return vals.at(key); }
-
-    template <class T>
-    T& getAnyAs(const std::string& key)
-    {
-        try {
-            return std::any_cast<T&>(get<std::any>(key));
-        } catch (const std::bad_any_cast& e) {
-            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-        }
-    }
-
-    template <class T>
-    const T& getAnyAs(const std::string& key) const
-    {
-        try {
-            return std::any_cast<const T&>(get<std::any>(key));
-        } catch (const std::bad_any_cast& e) {
-            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-        }
-    }
 
     template <class T>
     void set(const std::string& key, const T& value)
@@ -266,11 +289,6 @@ public:
         return _impl->get<T>(key);
     }
     const BlackboardValueType& get(const std::string& key) const { return _impl->get(key); }
-    template <class T>
-    const T& getAnyAs(const std::string& key) const
-    {
-        return _impl->getAnyAs<T>(key);
-    }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -302,11 +320,6 @@ public:
         return _impl->get<T>(key);
     }
     BlackboardValueType& get(const std::string& key) { return _impl->get(key); }
-    template <class T>
-    T& getAnyAs(const std::string& key)
-    {
-        return _impl->getAnyAs<T>(key);
-    }
 
     template <typename T>
     void set(const std::string& key, const T& value)

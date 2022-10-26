@@ -94,7 +94,7 @@ TEST_F(TestBlackBoard, testWithoutPlan)
 
     // unknown types
     bbrw.set<PlanStatus>("val5", PlanStatus::Success);
-    EXPECT_EQ(bbrw.getAnyAs<PlanStatus>("val5"), PlanStatus::Success);
+    EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
 }
 
 } // namespace
