@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.5.1)
 project(alica_tracing)
 add_compile_options(-std=c++17)
 
-set(PKG_DEPS
-)
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
-find_package(catkin REQUIRED COMPONENTS  roscpp ${PKG_DEPS})
+find_package(catkin REQUIRED COMPONENTS  roscpp)
 find_package(yaml-cpp REQUIRED)
 find_package(alica_engine REQUIRED)
 
@@ -14,7 +14,7 @@ find_package(alica_engine REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  CATKIN_DEPENDS  roscpp ${PKG_DEPS}
+  CATKIN_DEPENDS  roscpp 
   LIBRARIES ${PROJECT_NAME} jaegertracing
   DEPENDS alica_engine
 )

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros_proxy)
 
 add_compile_options(-std=c++17)
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -11,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
-find_package(alica_common_config REQUIRED)
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
@@ -26,7 +27,6 @@ catkin_package(
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
-  ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
   ${alica_engine_INCLUDE_DIRS}
 )

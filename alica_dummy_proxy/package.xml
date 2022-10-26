@@ -17,6 +17,5 @@
     <build_type>cmake</build_type>
   </export>
   <depend>alica_engine</depend>
-  <depend>alica_common_config</depend>
 
 </package>

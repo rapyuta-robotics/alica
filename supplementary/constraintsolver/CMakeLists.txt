@@ -3,6 +3,9 @@ project(constraintsolver)
 
 add_compile_options(-std=c++17)
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
+
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
@@ -11,8 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
 )
 
-find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)
@@ -21,14 +22,12 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES constraintsolver
  CATKIN_DEPENDS   roslib 
- DEPENDS fsystem alica_common_config alica_solver_interface autodiff alica_engine
+ DEPENDS  alica_solver_interface autodiff alica_engine
 )
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${alica_common_config_INCLUDE_DIRS}
-  ${alica_engine_INCLUDE_DIRS}
 )
 
 
@@ -53,7 +52,7 @@ add_library(constraintsolver
   src/GSolver.cpp
 )
 
-target_link_libraries(constraintsolver PUBLIC fsystem autodiff ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
+target_link_libraries(constraintsolver PUBLIC autodiff ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 catkin_add_gtest(${PROJECT_NAME}-test
  test/test_constraintsolver.cpp

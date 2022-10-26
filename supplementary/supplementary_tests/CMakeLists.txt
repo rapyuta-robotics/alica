@@ -3,6 +3,9 @@ project(supplementary_tests)
 
 add_compile_options(-std=c++17)
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
+
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     alica_ros_proxy    
@@ -10,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
-find_package(fsystem REQUIRED)
+
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)

@@ -7,6 +7,8 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
@@ -15,13 +17,11 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 
 # Imports
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
 # Install
 include_directories(include/autodiff 
-  ${alica_common_config_INCLUDE_DIRS}
   ${alica_solver_interface_INCLUDE_DIRS}
 )
 

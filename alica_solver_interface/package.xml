@@ -13,8 +13,5 @@
     <build_type>cmake</build_type>
   </export>
 
-  <build_depend>alica_common_config</build_depend>
-  <build_export_depend>alica_common_config</build_export_depend>
-
   <test_depend>gtest</test_depend>
 </package>
