@@ -9,7 +9,6 @@ add_compile_options(-std=c++17)
 set(PKG_DEPS
     roscpp
     alica_ros_proxy
-    constraintsolver
     turtlesim
     geometry_msgs
 )
@@ -18,14 +17,17 @@ set(PKG_DEPS
 find_package(yaml-cpp REQUIRED)
 
 find_package(alica_engine REQUIRED)
+find_package(constraintsolver REQUIRED)
+find_package(autodiff REQUIRED)
+find_package(fsystem REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(alica_common_config REQUIRED)
-# find_package(fsystem REQUIRED)
 
 catkin_package(
     CATKIN_DEPENDS ${PKG_DEPS}
     INCLUDE_DIRS include alica/Expr/include
-    DEPENDS alica_common_config 
+    DEPENDS alica_common_config autodiff
 )
 
 
@@ -55,6 +57,10 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${YAML_CPP_LIBRARIES}
+    constraintsolver
+    autodiff
+    alica_solver_interface
+    fsystem
 )
 
 #############
