@@ -12,9 +12,9 @@
 
 namespace alica
 {
-class AlicaEngine;
 class IVariableSyncModule;
 class SolverContext;
+class ConfigChangeListener;
 
 namespace reasoner
 {
@@ -23,7 +23,7 @@ class GSolver;
 class CGSolver : public ISolver<CGSolver, double>
 {
 public:
-    CGSolver(AlicaEngine* ae);
+    CGSolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener);
     virtual ~CGSolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);

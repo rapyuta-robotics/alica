@@ -14,7 +14,7 @@ namespace reasoner
 class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, int64_t>
 {
 public:
-    ConstraintTestPlanDummySolver(AlicaEngine* ae);
+    ConstraintTestPlanDummySolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener);
     virtual ~ConstraintTestPlanDummySolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);

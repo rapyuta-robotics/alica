@@ -19,6 +19,8 @@
 namespace alica
 {
 
+class ConfigChangeListener;
+
 namespace reasoner
 {
 class GSolver
@@ -26,7 +28,7 @@ class GSolver
     class RpropResult;
 
 public:
-    GSolver(YAML::Node config);
+    GSolver(ConfigChangeListener& configChangeListener);
     ~GSolver();
     bool solve(autodiff::TermPtr equation, autodiff::TermHolder& holder, const std::vector<Interval<double>>& limits, double& out_util,
             std::vector<double>& o_solution);
@@ -43,6 +45,8 @@ public:
     void setMaxFEvals(int64_t maxfevals) { _maxfevals = maxfevals; }
     void setRPropConvergenceStepSize(double rPropConvergenceStepSize) { _rPropConvergenceStepSize = rPropConvergenceStepSize; }
     void setUtilitySignificanceThreshold(double utilitySignificanceThreshold) { _utilityThreshold = utilitySignificanceThreshold; }
+
+    void reload(const YAML::Node& config);
 
 private:
     class ResultView

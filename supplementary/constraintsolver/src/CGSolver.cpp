@@ -23,13 +23,13 @@ using alica::VariableGrp;
 using autodiff::TermHolder;
 using autodiff::TermPtr;
 
-CGSolver::CGSolver(AlicaEngine* ae)
-        : ISolver(ae)
+CGSolver::CGSolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+        : ISolver(blackboard, resultStore, configChangeListener)
         , _lastUtil(0.0)
         , _lastFEvals(0.0)
         , _lastRuns(0.0)
-        , _gs(ae->getConfig())
-        , _sgs(ae->getConfig())
+        , _gs(configChangeListener)
+        , _sgs(configChangeListener)
 {
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
@@ -63,7 +63,7 @@ bool CGSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::sha
     }
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
@@ -124,7 +124,7 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     TermPtr all = holder->constraintUtility(constraint, utility);
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
