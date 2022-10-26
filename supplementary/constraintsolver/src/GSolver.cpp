@@ -49,7 +49,7 @@ GSolver::GSolver(YAML::Node config)
     autodiff::Term::setOr(autodiff::OrType::MAX);
 
     //    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    _maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<in64_t>();
+    _maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int64_t>();
     //    _maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
     _maxSolveTime = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["MaxSolveTime"].as<int64_t>());
     //    _maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
