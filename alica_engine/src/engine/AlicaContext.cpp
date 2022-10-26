@@ -185,4 +185,19 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
     return (*(cit->second));
 }
 
+Blackboard& AlicaContext::editBlackboard()
+{
+    return _engine->editBlackboard();
+}
+
+const VariableSyncModule& AlicaContext::getResultStore()
+{
+    return _engine->getResultStore();
+}
+
+ConfigChangeListener& AlicaContext::getConfigChangeListener()
+{
+    return _engine->getConfigChangeListener();
+}
+
 } // namespace alica

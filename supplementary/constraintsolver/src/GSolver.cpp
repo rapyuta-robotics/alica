@@ -8,6 +8,7 @@
 //#include "essentials/SystemConfig.h"
 
 #include <engine/AlicaClock.h>
+#include <engine/ConfigChangeListener.h>
 
 #include <autodiff/Constant.h>
 #include <autodiff/ConstraintUtility.h>
@@ -36,7 +37,7 @@ using autodiff::Tape;
 int GSolver::_fcounter = 0;
 #endif
 
-GSolver::GSolver(YAML::Node config)
+GSolver::GSolver(ConfigChangeListener& configChangeListener)
         : _seedWithUtilOptimum(true)
         , _rPropConvergenceStepSize(1E-2)
         , _utilitySignificanceThreshold(1E-22)
@@ -48,6 +49,13 @@ GSolver::GSolver(YAML::Node config)
     autodiff::Term::setAnd(autodiff::AndType::AND);
     autodiff::Term::setOr(autodiff::OrType::MAX);
 
+    auto reloadFunctionPtr = std::bind(&GSolver::reload, this, std::placeholders::_1);
+    configChangeListener.subscribe(reloadFunctionPtr);
+    reload(configChangeListener.getConfig());
+}
+
+void GSolver::reload(const YAML::Node& config)
+{
     //    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
     _maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int>();
     //    _maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
