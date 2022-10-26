@@ -1,6 +1,9 @@
 #include "alica_tests/TestWorldModel.h"
 #include "test_alica.h"
 #include <alica/test/Util.h>
+#include <engine/PlanStatus.h>
+#include <engine/Types.h>
+#include <variant>
 
 namespace alica
 {
@@ -70,6 +73,28 @@ TEST_F(TestBlackBoard, testNotInheritBlackboardFlag)
     EXPECT_FALSE(alica::test::Util::getBasicBehaviour(ae, 831400441334251602, 0)->getInheritBlackboard());
     // Plan has inheritBlackboard set to false
     EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getInheritBlackboard());
+}
+
+TEST_F(TestBlackBoard, testWithoutPlan)
+{
+    Blackboard bb;
+    LockedBlackboardRW bbrw = LockedBlackboardRW(bb);
+
+    // set default types
+    bbrw.set<int64_t>("val1", 14l);
+    bbrw.set<double>("val2", 15.3);
+    bbrw.set<std::string>("val3", "test");
+    bbrw.set<bool>("val4", true);
+
+    // get default types
+    EXPECT_EQ(bbrw.get<int64_t>("val1"), 14l);
+    EXPECT_EQ(bbrw.get<double>("val2"), 15.3);
+    EXPECT_EQ(bbrw.get<std::string>("val3"), "test");
+    EXPECT_EQ(bbrw.get<bool>("val4"), true);
+
+    // unknown types
+    bbrw.set<PlanStatus>("val5", PlanStatus::Success);
+    EXPECT_EQ(bbrw.getAnyAs<PlanStatus>("val5"), PlanStatus::Success);
 }
 
 } // namespace

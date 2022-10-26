@@ -25,7 +25,7 @@ public:
     friend class Blackboard;
 
 private:
-    std::unordered_map<std::string, BlackboardValue> vals;
+    std::unordered_map<std::string, BlackboardValueType> vals;
     YAML::Node node;
 };
 

@@ -70,7 +70,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
 void SimpleTestPlan1412252439925::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    bb.set<std::any>("targetChildStatus", PlanStatus::Success);
+    bb.set<PlanStatus>("targetChildStatus", PlanStatus::Success);
 }
 /*PROTECTED REGION END*/
 } // namespace alica

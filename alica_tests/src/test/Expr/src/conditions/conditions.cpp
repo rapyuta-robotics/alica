@@ -62,7 +62,7 @@ bool conditionIsAnyChildStatus843443485857038179(const Blackboard* input, const 
 {
     /*PROTECTED REGION ID(condition843443485857038179) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    PlanStatus status = std::any_cast<PlanStatus>(bb.get<std::any>("childStatus"));
+    PlanStatus status = bb.getAnyAs<PlanStatus>("childStatus");
     return rp->isAnyChildStatus(status);
     /*PROTECTED REGION END*/
 }
