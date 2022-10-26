@@ -1,7 +1,7 @@
-#include "supplementary_tests/DynamicBehaviourCreator.h"
-#include "supplementary_tests/DynamicConditionCreator.h"
-#include "supplementary_tests/DynamicLoadingUtils.h"
-#include "supplementary_tests/DynamicPlanCreator.h"
+#include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicLoadingUtils.h>
+#include <DynamicPlanCreator.h>
 #include <test_supplementary.h>
 
 #include "communication/AlicaRosCommunication.h"

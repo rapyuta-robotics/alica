@@ -21,15 +21,16 @@ find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
 find_package(yaml-cpp REQUIRED)
 
 find_package(alica_engine REQUIRED)
-
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 find_package(alica_common_config REQUIRED)
-# find_package(fsystem REQUIRED)
+find_package(alica_dynamic_loading REQUIRED)
+find_package(alica_solver_interface REQUIRED)
+find_package(fsystem REQUIRED)
 
 catkin_package(
     CATKIN_DEPENDS ${PKG_DEPS}
     INCLUDE_DIRS include alica/Expr/include
-    DEPENDS alica_common_config 
+    DEPENDS alica_solver_interface fsystem alica_common_config alica_dynamic_loading
 )
 
 
@@ -62,6 +63,7 @@ target_link_libraries(${PROJECT_NAME}
                         ${CMAKE_DL_LIBS}
                         ${catkin_LIBRARIES}
                         ${YAML_CPP_LIBRARIES}
+                        alica_dynamic_loading
 )
 
 #############

@@ -1,10 +1,10 @@
-#include "alica/DynamicLoadingUtils.h"
+#include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicLoadingUtils.h>
+#include <DynamicPlanCreator.h>
 #include <alica/BehaviourCreator.h>
 #include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
-#include <alica/DynamicBehaviourCreator.h>
-#include <alica/DynamicConditionCreator.h>
-#include <alica/DynamicPlanCreator.h>
 #include <alica/PlanCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>

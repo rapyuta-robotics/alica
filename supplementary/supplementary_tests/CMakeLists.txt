@@ -24,6 +24,7 @@ find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
+find_package(alica_dynamic_loading REQUIRED)
 
 
 include_directories(include)
@@ -32,7 +33,7 @@ catkin_package(
   INCLUDE_DIRS include src/test/Expr/include
   LIBRARIES autogen_code_supplementary_tests
   CATKIN_DEPENDS     constraintsolver alica_ros_proxy
-  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver
+  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_dynamic_loading
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
@@ -44,7 +45,9 @@ target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
                                                         Boost::filesystem
                                                         ${CMAKE_DL_LIBS}
                                                         ${YAML_CPP_LIBRARIES}
-                                                        alica_test_utility)
+                                                        alica_test_utility
+                                                        alica_dynamic_loading
+                                                        )
 
 if (CATKIN_ENABLE_TESTING)
 
