@@ -1,15 +1,45 @@
 #pragma once
 
 #include "BlackboardBlueprint.h"
+#include "engine/Types.h"
+#include "engine/modelmanagement/Strings.h"
 #include <any>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <variant>
+#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
+
+class BlackboardUtil;
+
+class BlackboardTypeMismatch : public std::exception
+{
+public:
+    BlackboardTypeMismatch(const std::string& type, const std::string& typeDefinedInPml)
+            : _inputType(type)
+            , _typeDefinedInPml(typeDefinedInPml)
+    {
+    }
+
+    const char* what() const noexcept override { return "The type of the blackboard value does not match the type in the pml file."; }
+
+    std::string detailedError() const
+    {
+        std::stringstream ss;
+        ss << "Type " << _inputType << " does not match the type defined in the pml file: " << _typeDefinedInPml;
+        return ss.str();
+    }
+
+private:
+    const std::string _inputType;
+    const std::string _typeDefinedInPml;
+};
+
 class BlackboardImpl
 {
 public:
@@ -23,25 +53,171 @@ public:
     template <typename T>
     const T& get(const std::string& key) const
     {
-        return std::any_cast<const T&>(vals.at(key));
+        try {
+            if (getBlackboardValueNode(key).Type() != YAML::NodeType::Null && getBlackboardValueType(key) == "std::any" && getNameFromType<T>() != "std::any") {
+                // std::anycast to T, return T
+                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
+            }
+            return std::get<T>(vals.at(key));
+        } catch (const std::bad_variant_access& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        }
     }
     template <typename T>
     T& get(const std::string& key)
     {
-        return std::any_cast<T&>(vals.at(key));
+        try {
+            if (getBlackboardValueNode(key).Type() != YAML::NodeType::Null && getBlackboardValueType(key) == "std::any" && getNameFromType<T>() != "std::any") {
+                // std::anycast to T, return T
+                return std::any_cast<T&>(std::get<std::any>(vals.at(key)));
+            }
+            return std::get<T>(vals.at(key));
+        } catch (const std::bad_variant_access& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        }
     }
-    std::any& get(const std::string& key) { return vals.at(key); }
-    const std::any& get(const std::string& key) const { return vals.at(key); }
+    BlackboardValueType& get(const std::string& key) { return vals.at(key); }
+    const BlackboardValueType& get(const std::string& key) const { return vals.at(key); }
 
-    void set(const std::string& key, const std::any& value) { vals.at(key) = value; }
+    template <class T>
+    T& getAnyAs(const std::string& key)
+    {
+        try {
+            return std::any_cast<T&>(get<std::any>(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        }
+    }
+
+    template <class T>
+    const T& getAnyAs(const std::string& key) const
+    {
+        try {
+            return std::any_cast<const T&>(get<std::any>(key));
+        } catch (const std::bad_any_cast& e) {
+            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+        }
+    }
+
+    template <class T>
+    void set(const std::string& key, const T& value)
+    {
+        if (getBlackboardValueNode(key).Type() == YAML::NodeType::Null) {
+            // value is not predefined in pml file
+            if (getNameFromType<T>() == "std::any") {
+                // if type is std::any, wrap into std::any
+                vals.emplace(key, std::any{value});
+            } else {
+                vals.emplace(key, value);
+            }
+        } else {
+            // value is predefined in pml file
+            std::string inputType = getNameFromType<T>();
+            std::string pmlType = getBlackboardValueType(key);
+            if (pmlType == "std::any") {
+                // insert as std::any with type T
+                vals.at(key) = std::any{value};
+            } else if (pmlType == inputType) {
+                vals.at(key) = value;
+            } else {
+                // types dont match, throw exception
+                throw BlackboardTypeMismatch(inputType, pmlType);
+            }
+        }
+    }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
     void removeValue(const std::string& key) { vals.erase(key); }
 
+    void initDefaultValues();
+
     void clear() { vals.clear(); }
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
-    std::unordered_map<std::string, std::any> vals;
+    std::unordered_map<std::string, BlackboardValueType> vals;
+    YAML::Node node;
+
+private:
+    friend BlackboardUtil;
+    YAML::Node getBlackboardValueNode(std::string key) const
+    {
+        for (const auto& entry : node) {
+            if (entry[Strings::key].as<std::string>() == key) {
+                return entry;
+            }
+        }
+        return YAML::Node(YAML::NodeType::Null);
+    }
+
+    std::string getBlackboardValueType(const std::string& key) const
+    {
+        YAML::Node entry = getBlackboardValueNode(key);
+        return entry[Strings::stateType].as<std::string>();
+    }
+
+    template <class T>
+    std::string getNameFromType() const;
+};
+
+struct Converter
+{
+    static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string", "std::any"};
+
+    // YAML doesnt support std::any, needs a separate list of types for iteration
+    static constexpr const char* typeNamesYAML[] = {"bool", "int64", "double", "std::string"};
+    using TypesYAML = std::variant<bool, int64_t, double, std::string>;
+
+    // convert from type to name as string
+    template <class T>
+    static constexpr const char* typeName()
+    {
+        return typeNames[BlackboardValueType{T{}}.index()];
+    }
+
+    // set the value given the type name as a string
+    static void setValueFromYaml(const std::string& key, const std::string& typeName, const YAML::Node& valueNode, BlackboardImpl& bb);
+
+    // used to set the value without a yaml node
+    static void setValue(const std::string& key, const BlackboardValueType& value, const std::string& typeName, BlackboardImpl& bb);
+
+    template <class T>
+    struct YamlAs
+    {
+        static T as(const YAML::Node& value) { return value.as<T>(); }
+    };
+
+    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
+    struct makeVariantIfEqual
+    {
+        static BlackboardValueType make(std::size_t index, const YAML::Node& value)
+        {
+            return index == INDEX ? BlackboardValueType{Parser<T>::as(value)} : BlackboardValueType{std::any{}};
+        }
+    };
+
+    template <class... Ts, std::size_t... Is>
+    static BlackboardValueType makeVariantFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
+    {
+        BlackboardValueType typeValues[] = {makeVariantIfEqual<Ts, Is>::make(index, value)...};
+        return typeValues[index];
+    };
+
+    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
+    struct makeAnyIfEqual
+    {
+        static std::any make(std::size_t index, const YAML::Node& value) { return index == INDEX ? std::any{Parser<T>::as(value)} : std::any{}; }
+    };
+
+    template <class... Ts, std::size_t... Is>
+    static std::any makeAnyFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
+    {
+        std::any typeValues[] = {makeAnyIfEqual<Ts, Is>::make(index, value)...};
+        return typeValues[index];
+    }
 };
 
 class Blackboard
@@ -51,7 +227,12 @@ public:
     Blackboard(Blackboard&&) = delete;
     Blackboard& operator&=(const Blackboard&) = delete;
     Blackboard& operator&=(Blackboard&&) = delete;
-    Blackboard(const BlackboardBlueprint* blueprint) { _impl.vals = blueprint->vals; };
+    Blackboard(const BlackboardBlueprint* blueprint)
+    {
+        _impl.vals = blueprint->vals;
+        _impl.node = blueprint->node;
+        _impl.initDefaultValues();
+    };
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
@@ -84,7 +265,12 @@ public:
     {
         return _impl->get<T>(key);
     }
-    const std::any& get(const std::string& key) const { return _impl->get(key); }
+    const BlackboardValueType& get(const std::string& key) const { return _impl->get(key); }
+    template <class T>
+    const T& getAnyAs(const std::string& key) const
+    {
+        return _impl->getAnyAs<T>(key);
+    }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -115,9 +301,18 @@ public:
     {
         return _impl->get<T>(key);
     }
-    std::any& get(const std::string& key) { return _impl->get(key); }
+    BlackboardValueType& get(const std::string& key) { return _impl->get(key); }
+    template <class T>
+    T& getAnyAs(const std::string& key)
+    {
+        return _impl->getAnyAs<T>(key);
+    }
 
-    void set(const std::string& key, const std::any& value) { _impl->set(key, value); }
+    template <typename T>
+    void set(const std::string& key, const T& value)
+    {
+        _impl->set<T>(key, value);
+    }
 
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
@@ -127,5 +322,11 @@ private:
     std::unique_lock<std::shared_mutex> _lk;
     BlackboardImpl* _impl;
 };
+
+template <class T>
+std::string BlackboardImpl::getNameFromType() const
+{
+    return Converter::typeName<T>();
+}
 
 } // namespace alica

@@ -10,6 +10,7 @@ std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::create(const YA
 {
 
     auto blackboard = std::make_unique<BlackboardBlueprint>();
+    blackboard->setBlackboardNode(node);
     for (const auto& entry : node) {
         auto key = getValue<std::string>(entry, Strings::key);
         blackboard->registerValue(key);

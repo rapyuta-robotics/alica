@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 4595223845781635836,
       "key": "behaviorKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "input",
@@ -14,7 +14,7 @@
       "defaultValue": null,
       "id": 831672371947300202,
       "key": "behaviorInputKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "output",
@@ -22,7 +22,7 @@
       "defaultValue": null,
       "id": 4355442070811434152,
       "key": "behaviorOutputKey",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",
