@@ -16,7 +16,6 @@
   </export>
   <depend>alica_common_config</depend>
   <depend>alica_solver_interface</depend>
-  <depend>alica_dynamic_loading</depend>
   <depend>fsystem</depend>
 
   <test_depend>gtest</test_depend>

@@ -8,6 +8,7 @@
 
   <license>MIT</license>
 
+  <depend>alica_engine</depend>
   <depend>alica_common_config</depend>
 
 
