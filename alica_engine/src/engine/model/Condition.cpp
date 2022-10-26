@@ -76,4 +76,9 @@ void Condition::setBasicConstraint(const std::shared_ptr<BasicConstraint>& basic
     _basicConstraint = basicConstraint;
 }
 
+std::string Condition::getLibraryName()
+{
+    return _libraryName;
+}
+
 } // namespace alica

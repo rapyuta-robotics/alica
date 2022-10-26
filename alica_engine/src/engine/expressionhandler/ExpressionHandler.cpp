@@ -13,6 +13,7 @@
 #include "engine/model/Plan.h"
 #include "engine/model/PreCondition.h"
 #include "engine/model/RuntimeCondition.h"
+#include "engine/modelmanagement/factories/Factory.h"
 
 namespace alica
 {
@@ -37,7 +38,8 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
-                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getPreCondition()->getId()));
+                ConditionContext context{p->getPreCondition()->getName(), p->getPreCondition()->_libraryName, p->getPreCondition()->getId()};
+                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
                 attachConstraint(p->_preCondition, *creatorCtx.constraintCreator);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
@@ -45,7 +47,8 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
         }
 
         if (p->getRuntimeCondition() != nullptr) {
-            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(p->getRuntimeCondition()->getId()));
+            ConditionContext context{p->getRuntimeCondition()->getName(), p->getRuntimeCondition()->_libraryName, p->getRuntimeCondition()->getId()};
+            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
         }
     }

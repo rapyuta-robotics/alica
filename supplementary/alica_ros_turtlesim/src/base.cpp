@@ -1,3 +1,7 @@
+#include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicLoadingUtils.h>
+#include <DynamicPlanCreator.h>
 #include <alica/BehaviourCreator.h>
 #include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
@@ -13,17 +17,23 @@
 #include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
 
+#include <boost/dll/import.hpp> // for import_alias
+
 #include <alica_ros_turtlesim/base.hpp>
 
 namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path)
+        const std::string& master_plan, const std::string& path, bool doDynamic)
         : spinner(0)
+        , _doDynamic(doDynamic)
 {
     // create world model
-    ALICATurtleWorldModel::init(nh, priv_nh);
+    if (_doDynamic)
+        ALICATurtleWorldModelCallInit(nh, priv_nh);
+    else
+        ALICATurtleWorldModel::init(nh, priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
@@ -32,15 +42,48 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 }
 
+void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
+{
+    std::string tmp = calculateLibraryPath();
+    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
+
+    if (!checkLibraryCompleteName(libraryPath, "BASE")) {
+        std::cerr << "Error:"
+                  << "Lib not exists in this path:" << libraryPath << std::endl;
+        return;
+    } else {
+        std::cerr << "Debug:"
+                  << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
+    }
+
+    typedef void(InitType)(ros::NodeHandle&, ros::NodeHandle&);
+    std::function<InitType> wminit;
+    wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
+            libraryPath,                              // complete path to library also with file name
+            "ALICATurtleWorldModelInit",              // symbol to import
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
+    );
+    wminit(nh, priv_nh);
+}
+
 void Base::start()
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::TransitionConditionCreator>());
+    if (_doDynamic) {
+        alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>());
 
-    spinner.start(); // start spinner before initializing engine, but after setting context
-    ac->init(std::move(creators));
-    ac->addSolver<alica::reasoner::CGSolver>();
+        spinner.start(); // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators));
+        ac->addSolver<alica::reasoner::CGSolver>();
+    } else {
+        alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>());
+        spinner.start(); // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators));
+        ac->addSolver<alica::reasoner::CGSolver>();
+    }
 }
 
 Base::~Base()
@@ -48,7 +91,8 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    ALICATurtleWorldModel::del();
+    if (_doDynamic)
+        ALICATurtleWorldModel::del();
 }
 
 } // namespace turtlesim

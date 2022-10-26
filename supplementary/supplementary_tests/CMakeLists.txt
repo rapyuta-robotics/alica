@@ -10,6 +10,13 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
+
+set(BOOST_MIN_VERSION "1.71.0")
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+
+##Yaml
+find_package(yaml-cpp REQUIRED)
+
 find_package(fsystem REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
@@ -17,6 +24,8 @@ find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
+find_package(alica_dynamic_loading REQUIRED)
+
 
 include_directories(include)
 
@@ -24,21 +33,29 @@ catkin_package(
   INCLUDE_DIRS include src/test/Expr/include
   LIBRARIES autogen_code_supplementary_tests
   CATKIN_DEPENDS     constraintsolver alica_ros_proxy
-  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver
+  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_dynamic_loading
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} alica_test_utility)
+
+target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} 
+                                                        Boost::system
+                                                        Boost::filesystem
+                                                        ${CMAKE_DL_LIBS}
+                                                        ${YAML_CPP_LIBRARIES}
+                                                        alica_test_utility
+                                                        alica_dynamic_loading
+                                                        )
 
 if (CATKIN_ENABLE_TESTING)
 
     find_package(rostest REQUIRED)
-    #file(GLOB_RECURSE test_supplementary_SOURCES "src/test/*.cpp" src/test_supplementary.cpp)
     set(test_supplementary_SOURCES
         src/test_supplementary.cpp
         src/test/test_main.cpp
+        src/test/test_alica_dynamicloadcreator.cpp
         src/test/test_alica_problem_composition.cpp
         src/test/test_alica_ros_proxy.cpp
         src/test/test_variable_handling.cpp

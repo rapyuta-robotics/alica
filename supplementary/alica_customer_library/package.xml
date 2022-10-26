@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_customer_library</name>
+  <version>0.0.1</version>
+  <description>The alica_customer_library package</description>
+
+  <maintainer email="luca.tricerri@rapyuta-robotics.com">Luca Tricerri</maintainer>
+
+  <author email="luca.tricerri@rapyuta-robotics.com">Luca Tricerri</author>
+  <author>Luca Tricerri</author>
+
+  <license>MIT</license>
+
+  <depend>alica_engine</depend>
+  <depend>constraintsolver</depend>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>
