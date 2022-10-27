@@ -5,14 +5,14 @@ namespace alica
 
 void BlackboardImpl::initDefaultValues()
 {
-    // for (YAML::Node entry : node) {
-    //     YAML::Node defaultValue = entry[Strings::defaultValue];
-    //     if (defaultValue.Type() != YAML::NodeType::Null) {
-    //         std::string key = entry[Strings::key].as<std::string>();
-    //         std::string typeString = entry[Strings::stateType].as<std::string>();
-    //         Converter::setValueFromYaml(key, typeString, defaultValue, *this);
-    //     }
-    // }
+    for (YAML::Node entry : node) {
+        YAML::Node defaultValue = entry[Strings::defaultValue];
+        if (defaultValue.Type() != YAML::NodeType::Null) {
+            std::string key = entry[Strings::key].as<std::string>();
+            std::string typeString = entry[Strings::stateType].as<std::string>();
+            Converter::setValueFromYaml(key, typeString, defaultValue, *this);
+        }
+    }
 }
 
 void Converter::setValueFromYaml(const std::string& key, const std::string& typeName, const YAML::Node& valueNode, BlackboardImpl& bb)
