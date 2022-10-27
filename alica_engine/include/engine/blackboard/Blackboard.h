@@ -41,17 +41,20 @@ private:
 };
 
 template <class Val, class... Ts>
-struct FindImpl {
+struct FindImpl
+{
     static constexpr bool result = false;
 };
 
 template <class Val, class T, class... Ts>
-struct FindImpl<Val, T, Ts...> {
+struct FindImpl<Val, T, Ts...>
+{
     static constexpr bool result = FindImpl<Val, Ts...>::result;
 };
 
 template <class Val, class... Ts>
-struct FindImpl<Val, Val, Ts...> {
+struct FindImpl<Val, Val, Ts...>
+{
     static constexpr bool result = true;
 };
 
@@ -59,36 +62,22 @@ template <class Val, class Variant>
 struct Find;
 
 template <class Val, template <class...> class Tp, class... Ts>
-struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...> {};
+struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
+{
+};
 
 // using BlackboardValueType = std::variant<bool, int, std::string, std::any>;
 
 template <class T, class = void>
-struct convert {
-    static auto& get(const BlackboardValueType& val) {
-        return std::any_cast<const T&>(std::get<std::any>(val));
-    }
+struct convert
+{
+    static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
 };
 
 template <class T>
-struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>> {
-    static auto& get(const BlackboardValueType& val) {
-        return std::get<T>(val);
-    }
-};
-
-template <class T, class = void>
-struct convertConst {
-    static const auto& get(const BlackboardValueType& val) {
-        return std::any_cast<const T&>(std::get<std::any>(val));
-    }
-};
-
-template <class T>
-struct convertConst<T, std::enable_if_t<Find<T, BlackboardValueType>::result>> {
-    static const auto& get(const BlackboardValueType& val) {
-        return std::get<T>(val);
-    }
+struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
+{
+    static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
 };
 
 class BlackboardImpl
@@ -102,7 +91,7 @@ public:
     }
 
     template <typename T>
-    T& get(const std::string& key) const
+    const T& get(const std::string& key) const
     {
         try {
             return convert<T>::get(vals.at(key));
@@ -116,7 +105,7 @@ public:
     const T& get(const std::string& key)
     {
         try {
-            return convertConst<T>::get(vals.at(key));
+            return convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -315,7 +304,7 @@ public:
     }
 
     template <typename T>
-    T& get(const std::string& key)
+    const T& get(const std::string& key)
     {
         return _impl->get<T>(key);
     }

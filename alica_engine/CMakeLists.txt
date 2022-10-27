@@ -57,6 +57,7 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/allocationauthority/AuthorityManager.cpp
   src/engine/allocationauthority/CycleManager.cpp
   src/engine/allocationauthority/EntryPointRobotPair.cpp
+  src/engine/blackboard/Blackboard.cpp
   src/engine/blackboard/BlackboardUtil.cpp
   src/engine/blackboard/KeyMapping.cpp
   src/engine/collections/RobotEngineData.cpp
