@@ -2,10 +2,10 @@ name: Build and Test
 on:
   push:
     branches:
-      - rr_devel
+      - devel
   pull_request:
     branches:
-      - rr_devel
+      - devel
   workflow_dispatch:
 jobs:
   ROS2_build_test:
