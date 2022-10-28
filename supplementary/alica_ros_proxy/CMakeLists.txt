@@ -13,14 +13,12 @@ find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_common_config REQUIRED)
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_ros_proxy
   CATKIN_DEPENDS roscpp
   DEPENDS  alica_solver_interface alica_engine 
-  #DEPENDS system_lib
 )
 
 include_directories(
