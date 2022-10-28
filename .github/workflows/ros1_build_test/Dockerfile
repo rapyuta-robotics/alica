@@ -1,19 +1,20 @@
 # syntax=docker/dockerfile:1.4
 
 FROM ros:noetic
+SHELL ["/bin/bash", "-c"]
 
 WORKDIR /root/catkin_ws/src
 
 RUN <<build
   cd /root/catkin_ws
-  . /opt/ros/noetic/setup.sh
+  source /opt/ros/noetic/setup.bash
   catkin init
   catkin config --blacklist alica_tracing --cmake-args -DCMAKE_CXX_FLAGS=-Werror
   catkin build --no-status
 build
 
 ENTRYPOINT <<runtests
-  . ../devel/setup.sh
+  source ../devel/setup.bash
   catkin run_tests --no-status && catkin_test_results --verbose
 runtests
 
