@@ -16,10 +16,25 @@ jobs:
         os:
           - ubuntu-latest
     steps:
+      - uses: docker/setup-buildx-action@v2
       - name: Checkout
         uses: actions/checkout@v3
       - name: Pull ROS2 images
         run: docker pull ros:humble
-      - name: Test Alica on ROS Humble
-        uses: ./.github/workflows/ros2_build_test/ 
-    
+      - name: Test Alica on ROS2 Humble
+        uses: ./.github/workflows/ros2_build_test/
+  ROS1_build_test:
+    runs-on: "${{ matrix.os }}"
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Pull ROS1 images
+        run: docker pull ros:noetic
+      - name: Test Alica on ROS Noetic
+        uses: ./.github/workflows/ros1_build_test/

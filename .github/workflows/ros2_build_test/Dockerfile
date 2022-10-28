@@ -1,9 +1,8 @@
-# Container image that runs your code
+# syntax=docker/dockerfile:1.4
+
 FROM ros:humble
 
-# Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entrypoint.sh
-
-
-# Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+RUN <<build
+ . /opt/ros/humble/setup.sh
+ colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests alica_msgs
+build
