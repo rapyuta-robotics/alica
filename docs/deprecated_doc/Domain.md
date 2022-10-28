@@ -2,7 +2,7 @@
 
 **--> explanation of code**
 
-``` cpp
+```cpp
 #include "DomainBehaviour.h"
 
 namespace alica

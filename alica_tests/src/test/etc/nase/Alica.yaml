@@ -20,7 +20,7 @@ Local:
   HasActiveBallHandler: true
 
 Alica:
-#ms
+  #ms
   TeamTimeOut: 10000
   AssignmentProtectionTime: 500
 

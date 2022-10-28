@@ -9,5 +9,3 @@ This guide is thought as a reference for developers of the Plan Designer. Theref
 3. Design Pattern
 4. Condition Plugin System
 5. Writing Code Generation Templates
-
-

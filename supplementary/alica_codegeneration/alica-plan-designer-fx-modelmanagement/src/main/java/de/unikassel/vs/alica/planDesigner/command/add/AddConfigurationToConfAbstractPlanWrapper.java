@@ -32,4 +32,3 @@ public class AddConfigurationToConfAbstractPlanWrapper extends Command {
             fireEvent(ModelEventType.ELEMENT_REMOVED, configuration);
         }
 }
-

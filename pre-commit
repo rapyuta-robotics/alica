@@ -23,7 +23,7 @@ case "${1}" in
         echo "Runs ${CLANG} on modified C/C++ source files"
     ;;
     * )
-        # find staged files, excluding D/deleted ones 
+        # find staged files, excluding D/deleted ones
         for file in `git diff-index --cached --name-status HEAD | awk '$1 != "D" { print $2 }'` ; do
             format_file "${file}"
         done

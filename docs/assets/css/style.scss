@@ -3,18 +3,19 @@
 
 @import "{{ site.theme }}";
 
-a:hover, a:focus {
-	color: #069;
-	font-weight: normal;
+a:hover,
+a:focus {
+  color: #069;
+  font-weight: normal;
 }
 
 .wrapper {
-	width: 1080px;
-	margin: 0 auto;
+  width: 1080px;
+  margin: 0 auto;
 }
 
 section {
-	width: 800px;
-	float: right;
-	padding-bottom: 50px;
+  width: 800px;
+  float: right;
+  padding-bottom: 50px;
 }
