@@ -3,14 +3,14 @@ c
 c SOURCE: James Crawford (jc@research.att.com)
 c
 c DESCRIPTION: Instance arises from the problem of learning the parity
-c              function.  
+c              function.
 c
 c     parxx-y denotes a parity problem on xx bits.  y is simply the
 c     intance number.
 c
 c     parxx-y-c denotes an instance identical to parxx-y except that
 c     the instances have been simplified (to create an equivalent
-c     problem). 
+c     problem).
 c
 c NOTE: Satisfiable (checked for 8 and 16 size instances. All
 c       instances are satisfiable by construction)

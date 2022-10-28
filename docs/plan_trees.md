@@ -4,6 +4,6 @@ Now that you should understand a little of the core concepts of the propositiona
 
 <img src="../images/clean_up_plan_example.svg" alt="Plan Example: Cleaning Up" style="zoom:20%;" />
 
-*Figure 1: Plan for Cleaning up Items in a Household*
+_Figure 1: Plan for Cleaning up Items in a Household_
 
-In Figure 1 you can see all these core concepts as you should already know them by the former articles about them. 
+In Figure 1 you can see all these core concepts as you should already know them by the former articles about them.

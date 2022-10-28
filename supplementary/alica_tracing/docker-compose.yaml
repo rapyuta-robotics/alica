@@ -3,7 +3,12 @@ version: "3"
 services:
   tracing-agent:
     image: jaegertracing/jaeger-agent
-    command: ["--reporter.grpc.host-port=$TRACE_COLLECTOR_EP", "--reporter.grpc.retry.max=1000", "--reporter.grpc.tls.enabled"]
+    command:
+      [
+        "--reporter.grpc.host-port=$TRACE_COLLECTOR_EP",
+        "--reporter.grpc.retry.max=1000",
+        "--reporter.grpc.tls.enabled",
+      ]
     ports:
       - "5775:5775/udp"
       - "6831:6831/udp"

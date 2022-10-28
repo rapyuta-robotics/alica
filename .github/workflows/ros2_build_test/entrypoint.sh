@@ -5,7 +5,7 @@ colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing a
 
 if [ $? -ne 0 ]
   then exit 1
-fi 
+fi
 
 # colcon test
 

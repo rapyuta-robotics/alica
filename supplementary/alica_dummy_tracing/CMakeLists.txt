@@ -41,7 +41,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
