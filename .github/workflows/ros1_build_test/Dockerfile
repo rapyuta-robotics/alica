@@ -13,7 +13,7 @@ RUN <<build
   catkin build --no-status
 build
 
-ENTRYPOINT <<runtests
+RUN <<runtests
   source ../devel/setup.bash
   catkin run_tests --no-status && catkin_test_results --verbose
 runtests
