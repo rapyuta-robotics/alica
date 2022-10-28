@@ -1,6 +1,6 @@
 # Documentation
 
-The documentation of the ALICA Framework is organised in small articles that are readable in 5-10 minutes. Therefore, you can use it as a lookup dictionary. However, we also tried to arrange the articles in an order that allows you to read the documentation as a whole, from start to end. 
+The documentation of the ALICA Framework is organised in small articles that are readable in 5-10 minutes. Therefore, you can use it as a lookup dictionary. However, we also tried to arrange the articles in an order that allows you to read the documentation as a whole, from start to end.
 
 The ALICA Framework is further divided into three parts, the language, the engine, and the plan designer. We recommend to understand the language first, since the documentation of the engine and plan designer requires you to understand the semantics of the core concepts of the language.
 
@@ -32,7 +32,7 @@ Constraint Queries, Constraint Composition, Constraint Management, Variable Sync
 
 ## The ALICA Engine
 
-To be done: 
+To be done:
 
 - Implementation specific things, like AlicaContext, interfaces for clock, solvers, configs, communication, code structure of generated code, etc.
 - Maybe implementations in different languages in future (Java and Python are currently work-in-progress)

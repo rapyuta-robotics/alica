@@ -8,7 +8,7 @@ alica_compile_flags()
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    alica_ros_proxy    
+    alica_ros_proxy
 )
 
 

@@ -9,14 +9,14 @@
   <license>MIT</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  
+
   <depend>alica_engine</depend>
   <depend>alica_msgs</depend>
   <depend>roscpp</depend>
   <build_depend>message_generation</build_depend>
 
   <exec_depend>message_runtime</exec_depend>
-  
+
   <test_depend>gtest</test_depend>
 
   <export>

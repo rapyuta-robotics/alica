@@ -28,4 +28,3 @@ else
 fi
 
 java -jar ${PWD}/codegen/PlanDesignerFX-Codegeneration-0.1.1.*.jar ${CLANG_FORMATTER} ${ALICA_APP_PATH}/Expr/ ${ALICA_APP_PATH}/etc/plans/ ${ALICA_APP_PATH}/etc/roles/ ${ALICA_APP_PATH}/etc/tasks/ ${PWD}/codegen/plugins/ ${PKG_NAME}
-
