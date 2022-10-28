@@ -23,13 +23,11 @@
 namespace alica
 {
 struct AlicaCreators;
-struct AlicaContextParams;
 class Plan;
 class Logger;
 class RoleSet;
 class IRoleAssignment;
 class VariableSyncModule;
-class ITransitionConditionCreator;
 
 class AlicaEngine
 {
