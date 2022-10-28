@@ -41,7 +41,7 @@ services:
       - redis
 
   alica-debug-tree:
-    image: rrdockerhub/alica_backend:interface_dev  # TODO: move to separate repo
+    image: rrdockerhub/alica_backend:interface_dev # TODO: move to separate repo
     command: roslaunch alica_interface alica_interface.launch demo:=false
     network_mode: host
     expose:
