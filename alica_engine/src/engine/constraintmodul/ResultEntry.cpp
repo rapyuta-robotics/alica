@@ -60,7 +60,7 @@ void ResultEntry::clear()
 void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const
 {
     std::lock_guard<std::mutex> lock(_valueLock);
-    for (const std::pair<int64_t, VarValue>& p : _values) {
+    for (const auto& p : _values) {
         if (p.second._lastUpdate > earliest) {
             SolverVar sv;
             sv.id = p.first;
