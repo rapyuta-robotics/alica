@@ -6,12 +6,12 @@ BASE_BRANCH=$2
 REGEX='^.*version:[[:blank:]]*([^[:blank:]]*)[[:blank:]]*$'
 ORIGINAL_BRANCH="NO_MATCH"
 
-while read LINE ; do 
+while read LINE ; do
     if [[ $LINE =~ $REGEX ]] ; then
-        ORIGINAL_BRANCH=${BASH_REMATCH[1]} 
-        break 
+        ORIGINAL_BRANCH=${BASH_REMATCH[1]}
+        break
     fi
-done < dependencies.rosinstall 
+done < dependencies.rosinstall
 
 
 cmd="bash -c \"

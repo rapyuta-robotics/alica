@@ -48,4 +48,3 @@ public abstract class UiPositionCommand extends Command {
         this.modelManager.fireEvent(event);
     }
 }
-

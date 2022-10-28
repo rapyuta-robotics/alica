@@ -3,7 +3,7 @@
   <name>alica_tracing</name>
   <version>0.9.4</version>
   <description>Tracing for alica</description>
-  <maintainer email="abhishek.sharma@rapyuta-robotics.com">Abhishek Sharma</maintainer>  
+  <maintainer email="abhishek.sharma@rapyuta-robotics.com">Abhishek Sharma</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>cmake</buildtool_depend>

@@ -66,4 +66,3 @@ public class Tags {
     public static final String PLANTYPETAG = "alica:PlanType";
     public static final String PARAMETERS = "parameters";
 }
-
