@@ -25,7 +25,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: "./github/workflows/ros1_build_test/Dockerfile"
+          file: "./.github/workflows/ros1_build_test/Dockerfile"
           platforms: linux/amd64
           push: false
           tags: noetic
@@ -48,7 +48,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: "./github/workflows/ros2_build_test/Dockerfile"
+          file: "./.github/workflows/ros2_build_test/Dockerfile"
           platforms: linux/amd64
           push: false
           tags: humble
