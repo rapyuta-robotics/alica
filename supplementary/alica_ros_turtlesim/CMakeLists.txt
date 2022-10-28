@@ -17,9 +17,9 @@ set(PKG_DEPS
 
 ##Yaml
 find_package(yaml-cpp REQUIRED)
-
+find_package(alica_solver_interface)
 find_package(alica_engine REQUIRED)
-
+find_package(constraintsolver REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
@@ -56,10 +56,8 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${YAML_CPP_LIBRARIES}
-    constraintsolver
     autodiff
-    alica_solver_interface
-    fsystem
+    constraintsolver
 )
 
 #############
