@@ -1,21 +1,24 @@
 #pragma once
 
+#include "engine/ConfigChangeListener.h"
 #include "engine/Types.h"
 #include <memory>
 
 namespace alica
 {
-class AlicaEngine;
 class ProblemDescriptor;
 class Variable;
 class SolverVariable;
 class SolverContext;
+class Blackboard;
+class VariableSyncModule;
 
 class ISolverBase
 {
 public:
-    ISolverBase(AlicaEngine* ae)
-            : _ae(ae)
+    ISolverBase(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+            : _blackboard(blackboard)
+            , _resultStore(resultStore)
     {
     }
     virtual ~ISolverBase() {}
@@ -23,18 +26,20 @@ public:
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
 protected:
-    AlicaEngine* getAlicaEngine() const { return _ae; }
+    Blackboard& editBlackboard() { return _blackboard; };
+    const VariableSyncModule& getResultStore() { return _resultStore; };
 
 private:
-    AlicaEngine* _ae;
+    Blackboard& _blackboard;
+    const VariableSyncModule& _resultStore;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
 public:
-    ISolver(AlicaEngine* ae)
-            : ISolverBase(ae)
+    ISolver(Blackboard& blackboard, const VariableSyncModule& resultStore, ConfigChangeListener& configChangeListener)
+            : ISolverBase(blackboard, resultStore, configChangeListener)
     {
     }
     virtual ~ISolver() {}

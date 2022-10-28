@@ -6,6 +6,7 @@
 
 #include <autodiff/ConstraintBuilder.h>
 #include <engine/AlicaClock.h>
+#include <engine/ConfigChangeListener.h>
 #include <yaml-cpp/yaml.h>
 
 #include <ctime>
@@ -33,7 +34,8 @@ TEST(AutoDiffTest, GSOLVER)
 
     std::string path = "./etc/Alica.yaml";
     YAML::Node config = YAML::LoadFile(path);
-    GSolver g(config);
+    ConfigChangeListener configChangerListener(config);
+    GSolver g(configChangerListener);
 
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);
@@ -112,7 +114,8 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
 
     std::string path = "./etc/Alica.yaml";
     YAML::Node config = YAML::LoadFile(path);
-    GSolver g(config);
+    ConfigChangeListener configChangerListener(config);
+    GSolver g(configChangerListener);
     TermHolder h;
     Term::setAnd(AndType::AND);
     Term::setOr(OrType::MAX);

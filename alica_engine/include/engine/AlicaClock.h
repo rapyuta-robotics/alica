@@ -130,8 +130,8 @@ private:
 class AlicaClock
 {
 public:
-    AlicaClock(){};
-    virtual ~AlicaClock(){};
+    AlicaClock() {}
+    virtual ~AlicaClock() {}
     virtual AlicaTime now() const;
     virtual void sleep(const AlicaTime&) const;
 };

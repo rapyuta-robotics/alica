@@ -470,6 +470,10 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
+
+    Blackboard& editBlackboard();
+    const VariableSyncModule& getResultStore();
+    ConfigChangeListener& getConfigChangeListener();
 };
 
 template <class ClockType, class... Args>
@@ -509,10 +513,16 @@ template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
+    if (!_engine) {
+        std::cerr << "ABORT: addSolver but engine is not instantiated" << std::endl;
+        exit(EXIT_FAILURE);
+    }
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
+    _solvers.emplace(typeid(SolverType).hash_code(),
+            std::make_unique<SolverType>(editBlackboard(), getResultStore(), getConfigChangeListener(), std::forward<Args>(args)...));
 #else
-    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine.get(), std::forward<Args>(args)...)));
+    _solvers.emplace(typeid(SolverType).hash_code(),
+            std::unique_ptr<SolverType>(new SolverType(editBlackboard(), getResultStore(), _configRootNode, std::forward<Args>(args)...)));
 #endif
 }
 
