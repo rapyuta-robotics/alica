@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>alica_ros2_proxy</name>
+  <version>0.9.4</version>
+  <description>The alica_ros2_proxy package</description>
+
+  <maintainer email="opfer@vs.uni-kassel.de">Stephan Opfer</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <depend>alica_engine</depend>
+  <depend>alica_msgs</depend>
+  <depend>rclcpp</depend>
+  <!-- <build_depend>message_generation</build_depend> -->
+
+  <!-- <exec_depend>message_runtime</exec_depend> -->
+  
+  <test_depend>gtest</test_depend>
+
+  <export>
+  <build_type>ament_cmake</build_type>
+  </export>
+</package>
