@@ -34,7 +34,6 @@ target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_ut
 if(CATKIN_ENABLE_TESTING)
     find_package(rostest REQUIRED)
 
-    # file(GLOB_RECURSE test_alica_SOURCES "src/test/*.cpp" src/test_alica.cpp)
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
         src/CounterClass.cpp

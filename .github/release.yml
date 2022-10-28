@@ -1,0 +1,20 @@
+changelog:
+  exclude:
+    labels:
+      - "No changelog"
+  categories:
+    - title: Fixed 🛠
+      labels:
+        - Fixed
+    - title: Added
+      labels:
+        - Added
+    - title: Deprecated
+      labels:
+        - Deprecated
+    - title: Improved
+      labels:
+        - Improved
+    - title: Other Changes
+      labels:
+        - Refactored
