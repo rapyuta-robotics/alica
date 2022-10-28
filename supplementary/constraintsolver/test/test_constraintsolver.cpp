@@ -5,12 +5,8 @@
 #include "constraintsolver/GSolver.h"
 
 #include <autodiff/ConstraintBuilder.h>
-//#include <essentials/SystemConfig.h>
 #include <engine/AlicaClock.h>
 #include <yaml-cpp/yaml.h>
-
-#include <ros/package.h>
-#include <ros/ros.h>
 
 #include <ctime>
 #include <iostream>
@@ -35,8 +31,7 @@ TEST(AutoDiffTest, GSOLVER)
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;
 
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/etc/Alica.yaml";
+    std::string path = "./etc/Alica.yaml";
     YAML::Node config = YAML::LoadFile(path);
     GSolver g(config);
 
@@ -115,8 +110,7 @@ TEST(AutoDiffTest, GSOLVER_UTIL)
     const double FIELDLENGTH = 18000;
     const double FIELDWIDTH = 12000;
 
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/etc/Alica.yaml";
+    std::string path = "./etc/Alica.yaml";
     YAML::Node config = YAML::LoadFile(path);
     GSolver g(config);
     TermHolder h;

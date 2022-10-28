@@ -58,7 +58,8 @@ add_executable(${PROJECT_NAME}-tests
 
 target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
 
-add_test(NAME alica_solver_interface-tests COMMAND alica_solver_interface-tests)
+add_test(NAME IntervalTest.Double COMMAND ${PROJECT_NAME}-tests --gtest_filter=IntervalTest.Double )
+add_test(NAME IntervalTest.Operations COMMAND ${PROJECT_NAME}-tests --gtest_filter=IntervalTest.Operations )
 
 
 install(TARGETS ${PROJECT_NAME}

@@ -86,7 +86,26 @@ add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
 
 target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
 
-add_test(NAME autodiff-tests COMMAND autodiff-tests)
+add_test(NAME AutoDiffTest.Distance COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.Distance]==] )
+add_test(NAME AutoDiffTest.ABS COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.ABS]==] )
+add_test(NAME AutoDiffTest.AND COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.AND]==] )
+add_test(NAME AutoDiffTest.ATAN2 COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.ATAN2]==] )
+add_test(NAME AutoDiffTest.CONSTPOWER COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.CONSTPOWER]==] )
+add_test(NAME AutoDiffTest.CONSTRAINTUTILITY COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.CONSTRAINTUTILITY]==] )
+add_test(NAME AutoDiffTest.COS COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.COS]==] )
+add_test(NAME AutoDiffTest.EXP COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.EXP]==] )
+add_test(NAME AutoDiffTest.LINSIGMOID COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LINSIGMOID]==] )
+add_test(NAME AutoDiffTest.LOG COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LOG]==] )
+add_test(NAME AutoDiffTest.LTCONSTRAINT COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LTCONSTRAINT]==] )
+add_test(NAME AutoDiffTest.LTECONSTRAINT COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LTECONSTRAINT]==] )
+add_test(NAME AutoDiffTest.MAX COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.MAX]==] )
+add_test(NAME AutoDiffTest.MIN COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.MIN]==] )
+add_test(NAME AutoDiffTest.OR COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.OR]==] )
+add_test(NAME AutoDiffTest.REIFICATION COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.REIFICATION]==] )
+add_test(NAME AutoDiffTest.SIN COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.SIN]==] )
+add_test(NAME AutoDiffTest.TERMPOWER COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.TERMPOWER]==] )
+add_test(NAME AutoDiffTest.EQUALITY COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.EQUALITY]==] )
+add_test(NAME AutoDiffTest.COMPILED COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.COMPILED]==] )
 
 
 # Install

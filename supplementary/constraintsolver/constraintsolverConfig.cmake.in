@@ -1,0 +1,15 @@
+# required by CMakePackageConfigHelpers
+# https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html
+@PACKAGE_INIT@
+
+# forward the targets
+include(${CMAKE_CURRENT_LIST_DIR}/constraintsolverTargets.cmake)
+
+
+# define INCLUDE_DIRS and LIBRARIES, required for catkin_package
+set_and_check(constraintsolver_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(constraintsolver_LIBRARIES constraintsolver)
+
+
+# labels the packages as found or not
+check_required_components(constraintsolver)
