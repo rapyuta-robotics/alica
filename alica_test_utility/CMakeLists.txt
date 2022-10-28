@@ -3,6 +3,8 @@ project(alica_test_utility)
 
 add_compile_options(-std=c++17)
 
+include(../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
@@ -11,17 +13,13 @@ set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 
 # Imports
-find_package(alica_common_config REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
 # Build 
-include_directories(
-	include
-	${alica_common_config_INCLUDE_DIRS}
-)
+include_directories(include)
 
 add_library(${PROJECT_NAME}
 	src/TestBehaviourCreator.cpp

@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(alica_dummy_tracing)
 
 add_compile_options(-std=c++17)
-
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)

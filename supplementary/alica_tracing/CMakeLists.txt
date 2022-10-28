@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.5.1)
 project(alica_tracing)
 add_compile_options(-std=c++17)
 
+
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
+
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
