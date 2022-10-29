@@ -60,11 +60,11 @@ void ResultEntry::clear()
 void ResultEntry::getCommunicatableResults(AlicaTime earliest, std::vector<SolverVar>& o_result) const
 {
     std::lock_guard<std::mutex> lock(_valueLock);
-    for (const auto& p : _values) {
-        if (p.second._lastUpdate > earliest) {
+    for (const auto& [id, value] : _values) {
+        if (value._lastUpdate > earliest) {
             SolverVar sv;
-            sv.id = p.first;
-            variant::serializeTo(sv.value, p.second._val);
+            sv.id = id;
+            variant::serializeTo(sv.value, value._val);
             o_result.push_back(std::move(sv));
         }
     }
