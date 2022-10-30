@@ -5,7 +5,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 set(BOOST_MIN_VERSION "1.71.0")
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS filesystem system REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 
