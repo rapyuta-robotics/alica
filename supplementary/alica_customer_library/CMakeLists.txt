@@ -4,6 +4,8 @@ project(alica_customer_library)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
+set(BOOST_MIN_VERSION "1.71.0")
+find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 
@@ -28,7 +30,12 @@ add_library(alica_customer_library SHARED
   ${alica_customer_library_SOURCES};
   ${alica_customer_library_HEADER};
 )
-target_link_libraries(alica_customer_library PUBLIC alica_engine alica_solver_interface)
+target_link_libraries(alica_customer_library PUBLIC
+                      alica_engine
+                      alica_solver_interface
+                      Boost::system
+                      Boost::filesystem
+)
 
 target_include_directories(alica_customer_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
