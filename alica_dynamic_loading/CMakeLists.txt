@@ -18,8 +18,7 @@ alica_compile_flags()
 
 # Imports
 find_package(alica_engine REQUIRED)
-set(BOOST_MIN_VERSION "1.71.0")
-find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS filesystem system REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 #Build
 include_directories(
