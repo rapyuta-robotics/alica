@@ -68,6 +68,8 @@ target_link_libraries(${PROJECT_NAME}
                         constraintsolver
 )
 
+add_subdirectory(alica_turtlesim_library)
+
 #############
 ## Install ##
 #############

@@ -16,9 +16,8 @@
   <depend>roscpp</depend>
   <depend>turtlesim</depend>
   <depend>geometry_msgs</depend>
-
   <depend>alica_engine</depend>
-
+  <depend>alica_dynamic_loading</depend>
   <depend>alica_ros_proxy</depend>
   <depend>constraintsolver</depend>
   <depend>alica_turtlesim_library</depend>
