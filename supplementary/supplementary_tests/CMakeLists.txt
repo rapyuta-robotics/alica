@@ -38,7 +38,7 @@ include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
 
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} 
+target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
                                                         Boost::system
                                                         Boost::filesystem
                                                         ${CMAKE_DL_LIBS}

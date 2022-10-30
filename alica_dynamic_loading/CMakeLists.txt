@@ -11,7 +11,7 @@ endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake_flags/cflags.cmake)
 alica_compile_flags()
@@ -46,7 +46,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-  alica_engine 
+  alica_engine
   Boost::system
   Boost::filesystem
   ${CMAKE_DL_LIBS}
@@ -60,7 +60,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
-  DESTINATION include/ 
+  DESTINATION include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
@@ -92,7 +92,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}

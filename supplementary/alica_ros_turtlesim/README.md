@@ -742,6 +742,7 @@ void GoTo::initialiseParameters()
 ### 8.1 Build
 
 follow the standard ros build step.
+
 ```bash
 cd catkin_ws
 source /opt/ros/$(ls /opt/ros)/setup.bash
@@ -758,9 +759,10 @@ Run application with roslaunch. video
 - Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
   `roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
 - Start moving.
-`rostopic pub /init std_msgs/Empty "{}" `
+  `rostopic pub /init std_msgs/Empty "{}" `
 
 ### 8.3 Run with Dynamic loading
+
 Is it possible to run Turtlesim using a dynamic library that contains all the Plan/Behaviour/Runtimecondition with:  
 `roslaunch alica_ros_turtlesim turtle.launch turtles:=2 dynamic:=YES`
 
