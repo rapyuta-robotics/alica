@@ -13,6 +13,7 @@
 
   <depend>alica_solver_interface</depend>
   <depend>alica_engine</depend>
+  <depend>constraintsolver</depend>
   <depend>alica_dynamic_loading</depend>
   <buildtool_depend>catkin</buildtool_depend>
 
