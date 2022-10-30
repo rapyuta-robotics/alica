@@ -23,18 +23,14 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
-message(${catkin_INCLUDE_DIRS})
 
 file(GLOB_RECURSE sources "src/*.cpp")
 
 add_library(alica_turtlesim_library
     ${sources};
 )
-target_link_libraries(alica_turtlesim_library ${catkin_LIBRARIES} alica_engine alica_solver_interface)
-
-if (NOT catkin_FOUND)
- target_include_directories(alica_turtlesim_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-endif (NOT catkin_FOUND)
+target_link_libraries(alica_turtlesim_library ${catkin_LIBRARIES} alica_solver_interface alica_engine )
+target_include_directories(alica_turtlesim_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
