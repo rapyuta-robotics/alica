@@ -18,7 +18,7 @@ alica_compile_flags()
 
 # Imports
 find_package(alica_engine REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 #Build
 include_directories(
