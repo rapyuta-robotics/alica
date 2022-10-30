@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_dynamic_loading)
 
-add_compile_options(-std=c++17)
-
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
 	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
@@ -15,11 +13,11 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 # Imports
 find_package(alica_engine REQUIRED)
-find_package(alica_common_config REQUIRED)
-find_package(alica_solver_interface REQUIRED)
 set(BOOST_MIN_VERSION "1.71.0")
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
 
@@ -48,7 +46,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-  alica_solver_interface 
   alica_engine 
   Boost::system
   Boost::filesystem

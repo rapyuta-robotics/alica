@@ -1,29 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_customer_library)
 
-add_compile_options(-std=c++17)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
-set(PKG_DEPS
-  roscpp
-  alica_ros_proxy
-  constraintsolver
-  turtlesim
-  geometry_msgs
-)
-
-find_package(yaml-cpp REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
-find_package(catkin REQUIRED COMPONENTS ${PKG_DEPS})
 
 # ##########
 # # Build ##
 # ##########
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-message(${catkin_INCLUDE_DIRS})
-
 set(alica_customer_library_SOURCES
   src/AcmeBehaviour.cpp
   src/AcmePlan.cpp
@@ -42,19 +28,22 @@ add_library(alica_customer_library SHARED
   ${alica_customer_library_SOURCES};
   ${alica_customer_library_HEADER};
 )
-target_link_libraries(alica_customer_library ${catkin_LIBRARIES})
+target_link_libraries(alica_customer_library PUBLIC alica_engine alica_solver_interface)
 
-if(NOT catkin_FOUND)
-  target_include_directories(alica_customer_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-endif(NOT catkin_FOUND)
+target_include_directories(alica_customer_library PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+
 
 install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  EXPORT ${CMAKE_PROJECT_NAME}Targets
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
 )
 
-install(DIRECTORY include/
-  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   PATTERN ".svn" EXCLUDE
 )
+
+

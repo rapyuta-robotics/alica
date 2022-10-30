@@ -15,4 +15,3 @@ This guide is thought as a reference for users of the Plan Designer, who simply 
 8. The PropertiesView
 9. Generating Code
 10. Code Generation Plugins
-

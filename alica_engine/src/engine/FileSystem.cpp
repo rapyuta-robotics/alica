@@ -1,4 +1,4 @@
-#include "essentials/FileSystem.h"
+#include "engine/FileSystem.h"
 #include <cstring>
 #include <dirent.h>
 #include <fstream>
@@ -304,7 +304,7 @@ std::string FileSystem::getParent(const std::string& path)
 bool FileSystem::createDirectory(std::string path, int rights)
 {
     std::string result = "";
-    int pos;
+    std::size_t pos;
     if (path[path.length() - 1] != PATH_SEPARATOR) {
         path = path + PATH_SEPARATOR;
     }

@@ -4,10 +4,10 @@ The domain-independence of the ALICA Framework allowed to build a substantial [a
 
 The four concepts that include domain-specific content are:
 
-* [conditions](conditions.md)
-* [behaviours](behaviours.md)
-* [utility functions](utility_functions.md)
-* [constraint descriptions](constraints.md)
+- [conditions](conditions.md)
+- [behaviours](behaviours.md)
+- [utility functions](utility_functions.md)
+- [constraint descriptions](constraints.md)
 
 For these four language elements, ALICA only defines the operational semantics that describes how these elements are handled during the execution of an ALICA program. At the same time, it allows domain experts to fill these elements with domain-specific code which ALICA considers as executable atomic black-box.
 
@@ -17,4 +17,4 @@ Additionally to these four concepts, the notion of a particular [task](finite-st
 
 You want to know how all these element work together? Then we recommend to read the article about [behaviours](behaviours.md) as they are the most fundamental building block of the ALICA Language.
 
-**NAV** *top: [Documentation](../README.md)* *next: [Behaviours](behaviours.md)*
+**NAV** _top: [Documentation](../README.md)_ _next: [Behaviours](behaviours.md)_

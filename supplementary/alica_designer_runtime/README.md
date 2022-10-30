@@ -3,7 +3,7 @@
 ## 1 How to start the plan designer?
 
 - To run the designer, use the shell script in
-supplementary/alica_designer_runtime/:
+  supplementary/alica_designer_runtime/:
 
 ```
     ./run_designer.sh [start|reset|update]
@@ -11,10 +11,11 @@ supplementary/alica_designer_runtime/:
         reset - clear the database
         update - pull newer images
 ```
+
 Launch time configurations can be changed at `config.env`
 
 - The designer is web based & runs in the browser. After executing the above command,
-navigate to http://localhost:3030/ to run the designer.
+  navigate to http://localhost:3030/ to run the designer.
 - When you start the plan designer for the first time, it should look like this:
 
 ![overview](./doc/empty_pd.png)
@@ -22,6 +23,7 @@ navigate to http://localhost:3030/ to run the designer.
 ## 2 Overview
 
 ### 2.1 Settings
+
 In the top left corner of the plan designer you can see a plus symbol.
 Clicking on that symbol shows the Settings menu.
 
@@ -32,6 +34,7 @@ Clicking on that symbol shows the Settings menu.
 ![settings](./doc/settings.png)
 
 ### 2.2 Import and export menu
+
 In the top left corner of the plan designer you can see a plus symbol.
 Clicking on that symbol opens the import and export menu of the plan designer.
 
@@ -82,21 +85,25 @@ You can create the following elements:
 - Conditions
 
 #### 2.4.1 Plan
+
 ![create_plan](./doc/create_plan.png)
 
 - Utility Threshold: A utility of an assignment needs an increase of at least the threshold value
-compared to the current assignment's utility before the assignment of an agent is replaced.
+  compared to the current assignment's utility before the assignment of an agent is replaced.
 - Frequency: Sets the number of executions of the plan's run method per second.
 - Master Plan: Check that box if you want to use the plan as a Master Plan for your agent.
 
 #### 2.4.2 Behaviour
+
 ![create_behaviour](./doc/create_behaviour.png)
+
 - Event Driven: Check that box if you prefer to execute the run method of the behaviour manually
-instead of executing it with a fixed frequency per second.
+  instead of executing it with a fixed frequency per second.
 - Frequency: Sets the number of executions of the behaviour's run method per second.
 - Deferring: Initial delay in ms before executing the behaviours run method the first time.
 
 #### 2.4.2 Task & TaskRepository
+
 ![create_task](./doc/create_task.png)
 
 - Task Repository: Select the repository in which the new task should be stored.
@@ -104,6 +111,7 @@ instead of executing it with a fixed frequency per second.
 You can create a TaskRepository by switching the tab from "Task" to "Task Repository".
 
 #### 2.4.3 Role & RoleSet
+
 ![create_role](./doc/create_role.png)
 
 - Role Set: Select the RoleSet in which the new role should be stored.
@@ -113,15 +121,17 @@ You can create a RoleSet by switching the tab from "Role" to "Role Set".
 ![create_roleset](./doc/create_roleset.png)
 
 - Default Priority: When a role of this roleset does not have a priority set for a task, this value
-will be used as its priority.
+  will be used as its priority.
 - Default Role Set: Check this box to use this RoleSet as your default one.
 
 #### 2.4.4 Plan Type, Configuration, TaskRepository & Conditions
+
 For the remaining elements of plans you only need to provide a name.
 
 ![create_plantype](./doc/create_plantype.png)
 
 ### 2.5 Selection menu
+
 In the selection menu you can select one of your previously created elements.
 
 ![selection_menu](./doc/selection_menu.png)
@@ -133,6 +143,7 @@ visible elements.
 At the top of the selection menu you can search for an element of any type by name.
 
 ### 2.6 Element settings menu
+
 Selecting an element in the selection menu (see 2.4) will open its settings menu right below the
 selection menu. Here you can adjust settings for each element of your plan.
 
@@ -147,6 +158,7 @@ you can change differ between the element types.
 ![behaviours_properties](./doc/properties_tab.png)
 
 #### 2.6.2 Conditions
+
 ![conditions_tab](./doc/conditions_tab.png)
 
 In the conditions tab you can add Pre Conditions, Runtime Conditions and Post Conditions. Not
@@ -161,16 +173,19 @@ To learn more about conditions, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/conditions.html).
 
 #### 2.6.3 Variables
+
 In the variables tab you can add variables to your element's conditions.
 
 To learn more about variables, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/variables.html).
 
 #### 2.6.4 Usage
+
 The usage tab shows you in which plans your selected element is used. Clicking on an entry in the
 list of usages will open the plan.
 
 #### 2.6.5 Plans
+
 You can apply plans to a PlanType in the "Plans" tab. Click on "Apply Plan" and select a plan from
 the list. You can click on the switch in the column "Active" to deactivate an active plan
 or activate a deactivated one in the PlanType without deleting it.
@@ -178,6 +193,7 @@ or activate a deactivated one in the PlanType without deleting it.
 ![plans_tab](./doc/plans_tab.png)
 
 #### 2.6.6 Variable Bindings
+
 You can create variable bindings for PlanTypes by clicking on "Add Variable Binding".
 
 This will open a window at the center of the plan designer.
@@ -188,6 +204,7 @@ To learn more about variable bindings, have a look at the
 ![create_variable_binding](./doc/create_variable_binding.png)
 
 #### 2.6.7 Parameters
+
 You can set parameters for configurations. Click on "Apply Configuration Parameter" to create
 a parameter with name and value.
 
@@ -195,14 +212,17 @@ To learn more about configurations and parameters, have a look at the
 [documentation](https://rapyuta-robotics.github.io/alica/articles/configurations.html).
 
 #### 2.6.8 Roles
+
 In the roles tab of a RoleSet you can add new roles to the roleset and remove existing ones.
 Clicking on the edit button of a role will open its properties tab.
 
 #### 2.6.9 Task Priorities
+
 You can set task priorities for a role by clicking on "Apply Task Priority", selecting a task
 and setting a value for priority.
 
 #### 2.6.10 Blackboard
+
 In the blackboard tab you can setup the blackboard of an element. By clicking on "Setup Blackboard", you can
 add items to the blackboard and set their keys.
 ![setup_blackboard](./doc/setup_blackboard.png)
@@ -217,15 +237,17 @@ On the left side of the plan designer you can see a list of tools you can use to
 ![plan_creation_tools](./doc/plan_creation_tools.png)
 
 From top to bottom these tools are:
-  - Selection Tool
-  - Entry Point Tool
-  - State Tool
-  - Success State Tool
-  - Failure State Tool
-  - Synchronization Tool
-  - Transition Synchronization Tool
+
+- Selection Tool
+- Entry Point Tool
+- State Tool
+- Success State Tool
+- Failure State Tool
+- Synchronization Tool
+- Transition Synchronization Tool
 
 ### 2.7.1 Entry Points
+
 Select the entry point tool symbol and click somewhere in the plan space. This will open a
 window for creating your entry point.
 
@@ -301,6 +323,7 @@ over the element you want to remove and clicking on the "X".
 ## 3 How to import and export plans?
 
 The plan designer supports three ways of importing and exporting plans:
+
 - Using native filesystem (only with NATIVE_MODE)
 - Using zip files
 - Using a GitHub repository
@@ -310,10 +333,12 @@ The plan designer supports three ways of importing and exporting plans:
 The web-plan-designer provides the capability to import and export plans directly from and to the local filesystem on the host where the web designer is running.
 
 To do this, the following environment variables must be set at launch time
+
 - `NATIVE_MODE` must be set to `true`. [See here](https://github.com/rapyuta-robotics/alica/blob/7ca145e25647a3a65a6e624c0ab8786d15198cf3/supplementary/alica_designer_runtime/config.env#L8)
 - `NATIVE_IMPORT_EXPORT_PATH` should be set to the filesystem path where the import/export takes place [See here](https://github.com/rapyuta-robotics/alica/blob/7ca145e25647a3a65a6e624c0ab8786d15198cf3/supplementary/alica_designer_runtime/config.env#L11)
 
 #### 3.1.1 Export
+
 Simply click on the ‘+’ button in the top left corner of the page, and then click on File System -> Export
 
 ![import_export_fs](./doc/import_export_fs.png)
@@ -321,6 +346,7 @@ Simply click on the ‘+’ button in the top left corner of the page, and then 
 This will export the plans directly to the host's filesystem.
 
 #### 3.1.2 Import
+
 Same as export, but click on File System -> Import. This will import plans directly from the host's filesystem.
 
 On successful import the plans should be visible in the right panel.
@@ -331,6 +357,7 @@ The web-plan-designer provides the capability to export
 your plans to a zip file, and also import plans from a zip file.
 
 #### 3.2.1 Export
+
 Simply click on the ‘+’ button in the top left corner of the page, and then click on Zip -> Export to Zip.
 
 ![import_export_zip](./doc/import_export_zip.png)
@@ -339,11 +366,13 @@ This will trigger a download of a zip file "web_designer_program.zip".
 The zip file contains information about your created plans.
 
 To use your alica plans in your project you have to
- - Extract the content of the zip file
- - Replace the content of your projects etc/ folder with the plans,
-roles and tasks folder in web_designer_program/alica_program/
+
+- Extract the content of the zip file
+- Replace the content of your projects etc/ folder with the plans,
+  roles and tasks folder in web_designer_program/alica_program/
 
 #### 3.2.2 Import
+
 Same as export, but click on Zip -> Import from Zip, and select a zip file from your computer containing valid ALICA plan elements,
 to import them to the web-designer. Usually this will be a zip file of your etc/ folder.
 
@@ -353,6 +382,7 @@ you’ve done on the web-designer, so make sure to export first, to save your da
 On successful import the plans should be visible in the right panel.
 
 ### 3.3 Git-Workflow
+
 It is also possible to import plans from a remote GitHub repository,
 as well as push changes back to the same repo, or any other, if explicitly specified.
 
@@ -382,12 +412,12 @@ To be able to login to github and use the Git-workflow to import and export plan
     export SOCIAL_APP_CLIENT_ID=<client_id>
     export SOCIAL_APP_SECRET=<client_secret
 ```
+
 This can also be set in `config.env`
 
 4. Set the client ID in the web-plan-designer [settings](#21-settings) after launch
 
 ![oauth_settings](./doc/oauth_settings.png)
-
 
 #### 3.3.1 Import
 
@@ -401,7 +431,7 @@ Branch Name: You can also enter a branch name, if kept blank, remote’s default
 
 Plans Path: It is also recommended to provide the path to the plan elements (relative to repo root), in case your repo contains many different folders each organising an ALICA designer project.
 
-E.g.  If your plans are in the `di_core`-repo , then the path for plans would be `robot/lbc/etc`, since that’s where the plans are located remotely.
+E.g. If your plans are in the `di_core`-repo , then the path for plans would be `robot/lbc/etc`, since that’s where the plans are located remotely.
 
 NOTE: If the repository contains duplicate plans, but in different sub paths of the repo, providing Plans Path is necessary or else, the import process will fail.
 
@@ -411,7 +441,7 @@ After a successful git-import the plans should be visible in the right panel as 
 
 #### 3.3.2 Export
 
-In the top left corner  ‘+’ -> GitHub -> Git Export
+In the top left corner ‘+’ -> GitHub -> Git Export
 The following form will pop up:
 
 ![export_git](./doc/export_git.png)

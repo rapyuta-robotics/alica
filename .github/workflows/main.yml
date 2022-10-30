@@ -1,0 +1,24 @@
+name: Build and Test
+on:
+  push:
+    branches:
+      - devel
+  pull_request:
+    branches:
+      - devel
+  workflow_dispatch:
+jobs:
+  ROS2_build_test:
+    runs-on: "${{ matrix.os }}"
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Pull ROS2 images
+        run: docker pull ros:humble
+      - name: Test Alica on ROS Humble
+        uses: ./.github/workflows/ros2_build_test/

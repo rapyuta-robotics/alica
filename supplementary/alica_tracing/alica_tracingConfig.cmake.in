@@ -2,13 +2,14 @@
 # https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html
 @PACKAGE_INIT@
 
-
 # forward the targets
+include(${CMAKE_CURRENT_LIST_DIR}/alica_tracingTargets.cmake)
 
 
 # define INCLUDE_DIRS and LIBRARIES, required for catkin_package
-set_and_check(alica_common_config_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set_and_check(alica_tracing_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(alica_tracing_LIBRARIES alica_tracing)
 
 
 # labels the packages as found or not
-check_required_components(alica_common_config)
+check_required_components(alica_tracing)

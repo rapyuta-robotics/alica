@@ -8,12 +8,12 @@
 
   <license>MIT</license>
 
-  <author email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</author> 
+  <author email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</author>
 
   <depend>alica_engine</depend>
   <depend>alica_dummy_proxy</depend>
-  
-<buildtool_depend>cmake</buildtool_depend>
+
+  <buildtool_depend>cmake</buildtool_depend>
 
   <export>
     <build_type>cmake</build_type>

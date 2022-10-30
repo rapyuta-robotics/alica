@@ -3,23 +3,19 @@ project(supplementary_tests)
 
 add_compile_options(-std=c++17)
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
+
 find_package(catkin REQUIRED COMPONENTS
     roscpp
-    alica_ros_proxy    
-    constraintsolver
     alica_ros_proxy
 )
 
-
 set(BOOST_MIN_VERSION "1.71.0")
 find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
-
-##Yaml
-find_package(yaml-cpp REQUIRED)
-
-find_package(fsystem REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
+find_package(constraintsolver REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
@@ -27,13 +23,15 @@ find_package(alica_test_utility REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
 
 
-include_directories(include)
+include_directories(include
+    ${alica_common_config_INCLUDE_DIRS}
+)
 
 catkin_package(
   INCLUDE_DIRS include src/test/Expr/include
   LIBRARIES autogen_code_supplementary_tests
-  CATKIN_DEPENDS     constraintsolver alica_ros_proxy
-  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_dynamic_loading
+  CATKIN_DEPENDS      alica_ros_proxy
+  DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver constraintsolver alica_dynamic_loading
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
@@ -47,6 +45,7 @@ target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
                                                         ${YAML_CPP_LIBRARIES}
                                                         alica_test_utility
                                                         alica_dynamic_loading
+                                                        constraintsolver
                                                         )
 
 if (CATKIN_ENABLE_TESTING)
