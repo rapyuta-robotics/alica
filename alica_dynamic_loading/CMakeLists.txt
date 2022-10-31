@@ -17,6 +17,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 # Imports
+find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 if (NOT Boost_FOUND)
@@ -48,6 +49,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
   alica_engine
+  alica_solver_interface
   Boost::system
   Boost::filesystem
   ${CMAKE_DL_LIBS}
