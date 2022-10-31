@@ -2,7 +2,7 @@
 
 ###Base.cpp
 
-``` cpp
+```cpp
 #include <iostream>
 
 #include <thread>
@@ -32,30 +32,30 @@ namespace msl
 		cc = new alica::ConditionCreator();
 		uc = new alica::UtilityFunctionCreator();
 		crc = new alica::ConstraintCreator();
-		
+
 		//You can create your own Clock and Communication by inheriting from
 		//AlicaClock and IAlicaCommunication, respectively.
 		//ae.setAlicaClock(new MyOwnClock());
-		
+
 		//DummyCommunication has only empty methods so cant communicate with other robots
 		//Without ros use this
 		ae->setCommunicator(new alicaDummyProxy::AlicaDummyCommunication(ae));
-		
-		//WORLDMODEL 
+
+		//WORLDMODEL
 		wm = MSLWorldModel::get();
 
 		//FOR CARPE NOCTEM
 		RobotMovement::readConfigParameters();
-		
+
 		//The engine method will initialize all parameters and classes which it needs
-		//Only call init isnt enough this will only initialize stuff and parse plans, beh etc., you have to call start ae->start();  
+		//Only call init isnt enough this will only initialize stuff and parse plans, beh etc., you have to call start ae->start();
 		ae->init(bc, cc, uc, crc, roleSetName, masterPlanName, roleSetDir, false);
 	}
 
 	void Base::start()
 	{
 		//After init the engine you should call start
-		//The PlanBase will now tick 
+		//The PlanBase will now tick
 		ae->start();
 	}
 
@@ -71,7 +71,7 @@ namespace msl
 
 } /* namespace msl */
 
-// Arguments for the main should be the path MasterPlan name, RoleSet directory and the correct RoleSet. 
+// Arguments for the main should be the path MasterPlan name, RoleSet directory and the correct RoleSet.
 int main(int argc, char** argv)
 {
 	cout << "Initing Ros" << endl;
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 	Base* base = new Base(roleset, masterplan, rolesetdir);
 
 	base->start();
-	
+
 	//If ROS --> need || !ROS --> comment out
 	while (ros::ok())
 	{
@@ -133,9 +133,10 @@ int main(int argc, char** argv)
 	return 0;
 }
 ```
+
 ###Base.h
 
-``` cpp
+```cpp
 #ifndef BASE_H_
 #define BASE_H_
 

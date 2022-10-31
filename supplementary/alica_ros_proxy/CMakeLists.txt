@@ -19,7 +19,7 @@ catkin_package(
   INCLUDE_DIRS include ${catkin_INCLUDE_DIRS}
   LIBRARIES alica_ros_proxy
   CATKIN_DEPENDS roscpp
-  DEPENDS  alica_solver_interface alica_engine 
+  DEPENDS  alica_solver_interface alica_engine
 )
 
 include_directories(

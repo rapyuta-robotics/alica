@@ -12,12 +12,12 @@
 	EngineFrequency = 30
 	#per plan, per iteration:
 	MaxRuleApplications = 20
-	
+
 	#if true, do not send out messages (except debug status) till MaySendMessages is set to true
 	SilentStart = false
 
 	AllowIdling = false
-	
+
 	MaxEpsPerPlan = 20
 
 	#relative to ES_ROOT env variable or absolute:

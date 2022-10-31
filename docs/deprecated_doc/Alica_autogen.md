@@ -6,13 +6,17 @@
 ![Used Plan](PlanDesignerNewPlan.png)
 
 **Explanation of Plan code**
-* [Plan code](Plancode.md)
+
+- [Plan code](Plancode.md)
 
 **Explanation of Plan constraint code**
-* [PlanConstrain code](PlanConstraintCode.md)
+
+- [PlanConstrain code](PlanConstraintCode.md)
 
 **Explanation of Behavoiur code**
-* [Behaviour code](BehCode.md)
+
+- [Behaviour code](BehCode.md)
 
 **Explanation of Domain Behaviour**
-* [DomainBehaviour code](Domain.md)
+
+- [DomainBehaviour code](Domain.md)

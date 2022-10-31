@@ -1,7 +1,7 @@
 c FILE:  bf0432-007.cnf
 c
 c SOURCE: Allen Van Gelder (avg@cs.ucsd.edu) and Yumi Tsuji
-c        (tsuji@cse.ucsc.edu) 
+c        (tsuji@cse.ucsc.edu)
 c
 c Nemesis formula in 6CNF in accordance with DIMACS CNF format:
 c    Filename: MCNC/c432/c432.tdl

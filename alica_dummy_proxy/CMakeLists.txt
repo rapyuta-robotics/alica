@@ -17,11 +17,11 @@ find_package(alica_engine REQUIRED)
 # Build
 include_directories(include)
 
-add_library(alica_dummy_proxy SHARED 
+add_library(alica_dummy_proxy SHARED
   src/communication/AlicaDummyCommunication.cpp
 )
 
-target_include_directories(alica_dummy_proxy PUBLIC 
+target_include_directories(alica_dummy_proxy PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
@@ -71,7 +71,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}

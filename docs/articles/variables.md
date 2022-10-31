@@ -1,6 +1,6 @@
 # Variables
 
-Variables belong to plans, plantypes, or behaviours that provide a context to the variables. There are two kind of variables available in ALICA: Agent variables that are bound to a quantified group of agents, e. g., there is a variable X for each agent A in state S, and free variables that are not bound by any quantification. The only way to assign values to the variables is through a [problem solver](./solvers.md). 
+Variables belong to plans, plantypes, or behaviours that provide a context to the variables. There are two kind of variables available in ALICA: Agent variables that are bound to a quantified group of agents, e. g., there is a variable X for each agent A in state S, and free variables that are not bound by any quantification. The only way to assign values to the variables is through a [problem solver](./solvers.md).
 
 ## Quantified and Free Variables
 
@@ -16,7 +16,7 @@ So the semantics of a quantifier can be read as "For all agents (universal agent
 
 ## Variable Bindings
 
-The variables of plans and plantypes in ALICA programs can be bound to variables of other plans, plantypes, and behaviours via a variable binding. The purpose of variable bindings in the ALICA language is to combine different constraints for the same variable in the plan hierarchy of an ALICA program. 
+The variables of plans and plantypes in ALICA programs can be bound to variables of other plans, plantypes, and behaviours via a variable binding. The purpose of variable bindings in the ALICA language is to combine different constraints for the same variable in the plan hierarchy of an ALICA program.
 There are two objects that can include variable bindings in the ALICA language. States, on the one hand, use bindings to bind the variables of the plan they are part of to variables of plans, plantypes, or behaviours inside themselves. Plantypes, on the other hand, bind their own variables to variables of plans inside themselves. The variable bindings are transitive, i. e. a variable of the top-level plan can be bound to variables of plans several levels below in the plan tree structure.
 
 A variable binding includes three entities: a variable, a sub-variable, and a sub plan.
@@ -29,5 +29,4 @@ A variable binding includes three entities: a variable, a sub-variable, and a su
 
 Please note, that variable bindings can only bind free variables. Quantified variables cannot be bound at all, since they are considered to be globally defined for each agent and not bound to the context of the plan, which owns the quantifier.
 
-**NAV** *prev:* [Configurations](configurations.md) *top: [Overview](../README.md)* *next: [Constraints](constraints.md)*
-
+**NAV** _prev:_ [Configurations](configurations.md) _top: [Overview](../README.md)_ _next: [Constraints](constraints.md)_

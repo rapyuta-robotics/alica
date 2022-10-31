@@ -54,8 +54,8 @@ notifications:
   - provider: Slack
     auth_token:
       secure: sQ5XjjBlOx8DYbuBh7sjsVTqY69K9XnypJucajuCAQHjXNSJJLr2k/s4zC4qX7HvadmbnqlSvTr83o8dRjnR6AHQ7L7ZUw0ZOPjRCwknEyU=
-    channel: '#alica-plan-designer-fx'
-    on_build_success: true  # TODO: set to false later
+    channel: "#alica-plan-designer-fx"
+    on_build_success: true # TODO: set to false later
 
 # RDP for debugging
 # requires encrypted environment variable "APPVEYOR_RDP_PASSWORD"

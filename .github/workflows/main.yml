@@ -21,5 +21,4 @@ jobs:
       - name: Pull ROS2 images
         run: docker pull ros:humble
       - name: Test Alica on ROS Humble
-        uses: ./.github/workflows/ros2_build_test/ 
-    
+        uses: ./.github/workflows/ros2_build_test/
