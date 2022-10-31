@@ -50,7 +50,6 @@ public:
         // will be called from the scheduler thread which is fine since stop() anyway blocks on userCb()
         _userCb();
 
-        // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
         _timer = rclcpp::create_timer(_nh, _nh->get_clock(), _period, std::bind(&SyncStopTimerRosImpl::timerCb, this));
     }
 
