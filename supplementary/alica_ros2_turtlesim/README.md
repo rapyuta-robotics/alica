@@ -1,6 +1,9 @@
 # Turtlesim Tutorial
+
 ## 1. Overview
+
 This tutorial is an extension of the [turtlesim ROS package](http://wiki.ros.org/turtlesim). By following this tutorial, you will learn
+
 - some of the core concepts of the ALICA language
 - how to achieve multi-agent collaboration with the ALICA framework
 
@@ -10,27 +13,36 @@ In this tutorial, you will create an application as shown in the picture below. 
 ![alica_ros_turtlesim](./doc/alica_ros_turtlesim.gif)
 
 ## 2. Prerequisite
+
 You need to be familiar with following topics and tools:
+
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/installing.html)
 
 ## 3. The ALICA Language - Basics and Core Concepts
+
 We will only give you a brief explanation on the ALICA core concepts. For the interested reader, we recommend to consider the [documentation](https://rapyuta-robotics.github.io/alica/) of the ALICA framework for more detailed information.
+
 ### Plan
-A plan is a state machine in tree structure. Plans can include plans and states and each state can include `Behaviour`s. The ALICA engine assigns entrypoints of the  plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
+
+A plan is a state machine in tree structure. Plans can include plans and states and each state can include `Behaviour`s. The ALICA engine assigns entrypoints of the plan tree to the agents, e.g., robots based on `Role`, `Task`, `Constraints` and `Utility function`.
 The ALICA engine manages state transitions based on the developers code. The ALICA plan designer generates method stubs that a developer will fill with state transition logic. The developer can create plans using the ALICA plan designer.
 
 ### Behaviour
+
 The developer can write robot behaviours in C++ for each state. The ALICA plan designer generates method stubs and the developer implements the behaviour logic in these stubs. In this tutorial, there are the `Go2RandomPosition` and `GoTo` behaviour.
-The turtles are teleported to random position with `Go2RandomPosition` and they go to their target position with  the `GoTo` behaviour.
+The turtles are teleported to random position with `Go2RandomPosition` and they go to their target position with the `GoTo` behaviour.
 
 ### Role
 
-A role is a task preference of the agent and it describes physical difference among agents , e.g., differences between a robotic arm and an AGV. In this tutorial all agent have same role:  `Turtle`
+A role is a task preference of the agent and it describes physical difference among agents , e.g., differences between a robotic arm and an AGV. In this tutorial all agent have same role: `Turtle`
 
 ### Task
+
 A task is assigned to an agent based on the `Role` of that agent and based on the `Utility function` of the plan. A task identifies an entry point of a state machine. The ALICA engine realises multi-agent collaboration by assigning tasks to agents. In this tutorial, there are the `Leader` and the `Follower` task. One turtle is assigned the `Leader` task and it moves to the centre. The other turtles are assigned the `Follower` task and they align in a circle.
+
 ### Constraints
+
 Developers can set constraints to plans. The ALICA engine can solve constraints and return corresponding answers. In this tutorial, the turtles align in a circle defined by distance constraints.
 
 ### Worldmodel
@@ -40,6 +52,7 @@ The world model represents the model of the world from the perspective of an age
 ![coreconcept](doc/coreconcept.png)
 
 ## 4. Setup of the Catkin Workspace
+
 We need to create a catkin workspace by executing the following steps in an Ubuntu18.04 terminal.
 
 1. Check out the required repositories:
@@ -67,7 +80,9 @@ mkdir -p alica_ros_turtlesim/alica/etc
 ```
 
 ## 5. Setup of the ALICA Plan Designer
+
 The ALICA plan designer is a user interface to design applications with the ALICA framework.
+
 ### 5.1 Start the ALICA plan designer by following steps
 
 The Plan Designer is a web application and can be started by using docker-compose.
@@ -82,16 +97,15 @@ docker-compose up
 You can open the Plan Designer with a browser of your choice by visiting the url
 http://localhost:3030.
 
- When you start the Plan Designer the first time, its main window should look like this:
+When you start the Plan Designer the first time, its main window should look like this:
 
 ![Empty Plan Designer](doc/Empty-PlanDesigner.png)
 
-
-
 ## 6. Create the Tutorial Plans with the Plan Designer
+
 In this section, you will create plans using the ALICA plan designer.
 In this tutorial there are two plans, `Master` and `Move`. The `Master`
-plan has an `Init` and `Move` state.  The `Move` plan includes the
+plan has an `Init` and `Move` state. The `Move` plan includes the
 `Move2Center` and the `AlignCircle` state. In the `Init` state, the turtle
 is teleported to a random position (`Go2RandomPosition` behaviour) and then
 transitions to the `Move` state.
@@ -99,17 +113,20 @@ transitions to the `Move` state.
 ![plan](doc/plan.png)
 
 ### 6.1 Create the TaskRepository
+
 1. In the top right corner, click on "More" and select "Task".
 2. Go to the tab "Task Repository", enter `TaskRepository` as the name of your
-TaskRepository and click on "Create New".
+   TaskRepository and click on "Create New".
 3. Repeat step 1.
 4. In the tab "Task", enter `DefaultTask` for the Task Name, select the TaskRepository `TaskRepository` in the
-drop down menu and click on "Create New".
+   drop down menu and click on "Create New".
 
 ### 6.2 Create the Master Plan
+
 ![master_plan](doc/master_plan.png)
+
 1. Click on the menu button "Plan" in the top right corner. This will open a window
-for creating a new plan on the right side of your browser window.
+   for creating a new plan on the right side of your browser window.
 2. Enter 'Master' as the plan name and check the Master Plan checkbox at the bottom.
 3. Click on "Create New" to create the Master Plan.
 
@@ -119,12 +136,12 @@ On the top left you will see a tab for your newly created Master Plan.
 5. Add a transition from `Init` to `Move` and from `Move` to `Init`.
    1. Hover over the state `Init`.
    2. Click and hold while your cursor is on the plus symbol inside the circle appearing
-   at the top of the state.
+      at the top of the state.
    3. Drag your mouse to the `Move` state. Let go of your mouse when your cursor is on the plus symbol
-   inside the circle appearing at the top of the state `Move`.
+      inside the circle appearing at the top of the state `Move`.
    4. Repeat step 1-3 for the transition from `Move` to `Init`.
    5. Select the transition from `Init` to `Move`, delete the generated pre condition and create a new one.
-   Make sure to check the "Enabled" checkbox. Do the same thing for the transition from `Move` to `Init`.
+      Make sure to check the "Enabled" checkbox. Do the same thing for the transition from `Move` to `Init`.
 6. Create an entrypoint. Select `DefaultTask` as a Task and click on "Select".
 7. Connect the entrypoint with the `Init` state.
 8. Set the "Minimum Cardinality" of the entrypoint to 1 and the "Maximum Cardinality" to 2147483647.
@@ -137,7 +154,9 @@ On the top left you will see a tab for your newly created Master Plan.
 12. Select the "Plans" tab, click on `Move` and drag and drop it on the `Move` state.
 
 ### 6.3 Move plan
+
 ![move_plan](doc/move_plan.png)
+
 1. Open the `Move` plan by selecting it in the "Plans" tab.
 2. Create two states `Move2Center` and `AlignCircle`.
 3. Create two entrypoints with new tasks `Leader` and `Follower`.
@@ -148,32 +167,33 @@ On the top left you will see a tab for your newly created Master Plan.
 8. Select the `Move` plan and add a RuntimeCondition with the name `CircleRuntimeCondition`.
 9. Click on the edit button of the CircleRuntimeConditon, select the Quantifiers tab.
 10. Choose `Move` as the "Entity Name". Enter `x` and `y` separately into the "Sorts" field
-and click on "Create New".
+    and click on "Create New".
 11. Close the edit window of CircleRuntimeConditon.
 
 ### 6.4 Create the RoleSet
 
 1. In the top right corner click on "More" and select "Role".
 2. Select the "Roleset" tab and create a RoleSet with the name `RoleSet` and check the
-'Default Role Set' checkbox.
+   'Default Role Set' checkbox.
 3. Repeat step 1. and create a role with the name `Turtle`. Select `RoleSet` as your Role Set.
 4. Go to the tab `Task Priorities`, click on `Apply Task Priority`. Select the task `Follower` and set the
-priority to 0.1.
+   priority to 0.1.
 
 ### 6.5 Export files and generate code
 
 1. In the top left corner click on the plus symbol and select `Export`. The browser will start a download of
-the file `web_designer_program.zip`.
+   the file `web_designer_program.zip`.
 2. Extract the archive, open the alica_program folder and place `plans`, `roles` and the `tasks` into your
-alica_ros_turtlesim/alica/etc/ folder.
+   alica_ros_turtlesim/alica/etc/ folder.
 3. Navigate into alica/supplementary/alica_designer_runtime and execute generate.sh with
-```./generate.sh ../alica_ros_turtlesim/alica/```
+   `./generate.sh ../alica_ros_turtlesim/alica/`
 
 Your generated files will be stored in alica/supplementary/alica_ros_turtlesim/alica/Expr
 
 ## 7. Implement Logics
 
 After the ALICA plan designer generated the method stubs, you need to modify/implement the logic in these stubs. In this section, the necessary code changes are explained for this.
+
 ### 7.1 World model
 
 We will explain only `base.cpp` which is related to ALICA.
@@ -337,7 +357,7 @@ bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp)
 ```
 
 - L4 : include world model since state transitions depend on the world model
-- `PreCondition1597434482701133956::evaluate`:  This is the transition condition from ‘Init’ to ‘Move’. This success condition is met by calling setSuccess in behaviour logic which is explained later in "Behaviours".
+- `PreCondition1597434482701133956::evaluate`: This is the transition condition from ‘Init’ to ‘Move’. This success condition is met by calling setSuccess in behaviour logic which is explained later in "Behaviours".
 - `PreCondition1136497454350831106::evaluate`: This is the transition condition from ‘Move’ to ‘Init’. This condition is met by publishing to the rostopic `/init`.
 
 #### alica/Expr/src/Move<id>.cpp
@@ -404,7 +424,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1889749086610694100::getUtilityF
 
 In this file, you need to set the runtime condition to always return true.
 
-* `RunTimeCondition1288817888979746811::evaluate`: Always returns true. Only the attached constraint is important (see next file).
+- `RunTimeCondition1288817888979746811::evaluate`: Always returns true. Only the attached constraint is important (see next file).
 
 #### alica/Expr/src/constraints/Move<id>Constraints.cpp
 
@@ -531,18 +551,19 @@ void Constraint1288817888979746811::getConstraint(std::shared_ptr<ProblemDescrip
 } // namespace alica
 ```
 
+- L3~7: include alica engine related header files and world model.
+- L46~110: Iterate over all agents and add constraints for each
+- L47~73: Preparing/getting variables and add range constraints
+- L77: add constraints for `Leader` agent. Leader agent moves to center of circle within tolearence
+- L81~L108: Iterate other agent to add constraints to keep distance among `Follower` agents. (Please note that copy-paste won't work, because you generated an entrypoint ID that is different from the one given in the repository. Enter the ID of the Leader entrypoint of your move plan here.)
 
-  - L3~7: include alica engine related header files and world model.
-  - L46~110: Iterate over all agents and add constraints for each
-  - L47~73: Preparing/getting variables and add range constraints
-  - L77: add constraints for `Leader` agent. Leader agent moves to center of circle within tolearence
-  - L81~L108: Iterate other agent to add constraints to keep distance among `Follower` agents. (Please note that copy-paste won't work, because you generated an entrypoint ID that is different from the one given in the repository. Enter the ID of the Leader entrypoint of your move plan here.)
+### 7.3 Behaviours
 
-### 7.3  Behaviours
-The auto-generated <behaviour_name>.cpp files under alica/Expr/src  have a `run` function which keeps running at the frequency specified when you created the behaviours in the plan designer.
+The auto-generated <behaviour_name>.cpp files under alica/Expr/src have a `run` function which keeps running at the frequency specified when you created the behaviours in the plan designer.
+
 #### alica/Expr/src/Go2RandomPosition.cpp
 
-In this file, you need to implement the teleportation of the  turtles:
+In this file, you need to implement the teleportation of the turtles:
 
 ```c++
 #include "Go2RandomPosition.h"
@@ -608,7 +629,7 @@ void Go2RandomPosition::initialiseParameters()
 
 - L6: Include world model
 - `Go2RandomPosition::run`: Generate random value and teleport turtle via world model.
-- `Go2RandomPosition::run`: After executing `setSuccess()`, `isAnyChildStatus(PlanStatus::Success)` at alica/Expr/src/Master***.cpp returns true. Then the state transition from `Init` to `Move` will be executed.
+- `Go2RandomPosition::run`: After executing `setSuccess()`, `isAnyChildStatus(PlanStatus::Success)` at alica/Expr/src/Master\*\*\*.cpp returns true. Then the state transition from `Init` to `Move` will be executed.
 
 #### alica/Expr/include/GoTo.h
 
@@ -646,6 +667,7 @@ private:
 };
 } /* namespace alica */
 ```
+
 - L6: Include Query
 - private variables: Add query and result which are used to get the solver result.
 
@@ -711,28 +733,33 @@ void GoTo::initialiseParameters()
 ```
 
 - L6-7: Include world model and CGSolver
-- `GoTo::run`: Inside the `run` function,  get a result from the solver. The CGSolver solves constraints defined in the  alica/Expr/src/constraints/Move***.cpp
+- `GoTo::run`: Inside the `run` function, get a result from the solver. The CGSolver solves constraints defined in the alica/Expr/src/constraints/Move\*\*\*.cpp
 - `GoTo::run`: Move turtle to the solver result position via world model.
-- `GoTo::initialiseParameters`: Add variable to query. `x` and `y` was defined when  “Quantifiers” of “Runtime Condition” was added in the ALICA plan designer
+- `GoTo::initialiseParameters`: Add variable to query. `x` and `y` was defined when “Quantifiers” of “Runtime Condition” was added in the ALICA plan designer
 
 ## 8. Build and Run
+
 ### 8.1 Build
+
 follow the standard ros build step.
+
 ```
 cd catkin_ws
 source /opt/ros/$(ls /opt/ros)/setup.bash
 catkin build alica_ros_turtlesim
 source ./devel/setup.bash
 ```
-### 8.2 Run
-Run application with roslaunch. video
-- Launch turtlesim
-			`roslaunch alica_ros_turtlesim env.launch`
-- Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
-`roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
-- Start moving.
-`rostopic pub /init std_msgs/Empty "{}" `
 
+### 8.2 Run
+
+Run application with roslaunch. video
+
+- Launch turtlesim
+  `roslaunch alica_ros_turtlesim env.launch`
+- Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
+  `roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
+- Start moving.
+  `rostopic pub /init std_msgs/Empty "{}" `
 
 ## 9. Troubleshooting
 
