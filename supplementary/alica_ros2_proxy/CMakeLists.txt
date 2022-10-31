@@ -30,9 +30,9 @@ include_directories(
 )
 
 add_library(alica_ros2_proxy SHARED
-	src/clock/AlicaROS2Clock.cpp
-	src/communication/AlicaRos2Communication.cpp
-  src/logger/AlicaRos2Logger.cpp
+	src/ros2_clock/AlicaROSClock.cpp
+	src/ros2_communication/AlicaRosCommunication.cpp
+  src/ros2_logger/AlicaRosLogger.cpp
 )
 
 # add_dependencies(alica_ros2_proxy alica_msgs_generate_messages_cpp)

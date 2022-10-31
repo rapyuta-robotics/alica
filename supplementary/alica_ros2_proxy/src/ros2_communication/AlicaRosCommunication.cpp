@@ -1,4 +1,4 @@
-#include "communication2/AlicaRos2Communication.h"
+#include "ros2_communication/AlicaRosCommunication.h"
 
 #include <engine/AlicaEngine.h>
 #include <engine/containers/AgentQuery.h>
@@ -15,10 +15,6 @@
 #include <rclcpp/logger.hpp>
 #include <rclcpp/node.hpp>
 #include <rclcpp/qos.hpp>
-// #include <ros/console.h>
-// #include <ros/node_handle.h>
-// #include <ros/publisher.h>
-// #include <ros/subscriber.h>
 
 using namespace alica;
 

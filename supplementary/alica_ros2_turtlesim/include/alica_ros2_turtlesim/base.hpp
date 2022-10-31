@@ -4,10 +4,10 @@
 #include "world_model.hpp"
 
 #include <memory>
+#include <thread>
+
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
-
-#include <thread>
 
 namespace turtlesim
 {

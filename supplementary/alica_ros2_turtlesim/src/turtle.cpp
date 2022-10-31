@@ -1,6 +1,8 @@
 #include "alica_ros2_turtlesim/turtle.hpp"
-#include <geometry_msgs/msg/twist.hpp>
+
 #include <rclcpp/logging.hpp>
+
+#include <geometry_msgs/msg/twist.hpp>
 #include <turtlesim/srv/teleport_absolute.hpp>
 
 #include <chrono>

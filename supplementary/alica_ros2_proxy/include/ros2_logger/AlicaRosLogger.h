@@ -9,13 +9,13 @@
 
 using namespace alica;
 
-namespace alicaRos2Logger
+namespace alicaRosLogger
 {
 
-class AlicaRos2Logger : public alica::IAlicaLogger
+class AlicaRosLogger : public alica::IAlicaLogger
 {
 public:
-    AlicaRos2Logger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId);
+    AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId);
     void log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace) override;
 
 private:
@@ -24,4 +24,4 @@ private:
     static const std::unordered_map<alica::Verbosity, rclcpp::Logger::Level> _verbosityRosLevelMap;
 };
 
-} // namespace alicaRos2Logger
+} // namespace alicaRosLogger

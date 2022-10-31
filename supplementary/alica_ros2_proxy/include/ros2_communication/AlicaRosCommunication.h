@@ -11,9 +11,9 @@
 
 #include <engine/IAlicaCommunication.h>
 
-// #include <ros/callback_queue.hpp>
-#include <memory>
 #include <rclcpp/rclcpp.hpp>
+
+#include <memory>
 #include <string>
 
 using namespace alica;

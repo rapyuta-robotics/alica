@@ -6,13 +6,13 @@
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
 
-// #include <clock/AlicaROSClock.h>
 #include <alica_ros2_turtlesim/base.hpp>
-#include <clock2/AlicaRosTimer.h>
-#include <communication2/AlicaRos2Communication.h>
 #include <constraintsolver/CGSolver.h>
 #include <geometry_msgs/msg/twist.hpp>
-#include <logger2/AlicaRos2Logger.h>
+#include <ros2_clock/AlicaRosTimer.h>
+#include <ros2_communication/AlicaRosCommunication.h>
+#include <ros2_logger/AlicaRosLogger.h>
+
 #include <rclcpp/executor.hpp>
 #include <rclcpp/rclcpp.hpp>
 
@@ -37,7 +37,7 @@ Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const st
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->setLogger<alicaRos2Logger::AlicaRos2Logger>(agent_id);
+    ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 
     spinThread = std::thread([this]() { spinner.spin(); });
 }

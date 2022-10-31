@@ -1,16 +1,17 @@
 #pragma once
 
 #include <engine/AlicaClock.h>
+
 #include <rclcpp/node.hpp>
 
-namespace alicaRos2Proxy
+namespace alicaRosProxy
 {
 
-class AlicaROS2Clock : public alica::AlicaClock
+class AlicaROSClock : public alica::AlicaClock
 {
 public:
-    AlicaROS2Clock();
-    virtual ~AlicaROS2Clock() {}
+    AlicaROSClock();
+    virtual ~AlicaROSClock() {}
     alica::AlicaTime now() const override;
     void sleep(const alica::AlicaTime&) const override;
 
@@ -18,4 +19,4 @@ private:
     rclcpp::Node::SharedPtr _rosTime;
 };
 
-} // namespace alicaRos2Proxy
+} // namespace alicaRosProxy

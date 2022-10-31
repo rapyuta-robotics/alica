@@ -1,13 +1,13 @@
-#include "logger2/AlicaRos2Logger.h"
+#include "ros2_logger/AlicaRosLogger.h"
 #include <iostream>
 #include <rclcpp/logging.hpp>
 #include <sstream>
 
 using namespace alica;
 
-namespace alicaRos2Logger
+namespace alicaRosLogger
 {
-AlicaRos2Logger::AlicaRos2Logger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
+AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
         : _localAgentName(localAgentName)
         , _localAgentId(localAgentId)
 {
@@ -19,7 +19,7 @@ AlicaRos2Logger::AlicaRos2Logger(const Verbosity verbosity, const std::string& l
     // rclcpp::get_logger(streamName.str()).set_level(level);
 }
 
-void AlicaRos2Logger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
+void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
     std::stringstream streamName;
     streamName << "[ALICA] "
@@ -37,9 +37,9 @@ void AlicaRos2Logger::log(const std::string& msg, const Verbosity verbosity, con
     }
 }
 
-const std::unordered_map<alica::Verbosity, rclcpp::Logger::Level> AlicaRos2Logger::_verbosityRosLevelMap = {
+const std::unordered_map<alica::Verbosity, rclcpp::Logger::Level> AlicaRosLogger::_verbosityRosLevelMap = {
         {alica::Verbosity::DEBUG, rclcpp::Logger::Level::Debug}, {alica::Verbosity::INFO, rclcpp::Logger::Level::Info},
         {alica::Verbosity::WARNING, rclcpp::Logger::Level::Warn}, {alica::Verbosity::ERROR, rclcpp::Logger::Level::Error},
         {alica::Verbosity::FATAL, rclcpp::Logger::Level::Fatal}};
 
-} // namespace alicaRos2Logger
+} // namespace alicaRosLogger

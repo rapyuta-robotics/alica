@@ -7,10 +7,11 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <stdexcept>
+
 #include <rclcpp/duration.hpp>
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
-#include <stdexcept>
 
 namespace alicaRosTimer
 {

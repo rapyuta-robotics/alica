@@ -1,25 +1,26 @@
-#include <clock2/AlicaROS2Clock.h>
+#include <ros2_clock/AlicaROSClock.h>
+
 #include <rclcpp/logging.hpp>
 
-namespace alicaRos2Proxy
+namespace alicaRosProxy
 {
 
-AlicaROS2Clock::AlicaROS2Clock()
+AlicaROSClock::AlicaROSClock()
 {
     _rosTime = std::make_shared<rclcpp::Node>("rosTime");
     rclcpp::Parameter simTime("use_sim_time", rclcpp::ParameterValue(true));
     _rosTime->set_parameter(simTime);
 }
 
-alica::AlicaTime AlicaROS2Clock::now() const
+alica::AlicaTime AlicaROSClock::now() const
 {
     return alica::AlicaTime::nanoseconds((_rosTime->now()).nanoseconds());
 }
 
-void AlicaROS2Clock::sleep(const alica::AlicaTime& time) const
+void AlicaROSClock::sleep(const alica::AlicaTime& time) const
 {
     // This will only work in Humble and beyond
     //_rosTime->get_clock()->sleep_for(rclcpp::Duration(time.inNanoseconds()));
 }
 
-} // namespace alicaRos2Proxy
+} // namespace alicaRosProxy

@@ -1,9 +1,9 @@
 #ifndef ALICA_TURTLE_SIM_TURTLE_HPP
 #define ALICA_TURTLE_SIM_TURTLE_HPP
 
-// #include <ros/ros.h>
-#include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
+
+#include <geometry_msgs/msg/twist.hpp>
 #include <turtlesim/msg/pose.hpp>
 #include <turtlesim/srv/teleport_absolute.hpp>
 
