@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_tests)
+include(CTest)
 
 add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
@@ -31,7 +32,7 @@ file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
 target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
 
-if(CATKIN_ENABLE_TESTING)
+if(BUILD_TESTING)
     find_package(rostest REQUIRED)
 
     set(test_alica_SOURCES

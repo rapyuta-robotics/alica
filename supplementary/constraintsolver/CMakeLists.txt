@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(constraintsolver)
+include(CTest)
 
 add_compile_options(-std=c++17)
 
@@ -58,9 +59,10 @@ target_include_directories(constraintsolver PUBLIC
 
 target_link_libraries(constraintsolver PUBLIC autodiff alica_engine ${YAML_CPP_LIBRARIES})
 
+if(BUILD_TESTING)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-include(CTest)
+
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
   include_directories(BEFORE
@@ -89,6 +91,7 @@ add_test(NAME CNSatTest.CNSAT1dubois22 COMMAND ${PROJECT_NAME}-tests --gtest_fil
 add_test(NAME CNSatTest.CNSAThole6 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAThole6 )
 add_test(NAME CNSatTest.CNSAT1_dubois20 COMMAND ${PROJECT_NAME}-tests --gtest_filter=CNSatTest.CNSAT1_dubois20 )
 
+endif()
 
 install(TARGETS ${PROJECT_NAME}
   EXPORT ${CMAKE_PROJECT_NAME}Targets
