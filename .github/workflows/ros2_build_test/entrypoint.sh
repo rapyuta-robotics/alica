@@ -1,7 +1,7 @@
 #!/bin/sh -l
 . /opt/ros/humble/setup.sh
 
-apt update
+apt update -q
 
 apt install ros-humble-turtlesim -q -y
 
