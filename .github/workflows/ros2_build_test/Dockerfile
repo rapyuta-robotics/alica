@@ -2,7 +2,7 @@
 FROM ros:humble
 
 RUN apt-get update && apt-get install -y \
-  libboost-dev && rm -rf /var/lib/apt/lists/*
+  libboost-all-dev && rm -rf /var/lib/apt/lists/*
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
