@@ -1,7 +1,7 @@
 macro(alica_compile_flags)
 set(WARNING "-Wall -Wuninitialized -Wmissing-field-initializers -Wno-reorder")
 set(C_ERROR "-Werror=implicit-function-declaration -Werror=return-type -Werror=pointer-arith")
-set(CPP_ERROR "-Werror=return-type -Werror=pointer-arith")
+set(CPP_ERROR "-Werror")
 set(C_WARNING "-Wbad-function-cast -Wstrict-prototypes")
 set(CPP_WARNING "")
 set(C_STD "-std=c11")
