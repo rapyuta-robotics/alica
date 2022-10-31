@@ -15,7 +15,7 @@ public:
     void sleep(const alica::AlicaTime&) const override;
 
 private:
-    std::shared_ptr<rclcpp::Node> _rosTime;
+    rclcpp::Node::SharedPtr _rosTime;
 };
 
 } // namespace alicaRos2Proxy

@@ -18,7 +18,7 @@ alica::AlicaTime AlicaROS2Clock::now() const
 
 void AlicaROS2Clock::sleep(const alica::AlicaTime& time) const
 {
-    // broken
+    // This will only work in Humble and beyond
     //_rosTime->get_clock()->sleep_for(rclcpp::Duration(time.inNanoseconds()));
 }
 

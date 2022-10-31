@@ -12,13 +12,14 @@ namespace turtlesim
 
 ALICATurtle::ALICATurtle(rclcpp::Node::SharedPtr priv_nh)
 {
+    rclcpp::CallbackGroup::SharedPtr teleportCallback = priv_nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
     priv_nh->get_parameter("name", _name);
     _priv_nh = priv_nh;
     // initialize publisher, subscriber and service client.
     _vel_pub = priv_nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
     _pose_sub = priv_nh->create_subscription<turtlesim::msg::Pose>(
             "/" + _name + "/pose", 1, std::bind(&ALICATurtle::pose_sub_callback, this, std::placeholders::_1));
-    _teleport_client = priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute");
+    _teleport_client = priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
 }
 
 void ALICATurtle::teleport(float x, float y)
@@ -29,27 +30,15 @@ void ALICATurtle::teleport(float x, float y)
 
     RCLCPP_INFO(_priv_nh->get_logger(), "teleport req to x: %f, y: %f", x, y);
     auto result = _teleport_client->async_send_request(request);
-
-    // result.wait();
-    // RCLCPP_INFO(_priv_nh->get_logger(), "AAAAAA");
-    // if (result.valid()) {
-    //     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "%s was teleported to (%f, %f)", _name.c_str(), x, y);
-    // } else {
-    //     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Failed to teleport %s to (%f, %f)", _name.c_str(), x, y);
-    // }
 }
 
 void ALICATurtle::pose_sub_callback(const msg::Pose::ConstSharedPtr msg)
 {
-    float x = msg->x;
-    float y = msg->y;
-    // RCLCPP_INFO(_priv_nh->get_logger(), "Pose sub callback: %f, %f, %f", x, y, msg->theta);
     _current = *msg;
 }
 
 bool ALICATurtle::move_toward_goal(float x, float y)
 {
-    // RCLCPP_INFO(_priv_nh->get_logger(), "Move towards goal %f %f", x, y);
     _goal.x = x;
     _goal.y = y;
     return move_toward_goal();

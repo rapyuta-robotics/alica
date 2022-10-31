@@ -18,8 +18,8 @@ namespace turtlesim
 class ALICATurtleWorldModel
 {
 public:
-    static ALICATurtleWorldModel* get();                                                       // return instance
-    static void init(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<rclcpp::Node> priv_nh); // create instance
+    static ALICATurtleWorldModel* get();                                           // return instance
+    static void init(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh); // create instance
     static void del();
     bool getInit() const { return _initTrigger; };
     void setInit(const bool input) { _initTrigger = input; };
@@ -28,11 +28,11 @@ public:
     ALICATurtle turtle;
 
 private:
-    ALICATurtleWorldModel(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<rclcpp::Node> priv_nh);
+    ALICATurtleWorldModel(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh);
     ~ALICATurtleWorldModel();
-    void initTriggerSubCallback(const std_msgs::msg::Empty& msg);                // callback of /init
-    std::shared_ptr<rclcpp::Subscription<std_msgs::msg::Empty>> _initTriggerSub; // user input for initialize,
-    bool _initTrigger;                                                           // become true when /init topic published
+    void initTriggerSubCallback(const std_msgs::msg::Empty& msg);          // callback of /init
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _initTriggerSub; // user input for initialize,
+    bool _initTrigger;                                                     // become true when /init topic published
 };
 
 } // namespace turtlesim

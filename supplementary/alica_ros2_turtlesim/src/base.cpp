@@ -13,6 +13,7 @@
 #include <constraintsolver/CGSolver.h>
 #include <geometry_msgs/msg/twist.hpp>
 #include <logger2/AlicaRos2Logger.h>
+#include <rclcpp/executor.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <turtlesim/srv/kill.hpp>
@@ -23,7 +24,7 @@ namespace turtlesim
 
 Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
         const std::string& master_plan, const std::string& path)
-        : spinner()
+        : spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 2))
         , _nh(nh)
         , _name(name)
 {
@@ -43,24 +44,22 @@ Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const st
 
 void Base::killMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
-
-    std::shared_ptr<rclcpp::Client<turtlesim::srv::Kill>> kill_client = nh->create_client<turtlesim::srv::Kill>("/kill");
+    rclcpp::CallbackGroup::SharedPtr killCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    rclcpp::Client<turtlesim::srv::Kill>::SharedPtr kill_client =
+            nh->create_client<turtlesim::srv::Kill>("/kill", rmw_qos_profile_services_default, killCallback);
     auto request = std::make_shared<turtlesim::srv::Kill::Request>();
     request->name = name;
     auto result = kill_client->async_send_request(request);
     RCLCPP_INFO(nh->get_logger(), "Requested to Kill: %s", name.c_str());
     result.wait();
     RCLCPP_INFO(nh->get_logger(), "Request to Kill: %s complete", name.c_str());
-    // if (rclcpp::spin_until_future_complete(nh, result) == rclcpp::FutureReturnCode::SUCCESS) {
-    //     RCLCPP_INFO(nh->get_logger(), "%s was killed", name.c_str());
-    // } else {
-    //     RCLCPP_INFO(nh->get_logger(), "%s does not exist or failed to kill %s", name.c_str(), name.c_str());
-    // }
 }
 
 void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 {
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client = nh->create_client<turtlesim::srv::Spawn>("/spawn");
+    rclcpp::CallbackGroup::SharedPtr spawnCallback = nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client =
+            nh->create_client<turtlesim::srv::Spawn>("/spawn", rmw_qos_profile_services_default, spawnCallback);
     auto request = std::make_shared<turtlesim::srv::Spawn_Request>();
     request->x = 1;
     request->y = 1;
@@ -70,13 +69,6 @@ void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
     RCLCPP_INFO(nh->get_logger(), "Request to spawn %s", name.c_str());
     result.wait();
     RCLCPP_INFO(nh->get_logger(), "Spawned %s", name.c_str());
-    // if (rclcpp::spin_until_future_complete(nh, result) == rclcpp::FutureReturnCode::SUCCESS) {
-    //     RCLCPP_INFO(nh->get_logger(), "%s was spawned", name.c_str());
-    // } else {
-    //     RCLCPP_INFO(nh->get_logger(), "Failed to spawn %s", name.c_str());
-    //     return false;
-    // }
-    // return true;
 }
 
 void Base::start()
@@ -87,20 +79,15 @@ void Base::start()
 
     killMyTurtle(_name, _nh);
     spawnMyTurtle(_name, _nh);
-    // spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators));
     ac->addSolver<alica::reasoner::CGSolver>();
-    // spinner.add_node(priv_nh);
-    // spinner.spin();
 }
 
 Base::~Base()
 {
-    // spinThread.join();
     killMyTurtle(_name, _nh);
     spinner.cancel();
     spinThread.join();
-    // spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
     ALICATurtleWorldModel::del();

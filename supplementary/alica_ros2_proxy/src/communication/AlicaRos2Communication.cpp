@@ -47,7 +47,6 @@ AlicaRosCommunication::AlicaRosCommunication(const AlicaCommunicationHandlers& c
 {
     _isRunning = false;
     _rosNode = rclcpp::Node::make_shared("AlicaROS2Communication");
-    // _rosNode->setCallbackQueue(&_callbackQueue);
 
     _allocationAuthorityInfoPublisher = _rosNode->create_publisher<alica_msgs::msg::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
     _allocationAuthorityInfoSubscriber = _rosNode->create_subscription<alica_msgs::msg::AllocationAuthorityInfo>(

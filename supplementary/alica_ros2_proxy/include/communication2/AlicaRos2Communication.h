@@ -52,31 +52,31 @@ public:
     void stopCommunication() override;
 
 private:
-    std::shared_ptr<rclcpp::Node> _rosNode;
+    rclcpp::Node::SharedPtr _rosNode;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::AlicaEngineInfo>> _alicaEngineInfoPublisher;
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::RoleSwitch>> _roleSwitchPublisher;
+    rclcpp::Publisher<alica_msgs::msg::AlicaEngineInfo>::SharedPtr _alicaEngineInfoPublisher;
+    rclcpp::Publisher<alica_msgs::msg::RoleSwitch>::SharedPtr _roleSwitchPublisher;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::AllocationAuthorityInfo>> _allocationAuthorityInfoPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::AllocationAuthorityInfo>> _allocationAuthorityInfoSubscriber;
+    rclcpp::Publisher<alica_msgs::msg::AllocationAuthorityInfo>::SharedPtr _allocationAuthorityInfoPublisher;
+    rclcpp::Subscription<alica_msgs::msg::AllocationAuthorityInfo>::SharedPtr _allocationAuthorityInfoSubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::PlanTreeInfo>> _planTreeInfoPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::PlanTreeInfo>> _planTreeInfoSubscriber;
+    rclcpp::Publisher<alica_msgs::msg::PlanTreeInfo>::SharedPtr _planTreeInfoPublisher;
+    rclcpp::Subscription<alica_msgs::msg::PlanTreeInfo>::SharedPtr _planTreeInfoSubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::SyncReady>> _syncReadyPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::SyncReady>> _syncReadySubscriber;
+    rclcpp::Publisher<alica_msgs::msg::SyncReady>::SharedPtr _syncReadyPublisher;
+    rclcpp::Subscription<alica_msgs::msg::SyncReady>::SharedPtr _syncReadySubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::SyncTalk>> _syncTalkPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::SyncTalk>> _syncTalkSubscriber;
+    rclcpp::Publisher<alica_msgs::msg::SyncTalk>::SharedPtr _syncTalkPublisher;
+    rclcpp::Subscription<alica_msgs::msg::SyncTalk>::SharedPtr _syncTalkSubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::SolverResult>> _solverResultPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::SolverResult>> _solverResultSubscriber;
+    rclcpp::Publisher<alica_msgs::msg::SolverResult>::SharedPtr _solverResultPublisher;
+    rclcpp::Subscription<alica_msgs::msg::SolverResult>::SharedPtr _solverResultSubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::AgentQuery>> _presenceQueryPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::AgentQuery>> _presenceQuerySubscriber;
+    rclcpp::Publisher<alica_msgs::msg::AgentQuery>::SharedPtr _presenceQueryPublisher;
+    rclcpp::Subscription<alica_msgs::msg::AgentQuery>::SharedPtr _presenceQuerySubscriber;
 
-    std::shared_ptr<rclcpp::Publisher<alica_msgs::msg::AgentAnnouncement>> _presenceAnnouncementPublisher;
-    std::shared_ptr<rclcpp::Subscription<alica_msgs::msg::AgentAnnouncement>> _presenceAnnouncementSubscriber;
+    rclcpp::Publisher<alica_msgs::msg::AgentAnnouncement>::SharedPtr _presenceAnnouncementPublisher;
+    rclcpp::Subscription<alica_msgs::msg::AgentAnnouncement>::SharedPtr _presenceAnnouncementSubscriber;
 
     bool _isRunning;
     rclcpp::executors::MultiThreadedExecutor _myexec;

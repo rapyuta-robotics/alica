@@ -11,7 +11,7 @@ ALICATurtleWorldModel* ALICATurtleWorldModel::get()
     return instance;
 }
 
-void ALICATurtleWorldModel::init(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<rclcpp::Node> priv_nh)
+void ALICATurtleWorldModel::init(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh)
 {
     if (!instance) {
         instance = new ALICATurtleWorldModel(nh, priv_nh);
@@ -23,7 +23,7 @@ void ALICATurtleWorldModel::del()
     delete instance;
 }
 
-ALICATurtleWorldModel::ALICATurtleWorldModel(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<rclcpp::Node> priv_nh)
+ALICATurtleWorldModel::ALICATurtleWorldModel(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh)
         : turtle(priv_nh)
 {
     // initialize publisher, subscriber and service client.

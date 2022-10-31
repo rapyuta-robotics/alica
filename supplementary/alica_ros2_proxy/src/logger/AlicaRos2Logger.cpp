@@ -1,6 +1,5 @@
 #include "logger2/AlicaRos2Logger.h"
 #include <iostream>
-// #include <ros/callback_queue.h>
 #include <rclcpp/logging.hpp>
 #include <sstream>
 
@@ -14,13 +13,10 @@ AlicaRos2Logger::AlicaRos2Logger(const Verbosity verbosity, const std::string& l
 {
     rclcpp::Logger::Level level = _verbosityRosLevelMap.at(verbosity);
 
-    std::stringstream streamName;
-    streamName << "[ALICA] "
-               << "[" << _localAgentId << "/" << _localAgentName << "]";
-    // if (rclcpp::Logger::set_level(streamName.str(), level)) {
-    //     rclcpp::Logger::notifyLoggerLevelChanged();
-    // }
-    rclcpp::get_logger(streamName.str()).set_level(level);
+    // std::stringstream streamName;
+    // streamName << "[ALICA] "
+    //            << "[" << _localAgentId << "/" << _localAgentName << "]";
+    // rclcpp::get_logger(streamName.str()).set_level(level);
 }
 
 void AlicaRos2Logger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)

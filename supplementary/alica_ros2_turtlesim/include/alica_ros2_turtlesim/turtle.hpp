@@ -22,21 +22,21 @@ namespace turtlesim
 class ALICATurtle
 {
 public:
-    ALICATurtle(std::shared_ptr<rclcpp::Node> priv_nh);
+    ALICATurtle(rclcpp::Node::SharedPtr priv_nh);
     void teleport(const float x, const float y);         // teleport turtle to (x,y)
     bool move_toward_goal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
     bool move_toward_goal() const;                       // publish cmd_vel based on goal and current pose
     msg::Pose get_current_pose() const { return _current; };
 
 private:
-    void pose_sub_callback(const msg::Pose::ConstSharedPtr msg);             // callback of /pose from the turtlesim
-    std::string _name;                                                       // name of turtle
-    std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> _vel_pub;  // publish cmd_vel to the turtlesim
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _pose_sub;         // subscribe turtleX/pose from the turtlesim
-    std::shared_ptr<rclcpp::Client<srv::TeleportAbsolute>> _teleport_client; // client of teleportAbsolute service
-    msg::Pose _current;                                                      // current position
-    msg::Pose _goal;
-    rclcpp::Node::SharedPtr _priv_nh; // goal position
+    void pose_sub_callback(const msg::Pose::ConstSharedPtr msg);       // callback of /pose from the turtlesim
+    std::string _name;                                                 // name of turtle
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _vel_pub;  // publish cmd_vel to the turtlesim
+    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _pose_sub;   // subscribe turtleX/pose from the turtlesim
+    rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleport_client; // client of teleportAbsolute service
+    msg::Pose _current;                                                // current position
+    msg::Pose _goal;                                                   // goal position
+    rclcpp::Node::SharedPtr _priv_nh;
 };
 } // namespace turtlesim
 
