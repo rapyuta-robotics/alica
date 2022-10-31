@@ -11,8 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
     alica_ros_proxy
 )
 
-set(BOOST_MIN_VERSION "1.71.0")
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+if (NOT Boost_FOUND)
+      message(FATAL_ERROR "Fatal error: Boost required.\n")
+endif (NOT Boost_FOUND)
+
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(constraintsolver REQUIRED)

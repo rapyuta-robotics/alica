@@ -5,6 +5,10 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
+if (NOT Boost_FOUND)
+      message(FATAL_ERROR "Fatal error: Boost required.\n")
+endif (NOT Boost_FOUND)
+
 find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
 

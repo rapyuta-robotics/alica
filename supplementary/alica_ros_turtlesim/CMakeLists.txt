@@ -14,8 +14,10 @@ set(PKG_DEPS
     geometry_msgs
 )
 
-set(BOOST_MIN_VERSION "1.71.0")
-find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS filesystem system)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+if (NOT Boost_FOUND)
+      message(FATAL_ERROR "Fatal error: Boost required.\n")
+endif (NOT Boost_FOUND)
 
 ##Yaml
 find_package(yaml-cpp REQUIRED)
