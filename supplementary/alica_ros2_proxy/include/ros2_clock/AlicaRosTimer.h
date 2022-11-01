@@ -134,9 +134,7 @@ public:
     TimerFactory() {}
 
     TimerFactory(const TimerFactory&) = delete;
-    TimerFactory(TimerFactory&&) = delete;
     TimerFactory& operator=(const TimerFactory&) = delete;
-    TimerFactory&& operator=(TimerFactory&&) = delete;
     ~TimerFactory() = default;
 
     std::unique_ptr<alica::IAlicaTimer> createTimer(TimerCb timerCb, alica::AlicaTime period) const override

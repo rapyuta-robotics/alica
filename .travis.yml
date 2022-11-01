@@ -51,7 +51,7 @@ jobs:
           source /opt/ros/$ROS_DISTRO/setup.bash &&
           catkin_init_workspace &&
           cd ~/catkin_ws &&
-          catkin config --install &&
+          catkin config --install --blacklist alica_ros2_proxy alica_ros2_turtlesim &&
           catkin build &&
           source devel/setup.bash &&
           cd ~/catkin_ws/src &&

@@ -11,12 +11,6 @@ AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& loc
         : _localAgentName(localAgentName)
         , _localAgentId(localAgentId)
 {
-    rclcpp::Logger::Level level = _verbosityRosLevelMap.at(verbosity);
-
-    // std::stringstream streamName;
-    // streamName << "[ALICA] "
-    //            << "[" << _localAgentId << "/" << _localAgentName << "]";
-    // rclcpp::get_logger(streamName.str()).set_level(level);
 }
 
 void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)

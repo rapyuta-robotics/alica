@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros2_turtlesim)
-add_compile_options(-std=c++17)
+
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 ##################
 ## Dependencies ##
@@ -26,7 +28,6 @@ find_package(alica_msgs REQUIRED)
 include_directories(
     include
     alica/Expr/include
-    ${YAML_CPP_INCLUDE_DIR}
     ${turtlesim_INCLUDE_DIRS}
 )
 
