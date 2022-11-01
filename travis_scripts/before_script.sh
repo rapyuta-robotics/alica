@@ -33,7 +33,7 @@ cmd="bash -c \"
         fi ;
     fi &&
     cd ~/catkin_ws &&
-    rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO\""
+    rosdep install -y --from-paths src --ignore-src alica_ros2_proxy alica_ros2_turtlesim --rosdistro $ROS_DISTRO\""
 
 docker_cmd="docker exec -t alica-test $cmd"
 
