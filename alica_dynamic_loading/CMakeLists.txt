@@ -1,13 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_dynamic_loading)
 
-if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
-	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
-	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
-endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
-
-
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
