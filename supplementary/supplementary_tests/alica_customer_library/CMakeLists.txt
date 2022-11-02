@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_customer_library)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake_flags/cflags.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)

@@ -67,4 +67,6 @@ if (CATKIN_ENABLE_TESTING)
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})
     target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_supplementary_tests )
 
+    add_subdirectory(alica_customer_library)
+
 endif()
