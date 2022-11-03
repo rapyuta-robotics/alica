@@ -12,5 +12,5 @@
   "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": [],
-  "libraryName": "alica_customer_library"
+  "libraryName": "alica_supplementary_test_library"
 }

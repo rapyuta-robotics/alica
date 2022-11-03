@@ -20,7 +20,7 @@
       1524453326397,
       1524453331530
     ],
-    "libraryName": "alica_customer_library"
+    "libraryName": "alica_supplementary_test_library"
   },
   "synchronisations": [],
   "utilityThreshold": 0.1,
@@ -44,5 +44,5 @@
       "variableType": ""
     }
   ],
-  "libraryName": "alica_customer_library"
+  "libraryName": "alica_supplementary_test_library"
 }
