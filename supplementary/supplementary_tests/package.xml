@@ -10,8 +10,7 @@
 
   <depend>alica_engine</depend>
   <depend>roscpp</depend>
-  <depend>alica_customer_library</depend>
-  <depend>alica_dummy_proxy</depend>
+    <depend>alica_dummy_proxy</depend>
   <depend>alica_simple_solver</depend>
   <depend>alica_dynamic_loading</depend>
   <depend>alica_solver_interface</depend>
