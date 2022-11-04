@@ -31,21 +31,3 @@ RUN <<runtests
   source ../devel/setup.bash
   catkin run_tests --no-status && catkin_test_results --verbose
 runtests
-
-# TODO: Coverity in gha
-# if [ \"$TRAVIS_BRANCH\" = \"coverity_scan\" ] || [ \"$TRAVIS_EVENT_TYPE\" = \"cron\" ] ; then
-#     wget -qO- https://scan.coverity.com/download/cxx/linux64
-#         --post-data \"token=$COVERITY_TOKEN&project=rapyuta-robotics/$COVERITY_PROJECT\" |
-#     tar xvz &&
-#     python3 /travis/generate_coverity-analysis_script.py . &&
-#     chmod +x coverity-analysis.sh &&
-#     ./cov-analysis*/bin/cov-build --dir cov-int ./coverity-analysis.sh &&
-#     tar czvf cs.tgz cov-int &&
-#     curl
-#         --form token=\"$COVERITY_TOKEN\"
-#         --form email=\"$COVERITY_EMAIL\"
-#         --form file=@cs.tgz
-#         --form version=\"1.0\"
-#         --form description=\"$COVERITY_PROJECT\"
-#         https://scan.coverity.com/builds?project=rapyuta-robotics%2F$COVERITY_PROJECT ;
-# fi"
