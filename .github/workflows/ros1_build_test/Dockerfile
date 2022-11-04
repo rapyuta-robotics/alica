@@ -7,7 +7,7 @@ WORKDIR /root/catkin_ws/src
 
 RUN <<catkin_tools
   apt-get update
-  apt-get install python3-catkin-tools
+  apt-get install -y python3-catkin-tools
 catkin_tools
 
 RUN <<build
