@@ -5,9 +5,13 @@ SHELL ["/bin/bash", "-c"]
 
 WORKDIR /root/catkin_ws/src
 
+RUN <<catkin_tools
+  apt-get install python3-catkin-tools
+catkin_tools
+
 RUN <<build
   cd /root/catkin_ws
-  source /opt/ros/noetic/setup.bash
+  source /opt/ros/noetic/setup.ba sh
   catkin init
   catkin config --blacklist alica_tracing --cmake-args -DCMAKE_CXX_FLAGS=-Werror
   catkin build --no-status
