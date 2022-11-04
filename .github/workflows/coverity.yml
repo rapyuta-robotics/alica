@@ -13,5 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: vapier/coverity-scan-action@v1
         with:
+          project: rapyuta-robotics/alica
           email: ${{ inputs.email }}
           token: ${{ secrets.COVERITY_SCAN_TOKEN }}
+          description: alica
