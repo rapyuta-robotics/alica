@@ -21,8 +21,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Pull ROS1 images
         run: docker pull ros:noetic
-      - name: Test Alica on ROS Noetic
-        uses: docker/build-push-action@v3
+      - name: Build and test Alica on ROS Noetic
+        uses: ./.github/workflows/ros1_build_test/Dockerfile
         with:
           context: .
           file: "./.github/workflows/ros1_build_test/Dockerfile"
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Pull ROS2 images
         run: docker pull ros:humble
-      - name: Test Alica on ROS2 Humble
+      - name: Build and test Alica on ROS2 Humble
         uses: docker/build-push-action@v3
         with:
           context: .

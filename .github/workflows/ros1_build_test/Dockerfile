@@ -11,6 +11,8 @@ sss
 
 WORKDIR /root/catkin_ws/src
 
+COPY . .
+
 RUN <<catkin_tools
   apt-get update
   apt-get install -y python3-catkin-tools
