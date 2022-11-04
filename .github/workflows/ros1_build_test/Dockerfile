@@ -13,16 +13,17 @@ WORKDIR /root/catkin_ws/src
 
 COPY . .
 
-RUN <<catkin_tools
+RUN <<deps
   apt-get update
   apt-get install -y python3-catkin-tools
-catkin_tools
+  rosdep install -y --from-paths . --ignore-src --rosdistro noetic
+deps
 
 RUN <<build
   cd /root/catkin_ws
   source /opt/ros/noetic/setup.bash
   catkin init
-  catkin config --blacklist alica_tracing --cmake-args -DCMAKE_CXX_FLAGS=-Werror
+  catkin config --skiplist alica_tracing --cmake-args -DCMAKE_CXX_FLAGS=-Werror
   catkin build --no-status
 build
 
