@@ -7,6 +7,7 @@
 #include "communication/AlicaRosCommunication.h"
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/modelmanagement/factories/BehaviourFactory.h>
 #include <engine/modelmanagement/factories/ConditionFactory.h>
@@ -29,6 +30,8 @@ class AlicaDynamicLoading : public ::testing::Test
 {
 public:
     std::string _ldLibraryPath;
+
+    AlicaDynamicLoading() { AlicaLogger::create<alica::AlicaDefaultLogger>(Verbosity::INFO, "TEST"); }
 
     void exportLdLibraryPath(const std::string& rootPath)
     {
@@ -85,6 +88,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
     std::string path = getRootPath();
+    exportLdLibraryPath(path);
 
     YAML::Node globalNode;
     try {
@@ -106,8 +110,6 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     Plan* planModel;
     planModel = PlanFactory::create(configChangeListener, node);
 
-    exportLdLibraryPath(path);
-
     // Create behaviour form dll
     IAlicaWorldModel wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
@@ -121,6 +123,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
 TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
     std::string path = getRootPath();
+    exportLdLibraryPath(path);
 
     YAML::Node node;
     try {
@@ -132,8 +135,6 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
     // Load model
     RuntimeCondition* conditionModel = RuntimeConditionFactory::create(node, nullptr);
-
-    exportLdLibraryPath(path);
 
     // Create condition form dll
     auto creator = std::make_unique<alica::DynamicConditionCreator>();
@@ -149,6 +150,7 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
     std::string path = getRootPath();
+    exportLdLibraryPath(path);
 
     YAML::Node node;
     try {
@@ -161,8 +163,6 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     // Load model
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(node);
-
-    exportLdLibraryPath(path);
 
     // Create behaviour form dll
     IAlicaWorldModel wm;

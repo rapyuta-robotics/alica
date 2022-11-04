@@ -13,6 +13,7 @@ namespace alica
 Condition::Condition()
         : _abstractPlan(nullptr)
         , _basicCondition(nullptr)
+        , _libraryName("")
 {
 }
 
@@ -76,7 +77,7 @@ void Condition::setBasicConstraint(const std::shared_ptr<BasicConstraint>& basic
     _basicConstraint = basicConstraint;
 }
 
-std::string Condition::getLibraryName()
+std::string Condition::getLibraryName() const
 {
     return _libraryName;
 }

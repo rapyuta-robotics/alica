@@ -1,5 +1,7 @@
 #pragma once
 
+#include "engine/logging/Logging.h"
+
 #include <filesystem>
 #include <iostream>
 #include <sstream>
@@ -26,15 +28,18 @@ inline std::vector<std::string> tokenizeStr(const std::string& toTokenize, char 
 inline std::string calculateLibraryPath()
 {
     const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
-    auto tokens = tokenizeStr(ldLibraryPath, ':');
-    if (tokens.size() < 1) {
-        std::cerr << "Error:"
-                  << "Missing LD_LIBRARY_PATH" << std::endl;
+    if (!ldLibraryPath) {
+        Logging::logError("DL") << "Error:"
+                                << "Missing LD_LIBRARY_PATH variable";
         return "";
     }
 
-    std::cerr << "Debug:"
-              << "use library path from LD_LIBRARY_PATH:" << tokens[0] << std::endl;
+    auto tokens = tokenizeStr(ldLibraryPath, ':');
+    if (tokens.size() < 1) {
+        Logging::logError("DL") << "Error:"
+                                << "Missing LD_LIBRARY_PATH";
+        return "";
+    }
 
     return tokens[0];
 }
@@ -42,8 +47,8 @@ inline std::string calculateLibraryPath()
 inline std::string calculateLibraryCompleteName(const std::string& libraryPath, const std::string& libraryName)
 {
     if (libraryName == "") {
-        std::cerr << "Error:"
-                  << "Empty library name" << std::endl;
+        Logging::logError("DL") << "Error:"
+                                << "Empty library name";
         return "";
     }
 
@@ -53,13 +58,13 @@ inline std::string calculateLibraryCompleteName(const std::string& libraryPath, 
 inline bool checkLibraryCompleteName(const std::string& libraryCompleteName, const std::string& entityName)
 {
     if (!std::filesystem::exists(libraryCompleteName)) {
-        std::cerr << "Error:"
-                  << "Lib not exixts in this path:" << libraryCompleteName << std::endl;
+        Logging::logError("DL") << "Error:"
+                                << "Lib not exixts in this path:" << libraryCompleteName;
         return false;
-    } else {
-        std::cerr << "Debug:"
-                  << "Lib exixts in this path:" << libraryCompleteName << " for:" << entityName << std::endl;
-    }
+    } /*else {
+        Logging::logWarn("DL") << "Debug:"
+                                << "Lib exixts in this path:" << libraryCompleteName << " for:" << entityName;
+    }*/
     return true;
 }
 

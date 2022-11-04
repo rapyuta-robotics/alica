@@ -12,13 +12,14 @@ class BasicCondition;
 class DynamicConditionCreator : public IConditionCreator
 {
 public:
-    virtual ~DynamicConditionCreator();
+    DynamicConditionCreator();
+    virtual ~DynamicConditionCreator(){};
     std::shared_ptr<BasicCondition> createConditions(ConditionContext& conditionContext) override;
-    std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId);
 
 private:
     typedef std::shared_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);
     std::function<conditionCreatorType> _conditionCreator;
+    std::string _libraryPath;
 };
 
 } /* namespace alica */

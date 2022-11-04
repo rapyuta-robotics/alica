@@ -44,7 +44,7 @@ public:
 
     bool evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const;
 
-    std::string getLibraryName();
+    std::string getLibraryName() const;
 
 private:
     friend ModelFactory;

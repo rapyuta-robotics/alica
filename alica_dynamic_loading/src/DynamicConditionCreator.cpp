@@ -10,12 +10,14 @@
 namespace alica
 {
 
-DynamicConditionCreator::~DynamicConditionCreator() {}
+DynamicConditionCreator::DynamicConditionCreator()
+{
+    _libraryPath = calculateLibraryPath();
+}
 
 std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(ConditionContext& context)
 {
-    std::string libraryPath = calculateLibraryPath();
-    std::string completeLibraryName = calculateLibraryCompleteName(libraryPath, context.libraryName);
+    std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
     if (!checkLibraryCompleteName(completeLibraryName, context.name)) {
         return nullptr;
     }
@@ -31,8 +33,4 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(Condit
     return createdCondition;
 }
 
-std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_t conditionConfId)
-{
-    return nullptr;
-}
 } // namespace alica

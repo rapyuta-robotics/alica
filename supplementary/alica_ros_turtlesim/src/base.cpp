@@ -9,6 +9,7 @@
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
 #include <engine/AlicaContext.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 
 #include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>
@@ -29,17 +30,18 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
         : spinner(0)
         , _doDynamic(doDynamic)
 {
-    // create world model
-    if (_doDynamic)
-        ALICATurtleWorldModelCallInit(nh, priv_nh);
-    else
-        ALICATurtleWorldModel::init(nh, priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
+
+    // create world model
+    if (_doDynamic) {
+        ALICATurtleWorldModelCallInit(nh, priv_nh);
+    } else
+        ALICATurtleWorldModel::init(nh, priv_nh);
 }
 
 void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)

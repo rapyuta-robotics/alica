@@ -7,19 +7,18 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace alica
 {
 
-DynamicBehaviourCreator::DynamicBehaviourCreator() {}
-
-DynamicBehaviourCreator::~DynamicBehaviourCreator() {}
+DynamicBehaviourCreator::DynamicBehaviourCreator()
+{
+    _libraryPath = calculateLibraryPath();
+}
 
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
-    std::string libraryPath = calculateLibraryPath();
-    std::string completeLibraryName = calculateLibraryCompleteName(libraryPath, context.behaviourModel->getLibraryName());
+    std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.behaviourModel->getLibraryName());
     if (!checkLibraryCompleteName(completeLibraryName, context.behaviourModel->getName())) {
         return nullptr;
     }

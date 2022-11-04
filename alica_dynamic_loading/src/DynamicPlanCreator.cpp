@@ -1,4 +1,5 @@
 #include "engine/BasicPlan.h"
+#include "engine/logging/Logging.h"
 #include "engine/model/Plan.h"
 #include <DynamicLoadingUtils.h>
 #include <DynamicPlanCreator.h>
@@ -11,12 +12,14 @@
 namespace alica
 {
 
-DynamicPlanCreator::~DynamicPlanCreator() {}
+DynamicPlanCreator::DynamicPlanCreator()
+{
+    _libraryPath = calculateLibraryPath();
+}
 
 std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanContext& context)
 {
-    std::string libraryPath = calculateLibraryPath();
-    std::string completeLibraryName = calculateLibraryCompleteName(libraryPath, context.planModel->getLibraryName());
+    std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.planModel->getLibraryName());
     if (!checkLibraryCompleteName(completeLibraryName, context.planModel->getName())) {
         return nullptr;
     }
