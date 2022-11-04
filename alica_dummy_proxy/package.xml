@@ -4,7 +4,7 @@
   <version>0.9.4</version>
   <description>The alica_dummy_proxy package</description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
   <maintainer email="snook@todo.todo">snook</maintainer>
@@ -17,6 +17,5 @@
     <build_type>cmake</build_type>
   </export>
   <depend>alica_engine</depend>
-  <depend>alica_common_config</depend>
 
 </package>

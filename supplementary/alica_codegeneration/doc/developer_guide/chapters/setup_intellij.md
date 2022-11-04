@@ -34,7 +34,7 @@
 
    It might be, that you need to add OpenJDK11 as SDK in the Plattform Settings->SDKs section.
 
-9. Compile the Default Plugin for the code generation by double click on "install"in the Maven menu 
+9. Compile the Default Plugin for the code generation by double click on "install"in the Maven menu
    under alica-plan-designer-fx-default-plugin->Lifecycle.
 
 10. If everything did go fine, you should be able to right-click on the class **de.unikassel.vs.alica.planDesigner.PlanDesigner** inside the **controller** module under src/main/java/de.unikassel.vs.alica.planDesigner and choose "Debug 'PlanDesigner.main()'" from the context menu, in order to start the Plan Designer. Once this is done, next time you can simply hit the green bug-button top right in Intellij.

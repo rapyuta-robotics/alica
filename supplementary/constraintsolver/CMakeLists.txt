@@ -4,24 +4,27 @@ project(constraintsolver)
 add_compile_options(-std=c++17)
 
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
+
+
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
+
 
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
 
-find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 find_package(autodiff REQUIRED)
 find_package(alica_engine REQUIRED)
 
+
 include_directories(
   include
-  ${alica_common_config_INCLUDE_DIRS}
   ${alica_engine_INCLUDE_DIRS}
 )
 
@@ -47,12 +50,14 @@ add_library(constraintsolver SHARED
   src/GSolver.cpp
 )
 
-target_include_directories(constraintsolver PUBLIC 
+
+target_include_directories(constraintsolver PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(constraintsolver PUBLIC autodiff alica_engine ${YAML_CPP_LIBRARIES})
+
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 include(CTest)
@@ -86,7 +91,7 @@ add_test(NAME CNSatTest.CNSAT1_dubois20 COMMAND ${PROJECT_NAME}-tests --gtest_fi
 
 
 install(TARGETS ${PROJECT_NAME}
-  EXPORT ${CMAKE_PROJECT_NAME}Targets 
+  EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )
@@ -125,7 +130,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
