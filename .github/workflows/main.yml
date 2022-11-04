@@ -22,7 +22,7 @@ jobs:
       - name: Pull ROS1 images
         run: docker pull ros:noetic
       - name: Build and test Alica on ROS Noetic
-        uses: ./.github/workflows/ros1_build_test/Dockerfile
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: "./.github/workflows/ros1_build_test/Dockerfile"
