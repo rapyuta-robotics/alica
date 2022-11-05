@@ -18,9 +18,8 @@ DynamicConditionCreator::DynamicConditionCreator()
 std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(ConditionContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (!checkLibraryCompleteName(completeLibraryName, context.name)) {
+    if (completeLibraryName.empty())
         return nullptr;
-    }
 
     _conditionCreator = boost::dll::import_alias<conditionCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                        // complete path to library also with file name

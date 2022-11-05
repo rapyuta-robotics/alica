@@ -25,26 +25,26 @@ inline std::vector<std::string> tokenizeStr(const std::string& toTokenize, char 
     return tokens;
 }
 
-inline std::string calculateLibraryPath()
+inline std::vector<std::string> calculateLibraryPath()
 {
     const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
     if (!ldLibraryPath) {
         Logging::logError("DL") << "Error:"
                                 << "Missing LD_LIBRARY_PATH variable";
-        return "";
+        return std::vector<std::string>();
     }
 
     auto tokens = tokenizeStr(ldLibraryPath, ':');
-    if (tokens.size() < 1) {
+    if (tokens.empty()) {
         Logging::logError("DL") << "Error:"
                                 << "Missing LD_LIBRARY_PATH";
-        return "";
+        return std::vector<std::string>();
     }
 
-    return tokens[0];
+    return tokens;
 }
 
-inline std::string calculateLibraryCompleteName(const std::string& libraryPath, const std::string& libraryName)
+inline std::string calculateLibraryCompleteName(const std::vector<std::string>& libraryPath, const std::string& libraryName)
 {
     if (libraryName == "") {
         Logging::logError("DL") << "Error:"
@@ -52,20 +52,17 @@ inline std::string calculateLibraryCompleteName(const std::string& libraryPath, 
         return "";
     }
 
-    return libraryPath + "/lib" + libraryName + ".so";
-}
-
-inline bool checkLibraryCompleteName(const std::string& libraryCompleteName, const std::string& entityName)
-{
-    if (!std::filesystem::exists(libraryCompleteName)) {
-        Logging::logError("DL") << "Error:"
-                                << "Lib not exixts in this path:" << libraryCompleteName;
-        return false;
-    } /*else {
-        Logging::logWarn("DL") << "Debug:"
-                                << "Lib exixts in this path:" << libraryCompleteName << " for:" << entityName;
-    }*/
-    return true;
+    for (const std::string& current : libraryPath) {
+        std::string completeName = current + "/lib" + libraryName + ".so";
+        if (std::filesystem::exists(completeName)) {
+            Logging::logDebug("DL") << "Debug:"
+                                    << "Lib exixts in this path:" << completeName;
+            return completeName;
+        }
+    }
+    Logging::logError("DL") << "Error:"
+                            << "Lib not exixts in LD_CONFIG_PATH library name:" << libraryName;
+    return "";
 }
 
 // Algorithm from internet

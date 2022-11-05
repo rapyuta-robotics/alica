@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace alica
 {
@@ -19,7 +20,7 @@ public:
 private:
     typedef std::shared_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);
     std::function<conditionCreatorType> _conditionCreator;
-    std::string _libraryPath;
+    std::vector<std::string> _libraryPath;
 };
 
 } /* namespace alica */

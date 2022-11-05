@@ -19,9 +19,8 @@ DynamicBehaviourCreator::DynamicBehaviourCreator()
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.behaviourModel->getLibraryName());
-    if (!checkLibraryCompleteName(completeLibraryName, context.behaviourModel->getName())) {
+    if (completeLibraryName.empty())
         return nullptr;
-    }
 
     _behaviourCreator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                        // complete path to library also with file name

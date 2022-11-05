@@ -20,9 +20,8 @@ DynamicPlanCreator::DynamicPlanCreator()
 std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.planModel->getLibraryName());
-    if (!checkLibraryCompleteName(completeLibraryName, context.planModel->getName())) {
+    if (completeLibraryName.empty())
         return nullptr;
-    }
 
     _planCreator = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                              // complete path to library also with file name

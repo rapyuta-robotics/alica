@@ -31,7 +31,7 @@ class AlicaDynamicLoading : public ::testing::Test
 public:
     std::string _ldLibraryPath;
 
-    AlicaDynamicLoading() { AlicaLogger::create<alica::AlicaDefaultLogger>(Verbosity::INFO, "TEST"); }
+    AlicaDynamicLoading() { AlicaLogger::create<alica::AlicaDefaultLogger>(Verbosity::DEBUG, "TEST"); }
 
     void exportLdLibraryPath(const std::string& rootPath)
     {
@@ -43,7 +43,7 @@ public:
                 std::cerr << "Library path not found:" << _ldLibraryPath << std::endl;
             }
         }
-        _ldLibraryPath = "LD_LIBRARY_PATH=" + _ldLibraryPath;
+        _ldLibraryPath = "LD_LIBRARY_PATH=/empty/path/:" + _ldLibraryPath + ":/another/empty/path/";
         char* env = &_ldLibraryPath[0];
         putenv(env);
     }
@@ -83,6 +83,34 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
+}
+
+TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
+{
+    std::string path = getRootPath();
+
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
+    } catch (YAML::BadFile& badFile) {
+        std::cerr << path + "/etc/plans/behaviours/Acme.beh" << std::endl;
+        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
+    }
+
+    // Load model
+    Behaviour* behaviourModel;
+    behaviourModel = BehaviourFactory::create(node);
+
+    exportLdLibraryPath("/wrong_path/");
+
+    // Create behaviour form dll
+    IAlicaWorldModel wm;
+    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
+
+    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
+    std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
+
+    ASSERT_EQ(nullptr, behaviour);
 }
 
 TEST_F(AlicaDynamicLoading, simple_plan_load)

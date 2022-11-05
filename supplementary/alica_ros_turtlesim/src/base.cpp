@@ -46,17 +46,15 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
 
 void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    std::string tmp = calculateLibraryPath();
+    std::vector<std::string> tmp = calculateLibraryPath();
     std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
+    if (libraryPath.empty())
+        {
+            std::cerr << "Error:"
+                      << "Lib not exists" << std::endl;
+            return;
+        }
 
-    if (!checkLibraryCompleteName(libraryPath, "BASE")) {
-        std::cerr << "Error:"
-                  << "Lib not exists in this path:" << libraryPath << std::endl;
-        return;
-    } else {
-        std::cerr << "Debug:"
-                  << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
-    }
 
     typedef void(InitType)(ros::NodeHandle&, ros::NodeHandle&);
     std::function<InitType> wminit;

@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace alica
 {
@@ -19,7 +20,7 @@ public:
 private:
     typedef std::unique_ptr<BasicBehaviour>(behaviourCreatorType)(BehaviourContext&);
     std::function<behaviourCreatorType> _behaviourCreator;
-    std::string _libraryPath;
+    std::vector<std::string> _libraryPath;
 };
 
 } /* namespace alica */

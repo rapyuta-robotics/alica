@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace alica
 {
@@ -19,7 +20,7 @@ public:
 private:
     typedef std::unique_ptr<BasicPlan>(PlanCreatorType)(PlanContext&);
     std::function<PlanCreatorType> _planCreator;
-    std::string _libraryPath;
+    std::vector<std::string> _libraryPath;
 };
 
 } /* namespace alica */
