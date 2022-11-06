@@ -21,6 +21,7 @@ set(alica_customer_library_SOURCES
   src/AcmePlan.cpp
   src/AcmeRuntimeCondition.cpp
   src/WaitBehaviour.cpp
+  src/conditions.cpp
 )
 
 set(alica_customer_library_HEADER
@@ -28,6 +29,7 @@ set(alica_customer_library_HEADER
   include/AcmePlan.h
   include/AcmeRuntimeCondition.h
   include/WaitBehaviour.h
+  include/conditions.h
 )
 
 add_library(${PROJECT_NAME} SHARED

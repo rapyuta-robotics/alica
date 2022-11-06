@@ -764,13 +764,13 @@ Run application with roslaunch. video
 ### 8.3 Run with Dynamic loading
 
 Is it possible to run Turtlesim using a dynamic library that contains all the Plan/Behaviour/Runtimecondition with:  
-`roslaunch alica_ros_turtlesim turtle.launch turtles:=2 dynamic:=YES`
+`roslaunch alica_ros_turtlesim turtle.launch turtles:=2 dynamic:=true`
 
 The file that contains the `dynamic` parameter is:
 `launch/turtle.launch`
 
 ```xml
-    <arg name="dynamic"        default="NO" />
+    <arg name="dynamic"        default="false" />
 ```
 
 ## 9. Troubleshooting

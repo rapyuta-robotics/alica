@@ -1,9 +1,9 @@
 #include "supplementary_tests/TransitionConditionCreator.h"
-
 #include "supplementary_tests/conditions/conditions.h"
 #include <engine/IAlicaWorldModel.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
+#include <engine/model/Transition.h>
 #include <iostream>
 
 namespace alica
@@ -13,8 +13,10 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
+        TransitionConditionContext& context)
 {
+    int64_t conditionId = context.conditionConfId;
     switch (conditionId) {
     case 295816226925111421:
         return std::bind(conditionVariableHandlingStart295816226925111421, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);

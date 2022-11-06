@@ -109,7 +109,7 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    
+
     if (_loadDynamically) {
         ALICATurtleWorldModelCallDel();
     } else {

@@ -2,6 +2,7 @@
 #include <DynamicConditionCreator.h>
 #include <DynamicLoadingUtils.h>
 #include <DynamicPlanCreator.h>
+#include <DynamicTransitionConditionCreator.h>
 #include <test_supplementary.h>
 
 #include "communication/AlicaRosCommunication.h"
@@ -9,10 +10,13 @@
 #include <engine/BasicPlan.h>
 #include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/model/RuntimeCondition.h>
+#include <engine/model/Transition.h>
+#include <engine/model/TransitionCondition.h>
 #include <engine/modelmanagement/factories/BehaviourFactory.h>
 #include <engine/modelmanagement/factories/ConditionFactory.h>
 #include <engine/modelmanagement/factories/PlanFactory.h>
 #include <engine/modelmanagement/factories/RuntimeConditionFactory.h>
+#include <engine/modelmanagement/factories/TransitionConditionFactory.h>
 
 #include <cstdlib>
 #include <filesystem>
@@ -175,6 +179,31 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
 
+TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
+{
+    std::string path = getRootPath();
+    exportLdLibraryPath(path);
+
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeTransitionCondition.cnd");
+    } catch (YAML::BadFile& badFile) {
+        std::cerr << path + "/etc/plans/conditions/AcmeTransitionCondition.cnd" << std::endl;
+        AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
+    }
+    // Load model
+    TransitionCondition* conditionModel = TransitionConditionFactory::create(node, nullptr);
+
+    // Create condition form dll
+    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
+
+    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
+
+    auto transitionCondition = creator->createConditions(ctx);
+    bool res = transitionCondition(nullptr, nullptr, nullptr);
+    ASSERT_EQ(false, res);
+}
+
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
     std::string path = getRootPath();
@@ -200,8 +229,6 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("waitbehaviour", behaviour->getName());
-    // behaviour->start(nullptr);
-    behaviour->run(nullptr);
 }
 
 } // namespace

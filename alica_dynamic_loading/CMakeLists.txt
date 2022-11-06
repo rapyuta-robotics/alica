@@ -28,10 +28,12 @@ add_library(${PROJECT_NAME}
   src/DynamicBehaviourCreator.cpp
   src/DynamicConditionCreator.cpp
   src/DynamicLoadingUtils.cpp
+  src/DynamicTransitionConditionCreator.cpp
   include/DynamicPlanCreator.h
   include/DynamicBehaviourCreator.h
   include/DynamicConditionCreator.h
   include/DynamicLoadingUtils.h
+  include/DynamicTransitionConditionCreator.h
   )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
