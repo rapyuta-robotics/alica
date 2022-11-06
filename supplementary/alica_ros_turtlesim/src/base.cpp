@@ -26,9 +26,9 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path, bool doDynamic)
+        const std::string& master_plan, const std::string& path, bool loadDynamically)
         : spinner(0)
-        , _doDynamic(doDynamic)
+        , _loadDynamically(loadDynamically)
 {
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
@@ -38,7 +38,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
 
     // create world model
-    if (_doDynamic) {
+    if (_loadDynamically) {
         ALICATurtleWorldModelCallInit(nh, priv_nh);
     } else
         ALICATurtleWorldModel::init(nh, priv_nh);
@@ -66,7 +66,7 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
 
 void Base::start()
 {
-    if (_doDynamic) {
+    if (_loadDynamically) {
         alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>());
@@ -89,7 +89,7 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    if (_doDynamic)
+    if (_loadDynamically)
         ALICATurtleWorldModel::del();
 }
 

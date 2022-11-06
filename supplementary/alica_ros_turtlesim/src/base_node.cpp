@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     ROS_INFO("Started Turtle Base Node.");
     std::string name, roleset, master_plan, alica_path;
     int agent_id;
-    std::string dynamic;
+    bool dynamic;
 
     ros::NodeHandle nh, priv_nh("~");
     priv_nh.getParam("name", name);
@@ -73,13 +73,11 @@ int main(int argc, char** argv)
     if (!spawnMyTurtle(name, priv_nh))
         return 1;
 
-    bool doDynamic = false;
-    if (dynamic == "YES") {
-        doDynamic = true;
+    if (dynamic) {
         ROS_INFO("Creating ALICA turtle Base in dynamic loading mode.......");
     } else
         ROS_INFO("Creating ALICA turtle Base.......");
-    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, doDynamic);
+    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, dynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start();

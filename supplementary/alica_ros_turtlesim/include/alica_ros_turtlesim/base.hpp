@@ -21,7 +21,7 @@ private:
 
     void ALICATurtleWorldModelCallDel();
 
-    bool _doDynamic{false};
+    bool _loadDynamically{false};
 };
 
 } // namespace turtlesim

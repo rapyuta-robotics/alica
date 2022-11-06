@@ -6,7 +6,7 @@
     <arg name="master_plan"    default="Master" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)/alica" />
-    <arg name="dynamic"        default="NO" />
+    <arg name="dynamic"        default="false" />
 
     <arg name="turtles"        default="1"/>
 
