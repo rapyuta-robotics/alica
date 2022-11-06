@@ -64,6 +64,26 @@ void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& p
     wminit(nh, priv_nh);
 }
 
+void Base::ALICATurtleWorldModelCallDel()
+{
+    std::vector<std::string> tmp = calculateLibraryPath();
+    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
+    if (libraryPath.empty()) {
+        std::cerr << "Error:"
+                  << "Lib not exists" << std::endl;
+        return;
+    }
+
+    typedef void(DelType)();
+    std::function<DelType> wmdel;
+    wmdel = boost::dll::import_alias<DelType>(        // type of imported symbol must be explicitly specified
+            libraryPath,                              // complete path to library also with file name
+            "ALICATurtleWorldModelDel",               // symbol to import
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
+    );
+    wmdel();
+}
+
 void Base::start()
 {
     if (_loadDynamically) {
@@ -89,8 +109,12 @@ Base::~Base()
     spinner.stop(); // stop spinner before terminating engine
     ac->terminate();
     delete ac;
-    if (_loadDynamically)
+    
+    if (_loadDynamically) {
+        ALICATurtleWorldModelCallDel();
+    } else {
         ALICATurtleWorldModel::del();
+    }
 }
 
 } // namespace turtlesim
