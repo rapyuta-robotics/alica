@@ -1,9 +1,9 @@
 #!/bin/sh -l
 . /opt/ros/humble/setup.sh
 
-sudo rosdep init 
+
 rosdep update 
-rosdep install --from-paths ./ -y --ignore-src
+rosdep install --from-paths ./ --ignore-src -r -y
 
 colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
 
