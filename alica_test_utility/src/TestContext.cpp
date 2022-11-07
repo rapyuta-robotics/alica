@@ -62,4 +62,153 @@ bool TestContext::isPlanActive(int64_t id) const
     return Util::isPlanActive(_engine.get(), id);
 }
 
+BasicBehaviour* TestContext::getActiveBehaviour(const std::string& name)
+{
+    auto rp = getRunningPlan(name);
+    if (rp != nullptr) {
+        return rp->isBehaviour() ? rp->getBasicBehaviour() : nullptr;
+    }
+    return nullptr;
+}
+
+BasicPlan* TestContext::getActivePlan(const std::string& name)
+{
+    auto rp = getRunningPlan(name);
+    if (rp != nullptr) {
+        return rp->isBehaviour() ? nullptr : rp->getBasicPlan();
+    }
+    return nullptr;
+}
+
+RunningPlan* TestContext::getRunningPlan(const std::string& name)
+{
+    if (name.empty()) {
+        return nullptr;
+    }
+    return name[0] == '/' ? /* fully qualified name */ followRunningPlanPath(name) : /* just name of beh/plan */ searchRunningPlanTree(name);
+}
+
+RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
+{
+    std::vector<RunningPlan*> results;
+    std::queue<RunningPlan*> q;
+    q.push(_engine->getPlanBase().getRootNode());
+    while (!q.empty()) {
+        auto cur = q.front();
+        q.pop();
+        if (getRunningPlanName(cur) == name) {
+            results.push_back(cur);
+        }
+        for (auto child : cur->getChildren()) {
+            q.push(child);
+        }
+    }
+    if (results.empty() || results.size() > 1) {
+        return nullptr;
+    }
+}
+
+RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifiedName)
+{
+    auto statePlanPairs = parseFullyQualifiedName(fullyQualifiedName);
+    if (statePlanPairs.empty()) {
+        return nullptr;
+    }
+    auto cur = _engine->getPlanBase().getRootNode();
+    std::size_t idx = 0;
+    while (cur && idx < statePlanPairs.size()) {
+        const auto& [state, plan] = statePlanPairs[idx];
+        if (getActiveStateName(cur) != state) {
+            return nullptr;
+        }
+        RunningPlan* next = nullptr;
+        if (plan.empty()) {
+            if (cur->getChildren().size() != 1) {
+                return nullptr;
+            }
+            next = cur->getChildren().front();
+        } else {
+            for (auto childIt = cur->getChildren().begin(); childIt != cur->getChildren().end(); ++childIt) {
+                if (getRunningPlanName(*childIt) == plan) {
+                    next = *childIt;
+                    break;
+                }
+            }
+        }
+        if (!next) {
+            return nullptr;
+        }
+        cur = next;
+    }
+    return cur;
+}
+
+std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifiedName(const std::string& fullyQualifiedName)
+{
+    /*
+     * fullyQualifiedName (FQN) syntax
+     *
+     * "/<S1,P1>/<S2,P2>/<S3,P3>"
+     *
+     * S1: active state in master plan
+     * Sx: active state in previous pair's Px
+     * Px: active plan in Sx
+     *
+     * If a state Sx has just a single plan/behaviour attached to it, the plan/behaviour name can be ommitted along with <> symbols i.e.
+     * "/S1/S2/<S3,P3>""
+     *
+     * White spaces are stripped from the FQN
+     * FQN is Case sensitive
+     */
+    std::string fqn;
+    std::copy_if(fullyQualifiedName.begin(), fullyQualifiedName.end(), std::back_inserter(fqn),
+            [](const auto& ch) { return !std::isspace(static_cast<unsigned char>(ch)); });
+    std::vector<std::pair<std::string, std::string>> statePlanPairs;
+    std::size_t start = 1;
+    while (start < fqn.length()) {
+        auto end = fqn.find("/", start);
+        auto count = (end == std::string::npos ? std::string::npos : end - start);
+        auto splitName = fqn.substr(start, count);
+        if (splitName.empty()) {
+            return {};
+        }
+        if (splitName[0] == '<') {
+            if (splitName.back() != '>') {
+                return {};
+            }
+            auto commaPos = splitName.find(",");
+            if (commaPos == std::string::npos) {
+                return {};
+            }
+            statePlanPairs.emplace_back(std::piecewise_construct,
+                    /* substring [1, commaPos) */ std::forward_as_tuple(splitName.substr(1, commaPos - 1)),
+                    /* substring [commaPos + 1, last_char_of_splitName) */
+                    std::forward_as_tuple(splitName.substr(commaPos + 1, (splitName.length() - 1) - (commaPos + 1))));
+
+        } else {
+            statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(splitName), std::forward_as_tuple());
+        }
+        if (statePlanPairs.back().first.empty() || statePlanPairs.back().second.empty()) {
+            return {};
+        }
+    }
+    return statePlanPairs;
+}
+
+std::string TestContext::getRunningPlanName(const RunningPlan* rp)
+{
+    if (rp->isActive()) {
+        return rp->isBehaviour() ? rp->getBasicBehaviour()->getName() : rp->getActivePlan()->getName();
+    }
+    return {};
+}
+
+std::string getActiveStateName(const RunningPlan* rp)
+{
+    if (rp->isActive()) {
+        return rp->getActiveState() ? rp->getActiveState()->getName() : std::string{};
+    }
+    return {};
+}
+
 } // namespace alica::test

@@ -100,7 +100,17 @@ public:
      */
     bool isPlanActive(int64_t id) const;
 
+    BasicBehaviour* getActiveBehaviour(const std::string& name);
+    BasicPlan* getActivePlan(const std::string& name);
+
 private:
+    RunningPlan* getRunningPlan(const std::string& name);
+    RunningPlan* searchRunningPlanTree(const std::string& name);
+    RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
+    static std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName);
+    static std::string getRunningPlanName(const RunningPlan* rp);
+    static std::string getActiveStateName(const RunningPlan* rp);
+
     struct hash_pair
     {
         template <class T1, class T2>
