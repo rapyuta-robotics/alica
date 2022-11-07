@@ -7,7 +7,7 @@
 namespace turtlesim
 {
 /*
-    ALICATurtleWoroldModel
+    ALICATurtleWorldModel
     - Turtle control classfor ALICA ros turtlesim which interface between ALICA and ROS.
     - A few class is static since one robot has one world model
     - ROS:
