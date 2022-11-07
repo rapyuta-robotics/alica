@@ -9,6 +9,7 @@ COPY . src
 
 
 RUN <<build
+ apt-get update
  source /opt/ros/humble/setup.bash
  rosdep update
  rosdep install --from-paths . --ignore-src --rosdistro humble -r -y
