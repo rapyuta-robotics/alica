@@ -2,6 +2,7 @@
 #include <DynamicConditionCreator.h>
 #include <DynamicLoadingUtils.h>
 #include <DynamicPlanCreator.h>
+#include <DynamicTransitionConditionCreator.h>
 #include <alica/BehaviourCreator.h>
 #include <alica/ConditionCreator.h>
 #include <alica/ConstraintCreator.h>
@@ -89,7 +90,7 @@ void Base::start()
     if (_loadDynamically) {
         alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>());
+                std::make_unique<alica::DynamicTransitionConditionCreator>());
 
         spinner.start(); // start spinner before initializing engine, but after setting context
         ac->init(std::move(creators));
