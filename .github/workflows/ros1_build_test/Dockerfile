@@ -3,12 +3,6 @@
 FROM ros:noetic
 SHELL ["/bin/bash", "-c"]
 
-RUN <<sss
-  pwd
-  ls
-sss
-
-
 WORKDIR /root/catkin_ws/src
 
 COPY . .
