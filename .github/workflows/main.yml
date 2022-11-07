@@ -20,5 +20,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Pull ROS2 images
         run: docker pull ros:humble
-      - name: Test Alica on ROS Humble
-        uses: ./.github/workflows/ros2_build_test/
+      - name: Build and test Alica on ROS2 Humble
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: "./.github/workflows/ros2_build_test/Dockerfile"
+          platforms: linux/amd64
+          push: false
+          tags: humble
+          build-args: |
+            COMMIT=${{ github.sha }}
