@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros_proxy)
+include(CTest)
 
 add_compile_options(-std=c++17)
 include(../../../cmake_flags/cflags.cmake)
@@ -52,7 +53,7 @@ install(DIRECTORY include/
   PATTERN ".svn" EXCLUDE
 )
 
-if(CATKIN_ENABLE_TESTING)
+if(BUILD_TESTING)
   find_package(catkin REQUIRED COMPONENTS
     rostest
     roscpp

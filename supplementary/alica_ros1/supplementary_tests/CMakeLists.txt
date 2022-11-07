@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(supplementary_tests)
+include(CTest)
 
 add_compile_options(-std=c++17)
 
@@ -36,7 +37,7 @@ file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
 target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES} alica_test_utility constraintsolver)
 
-if (CATKIN_ENABLE_TESTING)
+if (BUILD_TESTING)
 
     find_package(rostest REQUIRED)
     set(test_supplementary_SOURCES
