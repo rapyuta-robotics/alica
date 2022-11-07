@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(alica_solver_interface)
-
+include(CTest)
 ## Change to use clang ... unfortunately it doesnt work :(
 #set(CMAKE_CXX_COMPILER "clang")
 #
@@ -38,9 +38,11 @@ target_link_libraries(alica_solver_interface PUBLIC)
 
 
 # Testing Setup
+if(BUILD_TESTING)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-include(CTest)
+
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
   include_directories(BEFORE
@@ -57,6 +59,7 @@ target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_N
 add_test(NAME IntervalTest.Double COMMAND ${PROJECT_NAME}-tests --gtest_filter=IntervalTest.Double )
 add_test(NAME IntervalTest.Operations COMMAND ${PROJECT_NAME}-tests --gtest_filter=IntervalTest.Operations )
 
+endif()
 
 install(TARGETS ${PROJECT_NAME}
   EXPORT ${CMAKE_PROJECT_NAME}Targets
