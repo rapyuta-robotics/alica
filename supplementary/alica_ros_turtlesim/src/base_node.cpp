@@ -70,13 +70,15 @@ int main(int argc, char** argv)
     killMyTurtle(name, priv_nh);
 
     // spawn turtle in sim
-    if (!spawnMyTurtle(name, priv_nh))
+    if (!spawnMyTurtle(name, priv_nh)) {
         return 1;
+    }
 
     if (dynamic) {
         ROS_INFO("Creating ALICA turtle Base in dynamic loading mode.......");
-    } else
+    } else {
         ROS_INFO("Creating ALICA turtle Base.......");
+    }
     turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, dynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
