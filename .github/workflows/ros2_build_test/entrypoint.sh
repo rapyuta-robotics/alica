@@ -1,9 +1,9 @@
 #!/bin/sh -l
 . /opt/ros/humble/setup.sh
 
-apt update -q
-
-apt install ros-humble-turtlesim -q -y
+sudo rosdep init 
+rosdep update 
+rosdep install --from-paths ./ -y --ignore-src
 
 colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
 
