@@ -62,7 +62,8 @@
         ]
       }
     ],
-    "variables": []
+    "variables": [],
+    "libraryName": "alica_turtlesim_library"
   },
   "states": [
     {
@@ -125,5 +126,6 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "libraryName": "alica_turtlesim_library"
 }
