@@ -17,6 +17,13 @@ class ExpressionHandler;
 class IAlicaWorldModel;
 class KeyMapping;
 
+struct TransitionConditionContext
+{
+    const std::string name;
+    const std::string libraryName;
+    int64_t conditionConfId;
+};
+
 /**
  * Connects two States in a Plan
  */

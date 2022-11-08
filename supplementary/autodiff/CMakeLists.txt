@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(autodiff)
+include(CTest)
 
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
@@ -70,13 +71,15 @@ target_link_libraries(sine_benchmark ${PROJECT_NAME} alica_solver_interface)
 
 
 # AUTODIFF TESTS
+if(BUILD_TESTING)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
 
 find_package(GTest REQUIRED)
 
-include(CTest)
+
 
 include_directories(BEFORE
   ${GTEST_INCLUDE_DIRS}
@@ -107,6 +110,7 @@ add_test(NAME AutoDiffTest.TERMPOWER COMMAND ${PROJECT_NAME}-tests [==[--gtest_f
 add_test(NAME AutoDiffTest.EQUALITY COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.EQUALITY]==] )
 add_test(NAME AutoDiffTest.COMPILED COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.COMPILED]==] )
 
+endif()
 
 # Install
 install(TARGETS ${PROJECT_NAME}

@@ -13,6 +13,7 @@ namespace alica
 {
 TransitionCondition::TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint)
         : _blackboard(std::make_unique<Blackboard>(blackboardBlueprint.get()))
+        , _libraryName("")
 {
 }
 
@@ -24,5 +25,15 @@ bool TransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel
     assert(_evalCallback);
     BlackboardUtil::setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
     return _evalCallback(_blackboard.get(), rp, wm);
+}
+
+std::string TransitionCondition::getLibraryName() const
+{
+    return _libraryName;
+}
+
+void TransitionCondition::setLibraryName(const std::string& libraryname)
+{
+    _libraryName = libraryname;
 }
 } /* namespace alica */

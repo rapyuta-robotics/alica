@@ -21,6 +21,9 @@ TransitionCondition* TransitionConditionFactory::create(const YAML::Node& condit
     Factory::setAttributes(conditionNode, transitionCondition);
     Factory::storeElement(transitionCondition, alica::Strings::transitionCondition);
 
+    if (Factory::isValid(conditionNode[alica::Strings::libraryName]))
+        transitionCondition->setLibraryName(Factory::getValue<std::string>(conditionNode, alica::Strings::libraryName));
+
     return transitionCondition;
 }
 } // namespace alica

@@ -44,6 +44,8 @@ public:
 
     bool evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const;
 
+    std::string getLibraryName() const;
+
 private:
     friend ModelFactory;
     friend ConditionFactory;
@@ -77,5 +79,7 @@ private:
 
     std::string _conditionString;
     std::string _plugInName; // TODO: is this needed?!
+
+    std::string _libraryName;
 };
 } // namespace alica
