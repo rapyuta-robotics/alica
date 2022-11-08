@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <variant>
 #include <yaml-cpp/yaml.h>
+#include <iostream>
 
 namespace alica
 {
@@ -66,19 +67,80 @@ struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
 {
 };
 
-// using BlackboardValueType = std::variant<bool, int, std::string, std::any>;
+// template <class T, class = void>
+// struct convert
+// {
+//     static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
+// };
 
-template <class T, class = void>
-struct convert
-{
-    static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
-};
+// template <class T>
+// struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
+// {
+//     static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
+// };
 
-template <class T>
-struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
-{
-    static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
-};
+
+//////////////////////////////////////////////////
+
+static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
+static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
+
+template <bool PARSE_ARGS = false>
+    struct makeBBValueForIndex {
+        template <class T>
+        struct Parser {
+            auto operator()(const std::string& value) const {
+                // TODO: use Yaml::as<T>(value)
+                YAML::Node node = YAML::Load(value);
+                return node.as<T>();
+            }
+        };
+
+        template <class... Args>
+        static BlackboardValueType make(std::size_t index, Args&&... args) {
+            return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 1>(), std::forward<Args>(args)...);
+        }
+
+        template <class... Args, std::size_t... Is>
+        static BlackboardValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args) {
+            BlackboardValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+            if (!vals[index].index()) {
+                // TODO: variant construction failed, throw exception, remove return
+                std::cerr << "VARIANT CONSTRUCTION FAILED" << std::endl;
+                return vals[index];
+            }
+            std::cerr << "variant construction successful" << std::endl;
+            return vals[index];
+        }
+
+        template <std::size_t INDEX>
+        struct makeBBValueIfIndex {
+            using TypeAtIndex = std::decay_t<decltype(std::get<INDEX>(std::declval<BlackboardValueType>()))>;
+
+            template <class... Args>
+            static BlackboardValueType make(std::size_t index, Args&&... args) {
+                // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
+                // else makes a invalid variant, i.e. with value monostate
+                std::cerr << "calling make" << std::endl;
+                if constexpr (PARSE_ARGS) {
+                    std::cerr << "we have args" << std::endl;
+                    return index == INDEX ? BlackboardValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BlackboardValueType{};
+                } else {
+                    std::cerr << "we dont have args" << std::endl;
+                    if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
+                        std::cerr << "is constructible" << std::endl;
+                        std::cerr << "index == INDEX ? " << (index == INDEX) << std::endl;
+                        return index == INDEX ? BlackboardValueType{TypeAtIndex{std::forward<Args>(args)...}} : BlackboardValueType{};
+                    } else {
+                        std::cerr << "not constructible" << std::endl;
+                        return BlackboardValueType{};
+                    }
+                }
+            }
+        };
+    };
+
+/////////////////////////////////////////////////
 
 class BlackboardImpl
 {
@@ -94,7 +156,8 @@ public:
     const T& get(const std::string& key) const
     {
         try {
-            return convert<T>::get(vals.at(key));
+            return std::get<T>(vals.at(key));
+            // convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -105,7 +168,8 @@ public:
     const T& get(const std::string& key)
     {
         try {
-            return convert<T>::get(vals.at(key));
+            return std::get<T>(vals.at(key));
+            // return convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -130,6 +194,9 @@ public:
             // value is predefined in pml file
             std::string inputType = getNameFromType<T>();
             std::string pmlType = getBlackboardValueType(key);
+            if (key == "targetChildStatus") {
+                std::cerr << "123" << std::endl;
+            }
             if (pmlType == "std::any") {
                 // insert as std::any with type T
                 vals.at(key) = std::any{value};
@@ -140,6 +207,18 @@ public:
                 throw BlackboardTypeMismatch(inputType, pmlType);
             }
         }
+    }
+
+    void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb) {
+        // Note: srcKey & targetKey has to be set
+        // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
+        if (targetKey == "childStatus") {
+            std::cerr << "its child status" << std::endl;
+        }
+        std::visit([srcKey, targetKey, this](auto&& srcValue) {
+            // set the target as a side effect, throws if targetType is not constructible from srcType
+            vals[targetKey] = makeBBValueForIndex<false>::make(vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
+        }, srcBb.vals.at(srcKey));
     }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }

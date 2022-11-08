@@ -64,7 +64,7 @@ using VariableGrp = std::vector<const Variable*>;
 using ParameterMap = std::unordered_map<std::string, Parameter*>;
 using AgentStatePair = std::pair<AgentId, const State*>;
 using TransitionConditionCallback = std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)>;
-using BlackboardValueType = std::variant<bool, int64_t, double, std::string, std::any>;
+using BlackboardValueType = std::variant<std::monostate, bool, int64_t, double, std::string, std::any>;
 
 constexpr auto InvalidAgentID = std::numeric_limits<uint64_t>::max();
 

@@ -6,12 +6,56 @@ namespace alica
 void BlackboardImpl::initDefaultValues()
 {
     for (YAML::Node entry : node) {
-        YAML::Node defaultValue = entry[Strings::defaultValue];
-        if (defaultValue.Type() != YAML::NodeType::Null) {
-            std::string key = entry[Strings::key].as<std::string>();
-            std::string typeString = entry[Strings::stateType].as<std::string>();
-            Converter::setValueFromYaml(key, typeString, defaultValue, *this);
+    //     YAML::Node defaultValue = entry[Strings::defaultValue];
+    //     if (defaultValue.Type() != YAML::NodeType::Null) {
+    //         std::string key = entry[Strings::key].as<std::string>();
+    //         std::string typeString = entry[Strings::stateType].as<std::string>();
+    //         Converter::setValueFromYaml(key, typeString, defaultValue, *this);
+    //     } else {
+    //         // no default value, construct emtpy value
+    //     }
+    // }
+    // Note: value has to be in pml
+    // for (YAML::Node entry : node) {
+    //     const auto& typeName = _pmlType.at(key);
+    //     // get index of type in the variant
+    //     for (std::size_t i = 0; i < BB_VALUE_TYPE_NAMES_SIZE; ++i) {
+    //         if (BB_VALUE_TYPE_NAMES[i] == typeName) {
+    //             // index = i + 1 (because of std::monostate)
+    //             auto defValueIt = _pmlDefaultValues.find(key);
+    //             if (defValueIt != _pmlDefaultValues.end()) {
+    //                 // construct from default value
+    //                 _values[key] = makeBBValueForIndex<true>::make(i + 1, defValueIt->second);
+    //             } else {
+    //                 // no default value, default construct
+    //                 _values[key] = makeBBValueForIndex<false>::make(i + 1);
+    //             }
+    //         }
+    //     }
+    // }
+    // Note: value has to be in pml
+        const std::string& key = entry[Strings::key].as<std::string>();
+        const auto& typeName = entry[Strings::stateType].as<std::string>();
+        // get index of type in the variant
+        for (std::size_t i = 0; i < BB_VALUE_TYPE_NAMES_SIZE; ++i) {
+            if (BB_VALUE_TYPE_NAMES[i] == typeName) {
+                // index = i + 1 (because of std::monostate)
+                auto defaultValue = entry[Strings::defaultValue];
+                // auto defValueIt = _pmlDefaultValues.find(key);
+                if (!entry[Strings::defaultValue].IsNull()) {
+                    std::cerr << "have default value: " << entry[Strings::defaultValue] << std::endl;
+                    // construct from default value
+                    // vals[key] = makeBBValueForIndex<true>::make(i + 1, defValueIt->second);
+                    vals[key] = makeBBValueForIndex<true>::make(i + 1, entry[Strings::defaultValue].as<std::string>());
+                } else {
+                    // no default value, default construct
+                    std::cerr << "no default value" << std::endl;
+                    vals[key] = makeBBValueForIndex<false>::make(i + 1);
+                    std::cerr << "finished make" << std::endl;
+                }
+            }
         }
+        std::cerr << "finished initFromPML" << std::endl; 
     }
 }
 
