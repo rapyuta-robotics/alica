@@ -41,6 +41,7 @@ jobs:
           ros-$ROS_DISTRO-catkin
           ros-$ROS_DISTRO-rostest
           libyaml-cpp-dev
+          libboost-dev
           wget
           curl &&
           rm -f /etc/ros/rosdep/sources.list.d/20-default.list &&

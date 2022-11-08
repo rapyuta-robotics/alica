@@ -5,6 +5,8 @@
 #include "engine/IPlanCreator.h"
 #include "engine/logging/Logging.h"
 #include "engine/model/Plan.h"
+#include "engine/modelmanagement/factories/Factory.h"
+#include <engine/RuntimePlanFactory.h>
 
 namespace alica
 {

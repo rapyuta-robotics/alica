@@ -11,5 +11,6 @@
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
-  "variables": []
+  "variables": [],
+  "libraryName": "alica_turtlesim_library"
 }

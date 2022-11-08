@@ -142,7 +142,8 @@ void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
         if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
             transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
         } else {
-            transitionCondition->setEvalCallback(creator->createConditions(transitionCondition->getId()));
+            TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transitionCondition->getId()};
+            transitionCondition->setEvalCallback(creator->createConditions(ctx));
         }
     }
 }

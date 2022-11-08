@@ -6,7 +6,8 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /root/ws/src
 
 COPY . src
-
+RUN apt-get update && apt-get install -y \
+  libboost-all-dev && rm -rf /var/lib/apt/lists/*
 
 RUN <<build
  apt-get update
