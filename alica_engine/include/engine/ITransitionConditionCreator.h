@@ -6,12 +6,13 @@ namespace alica
 {
 class RunningPlan;
 class Blackboard;
+class TransitionConditionContext;
 
 class ITransitionConditionCreator
 {
 public:
     virtual ~ITransitionConditionCreator() {}
-    virtual TransitionConditionCallback createConditions(int64_t conditionId) = 0;
+    virtual TransitionConditionCallback createConditions(TransitionConditionContext& context) = 0;
 };
 
 } /* namespace alica */

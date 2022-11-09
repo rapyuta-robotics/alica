@@ -155,5 +155,6 @@
     }
   ],
   "utilityThreshold": 0.0,
-  "variables": []
+  "variables": [],
+  "libraryName": "alica_turtlesim_library"
 }

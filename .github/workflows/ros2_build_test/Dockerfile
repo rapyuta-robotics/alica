@@ -5,6 +5,12 @@ SHELL ["/bin/bash", "-c"]
 
 WORKDIR /root/ws/src
 
+RUN <<deps
+  apt-get update
+  apt-get install -y libboost-all-dev
+  rosdep install -y --from-paths . --ignore-src --rosdistro noetic
+deps
+
 COPY . src
 
 RUN <<build

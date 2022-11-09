@@ -9,7 +9,7 @@ COPY . .
 
 RUN <<deps
   apt-get update
-  apt-get install -y python3-catkin-tools
+  apt-get install -y python3-catkin-tools libboost-all-dev
   rosdep install -y --from-paths . --ignore-src --rosdistro noetic
 deps
 

@@ -13,8 +13,10 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
+        TransitionConditionContext& context)
 {
+    int64_t conditionId = context.conditionConfId;
     switch (conditionId) {
     case 748720375848597116:
         return std::bind(conditionMove2Init748720375848597116, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);

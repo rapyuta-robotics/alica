@@ -4,6 +4,7 @@
 #include "engine/BasicBehaviour.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/logging/Logging.h"
+#include "engine/modelmanagement/factories/Factory.h"
 
 namespace alica
 {

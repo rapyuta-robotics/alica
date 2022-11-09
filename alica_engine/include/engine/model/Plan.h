@@ -61,6 +61,8 @@ public:
 
     void reload(const YAML::Node& config);
 
+    std::string getLibraryName() const { return _libraryName; };
+
 private:
     friend ModelFactory;
     friend PlanFactory;
@@ -117,6 +119,8 @@ private:
      * Otherwise, the mapped keys will be copied in and out of the plans Blackboard
      */
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
+
+    std::string _libraryName;
 
     // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;

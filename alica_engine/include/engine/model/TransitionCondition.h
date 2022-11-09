@@ -24,8 +24,13 @@ public:
     bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
 
+    std::string getLibraryName() const;
+    void setLibraryName(const std::string& libraryname);
+
 private:
     std::unique_ptr<Blackboard> _blackboard;
     TransitionConditionCallback _evalCallback;
+
+    std::string _libraryName;
 };
 } // namespace alica
