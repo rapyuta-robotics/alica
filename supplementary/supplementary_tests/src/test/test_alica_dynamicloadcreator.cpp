@@ -9,6 +9,7 @@
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
 #include <engine/logging/AlicaDefaultLogger.h>
+#include <engine/logging/Logging.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/Transition.h>
 #include <engine/model/TransitionCondition.h>
@@ -39,15 +40,29 @@ public:
 
     void exportLdLibraryPath(const std::string& rootPath)
     {
-        _ldLibraryPath = rootPath + "/../../../../../../install/lib/";
-        _ldLibraryPath = simplifyPath(_ldLibraryPath);
-        if (!std::filesystem::exists(_ldLibraryPath)) {
-            _ldLibraryPath = rootPath + "/../../../../../../devel/lib/";
-            if (!std::filesystem::exists(_ldLibraryPath)) {
-                std::cerr << "Library path not found:" << _ldLibraryPath << std::endl;
-            }
+        Logging::logDebug("DT") << "Current folder:" << std::filesystem::current_path();
+
+        std::string develLibraryPath = rootPath + "/../../../../../../install/lib/";
+        std::string installLibraryPath = rootPath + "/../../../../../../devel/lib/";
+        std::string githubActionDevLibraryPath = std::filesystem::current_path().string() + "/../catkin_ws/devel/lib/";
+        std::string githubActionInstallLibraryPath = std::filesystem::current_path().string() + "/../catkin_ws/install/lib/";
+
+        develLibraryPath = simplifyPath(develLibraryPath);
+        installLibraryPath = simplifyPath(installLibraryPath);
+        githubActionDevLibraryPath = simplifyPath(githubActionDevLibraryPath);
+        githubActionInstallLibraryPath = simplifyPath(githubActionInstallLibraryPath);
+
+        if (!std::filesystem::exists(develLibraryPath) && !std::filesystem::exists(installLibraryPath) &&
+                !std::filesystem::exists(githubActionDevLibraryPath) && !std::filesystem::exists(githubActionInstallLibraryPath)) {
+            Logging::logError("DT") << "Devel library path not found:" << develLibraryPath;
+            Logging::logError("DT") << "Install library path not found:" << installLibraryPath;
+            Logging::logError("DT") << "GithubAction dev library path not found:" << githubActionDevLibraryPath;
+            Logging::logError("DT") << "GithubAction install library path not found:" << githubActionInstallLibraryPath;
+            FAIL();
         }
-        _ldLibraryPath = "LD_LIBRARY_PATH=/empty/path/:" + _ldLibraryPath + ":/another/empty/path/";
+        _ldLibraryPath = "LD_LIBRARY_PATH=/empty/path/:" + develLibraryPath + ":" + installLibraryPath + ":" + githubActionDevLibraryPath + ":" +
+                         githubActionInstallLibraryPath + ":/another/empty/path/";
+        Logging::logDebug("DT") << "Used LD_LIBRARY_PATH:" << _ldLibraryPath;
         char* env = &_ldLibraryPath[0];
         putenv(env);
     }
@@ -69,7 +84,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/Acme.beh" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/behaviours/Acme.beh";
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
 
@@ -97,7 +112,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
     try {
         node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/Acme.beh" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/behaviours/Acme.beh";
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
 
@@ -105,7 +120,10 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(node);
 
-    exportLdLibraryPath("/wrong_path/");
+    // Export wrong path
+    std::string wrongPath = "/wrong_path/";
+    char* env = &wrongPath[0];
+    putenv(env);
 
     // Create behaviour form dll
     IAlicaWorldModel wm;
@@ -126,7 +144,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     try {
         globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/hairy/Alica.yaml" << std::endl;
+        Logging::logError("DT") << path + "/etc/hairy/Alica.yaml";
         AlicaEngine::abort("MM: Could not parse global config file: ", badFile.msg);
     }
 
@@ -134,7 +152,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/Acme.pml");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/Acme.pml" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/Acme.pml";
         AlicaEngine::abort("MM: Could not parse plan file: ", badFile.msg);
     }
     // Load model
@@ -161,7 +179,7 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd";
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
 
@@ -188,7 +206,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeTransitionCondition.cnd");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/conditions/AcmeTransitionCondition.cnd" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/conditions/AcmeTransitionCondition.cnd";
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
     // Load model
@@ -213,7 +231,7 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/WaitBehaviour.beh" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/behaviours/WaitBehaviour.beh";
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
 
