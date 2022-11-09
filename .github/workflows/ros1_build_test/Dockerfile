@@ -17,7 +17,7 @@ RUN <<build
   cd /root/catkin_ws
   source /opt/ros/noetic/setup.bash
   catkin init
-  catkin config --skiplist alica_tracing --cmake-args -DCMAKE_CXX_FLAGS=-Werror
+  catkin config --skiplist alica_tracing
   catkin build --no-status
 build
 
