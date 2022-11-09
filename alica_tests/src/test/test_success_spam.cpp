@@ -34,6 +34,11 @@ class AlicaSpamSuccess : public AlicaTestFixture
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "BehaviorSuccessSpamMaster"; }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
+    }
 };
 
 /**
@@ -42,10 +47,9 @@ protected:
 TEST_F(AlicaSpamSuccess, runBehaviour)
 {
     ASSERT_NO_SIGNAL
+    CounterClass::called = 0;
     ae->start();
-    for (int i = 0; i < 30 * 6; ++i) {
-        ac->stepEngine();
-    }
+    STEP_UNTIL(CounterClass::called == 180);
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
 }
 } // namespace
