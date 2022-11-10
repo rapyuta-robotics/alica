@@ -11,7 +11,42 @@
 #include <unordered_map>
 #include <variant>
 #include <yaml-cpp/yaml.h>
-#include <iostream>
+
+namespace YAML
+{
+template <>
+struct convert<std::monostate>
+{
+    static Node encode(const std::monostate& rhs)
+    {
+        Node node;
+        return node;
+    }
+
+    static bool decode(const Node& node, std::monostate& rhs) { return true; }
+};
+
+template <>
+struct convert<std::any>
+{
+    static Node encode(const std::any& rhs)
+    {
+        std::string value = std::any_cast<std::string>(rhs);
+        Node node = YAML::Load(value);
+        return node;
+    }
+
+    static bool decode(const Node& node, std::any& rhs)
+    {
+        // check if node is convertible into string, or get original type of node
+        if (false) {
+            return false;
+        }
+        rhs = std::any{node.as<std::string>()};
+        return true;
+    }
+};
+} // namespace YAML
 
 namespace alica
 {
@@ -41,31 +76,31 @@ private:
     const std::string _typeDefinedInPml;
 };
 
-template <class Val, class... Ts>
-struct FindImpl
-{
-    static constexpr bool result = false;
-};
+// template <class Val, class... Ts>
+// struct FindImpl
+// {
+//     static constexpr bool result = false;
+// };
 
-template <class Val, class T, class... Ts>
-struct FindImpl<Val, T, Ts...>
-{
-    static constexpr bool result = FindImpl<Val, Ts...>::result;
-};
+// template <class Val, class T, class... Ts>
+// struct FindImpl<Val, T, Ts...>
+// {
+//     static constexpr bool result = FindImpl<Val, Ts...>::result;
+// };
 
-template <class Val, class... Ts>
-struct FindImpl<Val, Val, Ts...>
-{
-    static constexpr bool result = true;
-};
+// template <class Val, class... Ts>
+// struct FindImpl<Val, Val, Ts...>
+// {
+//     static constexpr bool result = true;
+// };
 
-template <class Val, class Variant>
-struct Find;
+// template <class Val, class Variant>
+// struct Find;
 
-template <class Val, template <class...> class Tp, class... Ts>
-struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
-{
-};
+// template <class Val, template <class...> class Tp, class... Ts>
+// struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
+// {
+// };
 
 // template <class T, class = void>
 // struct convert
@@ -79,68 +114,62 @@ struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
 //     static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
 // };
 
-
-//////////////////////////////////////////////////
-
 static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
 static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
 
 template <bool PARSE_ARGS = false>
-    struct makeBBValueForIndex {
-        template <class T>
-        struct Parser {
-            auto operator()(const std::string& value) const {
-                // TODO: use Yaml::as<T>(value)
-                YAML::Node node = YAML::Load(value);
-                return node.as<T>();
-            }
-        };
+struct makeBBValueForIndex
+{
 
-        template <class... Args>
-        static BlackboardValueType make(std::size_t index, Args&&... args) {
-            return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 1>(), std::forward<Args>(args)...);
+    template <class T>
+    struct Parser
+    {
+        auto operator()(const std::string& value) const
+        {
+            YAML::Node node = YAML::Load(value);
+            return node.as<T>();
         }
-
-        template <class... Args, std::size_t... Is>
-        static BlackboardValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args) {
-            BlackboardValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
-            if (!vals[index].index()) {
-                // TODO: variant construction failed, throw exception, remove return
-                std::cerr << "VARIANT CONSTRUCTION FAILED" << std::endl;
-                return vals[index];
-            }
-            std::cerr << "variant construction successful" << std::endl;
-            return vals[index];
-        }
-
-        template <std::size_t INDEX>
-        struct makeBBValueIfIndex {
-            using TypeAtIndex = std::decay_t<decltype(std::get<INDEX>(std::declval<BlackboardValueType>()))>;
-
-            template <class... Args>
-            static BlackboardValueType make(std::size_t index, Args&&... args) {
-                // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
-                // else makes a invalid variant, i.e. with value monostate
-                std::cerr << "calling make" << std::endl;
-                if constexpr (PARSE_ARGS) {
-                    std::cerr << "we have args" << std::endl;
-                    return index == INDEX ? BlackboardValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BlackboardValueType{};
-                } else {
-                    std::cerr << "we dont have args" << std::endl;
-                    if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
-                        std::cerr << "is constructible" << std::endl;
-                        std::cerr << "index == INDEX ? " << (index == INDEX) << std::endl;
-                        return index == INDEX ? BlackboardValueType{TypeAtIndex{std::forward<Args>(args)...}} : BlackboardValueType{};
-                    } else {
-                        std::cerr << "not constructible" << std::endl;
-                        return BlackboardValueType{};
-                    }
-                }
-            }
-        };
     };
 
-/////////////////////////////////////////////////
+    template <class... Args>
+    static BlackboardValueType make(std::size_t index, Args&&... args)
+    {
+        return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 1>(), std::forward<Args>(args)...);
+    }
+
+    template <class... Args, std::size_t... Is>
+    static BlackboardValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
+    {
+        BlackboardValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+        if (!vals[index].index()) {
+            // TODO: variant construction failed, throw exception, remove return
+            return vals[index];
+        }
+        return vals[index];
+    }
+
+    template <std::size_t INDEX>
+    struct makeBBValueIfIndex
+    {
+        using TypeAtIndex = std::decay_t<decltype(std::get<INDEX>(std::declval<BlackboardValueType>()))>;
+
+        template <class... Args>
+        static BlackboardValueType make(std::size_t index, Args&&... args)
+        {
+            // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
+            // else makes a invalid variant, i.e. with value monostate
+            if constexpr (PARSE_ARGS) {
+                return index == INDEX ? BlackboardValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BlackboardValueType{};
+            } else {
+                if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
+                    return index == INDEX ? BlackboardValueType{TypeAtIndex{std::forward<Args>(args)...}} : BlackboardValueType{};
+                } else {
+                    return BlackboardValueType{};
+                }
+            }
+        }
+    };
+};
 
 class BlackboardImpl
 {
@@ -194,9 +223,6 @@ public:
             // value is predefined in pml file
             std::string inputType = getNameFromType<T>();
             std::string pmlType = getBlackboardValueType(key);
-            if (key == "targetChildStatus") {
-                std::cerr << "123" << std::endl;
-            }
             if (pmlType == "std::any") {
                 // insert as std::any with type T
                 vals.at(key) = std::any{value};
@@ -209,16 +235,16 @@ public:
         }
     }
 
-    void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb) {
+    void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb)
+    {
         // Note: srcKey & targetKey has to be set
         // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
-        if (targetKey == "childStatus") {
-            std::cerr << "its child status" << std::endl;
-        }
-        std::visit([srcKey, targetKey, this](auto&& srcValue) {
-            // set the target as a side effect, throws if targetType is not constructible from srcType
-            vals[targetKey] = makeBBValueForIndex<false>::make(vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
-        }, srcBb.vals.at(srcKey));
+        std::visit(
+                [srcKey, targetKey, this](auto&& srcValue) {
+                    // set the target as a side effect, throws if targetType is not constructible from srcType
+                    vals[targetKey] = makeBBValueForIndex<false>::make(vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
+                },
+                srcBb.vals.at(srcKey));
     }
 
     bool hasValue(const std::string& key) const { return vals.count(key); }
@@ -258,56 +284,11 @@ struct Converter
 {
     static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string", "std::any"};
 
-    // YAML doesnt support std::any, needs a separate list of types for iteration
-    static constexpr const char* typeNamesYAML[] = {"bool", "int64", "double", "std::string"};
-    using TypesYAML = std::variant<bool, int64_t, double, std::string>;
-
     // convert from type to name as string
     template <class T>
     static constexpr const char* typeName()
     {
-        return typeNames[BlackboardValueType{T{}}.index()];
-    }
-
-    // set the value given the type name as a string
-    static void setValueFromYaml(const std::string& key, const std::string& typeName, const YAML::Node& valueNode, BlackboardImpl& bb);
-
-    // used to set the value without a yaml node
-    static void setValue(const std::string& key, const BlackboardValueType& value, const std::string& typeName, BlackboardImpl& bb);
-
-    template <class T>
-    struct YamlAs
-    {
-        static T as(const YAML::Node& value) { return value.as<T>(); }
-    };
-
-    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
-    struct makeVariantIfEqual
-    {
-        static BlackboardValueType make(std::size_t index, const YAML::Node& value)
-        {
-            return index == INDEX ? BlackboardValueType{Parser<T>::as(value)} : BlackboardValueType{std::any{}};
-        }
-    };
-
-    template <class... Ts, std::size_t... Is>
-    static BlackboardValueType makeVariantFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
-    {
-        BlackboardValueType typeValues[] = {makeVariantIfEqual<Ts, Is>::make(index, value)...};
-        return typeValues[index];
-    };
-
-    template <class T, std::size_t INDEX, template <class> class Parser = YamlAs>
-    struct makeAnyIfEqual
-    {
-        static std::any make(std::size_t index, const YAML::Node& value) { return index == INDEX ? std::any{Parser<T>::as(value)} : std::any{}; }
-    };
-
-    template <class... Ts, std::size_t... Is>
-    static std::any makeAnyFromIndex(std::variant<Ts...>, std::index_sequence<Is...>, std::size_t index, const YAML::Node& value)
-    {
-        std::any typeValues[] = {makeAnyIfEqual<Ts, Is>::make(index, value)...};
-        return typeValues[index];
+        return typeNames[BlackboardValueType{T{}}.index() - 1]; // account for monostate in variant
     }
 };
 

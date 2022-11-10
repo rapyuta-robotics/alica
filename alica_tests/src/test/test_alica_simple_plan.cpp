@@ -65,7 +65,6 @@ TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1402488848841));
 
     // We assume at least 30 calls to Attack in (3 * sleepTime) seconds.
-
     while (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter < 30 && timeoutCount < 3) {
         ae->getAlicaClock().sleep(sleepTime);
         timeoutCount++;
