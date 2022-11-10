@@ -3,7 +3,6 @@
 FROM ros:noetic
 SHELL ["/bin/bash", "-c"]
 
-
 WORKDIR /root/catkin_ws/src/alica/
 
 COPY . .
