@@ -3,9 +3,11 @@
 FROM ros:noetic
 SHELL ["/bin/bash", "-c"]
 
-WORKDIR /root/catkin_ws/src
+WORKDIR /root/catkin_ws/src/alica/
 
 COPY . .
+
+WORKDIR /root/catkin_ws/
 
 RUN <<deps
   apt-get update
@@ -14,7 +16,6 @@ RUN <<deps
 deps
 
 RUN <<build
-  cd /root/catkin_ws
   source /opt/ros/noetic/setup.bash
   catkin init
   catkin config --skiplist alica_tracing
@@ -22,6 +23,6 @@ RUN <<build
 build
 
 RUN <<runtests
-  source ../devel/setup.bash
+  source devel/setup.bash
   catkin run_tests --no-status && catkin_test_results --verbose
 runtests
