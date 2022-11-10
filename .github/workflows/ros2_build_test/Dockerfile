@@ -9,7 +9,8 @@ WORKDIR /root/ws/src
 RUN <<deps
   apt-get update
   apt-get install -y libboost-all-dev
-  rosdep install -y --from-paths . --ignore-src --rosdistro humble
+  rosdep update
+  rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
 deps
 
 COPY . src
