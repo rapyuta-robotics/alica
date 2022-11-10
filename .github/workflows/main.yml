@@ -8,6 +8,29 @@ on:
       - devel
   workflow_dispatch:
 jobs:
+  ROS1_build_test:
+    runs-on: "${{ matrix.os }}"
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Pull ROS1 images
+        run: docker pull ros:noetic
+      - name: Build and test Alica on ROS Noetic
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: "./.github/workflows/ros1_build_test/Dockerfile"
+          platforms: linux/amd64
+          push: false
+          tags: noetic
+          build-args: |
+            COMMIT=${{ github.sha }}
   ROS2_build_test:
     runs-on: "${{ matrix.os }}"
     timeout-minutes: 10
@@ -16,6 +39,7 @@ jobs:
         os:
           - ubuntu-latest
     steps:
+      - uses: docker/setup-buildx-action@v2
       - name: Checkout
         uses: actions/checkout@v3
       - name: Pull ROS2 images
