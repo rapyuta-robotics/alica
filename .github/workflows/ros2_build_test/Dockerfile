@@ -9,6 +9,7 @@ WORKDIR /root/ws/src
 RUN <<deps
   apt-get update
   apt-get install -y libboost-all-dev
+  source /opt/ros/humble/setup.bash
   rosdep update
   rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
 deps
@@ -16,6 +17,5 @@ deps
 COPY . src
 
 RUN <<build
- source /opt/ros/humble/setup.bash
  colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
 build
