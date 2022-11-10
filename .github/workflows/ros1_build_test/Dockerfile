@@ -26,4 +26,7 @@ RUN <<runtests
   source devel/setup.bash
   catkin run_tests --no-status
   catkin_test_results --verbose
+  source install/setup.bash
+  catkin run_tests --no-status
+  catkin_test_results --verbose
 runtests
