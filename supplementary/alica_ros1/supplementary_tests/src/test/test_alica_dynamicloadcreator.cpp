@@ -39,10 +39,10 @@ public:
 
     void exportLdLibraryPath(const std::string& rootPath)
     {
-        _ldLibraryPath = rootPath + "/../../../../../../install/lib/";
+        _ldLibraryPath = rootPath + "/../../../../../../../install/lib/";
         _ldLibraryPath = simplifyPath(_ldLibraryPath);
         if (!std::filesystem::exists(_ldLibraryPath)) {
-            _ldLibraryPath = rootPath + "/../../../../../../devel/lib/";
+            _ldLibraryPath = rootPath + "/../../../../../../../devel/lib/";
             if (!std::filesystem::exists(_ldLibraryPath)) {
                 std::cerr << "Library path not found:" << _ldLibraryPath << std::endl;
             }

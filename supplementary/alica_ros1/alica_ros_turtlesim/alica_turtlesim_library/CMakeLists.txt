@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_turtlesim_library)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake_flags/cflags.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 file(GLOB_RECURSE sources "src/*.cpp")
