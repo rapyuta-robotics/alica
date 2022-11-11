@@ -31,6 +31,9 @@ namespace alica
 
 namespace
 {
+
+std::string ldConfigPathArray; // must be permanent in compilation unit
+
 class AlicaDynamicLoading : public ::testing::Test
 {
 public:
@@ -69,6 +72,49 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
+}
+
+TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
+{
+    std::string path = getRootPath();
+
+    YAML::Node node;
+    try {
+        node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
+    } catch (YAML::BadFile& badFile) {
+        Logging::logError("DT") << path + "/etc/plans/behaviours/Acme.beh";
+        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
+    }
+
+    // Load model
+    Behaviour* behaviourModel;
+    behaviourModel = BehaviourFactory::create(node);
+
+    // Store original LD_LIBRARY_PATH
+    char* ldLibraryPathOriginal = std::getenv("LD_LIBRARY_PATH");
+    if (!ldLibraryPathOriginal) {
+        Logging::logError("DL") << "Error:"
+                                << "Missing LD_LIBRARY_PATH variable";
+        return;
+    }
+
+    // Export wrong path
+    std::string wrongPath = "LD_LIBRARY_PATH=/wrong_path/";
+    char* env = &wrongPath[0];
+    putenv(env);
+
+    // Create behaviour form dll
+    IAlicaWorldModel wm;
+    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
+
+    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
+    std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
+
+    ASSERT_EQ(nullptr, behaviour);
+
+    // Restore original LD_LIBRARY_PATH
+    ldConfigPathArray = "LD_LIBRARY_PATH=" + std::string(ldLibraryPathOriginal);
+    putenv((char*) ldConfigPathArray.c_str());
 }
 
 TEST_F(AlicaDynamicLoading, simple_plan_load)
@@ -179,37 +225,6 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("waitbehaviour", behaviour->getName());
-}
-
-TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
-{
-    std::string path = getRootPath();
-
-    YAML::Node node;
-    try {
-        node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
-    } catch (YAML::BadFile& badFile) {
-        Logging::logError("DT") << path + "/etc/plans/behaviours/Acme.beh";
-        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
-    }
-
-    // Load model
-    Behaviour* behaviourModel;
-    behaviourModel = BehaviourFactory::create(node);
-
-    // Export wrong path
-    std::string wrongPath = "LD_LIBRARY_PATH=/wrong_path/";
-    char* env = &wrongPath[0];
-    putenv(env);
-
-    // Create behaviour form dll
-    IAlicaWorldModel wm;
-    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
-    std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
-
-    ASSERT_EQ(nullptr, behaviour);
 }
 
 } // namespace
