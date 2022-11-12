@@ -1,5 +1,6 @@
 #include "test_alica.h"
 #include <alica/test/Util.h>
+#include <alica/test/CounterClass.h>
 #include <gtest/gtest.h>
 
 namespace alica
@@ -29,6 +30,11 @@ protected:
         AlicaTestFixture::SetUp();
         ac->setOption("Alica.AutoFailureHandling", false);
     }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
+    }
 };
 
 class AlicaFailureHandlingEnabledMultiAgentFixture : public AlicaTestMultiAgentFixture
@@ -56,6 +62,11 @@ protected:
         AlicaTestMultiAgentFixture::SetUp();
         acs[0]->setOption("Alica.AutoFailureHandling", false);
         acs[1]->setOption("Alica.AutoFailureHandling", false);
+    }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
     }
 };
 
@@ -103,9 +114,9 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    for (int i = 0; i < 10; ++i) {
-        ac->stepEngine();
-    }
+    CounterClass::called = 0;
+    STEP_UNTIL(CounterClass::called = 10);
+
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
@@ -185,10 +196,9 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    for (int i = 0; i < 10; ++i) {
-        acs[0]->stepEngine();
-        acs[1]->stepEngine();
-    }
+    CounterClass::called = 0;
+    STEP_UNTIL_VECT(acs, CounterClass::called = 10);
+
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 

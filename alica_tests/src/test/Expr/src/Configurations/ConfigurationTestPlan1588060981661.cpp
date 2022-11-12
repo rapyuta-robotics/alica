@@ -1,6 +1,6 @@
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 /*PROTECTED REGION ID(eph1588060981661) ENABLED START*/
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica

@@ -3,6 +3,7 @@
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
+#include <alica/test/CounterClass.h>
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
@@ -50,6 +51,11 @@ protected:
         } else {
             return "nase";
         }
+    }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
     }
 };
 
@@ -126,20 +132,13 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     wmTwo->robotsXPos.push_back(2000);
     wmTwo->robotsXPos.push_back(0);
 
-    for (int i = 0; i < 21; i++) {
-        acs[0]->stepEngine();
-        acs[1]->stepEngine();
-
-        if (i == 1) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-        }
-
-        if (i == 20) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
-        }
-    }
+    CounterClass::called = 0;
+    STEP_UNTIL_VECT(acs, CounterClass::called == 1);
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
+    STEP_UNTIL_VECT(acs, CounterClass::called == 20);
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 }
 } // namespace
 } // namespace alica

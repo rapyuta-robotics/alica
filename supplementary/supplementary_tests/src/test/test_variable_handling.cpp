@@ -2,6 +2,7 @@
 #include "supplementary_tests/conditions/conditions.h"
 #include "test_supplementary.h"
 
+#include <alica/test/CounterClass.h>
 #include <alica/test/Util.h>
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
@@ -42,11 +43,17 @@ protected:
         }
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         AlicaTestMultiAgentFixture::SetUp();
         acs[0]->addSolver<alica::reasoner::CGSolver>();
         acs[1]->addSolver<alica::reasoner::CGSolver>();
+    }
+
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
     }
 };
 
@@ -59,10 +66,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     std::chrono::milliseconds sleepTime(33);
     do {
-        for (int i = 0; i < 3; ++i) {
-            acs[0]->stepEngine();
-            acs[1]->stepEngine();
-        }
+        CounterClass::called = 0;
+        STEP_UNTIL_VECT(acs, CounterClass::called == 3);
     } while (alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
 
     const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();

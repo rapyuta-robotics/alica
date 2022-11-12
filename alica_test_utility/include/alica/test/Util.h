@@ -32,6 +32,19 @@
 #define GET_STEP_MACRO(_0, _1, _2, NAME, ...) NAME
 #define STEP_UNTIL(...) GET_STEP_MACRO(_0, __VA_ARGS__, STEP_UNTIL2, STEP_UNTIL1)(__VA_ARGS__)
 
+#define STEP_UNTIL_VECT(ac, condition)                                                                                                                         \
+    do {                                                                                                                                                       \
+        for (int i = 0; i < 10; ++i) {                                                                                                                         \
+            for (auto currentAc : ac) {                                                                                                                        \
+                currentAc->stepEngine();                                                                                                                       \
+            }                                                                                                                                                  \
+            if (condition) {                                                                                                                                   \
+                break;                                                                                                                                         \
+            }                                                                                                                                                  \
+        }                                                                                                                                                      \
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                            \
+    } while (0)
+
 #define SLEEP_UNTIL(condition)                                                                                                                                 \
     do {                                                                                                                                                       \
         for (int i = 0; i < 100; ++i) {                                                                                                                        \

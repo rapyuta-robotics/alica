@@ -3,7 +3,7 @@
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 
@@ -49,7 +49,7 @@ TEST_F(AlicaSpamSuccess, runBehaviour)
     ASSERT_NO_SIGNAL
     CounterClass::called = 0;
     ae->start();
-    STEP_UNTIL(CounterClass::called == 180);
+    STEP_UNTIL(CounterClass::called == 30 * 6);
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
 }
 } // namespace

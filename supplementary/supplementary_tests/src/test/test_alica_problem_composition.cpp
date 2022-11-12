@@ -1,3 +1,5 @@
+#include <alica/test/CounterClass.h>
+#include <alica/test/Util.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
 #include <gtest/gtest.h>
@@ -18,6 +20,11 @@ class AlicaProblemCompositionTest : public AlicaTestFixtureWithSolvers
 {
 protected:
     const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return true;
+    }
 };
 
 /**
@@ -29,9 +36,8 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 
     ae->start();
 
-    for (int i = 0; i < 6; ++i) {
-        ac->stepEngine();
-    }
+    CounterClass::called = 0;
+    STEP_UNTIL(CounterClass::called == 6);
 
     const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 

@@ -8,7 +8,7 @@
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
 
@@ -46,7 +46,11 @@ class AlicaTracingTest : public AlicaTestTracingFixture
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "TestTracingMasterPlan"; }
-    bool stepEngine() const override { return false; }
+    bool stepEngine() const override
+    {
+        CounterClass::called++;
+        return false;
+    }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
         ac->setWorldModel<alicaTests::TestWorldModel>();
@@ -124,20 +128,13 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     twm2->robotsXPos.push_back(2000);
     twm2->robotsXPos.push_back(0);
 
-    for (int i = 0; i < 21; i++) {
-        acs[0]->stepEngine();
-        acs[1]->stepEngine();
-
-        if (i == 1) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-        }
-
-        if (i == 20) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
-        }
-    }
+    CounterClass::called = 0;
+    STEP_UNTIL_VECT(acs, CounterClass::called == 1);
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
+    STEP_UNTIL_VECT(acs, CounterClass::called == 20);
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 
     auto logs = twm2->tracingLogs;
 
