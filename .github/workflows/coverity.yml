@@ -1,0 +1,19 @@
+name: Build and Test
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: "Email to send result to"
+        type: string
+        required: true
+jobs:
+  run_coverity_scan:
+    runs-on: "${{ matrix.os }}"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: vapier/coverity-scan-action@v1
+        with:
+          project: rapyuta-robotics/alica
+          email: ${{ inputs.email }}
+          token: ${{ secrets.COVERITY_SCAN_TOKEN }}
+          description: alica
