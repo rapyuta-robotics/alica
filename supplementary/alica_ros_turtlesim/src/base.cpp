@@ -9,19 +9,17 @@
 #include <alica/PlanCreator.h>
 #include <alica/TransitionConditionCreator.h>
 #include <alica/UtilityFunctionCreator.h>
-#include <engine/AlicaContext.h>
-#include <engine/logging/AlicaDefaultLogger.h>
-
+#include <alica_ros_turtlesim/base.hpp>
+#include <alica_ros_turtlesim/world_model.hpp>
+#include <boost/dll/import.hpp> // for import_alias
 #include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
+#include <engine/AlicaContext.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 #include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
-
-#include <boost/dll/import.hpp> // for import_alias
-
-#include <alica_ros_turtlesim/base.hpp>
 
 namespace turtlesim
 {
@@ -37,12 +35,12 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
+    ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
 
     // create world model
     if (_loadDynamically) {
         ALICATurtleWorldModelCallInit(nh, priv_nh);
-    } else
-        ALICATurtleWorldModel::init(nh, priv_nh);
+    }
 }
 
 void Base::ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
@@ -113,8 +111,6 @@ Base::~Base()
 
     if (_loadDynamically) {
         ALICATurtleWorldModelCallDel();
-    } else {
-        ALICATurtleWorldModel::del();
     }
 }
 

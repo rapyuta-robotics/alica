@@ -2,6 +2,7 @@
 #define IO_TURTLE_BASE_BASE_HPP
 
 #include "world_model.hpp"
+#include <engine/AlicaEngine.h>
 
 namespace turtlesim
 {
