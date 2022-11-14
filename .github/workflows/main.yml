@@ -10,7 +10,7 @@ on:
 jobs:
   ROS1_build_test:
     runs-on: "${{ matrix.os }}"
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       matrix:
         os:
