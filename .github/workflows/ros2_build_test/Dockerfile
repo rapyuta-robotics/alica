@@ -6,6 +6,8 @@ SHELL ["/bin/bash", "-c"]
 
 WORKDIR /root/ws/src
 
+COPY . src
+
 RUN <<deps
   apt-get update
   apt-get install -y libboost-all-dev
@@ -14,7 +16,7 @@ RUN <<deps
   rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
 deps
 
-COPY . src
+
 
 RUN <<build
   source /opt/ros/humble/setup.bash
