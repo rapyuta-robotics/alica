@@ -9,6 +9,7 @@
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
 #include <engine/logging/AlicaDefaultLogger.h>
+#include <engine/logging/Logging.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/Transition.h>
 #include <engine/model/TransitionCondition.h>
@@ -30,27 +31,11 @@ namespace alica
 
 namespace
 {
+
 class AlicaDynamicLoading : public ::testing::Test
 {
 public:
-    std::string _ldLibraryPath;
-
     AlicaDynamicLoading() { AlicaLogger::create<alica::AlicaDefaultLogger>(Verbosity::DEBUG, "TEST"); }
-
-    void exportLdLibraryPath(const std::string& rootPath)
-    {
-        _ldLibraryPath = rootPath + "/../../../../../../install/lib/";
-        _ldLibraryPath = simplifyPath(_ldLibraryPath);
-        if (!std::filesystem::exists(_ldLibraryPath)) {
-            _ldLibraryPath = rootPath + "/../../../../../../devel/lib/";
-            if (!std::filesystem::exists(_ldLibraryPath)) {
-                std::cerr << "Library path not found:" << _ldLibraryPath << std::endl;
-            }
-        }
-        _ldLibraryPath = "LD_LIBRARY_PATH=/empty/path/:" + _ldLibraryPath + ":/another/empty/path/";
-        char* env = &_ldLibraryPath[0];
-        putenv(env);
-    }
 
     std::string getRootPath() const
     {
@@ -69,15 +54,13 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/Acme.beh" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/behaviours/Acme.beh";
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
 
     // Load model
     Behaviour* behaviourModel;
     behaviourModel = BehaviourFactory::create(node);
-
-    exportLdLibraryPath(path);
 
     // Create behaviour form dll
     IAlicaWorldModel wm;
@@ -89,44 +72,15 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     ASSERT_EQ("acmebehaviour", behaviour->getName());
 }
 
-TEST_F(AlicaDynamicLoading, simple_behaviour_fail_load_wrong_path)
-{
-    std::string path = getRootPath();
-
-    YAML::Node node;
-    try {
-        node = YAML::LoadFile(path + "/etc/plans/behaviours/Acme.beh");
-    } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/Acme.beh" << std::endl;
-        AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
-    }
-
-    // Load model
-    Behaviour* behaviourModel;
-    behaviourModel = BehaviourFactory::create(node);
-
-    exportLdLibraryPath("/wrong_path/");
-
-    // Create behaviour form dll
-    IAlicaWorldModel wm;
-    auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
-
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
-    std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
-
-    ASSERT_EQ(nullptr, behaviour);
-}
-
 TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
     std::string path = getRootPath();
-    exportLdLibraryPath(path);
 
     YAML::Node globalNode;
     try {
         globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/hairy/Alica.yaml" << std::endl;
+        Logging::logError("DT") << path + "/etc/hairy/Alica.yaml";
         AlicaEngine::abort("MM: Could not parse global config file: ", badFile.msg);
     }
 
@@ -134,7 +88,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     try {
         node = YAML::LoadFile(path + "/etc/plans/Acme.pml");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/Acme.pml" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/Acme.pml";
         AlicaEngine::abort("MM: Could not parse plan file: ", badFile.msg);
     }
     // Load model
@@ -155,13 +109,12 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
 TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
     std::string path = getRootPath();
-    exportLdLibraryPath(path);
 
     YAML::Node node;
     try {
         node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/conditions/AcmeRuntimeCondition.cnd";
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
 
@@ -182,13 +135,12 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 {
     std::string path = getRootPath();
-    exportLdLibraryPath(path);
 
     YAML::Node node;
     try {
         node = YAML::LoadFile(path + "/etc/plans/conditions/AcmeTransitionCondition.cnd");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/conditions/AcmeTransitionCondition.cnd" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/conditions/AcmeTransitionCondition.cnd";
         AlicaEngine::abort("MM: Could not parse conditions file: ", badFile.msg);
     }
     // Load model
@@ -207,13 +159,12 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
     std::string path = getRootPath();
-    exportLdLibraryPath(path);
 
     YAML::Node node;
     try {
         node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh");
     } catch (YAML::BadFile& badFile) {
-        std::cerr << path + "/etc/plans/behaviours/WaitBehaviour.beh" << std::endl;
+        Logging::logError("DT") << path + "/etc/plans/behaviours/WaitBehaviour.beh";
         AlicaEngine::abort("MM: Could not parse behaviour file: ", badFile.msg);
     }
 
