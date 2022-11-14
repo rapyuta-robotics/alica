@@ -76,43 +76,43 @@ private:
     const std::string _typeDefinedInPml;
 };
 
-// template <class Val, class... Ts>
-// struct FindImpl
-// {
-//     static constexpr bool result = false;
-// };
+template <class Val, class... Ts>
+struct FindImpl
+{
+    static constexpr bool result = false;
+};
 
-// template <class Val, class T, class... Ts>
-// struct FindImpl<Val, T, Ts...>
-// {
-//     static constexpr bool result = FindImpl<Val, Ts...>::result;
-// };
+template <class Val, class T, class... Ts>
+struct FindImpl<Val, T, Ts...>
+{
+    static constexpr bool result = FindImpl<Val, Ts...>::result;
+};
 
-// template <class Val, class... Ts>
-// struct FindImpl<Val, Val, Ts...>
-// {
-//     static constexpr bool result = true;
-// };
+template <class Val, class... Ts>
+struct FindImpl<Val, Val, Ts...>
+{
+    static constexpr bool result = true;
+};
 
-// template <class Val, class Variant>
-// struct Find;
+template <class Val, class Variant>
+struct Find;
 
-// template <class Val, template <class...> class Tp, class... Ts>
-// struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
-// {
-// };
+template <class Val, template <class...> class Tp, class... Ts>
+struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
+{
+};
 
-// template <class T, class = void>
-// struct convert
-// {
-//     static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
-// };
+template <class T, class = void>
+struct convert
+{
+    static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
+};
 
-// template <class T>
-// struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
-// {
-//     static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
-// };
+template <class T>
+struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
+{
+    static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
+};
 
 static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
 static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
@@ -185,8 +185,7 @@ public:
     const T& get(const std::string& key) const
     {
         try {
-            return std::get<T>(vals.at(key));
-            // convert<T>::get(vals.at(key));
+            convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
@@ -197,8 +196,7 @@ public:
     const T& get(const std::string& key)
     {
         try {
-            return std::get<T>(vals.at(key));
-            // return convert<T>::get(vals.at(key));
+            return convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {

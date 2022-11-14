@@ -94,7 +94,27 @@ TEST_F(TestBlackBoard, testWithoutPlan)
 
     // unknown types
     bbrw.set<PlanStatus>("val5", PlanStatus::Success);
-    // EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
+    EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
+}
+
+TEST_F(TestBlackBoard, testMapping)
+{
+    Blackboard srcBb, targetBb;
+
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<int64_t>("valueInt", 13);
+    srcLocked.set<bool>("valueBool", true);
+
+    targetLocked.set<double>("valueDouble", 3.7);
+    targetLocked.set<int64_t>("valueInt", 92);
+
+    targetBb.impl().map("valueInt", "valueDouble", srcBb.impl());
+    targetBb.impl().map("valueBool", "valueInt", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueDouble"), 13.0);
+    EXPECT_EQ(targetLocked.get<int64_t>("valueInt"), 1);
 }
 
 } // namespace
