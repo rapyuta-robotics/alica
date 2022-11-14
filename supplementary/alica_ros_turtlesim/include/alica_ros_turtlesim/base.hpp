@@ -18,10 +18,8 @@ public:
 private:
     ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
-    void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
 
-    void ALICATurtleWorldModelCallDel();
-
+    void ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
     bool _loadDynamically{false};
 };
 
