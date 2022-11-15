@@ -4,25 +4,6 @@
 namespace turtlesim
 {
 
-ALICATurtleWorldModel* ALICATurtleWorldModel::instance = nullptr;
-
-ALICATurtleWorldModel* ALICATurtleWorldModel::get()
-{
-    return instance;
-}
-
-void ALICATurtleWorldModel::init(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
-{
-    if (!instance) {
-        instance = new ALICATurtleWorldModel(nh, priv_nh);
-    }
-}
-
-void ALICATurtleWorldModel::del()
-{
-    delete instance;
-}
-
 ALICATurtleWorldModel::ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         : turtle(priv_nh)
 {

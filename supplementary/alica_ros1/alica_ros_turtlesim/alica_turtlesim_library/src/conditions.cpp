@@ -13,7 +13,7 @@ bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const IA
 {
     std::cerr << "Debug:"
               << "conditionMove2Init" << std::endl;
-    return turtlesim::ALICATurtleWorldModel::get()->getInit();
+    return dynamic_cast<const turtlesim::ALICATurtleWorldModel*>(wm)->getInit();
 }
 bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
