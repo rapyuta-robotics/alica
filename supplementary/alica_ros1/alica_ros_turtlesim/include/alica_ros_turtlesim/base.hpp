@@ -2,6 +2,7 @@
 #define IO_TURTLE_BASE_BASE_HPP
 
 #include "world_model.hpp"
+#include <engine/AlicaEngine.h>
 
 namespace turtlesim
 {
@@ -17,10 +18,8 @@ public:
 private:
     ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
-    void ALICATurtleWorldModelCallInit(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
 
-    void ALICATurtleWorldModelCallDel();
-
+    void ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
     bool _loadDynamically{false};
 };
 
