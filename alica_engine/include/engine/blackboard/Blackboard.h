@@ -106,12 +106,15 @@ template <class T, class = void>
 struct convert
 {
     static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
+    // static auto& get(const BlackboardValueType& val) { return std::any_cast<T&>(std::get<std::any>(val)); }
 };
 
 template <class T>
 struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
 {
     static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
+    // static auto& get(const BlackboardValueType& val) { return std::get<T>(val); };
+    // static auto& get(const BlackboardValueType& val) { return std::get<T&>(val); }
 };
 
 static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
@@ -162,6 +165,7 @@ struct makeBBValueForIndex
                 return index == INDEX ? BlackboardValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BlackboardValueType{};
             } else {
                 if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
+#pragma warning(suppress: 4101) // TODO: fix compiler warning without suppression
                     return index == INDEX ? BlackboardValueType{TypeAtIndex{std::forward<Args>(args)...}} : BlackboardValueType{};
                 } else {
                     return BlackboardValueType{};
@@ -185,17 +189,6 @@ public:
     const T& get(const std::string& key) const
     {
         try {
-            convert<T>::get(vals.at(key));
-        } catch (const std::bad_variant_access& e) {
-            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-        } catch (const std::bad_any_cast& e) {
-            throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-        }
-    }
-    template <typename T>
-    const T& get(const std::string& key)
-    {
-        try {
             return convert<T>::get(vals.at(key));
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
@@ -203,13 +196,24 @@ public:
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         }
     }
+    // template <typename T>
+    // T& get(const std::string& key)
+    // {
+    //     try {
+    //         return convert<T>::get(vals.at(key));
+    //     } catch (const std::bad_variant_access& e) {
+    //         throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+    //     } catch (const std::bad_any_cast& e) {
+    //         throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+    //     }
+    // }
     BlackboardValueType& get(const std::string& key) { return vals.at(key); }
     const BlackboardValueType& get(const std::string& key) const { return vals.at(key); }
 
     template <class T>
     void set(const std::string& key, const T& value)
     {
-        if (getBlackboardValueNode(key).Type() == YAML::NodeType::Null) {
+        if (getBlackboardValueNode(key).Type() == YAML::NodeType::Null) { // replace with check if value is in keyToType map
             // value is not predefined in pml file
             if (getNameFromType<T>() == "std::any") {
                 // if type is std::any, wrap into std::any
@@ -220,7 +224,7 @@ public:
         } else {
             // value is predefined in pml file
             std::string inputType = getNameFromType<T>();
-            std::string pmlType = getBlackboardValueType(key);
+            std::string pmlType = keyToType.at(key);
             if (pmlType == "std::any") {
                 // insert as std::any with type T
                 vals.at(key) = std::any{value};
@@ -237,6 +241,7 @@ public:
     {
         // Note: srcKey & targetKey has to be set
         // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
+        // TODO: Fix compiler warning
         std::visit(
                 [srcKey, targetKey, this](auto&& srcValue) {
                     // set the target as a side effect, throws if targetType is not constructible from srcType
@@ -255,6 +260,7 @@ public:
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, BlackboardValueType> vals;
     YAML::Node node;
+    std::unordered_map<std::string, std::string> keyToType;
 
 private:
     friend BlackboardUtil;
@@ -270,8 +276,7 @@ private:
 
     std::string getBlackboardValueType(const std::string& key) const
     {
-        YAML::Node entry = getBlackboardValueNode(key);
-        return entry[Strings::stateType].as<std::string>();
+        return keyToType.at(key);
     }
 
     template <class T>
@@ -301,6 +306,12 @@ public:
     {
         _impl.vals = blueprint->vals;
         _impl.node = blueprint->node;
+        for (const auto& entry : _impl.node) {
+            std::string key = entry[Strings::key].as<std::string>();
+            std::string type = entry[Strings::stateType].as<std::string>();
+            // add to map, <key, type>
+            _impl.keyToType.at(key) = type;
+        }
         _impl.initDefaultValues();
     };
 
@@ -330,6 +341,13 @@ public:
 
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
+
+    // template <typename T>
+    // T& get(const std::string& key) const
+    // {
+    //     return _impl->get<T>(key);
+    // }
+
     template <typename T>
     const T& get(const std::string& key) const
     {
@@ -361,8 +379,14 @@ public:
         _impl->registerValue(key, std::forward<Args>(args)...);
     }
 
+    // template <typename T>
+    // T& get(const std::string& key)
+    // {
+    //     return _impl->get<T>(key);
+    // }
+
     template <typename T>
-    const T& get(const std::string& key)
+    const T& get(const std::string& key) const
     {
         return _impl->get<T>(key);
     }
