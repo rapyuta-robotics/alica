@@ -3,7 +3,7 @@ project(alica_ros_proxy)
 include(CTest)
 
 add_compile_options(-std=c++17)
-include(../../cmake_flags/cflags.cmake)
+include(../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 find_package(catkin REQUIRED COMPONENTS
