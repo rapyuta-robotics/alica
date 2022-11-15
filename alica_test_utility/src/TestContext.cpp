@@ -148,17 +148,17 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
     /*
      * fullyQualifiedName (FQN) syntax
      *
-     * "/<S1,P1>/<S2,P2>/<S3,P3>"
+     * "/<S(1),P(1)>/<S(2),P(2)>/<S(3),P(3)>"
      *
-     * S1: active state in master plan
-     * Sx: active state in previous pair's Px
-     * Px: active plan in Sx
+     * S(1): active state in master plan
+     * S(n): active state in P(n-1)
+     * P(n): active plan in S(n)
      *
-     * If a state Sx has just a single plan/behaviour attached to it, the plan/behaviour name can be ommitted along with <> symbols i.e.
-     * "/S1/S2/<S3,P3>""
+     * If a state S(n) has just a single plan/behaviour attached to it, the plan/behaviour name can be ommitted along with <> symbols i.e.
+     * "/S(1)/S(2)/<S(3),P(3)>""
      *
      * White spaces are stripped from the FQN
-     * FQN is Case sensitive
+     * FQN is case sensitive
      */
     std::string fqn;
     std::copy_if(fullyQualifiedName.begin(), fullyQualifiedName.end(), std::back_inserter(fqn),
@@ -180,16 +180,16 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
             if (commaPos == std::string::npos) {
                 return {};
             }
-            statePlanPairs.emplace_back(std::piecewise_construct,
-                    /* substring [1, commaPos) */ std::forward_as_tuple(splitName.substr(1, commaPos - 1)),
-                    /* substring [commaPos + 1, last_char_of_splitName) */
-                    std::forward_as_tuple(splitName.substr(commaPos + 1, (splitName.length() - 1) - (commaPos + 1))));
-
+            // substring [1, commaPos)
+            auto state = splitName.substr(1, commaPos - 1);
+            // substring [commaPos + 1, last_char_of_splitName)
+            auto plan = splitName.substr(commaPos + 1, (splitName.length() - 1) - (commaPos + 1));
+            if (state.empty() || plan.empty()) {
+                return {};
+            }
+            statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(std::move(state)), std::forward_as_tuple(std::move(plan)));
         } else {
             statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(splitName), std::forward_as_tuple());
-        }
-        if (statePlanPairs.back().first.empty() || statePlanPairs.back().second.empty()) {
-            return {};
         }
     }
     return statePlanPairs;
