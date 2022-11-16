@@ -216,12 +216,12 @@ AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunication
         : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
-    s_modContainer.registerModule(this);
+    // s_modContainer.registerModule(this);
 }
 
 AlicaDummyCommunication::~AlicaDummyCommunication()
 {
-    s_modContainer.deregisterModule(this);
+    // s_modContainer.deregisterModule(this);
 }
 
 void AlicaDummyCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const
@@ -284,10 +284,12 @@ void AlicaDummyCommunication::tick() {}
 void AlicaDummyCommunication::startCommunication()
 {
     _isRunning = true;
+    s_modContainer.registerModule(this);
 }
 
 void AlicaDummyCommunication::stopCommunication()
 {
+    s_modContainer.deregisterModule(this);
     _isRunning = false;
 }
 
