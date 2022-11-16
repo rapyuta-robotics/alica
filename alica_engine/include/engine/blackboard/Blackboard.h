@@ -12,42 +12,6 @@
 #include <variant>
 #include <yaml-cpp/yaml.h>
 
-namespace YAML
-{
-template <>
-struct convert<std::monostate>
-{
-    static Node encode(const std::monostate& rhs)
-    {
-        Node node;
-        return node;
-    }
-
-    static bool decode(const Node& node, std::monostate& rhs) { return true; }
-};
-
-template <>
-struct convert<std::any>
-{
-    static Node encode(const std::any& rhs)
-    {
-        std::string value = std::any_cast<std::string>(rhs);
-        Node node = YAML::Load(value);
-        return node;
-    }
-
-    static bool decode(const Node& node, std::any& rhs)
-    {
-        // check if node is convertible into string, or get original type of node
-        if (false) {
-            return false;
-        }
-        rhs = std::any{node.as<std::string>()};
-        return true;
-    }
-};
-} // namespace YAML
-
 namespace alica
 {
 
@@ -102,35 +66,28 @@ struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
 {
 };
 
-template <class T, class = void>
-struct convert
-{
-    static const auto& get(const BlackboardValueType& val) { return std::any_cast<const T&>(std::get<std::any>(val)); }
-    // static auto& get(const BlackboardValueType& val) { return std::any_cast<T&>(std::get<std::any>(val)); }
-};
-
-template <class T>
-struct convert<T, std::enable_if_t<Find<T, BlackboardValueType>::result>>
-{
-    static const auto& get(const BlackboardValueType& val) { return std::get<T>(val); }
-    // static auto& get(const BlackboardValueType& val) { return std::get<T>(val); };
-    // static auto& get(const BlackboardValueType& val) { return std::get<T&>(val); }
-};
-
 static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
 static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
 
 template <bool PARSE_ARGS = false>
 struct makeBBValueForIndex
 {
+    using KnownTypes = std::variant<bool, int64_t, double, std::string>;
 
     template <class T>
     struct Parser
     {
         auto operator()(const std::string& value) const
         {
-            YAML::Node node = YAML::Load(value);
-            return node.as<T>();
+            if constexpr(Find<T, KnownTypes>::result) {
+                // type is a known type, continue parsing
+                YAML::Node node = YAML::Load(value);
+                return node.as<T>();
+            } else {
+                // type is not a known type, throw exception
+                throw BlackboardTypeMismatch("<std::monostate, std::any>", "<bool, int64, double, std::string>");
+                return T{};
+            }
         }
     };
 
@@ -189,24 +146,23 @@ public:
     const T& get(const std::string& key) const
     {
         try {
-            return convert<T>::get(vals.at(key));
+            if constexpr (Find<T, BlackboardValueType>::result) {
+                return std::get<T>(vals.at(key));
+            } else {
+                return std::any_cast<T>(vals.at(key));
+            }
         } catch (const std::bad_variant_access& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         } catch (const std::bad_any_cast& e) {
             throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
         }
     }
-    // template <typename T>
-    // T& get(const std::string& key)
-    // {
-    //     try {
-    //         return convert<T>::get(vals.at(key));
-    //     } catch (const std::bad_variant_access& e) {
-    //         throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-    //     } catch (const std::bad_any_cast& e) {
-    //         throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
-    //     }
-    // }
+
+    template <typename T>
+    T& get(const std::string& key)
+    {
+        return const_cast<T&>(const_cast<const BlackboardImpl*>(this)->get<T>(key));
+    }
     BlackboardValueType& get(const std::string& key) { return vals.at(key); }
     const BlackboardValueType& get(const std::string& key) const { return vals.at(key); }
 
@@ -342,12 +298,6 @@ public:
     bool empty() const { return _impl->empty(); }
     size_t size() const { return _impl->size(); }
 
-    // template <typename T>
-    // T& get(const std::string& key) const
-    // {
-    //     return _impl->get<T>(key);
-    // }
-
     template <typename T>
     const T& get(const std::string& key) const
     {
@@ -378,15 +328,13 @@ public:
     {
         _impl->registerValue(key, std::forward<Args>(args)...);
     }
-
-    // template <typename T>
-    // T& get(const std::string& key)
-    // {
-    //     return _impl->get<T>(key);
-    // }
-
     template <typename T>
     const T& get(const std::string& key) const
+    {
+        return _impl->get<T>(key);
+    }
+    template <typename T>
+    T& get(const std::string& key)
     {
         return _impl->get<T>(key);
     }
