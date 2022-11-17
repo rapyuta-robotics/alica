@@ -17,29 +17,6 @@ namespace alica
 
 class BlackboardUtil;
 
-class BlackboardTypeMismatch : public std::exception
-{
-public:
-    BlackboardTypeMismatch(const std::string& type, const std::string& typeDefinedInPml)
-            : _inputType(type)
-            , _typeDefinedInPml(typeDefinedInPml)
-    {
-    }
-
-    const char* what() const noexcept override { return "The type of the blackboard value does not match the type in the pml file."; }
-
-    std::string detailedError() const
-    {
-        std::stringstream ss;
-        ss << "Type " << _inputType << " does not match the type defined in the pml file: " << _typeDefinedInPml;
-        return ss.str();
-    }
-
-private:
-    const std::string _inputType;
-    const std::string _typeDefinedInPml;
-};
-
 class BlackboardImpl
 {
 public:
@@ -47,70 +24,72 @@ public:
     template <class... Args>
     void registerValue(const std::string& key, Args&&... args)
     {
-        vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...));
+        _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...));
     }
 
     template <typename T>
     const T& get(const std::string& key) const
     {
         try {
-            const auto yamlTypeIt = keyToType.find(key);
-            if (yamlTypeIt != keyToType.end() && yamlTypeIt->second == "std::any") {
-                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
+            const auto yamlTypeIt = _yamlType.find(key);
+            if (yamlTypeIt != _yamlType.end() && yamlTypeIt->second == "std::any") {
+                // yaml type is std::any, so would be stored as std::any
+                return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
             }
-            if constexpr (Find<T, BlackboardValueType>::result) {
-                // Type T is covered by variant BlackboardValueType, can access value with std::get
-                return std::get<T>(vals.at(key));
+            if constexpr (isTypeInVariant<std::decay_t<T>, BlackboardValueType>::value) {
+                // T is a known type, directly use std::get to fetch from variant
+                // T must be an exact match to some type in the variant, type conversions are not taken into account
+                return std::get<T>(_vals.at(key));
             } else {
-                // Type T is not covered by variant so it is stored as an std::any
-                // Type T has to be an exact match with the type stored in std::any
-                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
+                // T is an unknown type, use std::any for variant type & any_cast to T
+                // T must be an exact match to the T used while setting this key (i.e. no type conversions taken into account)
+                // Exact matches are required because we return by reference
+                return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
             }
         } catch (const std::bad_variant_access& e) {
-            // Type mismatch between value stored in BlackboardValueType variant and requested type
-            // throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+            // TODO: raise exception
         } catch (const std::bad_any_cast& e) {
-            // Type mismatch between value stored in std::any and requested type
-            // throw BlackboardTypeMismatch(getNameFromType<T>(), getBlackboardValueType(key));
+            // TODO: raise exception
+        } catch (const std::out_of_range& e) {
+            // TODO: raise exception
         }
     }
 
     template <typename T>
     T& get(const std::string& key)
     {
-        return const_cast<T&>(const_cast<const BlackboardImpl*>(this)->get<T>(key));
+        return const_cast<T&>(static_cast<const BlackboardImpl*>(this)->get<T>(key));
     }
-    BlackboardValueType& get(const std::string& key) { return vals.at(key); }
-    const BlackboardValueType& get(const std::string& key) const { return vals.at(key); }
+    BlackboardValueType& get(const std::string& key) { return _vals.at(key); }
+    const BlackboardValueType& get(const std::string& key) const { return _vals.at(key); }
 
     template <class T>
-    void set(const std::string& key, const T& value)
+    void set(const std::string& key, T&& value)
     {
-        // if (getBlackboardValueNode(key).Type() == YAML::NodeType::Null) { // replace with check if value is in keyToType map
-        if (keyToType.find("key") == keyToType.end()) { // replace with check if value is in keyToType map
-            // value is not predefined in pml file
-            if (getNameFromType<T>() == "std::any") {
-                // if type is std::any, wrap into std::any
-                vals[key] = std::any(value);
-                // vals.emplace(key, std::any{value});
+        const char* type = getTypeName<T>();
+        const auto yamlTypeIt = _yamlType.find(key);
+        if (yamlTypeIt == _yamlType.end()) {
+            // key is not found in yaml file
+            if (!type) {
+                // unknown type, use std::any
+                _values[key] = std::any{std::forward<T>(value)};
             } else {
-                // otherwise store value directly, will be stored as BlackboardValueType variant
-                vals[key] = value;
-                // vals.emplace(key, value);
+                // known type, just assign (type conversions are taken into account)
+                _values[key] = std::forward<T>(value);
             }
         } else {
-            // value is predefined in pml file
-            std::string inputType = getNameFromType<T>();
-            std::string pmlType = keyToType.at(key);
-            if (pmlType == "std::any") {
-                // insert as std::any with type T
-                vals.at(key) = std::any{value};
-            } else if (pmlType == inputType) {
-                // insert directly, will be stored as BlackboardValueType variant
-                vals.at(key) = value;
+            // key is found in yaml file
+            const auto& yamlType = yamlTypeIt->second;
+            if (yamlType == "std::any") {
+                // yaml type is std::any, so can store values of any type, therefore use std::any for variant type
+                _values[key] = std::any{std::forward<T>(value)};
             } else {
-                // type in pml file and type of T dont match, throw exception
-                throw BlackboardTypeMismatch(inputType, pmlType);
+                if (!type || yamlType != type) {
+                    // TODO: raise exception
+                } else {
+                    // types match, assign
+                    _values[key] = std::forward<T>(value);
+                }
             }
         }
     }
@@ -123,30 +102,30 @@ public:
         std::visit(
                 [srcKey, targetKey, this](auto&& srcValue) {
                     // set the target as a side effect, throws if targetType is not constructible from srcType
-                    vals[targetKey] = makeBBValueForIndex<false>::make(vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
+                    _vals[targetKey] = makeBBValueForIndex<false>::make(_vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
                 },
-                srcBb.vals.at(srcKey));
+                srcBb._vals.at(srcKey));
     }
 
-    bool hasValue(const std::string& key) const { return vals.count(key); }
-    void removeValue(const std::string& key) { vals.erase(key); }
+    bool hasValue(const std::string& key) const { return _vals.count(key); }
+    void removeValue(const std::string& key) { _vals.erase(key); }
 
     void initDefaultValues();
 
-    void clear() { vals.clear(); }
-    bool empty() const { return vals.empty(); }
-    size_t size() const { return vals.size(); }
-    std::unordered_map<std::string, BlackboardValueType> vals;
+    void clear() { _vals.clear(); }
+    bool empty() const { return _vals.empty(); }
+    size_t size() const { return _vals.size(); }
+    std::unordered_map<std::string, BlackboardValueType> _vals;
     YAML::Node node;
-    std::unordered_map<std::string, std::string> keyToType;
+    std::unordered_map<std::string, std::string> _yamlType;
 
 private:
     friend BlackboardUtil;
 
-    std::string getBlackboardValueType(const std::string& key) const { return keyToType.at(key); }
+    std::string getBlackboardValueType(const std::string& key) const { return _yamlType.at(key); }
 
     template <class T>
-    std::string getNameFromType() const;
+    std::string getTypeName() const;
 
     static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
     static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
@@ -184,12 +163,12 @@ private:
         template <class... Args, std::size_t... Is>
         static BlackboardValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
         {
-            BlackboardValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
-            if (!vals[index].index()) {
+            BlackboardValueType _vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+            if (!_vals[index].index()) {
                 // TODO: variant construction failed, throw exception, remove return
-                return vals[index];
+                return _vals[index];
             }
-            return vals[index];
+            return _vals[index];
         }
 
         template <std::size_t INDEX>
@@ -228,32 +207,17 @@ private:
         }
     };
 
-    // all Find structs are used for constexpr ifs in BlackboardImpl
-    template <class Val, class... Ts>
-    struct FindImpl
-    {
-        static constexpr bool result = false;
-    };
+    template <class T1, class T2>
+    struct isTypeInVariant;
 
-    template <class Val, class T, class... Ts>
-    struct FindImpl<Val, T, Ts...>
-    {
-        static constexpr bool result = FindImpl<Val, Ts...>::result;
-    };
+    template <class T>
+    struct isTypeInVariant<T, std::variant<>> : std::false_type {};
 
-    template <class Val, class... Ts>
-    struct FindImpl<Val, Val, Ts...>
-    {
-        static constexpr bool result = true;
-    };
+    template <class T, class... VariantTs>
+    struct isTypeInVariant<T, std::variant<T, VariantTs...>> : std::true_type {};
 
-    template <class Val, class Variant>
-    struct Find;
-
-    template <class Val, template <class...> class Tp, class... Ts>
-    struct Find<Val, Tp<Ts...>> : FindImpl<Val, Ts...>
-    {
-    };
+    template <class T, class First, class... VariantTs>
+    struct isTypeInVariant<T, std::variant<First, VariantTs...>> : isTypeInVariant<T, std::variant<VariantTs...>> {};
 };
 
 class Blackboard
@@ -265,13 +229,13 @@ public:
     Blackboard& operator&=(Blackboard&&) = delete;
     Blackboard(const BlackboardBlueprint* blueprint)
     {
-        _impl.vals = blueprint->vals;
+        _impl._vals = blueprint->_vals;
         _impl.node = blueprint->node;
         // store blackboard keys from pml file with their type in a map
         for (const auto& entry : _impl.node) {
             std::string key = entry[Strings::key].as<std::string>();
             std::string type = entry[Strings::stateType].as<std::string>();
-            _impl.keyToType[key] = type;
+            _impl._yamlType[key] = type;
         }
         _impl.initDefaultValues();
     };
@@ -361,7 +325,7 @@ private:
 };
 
 template <class T>
-std::string BlackboardImpl::getNameFromType() const
+std::string BlackboardImpl::getTypeName() const
 {
     return Converter::typeName<T>();
 }

@@ -16,10 +16,10 @@ void BlackboardImpl::initDefaultValues()
                 auto defaultValue = entry[Strings::defaultValue];
                 if (!entry[Strings::defaultValue].IsNull()) {
                     // construct from default value
-                    vals[key] = makeBBValueForIndex<true>::make(i + 1, entry[Strings::defaultValue].as<std::string>());
+                    _vals[key] = makeBBValueForIndex<true>::make(i + 1, entry[Strings::defaultValue].as<std::string>());
                 } else {
                     // no default value, default construct
-                    vals[key] = makeBBValueForIndex<false>::make(i + 1);
+                    _vals[key] = makeBBValueForIndex<false>::make(i + 1);
                 }
             }
         }
