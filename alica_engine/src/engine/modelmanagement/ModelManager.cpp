@@ -23,7 +23,7 @@
 #include "engine/modelmanagement/factories/TransitionConditionRepositoryFactory.h"
 #include "engine/util/HashFunctions.h"
 
-#include <essentials/FileSystem.h>
+#include <engine/FileSystem.h>
 #include <functional>
 
 namespace alica

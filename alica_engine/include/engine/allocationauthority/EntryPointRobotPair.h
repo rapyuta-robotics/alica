@@ -3,7 +3,6 @@
 #include "engine/Types.h"
 #include "engine/model/EntryPoint.h"
 
-#include <boost/functional/hash.hpp>
 #include <memory>
 
 namespace alica

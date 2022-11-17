@@ -1,0 +1,25 @@
+{
+  "blackboard": [
+    {
+      "access": "output",
+      "comment": "Wait time in seconds",
+      "defaultValue": 10,
+      "id": 123,
+      "key": "waittime",
+      "type": "std::any"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1234,
+  "inheritBlackboard": false,
+  "name": "waitbehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": [],
+  "libraryName": "alica_supplementary_test_library"
+}

@@ -439,7 +439,7 @@ public class ModelManager implements Observer {
             while (modelFile.length() == 0) {
                 Thread.sleep(1000);
             }
-            planElement = objectMapper.readValue(modelFile, type);           
+            planElement = objectMapper.readValue(modelFile, type);
         } catch (com.fasterxml.jackson.databind.exc.MismatchedInputException
                 | com.fasterxml.jackson.databind.deser.UnresolvedForwardReference e) {
             System.err.println("PlanDesigner-ModelManager: Unable to parse " + modelFile);

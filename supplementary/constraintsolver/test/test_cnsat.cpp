@@ -2,7 +2,7 @@
 
 #include "constraintsolver/CNSMTGSolver.h"
 #include "constraintsolver/CNSat.h"
-#include "essentials/FileSystem.h"
+#include "engine/FileSystem.h"
 #include "types/Clause.h"
 #include "types/Lit.h"
 #include "types/Var.h"
@@ -11,8 +11,6 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <ros/package.h>
-#include <ros/ros.h>
 #include <string>
 
 using namespace std;
@@ -24,8 +22,7 @@ TEST(CNSatTest, CNSAT0)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
 
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/testen.cnf";
+    std::string path = "./cnf/testen.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
@@ -84,8 +81,7 @@ TEST(CNSatTest, CNSAT0)
 TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/aim-50-1_6-yes1-4.cnf";
+    std::string path = "./cnf/aim-50-1_6-yes1-4.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
@@ -112,9 +108,7 @@ TEST(CNSatTest, CNSATaim_50_1_6_yes1_4)
 TEST(CNSatTest, CNSATpar8_1_c_cnf)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/par8-1-c.cnf";
-    std::cout << path << std::endl;
+    std::string path = "./cnf/par8-1-c.cnf";
     {
         ifstream test(path);
         ASSERT_TRUE(test.good()) << "Cannot find file " << path << std::endl;
@@ -141,8 +135,7 @@ TEST(CNSatTest, CNSATpar8_1_c_cnf)
 TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/aim-100-1_6-no-1.cnf";
+    std::string path = "./cnf/aim-100-1_6-no-1.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
@@ -162,8 +155,7 @@ TEST(CNSatTest, CNSAT1_aim_100_1_6_no_1cnf)
 TEST(CNSatTest, CNSAT1dubois22)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/dubois22.cnf";
+    std::string path = "./cnf/dubois22.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
@@ -183,8 +175,7 @@ TEST(CNSatTest, CNSAT1dubois22)
 TEST(CNSatTest, CNSAThole6)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/hole6.cnf";
+    std::string path = "./cnf/hole6.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);
@@ -204,8 +195,7 @@ TEST(CNSatTest, CNSAThole6)
 TEST(CNSatTest, CNSAT1_dubois20)
 {
     shared_ptr<CNSat> cns = make_shared<CNSat>();
-    std::string path = ros::package::getPath("constraintsolver");
-    path = path + "/test/cnf/dubois20.cnf";
+    std::string path = "./cnf/dubois20.cnf";
     std::cout << path << std::endl;
     {
         ifstream test(path);

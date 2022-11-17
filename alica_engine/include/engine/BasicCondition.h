@@ -10,6 +10,13 @@ namespace alica
 class RunningPlan;
 class IAlicaWorldModel;
 
+struct ConditionContext
+{
+    const std::string name;
+    const std::string libraryName;
+    int64_t conditionConfId;
+};
+
 class BasicCondition
 {
 public:

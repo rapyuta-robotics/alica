@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(autodiff)
+include(CTest)
 
 if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++14" CACHE STRING "C++ version for eclipse" FORCE)
@@ -7,21 +8,21 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
+include(../../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 
 # Imports
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
 # Install
-include_directories(include/autodiff 
-  ${alica_common_config_INCLUDE_DIRS}
+include_directories(include/autodiff
   ${alica_solver_interface_INCLUDE_DIRS}
 )
 
@@ -70,13 +71,15 @@ target_link_libraries(sine_benchmark ${PROJECT_NAME} alica_solver_interface)
 
 
 # AUTODIFF TESTS
+if(BUILD_TESTING)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
 
 find_package(GTest REQUIRED)
 
-include(CTest)
+
 
 include_directories(BEFORE
   ${GTEST_INCLUDE_DIRS}
@@ -86,8 +89,28 @@ add_executable(${PROJECT_NAME}-tests test/test_autodiff.cpp)
 
 target_link_libraries(${PROJECT_NAME}-tests PRIVATE Threads::Threads ${PROJECT_NAME} ${GTEST_LIBRARIES})
 
-add_test(NAME autodiff-tests COMMAND autodiff-tests)
+add_test(NAME AutoDiffTest.Distance COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.Distance]==] )
+add_test(NAME AutoDiffTest.ABS COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.ABS]==] )
+add_test(NAME AutoDiffTest.AND COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.AND]==] )
+add_test(NAME AutoDiffTest.ATAN2 COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.ATAN2]==] )
+add_test(NAME AutoDiffTest.CONSTPOWER COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.CONSTPOWER]==] )
+add_test(NAME AutoDiffTest.CONSTRAINTUTILITY COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.CONSTRAINTUTILITY]==] )
+add_test(NAME AutoDiffTest.COS COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.COS]==] )
+add_test(NAME AutoDiffTest.EXP COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.EXP]==] )
+add_test(NAME AutoDiffTest.LINSIGMOID COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LINSIGMOID]==] )
+add_test(NAME AutoDiffTest.LOG COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LOG]==] )
+add_test(NAME AutoDiffTest.LTCONSTRAINT COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LTCONSTRAINT]==] )
+add_test(NAME AutoDiffTest.LTECONSTRAINT COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.LTECONSTRAINT]==] )
+add_test(NAME AutoDiffTest.MAX COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.MAX]==] )
+add_test(NAME AutoDiffTest.MIN COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.MIN]==] )
+add_test(NAME AutoDiffTest.OR COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.OR]==] )
+add_test(NAME AutoDiffTest.REIFICATION COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.REIFICATION]==] )
+add_test(NAME AutoDiffTest.SIN COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.SIN]==] )
+add_test(NAME AutoDiffTest.TERMPOWER COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.TERMPOWER]==] )
+add_test(NAME AutoDiffTest.EQUALITY COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.EQUALITY]==] )
+add_test(NAME AutoDiffTest.COMPILED COMMAND ${PROJECT_NAME}-tests [==[--gtest_filter=AutoDiffTest.COMPILED]==] )
 
+endif()
 
 # Install
 install(TARGETS ${PROJECT_NAME}
@@ -129,7 +152,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}

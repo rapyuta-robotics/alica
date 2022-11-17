@@ -7,15 +7,15 @@ set(CMAKE_BUILD_TYPE Debug)
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake) 
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
+include(../cmake_flags/cflags.cmake)
+alica_compile_flags()
 
 ##Yaml
 find_package(yaml-cpp REQUIRED)
 
 # Imports
-find_package(fsystem REQUIRED)
-find_package(alica_common_config REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 
@@ -23,11 +23,9 @@ find_package(alica_solver_interface REQUIRED)
 ## Build ##
 ###########
 
-include_directories(include 
-  ${alica_common_config_INCLUDE_DIRS}
-)
+include_directories(include)
 
-add_library(${PROJECT_NAME} SHARED 
+add_library(${PROJECT_NAME} SHARED
   src/engine/AlicaClock.cpp
   src/engine/AlicaContext.cpp
   src/engine/AlicaEngine.cpp
@@ -38,6 +36,7 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/BasicUtilityFunction.cpp
   src/engine/ConfigChangeListener.cpp
   src/engine/DefaultUtilityFunction.cpp
+  src/engine/FileSystem.cpp
   src/engine/IAlicaCommunication.cpp
   src/engine/IRoleAssignment.cpp
   src/engine/Logger.cpp
@@ -160,9 +159,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC 
-  ${YAML_CPP_LIBRARIES} 
-  fsystem 
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ${YAML_CPP_LIBRARIES}
   alica_solver_interface
 )
 
@@ -178,7 +176,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(DIRECTORY include/
-  DESTINATION include/ 
+  DESTINATION include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
@@ -209,7 +207,7 @@ configure_package_config_file(
   PATH_VARS INCLUDE_INSTALL_DIR
 )
 
-install(FILES 
+install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${ConfigPackageLocation}
