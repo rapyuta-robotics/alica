@@ -54,13 +54,17 @@ public:
     const T& get(const std::string& key) const
     {
         try {
+            const auto yamlTypeIt = keyToType.find(key);
+            if (yamlTypeIt != keyToType.end() && yamlTypeIt->second == "std::any") {
+                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
+            }
             if constexpr (Find<T, BlackboardValueType>::result) {
                 // Type T is covered by variant BlackboardValueType, can access value with std::get
                 return std::get<T>(vals.at(key));
             } else {
                 // Type T is not covered by variant so it is stored as an std::any
                 // Type T has to be an exact match with the type stored in std::any
-                return std::any_cast<T>(std::get<std::any>(vals.at(key)));
+                return std::any_cast<const T&>(std::get<std::any>(vals.at(key)));
             }
         } catch (const std::bad_variant_access& e) {
             // Type mismatch between value stored in BlackboardValueType variant and requested type
