@@ -36,6 +36,7 @@ public interface IGenerator {
 
     void createPlanCreator(List<Plan> plans);
     void createTransitionConditionsCreator(List<TransitionCondition> conditions);
+    void createLegacyTransitionConditionsCreator(List<Plan> plans, List<Condition> conditions);
 
     void createDomainPlan();
 }

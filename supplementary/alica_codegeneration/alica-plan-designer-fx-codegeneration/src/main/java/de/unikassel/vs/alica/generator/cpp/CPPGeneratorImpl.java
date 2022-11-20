@@ -460,6 +460,19 @@ public class CPPGeneratorImpl implements IGenerator {
     }
 
     @Override
+    public void createLegacyTransitionConditionsCreator(List<Plan> plans, List<Condition> conditions) {
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "LegacyTransitionConditionCreator.h").toString();
+        String fileContentHeader = xtendTemplates.legacyTransitionConditionCreatorHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "LegacyTransitionConditionCreator.cpp").toString();
+        String fileContentSource = xtendTemplates.legacyTransitionConditionCreatorSource(plans, conditions, packageName);
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
+    }
+
+    @Override
     public void setFormatter(String formatter) {
         this.formatter = formatter;
     }

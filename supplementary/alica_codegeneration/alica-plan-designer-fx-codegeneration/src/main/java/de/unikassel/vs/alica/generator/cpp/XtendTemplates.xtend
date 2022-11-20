@@ -360,7 +360,7 @@ namespace alica
         public:
         ConditionCreator();
         virtual ~ConditionCreator();
-        std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId) override;
+        std::shared_ptr<BasicCondition> createConditions(ConditionContext& conditionContext) override;
     };
 
 } /* namespace alica */
@@ -392,8 +392,9 @@ namespace alica
     {
     }
 
-    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId)
+    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(ConditionContext& context)
     {
+        int64_t conditionConfId = context.conditionConfId;
         switch (conditionConfId)
         {
             «FOR con : conditions»
@@ -1028,6 +1029,16 @@ namespace alica
                 };
             «ENDIF»
         «ENDIF»
+        «var List<Transition> transitions = s.outTransitions»
+        «FOR transition : transitions»
+            «IF transition.preCondition !== null»
+                class PreCondition«transition.preCondition.id» : public DomainCondition
+                {
+                public:
+                    bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm);
+                };
+            «ENDIF»
+        «ENDFOR»
     «ENDFOR»
 } /* namespace alica */
 '''
@@ -1097,6 +1108,10 @@ std::shared_ptr<UtilityFunction> UtilityFunction«plan.id»::getUtilityFunction(
    «ENDIF»
     /*PROTECTED REGION END*/
 }
+
+«FOR state : states»
+    «constraintCodeGenerator.expressionsStateCheckingMethods(state)»
+«ENDFOR»
 
 /*PROTECTED REGION ID(methods«plan.id») ENABLED START*/
         «IF (protectedRegions.containsKey("methods" + plan.id))»
@@ -1172,6 +1187,7 @@ def String transitionConditionCreatorHeader(List<TransitionCondition> conditions
 #pragma once
 
 #include <engine/ITransitionConditionCreator.h>
+#include <engine/model/Transition.h>
 
 namespace alica
 {
@@ -1181,7 +1197,7 @@ public:
     TransitionConditionCreator();
     virtual ~TransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1208,8 +1224,9 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(TransitionConditionContext& context)
 {
+    int64_t conditionId = context.conditionConfId;
     switch (conditionId)
     {
         «FOR con : conditions»
@@ -1218,6 +1235,69 @@ std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldMode
         «ENDFOR»
         default:
         std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+        throw new std::exception();
+        break;
+    }
+}
+} /* namespace alica */
+'''
+
+def String legacyTransitionConditionCreatorHeader(List<Condition> conditions) '''
+#pragma once
+
+#include <engine/ITransitionConditionCreator.h>
+#include <engine/model/Transition.h>
+
+namespace alica
+{
+class LegacyTransitionConditionCreator : public ITransitionConditionCreator
+{
+public:
+    LegacyTransitionConditionCreator();
+    virtual ~LegacyTransitionConditionCreator();
+
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(TransitionConditionContext& context);
+};
+} /* namespace alica */
+'''
+
+def String legacyTransitionConditionCreatorSource(List<Plan> plans, List<Condition> conditions, String pkgName) '''
+#include "«pkgName»/LegacyTransitionConditionCreator.h"
+
+«FOR p : plans»
+«IF (p.relativeDirectory == null || p.relativeDirectory.isEmpty)»
+#include <«pkgName»/«p.name»«p.id».h>
+«ELSE»
+#include <«pkgName»/«p.relativeDirectory»/«p.name»«p.id».h>
+«ENDIF»
+«ENDFOR»
+#include <iostream>
+#include <engine/blackboard/Blackboard.h>
+#include <engine/RunningPlan.h>
+#include <engine/IAlicaWorldModel.h>
+
+namespace alica
+{
+
+LegacyTransitionConditionCreator::LegacyTransitionConditionCreator() {}
+
+LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
+
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(TransitionConditionContext& context)
+{
+    int64_t conditionId = context.conditionConfId;
+    switch (conditionId)
+    {
+        «FOR con : conditions»
+        case «con.id»:
+            PreCondition«con.id» preCondition;
+            return [preCondition&](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm)
+            {
+                return preCondition.evaluate(rp, wm);
+            };
+        «ENDFOR»
+        default:
+        std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
         throw new std::exception();
         break;
     }

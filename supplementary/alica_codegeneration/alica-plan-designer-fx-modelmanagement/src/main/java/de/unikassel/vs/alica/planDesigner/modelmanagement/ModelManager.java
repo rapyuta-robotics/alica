@@ -217,6 +217,18 @@ public class ModelManager implements Observer {
         return null;
     }
 
+    public ArrayList<Condition> getLegacyTransitionConditions() {
+        ArrayList<Condition> conditions = new ArrayList<>();
+        for (Plan plan : planMap.values()) {
+            for (Transition transition : plan.getTransitions()) {
+                conditions.add(transition.getPreCondition());
+            }
+        }
+        // remove all null values inserted before
+        conditions.removeIf(Objects::isNull);
+        return conditions;
+    }
+
     public ArrayList<Condition> getConditions() {
         ArrayList<Condition> conditions = new ArrayList<>();
         for (Plan plan : planMap.values()) {
