@@ -15,7 +15,7 @@ find_package(alica_engine REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
 include_directories(
-	include/${PROJECT_NAME}
+  include/${PROJECT_NAME}
   ${alica_solver_interface_INCLUDE_DIRS}
   ${alica_engine_INCLUDE_DIRS}
 )

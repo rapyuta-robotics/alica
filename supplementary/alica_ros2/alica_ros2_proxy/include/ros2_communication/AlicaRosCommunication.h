@@ -27,8 +27,6 @@ public:
     AlicaRosCommunication(const AlicaCommunicationHandlers& callbacks);
     virtual ~AlicaRosCommunication();
 
-    void tick();
-
     void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const override;
     void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const override;
     void sendPlanTreeInfo(const PlanTreeInfo& pti) const override;

@@ -92,14 +92,6 @@ AlicaRosCommunication::~AlicaRosCommunication()
     _commThread.join();
 }
 
-void AlicaRosCommunication::tick()
-{
-    if (_isRunning) {
-        // Use this for synchronous communication!
-        // ros::spinOnce();
-    }
-}
-
 void AlicaRosCommunication::sendAllocationAuthority(const AllocationAuthorityInfo& aai) const
 {
     alica_msgs::msg::AllocationAuthorityInfo aais;
