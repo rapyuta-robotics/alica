@@ -19,10 +19,6 @@ class AlicaProblemCompositionTest : public AlicaTestFixtureWithSolvers
 {
 protected:
     const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
-    bool stepEngine() const override
-    {
-        return true;
-    }
 };
 
 /**

@@ -33,10 +33,6 @@ class AlicaSpamSuccess : public AlicaTestFixture
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "BehaviorSuccessSpamMaster"; }
-    bool stepEngine() const override
-    {
-        return true;
-    }
 };
 
 /**

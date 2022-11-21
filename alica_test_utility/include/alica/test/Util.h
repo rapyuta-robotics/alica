@@ -35,7 +35,7 @@
 #define STEP_UNTIL_VECT(ac, condition)                                                                                                                         \
     do {                                                                                                                                                       \
         for (int i = 0; i < 50; ++i) {                                                                                                                         \
-            for (auto& currentAc : (ac)) {                                                                                                                       \
+            for (auto& currentAc : (ac)) {                                                                                                                     \
                 currentAc->stepEngine();                                                                                                                       \
             }                                                                                                                                                  \
             if (condition) {                                                                                                                                   \

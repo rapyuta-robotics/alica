@@ -29,10 +29,6 @@ protected:
         AlicaTestFixture::SetUp();
         ac->setOption("Alica.AutoFailureHandling", false);
     }
-    bool stepEngine() const override
-    {
-        return true;
-    }
 };
 
 class AlicaFailureHandlingEnabledMultiAgentFixture : public AlicaTestMultiAgentFixture
@@ -60,10 +56,6 @@ protected:
         AlicaTestMultiAgentFixture::SetUp();
         acs[0]->setOption("Alica.AutoFailureHandling", false);
         acs[1]->setOption("Alica.AutoFailureHandling", false);
-    }
-    bool stepEngine() const override
-    {
-        return true;
     }
 };
 
