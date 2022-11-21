@@ -1,6 +1,5 @@
 #include "test_alica.h"
 
-#include <alica/test/CounterClass.h>
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
@@ -52,11 +51,7 @@ protected:
             return "nase";
         }
     }
-    bool stepEngine() const override
-    {
-        CounterClass::called++;
-        return true;
-    }
+    bool stepEngine() const override { return true; }
 };
 
 TEST(AllocationDifference, MessageCancelsUtil)
@@ -132,11 +127,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     wmTwo->robotsXPos.push_back(2000);
     wmTwo->robotsXPos.push_back(0);
 
-    CounterClass::called = 0;
-    STEP_UNTIL_VECT(acs, CounterClass::called == 1);
+    STEP_UNTIL_VECT(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-    STEP_UNTIL_VECT(acs, CounterClass::called == 20);
+    STEP_UNTIL_VECT(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403429950));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 }

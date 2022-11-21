@@ -1,5 +1,4 @@
 #include "test_alica.h"
-#include <alica/test/CounterClass.h>
 #include <alica/test/Util.h>
 #include <gtest/gtest.h>
 
@@ -32,7 +31,6 @@ protected:
     }
     bool stepEngine() const override
     {
-        CounterClass::called++;
         return true;
     }
 };
@@ -65,7 +63,6 @@ protected:
     }
     bool stepEngine() const override
     {
-        CounterClass::called++;
         return true;
     }
 };
@@ -114,8 +111,7 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    CounterClass::called = 0;
-    STEP_UNTIL(CounterClass::called = 10);
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
@@ -196,8 +192,7 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    CounterClass::called = 0;
-    STEP_UNTIL_VECT(acs, CounterClass::called = 10);
+    STEP_UNTIL_VECT(acs, test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));

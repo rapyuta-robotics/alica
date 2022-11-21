@@ -1,5 +1,4 @@
 #include "test_alica.h"
-#include <alica/test/CounterClass.h>
 #include <alica_tests/Behaviour/Attack.h>
 #include <alica_tests/Behaviour/ConstraintUsingBehaviour.h>
 

@@ -1,6 +1,5 @@
 #include "test_alica.h"
 
-#include <alica/test/CounterClass.h>
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
@@ -36,7 +35,6 @@ protected:
     const char* getMasterPlanName() const override { return "BehaviorSuccessSpamMaster"; }
     bool stepEngine() const override
     {
-        CounterClass::called++;
         return true;
     }
 };
@@ -47,9 +45,8 @@ protected:
 TEST_F(AlicaSpamSuccess, runBehaviour)
 {
     ASSERT_NO_SIGNAL
-    CounterClass::called = 0;
     ae->start();
-    STEP_UNTIL(CounterClass::called == 30 * 6);
+    STEP_UNTIL(alica::test::Util::isPlanActive(ae, 1522377375148));
     EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
 }
 } // namespace

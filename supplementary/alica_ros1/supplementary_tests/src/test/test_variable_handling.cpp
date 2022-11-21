@@ -2,7 +2,6 @@
 #include "supplementary_tests/conditions/conditions.h"
 #include "test_supplementary.h"
 
-#include <alica/test/CounterClass.h>
 #include <alica/test/Util.h>
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
@@ -50,11 +49,7 @@ protected:
         acs[1]->addSolver<alica::reasoner::CGSolver>();
     }
 
-    bool stepEngine() const override
-    {
-        CounterClass::called++;
-        return true;
-    }
+    bool stepEngine() const override { return true; }
 };
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
@@ -65,10 +60,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     std::chrono::milliseconds sleepTime(33);
-    do {
-        CounterClass::called = 0;
-        STEP_UNTIL_VECT(acs, CounterClass::called == 3);
-    } while (alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
+
+    STEP_UNTIL_VECT(acs, alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
 
     const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
     const RunningPlan* rp2 = aes[1]->getPlanBase().getDeepestNode();

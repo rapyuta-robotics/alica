@@ -1,4 +1,3 @@
-#include <alica/test/CounterClass.h>
 #include <alica/test/Util.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
@@ -22,7 +21,6 @@ protected:
     const char* getMasterPlanName() const override { return "ProblemBuildingMaster"; }
     bool stepEngine() const override
     {
-        CounterClass::called++;
         return true;
     }
 };
@@ -36,8 +34,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 
     ae->start();
 
-    CounterClass::called = 0;
-    STEP_UNTIL(CounterClass::called == 6);
+    STEP_UNTIL(ae->getPlanBase().getDeepestNode() == nullptr);
 
     const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 
