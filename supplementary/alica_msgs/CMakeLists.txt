@@ -3,7 +3,7 @@ project(alica_msgs)
 
 find_package(ament_cmake QUIET)
 if (ament_cmake_FOUND)
-find_package(ament_cmake REQUIRED)
+  find_package(ament_cmake REQUIRED)
 
   find_package(rosidl_default_generators REQUIRED)
 
