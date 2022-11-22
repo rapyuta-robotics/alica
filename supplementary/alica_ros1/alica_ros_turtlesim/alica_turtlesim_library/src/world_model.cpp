@@ -4,8 +4,6 @@
 namespace turtlesim
 {
 
-//std::shared_ptr<turtlesim::ALICATurtleWorldModel> testwm=nu;;;
-
 ALICATurtleWorldModel::ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         : turtle(priv_nh)
 {

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "alica_ros_turtlesim/turtle.hpp"
+#include <boost/dll/alias.hpp>
 #include <engine/AlicaContext.h>
 #include <engine/IAlicaWorldModel.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
-#include <boost/dll/alias.hpp>
 
 namespace turtlesim
 {
@@ -15,7 +15,7 @@ namespace turtlesim
         - ROS:
                 - Subscribe: t/init
 */
- 
+
 class ALICATurtleWorldModel : public alica::IAlicaWorldModel
 {
 public:
@@ -26,7 +26,7 @@ public:
 
     ALICATurtle turtle;
 
-    static ALICATurtleWorldModel* testwm;
+    static ALICATurtleWorldModel* wmInstance_;
 
 private:
     void initTriggerSubCallback(const std_msgs::EmptyConstPtr& msg); // callback of /init
@@ -34,12 +34,10 @@ private:
     bool _initTrigger;                                               // become true when /init topic published
 };
 
-
-
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
     ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
-    turtlesim::ALICATurtleWorldModel::testwm=new turtlesim::ALICATurtleWorldModel(nh, priv_nh);
+    turtlesim::ALICATurtleWorldModel::wmInstance_ = new turtlesim::ALICATurtleWorldModel(nh, priv_nh);
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel);

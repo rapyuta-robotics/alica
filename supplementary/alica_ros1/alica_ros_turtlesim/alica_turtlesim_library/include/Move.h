@@ -16,7 +16,7 @@ public:
     static std::unique_ptr<Move> create(PlanContext& context)
     {
         auto out = std::unique_ptr<Move>(new Move(context));
-        out->getBlackboard()->impl().set("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::testwm);
+        out->getBlackboard()->impl().set("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::wmInstance_);
         return out;
     }
 };
