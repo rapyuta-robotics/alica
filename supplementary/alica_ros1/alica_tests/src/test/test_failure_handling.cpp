@@ -184,7 +184,7 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    STEP_UNTIL_VECT(acs, test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
+    STEP_ALL_UNTIL(acs, test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));

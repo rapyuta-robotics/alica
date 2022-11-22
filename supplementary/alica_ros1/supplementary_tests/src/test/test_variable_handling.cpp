@@ -61,7 +61,7 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
 
     std::chrono::milliseconds sleepTime(33);
 
-    STEP_UNTIL_VECT(acs, alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
+    STEP_ALL_UNTIL(acs, alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
 
     const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
     const RunningPlan* rp2 = aes[1]->getPlanBase().getDeepestNode();

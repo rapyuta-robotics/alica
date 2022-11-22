@@ -127,10 +127,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     wmTwo->robotsXPos.push_back(2000);
     wmTwo->robotsXPos.push_back(0);
 
-    STEP_UNTIL_VECT(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-    STEP_UNTIL_VECT(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403429950));
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403429950));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 }
