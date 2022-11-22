@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/BasicPlan.h"
+#include "world_model.hpp"
 #include <boost/dll/alias.hpp>
 
 namespace alica
@@ -12,7 +13,12 @@ public:
     Move(PlanContext& context);
     virtual ~Move();
     // Factory method
-    static std::unique_ptr<Move> create(PlanContext& context) { return std::unique_ptr<Move>(new Move(context)); }
+    static std::unique_ptr<Move> create(PlanContext& context)
+    {
+        auto out = std::unique_ptr<Move>(new Move(context));
+        out->getBlackboard()->impl().set("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::testwm);
+        return out;
+    }
 };
 
 BOOST_DLL_ALIAS(alica::Move::create, Move)
