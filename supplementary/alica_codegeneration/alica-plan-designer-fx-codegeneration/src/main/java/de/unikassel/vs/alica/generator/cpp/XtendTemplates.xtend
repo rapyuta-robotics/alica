@@ -1035,7 +1035,7 @@ namespace alica
                 class PreCondition«transition.preCondition.id» : public DomainCondition
                 {
                 public:
-                    bool evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm);
+                    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
                 };
             «ENDIF»
         «ENDFOR»
@@ -1290,11 +1290,15 @@ std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldMode
     {
         «FOR con : conditions»
         case «con.id»:
-            PreCondition«con.id» preCondition;
-            return [preCondition&](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm)
             {
-                return preCondition.evaluate(rp, wm);
-            };
+                PreCondition«con.id» preCondition;
+                return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable
+                {
+                    // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+                    std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+                    return preCondition.evaluate(temp, wm);
+                };
+            }
         «ENDFOR»
         default:
         std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
