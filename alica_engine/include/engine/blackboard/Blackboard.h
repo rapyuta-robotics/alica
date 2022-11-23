@@ -105,7 +105,7 @@ public:
     LockedBlackboardRW(LockedBlackboardRW&) = delete;
 
     template <class... Args>
-    [[deprecated]] void registerValue(const std::string& key, Args&&... args)
+    void registerValue(const std::string& key, Args&&... args)
     {
         _impl->registerValue(key, std::forward<Args>(args)...);
     }

@@ -1,4 +1,5 @@
 #include "GoTo.h"
+#include "engine/RunningPlan.h"
 #include "world_model.hpp"
 #include <constraintsolver/CGSolver.h>
 #include <memory>
@@ -22,7 +23,13 @@ void GoTo::run(void* msg)
         return;
     }
     // move turtle to goal
-    if (dynamic_cast<turtlesim::ALICATurtleWorldModel*>(getWorldModel())->turtle.move_toward_goal(_results[0], _results[1])) {
+    LockedBlackboardRW bb(*(getBlackboard()));
+    if (!bb.hasValue("turtlesim::worldmodel")) {
+        std::cerr << "Errro:Blackboard for GoTo not found" << std::endl;
+        return;
+    }
+    turtlesim::ALICATurtleWorldModel* wm = bb.get<turtlesim::ALICATurtleWorldModel*>("turtlesim::worldmodel");
+    if (wm->turtle.move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
 }

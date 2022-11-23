@@ -6,7 +6,13 @@ namespace alica
 Master::Master(PlanContext& context)
         : BasicPlan(context)
 {
-    std::cerr << "Masterr created" << std::endl;
+    std::cerr << "Master created" << std::endl;
+}
+
+void Master::onInit()
+{
+    LockedBlackboardRW bb(*(getBlackboard()));
+    bb.registerValue("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::wmInstance_);
 }
 Master::~Master() {}
 

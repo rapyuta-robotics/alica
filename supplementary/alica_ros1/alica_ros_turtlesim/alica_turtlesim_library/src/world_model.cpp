@@ -1,8 +1,10 @@
-#include <alica_ros_turtlesim/world_model.hpp>
+#include "world_model.hpp"
 #include <geometry_msgs/Twist.h>
 
 namespace turtlesim
 {
+
+ALICATurtleWorldModel* turtlesim::ALICATurtleWorldModel::wmInstance_ = nullptr;
 
 ALICATurtleWorldModel::ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         : turtle(priv_nh)

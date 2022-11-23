@@ -13,12 +13,10 @@ public:
     Move(PlanContext& context);
     virtual ~Move();
     // Factory method
-    static std::unique_ptr<Move> create(PlanContext& context)
-    {
-        auto out = std::unique_ptr<Move>(new Move(context));
-        out->getBlackboard()->impl().set("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::wmInstance_);
-        return out;
-    }
+    static std::unique_ptr<Move> create(PlanContext& context) { return std::unique_ptr<Move>(new Move(context)); }
+
+protected:
+    virtual void onInit() override;
 };
 
 BOOST_DLL_ALIAS(alica::Move::create, Move)

@@ -13,7 +13,13 @@ bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const IA
 {
     std::cerr << "Debug:"
               << "conditionMove2Init" << std::endl;
-    return dynamic_cast<const turtlesim::ALICATurtleWorldModel*>(wm)->getInit();
+    LockedBlackboardRO bb(*input);
+    if (!bb.hasValue("turtlesim::worldmodel")) {
+        std::cerr << "Errro:Blackboard for conditionMove2Init not found" << std::endl;
+        return true;
+    }
+    turtlesim::ALICATurtleWorldModel* wmblack = bb.get<turtlesim::ALICATurtleWorldModel*>("turtlesim::worldmodel");
+    return wmblack->getInit();
 }
 bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {

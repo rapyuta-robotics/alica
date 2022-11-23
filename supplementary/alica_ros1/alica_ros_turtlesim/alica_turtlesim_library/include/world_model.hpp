@@ -16,7 +16,7 @@ namespace turtlesim
                 - Subscribe: t/init
 */
 
-class ALICATurtleWorldModel : public alica::IAlicaWorldModel
+class ALICATurtleWorldModel
 {
 public:
     ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
@@ -36,7 +36,6 @@ private:
 
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
     turtlesim::ALICATurtleWorldModel::wmInstance_ = new turtlesim::ALICATurtleWorldModel(nh, priv_nh);
 }
 
