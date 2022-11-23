@@ -141,6 +141,10 @@ void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
         TransitionCondition* transitionCondition = transition->getTransitionCondition();
         if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
             transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
+        } else if (_ctx.getConfig()["Alica"]["LegacyTransitionConditions"].as<bool>(false)) { // if value not in config, use false as default
+            // use legacy transition condition ID stored in transition
+            TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transition->getLegacyTransitionConditionId()};
+            transitionCondition->setEvalCallback(creator->createConditions(ctx));
         } else {
             TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transitionCondition->getId()};
             transitionCondition->setEvalCallback(creator->createConditions(ctx));
