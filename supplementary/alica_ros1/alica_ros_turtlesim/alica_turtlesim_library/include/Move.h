@@ -13,7 +13,7 @@ public:
     Move(PlanContext& context);
     virtual ~Move();
     // Factory method
-    static std::unique_ptr<Move> create(PlanContext& context) { return std::unique_ptr<Move>(new Move(context)); }
+    static std::unique_ptr<Move> create(PlanContext& context) { return std::make_unique<Move>(context); }
 
 protected:
     virtual void onInit() override;

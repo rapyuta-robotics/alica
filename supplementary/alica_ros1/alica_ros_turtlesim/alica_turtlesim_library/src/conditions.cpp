@@ -18,8 +18,8 @@ bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const IA
         std::cerr << "Errro:Blackboard for conditionMove2Init not found" << std::endl;
         return true;
     }
-    turtlesim::ALICATurtleWorldModel* wmblack = bb.get<turtlesim::ALICATurtleWorldModel*>("turtlesim::worldmodel");
-    return wmblack->getInit();
+    turtlesim::ALICATurtleWorldModel* wmFromBlack = bb.get<turtlesim::ALICATurtleWorldModel*>("turtlesim::worldmodel");
+    return wmFromBlack->getInit();
 }
 bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {

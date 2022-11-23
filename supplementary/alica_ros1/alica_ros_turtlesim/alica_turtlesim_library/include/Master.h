@@ -13,7 +13,7 @@ public:
     Master(PlanContext& context);
     virtual ~Master();
     // Factory method
-    static std::unique_ptr<Master> create(PlanContext& context) { return std::unique_ptr<Master>(new Master(context)); }
+    static std::unique_ptr<Master> create(PlanContext& context) { return std::make_unique<Master>(context); }
 
 protected:
     virtual void onInit() override;
