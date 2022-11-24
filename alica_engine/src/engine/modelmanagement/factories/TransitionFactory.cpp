@@ -1,6 +1,6 @@
 #include "engine/modelmanagement/factories/TransitionFactory.h"
-#include "engine/model/Transition.h"
 #include "engine/model/PreCondition.h"
+#include "engine/model/Transition.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/KeyMappingFactory.h"
 #include "engine/modelmanagement/factories/PreConditionFactory.h"
