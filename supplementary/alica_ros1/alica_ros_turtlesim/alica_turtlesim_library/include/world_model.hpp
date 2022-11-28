@@ -7,6 +7,20 @@
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 
+void atLoading() __attribute__((constructor)); // Only for demonstration
+void atClosing() __attribute__((destructor));  // Only for demonstration
+
+inline void atLoading()
+{
+    static int calledTime = 0;
+    calledTime++;
+    std::cerr << "On loading shared library:" << calledTime << std::endl;
+};
+inline void atClosing()
+{
+    std::cerr << "On closing shared library" << std::endl;
+};
+
 namespace turtlesim
 {
 /*
