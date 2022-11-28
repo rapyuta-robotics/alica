@@ -252,6 +252,9 @@ public class ModelManager implements Observer {
     }
 
     public List<TransitionCondition> getTransitionConditions() {
+        if (conditionRepository == null) {
+            return new ArrayList<TransitionCondition>();
+        }
         return conditionRepository.getConditions();
     }
 
@@ -528,6 +531,9 @@ public class ModelManager implements Observer {
     }
 
     private void resolveReferences(ConditionRepository conditionRepo) {
+        if (conditionRepo == null) {
+            return;
+        }
         for (TransitionCondition condition : conditionRepo.getConditions()) {
             condition.setConditionRepository(conditionRepo);
         }

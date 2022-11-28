@@ -434,6 +434,9 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createTransitionConditions(List<TransitionCondition> conditions) {
+        if (conditions.isEmpty()) {
+            return;
+        }
         String destinationPath = cutDestinationPathToDirectory(conditions.get(0));
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, "conditions.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionHeader(conditions);
@@ -448,6 +451,9 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createTransitionConditionsCreator(List<TransitionCondition> conditions) {
+        if (conditions.isEmpty()) {
+            return;
+        }
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionConditionCreator.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionCreatorHeader(conditions);
         writeSourceFile(headerPath, fileContentHeader);
