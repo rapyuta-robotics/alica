@@ -11,6 +11,7 @@ Master::Master(PlanContext& context)
 
 void Master::onInit()
 {
+    std::cerr << "Master::onInit" << std::endl;
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.registerValue("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::wmInstance_);
 }

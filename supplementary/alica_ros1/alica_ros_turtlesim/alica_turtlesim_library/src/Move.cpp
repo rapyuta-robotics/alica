@@ -11,6 +11,7 @@ Move::Move(PlanContext& context)
 
 void Move::onInit()
 {
+    std::cerr << "Move::onInit" << std::endl;
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.registerValue("turtlesim::worldmodel", turtlesim::ALICATurtleWorldModel::wmInstance_);
 }
