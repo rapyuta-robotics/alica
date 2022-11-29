@@ -19,12 +19,26 @@ class BlackboardUtil;
 
 class BlackboardImpl
 {
+    using BBValueType = std::variant<std::monostate, bool, int64_t, double, std::string, std::any>;
+
 public:
-    // Not for API use, but public to allow modifying without mutex when we know the behavior/plan is not running
-    template <class... Args>
-    void registerValue(const std::string& key, Args&&... args)
+    BlackboardImpl() = default;
+    BlackboardImpl(const BlackboardImpl&) = delete;
+    BlackboardImpl(const BlackboardBlueprint* blueprint)
     {
-        _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...));
+        for (auto it = blueprint->begin(); it != blueprint->end(); ++it) {
+            const auto& [key, keyInfo] = *it;
+            _yamlType.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(keyInfo.type));
+            if (keyInfo.defaultValue) {
+                auto typeIndex = getTypeIndex(keyInfo.type);
+                if (!typeIndex) {
+                    // unknown type, can't set default value, TODO: throw exception
+                } else {
+                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
+                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
+                }
+            }
+        }
     }
 
     template <typename T>
@@ -36,9 +50,9 @@ public:
                 // yaml type is std::any, so would be stored as std::any
                 return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
             }
-            if constexpr (isTypeInVariant<std::decay_t<T>, BlackboardValueType>::value) {
+            if constexpr (isTypeInVariant<T, BBValueType>::value) {
                 // T is a known type, directly use std::get to fetch from variant
-                // T must be an exact match to some type in the variant, type conversions are not taken into account
+                // T must be an exact match to some type in the variant (i.e. no type conversions taken into account)
                 return std::get<T>(_vals.at(key));
             } else {
                 // T is an unknown type, use std::any for variant type & any_cast to T
@@ -47,11 +61,11 @@ public:
                 return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
             }
         } catch (const std::bad_variant_access& e) {
-            // TODO: raise exception
+            // known type, but type mismatch, TODO: raise exception
         } catch (const std::bad_any_cast& e) {
-            // TODO: raise exception
+            // type mismatch (unknown type or yaml type is std::any), TODO: raise exception
         } catch (const std::out_of_range& e) {
-            // TODO: raise exception
+            // key not set, TODO: raise exception
         }
     }
 
@@ -60,8 +74,8 @@ public:
     {
         return const_cast<T&>(static_cast<const BlackboardImpl*>(this)->get<T>(key));
     }
-    BlackboardValueType& get(const std::string& key) { return _vals.at(key); }
-    const BlackboardValueType& get(const std::string& key) const { return _vals.at(key); }
+    BBValueType& get(const std::string& key) { return _vals.at(key); }
+    const BBValueType& get(const std::string& key) const { return _vals.at(key); }
 
     template <class T>
     void set(const std::string& key, T&& value)
@@ -72,23 +86,25 @@ public:
             // key is not found in yaml file
             if (!type) {
                 // unknown type, use std::any
-                _values[key] = std::any{std::forward<T>(value)};
+                _vals[key] = std::any{std::forward<T>(value)};
             } else {
                 // known type, just assign (type conversions are taken into account)
-                _values[key] = std::forward<T>(value);
+                _vals[key] = std::forward<T>(value);
             }
         } else {
             // key is found in yaml file
             const auto& yamlType = yamlTypeIt->second;
             if (yamlType == "std::any") {
                 // yaml type is std::any, so can store values of any type, therefore use std::any for variant type
-                _values[key] = std::any{std::forward<T>(value)};
+                _vals[key] = std::any{std::forward<T>(value)};
             } else {
-                if (!type || yamlType != type) {
-                    // TODO: raise exception
+                if (!type) {
+                    // unknown type, TODO: raise exception
+                } else if (yamlType != type) {
+                    // known type, but type mismatch, TODO: raise exception
                 } else {
-                    // types match, assign
-                    _values[key] = std::forward<T>(value);
+                    // known type & types match, assign
+                    _vals[key] = std::forward<T>(value);
                 }
             }
         }
@@ -96,7 +112,7 @@ public:
 
     void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb)
     {
-        // Note: srcKey & targetKey has to be set
+        // Note: srcKey & targetKey has to be set & both have to be found in the yaml (pml or beh) file
         // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
         // TODO: Fix compiler warning
         std::visit(
@@ -110,60 +126,69 @@ public:
     bool hasValue(const std::string& key) const { return _vals.count(key); }
     void removeValue(const std::string& key) { _vals.erase(key); }
 
-    void initDefaultValues();
-
     void clear() { _vals.clear(); }
     bool empty() const { return _vals.empty(); }
     size_t size() const { return _vals.size(); }
-    std::unordered_map<std::string, BlackboardValueType> _vals;
-    YAML::Node node;
-    std::unordered_map<std::string, std::string> _yamlType;
 
 private:
+    std::unordered_map<std::string, BBValueType> _vals;
+    std::unordered_map<std::string, std::string> _yamlType;
+
     friend BlackboardUtil;
 
-    std::string getBlackboardValueType(const std::string& key) const { return _yamlType.at(key); }
-
     template <class T>
-    std::string getTypeName() const;
+    static const char* getTypeName()
+    {
+        auto typeIndex = BBValueType{T{}}.index() - 1;
+        if (typeIndex < BB_VALUE_TYPE_NAMES_SIZE + 1) {
+            // known type (after conversions to supported types in the the variant are taken into account)
+            return BB_VALUE_TYPE_NAMES[typeIndex];
+        } else {
+            // unknown type, note: if index is deduced as std::any, it is also treated as unknown type
+            return nullptr;
+        }
+    }
 
-    static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string", "std::any"};
+    static std::optional<std::size_t> getTypeIndex(const std::string& type)
+    {
+        for (std::size_t i = 0; i < BB_VALUE_TYPE_NAMES_SIZE; ++i) {
+            if (BB_VALUE_TYPE_NAMES[i] == type) {
+                // i + 1 to account for std::monostate in the variant
+                return i + 1;
+            }
+        }
+        return {};
+    }
+
+    static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string"};
     static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
 
-    // Used to create a variant of type BlackboardValueType from an index
     template <bool PARSE_ARGS = false>
     struct makeBBValueForIndex
     {
-        using KnownTypes = std::variant<bool, int64_t, double, std::string>;
+        template <class... Args>
+        static BBValueType make(std::size_t index, Args&&... args)
+        {
+            // make a BBValueType constructed from a value of type that is at `index` of the variant
+            // The value itself is either constructed from args or parsed from args
+            return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 2>(), std::forward<Args>(args)...);
+        }
 
+    private:
         template <class T>
         struct Parser
         {
             auto operator()(const std::string& value) const
             {
-                if constexpr (Find<T, KnownTypes>::result) {
-                    // type is a known type, continue parsing
-                    YAML::Node node = YAML::Load(value);
-                    return node.as<T>();
-                } else {
-                    // type is not a known type, throw exception
-                    throw BlackboardTypeMismatch("", "<bool, int64, double, std::string>");
-                    return T{};
-                }
+                YAML::Node node = YAML::Load(value);
+                return node.as<T>();
             }
         };
 
-        template <class... Args>
-        static BlackboardValueType make(std::size_t index, Args&&... args)
-        {
-            // BB_VALUE_TYPE_NAMES_SIZE + 1 to account for std::monostate
-            return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 1>(), std::forward<Args>(args)...);
-        }
-
         template <class... Args, std::size_t... Is>
-        static BlackboardValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
+        static BBValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
         {
-            BlackboardValueType _vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+            BBValueType _vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
             if (!_vals[index].index()) {
                 // TODO: variant construction failed, throw exception, remove return
                 return _vals[index];
@@ -174,50 +199,63 @@ private:
         template <std::size_t INDEX>
         struct makeBBValueIfIndex
         {
-            using TypeAtIndex = std::decay_t<decltype(std::get<INDEX>(std::declval<BlackboardValueType>()))>;
+            using TypeAtIndex = std::decay_t<decltype(std::get<INDEX>(std::declval<BBValueType>()))>;
 
             template <class... Args>
-            static BlackboardValueType make(std::size_t index, Args&&... args)
+            static BBValueType make(std::size_t index, Args&&... args)
             {
                 // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
                 // else makes a invalid variant, i.e. with value monostate
                 if constexpr (PARSE_ARGS) {
-                    return index == INDEX ? BlackboardValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BlackboardValueType{};
+                    if constexpr (isTypeInVariant<TypeAtIndex, BBValueType>::value && !std::is_same_v<TypeAtIndex, std::monostate> &&
+                                  !std::is_same_v<TypeAtIndex, std::any>) {
+                        return index == INDEX ? BBValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BBValueType{};
+                    }
                 } else {
-                    if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
-#pragma warning(suppress : 4101) // TODO: fix compiler warning without suppression
-                        return index == INDEX ? BlackboardValueType{TypeAtIndex{std::forward<Args>(args)...}} : BlackboardValueType{};
-                    } else {
-                        return BlackboardValueType{};
+                    if constexpr (isConstructible<TypeAtIndex, Args&&...>::value) {
+                        return index == INDEX ? BBValueType{TypeAtIndex{std::forward<Args>(args)...}} : BBValueType{};
                     }
                 }
+                return BBValueType{};
             }
         };
     };
 
-    struct Converter
-    {
-        // static constexpr const char* typeNames[] = {"bool", "int64", "double", "std::string", "std::any"};
-
-        // convert from type to name as string
-        template <class T>
-        static constexpr const char* typeName()
-        {
-            return BB_VALUE_TYPE_NAMES[BlackboardValueType{T{}}.index() - 1]; // account for monostate in variant
-        }
-    };
-
+    // trait to check if a type is one of the types in the variant
     template <class T1, class T2>
     struct isTypeInVariant;
 
     template <class T>
-    struct isTypeInVariant<T, std::variant<>> : std::false_type {};
+    struct isTypeInVariant<T, std::variant<>> : std::false_type
+    {
+    };
 
     template <class T, class... VariantTs>
-    struct isTypeInVariant<T, std::variant<T, VariantTs...>> : std::true_type {};
+    struct isTypeInVariant<T, std::variant<T, VariantTs...>> : std::true_type
+    {
+    };
 
     template <class T, class First, class... VariantTs>
-    struct isTypeInVariant<T, std::variant<First, VariantTs...>> : isTypeInVariant<T, std::variant<VariantTs...>> {};
+    struct isTypeInVariant<T, std::variant<First, VariantTs...>> : isTypeInVariant<T, std::variant<VariantTs...>>
+    {
+    };
+
+    // trait to check if T is constructible from a bunch of Args. std::is_constructible is not used since it
+    // allows narrowing conversions resulting in a bunch of compiler warnings
+    template <class T, class ArgPack, class = void>
+    struct isConstructibleImpl : std::false_type
+    {
+    };
+
+    template <class T, template <class...> class Tp, class... Args>
+    struct isConstructibleImpl<T, Tp<Args...>, std::void_t<decltype(T{std::declval<Args>()...})>> : std::true_type
+    {
+    };
+
+    template <class T, class... Args>
+    struct isConstructible : isConstructibleImpl<T, std::variant<Args...>>
+    {
+    };
 };
 
 class Blackboard
@@ -228,17 +266,10 @@ public:
     Blackboard& operator&=(const Blackboard&) = delete;
     Blackboard& operator&=(Blackboard&&) = delete;
     Blackboard(const BlackboardBlueprint* blueprint)
+            : _impl{blueprint}
+            , _mtx{}
     {
-        _impl._vals = blueprint->_vals;
-        _impl.node = blueprint->node;
-        // store blackboard keys from pml file with their type in a map
-        for (const auto& entry : _impl.node) {
-            std::string key = entry[Strings::key].as<std::string>();
-            std::string type = entry[Strings::stateType].as<std::string>();
-            _impl._yamlType[key] = type;
-        }
-        _impl.initDefaultValues();
-    };
+    }
 
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
@@ -272,7 +303,6 @@ public:
     {
         return _impl->get<T>(key);
     }
-    const BlackboardValueType& get(const std::string& key) const { return _impl->get(key); }
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
@@ -292,11 +322,6 @@ public:
     LockedBlackboardRW& operator&=(LockedBlackboardRW&) = delete;
     LockedBlackboardRW(LockedBlackboardRW&) = delete;
 
-    template <class... Args>
-    [[deprecated]] void registerValue(const std::string& key, Args&&... args)
-    {
-        _impl->registerValue(key, std::forward<Args>(args)...);
-    }
     template <typename T>
     const T& get(const std::string& key) const
     {
@@ -307,12 +332,11 @@ public:
     {
         return _impl->get<T>(key);
     }
-    BlackboardValueType& get(const std::string& key) { return _impl->get(key); }
 
     template <typename T>
-    void set(const std::string& key, const T& value)
+    void set(const std::string& key, T&& value)
     {
-        _impl->set<T>(key, value);
+        _impl->set<T>(key, std::forward<T>(value));
     }
 
     bool empty() const { return _impl->empty(); }
@@ -323,11 +347,5 @@ private:
     std::unique_lock<std::shared_mutex> _lk;
     BlackboardImpl* _impl;
 };
-
-template <class T>
-std::string BlackboardImpl::getTypeName() const
-{
-    return Converter::typeName<T>();
-}
 
 } // namespace alica

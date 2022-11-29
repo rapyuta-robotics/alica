@@ -1,32 +1,32 @@
 #pragma once
 
-#include "engine/Types.h"
-#include <any>
-#include <mutex>
-#include <shared_mutex>
+#include <optional>
 #include <string>
-#include <type_traits>
 #include <unordered_map>
-#include <variant>
-#include <yaml-cpp/yaml.h>
 
 namespace alica
 {
 
 class BlackboardBlueprint
 {
-public:
-    template <class... Args>
-    void registerValue(const std::string& key, Args&&... args)
+    struct KeyInfo
     {
-        vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(std::forward<decltype(args)>(args)...));
+        std::string type;
+        std::optional<std::string> defaultValue;
+    };
+
+public:
+    using const_iterator = std::unordered_map<std::string, KeyInfo>::const_iterator;
+
+    void addKey(const std::string& key, const std::string& type, std::optional<std::string> defaultValue)
+    {
+        _keyInfo.emplace(std::piecewise_construct, std::forward_as_tuple(type), std::forward_as_tuple(KeyInfo{.type = type, .defaultValue = defaultValue}));
     }
-    void setBlackboardNode(const YAML::Node& node) { this->node = node; }
-    friend class Blackboard;
+    const_iterator begin() const { return _keyInfo.begin(); }
+    const_iterator end() const { return _keyInfo.end(); }
 
 private:
-    std::unordered_map<std::string, BlackboardValueType> vals;
-    YAML::Node node;
+    std::unordered_map<std::string, KeyInfo> _keyInfo;
 };
 
 } // namespace alica

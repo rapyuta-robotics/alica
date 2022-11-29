@@ -8,14 +8,17 @@ namespace alica
 {
 std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::create(const YAML::Node& node)
 {
-
-    auto blackboard = std::make_unique<BlackboardBlueprint>();
-    blackboard->setBlackboardNode(node);
+    auto blueprint = std::make_unique<BlackboardBlueprint>();
     for (const auto& entry : node) {
         auto key = getValue<std::string>(entry, Strings::key);
-        blackboard->registerValue(key);
+        auto type = getValue<std::string>(entry, Strings::stateType);
+        std::optional<std::string> defaultValue;
+        if (!entry[Strings::defaultValue].IsNull()) {
+            defaultValue = getValue<std::string>(entry, Strings::defaultValue);
+        }
+        blueprint->addKey(key, type, defaultValue);
     }
-    return blackboard;
+    return blueprint;
 }
 
 std::unique_ptr<BlackboardBlueprint> BlackboardBlueprintFactory::createEmpty()
