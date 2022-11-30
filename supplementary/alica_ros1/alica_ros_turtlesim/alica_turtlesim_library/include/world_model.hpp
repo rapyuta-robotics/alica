@@ -4,11 +4,14 @@
 #include <boost/dll/alias.hpp>
 #include <engine/AlicaContext.h>
 #include <engine/IAlicaWorldModel.h>
+#include <engine/blackboard/Blackboard.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 
 void atLoading() __attribute__((constructor)); // Only for demonstration
 void atClosing() __attribute__((destructor));  // Only for demonstration
+
+constexpr char libraryName[] = "alica_turtlesim_library";
 
 inline void atLoading()
 {
@@ -30,7 +33,7 @@ namespace turtlesim
                 - Subscribe: t/init
 */
 
-class ALICATurtleWorldModel
+class ALICATurtleWorldModel : public alica::IAlicaWorldModel
 {
 public:
     ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
@@ -51,6 +54,7 @@ private:
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
     turtlesim::ALICATurtleWorldModel::wmInstance_ = new turtlesim::ALICATurtleWorldModel(nh, priv_nh);
+    alica::BlackboardImpl::worldModels_.insert({libraryName, std::make_unique<turtlesim::ALICATurtleWorldModel>(nh, priv_nh)});
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel);

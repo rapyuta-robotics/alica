@@ -10,6 +10,9 @@
 
 namespace alica
 {
+
+class IAlicaWorldModel;
+
 class BlackboardImpl
 {
 public:
@@ -42,6 +45,18 @@ public:
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
+
+    static std::unordered_map<std::string /* library name */, std::unique_ptr<IAlicaWorldModel>> worldModels_;
+    template <class T>
+    static T* getWorldModel(const std::string& libraryName)
+    {
+        auto it = worldModels_.find(libraryName);
+        if (it == worldModels_.end()) {
+            // Error: missing requested WM
+            return nullptr;
+        }
+        return dynamic_cast<T*>(it->second.get());
+    };
 };
 
 class Blackboard
