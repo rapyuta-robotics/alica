@@ -4,6 +4,7 @@
 #include "engine/Types.h"
 #include "engine/modelmanagement/Strings.h"
 #include <any>
+#include <cassert>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
@@ -20,6 +21,7 @@ class BlackboardUtil;
 class BlackboardImpl
 {
     using BBValueType = std::variant<std::monostate, bool, int64_t, double, std::string, std::any>;
+    static constexpr std::size_t BB_VALUE_TYPE_ANY_INDEX = 5;
 
 public:
     BlackboardImpl() = default;
@@ -29,7 +31,7 @@ public:
         for (auto it = blueprint->begin(); it != blueprint->end(); ++it) {
             const auto& [key, keyInfo] = *it;
             _yamlType.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(keyInfo.type));
-            if (keyInfo.defaultValue) {
+            if (keyInfo.defaultValue.has_value()) {
                 auto typeIndex = getTypeIndex(keyInfo.type);
                 if (!typeIndex) {
                     // unknown type, can't set default value, TODO: throw exception
@@ -37,6 +39,14 @@ public:
                     _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
                             std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
                 }
+            } else {
+                auto typeIndex = getTypeIndex(keyInfo.type);
+                if (keyInfo.type == "std::any") {
+                    // getTypeIndex() does not consider std::any
+                    typeIndex = BB_VALUE_TYPE_ANY_INDEX;
+                }
+                // insert a default constructed value
+                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
             }
         }
     }
@@ -113,8 +123,9 @@ public:
     void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb)
     {
         // Note: srcKey & targetKey has to be set & both have to be found in the yaml (pml or beh) file
+        assert(_vals.count(targetKey));
+        assert(srcBb._vals.count(srcKey));
         // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
-        // TODO: Fix compiler warning
         std::visit(
                 [srcKey, targetKey, this](auto&& srcValue) {
                     // set the target as a side effect, throws if targetType is not constructible from srcType
@@ -140,7 +151,7 @@ private:
     static const char* getTypeName()
     {
         auto typeIndex = BBValueType{T{}}.index() - 1;
-        if (typeIndex < BB_VALUE_TYPE_NAMES_SIZE + 1) {
+        if (typeIndex < BB_VALUE_TYPE_NAMES_SIZE) {
             // known type (after conversions to supported types in the the variant are taken into account)
             return BB_VALUE_TYPE_NAMES[typeIndex];
         } else {
@@ -188,12 +199,12 @@ private:
         template <class... Args, std::size_t... Is>
         static BBValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
         {
-            BBValueType _vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
-            if (!_vals[index].index()) {
+            BBValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+            if (!vals[index].index()) {
                 // TODO: variant construction failed, throw exception, remove return
-                return _vals[index];
+                return vals[index];
             }
-            return _vals[index];
+            return vals[index];
         }
 
         template <std::size_t INDEX>
@@ -212,9 +223,13 @@ private:
                         return index == INDEX ? BBValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BBValueType{};
                     }
                 } else {
-                    if constexpr (isConstructible<TypeAtIndex, Args&&...>::value) {
+                    // TODO: figure out a way to disable warnings, caused due to std::visit. Note: really tricky since small changes can cause unexpected behaviour, so best to disable the warning for now
+                    #pragma GCC diagnostic push
+                    #pragma GCC diagnostic ignored "-Wnarrowing"
+                    if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
                         return index == INDEX ? BBValueType{TypeAtIndex{std::forward<Args>(args)...}} : BBValueType{};
                     }
+                    #pragma GCC diagnostic pop
                 }
                 return BBValueType{};
             }
@@ -237,23 +252,6 @@ private:
 
     template <class T, class First, class... VariantTs>
     struct isTypeInVariant<T, std::variant<First, VariantTs...>> : isTypeInVariant<T, std::variant<VariantTs...>>
-    {
-    };
-
-    // trait to check if T is constructible from a bunch of Args. std::is_constructible is not used since it
-    // allows narrowing conversions resulting in a bunch of compiler warnings
-    template <class T, class ArgPack, class = void>
-    struct isConstructibleImpl : std::false_type
-    {
-    };
-
-    template <class T, template <class...> class Tp, class... Args>
-    struct isConstructibleImpl<T, Tp<Args...>, std::void_t<decltype(T{std::declval<Args>()...})>> : std::true_type
-    {
-    };
-
-    template <class T, class... Args>
-    struct isConstructible : isConstructibleImpl<T, std::variant<Args...>>
     {
     };
 };
