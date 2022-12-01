@@ -223,13 +223,14 @@ private:
                         return index == INDEX ? BBValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BBValueType{};
                     }
                 } else {
-                    // TODO: figure out a way to disable warnings, caused due to std::visit. Note: really tricky since small changes can cause unexpected behaviour, so best to disable the warning for now
-                    #pragma GCC diagnostic push
-                    #pragma GCC diagnostic ignored "-Wnarrowing"
+// TODO: figure out a way to disable warnings, caused due to std::visit. Note: really tricky since small changes can cause unexpected behaviour, so best to
+// disable the warning for now
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnarrowing"
                     if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
                         return index == INDEX ? BBValueType{TypeAtIndex{std::forward<Args>(args)...}} : BBValueType{};
                     }
-                    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
                 }
                 return BBValueType{};
             }
