@@ -5,6 +5,7 @@
 #include "engine/modelmanagement/Strings.h"
 #include <any>
 #include <cassert>
+#include <exception>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
@@ -18,10 +19,29 @@ namespace alica
 
 class BlackboardUtil;
 
+struct BlackboardException : public std::logic_error
+{
+    static constexpr const char* BB_EXCEPTION_PREFIX = "Blackboard exception: ";
+    explicit BlackboardException(const std::string& errMsg)
+            : std::logic_error(BB_EXCEPTION_PREFIX + errMsg)
+    {
+    }
+    BlackboardException(const BlackboardException&) = default;
+    BlackboardException& operator=(const BlackboardException&) = default;
+};
+
 class BlackboardImpl
 {
     using BBValueType = std::variant<std::monostate, bool, int64_t, double, std::string, std::any>;
     static constexpr std::size_t BB_VALUE_TYPE_ANY_INDEX = 5;
+
+    template <class... Args>
+    static std::string stringify(Args&&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << std::forward<Args>(args));
+        return oss.str();
+    }
 
 public:
     BlackboardImpl() = default;
@@ -30,19 +50,20 @@ public:
     {
         for (auto it = blueprint->begin(); it != blueprint->end(); ++it) {
             const auto& [key, keyInfo] = *it;
+            auto typeIndex = getTypeIndex(keyInfo.type);
+            if (!typeIndex.has_value() && keyInfo.type != "std::any") {
+                throw BlackboardException(stringify("key: ", key, " has an unsupported type"));
+            }
             _yamlType.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(keyInfo.type));
             if (keyInfo.defaultValue.has_value()) {
-                auto typeIndex = getTypeIndex(keyInfo.type);
-                if (!typeIndex) {
-                    // unknown type, can't set default value, TODO: throw exception
-                } else {
-                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
-                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
-                }
-            } else {
-                auto typeIndex = getTypeIndex(keyInfo.type);
                 if (keyInfo.type == "std::any") {
-                    // getTypeIndex() does not consider std::any
+                    throw BlackboardException(stringify("key: ", key, " cannot have a default value because it is of type std::any"));
+                }
+                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
+                        std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
+            } else {
+                if (keyInfo.type == "std::any") {
+                    // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
                     typeIndex = BB_VALUE_TYPE_ANY_INDEX;
                 }
                 // insert a default constructed value
@@ -54,28 +75,50 @@ public:
     template <typename T>
     const T& get(const std::string& key) const
     {
+        // T must be an exact match to the T used while setting this key (i.e. no type conversions taken into account)
+        // Exact matches are required because we return by reference
         try {
             const auto yamlTypeIt = _yamlType.find(key);
-            if (yamlTypeIt != _yamlType.end() && yamlTypeIt->second == "std::any") {
-                // yaml type is std::any, so would be stored as std::any
-                return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
-            }
-            if constexpr (isTypeInVariant<T, BBValueType>::value) {
-                // T is a known type, directly use std::get to fetch from variant
-                // T must be an exact match to some type in the variant (i.e. no type conversions taken into account)
-                return std::get<T>(_vals.at(key));
+            if (yamlTypeIt == _yamlType.end()) {
+                // key is not found in yaml file
+                if constexpr (isTypeInVariant<T, BBValueType>::value) {
+                    // T is a known type or std::any, in either case use std::get directly to fetch from variant
+                    // Although std::any is considered an unknown type, we treat it as if its a known type here to avoid a double any_cast
+                    return std::get<T>(_vals.at(key));
+                } else {
+                    // T is an unknown type, use std::any for variant type & any_cast to T
+                    return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                }
             } else {
-                // T is an unknown type, use std::any for variant type & any_cast to T
-                // T must be an exact match to the T used while setting this key (i.e. no type conversions taken into account)
-                // Exact matches are required because we return by reference
-                return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                // key is found in yaml file
+                if (yamlTypeIt->second == "std::any") {
+                    // since yaml type is std::any, value would be stored as std::any, regardless of T being a known or unknown type
+                    return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                }
+                if constexpr (isTypeInVariant<T, BBValueType>::value) {
+                    // T is a known type or std::any, in either case use std::get directly to fetch from variant
+                    // if T is std::any, get<T> will throw, because yaml type is not "std::any"
+                    return std::get<T>(_vals.at(key));
+                } else {
+                    // T is an unknown type, use std::any for variant type & any_cast to T
+                    return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                }
             }
         } catch (const std::bad_variant_access& e) {
-            // known type, but type mismatch, TODO: raise exception
+            // T is a known type or std::any, but type mismatch
+            auto setType = getTypeName(_vals.at(key).index());
+            auto getType = getTypeName<T>();
+            setType = (setType == nullptr ? "std::any" : setType);
+            getType = (getType == nullptr ? "std::any" : getType);
+            throw BlackboardException(stringify("get() type mismatch, key: ", key, ", setType: ", setType, ", getType: ", getType));
         } catch (const std::bad_any_cast& e) {
-            // type mismatch (unknown type or yaml type is std::any), TODO: raise exception
+            // T is an unknown type or yaml type is std::any, but type mismatch
+            auto getType = getTypeName<T>();
+            getType = (getType == nullptr ? "unknown" : getType);
+            throw BlackboardException(stringify("get() type mismatch, key: ", key, ", setType: unknown, getType: ", getType));
         } catch (const std::out_of_range& e) {
-            // key not set, TODO: raise exception
+            // key not set
+            throw BlackboardException(stringify("get() failure, key: ", key, " is not yet set, so cannot get it"));
         }
     }
 
@@ -123,13 +166,11 @@ public:
     void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb)
     {
         // Note: srcKey & targetKey has to be set & both have to be found in the yaml (pml or beh) file
-        assert(_vals.count(targetKey));
-        assert(srcBb._vals.count(srcKey));
         // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
         std::visit(
                 [srcKey, targetKey, this](auto&& srcValue) {
                     // set the target as a side effect, throws if targetType is not constructible from srcType
-                    _vals[targetKey] = makeBBValueForIndex<false>::make(_vals[targetKey].index(), std::forward<decltype(srcValue)>(srcValue));
+                    _vals.at(targetKey) = makeBBValueForIndex<false>::make(_vals.at(targetKey).index(), std::forward<decltype(srcValue)>(srcValue));
                 },
                 srcBb._vals.at(srcKey));
     }
@@ -154,10 +195,19 @@ private:
         if (typeIndex < BB_VALUE_TYPE_NAMES_SIZE) {
             // known type (after conversions to supported types in the the variant are taken into account)
             return BB_VALUE_TYPE_NAMES[typeIndex];
-        } else {
-            // unknown type, note: if index is deduced as std::any, it is also treated as unknown type
-            return nullptr;
         }
+        // Note: std::any is also considered to be an unknown type
+        return nullptr;
+    }
+
+    static const char* getTypeName(std::size_t index)
+    {
+        if (index - 1 < BB_VALUE_TYPE_NAMES_SIZE) {
+            // index - 1 to account for std::monostate in the variant
+            return BB_VALUE_TYPE_NAMES[index - 1];
+        }
+        // Note: if index points to std::any, nullptr will be returned, because std::any is also considered to be an unknown type
+        return nullptr;
     }
 
     static std::optional<std::size_t> getTypeIndex(const std::string& type)
