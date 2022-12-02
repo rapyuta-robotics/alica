@@ -59,7 +59,6 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     ae->start();
     auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
 
-    CounterClass::called = 0;
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
     wm->setRuntimeCondition1418042967134(true);
