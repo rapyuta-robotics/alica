@@ -288,6 +288,7 @@ void AlicaDummyCommunication::startCommunication()
 
 void AlicaDummyCommunication::stopCommunication()
 {
+    s_modContainer.deregisterModule(this);
     _isRunning = false;
 }
 
