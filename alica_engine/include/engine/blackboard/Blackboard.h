@@ -59,15 +59,25 @@ public:
                 if (keyInfo.type == "std::any") {
                     throw BlackboardException(stringify("key: ", key, " cannot have a default value because it is of type std::any"));
                 }
-                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
-                        std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
+                try {
+                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
+                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
+                } catch (const std::exception& ex) {
+                    throw BlackboardException(stringify("Could not set key: ", key, ", from default value: ", keyInfo.defaultValue.value(),
+                            ", type: ", keyInfo.type, ", details: ", ex.what()));
+                }
             } else {
                 if (keyInfo.type == "std::any") {
                     // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
                     typeIndex = BB_VALUE_TYPE_ANY_INDEX;
                 }
-                // insert a default constructed value
-                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+                try {
+                    // insert a default constructed value
+                    _vals.emplace(
+                            std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+                } catch (const std::exception& ex) {
+                    throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
+                }
             }
         }
     }
@@ -138,10 +148,10 @@ public:
         if (yamlTypeIt == _yamlType.end()) {
             // key is not found in yaml file
             if (!type) {
-                // unknown type, use std::any
+                // T is an unknown type, use std::any
                 _vals[key] = std::any{std::forward<T>(value)};
             } else {
-                // known type, just assign (type conversions are taken into account)
+                // T is a known type, just assign (type conversions are taken into account)
                 _vals[key] = std::forward<T>(value);
             }
         } else {
@@ -152,11 +162,14 @@ public:
                 _vals[key] = std::any{std::forward<T>(value)};
             } else {
                 if (!type) {
-                    // unknown type, TODO: raise exception
+                    // T is an unknown type, but yaml type is always known
+                    throw BlackboardException(stringify("set() failure, unknown type used to set key: ", key, ", expected type (from yaml file): ", yamlType));
                 } else if (yamlType != type) {
-                    // known type, but type mismatch, TODO: raise exception
+                    // T is a known type, but type mismatch
+                    throw BlackboardException(
+                            stringify("set() type mismatch, key: ", key, ", set type: ", type, ", expected type (from yaml file): ", yamlType));
                 } else {
-                    // known type & types match, assign
+                    // T is a known type & types match, assign
                     _vals[key] = std::forward<T>(value);
                 }
             }
@@ -232,6 +245,9 @@ private:
         {
             // make a BBValueType constructed from a value of type that is at `index` of the variant
             // The value itself is either constructed from args or parsed from args
+            // Note: index cannot be std::monostate
+            // throws if variant construction fails
+            assert(index > 0);
             return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 2>(), std::forward<Args>(args)...);
         }
 
@@ -251,8 +267,8 @@ private:
         {
             BBValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
             if (!vals[index].index()) {
-                // TODO: variant construction failed, throw exception, remove return
-                return vals[index];
+                // variant construction failed, throw exception
+                throw BlackboardException("variant construction failed");
             }
             return vals[index];
         }
@@ -268,8 +284,7 @@ private:
                 // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
                 // else makes a invalid variant, i.e. with value monostate
                 if constexpr (PARSE_ARGS) {
-                    if constexpr (isTypeInVariant<TypeAtIndex, BBValueType>::value && !std::is_same_v<TypeAtIndex, std::monostate> &&
-                                  !std::is_same_v<TypeAtIndex, std::any>) {
+                    if constexpr (!std::is_same_v<TypeAtIndex, std::monostate> && !std::is_same_v<TypeAtIndex, std::any>) {
                         return index == INDEX ? BBValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BBValueType{};
                     }
                 } else {
