@@ -216,7 +216,6 @@ AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunication
         : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
-    s_modContainer.registerModule(this);
 }
 
 AlicaDummyCommunication::~AlicaDummyCommunication()
@@ -284,6 +283,7 @@ void AlicaDummyCommunication::tick() {}
 void AlicaDummyCommunication::startCommunication()
 {
     _isRunning = true;
+    s_modContainer.registerModule(this);
 }
 
 void AlicaDummyCommunication::stopCommunication()
