@@ -62,15 +62,12 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     CounterClass::called = 0;
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
-    STEP_UNTIL(CounterClass::called == 5);
     wm->setRuntimeCondition1418042967134(true);
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042806576));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
-    STEP_UNTIL(CounterClass::called == 10);
     wm->setRuntimeCondition1418042967134(false);
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
-    STEP_UNTIL(CounterClass::called == 13);
     wm->setPreCondition1418042929966(true);
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042796752));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042796752));
