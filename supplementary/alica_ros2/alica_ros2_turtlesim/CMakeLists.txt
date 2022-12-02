@@ -77,7 +77,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION include/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch alica
+install(DIRECTORY launch Expr etc
     DESTINATION share/${PROJECT_NAME}
 )
 
