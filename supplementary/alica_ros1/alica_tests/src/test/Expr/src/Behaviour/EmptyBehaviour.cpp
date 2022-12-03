@@ -25,7 +25,7 @@ EmptyBehaviour::~EmptyBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void EmptyBehaviour::run(void* msg)
+void EmptyBehaviour::run()
 {
     /*PROTECTED REGION ID(run1625610857563) ENABLED START*/
     // Add additional options here

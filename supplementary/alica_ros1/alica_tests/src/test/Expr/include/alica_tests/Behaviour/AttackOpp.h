@@ -12,7 +12,7 @@ class AttackOpp : public DomainBehaviour
 public:
     AttackOpp(BehaviourContext& context);
     virtual ~AttackOpp();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1402489351885) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

@@ -10,7 +10,7 @@ class AcmeBehaviour : public BasicBehaviour
 public:
     AcmeBehaviour(BehaviourContext& context);
     virtual ~AcmeBehaviour(){};
-    void run(void* msg) override{};
+    void run() override{};
 
     // Factory method
     static std::unique_ptr<AcmeBehaviour> create(BehaviourContext& context) { return std::make_unique<AcmeBehaviour>(context); }

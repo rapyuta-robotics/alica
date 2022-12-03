@@ -12,7 +12,7 @@ class TestBehaviour : public DomainBehaviour
 public:
     TestBehaviour(BehaviourContext& context);
     virtual ~TestBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub55178365253414982) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

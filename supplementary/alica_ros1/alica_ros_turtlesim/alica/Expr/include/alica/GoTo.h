@@ -13,7 +13,7 @@ class GoTo : public DomainBehaviour
 public:
     GoTo(BehaviourContext& context);
     virtual ~GoTo();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub4054297592460872311) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

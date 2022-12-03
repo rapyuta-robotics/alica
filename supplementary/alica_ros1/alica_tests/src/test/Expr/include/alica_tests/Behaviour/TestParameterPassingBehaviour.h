@@ -12,7 +12,7 @@ class TestParameterPassingBehaviour : public DomainBehaviour
 public:
     TestParameterPassingBehaviour(BehaviourContext& context);
     virtual ~TestParameterPassingBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub831400441334251602) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

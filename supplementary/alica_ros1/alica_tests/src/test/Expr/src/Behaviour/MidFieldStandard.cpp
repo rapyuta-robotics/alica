@@ -25,7 +25,7 @@ MidFieldStandard::~MidFieldStandard()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void MidFieldStandard::run(void* msg)
+void MidFieldStandard::run()
 {
     /*PROTECTED REGION ID(run1402488696205) ENABLED START*/
     // Add additional options here

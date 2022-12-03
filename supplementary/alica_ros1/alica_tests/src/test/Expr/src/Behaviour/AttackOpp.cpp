@@ -24,7 +24,7 @@ AttackOpp::~AttackOpp()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void AttackOpp::run(void* msg)
+void AttackOpp::run()
 {
     /*PROTECTED REGION ID(run1402489351885) ENABLED START*/
     // Add additional options here

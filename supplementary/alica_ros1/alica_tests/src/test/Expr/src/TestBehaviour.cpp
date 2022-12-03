@@ -25,7 +25,7 @@ TestBehaviour::~TestBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void TestBehaviour::run(void* msg)
+void TestBehaviour::run()
 {
     /*PROTECTED REGION ID(run55178365253414982) ENABLED START*/
     // Add additional options here

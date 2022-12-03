@@ -10,7 +10,7 @@ class WaitBehaviour : public BasicBehaviour
 public:
     explicit WaitBehaviour(BehaviourContext& context);
     virtual ~WaitBehaviour(){};
-    void run(void* msg) override;
+    void run() override;
 
     // Factory method
     static std::unique_ptr<WaitBehaviour> create(BehaviourContext& context) { return std::make_unique<WaitBehaviour>(context); }
