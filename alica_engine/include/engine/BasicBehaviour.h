@@ -25,7 +25,7 @@ class EntryPoint;
 
 struct BehaviourContext
 {
-    IAlicaWorldModel* worldModel;
+    Blackboard& worldModels;
     const std::string name;
     const Behaviour* behaviourModel;
     const IAlicaTraceFactory* traceFactory;

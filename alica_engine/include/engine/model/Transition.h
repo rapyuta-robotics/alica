@@ -14,7 +14,7 @@ class TransitionCondition;
 class ModelFactory;
 class TransitionFactory;
 class ExpressionHandler;
-class IAlicaWorldModel;
+class Blackboard;
 class KeyMapping;
 
 struct TransitionConditionContext

@@ -4,7 +4,7 @@ namespace alica
 {
 class Blackboard;
 class RunningPlan;
-class IAlicaWorldModel;
+class Blackboard;
 
-bool defaultCondition(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool defaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
 } /* namespace alica */

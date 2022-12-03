@@ -8,7 +8,7 @@ namespace alica
 {
 
 class RunningPlan;
-class IAlicaWorldModel;
+class Blackboard;
 
 struct ConditionContext
 {
@@ -22,7 +22,7 @@ class BasicCondition
 public:
     BasicCondition();
     virtual ~BasicCondition();
-    virtual bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm) = 0;
+    virtual bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels) = 0;
 
     bool isStateTimedOut(const AlicaTime timeOut, std::shared_ptr<RunningPlan> rp) const;
     bool isTimeOut(const AlicaTime timeOut, const AlicaTime startTime, std::shared_ptr<RunningPlan> rp) const;

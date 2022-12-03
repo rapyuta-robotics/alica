@@ -6,7 +6,7 @@ namespace alica
 {
 
 class IAssignment;
-class IAlicaWorldModel;
+class Blackboard;
 
 class ITaskAssignmentProblem
 {

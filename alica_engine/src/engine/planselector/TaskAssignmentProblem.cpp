@@ -33,10 +33,10 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
-        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const Blackboard* worldModels)
         : _agents(paraAgents)
         , _plans(planList)
-        , _wm(wm)
+        , _worldModels(worldModels)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
@@ -54,7 +54,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, c
         // prep successinfo for this plan
         _successData.push_back(_teamObserver.createSuccessCollection(curPlan));
         // allow caching of eval data
-        curPlan->getUtilityFunction()->cacheEvalData(_wm);
+        curPlan->getUtilityFunction()->cacheEvalData(_worldModels);
         // seed the fringe with a partial assignment
         PartialAssignment* curPa = _pool.getNext();
 
@@ -77,7 +77,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr, _wm);
+            curPa->evaluate(nullptr, _worldModels);
             changed = true;
         }
         ++i;
@@ -124,7 +124,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
             goal = curPa;
         } else {
             Logging::logDebug("TA") << "<--- TA: BEFORE fringe exp:" << _fringe << "--->";
-            curPa->expand(_fringe, _pool, oldAss, _wm);
+            curPa->expand(_fringe, _pool, oldAss, _worldModels);
             Logging::logDebug("TA") << "<--- TA: AFTER fringe exp:\n"
                                     << "TA: fringe size " << _fringe.size() << _fringe << "--->";
         }

@@ -20,7 +20,7 @@ namespace test
 class TestContext;
 }
 class RunningPlan;
-class IAlicaWorldModel;
+class Blackboard;
 class TeamManager;
 class PlanBase;
 class IAlicaCommunication;
@@ -76,7 +76,7 @@ class RunnableObject
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* tf, const std::string& name = "");
+    RunnableObject(Blackboard& worldModels, const IAlicaTraceFactory* tf, const std::string& name = "");
     virtual ~RunnableObject() = default;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;
@@ -94,7 +94,7 @@ protected:
     void sendLogMessage(int level, const std::string& message) const;
     RunningPlan* getPlanContext() const { return _runningplanContext; }
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
-    IAlicaWorldModel* getWorldModel() { return _wm; };
+    Blackboard& getWorldModel() { return _worldModels; };
 
     void start(RunningPlan* rp);
     void stop();
@@ -133,7 +133,7 @@ private:
     std::unique_ptr<IAlicaTimer> _activeRunTimer;
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
-    IAlicaWorldModel* _wm;
+    Blackboard& _worldModels;
 
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these

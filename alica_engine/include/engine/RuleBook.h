@@ -24,7 +24,7 @@ class CycleManager;
 class UtilityFunction;
 class TeamObserver;
 class TeamManager;
-class IAlicaWorldModel;
+class Blackboard;
 class ConfigChangeListener;
 class PlanRepository;
 
@@ -44,7 +44,7 @@ public:
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
     void reload(const YAML::Node& config);
-    void init(const IAlicaWorldModel* wm);
+    void init(const Blackboard& worldModels);
 
 private:
     Logger& _logger;
@@ -56,7 +56,7 @@ private:
     int _maxConsecutiveChanges;
     bool _autoFailureHandlingEnabled;
     bool _changeOccurred;
-    const IAlicaWorldModel* _wm;
+    const Blackboard* _worldModels;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);

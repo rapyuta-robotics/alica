@@ -42,6 +42,19 @@ public:
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
+
+    std::unordered_map<std::string /*libraryname*/, std::any> _worldModels;
+
+    template <class T>
+    T* getWorldModel(const std::string& libraryName)
+    {
+        auto it = _worldModels.find(libraryName);
+        if (it == _worldModels.end()) {
+            // Error: missing requested WM
+            return nullptr;
+        }
+        return std::any_cast<T*>(it->second);
+    };
 };
 
 class Blackboard

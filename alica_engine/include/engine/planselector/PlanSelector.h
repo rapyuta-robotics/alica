@@ -29,7 +29,7 @@ public:
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs,
             const RunningPlan* oldRp, const PlanType* relevantPlanType, double& o_oldUtility);
-    void setWorldModel(const IAlicaWorldModel* wm);
+    void setWorldModels(const Blackboard& worldModels);
 
 private:
     bool getPlansForStateInternal(
@@ -40,7 +40,7 @@ private:
     const TeamManager& _teamManager;
 
     PlanBase* _pb;
-    const IAlicaWorldModel* _wm;
+    const Blackboard* _worldModels;
 };
 
 } /* namespace alica */

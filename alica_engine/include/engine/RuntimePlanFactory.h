@@ -9,7 +9,7 @@ namespace alica
 class Plan;
 class BasicPlan;
 class IPlanCreator;
-class IAlicaWorldModel;
+class Blackboard;
 class IAlicaTraceFactory;
 class TeamManager;
 class IAlicaTimerFactory;
@@ -17,7 +17,7 @@ class IAlicaTimerFactory;
 class RuntimePlanFactory
 {
 public:
-    RuntimePlanFactory(IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
+    RuntimePlanFactory(Blackboard& worldModels, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
     ~RuntimePlanFactory() = default;
     void init(std::unique_ptr<IPlanCreator>&& pc);
 
@@ -25,7 +25,7 @@ public:
 
 private:
     std::unique_ptr<IPlanCreator> _creator;
-    IAlicaWorldModel* _wm;
+    Blackboard& _worldModels;
     const IAlicaTraceFactory* _traceFactory;
     const TeamManager& _teamManager;
     const IAlicaTimerFactory& _timerFactory;

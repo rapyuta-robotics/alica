@@ -47,10 +47,10 @@ RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, Sync
 
 RuleBook::~RuleBook() {}
 
-void RuleBook::init(const IAlicaWorldModel* wm)
+void RuleBook::init(const Blackboard& worldModels)
 {
-    _wm = wm;
-    _ps->setWorldModel(wm);
+    _worldModels = &worldModels;
+    _ps->setWorldModels(worldModels);
 }
 
 void RuleBook::reload(const YAML::Node& config)
@@ -463,7 +463,7 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
             continue;
         }
 
-        if (t->getTransitionCondition()->evaluate(&r, _wm, t->getKeyMapping())) {
+        if (t->getTransitionCondition()->evaluate(&r, _worldModels, t->getKeyMapping())) {
             nextState = t->getOutState();
             break;
         }
@@ -508,7 +508,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             continue;
         }
         if (_syncModule.isTransitionSuccessfullySynchronised(t)) {
-            if (t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping())) {
+            if (t->getTransitionCondition()->evaluate(&rp, _worldModels, t->getKeyMapping())) {
                 // we follow the transition, because it holds and is synchronised
                 nextState = t->getOutState();
                 // TODO: Find solution for constraints with new transition conditions
@@ -520,7 +520,7 @@ PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
             }
         } else {
             // adds a new synchronisation process or updates existing
-            _syncModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _wm, t->getKeyMapping()));
+            _syncModule.setSynchronisation(t, t->getTransitionCondition()->evaluate(&rp, _worldModels, t->getKeyMapping()));
         }
     }
     if (nextState == nullptr) {

@@ -80,8 +80,8 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const Blackboard& getBlackboard() const { return _Blackboard; }
-    Blackboard& editBlackboard() { return _Blackboard; }
+    const Blackboard& getBlackboard() const { return _worldModels; }
+    Blackboard& editBlackboard() { return _worldModels; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -97,7 +97,7 @@ public:
     IAlicaTimerFactory& getTimerFactory() const;
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
-    IAlicaWorldModel* getWorldModel() const;
+    const Blackboard& getWorldModel() const;
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;
@@ -148,7 +148,7 @@ private:
 
     bool _initialized{false};
 
-    Blackboard _Blackboard;
+    Blackboard _worldModels;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
 };
