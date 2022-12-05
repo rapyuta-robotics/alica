@@ -15,8 +15,6 @@ Trace::Trace(const std::string& opName, std::optional<const std::string> parent)
 
 Trace::~Trace()
 {
-    std::time_t now = std::time(nullptr);
-    setTag("destructed_trace", std::string(std::asctime(std::localtime(&now))));
     _rawTrace->Finish();
 }
 
@@ -51,8 +49,7 @@ std::string Trace::context() const
 
 void Trace::finish()
 {
-    std::time_t now = std::time(nullptr);
-    setTag("closed_trace", std::string(std::asctime(std::localtime(&now))));
+    setTag("closed_trace", std::time(nullptr));
     _rawTrace->Finish();
 }
 
