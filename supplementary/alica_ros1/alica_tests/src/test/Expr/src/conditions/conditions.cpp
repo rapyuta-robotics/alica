@@ -15,6 +15,30 @@
 
 namespace alica
 {
+bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition1) ENABLED START*/
+    static_assert(false, "Condition 1 with name AnyChildSuccess is not yet implemented");
+    /*PROTECTED REGION END*/
+}
+bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition2) ENABLED START*/
+    static_assert(false, "Condition 2 with name AllChildSuccess is not yet implemented");
+    /*PROTECTED REGION END*/
+}
+bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition3) ENABLED START*/
+    static_assert(false, "Condition 3 with name AnyChildFailure is not yet implemented");
+    /*PROTECTED REGION END*/
+}
+bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition4) ENABLED START*/
+    static_assert(false, "Condition 4 with name AllChildFailure is not yet implemented");
+    /*PROTECTED REGION END*/
+}
 bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition19871606597697646) ENABLED START*/
@@ -37,6 +61,12 @@ bool conditionisAnyChildTaskSuccessfull330238006348384830(const Blackboard* inpu
 {
     /*PROTECTED REGION ID(condition330238006348384830) ENABLED START*/
     return rp->isAnyChildTaskSuccessful();
+    /*PROTECTED REGION END*/
+}
+bool conditionTriggerCond593157092542472645(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition593157092542472645) ENABLED START*/
+    return LockedBlackboardRO(*input).get<bool>("trigger");
     /*PROTECTED REGION END*/
 }
 bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -188,7 +218,7 @@ bool conditionInit2End2711102114821139213(const Blackboard* input, const Running
     return CounterClass::called == 8;
     /*PROTECTED REGION END*/
 }
-bool conditionAlwaysTrue2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool conditionAlwaysTrueCond2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition2872265442510628524) ENABLED START*/
     return true;
@@ -280,6 +310,18 @@ bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* in
     /*PROTECTED REGION ID(condition4547372457936774346) ENABLED START*/
     auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
     return worldModel->isPreCondition1840401110297459509();
+    /*PROTECTED REGION END*/
+}
+bool conditionChooseTest2PlanSuccessTestCond4467569689589495619(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition4467569689589495619) ENABLED START*/
+    static_assert(false, "Condition 4467569689589495619 with name ChooseTest2PlanSuccessTestCond is not yet implemented");
+    /*PROTECTED REGION END*/
+}
+bool conditionChooseTest2BehSuccessTestCond1084332280175915034(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition1084332280175915034) ENABLED START*/
+    static_assert(false, "Condition 1084332280175915034 with name ChooseTest2BehSuccessTestCond is not yet implemented");
     /*PROTECTED REGION END*/
 }
 } /* namespace alica */

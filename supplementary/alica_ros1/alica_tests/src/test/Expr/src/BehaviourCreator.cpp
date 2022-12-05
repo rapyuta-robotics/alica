@@ -20,6 +20,7 @@
 #include <alica_tests/Behaviour/TriggerC.h>
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/TestBehaviour.h>
+#include <alica_tests/behaviours/SuccessOnInitBeh.h>
 
 namespace alica
 {
@@ -90,6 +91,9 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 831400441334251602:
         return std::make_unique<TestParameterPassingBehaviour>(context);
+        break;
+    case 3821787310391665935:
+        return std::make_unique<SuccessOnInitBeh>(context);
         break;
     default:
         std::cerr << "BehaviourCreator: Unknown behaviour requested: " << behaviourId << std::endl;

@@ -5,7 +5,7 @@
       "comment": "TODO: remove, once key mapping with constants is supported",
       "defaultValue": null,
       "id": 3455177961627081777,
-      "key": "trigger",
+      "key": "dummy",
       "type": "std::any"
     }
   ],
@@ -39,25 +39,6 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": 3091576485060406140,
-      "id": 4098979167613947533,
-      "inTransitions": [],
-      "name": "ChooseTestState",
-      "outTransitions": [
-        3355362303645271539,
-        2555927562837594933
-      ],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 459,
-        "y": 278
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [
         {
           "abstractPlan": "PlanSuccessTestPlan.pml#3870436056558842479",
@@ -74,7 +55,7 @@
       "entryPoint": null,
       "id": 2212831089687963769,
       "inTransitions": [
-        2555927562837594933
+        2841206023261337744
       ],
       "name": "PlanSuccessTestState",
       "outTransitions": [],
@@ -82,6 +63,25 @@
       "positionWeb": {
         "x": 735,
         "y": 375
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 3091576485060406140,
+      "id": 4098979167613947533,
+      "inTransitions": [],
+      "name": "ChooseTestState",
+      "outTransitions": [
+        846865468084822174,
+        2841206023261337744
+      ],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 459,
+        "y": 278
       },
       "type": "State",
       "variableBindings": []
@@ -104,7 +104,7 @@
       "entryPoint": null,
       "id": 4487929496627066142,
       "inTransitions": [
-        3355362303645271539
+        846865468084822174
       ],
       "name": "BehSuccessTestState",
       "outTransitions": [],
@@ -121,14 +121,14 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#593157092542472645",
-      "id": 3355362303645271539,
+      "condition": "conditions/ConditionRepository.cnd#1084332280175915034",
+      "id": 846865468084822174,
       "inState": 4098979167613947533,
       "keyMapping": {
         "input": [
           {
-            "childKey": "trigger",
-            "parentKey": "trigger"
+            "childKey": "result",
+            "parentKey": "dummy"
           }
         ],
         "output": []
@@ -140,7 +140,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 2873618081435588223,
+        "id": 1879497210052616817,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -150,14 +150,14 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#593157092542472645",
-      "id": 2555927562837594933,
+      "condition": "conditions/ConditionRepository.cnd#4467569689589495619",
+      "id": 2841206023261337744,
       "inState": 4098979167613947533,
       "keyMapping": {
         "input": [
           {
-            "childKey": "trigger",
-            "parentKey": "trigger"
+            "childKey": "result",
+            "parentKey": "dummy"
           }
         ],
         "output": []
@@ -169,7 +169,7 @@
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 341809299559343556,
+        "id": 3883605426713053219,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

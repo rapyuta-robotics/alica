@@ -10,9 +10,14 @@ class Blackboard;
 class RunningPlan;
 class IAlicaWorldModel;
 
+bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionFailurePlan2FailureHandled190171326790683374(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionisAnyChildTaskSuccessfull330238006348384830(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionTriggerCond593157092542472645(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionPlanA2PlanB682216470625774387(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionIsAnyChildStatusFailed711536493236439192(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
@@ -35,7 +40,7 @@ bool conditionInit2Start2208457928613785430(const Blackboard* input, const Runni
 bool conditionStart2ExecBehaviourTest2452554857659522052(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionStart2ExecOrderTest2619422076497988080(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionInit2End2711102114821139213(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionAlwaysTrue2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionAlwaysTrueCond2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionCounterCalled2901825906319407673(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionWait2Suc3517323109117319233(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
@@ -49,4 +54,6 @@ bool conditionExecBehaviour2SubPlan4244459279660861567(const Blackboard* input, 
 bool conditionDecision2A4281647834169813432(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionOther2NewSuccessStateOne4368560569514553226(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionChooseTest2PlanSuccessTestCond4467569689589495619(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionChooseTest2BehSuccessTestCond1084332280175915034(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 } /* namespace alica */

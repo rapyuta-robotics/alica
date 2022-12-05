@@ -4,6 +4,7 @@
 #include <alica_tests/Authority/AuthorityTest1414403413451.h>
 #include <alica_tests/Authority/AuthorityTestMaster1414403396328.h>
 #include <alica_tests/BackForth1529456584982.h>
+#include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/Behaviour/AlwaysFail1532424188199.h>
 #include <alica_tests/Behaviour/Attack1402488848841.h>
@@ -56,6 +57,7 @@
 #include <alica_tests/PlanFive1407153703092.h>
 #include <alica_tests/PlanFour1407153683051.h>
 #include <alica_tests/PlanOne1407153611768.h>
+#include <alica_tests/PlanSuccessTestPlan3870436056558842479.h>
 #include <alica_tests/PlanThree1407153663917.h>
 #include <alica_tests/PlanTwo1407153645238.h>
 #include <alica_tests/PreConditionPlan1418042796751.h>
@@ -70,14 +72,17 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan21614964444419.h>
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
+#include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestBehaviour55178365253414982.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>
 #include <alica_tests/TestInheritBlackboardMaster1179066429431332056.h>
+#include <alica_tests/TestMasterPlan2521443078354411465.h>
 #include <alica_tests/TestParameterPassing1692837668719979457.h>
 #include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 #include <alica_tests/TestTracingMasterPlan691392966514374878.h>
 #include <alica_tests/TestTracingSubPlan1482512794732634139.h>
+#include <alica_tests/behaviours/SuccessOnInitBeh3821787310391665935.h>
 
 namespace alica
 {
@@ -85,9 +90,8 @@ namespace alica
 ConditionCreator::ConditionCreator() {}
 ConditionCreator::~ConditionCreator() {}
 
-std::shared_ptr<BasicCondition> ConditionCreator::createConditions(ConditionContext& context)
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId)
 {
-    int64_t conditionConfId = context.conditionConfId;
     switch (conditionConfId) {
     case 1402489131988:
         return std::make_shared<PreCondition1402489131988>();

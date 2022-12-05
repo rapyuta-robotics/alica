@@ -13,17 +13,25 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
-        TransitionConditionContext& context)
+std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
 {
-    int64_t conditionId = context.conditionConfId;
     switch (conditionId) {
+    case 1:
+        return std::bind(conditionAnyChildSuccess1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 2:
+        return std::bind(conditionAllChildSuccess2, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3:
+        return std::bind(conditionAnyChildFailure3, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 4:
+        return std::bind(conditionAllChildFailure4, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 19871606597697646:
         return std::bind(conditionEntry2Wait19871606597697646, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 190171326790683374:
         return std::bind(conditionFailurePlan2FailureHandled190171326790683374, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 330238006348384830:
         return std::bind(conditionisAnyChildTaskSuccessfull330238006348384830, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 593157092542472645:
+        return std::bind(conditionTriggerCond593157092542472645, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 655002160731734731:
         return std::bind(conditionPlanB2PlanA655002160731734731, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 682216470625774387:
@@ -71,7 +79,7 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
     case 2711102114821139213:
         return std::bind(conditionInit2End2711102114821139213, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2872265442510628524:
-        return std::bind(conditionAlwaysTrue2872265442510628524, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        return std::bind(conditionAlwaysTrueCond2872265442510628524, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2901825906319407673:
         return std::bind(conditionCounterCalled2901825906319407673, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3016035752801585170:
@@ -98,6 +106,10 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         return std::bind(conditionOther2NewSuccessStateOne4368560569514553226, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4547372457936774346:
         return std::bind(conditionTestTracingMasterCondition4547372457936774346, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 4467569689589495619:
+        return std::bind(conditionChooseTest2PlanSuccessTestCond4467569689589495619, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 1084332280175915034:
+        return std::bind(conditionChooseTest2BehSuccessTestCond1084332280175915034, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     default:
         std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
         throw new std::exception();
