@@ -33,7 +33,7 @@ GoalPlan1402488870347::~GoalPlan1402488870347()
 /**
  * Available Vars:
  */
-bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1402489131988) ENABLED START*/
     //--> "PreCondition:1402489131988  not implemented";
@@ -46,7 +46,7 @@ bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Available Vars:
  *	- test (1403773747758)
  */
-bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1403773741874) ENABLED START*/
     return true;
@@ -57,7 +57,7 @@ bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp, co
 /**
  * Available Vars:
  */
-bool PostCondition1402489620773::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PostCondition1402489620773::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1402489620773) ENABLED START*/
     std::cout << "The PostCondition 1402489620773 in TerminalState Scored is not implement yet!" << std::endl;

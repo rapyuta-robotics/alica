@@ -34,7 +34,7 @@ Lvl11524452759599::~Lvl11524452759599()
  *	- L1A (1524453326397)
  *	- L1B (1524453331530)
  */
-bool RunTimeCondition1524453470580::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1524453470580::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1524453470580) ENABLED START*/
     return true;

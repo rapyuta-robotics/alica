@@ -2,7 +2,6 @@
 #include "engine/AlicaEngine.h"
 #include "engine/Assignment.h"
 #include "engine/ConfigChangeListener.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/Logger.h"
 #include "engine/PlanBase.h"
 #include "engine/RunningPlan.h"

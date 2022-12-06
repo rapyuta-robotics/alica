@@ -30,7 +30,8 @@ FailurePlan631515556091266493::~FailurePlan631515556091266493()
 }
 
 /**
- * Task: DefaultTask  -> EntryPoint-ID: 4488468250406966071
+ * @brief 
+ * 
  */
 std::shared_ptr<UtilityFunction> UtilityFunction631515556091266493::getUtilityFunction(Plan* plan)
 {
@@ -44,7 +45,8 @@ std::shared_ptr<UtilityFunction> UtilityFunction631515556091266493::getUtilityFu
 // Add additional options here
 void FailurePlan631515556091266493::onInit()
 {
-    auto* worldModel = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
+
+    auto* worldModel=getWorldModel().impl().getWorldModel<alicaTests::TestWorldModel>("worldModel");
     worldModel->failurePlanInitCalled();
 }
 /*PROTECTED REGION END*/

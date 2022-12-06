@@ -23,7 +23,7 @@ DistXContourTest::DistXContourTest(double weight, const std::vector<std::pair<do
 
 DistXContourTest::~DistXContourTest() {}
 
-void DistXContourTest::cacheEvalData(const IAlicaWorldModel* wm)
+void DistXContourTest::cacheEvalData(const Blackboard* worldModels)
 {
     auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
     xAlloBall = worldModel->x;
@@ -34,7 +34,7 @@ double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y
     return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 }
 
-UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
+UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* worldModels) const
 {
     UtilityInterval ui(0.0, 0.0);
 

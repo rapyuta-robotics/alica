@@ -42,14 +42,14 @@ class UtilityFunction1402488870347 : public BasicUtilityFunction
 };
 class PreCondition1402489131988 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
 };
 class RunTimeCondition1403773741874 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
 };
 class PostCondition1402489620773 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
 };
 } /* namespace alica */

@@ -4,8 +4,6 @@
 #include "engine/RunningPlan.h"
 #include <boost/dll/alias.hpp>
 
-class IAlicaWorldModel;
-
 namespace alica
 {
 class AcmeRuntimeCondition : public BasicCondition
@@ -13,7 +11,7 @@ class AcmeRuntimeCondition : public BasicCondition
 public:
     AcmeRuntimeCondition();
 
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
     // Factory method
     static std::shared_ptr<AcmeRuntimeCondition> create()
     {

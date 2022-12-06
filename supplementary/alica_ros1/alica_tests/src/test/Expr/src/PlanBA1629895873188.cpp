@@ -42,7 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895873188::getUtilityFunctio
 // Add additional options here
 void PlanBA1629895873188::onInit()
 {
-    _wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
+    _wm = getWorldModel().impl().getWorldModel<alica_test::SchedWM>("worldModel");
     _wm->execOrder += "PlanBA::Init\n";
 }
 

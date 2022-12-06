@@ -33,7 +33,7 @@ SimpleTestPlan1412252439925::~SimpleTestPlan1412252439925()
 /**
  * Available Vars:
  */
-bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1412781707952) ENABLED START*/
     //--> "PreCondition:1412781707952  not implemented";
@@ -45,7 +45,7 @@ bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const 
 /**
  * Available Vars:
  */
-bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1412781693884) ENABLED START*/
     CounterClass::called++;

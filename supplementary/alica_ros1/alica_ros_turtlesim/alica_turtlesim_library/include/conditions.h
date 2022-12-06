@@ -5,11 +5,10 @@ namespace alica
 {
 class Blackboard;
 class RunningPlan;
-class IAlicaWorldModel;
 
-bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
+bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
+bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
 
 BOOST_DLL_ALIAS(alica::conditionMove2Init, Move2Init)
 BOOST_DLL_ALIAS(alica::conditionInit2Move, Init2Move)

@@ -35,7 +35,7 @@ MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1402489260911) ENABLED START*/
     return true;

@@ -8,7 +8,6 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/blackboard/Blackboard.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
@@ -16,6 +15,7 @@
 #include "engine/ITransitionConditionCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/Types.h"
+#include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/Logging.h"
@@ -269,8 +269,8 @@ public:
      *
      * @param args Arguments to be forwarded to constructor of world model. Might be empty.
      */
-    //template <class WorldModelType, class... Args>
-    //void setWorldModel(Args&&... args);
+    // template <class WorldModelType, class... Args>
+    // void setWorldModel(Args&&... args);
 
     /**
      * Get worldModel being used by this alica instance. If no worldModel has been set,
@@ -278,7 +278,7 @@ public:
      *
      * @return A pointer to worldModel object being used by context
      */
-    //Blackboard& getWorldModel() const { return _worldModel.get(); }
+    const Blackboard& getWorldModels() const;
 
     /**
      * Add a solver to be used by this alica instance.
@@ -444,7 +444,7 @@ private:
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
-    //std::unique_ptr<IAlicaWorldModel> _worldModel;
+    // std::unique_ptr<IAlicaWorldModel> _worldModel;
     const AlicaContextParams _alicaContextParams;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 

@@ -42,6 +42,6 @@ class UtilityFunction1524452836022 : public BasicUtilityFunction
 };
 class RunTimeCondition1524452937477 : public DomainCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
 };
 } /* namespace alica */

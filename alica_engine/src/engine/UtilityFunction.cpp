@@ -2,7 +2,6 @@
 
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/TaskRoleStruct.h"

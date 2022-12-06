@@ -1,7 +1,5 @@
 #pragma once
 
-#include <engine/IAlicaWorldModel.h>
-
 #include <atomic>
 #include <string>
 #include <unordered_map>
@@ -10,7 +8,7 @@
 namespace alicaTests
 {
 
-class TestWorldModel : public alica::IAlicaWorldModel
+class TestWorldModel 
 {
 public:
     TestWorldModel();

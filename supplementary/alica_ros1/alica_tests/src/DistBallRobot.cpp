@@ -1,6 +1,5 @@
 #include <alica_tests/DistBallRobot.h>
 #include <alica_tests/TestWorldModel.h>
-#include <engine/IAlicaWorldModel.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
@@ -18,7 +17,7 @@ DistBallRobot::DistBallRobot(double weight)
 
 DistBallRobot::~DistBallRobot() {}
 
-UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
+UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* worldModels) const
 {
     UtilityInterval ui(0.0, 1.0);
 

@@ -1,6 +1,5 @@
 #include "engine/default/DefaultConditions.h"
 
-#include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"
 #include "engine/blackboard/Blackboard.h"
 

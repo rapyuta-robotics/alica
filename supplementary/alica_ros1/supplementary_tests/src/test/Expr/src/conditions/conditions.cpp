@@ -1,6 +1,5 @@
 #include <supplementary_tests/conditions/conditions.h>
 
-#include <engine/IAlicaWorldModel.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
 #include <iostream>
@@ -12,13 +11,13 @@ bool vhStartCondition = false;
 
 namespace alica
 {
-bool conditionVariableHandlingStart295816226925111421(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool conditionVariableHandlingStart295816226925111421(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(condition295816226925111421) ENABLED START*/
     return vhStartCondition;
     /*PROTECTED REGION END*/
 }
-bool conditionDefaultCondition2011598442725310989(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool conditionDefaultCondition2011598442725310989(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(condition2011598442725310989) ENABLED START*/
     return false;
