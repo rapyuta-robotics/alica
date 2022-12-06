@@ -8,6 +8,7 @@
 #include <engine/model/Behaviour.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
+#include <engine/model/TransitionCondition.h>
 
 namespace alica::test
 {
@@ -80,6 +81,16 @@ BasicPlan* TestContext::getActivePlan(const std::string& name)
     return nullptr;
 }
 
+void TestContext::setTransitionCond(const std::string& name)
+{
+    setTransitionCondResult(name, true);
+}
+
+void TestContext::resetTransitionCond(const std::string& name)
+{
+    setTransitionCondResult(name, false);
+}
+
 RunningPlan* TestContext::getRunningPlan(const std::string& name)
 {
     if (name.empty()) {
@@ -106,6 +117,7 @@ RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
     if (results.empty() || results.size() > 1) {
         return nullptr;
     }
+    return results.front();
 }
 
 RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifiedName)
@@ -203,12 +215,24 @@ std::string TestContext::getRunningPlanName(const RunningPlan* rp)
     return {};
 }
 
-std::string getActiveStateName(const RunningPlan* rp)
+std::string TestContext::getActiveStateName(const RunningPlan* rp)
 {
     if (rp->isActive()) {
         return rp->getActiveState() ? rp->getActiveState()->getName() : std::string{};
     }
     return {};
+}
+
+void TestContext::setTransitionCondResult(const std::string& name, bool result)
+{
+    const auto& conds = _engine->getPlanRepository().getTransitionConditions();
+    for (auto condIt = conds.begin(); condIt != conds.end(); ++condIt) {
+        TransitionCondition* cond = const_cast<TransitionCondition*>(*condIt);
+        if (cond->getName() == name) {
+            LockedBlackboardRW bb(*(cond->_blackboard));
+            bb.set("result", result);
+        }
+    }
 }
 
 } // namespace alica::test
