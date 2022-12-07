@@ -47,5 +47,5 @@ Run application with ros2 launch.
 
 If you get the following error message when starting a turtle
 `Unknown quantifier type encountered!`, have a look at the
-file `alica/etc/plans/Move.pml` and make sure the value of the field
+file `etc/plans/Move.pml` and make sure the value of the field
 `quantifierType` is set to `"all"`.
