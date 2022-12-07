@@ -2,7 +2,7 @@
 
 #include "Behaviour/Attack.h"
 #include "Behaviour/MidFieldStandard.h"
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>
