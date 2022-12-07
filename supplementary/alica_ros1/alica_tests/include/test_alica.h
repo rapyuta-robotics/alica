@@ -72,7 +72,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -159,7 +159,7 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alicaTests::TestWorldModel>();
+            ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
@@ -206,7 +206,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -242,7 +242,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
+        ac->addWorldModelByType<alica_test::SchedWM>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -274,7 +274,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>("worldModel"); }
 
     virtual void SetUp() override
     {
@@ -323,7 +323,7 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>("worldModel"); }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
@@ -347,7 +347,8 @@ protected:
             manageWorldModel(ac);
             auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(ac->getWorldModel());
+            // attf->setWorldModel(ac->getWorldModel());
+            //attf->addWorldModel(std::any(ac->getWorldModel()), "worldModel"); todo luca
 
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();

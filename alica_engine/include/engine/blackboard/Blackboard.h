@@ -55,6 +55,12 @@ public:
         }
         return std::any_cast<T*>(it->second);
     };
+
+    void addWorldModel(std::any worldModel,const std::string& libraryName)
+    {
+        //todo luca check for already present
+        _worldModels.insert({libraryName,worldModel});
+    }
 };
 
 class Blackboard

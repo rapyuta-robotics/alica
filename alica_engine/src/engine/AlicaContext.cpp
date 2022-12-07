@@ -190,4 +190,14 @@ const Blackboard& AlicaContext::getWorldModels() const
     return _engine->getWorldModels();
 }
 
+void AlicaContext::addWorldModel(std::any worldModel, const std::string& libraryName)
+{
+    if (_initialized) {
+        Logging::logWarn("AC") << "Context already initialized. Can not set new worldmodeltype";
+        return;
+    }
+
+    _engine->addWorldModel(worldModel, libraryName);
+}
+
 } // namespace alica

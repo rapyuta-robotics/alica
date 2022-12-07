@@ -1,5 +1,6 @@
 #include <alica_tests/DistBallRobot.h>
 #include <alica_tests/TestWorldModel.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
@@ -34,7 +35,8 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
             pos = 1;
         }
 
-        auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+        BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+        auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
         if (this->robotId == agentID8) {
             curPosition = worldModel->robotsXPos[pos];
         } else {
@@ -48,7 +50,8 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
     if (_relevantEntryPoints[0]->getMaxCardinality() > numAssignedRobots && ass.getUnAssignedAgentCount() > 0) {
         for (int i = 0; i < ass.getUnAssignedAgentCount(); ++i) {
             // curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
-            auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+            BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+            auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
             if (this->robotId == agentID8) {
                 curPosition = worldModel->robotsXPos.at(i);
             } else {

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <engine/IAlicaTrace.h>
+#include <engine/blackboard/Blackboard.h>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -50,7 +51,7 @@ public:
     ~AlicaTestTraceFactory() = default;
     void setGlobalContext(const std::string& globalContext) override {}
     void unsetGlobalContext() override {}
-    void setWorldModel(alica::IAlicaWorldModel* wm) { _wm = dynamic_cast<alicaTests::TestWorldModel*>(wm); };
+    void setWorldModel(alica::Blackboard* worldModels) { _wm = worldModels->impl().getWorldModel<alicaTests::TestWorldModel>("worldModel"); };
     alicaTests::TestWorldModel* _wm;
 
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const

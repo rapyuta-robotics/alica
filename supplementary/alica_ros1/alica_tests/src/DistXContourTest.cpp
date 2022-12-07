@@ -6,7 +6,7 @@
  */
 #include <alica_tests/DistXContourTest.h>
 #include <alica_tests/TestWorldModel.h>
-
+#include <engine/blackboard/Blackboard.h>
 #include <engine/planselector/IAssignment.h>
 
 namespace alica
@@ -25,7 +25,8 @@ DistXContourTest::~DistXContourTest() {}
 
 void DistXContourTest::cacheEvalData(const Blackboard* worldModels)
 {
-    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+    auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     xAlloBall = worldModel->x;
 }
 

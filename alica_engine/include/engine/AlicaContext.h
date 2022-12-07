@@ -261,24 +261,14 @@ public:
     }
 
     /**
-     * Set world model to be used by this alica framework instance.
-     * Example usage: setWorldModel<alicaDummyProxy::alicaDummyWorldModel>();
+     * Get worldModels list being used by this alica instance.
      *
-     * @note WorldModelType must be a derived class of IAlicaWorldModel
-     * @note This must be called before initializing context
-     *
-     * @param args Arguments to be forwarded to constructor of world model. Might be empty.
-     */
-    // template <class WorldModelType, class... Args>
-    // void setWorldModel(Args&&... args);
-
-    /**
-     * Get worldModel being used by this alica instance. If no worldModel has been set,
-     * the returned value will be a nullptr.
-     *
-     * @return A pointer to worldModel object being used by context
+     * @return A reference to worldModels being used by context. Worldmodels are stored in Blackboard
      */
     const Blackboard& getWorldModels() const;
+    void addWorldModel(std::any worldModel, const std::string& libraryName);
+    template <class WM, class... Args>
+    void addWorldModelByType(const std::string& libraryName, Args&&... args);
 
     /**
      * Add a solver to be used by this alica instance.
@@ -563,23 +553,13 @@ void AlicaContext::setTraceFactory(Args&&... args)
 #endif
 }
 
-/*
-template <class WorldModelType, class... Args>
-void AlicaContext::setWorldModel(Args&&... args)
+template <class WM, class... Args>
+void AlicaContext::addWorldModelByType(const std::string& libraryName, Args&&... args)
 {
-    if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new worldmodeltype";
-        return;
-    }
-
-    static_assert(std::is_base_of<IAlicaWorldModel, WorldModelType>::value, "Must be derived from IAlicaWorldModel");
-#if (defined __cplusplus && __cplusplus >= 201402L)
-    _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);
-#else
-    _worldModel = std::unique_ptr<WorldModelType>(new WorldModelType(std::forward<Args>(args)...));
-#endif
+    std::any toAdd=std::make_unique<WM>(std::forward<Args>(args)...).get();
+    addWorldModel(toAdd, libraryName);
 }
-*/
+
 template <class LoggerType, class... Args>
 void AlicaContext::setLogger(Args&&... args)
 {

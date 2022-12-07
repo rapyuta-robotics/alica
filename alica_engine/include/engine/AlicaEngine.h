@@ -98,6 +98,7 @@ public:
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
     const Blackboard& getWorldModels() const;
+    void addWorldModel(std::any worldModel,const std::string& libraryName);
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;

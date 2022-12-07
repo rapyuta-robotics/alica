@@ -196,6 +196,11 @@ const Blackboard& AlicaEngine::getWorldModels() const
     return _worldModels;
 }
 
+void AlicaEngine::addWorldModel(std::any worldModel,const std::string& libraryName)
+{
+    _worldModels.impl().addWorldModel(worldModel,libraryName);
+}
+
 /**
  * Triggers the engine to run one iteration.
  * Attention: This method call is asynchronous to the triggered iteration.
