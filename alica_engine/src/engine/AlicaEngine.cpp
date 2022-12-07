@@ -11,6 +11,7 @@
 #include "engine/model/Transition.h"
 #include "engine/model/TransitionCondition.h"
 #include "engine/modelmanagement/ModelManager.h"
+#include "engine/modelmanagement/factories/TransitionConditionRepositoryFactory.h"
 #include "engine/planselector/PartialAssignment.h"
 #include "engine/syncmodule/SyncModule.h"
 #include "engine/teammanager/TeamManager.h"
@@ -138,13 +139,23 @@ void AlicaEngine::terminate()
 void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
 {
     for (const Transition* transition : _planRepository.getTransitions()) {
+        // TransitionCondition will be nullptr if new conditions are not generated for the project
         TransitionCondition* transitionCondition = transition->getTransitionCondition();
-        if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
-            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
-        } else if (_ctx.getConfig()["Alica"]["LegacyTransitionConditions"].as<bool>(false)) { // if value not in config, use false as default
+
+        if (!transitionCondition) {
+            // transition conditions have not been created yet because the project doesnt have a conditionRepository.cnd file
+            // create and attach transitionConditions to transitions, will should only be called once
+            TransitionConditionRepositoryFactory::createAndAttach(_planRepository);
+            transitionCondition = transition->getTransitionCondition();
+        }
+
+        // We have to check for legacy transitions first, because transitionCondition might be null
+        if (_ctx.getConfig()["Alica"]["LegacyTransitionConditions"].as<bool>(false)) { // if value not in config, use false as default
             // use legacy transition condition ID stored in transition
-            TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transition->getLegacyTransitionConditionId()};
+            TransitionConditionContext ctx{"", "", transition->getLegacyTransitionConditionId()};
             transitionCondition->setEvalCallback(creator->createConditions(ctx));
+        } else if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
+            transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
         } else {
             TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transitionCondition->getId()};
             transitionCondition->setEvalCallback(creator->createConditions(ctx));

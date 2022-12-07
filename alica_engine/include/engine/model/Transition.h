@@ -16,6 +16,7 @@ class TransitionFactory;
 class ExpressionHandler;
 class IAlicaWorldModel;
 class KeyMapping;
+class TransitionConditionFactory;
 
 struct TransitionConditionContext
 {
@@ -43,6 +44,7 @@ public:
 private:
     friend ModelFactory;
     friend TransitionFactory;
+    friend TransitionConditionFactory; // used for legacy transition conditions
     friend ExpressionHandler;
     void setTransitionCondition(TransitionCondition* transitionCondition);
     void setInState(State* inState);
