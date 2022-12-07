@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>alica_msgs</name>
   <version>0.9.4</version>
   <description>The alica_msgs package</description>
@@ -8,12 +8,18 @@
 
   <license>MIT</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend  condition="$ROS_VERSION == 1">catkin</buildtool_depend>
 
-  <depend>std_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>message_runtime</depend>
+  <depend  condition="$ROS_VERSION == 1">std_msgs</depend>
+  <depend  condition="$ROS_VERSION == 1">geometry_msgs</depend>
+  <depend  condition="$ROS_VERSION == 1">message_runtime</depend>
 
+
+  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
+  <buildtool_depend condition="$ROS_VERSION == 2">rosidl_default_generators</buildtool_depend>
+  <exec_depend condition="$ROS_VERSION == 2">rosidl_default_runtime</exec_depend>
+  <member_of_group condition="$ROS_VERSION == 2">rosidl_interface_packages</member_of_group>
   <export>
+    <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
   </export>
 </package>
