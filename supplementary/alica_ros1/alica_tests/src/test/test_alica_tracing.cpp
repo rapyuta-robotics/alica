@@ -97,10 +97,10 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
-    auto* twm1 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
-    auto* twm2 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    BlackboardImpl& impl1 = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm1 = impl1.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    BlackboardImpl& impl2 = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm2 = impl2.getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

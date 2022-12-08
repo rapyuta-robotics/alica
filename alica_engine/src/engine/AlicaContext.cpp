@@ -75,7 +75,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
             _engine->start();
         }
         _initialized = true;
-
+        Logging::logDebug("AC") << "Context correctly initialized.";
         return 0;
     }
     return -1;
@@ -192,8 +192,8 @@ const Blackboard& AlicaContext::getWorldModels() const
 
 void AlicaContext::addWorldModel(std::any worldModel, const std::string& libraryName)
 {
-    if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new worldmodeltype";
+    if (!_initialized) {
+        Logging::logWarn("AC") << "Context not initialized. Can not set new worldmodeltype";
         return;
     }
 

@@ -72,7 +72,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -81,6 +80,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
     }
 
     virtual void TearDown() override
@@ -159,7 +159,6 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
@@ -167,6 +166,7 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
@@ -206,7 +206,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
+        // ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -242,7 +242,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->addWorldModelByType<alica_test::SchedWM>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -251,6 +250,7 @@ protected:
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        ac->addWorldModelByType<alica_test::SchedWM>("worldModel");
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -290,7 +290,6 @@ protected:
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -298,6 +297,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        manageWorldModel(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -344,15 +344,15 @@ protected:
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-            manageWorldModel(ac);
             auto tf = ac->getTraceFactory();
-            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
-
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            manageWorldModel(ac);
+            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
+
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
