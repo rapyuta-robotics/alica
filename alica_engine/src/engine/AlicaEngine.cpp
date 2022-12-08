@@ -144,7 +144,7 @@ void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
 
         if (!transitionCondition) {
             // transition conditions have not been created yet because the project doesnt have a conditionRepository.cnd file
-            // create and attach transitionConditions to transitions, will should only be called once
+            // create and attach transitionConditions to transitions, will only be called once
             TransitionConditionRepositoryFactory::createAndAttach(_planRepository);
             transitionCondition = transition->getTransitionCondition();
         }
