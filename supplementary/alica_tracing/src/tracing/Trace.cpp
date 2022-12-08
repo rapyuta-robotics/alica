@@ -49,7 +49,7 @@ std::string Trace::context() const
 
 void Trace::finish()
 {
-    setTag("end_time", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    setTag("endTime", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
     _rawTrace->Finish();
 }
 
