@@ -19,6 +19,6 @@ public:
 private:
     TransitionConditionRepositoryFactory() = delete;
     // helper function used to generate unique IDs for legacy condition repository and legacy transition conditions
-    static uint64_t generateID();
+    static int64_t generateID();
 };
 } // namespace alica

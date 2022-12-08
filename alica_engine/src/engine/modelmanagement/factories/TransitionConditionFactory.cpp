@@ -28,7 +28,7 @@ TransitionCondition* TransitionConditionFactory::create(const YAML::Node& condit
 
     return transitionCondition;
 }
-TransitionCondition* TransitionConditionFactory::createAndAttach(TransitionConditionRepository* conditionRepository, Transition* transition, uint64_t id)
+TransitionCondition* TransitionConditionFactory::createAndAttach(TransitionConditionRepository* conditionRepository, Transition* transition, int64_t id)
 {
     TransitionCondition* transitionCondition = new TransitionCondition(std::move(BlackboardBlueprintFactory::createEmpty()));
     YAML::Node node;
