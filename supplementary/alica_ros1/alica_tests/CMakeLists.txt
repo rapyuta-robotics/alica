@@ -6,10 +6,7 @@ add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
 
 
-find_package(catkin REQUIRED COMPONENTS
-    roscpp
-    alica_ros_proxy
-)
+find_package(catkin REQUIRED)
 
 # #Yaml
 find_package(yaml-cpp REQUIRED)
@@ -23,7 +20,6 @@ include_directories(include)
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include
     LIBRARIES autogen_code_alica_tests
-    CATKIN_DEPENDS    alica_ros_proxy
     DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility
 )
 
@@ -31,6 +27,7 @@ include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
 target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+target_compile_definitions(autogen_code_alica_tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 if(BUILD_TESTING)
     find_package(rostest REQUIRED)
