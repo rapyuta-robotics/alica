@@ -86,7 +86,10 @@ protected:
     virtual void doRun() = 0;
     virtual void doTerminate() = 0;
 
-    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
+    void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {})
+    {
+        _runnableObjectTracer.setTracing(type, customTraceContextGetter);
+    }
     const std::string& getName() { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
     // Helper to allow applications to generate their own trace.
