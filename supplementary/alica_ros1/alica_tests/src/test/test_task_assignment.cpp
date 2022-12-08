@@ -84,7 +84,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModel(), ae->getPlanBase().getRuntimePlanFactory(),
+    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModels(), ae->getPlanBase().getRuntimePlanFactory(),
             ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
             ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
 
@@ -141,7 +141,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModel(), ae->getPlanBase().getRuntimePlanFactory(),
+    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getWorldModels(), ae->getPlanBase().getRuntimePlanFactory(),
             ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
             ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
 

@@ -64,8 +64,10 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
     getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
 
-    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm1 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm2 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     twm1->setTransitionCondition1413201227586(true);
     twm2->setTransitionCondition1413201227586(true);
 

@@ -117,8 +117,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    auto* wmOne = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto* wmTwo = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* wmOne = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* wmTwo = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");    
 
     wmOne->robotsXPos.push_back(0);
     wmOne->robotsXPos.push_back(2000);

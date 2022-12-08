@@ -55,8 +55,10 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     aes[0]->start();
     aes[1]->start();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm1 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm2 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();

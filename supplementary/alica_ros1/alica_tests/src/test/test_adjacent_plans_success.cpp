@@ -22,7 +22,8 @@ protected:
 
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
-    auto worldModel = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     ae->start();
 
     for (int i = 0; i < 10; i++) {

@@ -56,8 +56,10 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     aes[1]->start();
     // Allow agents to discover each other
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm1 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* twm2 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << acs[0]->getLocalAgentId() << std::endl;

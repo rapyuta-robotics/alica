@@ -52,8 +52,8 @@ TEST_F(AlicaSchedulingPlan, orderedInitTermCheck)
     CounterClass::called = -1;
     ae->start();
 
-    IAlicaWorldModel* wmTemp = ac->getWorldModel();
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alica_test::SchedWM* wm = impl.getWorldModel<alica_test::SchedWM>("worldModel");
 
     std::string planAInitOrder = "PlanA::Init\nPlanAA::Init\nBehAAA::Init\n";
     std::string planATermOrder = "BehAAA::Term\nPlanAA::Term\nPlanA::Term\n";
@@ -97,8 +97,8 @@ TEST_F(AlicaSchedulingPlan, orderedRunCheck)
     CounterClass::called = -1;
     ae->start();
 
-    IAlicaWorldModel* wmTemp = ac->getWorldModel();
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alica_test::SchedWM* wm = impl.getWorldModel<alica_test::SchedWM>("worldModel");
     wm->execOrderTest = true;
     ac->stepEngine();
 
@@ -124,8 +124,8 @@ TEST_F(AlicaSchedulingPlan, behaviourSuccessFailureCheck)
     CounterClass::called = -1;
     ae->start();
 
-    IAlicaWorldModel* wmTemp = ac->getWorldModel();
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alica_test::SchedWM* wm = impl.getWorldModel<alica_test::SchedWM>("worldModel");
     wm->execOrderTest = true;
     ac->stepEngine();
 
@@ -193,8 +193,8 @@ TEST_F(AlicaSchedulingPlan, behaviourRunCheck)
     CounterClass::called = -1;
     ae->start();
 
-    IAlicaWorldModel* wmTemp = ac->getWorldModel();
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alica_test::SchedWM* wm = impl.getWorldModel<alica_test::SchedWM>("worldModel");
     wm->execOrderTest = true;
     ac->stepEngine();
 
@@ -226,8 +226,8 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     CounterClass::called = -1;
     ae->start();
 
-    IAlicaWorldModel* wmTemp = ac->getWorldModel();
-    alica_test::SchedWM* wm = dynamic_cast<alica_test::SchedWM*>(wmTemp);
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
+    alica_test::SchedWM* wm = impl.getWorldModel<alica_test::SchedWM>("worldModel");
     wm->execBehaviourTest = true;
     std::string orderString = "TestBehaviour::Init\nTestBehaviour::Run\n";
     STEP_UNTIL(wm->execOrder == orderString);

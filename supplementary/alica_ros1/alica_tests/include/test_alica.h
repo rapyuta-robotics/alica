@@ -347,8 +347,7 @@ protected:
             manageWorldModel(ac);
             auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            // attf->setWorldModel(ac->getWorldModel());
-            //attf->addWorldModel(std::any(ac->getWorldModel()), "worldModel"); todo luca
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
 
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
