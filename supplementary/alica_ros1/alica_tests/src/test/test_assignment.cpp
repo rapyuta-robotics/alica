@@ -7,7 +7,6 @@
 #include <engine/modelmanagement/ModelManager.h>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 #include <vector>
 
 #include "test_alica.h"
@@ -21,10 +20,12 @@ using alica::State;
 
 TEST(Assignment, RobotsInserted)
 {
-    // determine the path to the test config
-    ros::NodeHandle nh;
-    std::string path;
-    nh.param<std::string>("/rootPath", path, ".");
+    // Path to test configs set by CMake
+    std::string path = "";
+#if defined(PLANS)
+    path = PLANS;
+    path += "/src/test";
+#endif
 
     alica::AgentId robot1 = 2;
     alica::AgentId robot2 = 1;
@@ -37,7 +38,8 @@ TEST(Assignment, RobotsInserted)
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-    ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+    ac->setWorldModel<alicaTests::TestWorldModel>();
+    ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
 
     alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),

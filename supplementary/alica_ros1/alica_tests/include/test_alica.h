@@ -10,8 +10,8 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
+#include <alica_test_timer.h>
 #include <alica_tests/TestTracing.h>
-#include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
@@ -21,7 +21,6 @@
 #include <DynamicBehaviourCreator.h>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 #include <yaml-cpp/yaml.h>
 
 #include <csetjmp>
@@ -65,18 +64,20 @@ protected:
     virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
+
+        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -89,11 +90,8 @@ protected:
 
     virtual void TearDown() override
     {
-        spinner->stop();
         ac->terminate();
     }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestFixtureWithSolvers : public AlicaTestFixture
@@ -112,8 +110,6 @@ class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 protected:
     std::vector<alica::AlicaContext*> acs;
     std::vector<alica::AlicaEngine*> aes;
-    std::vector<std::unique_ptr<ros::AsyncSpinner>> spinners;
-    std::vector<std::unique_ptr<ros::CallbackQueue>> cbQueues;
 };
 
 class TestClock : public AlicaClock
@@ -156,10 +152,12 @@ protected:
 
     void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -168,10 +166,9 @@ protected:
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
-            cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
-            spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            ac->setWorldModel<alicaTests::TestWorldModel>();
+            ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
                 ac->setClock<TestClock>();
@@ -182,7 +179,6 @@ protected:
             LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            spinners.back()->start();
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -190,9 +186,6 @@ protected:
 
     void TearDown() override
     {
-        for (auto& spinner : spinners) {
-            spinner->stop();
-        }
         for (alica::AlicaContext* ac : acs) {
             ac->terminate();
             delete ac;
@@ -211,23 +204,22 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setWorldModel<alicaTests::TestWorldModel>();
+        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
-        spinner->start();
     }
 
-    void TearDown() override { spinner->stop(); }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
+    void TearDown() override { delete ac; }
 };
 
 class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
@@ -241,17 +233,19 @@ protected:
     virtual bool stepEngine() const { return true; }
     virtual void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setWorldModel<alica_test::SchedWM>();
+        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -263,16 +257,12 @@ protected:
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
 
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        spinner->start();
     }
 
     virtual void TearDown() override
     {
-        spinner->stop();
         ac->terminate();
     }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
@@ -292,17 +282,20 @@ protected:
     virtual void SetUp() override
     {
 
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        manageWorldModel(ac);
+        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -311,12 +304,10 @@ protected:
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         manageWorldModel(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        spinner->start();
     }
 
     virtual void TearDown() override
     {
-        spinner->stop();
         ac->terminate();
     }
 
@@ -368,8 +359,6 @@ protected:
         spinner->stop();
         ac->terminate();
     }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
@@ -391,10 +380,12 @@ protected:
 
     void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
+        // Path to test configs set by CMake
+        std::string path = "";
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -403,12 +394,13 @@ protected:
             alica::AlicaContext* ac =
                     new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
-            cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
-            spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
             auto tf = ac->getTraceFactory();
-            ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
+            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+            attf->setWorldModel(ac->getWorldModel());
+
+            ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -416,7 +408,6 @@ protected:
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            spinners.back()->start();
             acs.push_back(ac);
             aes.push_back(ae);
         }
@@ -424,9 +415,6 @@ protected:
 
     void TearDown() override
     {
-        for (auto& spinner : spinners) {
-            spinner->stop();
-        }
         for (alica::AlicaContext* ac : acs) {
             ac->terminate();
             delete ac;
