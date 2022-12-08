@@ -1,4 +1,4 @@
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 namespace alica
 {
 std::atomic<int> CounterClass::called(0);
