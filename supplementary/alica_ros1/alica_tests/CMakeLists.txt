@@ -26,19 +26,20 @@ find_package(alica_test_utility REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
 include_directories(include)
 
-
-include_directories(include src/test/Expr/include)
-file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(alica_tests SHARED ${autogen_SOURCES})
-target_include_directories(alica_tests PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+catkin_package(
+    INCLUDE_DIRS include src/test/Expr/include
+    LIBRARIES alica_tests
+    DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility
 )
-target_link_libraries(alica_tests alica_test_utility alica_dummy_proxy)
+
+include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
+file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
+add_library(alica_tests ${autogen_SOURCES})
+target_link_libraries(alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
 target_compile_definitions(alica_tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 if(BUILD_TESTING)
-    find_package(GTest REQUIRED)
+    find_package(rostest REQUIRED)
 
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
@@ -85,55 +86,52 @@ if(BUILD_TESTING)
         src/test/test_success.cpp
     )
 
-    add_executable(${PROJECT_NAME}-tests ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test alica_tests ${YAML_CPP_LIBRARIES})
-
-    # add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
-    
+    add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
+    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} alica_tests ${YAML_CPP_LIBRARIES})
 endif()
 
-# Install
-install(TARGETS ${PROJECT_NAME}
-EXPORT ${CMAKE_PROJECT_NAME}Targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
+# # Install
+# install(TARGETS ${PROJECT_NAME}
+# EXPORT ${CMAKE_PROJECT_NAME}Targets
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+# )
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
-)
+# install(DIRECTORY include/${PROJECT_NAME}/
+#   DESTINATION include/${PROJECT_NAME}
+#   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+#   PATTERN ".svn" EXCLUDE
+# )
 
-# Export targets to make package libraries
-export(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
-)
+# # Export targets to make package libraries
+# export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+#   FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+# )
 
-install(EXPORT ${CMAKE_PROJECT_NAME}Targets
-  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
-  DESTINATION ${ConfigPackageLocation}
-)
+# install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+#   FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+#   DESTINATION ${ConfigPackageLocation}
+# )
 
 
-# Installing files to make a find_package()-able package
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  VERSION 0.9.4
-  COMPATIBILITY SameMajorVersion
-)
+# # Installing files to make a find_package()-able package
+# write_basic_package_version_file(
+#   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+#   VERSION 0.9.4
+#   COMPATIBILITY SameMajorVersion
+# )
 
-set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+# set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
-configure_package_config_file(
-  ${CMAKE_PROJECT_NAME}Config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-  INSTALL_DESTINATION ${ConfigPackageLocation}
-  PATH_VARS INCLUDE_INSTALL_DIR
-)
+# configure_package_config_file(
+#   ${CMAKE_PROJECT_NAME}Config.cmake.in
+#   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+#   INSTALL_DESTINATION ${ConfigPackageLocation}
+#   PATH_VARS INCLUDE_INSTALL_DIR
+# )
 
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
-  DESTINATION ${ConfigPackageLocation}
-)
+# install(FILES
+#   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+#   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+#   DESTINATION ${ConfigPackageLocation}
+# )
