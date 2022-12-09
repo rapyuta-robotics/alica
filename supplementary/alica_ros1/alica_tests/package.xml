@@ -18,8 +18,11 @@
   <depend>alica_test_utility</depend>
   <depend>alica_dynamic_loading</depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>cmake</buildtool_depend>
 
   <test_depend>gtest</test_depend>
   <test_depend>rostest</test_depend>
+   <export>
+    <build_type>cmake</build_type>
+  </export>
 </package>
