@@ -10,24 +10,24 @@
 #include <stdexcept>
 #include <thread>
 
-namespace alicaRosTimer
+namespace alicaTimer
 {
 
-class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRosImpl>
+class SyncStopTimerImpl : public std::enable_shared_from_this<SyncStopTimerImpl>
 {
-    using Base = std::enable_shared_from_this<SyncStopTimerRosImpl>;
+    using Base = std::enable_shared_from_this<SyncStopTimerImpl>;
 
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerRosImpl(TimerCb&& userCb, alica::AlicaTime period)
+    SyncStopTimerImpl(TimerCb&& userCb, alica::AlicaTime period)
             : _userCb(std::move(userCb))
             , _period(period.inMilliseconds())
             , _active(false)
     {
     }
 
-    ~SyncStopTimerRosImpl()
+    ~SyncStopTimerImpl()
     {
         if (_active.load(std::memory_order_acquire)) {
             stop();
@@ -65,7 +65,7 @@ public:
 
 class SyncStopTimerTest : public alica::IAlicaTimer
 {
-    using Impl = SyncStopTimerRosImpl;
+    using Impl = SyncStopTimerImpl;
 
 public:
     using TimerCb = std::function<void()>;
@@ -109,4 +109,4 @@ private:
 
 using AlicaTestTimerFactory = TimerFactory<SyncStopTimerTest>;
 
-} // namespace alicaRosTimer
+} // namespace alicaTimer
