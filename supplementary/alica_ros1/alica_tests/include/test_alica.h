@@ -10,8 +10,8 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <alica_tests/test_sched_world_model.h>
 
-#include <alica_test_timer.h>
 #include <alica_tests/TestTracing.h>
+#include <alica_timer.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
@@ -74,7 +74,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
-        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -155,7 +155,7 @@ protected:
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
-            ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+            ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
                 ac->setClock<TestClock>();
@@ -199,7 +199,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alicaTests::TestWorldModel>();
-        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
 
@@ -229,7 +229,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setWorldModel<alica_test::SchedWM>();
-        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -274,7 +274,7 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
         manageWorldModel(ac);
-        ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -328,7 +328,7 @@ protected:
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(ac->getWorldModel());
 
-            ac->setTimerFactory<alicaRosTimer::AlicaTestTimerFactory>();
+            ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);

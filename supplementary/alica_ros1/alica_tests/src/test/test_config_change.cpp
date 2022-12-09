@@ -40,8 +40,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
 {
-    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", false));
-    EXPECT_FALSE(PartialAssignment::isIdlingAllowed());
+    PartialAssignment::allowIdling(false);
 
     // Some options can be set but become available only after init
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));

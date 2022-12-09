@@ -31,10 +31,10 @@ target_compile_definitions(alica_tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DI
 
 if(BUILD_TESTING)
     find_package(GTest)
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-find_package(Threads REQUIRED)
     include(GoogleTest)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+
 
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
