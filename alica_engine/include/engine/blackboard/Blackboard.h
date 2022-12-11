@@ -53,7 +53,8 @@ public:
             // Error: missing requested WM
             return nullptr;
         }
-        return std::any_cast<T*>(it->second);
+        auto tmp=std::any_cast<std::shared_ptr<T>>(it->second);//luca to remove
+        return tmp.get();
     };
 
     void addWorldModel(std::any worldModel,const std::string& libraryName)

@@ -117,10 +117,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
-    auto* wmOne = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    impl = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
-    auto* wmTwo = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");    
+    BlackboardImpl& impl1 = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
+    auto* wmOne = impl1.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    BlackboardImpl& impl2 = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
+    auto* wmTwo = impl2.getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     wmOne->robotsXPos.push_back(0);
     wmOne->robotsXPos.push_back(2000);
@@ -143,5 +143,6 @@ TEST_F(AlicaEngineAuthorityManager, authority)
         }
     }
 }
+
 } // namespace
 } // namespace alica

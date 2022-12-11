@@ -556,7 +556,8 @@ void AlicaContext::setTraceFactory(Args&&... args)
 template <class WM, class... Args>
 void AlicaContext::addWorldModelByType(const std::string& libraryName, Args&&... args)
 {
-    std::any toAdd=std::make_unique<WM>(std::forward<Args>(args)...).get();
+    // std::unique_ptr can not be used it is not copyable so can't fit inside std::any
+    std::shared_ptr<WM> toAdd = std::make_shared<WM>(std::forward<Args>(args)...);
     addWorldModel(toAdd, libraryName);
 }
 
