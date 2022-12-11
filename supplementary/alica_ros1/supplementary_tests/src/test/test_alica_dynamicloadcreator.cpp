@@ -63,10 +63,10 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     behaviourModel = BehaviourFactory::create(node);
 
     // Create behaviour form dll
-    IAlicaWorldModel wm;
+    Blackboard wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
 
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
+    BehaviourContext ctx{wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("acmebehaviour", behaviour->getName());
@@ -97,10 +97,10 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     planModel = PlanFactory::create(configChangeListener, node);
 
     // Create behaviour form dll
-    IAlicaWorldModel wm;
+    Blackboard wm;
     auto creator = std::make_unique<alica::DynamicPlanCreator>();
 
-    PlanContext ctx{&wm, planModel->getName(), planModel, nullptr};
+    PlanContext ctx{wm, planModel->getName(), planModel, nullptr};
 
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
     ASSERT_EQ("acmeplan", plan->getName());
@@ -173,10 +173,10 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     behaviourModel = BehaviourFactory::create(node);
 
     // Create behaviour form dll
-    IAlicaWorldModel wm;
+    Blackboard wm;
     auto creator = std::make_unique<alica::DynamicBehaviourCreator>();
 
-    BehaviourContext ctx{&wm, behaviourModel->getName(), behaviourModel, nullptr};
+    BehaviourContext ctx{wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
     ASSERT_EQ("waitbehaviour", behaviour->getName());

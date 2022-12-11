@@ -434,7 +434,6 @@ private:
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
-    // std::unique_ptr<IAlicaWorldModel> _worldModel;
     const AlicaContextParams _alicaContextParams;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
