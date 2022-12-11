@@ -72,13 +72,22 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 
     if (_engine->init(std::move(creatorCtx))) {
         if (!delayStart) {
+
             _engine->start();
+        } else {
+            Logging::logWarn("AC") << "Engine not started during init.";
         }
         _initialized = true;
         Logging::logDebug("AC") << "Context correctly initialized.";
         return 0;
     }
     return -1;
+}
+
+void AlicaContext::startEngine()
+{
+    Logging::logWarn("AC") << "Engine started now.";
+    _engine->start();
 }
 
 int AlicaContext::terminate()
@@ -196,7 +205,7 @@ void AlicaContext::addWorldModel(std::any worldModel, const std::string& library
         Logging::logWarn("AC") << "Context not initialized. Can not set new worldmodeltype";
         return;
     }
-
+    std::cerr << "1****************Add WM:" << libraryName << std::endl;
     _engine->addWorldModel(worldModel, libraryName);
 }
 

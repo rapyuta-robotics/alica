@@ -208,6 +208,7 @@ public:
      * @see AlicaCreators
      */
     int init(AlicaCreators&& creatorCtx, bool delayStart = false);
+    void startEngine();
 
     /**
      * Terminate alica framework and related modules. This function must be called for safe termination before

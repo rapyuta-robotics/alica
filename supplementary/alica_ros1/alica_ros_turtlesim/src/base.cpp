@@ -35,13 +35,6 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
-
-    // create world model
-    if (_loadDynamically) {
-        ALICASetWorldModel(nh, priv_nh);
-    } else {
-        ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
-    }
 }
 
 void Base::ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
@@ -64,7 +57,7 @@ void Base::ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     setWm(ac, nh, priv_nh);
 }
 
-void Base::start()
+void Base::start(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
     if (_loadDynamically) {
         alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -72,15 +65,21 @@ void Base::start()
                 std::make_unique<alica::DynamicTransitionConditionCreator>());
 
         spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators));
+        ac->init(std::move(creators), true);
+        // create world model
+        ALICASetWorldModel(nh, priv_nh);
         ac->addSolver<alica::reasoner::CGSolver>();
+        ac->startEngine();
     } else {
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>());
         spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators));
+        ac->init(std::move(creators), true);
+        // create world model
+        ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel", nh, priv_nh);
         ac->addSolver<alica::reasoner::CGSolver>();
+        ac->startEngine();
     }
 }
 

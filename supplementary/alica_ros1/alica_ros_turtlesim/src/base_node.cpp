@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, dynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
-    base.start();
+    base.start(nh, priv_nh);
 
     // Wait for ctrl+c
     sigset_t signal_set;

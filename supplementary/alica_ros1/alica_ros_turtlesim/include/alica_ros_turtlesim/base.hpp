@@ -13,7 +13,7 @@ public:
     Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
             const std::string& path, bool dynamic);
     ~Base();
-    void start();
+    void start(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
 
 private:
     ros::AsyncSpinner spinner;

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "BlackboardBlueprint.h"
+#include "engine/logging/Logging.h"
 #include <any>
+#include <iostream>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
@@ -50,17 +52,18 @@ public:
     {
         auto it = _worldModels.find(libraryName);
         if (it == _worldModels.end()) {
-            // Error: missing requested WM
+            Logging::logError("BB") << "Missing requested WM:" << libraryName << " Size:" << _worldModels.size();
             return nullptr;
         }
-        auto tmp=std::any_cast<std::shared_ptr<T>>(it->second);//luca to remove
+        auto tmp = std::any_cast<std::shared_ptr<T>>(it->second); // luca to remove
         return tmp.get();
     };
 
-    void addWorldModel(std::any worldModel,const std::string& libraryName)
+    void addWorldModel(std::any worldModel, const std::string& libraryName)
     {
-        //todo luca check for already present
-        _worldModels.insert({libraryName,worldModel});
+        // todo luca check for already present
+        _worldModels.insert({libraryName, worldModel});
+        Logging::logDebug("BB") << "Add WM:" << libraryName << " Size:" << _worldModels.size();
     }
 };
 

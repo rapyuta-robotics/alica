@@ -35,7 +35,9 @@ void GoTo::run(void* msg)
         return;
     }
     // move turtle to goal
-    if (dynamic_cast<turtlesim::ALICATurtleWorldModel*>(getWorldModel())->turtle.move_toward_goal(_results[0], _results[1])) {
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModel().impl()); // todo luca remove cast
+    turtlesim::ALICATurtleWorldModel* wm = impl.getWorldModel<turtlesim::ALICATurtleWorldModel>("worldModel");
+    if (wm->turtle.move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
     /*PROTECTED REGION END*/
