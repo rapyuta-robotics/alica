@@ -351,7 +351,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             manageWorldModel(ac);
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
 
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();

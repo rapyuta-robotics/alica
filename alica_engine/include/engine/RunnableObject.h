@@ -94,7 +94,7 @@ protected:
     void sendLogMessage(int level, const std::string& message) const;
     RunningPlan* getPlanContext() const { return _runningplanContext; }
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
-    Blackboard& getWorldModel() { return _worldModels; };
+    Blackboard& getWorldModels() { return _worldModels; };
 
     void start(RunningPlan* rp);
     void stop();

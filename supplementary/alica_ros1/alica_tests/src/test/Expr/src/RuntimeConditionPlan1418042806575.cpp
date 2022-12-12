@@ -37,7 +37,7 @@ RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
 bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
 {
     /*PROTECTED REGION ID(1418042967134) ENABLED START*/
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
     const alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     return worldModel->isRuntimeCondition1418042967134();
     /*PROTECTED REGION END*/

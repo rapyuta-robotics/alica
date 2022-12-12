@@ -39,8 +39,7 @@ void Go2RandomPosition::run(void* msg)
     std::uniform_real_distribution<> dist(0, 10.0);
 
     // teleport turtle to random place
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModel().impl()); // todo luca remove cast
-    turtlesim::ALICATurtleWorldModel* wm = impl.getWorldModel<turtlesim::ALICATurtleWorldModel>("worldModel");
+    turtlesim::ALICATurtleWorldModel* wm = getWorldModels().impl().getWorldModel<turtlesim::ALICATurtleWorldModel>("worldModel");
 
     wm->turtle.teleport(dist(engine), dist(engine));
     wm->setInit(false);

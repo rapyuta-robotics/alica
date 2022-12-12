@@ -51,8 +51,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     ASSERT_NE(dbrRun, nullptr);
     dbrRun->robotId = ac->getLocalAgentId();
     ae->start();
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
-    auto* wm = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* wm = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     for (int i = 0; i < 21; i++) {
         ac->stepEngine();

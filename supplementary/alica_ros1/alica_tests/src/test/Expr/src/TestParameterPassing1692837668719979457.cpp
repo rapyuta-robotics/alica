@@ -43,7 +43,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
 void TestParameterPassing1692837668719979457::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    auto* wm = getWorldModel().impl().getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    auto* wm = getWorldModels().impl().getWorldModel<alicaTests::TestWorldModel>("worldModel");
     bb.set("targetChildStatus", PlanStatus::Success);
     bb.set("planKey", 1);
     wm->passedParameters["planKey"] = bb.get<int>("planKey");

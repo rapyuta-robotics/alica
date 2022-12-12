@@ -25,7 +25,7 @@ DistXContourTest::~DistXContourTest() {}
 
 void DistXContourTest::cacheEvalData(const Blackboard* worldModels)
 {
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
     auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     xAlloBall = worldModel->x;
 }

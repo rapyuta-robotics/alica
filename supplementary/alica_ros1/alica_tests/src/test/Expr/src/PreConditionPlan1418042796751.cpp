@@ -39,7 +39,7 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const 
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl()); // todo luca remove cast
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
     alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
     return worldModel->isPreCondition1418042929966();
     /*PROTECTED REGION END*/

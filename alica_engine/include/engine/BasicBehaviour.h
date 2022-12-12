@@ -47,7 +47,7 @@ public:
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTeamManager;
-    using RunnableObject::getWorldModel;
+    using RunnableObject::getWorldModels;
     using RunnableObject::setAlicaCommunication;
     using RunnableObject::setAlicaTimerFactory;
     using RunnableObject::setAlicaTraceFactory;

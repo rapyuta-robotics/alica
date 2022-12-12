@@ -117,16 +117,14 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    BlackboardImpl& impl1 = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
-    auto* wmOne = impl1.getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    BlackboardImpl& impl2 = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
-    auto* wmTwo = impl2.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
-    wmOne->robotsXPos.push_back(0);
-    wmOne->robotsXPos.push_back(2000);
+    twm1->robotsXPos.push_back(0);
+    twm1->robotsXPos.push_back(2000);
 
-    wmTwo->robotsXPos.push_back(2000);
-    wmTwo->robotsXPos.push_back(0);
+    twm2->robotsXPos.push_back(2000);
+    twm2->robotsXPos.push_back(0);
 
     for (int i = 0; i < 21; i++) {
         acs[0]->stepEngine();

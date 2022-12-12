@@ -22,8 +22,7 @@ protected:
 
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
     ae->start();
 
     for (int i = 0; i < 10; i++) {

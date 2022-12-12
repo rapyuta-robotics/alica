@@ -52,7 +52,7 @@ protected:
         ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
     }
 };
 
@@ -68,7 +68,7 @@ protected:
         ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels())); // todo luca cast remove
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
     }
     const char* getHostName(int agentNumber) const override
     {
@@ -85,8 +85,7 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(ac->getWorldModels().impl()); // todo luca remove cast
-    auto* twm1 = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
@@ -97,10 +96,8 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    BlackboardImpl& impl1 = const_cast<BlackboardImpl&>(acs[0]->getWorldModels().impl()); // todo luca remove cast
-    auto* twm1 = impl1.getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    BlackboardImpl& impl2 = const_cast<BlackboardImpl&>(acs[1]->getWorldModels().impl()); // todo luca remove cast
-    auto* twm2 = impl2.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

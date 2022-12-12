@@ -267,6 +267,13 @@ public:
      * @return A reference to worldModels being used by context. Worldmodels are stored in Blackboard
      */
     const Blackboard& getWorldModels() const;
+    template <class T>
+    T* getWorldModel(const std::string& libraryName);
+
+    /**
+     * Add a new world model to AlicaEngine.
+     *
+     */
     void addWorldModel(std::any worldModel, const std::string& libraryName);
     template <class WM, class... Args>
     void addWorldModelByType(const std::string& libraryName, Args&&... args);
@@ -559,6 +566,14 @@ void AlicaContext::addWorldModelByType(const std::string& libraryName, Args&&...
     // std::unique_ptr can not be used it is not copyable so can't fit inside std::any
     std::shared_ptr<WM> toAdd = std::make_shared<WM>(std::forward<Args>(args)...);
     addWorldModel(toAdd, libraryName);
+}
+
+template <class T>
+T* AlicaContext::getWorldModel(const std::string& libraryName)
+{
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModels().impl());
+    T* wm = impl.getWorldModel<T>(libraryName);
+    return wm;
 }
 
 template <class LoggerType, class... Args>

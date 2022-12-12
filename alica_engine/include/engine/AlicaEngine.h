@@ -98,6 +98,8 @@ public:
     // can be null if no traceFactory is set
     const IAlicaTraceFactory* getTraceFactory() const;
     const Blackboard& getWorldModels() const;
+    template <class T>
+    T* getWorldModel(const std::string& libraryName);
     void addWorldModel(std::any worldModel, const std::string& libraryName);
     std::string getLocalAgentName() const;
     template <class SolverType>
@@ -172,6 +174,14 @@ template <class SolverType>
 bool AlicaEngine::existSolver() const
 {
     return _ctx.existSolver<SolverType>();
+}
+
+template <class T>
+T* AlicaEngine::getWorldModel(const std::string& libraryName)
+{
+    BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModels().impl());
+    T* wm = impl.getWorldModel<T>(libraryName);
+    return wm;
 }
 
 } // namespace alica
