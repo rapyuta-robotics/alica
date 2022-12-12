@@ -10,6 +10,13 @@ namespace alica
 namespace
 {
 
+// used for accessing bb values with an unknown type
+class UnknownType
+{
+public:
+    UnknownType() = default;
+};
+
 class TestBlackBoard : public AlicaTestFixture
 {
 protected:
@@ -409,6 +416,78 @@ TEST_F(TestBlackBoard, testStringToString)
     targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
 
     EXPECT_EQ(targetLocked.get<std::string>("valueTarget"), "123");
+}
+
+TEST_F(TestBlackBoard, testAccessingWithWrongType)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<int64_t>("value", 1);
+
+    bool exceptionThrown = false;
+    try {
+        bb_locked.get<double>("value"); // try to access with a type we can cast to
+    } catch (const BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: double");
+    }
+    EXPECT_TRUE(exceptionThrown);
+
+    exceptionThrown = false;
+    try {
+        bb_locked.get<std::string>("value"); // try to access with a type we cant cast to
+    } catch (const BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: std::string");
+    }
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testAccessingWithNonExistingKey)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+
+    bool exceptionThrown = false;
+    try {
+        bb_locked.get<double>("value");
+    } catch (const BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: get() failure, key: value is not yet set, so cannot get it");
+    }
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testAccessUnknownTypeWithKnownWrongType)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<PlanStatus>("value", PlanStatus::Success);
+
+    bool exceptionThrown = false;
+    try {
+        bb_locked.get<double>("value");
+    } catch (const BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: std::any, getType: double");
+    }
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testAccessUnknownTypeWithUnknownWrongType)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<PlanStatus>("value", PlanStatus::Success);
+
+    bool exceptionThrown = false;
+    try {
+        bb_locked.get<UnknownType>("value");
+    } catch (const BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: unknown, getType: unknown");
+    }
+    EXPECT_TRUE(exceptionThrown);
 }
 
 } // namespace
