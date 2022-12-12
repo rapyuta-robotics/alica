@@ -100,7 +100,6 @@ TEST_F(TestBlackBoard, testWithoutPlan)
 TEST_F(TestBlackBoard, testMapping)
 {
     Blackboard srcBb, targetBb;
-
     auto srcLocked = LockedBlackboardRW(srcBb);
     auto targetLocked = LockedBlackboardRW(targetBb);
 
@@ -115,6 +114,301 @@ TEST_F(TestBlackBoard, testMapping)
 
     EXPECT_EQ(targetLocked.get<double>("valueDouble"), 13.0);
     EXPECT_EQ(targetLocked.get<int64_t>("valueInt"), 1);
+}
+
+TEST_F(TestBlackBoard, testBoolToBool)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<bool>("valueSrc", true);
+    targetLocked.set<bool>("valueTarget", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
+
+    srcLocked.set<bool>("valueSrc", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), false);
+}
+
+TEST_F(TestBlackBoard, testBoolToInt64)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<bool>("valueSrc", true);
+    targetLocked.set<int64_t>("valueTarget", -1);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 1);
+
+    srcLocked.set<bool>("valueSrc", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 0);
+}
+
+TEST_F(TestBlackBoard, testBoolToDouble)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<bool>("valueSrc", true);
+    targetLocked.set<double>("valueTarget", -1.0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueTarget"), 1.0);
+
+    srcLocked.set<bool>("valueSrc", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueTarget"), 0.0);
+}
+
+TEST_F(TestBlackBoard, testBoolToString)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<bool>("valueSrc", true);
+    targetLocked.set<std::string>("valueTarget", "");
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testInt64ToBool)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<int64_t>("valueSrc", 1);
+    targetLocked.set<bool>("valueTarget", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
+
+    srcLocked.set<int64_t>("valueSrc", 0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), false);
+
+    srcLocked.set<int64_t>("valueSrc", -2);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
+}
+
+TEST_F(TestBlackBoard, testInt64ToInt64)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<int64_t>("valueSrc", 1);
+    targetLocked.set<int64_t>("valueTarget", 0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 1);
+}
+
+TEST_F(TestBlackBoard, testInt64ToDouble)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<int64_t>("valueSrc", 1);
+    targetLocked.set<double>("valueTarget", 0.0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueTarget"), 1.0);
+
+    srcLocked.set<int64_t>("valueSrc", -2);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueTarget"), -2.0);
+}
+
+TEST_F(TestBlackBoard, testInt64ToString)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<int64_t>("valueSrc", 1);
+    targetLocked.set<std::string>("valueTarget", "");
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testDoubleToBool)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<double>("valueSrc", 1.0);
+    targetLocked.set<bool>("valueTarget", false);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
+
+    srcLocked.set<double>("valueSrc", 0.0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), false);
+
+    srcLocked.set<double>("valueSrc", -0.001);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
+}
+
+TEST_F(TestBlackBoard, testDoubleToInt64)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<double>("valueSrc", 1.7);
+    targetLocked.set<int64_t>("valueTarget", 0);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 1);
+
+    srcLocked.set<double>("valueSrc", -5.4);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), -5);
+}
+
+TEST_F(TestBlackBoard, testDoubleToDouble)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<double>("valueSrc", 1.3);
+    targetLocked.set<double>("valueTarget", 0.5);
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<double>("valueTarget"), 1.3);
+}
+
+TEST_F(TestBlackBoard, testDoubleToString)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<double>("valueSrc", 1.0);
+    targetLocked.set<std::string>("valueTarget", "");
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testStringToBool)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<std::string>("valueSrc", "123");
+    targetLocked.set<bool>("valueTarget", false);
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testStringToInt64)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<std::string>("valueSrc", "123");
+    targetLocked.set<int64_t>("valueTarget", 0);
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testStringToDouble)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<std::string>("valueSrc", "123");
+    targetLocked.set<double>("valueTarget", 0);
+
+    bool exceptionThrown = false;
+    try {
+        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+    } catch (const alica::BlackboardException& e) {
+        exceptionThrown = true;
+        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+    }
+
+    EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackBoard, testStringToString)
+{
+    Blackboard srcBb, targetBb;
+    auto srcLocked = LockedBlackboardRW(srcBb);
+    auto targetLocked = LockedBlackboardRW(targetBb);
+
+    srcLocked.set<std::string>("valueSrc", "123");
+    targetLocked.set<std::string>("valueTarget", "abc");
+    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+
+    EXPECT_EQ(targetLocked.get<std::string>("valueTarget"), "123");
 }
 
 } // namespace
