@@ -15,7 +15,7 @@ namespace turtlesim
                 - Subscribe: t/init
 */
 
-constexpr char thisLibraryWorldModelName[]="worldModel"; 
+constexpr char thisLibraryWorldModelName[] = "worldModel";
 
 class ALICATurtleWorldModel : public alica::IAlicaWorldModel
 {
