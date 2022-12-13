@@ -150,7 +150,7 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
     EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
-    EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest"); // added by Luca
+    EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest");
 }
 
 } // namespace
