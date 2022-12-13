@@ -11,6 +11,7 @@ class TransitionConditionRepositoryFactory : public Factory
 {
 public:
     static TransitionConditionRepository* create(const YAML::Node& node);
+
 private:
     TransitionConditionRepositoryFactory() = delete;
 };
