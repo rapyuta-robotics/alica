@@ -39,6 +39,7 @@ public:
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
+    // Deprecated, only used when using legacy transition conditions.
     const int64_t getPreConditionId() const { return _preConditionId; }
 
 private:
@@ -68,7 +69,7 @@ private:
     const Synchronisation* _synchronisation;
 
     /**
-     * Only used when using legacy transition conditions.
+     * Deprecated, only used when using legacy transition conditions.
      */
     int64_t _preConditionId;
 
