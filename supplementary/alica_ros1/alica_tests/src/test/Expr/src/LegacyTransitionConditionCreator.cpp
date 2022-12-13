@@ -74,7 +74,7 @@ LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(
         TransitionConditionContext& context)
 {
-    int64_t conditionId = context.conditionConfId;
+    int64_t conditionId = context.preConditionId;
     switch (conditionId) {
     case 1588069612661: {
         PreCondition1588069612661 preCondition;
@@ -316,14 +316,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
             return preCondition.evaluate(temp, wm);
         };
     }
-    case 488794245455049811: {
-        PreCondition488794245455049811 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, wm);
-        };
-    }
     case 1529456610697: {
         PreCondition1529456610697 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
@@ -334,6 +326,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
     }
     case 1529456611916: {
         PreCondition1529456611916 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, wm);
+        };
+    }
+    case 488794245455049811: {
+        PreCondition488794245455049811 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
