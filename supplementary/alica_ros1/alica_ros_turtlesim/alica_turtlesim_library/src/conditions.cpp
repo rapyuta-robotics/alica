@@ -13,7 +13,7 @@ bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Bl
     std::cerr << "Debug:"
               << "conditionMove2Init" << std::endl;
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    turtlesim::ALICATurtleWorldModel* wm = impl.getWorldModel<turtlesim::ALICATurtleWorldModel>("worldModel");
+    turtlesim::ALICATurtleWorldModel* wm = impl.getWorldModel<turtlesim::ALICATurtleWorldModel>(turtlesim::thisLibraryWorldModelName);
     return wm->getInit();
 }
 bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels)

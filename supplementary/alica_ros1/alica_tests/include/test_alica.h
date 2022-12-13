@@ -206,7 +206,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        // ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();

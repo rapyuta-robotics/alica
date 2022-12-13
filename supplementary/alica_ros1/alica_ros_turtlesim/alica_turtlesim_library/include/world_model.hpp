@@ -14,6 +14,9 @@ namespace turtlesim
         - ROS:
                 - Subscribe: t/init
 */
+
+constexpr char thisLibraryWorldModelName[]="worldModel"; 
+
 class ALICATurtleWorldModel : public alica::IAlicaWorldModel
 {
 public:
@@ -32,7 +35,7 @@ private:
 
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel", nh, priv_nh);
+    ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>(turtlesim::thisLibraryWorldModelName, nh, priv_nh);
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel)

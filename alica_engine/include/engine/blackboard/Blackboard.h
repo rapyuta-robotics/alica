@@ -58,17 +58,6 @@ public:
         return std::any_cast<std::shared_ptr<T>>(it->second).get();
     };
 
-    template <class T>
-    const T* getWorldModelTest(const std::string& libraryName)
-    {
-        auto it = _worldModels.find(libraryName);
-        if (it == _worldModels.end()) {
-            Logging::logError("BB") << "Missing requested WM:" << libraryName << " Size:" << _worldModels.size();
-            return nullptr;
-        }
-        return std::any_cast<std::shared_ptr<T>>(it->second).get();
-    };
-
     void addWorldModel(std::any worldModel, const std::string& libraryName)
     {
         _worldModels.insert({libraryName, worldModel});
