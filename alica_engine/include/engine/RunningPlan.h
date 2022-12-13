@@ -105,16 +105,18 @@ public:
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const RuntimeBehaviourFactory& runTimeBehaviourFactory,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b,
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
             const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+            const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 

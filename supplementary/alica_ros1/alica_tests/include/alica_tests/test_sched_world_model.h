@@ -6,7 +6,7 @@
 namespace alica_test
 {
 
-class SchedWM 
+class SchedWM
 {
 public:
     SchedWM() { reset(); }

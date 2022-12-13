@@ -37,7 +37,7 @@ void BehBAA::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
     // Add additional options here
-    _wm=getWorldModels().impl().getWorldModel<alica_test::SchedWM>("worldModel");
+    _wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>("worldModel");
     _wm->execOrder += "BehBAA::Init\n";
     runCount = 0;
 

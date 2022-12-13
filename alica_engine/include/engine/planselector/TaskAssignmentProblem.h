@@ -36,24 +36,12 @@ public:
     Assignment getNextBestAssignment(const Assignment* oldAss) override;
 
 #ifdef EXPANSIONEVAL
-    int getExpansionCount() const
-    {
-        return _expansionCount;
-    }
-    void setExpansionCount(int expansionCount)
-    {
-        _expansionCount = expansionCount;
-    }
+    int getExpansionCount() const { return _expansionCount; }
+    void setExpansionCount(int expansionCount) { _expansionCount = expansionCount; }
 #endif
 
-    int getAgentCount() const
-    {
-        return _agents.size();
-    }
-    const AgentGrp& getAgents() const
-    {
-        return _agents;
-    }
+    int getAgentCount() const { return _agents.size(); }
+    const AgentGrp& getAgents() const { return _agents; }
 
     const SuccessCollection* getSuccessData(const Plan* p) const
     {

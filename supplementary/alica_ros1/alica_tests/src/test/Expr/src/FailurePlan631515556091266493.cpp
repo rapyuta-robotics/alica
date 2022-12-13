@@ -30,8 +30,8 @@ FailurePlan631515556091266493::~FailurePlan631515556091266493()
 }
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 std::shared_ptr<UtilityFunction> UtilityFunction631515556091266493::getUtilityFunction(Plan* plan)
 {
@@ -46,7 +46,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction631515556091266493::getUtilityFu
 void FailurePlan631515556091266493::onInit()
 {
 
-    auto* worldModel=getWorldModels().impl().getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    auto* worldModel = getWorldModels().impl().getWorldModel<alicaTests::TestWorldModel>("worldModel");
     worldModel->failurePlanInitCalled();
 }
 /*PROTECTED REGION END*/

@@ -12,8 +12,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(
-        TransitionConditionContext& context)
+std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(TransitionConditionContext& context)
 {
     int64_t conditionId = context.conditionConfId;
     switch (conditionId) {

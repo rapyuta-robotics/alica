@@ -223,7 +223,7 @@ TEST_F(AlicaSchedulingPlan, execBehaviourCheck)
     ae->start();
 
     alica_test::SchedWM* wm = ac->getWorldModel<alica_test::SchedWM>("worldModel");
-    
+
     wm->execBehaviourTest = true;
     std::string orderString = "TestBehaviour::Init\nTestBehaviour::Run\n";
     STEP_UNTIL(wm->execOrder == orderString);

@@ -63,7 +63,7 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     acs[1]->stepEngine();
     getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
     getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
-    
+
     alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
     alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
     twm1->setTransitionCondition1413201227586(true);

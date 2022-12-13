@@ -8,7 +8,7 @@
 namespace alicaTests
 {
 
-class TestWorldModel 
+class TestWorldModel
 {
 public:
     TestWorldModel();

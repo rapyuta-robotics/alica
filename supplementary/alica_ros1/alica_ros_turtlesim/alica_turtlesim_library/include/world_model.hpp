@@ -32,7 +32,7 @@ private:
 
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel",nh, priv_nh);
+    ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel", nh, priv_nh);
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel)
