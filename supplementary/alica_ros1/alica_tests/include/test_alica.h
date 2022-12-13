@@ -11,11 +11,11 @@
 #include <alica_tests/test_sched_world_model.h>
 
 #include <alica_tests/TestTracing.h>
-#include <alica_timer.h>
 #include <communication/AlicaDummyCommunication.h>
 #include <engine/AlicaClock.h>
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
+#include <engine/AlicaTimer.h>
 #include <engine/logging/AlicaDefaultLogger.h>
 
 #include <gtest/gtest.h>
