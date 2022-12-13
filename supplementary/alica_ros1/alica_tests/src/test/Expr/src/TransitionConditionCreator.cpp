@@ -87,6 +87,8 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         return std::bind(conditionSwitchIsNotSet3016035752801585170, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3517323109117319233:
         return std::bind(conditionWait2Suc3517323109117319233, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3592699233854318376:
+        return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3604374027783683696:
         return std::bind(conditionIsAnyChildStatusSuccess3604374027783683696, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3684268241099966909:
@@ -107,8 +109,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         return std::bind(conditionOther2NewSuccessStateOne4368560569514553226, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4547372457936774346:
         return std::bind(conditionTestTracingMasterCondition4547372457936774346, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    case 3592699233854318376:
-        return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     default:
         std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
         throw new std::exception();

@@ -105,6 +105,7 @@ public:
 
     bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
     bool resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
+    bool resetAllTransitions(const std::string& runningPlanName);
 
 private:
     RunningPlan* getRunningPlan(const std::string& name);

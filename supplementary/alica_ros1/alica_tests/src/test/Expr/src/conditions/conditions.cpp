@@ -296,6 +296,13 @@ bool conditionWait2Suc3517323109117319233(const Blackboard* input, const Running
     return worldmodel->isTransitionCondition1067314038887345208();
     /*PROTECTED REGION END*/
 }
+bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition3592699233854318376) ENABLED START*/
+    LockedBlackboardRO bb(*input);
+    return bb.get<bool>("result");
+    /*PROTECTED REGION END*/
+}
 bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition3604374027783683696) ENABLED START*/
@@ -362,13 +369,6 @@ bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* in
     /*PROTECTED REGION ID(condition4547372457936774346) ENABLED START*/
     auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
     return worldModel->isPreCondition1840401110297459509();
-    /*PROTECTED REGION END*/
-}
-bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(condition3592699233854318376) ENABLED START*/
-    LockedBlackboardRO bb(*input);
-    return bb.get<bool>("result");
     /*PROTECTED REGION END*/
 }
 } /* namespace alica */

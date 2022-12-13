@@ -21,7 +21,7 @@ find_package(alica_solver_interface REQUIRED)
 # Build
 include_directories(include)
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
 	src/TestBehaviourCreator.cpp
 	src/TestContext.cpp
 	src/IdleBehaviour.cpp

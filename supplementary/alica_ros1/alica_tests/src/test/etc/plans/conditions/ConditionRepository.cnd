@@ -310,6 +310,23 @@
       "relativeDirectory": "conditions"
     },
     {
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "defaultValue": null,
+          "id": 924760096646037639,
+          "key": "result",
+          "type": "std::any"
+        }
+      ],
+      "comment": "",
+      "conditionRepository": 0,
+      "id": 3592699233854318376,
+      "name": "TriggerFromInputCond",
+      "relativeDirectory": "conditions"
+    },
+    {
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
@@ -396,23 +413,6 @@
       "conditionRepository": 0,
       "id": 4547372457936774346,
       "name": "TestTracingMasterCondition",
-      "relativeDirectory": "conditions"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "defaultValue": null,
-          "id": 924760096646037639,
-          "key": "result",
-          "type": "std::any"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 3592699233854318376,
-      "name": "TriggerFromInputCond",
       "relativeDirectory": "conditions"
     }
   ],

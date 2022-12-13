@@ -9,6 +9,7 @@
 #include <engine/model/ConfAbstractPlanWrapper.h>
 #include <engine/model/Configuration.h>
 #include <engine/model/TransitionCondition.h>
+#include <engine/model/Transition.h>
 
 namespace alica::test
 {
@@ -89,6 +90,24 @@ bool TestContext::setTransitionCond(const std::string& runningPlanName, const st
 bool TestContext::resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState)
 {
     return setTransitionCond(runningPlanName, inState, outState, false);
+}
+
+bool TestContext::resetAllTransitions(const std::string& runningPlanName)
+{
+    const auto* rp = getRunningPlan(runningPlanName);
+    if (!rp) {
+        return false;
+    }
+    const auto* plan = rp->getActivePlanAsPlan();
+    if (!plan) {
+        return false;
+    }
+    for (const auto* transition : plan->getTransitions()) {
+        const auto& inState = transition->getInState()->getName();
+        const auto& outState = transition->getOutState()->getName();
+        resetTransitionCond(runningPlanName, inState, outState);
+    }
+    return true;
 }
 
 RunningPlan* TestContext::getRunningPlan(const std::string& name)

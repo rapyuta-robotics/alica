@@ -1,6 +1,7 @@
 #include <alica_tests/TestMasterPlan2521443078354411465.h>
 /*PROTECTED REGION ID(eph2521443078354411465) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -41,5 +42,11 @@ std::shared_ptr<UtilityFunction> UtilityFunction2521443078354411465::getUtilityF
 
 /*PROTECTED REGION ID(methods2521443078354411465) ENABLED START*/
 // Add additional options here
+void TestMasterPlan2521443078354411465::onInit()
+{
+    auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
+    auto* tc = wm->getTestContext();
+    tc->resetAllTransitions(getName());
+}
 /*PROTECTED REGION END*/
 } // namespace alica
