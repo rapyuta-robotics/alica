@@ -17,7 +17,13 @@ public:
     UnknownType() = default;
 };
 
-class TestBlackBoard : public AlicaTestFixture
+class NonConstructable
+{
+public:
+    NonConstructable() = delete;
+}
+
+class TestBlackboard : public AlicaTestFixture
 {
 protected:
     const char* getRoleSetName() const override { return "Roleset"; }
@@ -25,7 +31,7 @@ protected:
     bool stepEngine() const override { return false; }
 };
 
-TEST_F(TestBlackBoard, testJsonTwoBehaviorKeyMapping)
+TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
 {
     // Two parent values mapped to same behavior input value to differentiate call contexts
     ae->start();
@@ -35,7 +41,7 @@ TEST_F(TestBlackBoard, testJsonTwoBehaviorKeyMapping)
     EXPECT_EQ(wm->passedParameters["behaviorSecondInputKey"], 7); // Value set in second behavior call
 }
 
-TEST_F(TestBlackBoard, testJsonPlanKeyMapping)
+TEST_F(TestBlackboard, testJsonPlanKeyMapping)
 {
     // Pass values of mapped keys form a plan into another plan
     ae->start();
@@ -44,7 +50,7 @@ TEST_F(TestBlackBoard, testJsonPlanKeyMapping)
     EXPECT_EQ(wm->passedParameters["planInputFromMaster"], 8);
 }
 
-TEST_F(TestBlackBoard, testJsonBehaviorKeyMapping)
+TEST_F(TestBlackboard, testJsonBehaviorKeyMapping)
 {
     // Pass values of mapped keys form a plan into a behavior and out of a bahavior into a plan
     ae->start();
@@ -54,7 +60,7 @@ TEST_F(TestBlackBoard, testJsonBehaviorKeyMapping)
     EXPECT_EQ(wm->passedParameters["planInputKey"], 6);     // Value set in behavior -> read in plan termination
 }
 
-TEST_F(TestBlackBoard, testJsonBlackboardPlan)
+TEST_F(TestBlackboard, testJsonBlackboardPlan)
 {
     // Check if a key defined in json of a plan is accessible
     ae->start();
@@ -63,7 +69,7 @@ TEST_F(TestBlackBoard, testJsonBlackboardPlan)
     EXPECT_EQ(wm->passedParameters["planKey"], 1);
 }
 
-TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
+TEST_F(TestBlackboard, testJsonBlackboardBehavior)
 {
     // Check if a key defined in json of a behavior is accessible
     ae->start();
@@ -72,7 +78,7 @@ TEST_F(TestBlackBoard, testJsonBlackboardBehavior)
     EXPECT_EQ(wm->passedParameters["behaviorKey"], 2);
 }
 
-TEST_F(TestBlackBoard, testNotInheritBlackboardFlag)
+TEST_F(TestBlackboard, testNotInheritBlackboardFlag)
 {
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
@@ -82,7 +88,7 @@ TEST_F(TestBlackBoard, testNotInheritBlackboardFlag)
     EXPECT_FALSE(alica::test::Util::getBasicPlan(ae, 1692837668719979457, 0)->getInheritBlackboard());
 }
 
-TEST_F(TestBlackBoard, testWithoutPlan)
+TEST_F(TestBlackboard, testWithoutPlan)
 {
     Blackboard bb;
     LockedBlackboardRW bbrw = LockedBlackboardRW(bb);
@@ -104,7 +110,7 @@ TEST_F(TestBlackBoard, testWithoutPlan)
     EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
 }
 
-TEST_F(TestBlackBoard, testMapping)
+TEST_F(TestBlackboard, testMapping)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -123,7 +129,7 @@ TEST_F(TestBlackBoard, testMapping)
     EXPECT_EQ(targetLocked.get<int64_t>("valueInt"), 1);
 }
 
-TEST_F(TestBlackBoard, testBoolToBool)
+TEST_F(TestBlackboard, testBoolToBool)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -141,7 +147,7 @@ TEST_F(TestBlackBoard, testBoolToBool)
     EXPECT_EQ(targetLocked.get<bool>("valueTarget"), false);
 }
 
-TEST_F(TestBlackBoard, testBoolToInt64)
+TEST_F(TestBlackboard, testBoolToInt64)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -159,7 +165,7 @@ TEST_F(TestBlackBoard, testBoolToInt64)
     EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 0);
 }
 
-TEST_F(TestBlackBoard, testBoolToDouble)
+TEST_F(TestBlackboard, testBoolToDouble)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -177,7 +183,7 @@ TEST_F(TestBlackBoard, testBoolToDouble)
     EXPECT_EQ(targetLocked.get<double>("valueTarget"), 0.0);
 }
 
-TEST_F(TestBlackBoard, testBoolToString)
+TEST_F(TestBlackboard, testBoolToString)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -197,7 +203,7 @@ TEST_F(TestBlackBoard, testBoolToString)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testInt64ToBool)
+TEST_F(TestBlackboard, testInt64ToBool)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -220,7 +226,7 @@ TEST_F(TestBlackBoard, testInt64ToBool)
     EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
 }
 
-TEST_F(TestBlackBoard, testInt64ToInt64)
+TEST_F(TestBlackboard, testInt64ToInt64)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -233,7 +239,7 @@ TEST_F(TestBlackBoard, testInt64ToInt64)
     EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), 1);
 }
 
-TEST_F(TestBlackBoard, testInt64ToDouble)
+TEST_F(TestBlackboard, testInt64ToDouble)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -251,7 +257,7 @@ TEST_F(TestBlackBoard, testInt64ToDouble)
     EXPECT_EQ(targetLocked.get<double>("valueTarget"), -2.0);
 }
 
-TEST_F(TestBlackBoard, testInt64ToString)
+TEST_F(TestBlackboard, testInt64ToString)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -271,7 +277,7 @@ TEST_F(TestBlackBoard, testInt64ToString)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testDoubleToBool)
+TEST_F(TestBlackboard, testDoubleToBool)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -294,7 +300,7 @@ TEST_F(TestBlackBoard, testDoubleToBool)
     EXPECT_EQ(targetLocked.get<bool>("valueTarget"), true);
 }
 
-TEST_F(TestBlackBoard, testDoubleToInt64)
+TEST_F(TestBlackboard, testDoubleToInt64)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -312,7 +318,7 @@ TEST_F(TestBlackBoard, testDoubleToInt64)
     EXPECT_EQ(targetLocked.get<int64_t>("valueTarget"), -5);
 }
 
-TEST_F(TestBlackBoard, testDoubleToDouble)
+TEST_F(TestBlackboard, testDoubleToDouble)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -325,7 +331,7 @@ TEST_F(TestBlackBoard, testDoubleToDouble)
     EXPECT_EQ(targetLocked.get<double>("valueTarget"), 1.3);
 }
 
-TEST_F(TestBlackBoard, testDoubleToString)
+TEST_F(TestBlackboard, testDoubleToString)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -345,7 +351,7 @@ TEST_F(TestBlackBoard, testDoubleToString)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testStringToBool)
+TEST_F(TestBlackboard, testStringToBool)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -365,7 +371,7 @@ TEST_F(TestBlackBoard, testStringToBool)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testStringToInt64)
+TEST_F(TestBlackboard, testStringToInt64)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -385,7 +391,7 @@ TEST_F(TestBlackBoard, testStringToInt64)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testStringToDouble)
+TEST_F(TestBlackboard, testStringToDouble)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -405,7 +411,7 @@ TEST_F(TestBlackBoard, testStringToDouble)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testStringToString)
+TEST_F(TestBlackboard, testStringToString)
 {
     Blackboard srcBb, targetBb;
     auto srcLocked = LockedBlackboardRW(srcBb);
@@ -418,7 +424,7 @@ TEST_F(TestBlackBoard, testStringToString)
     EXPECT_EQ(targetLocked.get<std::string>("valueTarget"), "123");
 }
 
-TEST_F(TestBlackBoard, testAccessingWithWrongType)
+TEST_F(TestBlackboard, testAccessingWithWrongType)
 {
     Blackboard bb;
     auto bb_locked = LockedBlackboardRW(bb);
@@ -443,7 +449,7 @@ TEST_F(TestBlackBoard, testAccessingWithWrongType)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testAccessingWithNonExistingKey)
+TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
 {
     Blackboard bb;
     auto bb_locked = LockedBlackboardRW(bb);
@@ -458,7 +464,7 @@ TEST_F(TestBlackBoard, testAccessingWithNonExistingKey)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testAccessUnknownTypeWithKnownWrongType)
+TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
 {
     Blackboard bb;
     auto bb_locked = LockedBlackboardRW(bb);
@@ -474,7 +480,7 @@ TEST_F(TestBlackBoard, testAccessUnknownTypeWithKnownWrongType)
     EXPECT_TRUE(exceptionThrown);
 }
 
-TEST_F(TestBlackBoard, testAccessUnknownTypeWithUnknownWrongType)
+TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
 {
     Blackboard bb;
     auto bb_locked = LockedBlackboardRW(bb);
@@ -488,6 +494,69 @@ TEST_F(TestBlackBoard, testAccessUnknownTypeWithUnknownWrongType)
         EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: unknown, getType: unknown");
     }
     EXPECT_TRUE(exceptionThrown);
+}
+
+TEST_F(TestBlackboard, testSetNotMatchingKnownType)
+{
+
+}
+
+TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
+{
+
+}
+
+TEST_F(TestBlackboard, testSetWithDifferentTypeNotInPML)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<int64_t>("value", 1);
+    EXPECT_EQ(bb_locked.get<int64_t>("value"), 1);
+
+    bb_locked.set<double>("value", 2.0);
+    EXPECT_EQ(bb_locked.get<double>("value"), 1.0);
+}
+
+TEST_F(TestBlackboard, testSetAnyWithDifferentType)
+{
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<alica::PlanStatus>("value", alica::PlanStatus::Success);
+    EXPECT_EQ(bb_locked.get<alica::PlanStatus>("value"), alica::PlanStatus::Success);
+
+    // TODO: find different unknown type
+    bb_locked.set<int64_t>("value", 2.0);
+    EXPECT_EQ(bb_locked.get<double>("value"), 1.0);
+}
+
+TEST_F(TestBlackboard, testInitWithUnsupportedType)
+{
+
+}
+
+TEST_F(TestBlackboard, testInitWithDefaultValueForAny)
+{
+
+}
+
+TEST_F(TestBlackboard, testInitWithWrongDefaultValueType)
+{
+
+}
+
+TEST_F(TestBlackboard, testInitWithNonConstructable)
+{
+
+}
+
+TEST_F(TestBlackboard, testInitWithDefaultValue)
+{
+
+}
+
+TEST_F(TestBlackboard, testInitWithoutDefaultValue)
+{
+
 }
 
 } // namespace
