@@ -55,10 +55,10 @@ protected:
 
 TEST_F(TestSuccessFixture, behSuccessTest)
 {
-    _tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehSuccessTestPlan");
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehSuccessTestState"));
     STEP_UNTIL2(_tc, _tc->getActiveBehaviour("SuccessOnInitBeh"));
     auto beh = _tc->getActiveBehaviour("SuccessOnInitBeh");
-    ASSERT_TRUE(beh != nullptr);
+    ASSERT_NE(beh, nullptr);
     STEP_UNTIL2(_tc, beh->isSuccess());
     ASSERT_TRUE(beh->isSuccess());
 }
