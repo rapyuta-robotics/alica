@@ -13,7 +13,8 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
+        int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
     case 1:
@@ -106,10 +107,8 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         return std::bind(conditionOther2NewSuccessStateOne4368560569514553226, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4547372457936774346:
         return std::bind(conditionTestTracingMasterCondition4547372457936774346, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    case 4467569689589495619:
-        return std::bind(conditionChooseTest2PlanSuccessTestCond4467569689589495619, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    case 1084332280175915034:
-        return std::bind(conditionChooseTest2BehSuccessTestCond1084332280175915034, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3592699233854318376:
+        return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     default:
         std::cerr << "TransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
         throw new std::exception();

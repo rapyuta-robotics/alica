@@ -81,14 +81,14 @@ BasicPlan* TestContext::getActivePlan(const std::string& name)
     return nullptr;
 }
 
-void TestContext::setTransitionCond(const std::string& name)
+bool TestContext::setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState)
 {
-    setTransitionCondResult(name, true);
+    return setTransitionCond(runningPlanName, inState, outState, true);
 }
 
-void TestContext::resetTransitionCond(const std::string& name)
+bool TestContext::resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState)
 {
-    setTransitionCondResult(name, false);
+    return setTransitionCond(runningPlanName, inState, outState, false);
 }
 
 RunningPlan* TestContext::getRunningPlan(const std::string& name)
@@ -223,16 +223,19 @@ std::string TestContext::getActiveStateName(const RunningPlan* rp)
     return {};
 }
 
-void TestContext::setTransitionCondResult(const std::string& name, bool result)
+bool TestContext::setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result)
 {
-    const auto& conds = _engine->getPlanRepository().getTransitionConditions();
-    for (auto condIt = conds.begin(); condIt != conds.end(); ++condIt) {
-        TransitionCondition* cond = const_cast<TransitionCondition*>(*condIt);
-        if (cond->getName() == name) {
-            LockedBlackboardRW bb(*(cond->_blackboard));
-            bb.set("result", result);
-        }
+    auto plan = getActivePlan(runningPlanName);
+    if (!plan) {
+        return false;
     }
+    LockedBlackboardRW bb(*(plan->getBlackboard()));
+    auto key = inState + "2" + outState;
+    if (!bb.hasValue(key)) {
+        return false;
+    }
+    bb.set(key, result);
+    return true;
 }
 
 } // namespace alica::test

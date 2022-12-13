@@ -11,6 +11,30 @@
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/test_sched_world_model.h>
 #include <engine/BasicPlan.h>
+
+namespace alica
+{
+
+bool isSuccess(const alica::RunningPlan* rp)
+{
+    if (rp->isBehaviour()) {
+        return rp->getStatus() == alica::PlanStatus::Success;
+    } else {
+        return rp->getActiveState()->isSuccessState();
+    }
+}
+
+bool isFailure(const alica::RunningPlan* rp)
+{
+    if (rp->isBehaviour()) {
+        return rp->getStatus() == alica::PlanStatus::Failed;
+    } else {
+        return rp->getActiveState()->isFailureState();
+    }
+}
+
+} // namespace alica
+
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -18,25 +42,53 @@ namespace alica
 bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition1) ENABLED START*/
-    static_assert(false, "Condition 1 with name AnyChildSuccess is not yet implemented");
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (isSuccess(child)) {
+            return true;
+        }
+    }
+    return false;
     /*PROTECTED REGION END*/
 }
 bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition2) ENABLED START*/
-    static_assert(false, "Condition 2 with name AllChildSuccess is not yet implemented");
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (!isSuccess(child)) {
+            return false;
+        }
+    }
+    // In case of a state, make sure that all children are actually running
+    if (rp->getActiveTriple().state) {
+        return rp->getChildren().size() >= rp->getActiveTriple().state->getConfAbstractPlanWrappers().size();
+    }
+    return true;
     /*PROTECTED REGION END*/
 }
 bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition3) ENABLED START*/
-    static_assert(false, "Condition 3 with name AnyChildFailure is not yet implemented");
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (isFailure(child)) {
+            return true;
+        }
+    }
+    return false;
     /*PROTECTED REGION END*/
 }
 bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition4) ENABLED START*/
-    static_assert(false, "Condition 4 with name AllChildFailure is not yet implemented");
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (!isFailure(child)) {
+            return false;
+        }
+    }
+    // In case of a state, make sure that all children are actually running
+    if (rp->getActiveTriple().state) {
+        return rp->getChildren().size() >= rp->getActiveTriple().state->getConfAbstractPlanWrappers().size();
+    }
+    return true;
     /*PROTECTED REGION END*/
 }
 bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -312,16 +364,11 @@ bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* in
     return worldModel->isPreCondition1840401110297459509();
     /*PROTECTED REGION END*/
 }
-bool conditionChooseTest2PlanSuccessTestCond4467569689589495619(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
-    /*PROTECTED REGION ID(condition4467569689589495619) ENABLED START*/
-    static_assert(false, "Condition 4467569689589495619 with name ChooseTest2PlanSuccessTestCond is not yet implemented");
-    /*PROTECTED REGION END*/
-}
-bool conditionChooseTest2BehSuccessTestCond1084332280175915034(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(condition1084332280175915034) ENABLED START*/
-    static_assert(false, "Condition 1084332280175915034 with name ChooseTest2BehSuccessTestCond is not yet implemented");
+    /*PROTECTED REGION ID(condition3592699233854318376) ENABLED START*/
+    LockedBlackboardRO bb(*input);
+    return bb.get<bool>("result");
     /*PROTECTED REGION END*/
 }
 } /* namespace alica */

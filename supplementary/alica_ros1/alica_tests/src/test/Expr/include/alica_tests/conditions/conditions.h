@@ -54,6 +54,5 @@ bool conditionExecBehaviour2SubPlan4244459279660861567(const Blackboard* input, 
 bool conditionDecision2A4281647834169813432(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionOther2NewSuccessStateOne4368560569514553226(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionChooseTest2PlanSuccessTestCond4467569689589495619(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionChooseTest2BehSuccessTestCond1084332280175915034(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 } /* namespace alica */

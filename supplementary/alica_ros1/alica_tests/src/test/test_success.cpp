@@ -35,6 +35,7 @@ public:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         _tc->init(std::move(creators));
+        _tc->startEngine();
     }
 
     virtual void TearDown() override
@@ -50,7 +51,7 @@ protected:
 
 TEST_F(TestSuccessFixture, behSuccessTest)
 {
-    _tc->setTransitionCond("ChooseTest2BehSuccessTestCond");
+    _tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehSuccessTestPlan");
     STEP_UNTIL2(_tc, _tc->getActiveBehaviour("SuccessOnInitBeh"));
     auto beh = _tc->getActiveBehaviour("SuccessOnInitBeh");
     ASSERT_TRUE(beh != nullptr);

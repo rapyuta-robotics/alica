@@ -103,8 +103,8 @@ public:
     BasicBehaviour* getActiveBehaviour(const std::string& name);
     BasicPlan* getActivePlan(const std::string& name);
 
-    void setTransitionCond(const std::string& name);
-    void resetTransitionCond(const std::string& name);
+    bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
+    bool resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
 
 private:
     RunningPlan* getRunningPlan(const std::string& name);
@@ -113,7 +113,7 @@ private:
     static std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName);
     static std::string getRunningPlanName(const RunningPlan* rp);
     static std::string getActiveStateName(const RunningPlan* rp);
-    void setTransitionCondResult(const std::string& name, bool result);
+    bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result);
 
     struct hash_pair
     {

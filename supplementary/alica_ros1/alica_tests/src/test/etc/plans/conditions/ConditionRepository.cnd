@@ -404,32 +404,15 @@
           "access": "input",
           "comment": "",
           "defaultValue": null,
-          "id": 2593081978153884873,
+          "id": 924760096646037639,
           "key": "result",
           "type": "std::any"
         }
       ],
       "comment": "",
       "conditionRepository": 0,
-      "id": 4467569689589495619,
-      "name": "ChooseTest2PlanSuccessTestCond",
-      "relativeDirectory": "conditions"
-    },
-    {
-      "blackboard": [
-        {
-          "access": "input",
-          "comment": "",
-          "defaultValue": null,
-          "id": 1089675895506356170,
-          "key": "result",
-          "type": "std::any"
-        }
-      ],
-      "comment": "",
-      "conditionRepository": 0,
-      "id": 1084332280175915034,
-      "name": "ChooseTest2BehSuccessTestCond",
+      "id": 3592699233854318376,
+      "name": "TriggerFromInputCond",
       "relativeDirectory": "conditions"
     }
   ],

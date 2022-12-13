@@ -2,10 +2,18 @@
   "blackboard": [
     {
       "access": "protected",
-      "comment": "TODO: remove, once key mapping with constants is supported",
+      "comment": "",
       "defaultValue": null,
-      "id": 3455177961627081777,
-      "key": "dummy",
+      "id": 330153981060768900,
+      "key": "ChooseTest2BehSuccessTest",
+      "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 1487451634780526767,
+      "key": "ChooseTest2PlanSuccessTest",
       "type": "std::any"
     }
   ],
@@ -121,14 +129,14 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1084332280175915034",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 846865468084822174,
       "inState": 4098979167613947533,
       "keyMapping": {
         "input": [
           {
             "childKey": "result",
-            "parentKey": "dummy"
+            "parentKey": "ChooseTest2BehSuccessTest"
           }
         ],
         "output": []
@@ -150,14 +158,14 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#4467569689589495619",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 2841206023261337744,
       "inState": 4098979167613947533,
       "keyMapping": {
         "input": [
           {
             "childKey": "result",
-            "parentKey": "dummy"
+            "parentKey": "ChooseTest2PlanSuccessTest"
           }
         ],
         "output": []
