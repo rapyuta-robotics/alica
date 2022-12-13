@@ -8,7 +8,6 @@
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
 
-#include <alica_tests/CounterClass.h>
 #include <alica_tests/DummyTestSummand.h>
 #include <alica_tests/TestWorldModel.h>
 
@@ -124,20 +123,12 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     twm2->robotsXPos.push_back(2000);
     twm2->robotsXPos.push_back(0);
 
-    for (int i = 0; i < 21; i++) {
-        acs[0]->stepEngine();
-        acs[1]->stepEngine();
-
-        if (i == 1) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-        }
-
-        if (i == 20) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
-        }
-    }
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403429950));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 
     auto logs = twm2->tracingLogs;
 

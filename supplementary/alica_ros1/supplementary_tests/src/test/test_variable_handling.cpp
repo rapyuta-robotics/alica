@@ -42,12 +42,14 @@ protected:
         }
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         AlicaTestMultiAgentFixture::SetUp();
         acs[0]->addSolver<alica::reasoner::CGSolver>();
         acs[1]->addSolver<alica::reasoner::CGSolver>();
     }
+
+    bool stepEngine() const override { return true; }
 };
 
 TEST_F(AlicaVariableHandlingTest, testQueries)
@@ -58,12 +60,8 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
     std::chrono::milliseconds sleepTime(33);
-    do {
-        for (int i = 0; i < 3; ++i) {
-            acs[0]->stepEngine();
-            acs[1]->stepEngine();
-        }
-    } while (alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
+
+    STEP_ALL_UNTIL(acs, alica::test::Util::getTeamSize(aes[0]) != 2 || alica::test::Util::getTeamSize(aes[1]) != 2);
 
     const RunningPlan* rp1 = aes[0]->getPlanBase().getDeepestNode();
     const RunningPlan* rp2 = aes[1]->getPlanBase().getDeepestNode();

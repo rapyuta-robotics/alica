@@ -103,9 +103,8 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    for (int i = 0; i < 10; ++i) {
-        ac->stepEngine();
-    }
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
+
     ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
@@ -185,10 +184,8 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    for (int i = 0; i < 10; ++i) {
-        acs[0]->stepEngine();
-        acs[1]->stepEngine();
-    }
+    STEP_ALL_UNTIL(acs, test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
+
     ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
     ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
