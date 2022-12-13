@@ -16,13 +16,13 @@ class TransitionFactory;
 class ExpressionHandler;
 class IAlicaWorldModel;
 class KeyMapping;
-class TransitionConditionFactory;
 
 struct TransitionConditionContext
 {
     const std::string name;
     const std::string libraryName;
     int64_t conditionConfId;
+    int64_t preConditionId;
 };
 
 /**
@@ -39,12 +39,11 @@ public:
     const Synchronisation* getSynchronisation() const { return _synchronisation; }
     TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
-    const int64_t getLegacyTransitionConditionId() const { return _legacyTransitionConditionId; }
+    const int64_t getPreConditionId() const { return _preConditionId; }
 
 private:
     friend ModelFactory;
     friend TransitionFactory;
-    friend TransitionConditionFactory; // used for legacy transition conditions
     friend ExpressionHandler;
     void setTransitionCondition(TransitionCondition* transitionCondition);
     void setInState(State* inState);
@@ -71,7 +70,7 @@ private:
     /**
      * Only used when using legacy transition conditions.
      */
-    int64_t _legacyTransitionConditionId;
+    int64_t _preConditionId;
 
     std::unique_ptr<KeyMapping> _keyMapping;
 };

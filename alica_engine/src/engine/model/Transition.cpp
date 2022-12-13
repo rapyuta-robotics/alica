@@ -14,7 +14,7 @@ Transition::Transition()
         , _outState(nullptr)
         , _synchronisation(nullptr)
         , _keyMapping(nullptr)
-        , _legacyTransitionConditionId(0)
+        , _preConditionId(0)
 {
 }
 

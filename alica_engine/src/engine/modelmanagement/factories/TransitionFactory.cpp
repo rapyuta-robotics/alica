@@ -34,7 +34,7 @@ Transition* TransitionFactory::create(const YAML::Node& transitionNode, Plan* pl
     }
     // Used to set the legacyTransitionCondition for the Transition object
     if (Factory::isValid(transitionNode[alica::Strings::preCondition])) {
-        transition->_legacyTransitionConditionId = PreConditionFactory::create(transitionNode[alica::Strings::preCondition], plan)->getId();
+        transition->_preConditionId = PreConditionFactory::create(transitionNode[alica::Strings::preCondition], plan)->getId();
     }
 
     return transition;

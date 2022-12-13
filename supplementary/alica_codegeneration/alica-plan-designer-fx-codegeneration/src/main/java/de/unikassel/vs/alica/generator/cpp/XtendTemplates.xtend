@@ -1285,7 +1285,7 @@ LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 
 std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(TransitionConditionContext& context)
 {
-    int64_t conditionId = context.conditionConfId;
+    int64_t conditionId = context.preConditionId;
     switch (conditionId)
     {
         «FOR con : conditions»

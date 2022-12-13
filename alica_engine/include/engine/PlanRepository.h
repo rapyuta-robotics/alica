@@ -29,7 +29,6 @@ class ExpressionHandler;
 class ModelManager;
 class TransitionCondition;
 class TransitionConditionRepository;
-class TransitionConditionRepositoryFactory;
 
 /**
  * The PlanRepository holds the ALICA program, neatly separated into different Dictionaries.
@@ -135,7 +134,6 @@ private:
     friend Factory;
     friend ModelManager;
     friend ExpressionHandler;
-    friend TransitionConditionRepositoryFactory; // used for legacy transition condition support
     MapType<Plan> _plans;
     MapType<Task> _tasks;
     MapType<Behaviour> _behaviours;
