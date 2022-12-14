@@ -126,8 +126,8 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
     ConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
 
-    std::shared_ptr<BasicCondition> condition1 = creator->createConditions(ctx);
-    std::shared_ptr<BasicCondition> condition2 = creator->createConditions(ctx);
+    std::shared_ptr<BasicCondition> condition1 = creator->createConditions(1, ctx);
+    std::shared_ptr<BasicCondition> condition2 = creator->createConditions(2, ctx);
     ASSERT_EQ(true, condition1->evaluate(nullptr, nullptr));
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
@@ -151,7 +151,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 
     TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
 
-    auto transitionCondition = creator->createConditions(ctx);
+    auto transitionCondition = creator->createConditions(1, ctx);
     bool res = transitionCondition(nullptr, nullptr, nullptr);
     ASSERT_EQ(false, res);
 }

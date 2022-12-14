@@ -1,3 +1,4 @@
+#include <supplementary_tests/Behaviour/waitbehaviour1234.h>
 #include <supplementary_tests/ConditionCreator.h>
 #include <supplementary_tests/GSolver/GSolverMaster1417423751087.h>
 #include <supplementary_tests/GSolver/GSolverTestPlan1417423757243.h>
@@ -19,9 +20,8 @@ namespace alica
 ConditionCreator::ConditionCreator() {}
 ConditionCreator::~ConditionCreator() {}
 
-std::shared_ptr<BasicCondition> ConditionCreator::createConditions(ConditionContext& context)
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
 {
-    int64_t conditionConfId = context.conditionConfId;
     switch (conditionConfId) {
     case 1417424512343:
         return std::make_shared<RunTimeCondition1417424512343>();
