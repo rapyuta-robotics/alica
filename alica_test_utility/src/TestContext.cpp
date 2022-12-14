@@ -110,6 +110,16 @@ bool TestContext::resetAllTransitions(const std::string& runningPlanName)
     return true;
 }
 
+bool TestContext::isSuccess(const BasicBehaviour* beh) const
+{
+    return beh->isSuccess();
+}
+
+bool TestContext::isSuccess(const BasicPlan* plan) const
+{
+    return plan->getPlanContext()->getActiveState()->isSuccessState();
+}
+
 RunningPlan* TestContext::getRunningPlan(const std::string& name)
 {
     if (name.empty()) {

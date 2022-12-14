@@ -59,8 +59,18 @@ TEST_F(TestSuccessFixture, behSuccessTest)
     STEP_UNTIL2(_tc, _tc->getActiveBehaviour("SuccessOnInitBeh"));
     auto beh = _tc->getActiveBehaviour("SuccessOnInitBeh");
     ASSERT_NE(beh, nullptr);
-    STEP_UNTIL2(_tc, beh->isSuccess());
-    ASSERT_TRUE(beh->isSuccess());
+    STEP_UNTIL2(_tc, _tc->isSuccess(beh));
+    ASSERT_TRUE(_tc->isSuccess(beh));
+}
+
+TEST_F(TestSuccessFixture, planSuccessTest)
+{
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "PlanSuccessTestState"));
+    STEP_UNTIL2(_tc, _tc->getActivePlan("SuccessOnInitPlan"));
+    auto plan = _tc->getActivePlan("SuccessOnInitPlan");
+    ASSERT_NE(plan, nullptr);
+    STEP_UNTIL2(_tc, _tc->isSuccess(plan));
+    ASSERT_TRUE(_tc->isSuccess(plan));
 }
 
 } // namespace alica::test

@@ -107,6 +107,9 @@ public:
     bool resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
     bool resetAllTransitions(const std::string& runningPlanName);
 
+    bool isSuccess(const BasicBehaviour* beh) const;
+    bool isSuccess(const BasicPlan* plan) const;
+
 private:
     RunningPlan* getRunningPlan(const std::string& name);
     RunningPlan* searchRunningPlanTree(const std::string& name);
