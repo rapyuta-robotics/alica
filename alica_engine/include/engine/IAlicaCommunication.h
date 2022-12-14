@@ -47,7 +47,7 @@ public:
     virtual void sendSolverResult(const SolverResult& sr) const = 0;
     virtual void sendAgentQuery(const AgentQuery& pq) const = 0;
     virtual void sendAgentAnnouncement(const AgentAnnouncement& pa) const = 0;
-    virtual void sendLogMessage(int level, const std::string& message) const {};
+    virtual void sendLogMessage([[maybe_unused]] int level, [[maybe_unused]] const std::string& message) const {};
 
     virtual void tick(){};
 
