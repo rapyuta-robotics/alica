@@ -130,12 +130,18 @@ RunningPlan* TestContext::getRunningPlan(const std::string& name)
 
 RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
 {
+    if (!_engine->getPlanBase().getRootNode()) {
+        return nullptr;
+    }
     std::vector<RunningPlan*> results;
     std::queue<RunningPlan*> q;
     q.push(_engine->getPlanBase().getRootNode());
     while (!q.empty()) {
         auto cur = q.front();
         q.pop();
+        if (!cur->isActive()) {
+            return nullptr;
+        }
         if (getRunningPlanName(cur) == name) {
             results.push_back(cur);
         }
@@ -159,6 +165,9 @@ RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifie
     std::size_t idx = 0;
     while (cur && idx < statePlanPairs.size()) {
         const auto& [state, plan] = statePlanPairs[idx];
+        if (!cur->isActive()) {
+            return nullptr;
+        }
         if (getActiveStateName(cur) != state) {
             return nullptr;
         }
@@ -238,18 +247,12 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
 
 std::string TestContext::getRunningPlanName(const RunningPlan* rp)
 {
-    if (rp->isActive()) {
-        return rp->isBehaviour() ? rp->getBasicBehaviour()->getName() : rp->getActivePlan()->getName();
-    }
-    return {};
+    return rp->isBehaviour() ? rp->getBasicBehaviour()->getName() : rp->getActivePlan()->getName();
 }
 
 std::string TestContext::getActiveStateName(const RunningPlan* rp)
 {
-    if (rp->isActive()) {
-        return rp->getActiveState() ? rp->getActiveState()->getName() : std::string{};
-    }
-    return {};
+    return rp->getActiveState() ? rp->getActiveState()->getName() : std::string{};
 }
 
 bool TestContext::setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result)
