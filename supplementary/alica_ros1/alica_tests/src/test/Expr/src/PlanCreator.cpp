@@ -29,8 +29,10 @@
 #include <alica_tests/MidFieldPlayPlan1402488770050.h>
 #include <alica_tests/MultiAgentTestMaster1413200842973.h>
 #include <alica_tests/MultiAgentTestPlan1413200862180.h>
+#include <alica_tests/MultiPlanInstanceSuccessTestPlan3392981108193862307.h>
 #include <alica_tests/OrderedSchedulingTestPlan1629895582410.h>
 #include <alica_tests/OtherPlan1418042819203.h>
+#include <alica_tests/ParallelSuccessOnCondPlan3288843407985944525.h>
 #include <alica_tests/PlanA1629895837159.h>
 #include <alica_tests/PlanAA1629895864090.h>
 #include <alica_tests/PlanB1629895853508.h>
@@ -54,6 +56,9 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan21614964444419.h>
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
+#include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
+#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>
@@ -221,6 +226,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
     case 631515556091266493:
         return std::make_unique<FailurePlan631515556091266493>(context);
         break;
+    case 673160616613514188:
+        return std::make_unique<SuccessOnCondWrapperA673160616613514188>(context);
+        break;
     case 691392966514374878:
         return std::make_unique<TestTracingMasterPlan691392966514374878>(context);
         break;
@@ -251,11 +259,23 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
     case 2521443078354411465:
         return std::make_unique<TestMasterPlan2521443078354411465>(context);
         break;
+    case 2869465844414224272:
+        return std::make_unique<SuccessOnCondWrapperB2869465844414224272>(context);
+        break;
+    case 3153116020668535682:
+        return std::make_unique<SuccessOnCondPlan3153116020668535682>(context);
+        break;
     case 3172561495666303184:
         return std::make_unique<ExecuteBehaviourInSubPlan3172561495666303184>(context);
         break;
     case 3254486013443203397:
         return std::make_unique<AdjacentSuccessMasterPlan3254486013443203397>(context);
+        break;
+    case 3288843407985944525:
+        return std::make_unique<ParallelSuccessOnCondPlan3288843407985944525>(context);
+        break;
+    case 3392981108193862307:
+        return std::make_unique<MultiPlanInstanceSuccessTestPlan3392981108193862307>(context);
         break;
     case 3870436056558842479:
         return std::make_unique<PlanSuccessTestPlan3870436056558842479>(context);

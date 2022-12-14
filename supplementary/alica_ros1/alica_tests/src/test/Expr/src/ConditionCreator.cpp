@@ -48,8 +48,10 @@
 #include <alica_tests/MidFieldPlayPlan1402488770050.h>
 #include <alica_tests/MultiAgentTestMaster1413200842973.h>
 #include <alica_tests/MultiAgentTestPlan1413200862180.h>
+#include <alica_tests/MultiPlanInstanceSuccessTestPlan3392981108193862307.h>
 #include <alica_tests/OrderedSchedulingTestPlan1629895582410.h>
 #include <alica_tests/OtherPlan1418042819203.h>
+#include <alica_tests/ParallelSuccessOnCondPlan3288843407985944525.h>
 #include <alica_tests/PlanA1629895837159.h>
 #include <alica_tests/PlanAA1629895864090.h>
 #include <alica_tests/PlanB1629895853508.h>
@@ -72,6 +74,9 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan21614964444419.h>
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
+#include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
+#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestBehaviour55178365253414982.h>

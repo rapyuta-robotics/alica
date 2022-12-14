@@ -15,6 +15,14 @@
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
       "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 4512660562305170561,
+      "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
+      "type": "std::any"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -69,8 +77,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 735,
-        "y": 375
+        "x": 737.2753842205811,
+        "y": 370.44923155883777
       },
       "type": "State",
       "variableBindings": []
@@ -84,7 +92,8 @@
       "name": "ChooseTestState",
       "outTransitions": [
         846865468084822174,
-        2841206023261337744
+        2841206023261337744,
+        4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -120,6 +129,36 @@
       "positionWeb": {
         "x": 728,
         "y": 110
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
+          "comment": "",
+          "configuration": null,
+          "id": 2887093750412106903,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3960396736820956915,
+      "inTransitions": [
+        4120890224163547783
+      ],
+      "name": "MultiPlanInstanceSuccessTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 739.1787599282301,
+        "y": 593.7031666785609
       },
       "type": "State",
       "variableBindings": []
@@ -178,6 +217,35 @@
         "conditionString": "",
         "enabled": true,
         "id": 3883605426713053219,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 4120890224163547783,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2MultiPlanInstanceSuccessTestState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3960396736820956915,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2733591692277574870,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
