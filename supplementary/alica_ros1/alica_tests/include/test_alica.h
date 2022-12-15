@@ -62,7 +62,7 @@ protected:
     virtual void SetUp() override
     {
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";
@@ -140,7 +140,7 @@ protected:
     void SetUp() override
     {
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";
@@ -189,7 +189,7 @@ protected:
     void SetUp() override
     {
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";
@@ -218,7 +218,7 @@ protected:
     virtual void SetUp() override
     {
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";
@@ -262,7 +262,7 @@ protected:
     {
 
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";
@@ -308,7 +308,7 @@ protected:
     void SetUp() override
     {
         // Path to test configs set by CMake
-        std::string path = "";
+        std::string path;
 #if defined(PLANS)
         path = PLANS;
         path += "/src/test";

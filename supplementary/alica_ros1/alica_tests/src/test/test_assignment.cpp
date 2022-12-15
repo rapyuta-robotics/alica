@@ -20,7 +20,7 @@ using alica::State;
 TEST(Assignment, RobotsInserted)
 {
     // Path to test configs set by CMake
-    std::string path = "";
+    std::string path;
 #if defined(PLANS)
     path = PLANS;
     path += "/src/test";
