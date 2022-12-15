@@ -29,20 +29,20 @@ public:
 
     ~SyncStopTimerImpl()
     {
-        if (_active.load(std::memory_order_acquire)) {
+        if (_active.load()) {
             stop();
-        };
+        }
     }
 
     void start()
     {
 
-        if (_active.load(std::memory_order_acquire)) {
+        if (_active.load()) {
             stop();
-        };
-        _active.store(true, std::memory_order_release);
+        }
+        _active.store(true);
         _thread = std::thread([this]() {
-            while (_active.load(std::memory_order_acquire)) {
+            while (_active.load()) {
                 _userCb();
                 std::this_thread::sleep_for(std::chrono::milliseconds(_period));
             }
@@ -51,7 +51,7 @@ public:
 
     void stop()
     {
-        _active.store(false, std::memory_order_release);
+        _active.store(false);
         if (_thread.joinable()) {
             _thread.join();
         }
