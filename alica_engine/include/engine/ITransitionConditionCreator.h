@@ -12,7 +12,7 @@ class ITransitionConditionCreator
 {
 public:
     virtual ~ITransitionConditionCreator() {}
-    virtual TransitionConditionCallback createConditions(TransitionConditionContext& context) = 0;
+    virtual TransitionConditionCallback createConditions(int64_t conditionId, TransitionConditionContext& context) = 0;
 };
 
 } /* namespace alica */

@@ -360,7 +360,7 @@ namespace alica
         public:
         ConditionCreator();
         virtual ~ConditionCreator();
-        std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId) override;
+        std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId, ConditionContext& context) override;
     };
 
 } /* namespace alica */
@@ -392,7 +392,7 @@ namespace alica
     {
     }
 
-    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId)
+    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
     {
         switch (conditionConfId)
         {
@@ -1181,7 +1181,7 @@ public:
     TransitionConditionCreator();
     virtual ~TransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1208,7 +1208,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId)
     {
