@@ -12,9 +12,10 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(TransitionConditionContext& context)
+std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(
+        int64_t conditionId, TransitionConditionContext& context)
+
 {
-    int64_t conditionId = context.conditionConfId;
     switch (conditionId) {
     case 19871606597697646:
         return std::bind(conditionEntry2Wait19871606597697646, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
