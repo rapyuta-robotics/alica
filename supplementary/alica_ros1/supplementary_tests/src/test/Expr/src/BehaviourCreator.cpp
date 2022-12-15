@@ -1,5 +1,4 @@
 #include "engine/BasicBehaviour.h"
-#include <supplementary_tests/Behaviour/waitbehaviour.h>
 #include <supplementary_tests/BehaviourCreator.h>
 #include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 #include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
@@ -14,9 +13,6 @@ BehaviourCreator::~BehaviourCreator() {}
 std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     switch (behaviourId) {
-    case 1234:
-        return std::make_unique<waitbehaviour>(context);
-        break;
     case 1417424455986:
         return std::make_unique<SolverTestBehaviour>(context);
         break;
