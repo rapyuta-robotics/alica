@@ -74,12 +74,11 @@ void Base::start(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>());
-        spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators), true);
-        // create world model
-        ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel", nh, priv_nh);
+        spinner.start();                     // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators), true); // Do not start engine, I need to add WM before
+        ac->addWorldModelByType<turtlesim::ALICATurtleWorldModel>("worldModel", nh, priv_nh); // create and add world model
         ac->addSolver<alica::reasoner::CGSolver>();
-        ac->startEngine();
+        ac->startEngine(); // Now I can start engine
     }
 }
 

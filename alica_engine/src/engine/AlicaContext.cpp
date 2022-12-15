@@ -20,7 +20,6 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        //        , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
@@ -30,7 +29,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        //       , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
 {
@@ -199,14 +197,13 @@ const Blackboard& AlicaContext::getWorldModels() const
     return _engine->getWorldModels();
 }
 
-void AlicaContext::addWorldModel(std::any worldModel, const std::string& libraryName)
+void AlicaContext::addWorldModel(const std::string& libraryName, std::any worldModel)
 {
     if (!_initialized) {
         Logging::logWarn("AC") << "Context not initialized. Can not set new worldmodeltype";
         return;
     }
-    std::cerr << "1****************Add WM:" << libraryName << std::endl;
-    _engine->addWorldModel(worldModel, libraryName);
+    _engine->addWorldModel(libraryName, worldModel);
 }
 
 } // namespace alica

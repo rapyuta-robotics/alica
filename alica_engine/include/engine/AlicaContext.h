@@ -201,13 +201,19 @@ public:
      * Initialize alica framework and related modules.
      *
      * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
-     * @param delayStarted does not start _engine. Set to true only for testing purpose
+     * @param delayStarted does not start _engine. To start engine it is possible to call startEngine()
+     *  If you need to add a worldmodel set this to true and startEngine() after.
      *
      * @return Return code '0' stands for success, any other for corresponding error
      *
      * @see AlicaCreators
      */
     int init(AlicaCreators&& creatorCtx, bool delayStart = false);
+
+    /**
+     * Start engine if not previously started (Do you need to add a worldmodel?)
+     *
+     */
     void startEngine();
 
     /**
@@ -267,14 +273,31 @@ public:
      * @return A reference to worldModels being used by context. Worldmodels are stored in Blackboard
      */
     const Blackboard& getWorldModels() const;
+
+    /**
+     * Get a worldmodel by libratyName
+     *
+     * @param libraryName Library in which the worldmodel is hosted.
+     *
+     */
     template <class T>
     T* getWorldModel(const std::string& libraryName);
 
     /**
      * Add a new world model to AlicaEngine.
+     * @param libraryName Library in which the worldmodel is hosted.
+     * @param worldModel The worldmodel to be added
      *
      */
-    void addWorldModel(std::any worldModel, const std::string& libraryName);
+    void addWorldModel(const std::string& libraryName, std::any worldModel);
+
+    /**
+     * Add a new world model to AlicaEngine passing the worldmodel type WM.
+     *
+     * @param libraryName Library in which the worldmodel is hosted.
+     * @param args Arguments to be forwarded to constructor of worldmodel. Might be empty.
+     *
+     */
     template <class WM, class... Args>
     void addWorldModelByType(const std::string& libraryName, Args&&... args);
 
@@ -565,7 +588,7 @@ void AlicaContext::addWorldModelByType(const std::string& libraryName, Args&&...
 {
     // std::unique_ptr can not be used it is not copyable so can't fit inside std::any
     std::shared_ptr<WM> toAdd = std::make_shared<WM>(std::forward<Args>(args)...);
-    addWorldModel(toAdd, libraryName);
+    addWorldModel(libraryName, toAdd);
 }
 
 template <class T>

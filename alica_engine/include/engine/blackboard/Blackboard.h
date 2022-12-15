@@ -58,8 +58,13 @@ public:
         return std::any_cast<std::shared_ptr<T>>(it->second).get();
     };
 
-    void addWorldModel(std::any worldModel, const std::string& libraryName)
+    void addWorldModel(const std::string& libraryName,std::any worldModel)
     {
+        auto it = _worldModels.find(libraryName);
+        if (it != _worldModels.end()) {
+            Logging::logWarn("BB") << "This worldmodel is already present overwrite:" << libraryName;
+        }
+
         _worldModels.insert({libraryName, worldModel});
         Logging::logDebug("BB") << "Add WM:" << libraryName << " Size:" << _worldModels.size();
     }
