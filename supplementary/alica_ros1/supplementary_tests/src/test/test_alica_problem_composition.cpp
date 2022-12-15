@@ -1,3 +1,4 @@
+#include <alica/test/Util.h>
 #include <engine/PlanBase.h>
 #include <engine/model/Variable.h>
 #include <gtest/gtest.h>
@@ -29,9 +30,7 @@ TEST_F(AlicaProblemCompositionTest, SimpleStaticComposition)
 
     ae->start();
 
-    for (int i = 0; i < 6; ++i) {
-        ac->stepEngine();
-    }
+    STEP_UNTIL(ae->getPlanBase().getDeepestNode() == nullptr);
 
     const alica::RunningPlan* deep = ae->getPlanBase().getDeepestNode();
 

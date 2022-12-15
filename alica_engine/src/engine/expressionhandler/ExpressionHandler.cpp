@@ -39,7 +39,7 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
         if (p->getPreCondition() != nullptr) {
             if (p->getPreCondition()->isEnabled()) {
                 ConditionContext context{p->getPreCondition()->getName(), p->getPreCondition()->getLibraryName(), p->getPreCondition()->getId()};
-                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
+                p->_preCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context.conditionConfId, context));
                 attachConstraint(p->_preCondition, *creatorCtx.constraintCreator);
             } else {
                 p->_preCondition->setBasicCondition(make_shared<BasicFalseCondition>());
@@ -48,7 +48,7 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 
         if (p->getRuntimeCondition() != nullptr) {
             ConditionContext context{p->getRuntimeCondition()->getName(), p->getRuntimeCondition()->getLibraryName(), p->getRuntimeCondition()->getId()};
-            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context));
+            p->_runtimeCondition->setBasicCondition(creatorCtx.conditionCreator->createConditions(context.conditionConfId, context));
             attachConstraint(p->_runtimeCondition, *creatorCtx.constraintCreator);
         }
     }
