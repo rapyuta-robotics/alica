@@ -15,7 +15,7 @@ class DynamicConditionCreator : public IConditionCreator
 public:
     DynamicConditionCreator();
     virtual ~DynamicConditionCreator(){};
-    std::shared_ptr<BasicCondition> createConditions(ConditionContext& conditionContext) override;
+    std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId, ConditionContext& conditionContext) override;
 
 private:
     typedef std::shared_ptr<BasicCondition>(conditionCreatorType)(ConditionContext&);

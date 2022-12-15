@@ -10,9 +10,8 @@ namespace alica
 ConditionCreator::ConditionCreator() {}
 ConditionCreator::~ConditionCreator() {}
 
-std::shared_ptr<BasicCondition> ConditionCreator::createConditions(ConditionContext& context)
+std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
 {
-    int64_t conditionConfId = context.conditionConfId;
     switch (conditionConfId) {
     case 1288817888979746811:
         return std::make_shared<RunTimeCondition1288817888979746811>();

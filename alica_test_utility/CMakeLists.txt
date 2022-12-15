@@ -11,28 +11,20 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
-
 # Imports
 find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_solver_interface REQUIRED)
 
-
 # Build
 include_directories(include)
 
-add_library(${PROJECT_NAME}
-	src/TestBehaviourCreator.cpp
-	src/TestContext.cpp
-	src/IdleBehaviour.cpp
-	src/Util.cpp
-)
-
-target_sources(${PROJECT_NAME} PRIVATE
+add_library(${PROJECT_NAME} SHARED
   src/TestBehaviourCreator.cpp
-	src/TestContext.cpp
-	src/IdleBehaviour.cpp
-	src/Util.cpp
+  src/TestContext.cpp
+  src/IdleBehaviour.cpp
+  src/Util.cpp
+  src/CounterClass.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -45,7 +37,6 @@ target_link_libraries(${PROJECT_NAME}
   alica_dummy_proxy
   alica_solver_interface
 )
-
 
 # Install
 install(TARGETS ${PROJECT_NAME}
@@ -60,7 +51,6 @@ install(DIRECTORY include/
   PATTERN ".svn" EXCLUDE
 )
 
-
 # Export targets to make package libraries
 export(EXPORT ${CMAKE_PROJECT_NAME}Targets
   FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
@@ -70,7 +60,6 @@ install(EXPORT ${CMAKE_PROJECT_NAME}Targets
   FILE ${CMAKE_PROJECT_NAME}Targets.cmake
   DESTINATION ${ConfigPackageLocation}
 )
-
 
 # Installing files to make a find_package()-able package
 write_basic_package_version_file(

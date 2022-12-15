@@ -1,6 +1,6 @@
 #include <test_alica.h>
 
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 #include <alica_tests/SimpleSwitches.h>
 
 #include <alica/test/Util.h>

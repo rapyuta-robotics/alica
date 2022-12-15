@@ -1,7 +1,7 @@
 #include <alica_tests/SimpleTestPlan1412252439925.h>
 /*PROTECTED REGION ID(eph1412252439925) ENABLED START*/
 // Add additional using directives here
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
