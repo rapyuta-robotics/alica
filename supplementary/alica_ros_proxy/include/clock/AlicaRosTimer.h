@@ -43,7 +43,7 @@ public:
         _userCb();
 
         // Grab a weak ptr to this object (grabbing a shared_ptr will result in a cycle)
-        _timer = _nh.createTimer(_period, [weak_ptr_self = Base::weak_from_this()](auto&&... args) {
+        _timer = _nh.createTimer(_period, [weak_ptr_self = Base::weak_from_this()](auto&&...) {
             // Ensure impl object for this timer is not destroyed
             if (auto self = weak_ptr_self.lock()) {
                 self->timerCb();
