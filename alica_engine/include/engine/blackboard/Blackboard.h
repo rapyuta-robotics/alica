@@ -58,7 +58,7 @@ public:
         return std::any_cast<std::shared_ptr<T>>(it->second).get();
     };
 
-    void addWorldModel(const std::string& libraryName,std::any worldModel)
+    void addWorldModel(const std::string& libraryName, std::any worldModel)
     {
         auto it = _worldModels.find(libraryName);
         if (it != _worldModels.end()) {
