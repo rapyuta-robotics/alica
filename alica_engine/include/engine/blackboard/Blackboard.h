@@ -56,7 +56,7 @@ public:
             return nullptr;
         }
         return std::any_cast<std::shared_ptr<T>>(it->second).get();
-    };
+    }
 
     void addWorldModel(const std::string& libraryName, std::any worldModel)
     {
