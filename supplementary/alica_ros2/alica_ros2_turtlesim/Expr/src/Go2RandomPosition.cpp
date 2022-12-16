@@ -26,7 +26,7 @@ Go2RandomPosition::~Go2RandomPosition()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void Go2RandomPosition::run(void* msg)
+void Go2RandomPosition::run()
 {
     /*PROTECTED REGION ID(run4085572422059465423) ENABLED START*/
     if (isSuccess()) {

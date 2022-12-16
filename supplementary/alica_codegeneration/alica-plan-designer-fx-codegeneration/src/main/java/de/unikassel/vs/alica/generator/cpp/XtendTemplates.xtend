@@ -170,7 +170,7 @@ namespace alica
         public:
             «behaviour.name»(BehaviourContext& context);
             virtual ~«behaviour.name»();
-            virtual void run(void* msg);
+            virtual void run();
             /*PROTECTED REGION ID(pub«behaviour.id») ENABLED START*/
             «IF (protectedRegions.containsKey("pub" + behaviour.id))»
 «protectedRegions.get("pub" + behaviour.id)»
@@ -247,7 +247,7 @@ namespace alica
         /*PROTECTED REGION END*/
 
     }
-    void «behaviour.name»::run(void* msg)
+    void «behaviour.name»::run()
     {
         /*PROTECTED REGION ID(run«behaviour.id») ENABLED START*/
         «IF (protectedRegions.containsKey("run" + behaviour.id))»
@@ -360,7 +360,7 @@ namespace alica
         public:
         ConditionCreator();
         virtual ~ConditionCreator();
-        std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId) override;
+        std::shared_ptr<BasicCondition> createConditions(int64_t conditionConfId, ConditionContext& context) override;
     };
 
 } /* namespace alica */
@@ -392,7 +392,7 @@ namespace alica
     {
     }
 
-    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId)
+    std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
     {
         switch (conditionConfId)
         {
@@ -984,7 +984,7 @@ namespace alica
     «protectedRegions.get("pro" + plan.id)»
                 «ELSE»
                 // Override these methods for your use case
-                // virtual void run(void* msg) override;
+                // virtual void run() override;
                 // virtual void onInit() override;
                 // virtual void onTerminate() override;
                 // Add additional protected methods here
@@ -1181,7 +1181,7 @@ public:
     TransitionConditionCreator();
     virtual ~TransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId);
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1208,7 +1208,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId)
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId)
     {

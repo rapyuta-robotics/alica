@@ -12,7 +12,7 @@ class Go2RandomPosition : public DomainBehaviour
 public:
     Go2RandomPosition(BehaviourContext& context);
     virtual ~Go2RandomPosition();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub4085572422059465423) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

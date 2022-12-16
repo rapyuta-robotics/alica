@@ -18,6 +18,6 @@ fi
 
 # Compile and move JAR files
 mvn -DskipTests=true install
-rm codegen/*.jar codegen/plugins/*.jar
+rm -f codegen/*.jar codegen/plugins/*.jar
 mv target/*.jar codegen/
 mv alica-plan-designer-fx-default-plugin/target/*.jar codegen/plugins/
