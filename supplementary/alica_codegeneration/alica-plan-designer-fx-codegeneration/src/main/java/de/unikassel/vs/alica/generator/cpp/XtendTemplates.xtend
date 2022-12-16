@@ -170,7 +170,7 @@ namespace alica
         public:
             «behaviour.name»(BehaviourContext& context);
             virtual ~«behaviour.name»();
-            virtual void run(void* msg);
+            virtual void run();
             /*PROTECTED REGION ID(pub«behaviour.id») ENABLED START*/
             «IF (protectedRegions.containsKey("pub" + behaviour.id))»
 «protectedRegions.get("pub" + behaviour.id)»
@@ -247,7 +247,7 @@ namespace alica
         /*PROTECTED REGION END*/
 
     }
-    void «behaviour.name»::run(void* msg)
+    void «behaviour.name»::run()
     {
         /*PROTECTED REGION ID(run«behaviour.id») ENABLED START*/
         «IF (protectedRegions.containsKey("run" + behaviour.id))»
@@ -984,7 +984,7 @@ namespace alica
     «protectedRegions.get("pro" + plan.id)»
                 «ELSE»
                 // Override these methods for your use case
-                // virtual void run(void* msg) override;
+                // virtual void run() override;
                 // virtual void onInit() override;
                 // virtual void onTerminate() override;
                 // Add additional protected methods here

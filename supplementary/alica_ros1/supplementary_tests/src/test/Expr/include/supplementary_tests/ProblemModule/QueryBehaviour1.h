@@ -15,7 +15,7 @@ class QueryBehaviour1 : public DomainBehaviour
 public:
     QueryBehaviour1(BehaviourContext& context);
     virtual ~QueryBehaviour1();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1479556104511) ENABLED START*/
     // Add additional public methods here
     int getCallCounter();

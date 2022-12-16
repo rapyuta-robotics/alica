@@ -27,7 +27,7 @@ QueryBehaviour1::~QueryBehaviour1()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void QueryBehaviour1::run(void* msg)
+void QueryBehaviour1::run()
 {
     /*PROTECTED REGION ID(run1479556104511) ENABLED START*/
     // Add additional options here

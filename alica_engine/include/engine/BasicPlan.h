@@ -61,7 +61,7 @@ protected:
     }
 
     virtual void onInit(){};
-    virtual void run(void* msg){};
+    virtual void run(){};
     virtual void onTerminate(){};
 
 private:

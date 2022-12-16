@@ -48,7 +48,7 @@ void PlanA1629895837159::onInit()
     _inRunContext = true;
 }
 
-void PlanA1629895837159::run(void* msg)
+void PlanA1629895837159::run()
 {
     _wm->planARunCalled = true;
     if (!_inRunContext) {

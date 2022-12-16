@@ -16,7 +16,7 @@ class BehBAA : public DomainBehaviour
 public:
     BehBAA(BehaviourContext& context);
     virtual ~BehBAA();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1629895911592) ENABLED START*/
     // Add additional protected methods here
     static int runCount;
