@@ -58,7 +58,7 @@ public:
     using RunnableObject::stop;
     using RunnableObject::TracingType;
 
-    virtual void run(void* msg) = 0;
+    virtual void run() = 0;
     /**
      * Called whenever a basic behaviour is started, i.e., when the corresponding state is entered.
      * Override for behaviour specific initialisation. Guaranteed to be executed on the behavior's thread.

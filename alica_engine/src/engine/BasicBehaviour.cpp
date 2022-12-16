@@ -64,7 +64,7 @@ void BasicBehaviour::doInit()
 void BasicBehaviour::doRun()
 {
     try {
-        run(nullptr);
+        run();
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
         sendLogMessage(4, err);

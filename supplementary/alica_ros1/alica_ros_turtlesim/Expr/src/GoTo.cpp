@@ -26,7 +26,7 @@ GoTo::~GoTo()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void GoTo::run(void* msg)
+void GoTo::run()
 {
     /*PROTECTED REGION ID(run4054297592460872311) ENABLED START*/
     // solve constraints and get value

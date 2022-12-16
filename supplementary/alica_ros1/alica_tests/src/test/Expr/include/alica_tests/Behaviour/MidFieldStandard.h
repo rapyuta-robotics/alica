@@ -12,7 +12,7 @@ class MidFieldStandard : public DomainBehaviour
 public:
     MidFieldStandard(BehaviourContext& context);
     virtual ~MidFieldStandard();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1402488696205) ENABLED START*/
     // Add additional public methods here
     int callCounter;

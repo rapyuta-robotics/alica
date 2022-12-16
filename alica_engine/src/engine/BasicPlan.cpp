@@ -44,7 +44,7 @@ void BasicPlan::doInit()
 void BasicPlan::doRun()
 {
     try {
-        run(nullptr);
+        run();
     } catch (const std::exception& e) {
         std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
         sendLogMessage(4, err);

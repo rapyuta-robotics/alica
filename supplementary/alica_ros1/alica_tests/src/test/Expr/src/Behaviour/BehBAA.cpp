@@ -26,7 +26,7 @@ BehBAA::~BehBAA()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void BehBAA::run(void* msg)
+void BehBAA::run()
 {
     /*PROTECTED REGION ID(run1629895911592) ENABLED START*/
     // Add additional options here

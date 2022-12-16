@@ -12,7 +12,7 @@ class Tackle : public DomainBehaviour
 public:
     Tackle(BehaviourContext& context);
     virtual ~Tackle();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1402488939130) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

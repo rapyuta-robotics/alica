@@ -24,7 +24,7 @@ TestInheritBlackboardBehaviour::~TestInheritBlackboardBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void TestInheritBlackboardBehaviour::run(void* msg)
+void TestInheritBlackboardBehaviour::run()
 {
     /*PROTECTED REGION ID(run831400441334251600) ENABLED START*/
     // Add additional options here

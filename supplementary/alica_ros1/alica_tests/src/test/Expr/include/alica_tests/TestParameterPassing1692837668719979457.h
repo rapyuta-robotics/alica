@@ -25,7 +25,7 @@ public:
 protected:
     /*PROTECTED REGION ID(pro1692837668719979457) ENABLED START*/
     // Override these methods for your use case
-    // virtual void run(void* msg) override;
+    // virtual void run() override;
     virtual void onInit() override;
     // Add/Override protected methods here
     /*PROTECTED REGION END*/

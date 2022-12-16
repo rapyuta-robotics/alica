@@ -14,7 +14,7 @@ class TriggerC : public DomainBehaviour
 public:
     TriggerC(BehaviourContext& context);
     virtual ~TriggerC();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1428508355209) ENABLED START*/
     // Add additional public methods here
     int callCounter;

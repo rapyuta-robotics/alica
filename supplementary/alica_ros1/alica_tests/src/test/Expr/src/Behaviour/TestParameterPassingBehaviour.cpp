@@ -25,7 +25,7 @@ TestParameterPassingBehaviour::~TestParameterPassingBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void TestParameterPassingBehaviour::run(void* msg)
+void TestParameterPassingBehaviour::run()
 {
     /*PROTECTED REGION ID(run831400441334251602) ENABLED START*/
     // Add additional options here

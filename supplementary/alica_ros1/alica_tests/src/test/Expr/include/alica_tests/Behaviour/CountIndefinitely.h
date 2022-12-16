@@ -12,7 +12,7 @@ class CountIndefinitely : public DomainBehaviour
 public:
     CountIndefinitely(BehaviourContext& context);
     virtual ~CountIndefinitely();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1529456643148) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
