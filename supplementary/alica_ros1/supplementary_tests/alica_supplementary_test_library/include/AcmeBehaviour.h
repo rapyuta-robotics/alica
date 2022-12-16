@@ -16,4 +16,4 @@ public:
     static std::unique_ptr<AcmeBehaviour> create(BehaviourContext& context) { return std::make_unique<AcmeBehaviour>(context); }
 };
 BOOST_DLL_ALIAS(alica::AcmeBehaviour::create, AcmeBeh)
-}; // namespace alica
+} // namespace alica
