@@ -15,5 +15,5 @@ public:
     // Factory method
     static std::unique_ptr<AcmePlan> create(PlanContext& context) { return std::make_unique<AcmePlan>(context); }
 };
-BOOST_DLL_ALIAS(alica::AcmePlan::create, acmeplan)
+BOOST_DLL_ALIAS(alica::AcmePlan::create, AcmePlan)
 } // namespace alica

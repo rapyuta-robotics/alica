@@ -15,5 +15,5 @@ public:
     // Factory method
     static std::unique_ptr<AcmeBehaviour> create(BehaviourContext& context) { return std::make_unique<AcmeBehaviour>(context); }
 };
-BOOST_DLL_ALIAS(alica::AcmeBehaviour::create, acmebehaviour)
+BOOST_DLL_ALIAS(alica::AcmeBehaviour::create, AcmeBeh)
 } // namespace alica

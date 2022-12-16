@@ -15,5 +15,5 @@ public:
     // Factory method
     static std::unique_ptr<WaitBehaviour> create(BehaviourContext& context) { return std::make_unique<WaitBehaviour>(context); }
 };
-BOOST_DLL_ALIAS(alica::WaitBehaviour::create, waitbehaviour)
+BOOST_DLL_ALIAS(alica::WaitBehaviour::create, WaitBehaviour)
 } // namespace alica
