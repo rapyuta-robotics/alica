@@ -1254,7 +1254,7 @@ public:
     LegacyTransitionConditionCreator();
     virtual ~LegacyTransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(TransitionConditionContext& context);
+    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1281,9 +1281,10 @@ LegacyTransitionConditionCreator::LegacyTransitionConditionCreator() {}
 
 LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(TransitionConditionContext& context)
+std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
-    switch (conditionId)
+    int64_t preConditionId = context.preConditionId;
+    switch (preConditionId)
     {
         «FOR con : conditions»
         case «con.id»:
@@ -1298,7 +1299,7 @@ std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldMode
             }
         «ENDFOR»
         default:
-        std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+        std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << preConditionId << std::endl;
         throw new std::exception();
         break;
     }
