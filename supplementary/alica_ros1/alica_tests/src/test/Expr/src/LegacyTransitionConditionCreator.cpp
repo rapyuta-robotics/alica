@@ -74,7 +74,8 @@ LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(
         int64_t conditionId, TransitionConditionContext& context)
 {
-    switch (conditionId) {
+    int64_t preConditionId = context.preConditionId;
+    switch (preConditionId) {
     case 1588069612661: {
         PreCondition1588069612661 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
@@ -620,7 +621,7 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         };
     }
     default:
-        std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << conditionId << std::endl;
+        std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << preConditionId << std::endl;
         throw new std::exception();
         break;
     }
