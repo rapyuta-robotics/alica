@@ -335,12 +335,11 @@ protected:
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        const_cast<YAML::Node&>(config)["Alica"]["LegacyTransitionConditions"] = true;
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        ac->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
+        ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::LegacyTransitionConditionCreator>()};

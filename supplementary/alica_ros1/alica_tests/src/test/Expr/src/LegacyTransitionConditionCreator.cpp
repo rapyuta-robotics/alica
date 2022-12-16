@@ -72,7 +72,7 @@ LegacyTransitionConditionCreator::LegacyTransitionConditionCreator() {}
 LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 
 std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(
-        TransitionConditionContext& context)
+        int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
     case 1588069612661: {
