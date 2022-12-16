@@ -26,7 +26,7 @@ BehAAA::~BehAAA()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void BehAAA::run(void* msg)
+void BehAAA::run()
 {
     /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
     // Add additional options here

@@ -12,7 +12,7 @@ class Attack : public DomainBehaviour
 public:
     Attack(BehaviourContext& context);
     virtual ~Attack();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1402488848841) ENABLED START*/
     // Add additional public methods here
     int callCounter;

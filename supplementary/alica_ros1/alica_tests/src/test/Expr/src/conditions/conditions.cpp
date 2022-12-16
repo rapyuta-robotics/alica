@@ -6,7 +6,7 @@
 #include <iostream>
 
 /*PROTECTED REGION ID(conditionSource) ENABLED START*/
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 #include <alica_tests/SimpleSwitches.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/test_sched_world_model.h>

@@ -40,7 +40,7 @@ public:
     TransitionCondition* getTransitionCondition() const { return _transitionCondition; }
     const KeyMapping* getKeyMapping() const { return _keyMapping.get(); }
     // Deprecated, only used when using legacy transition conditions.
-    const int64_t getPreConditionId() const { return _preConditionId; }
+    int64_t getPreConditionId() const { return _preConditionId; }
 
 private:
     friend ModelFactory;

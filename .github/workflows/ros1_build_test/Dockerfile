@@ -12,13 +12,13 @@ WORKDIR /root/catkin_ws/
 RUN <<deps
   apt-get update
   apt-get install -y python3-catkin-tools libboost-all-dev
-  rosdep install -y --from-paths . --ignore-src --rosdistro noetic
+  rosdep install -y --from-paths . --ignore-src --skip-keys='rclcpp ament_cmake' --rosdistro noetic
 deps
 
 RUN <<build
   source /opt/ros/noetic/setup.bash
   catkin init
-  catkin config --skiplist alica_tracing
+  catkin config --install --skiplist alica_tracing alica_ros2_proxy alica_ros2_turtlesim
   catkin build --no-status
 build
 
