@@ -12,7 +12,7 @@ class EmptyBehaviour : public DomainBehaviour
 public:
     EmptyBehaviour(BehaviourContext& context);
     virtual ~EmptyBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1625610857563) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/

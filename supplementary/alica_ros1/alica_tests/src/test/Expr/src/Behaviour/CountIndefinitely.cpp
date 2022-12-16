@@ -25,7 +25,7 @@ CountIndefinitely::~CountIndefinitely()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void CountIndefinitely::run(void* msg)
+void CountIndefinitely::run()
 {
     /*PROTECTED REGION ID(run1529456643148) ENABLED START*/
     // Add additional options here

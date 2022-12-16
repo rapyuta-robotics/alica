@@ -10,7 +10,7 @@ class AcmePlan : public BasicPlan
 public:
     AcmePlan(PlanContext& context);
     virtual ~AcmePlan(){};
-    void run(void* msg) override{};
+    void run() override{};
 
     // Factory method
     static std::unique_ptr<AcmePlan> create(PlanContext& context) { return std::make_unique<AcmePlan>(context); }

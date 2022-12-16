@@ -10,7 +10,7 @@ class Go2RandomPosition : public BasicBehaviour
 public:
     Go2RandomPosition(BehaviourContext& context);
     virtual ~Go2RandomPosition();
-    virtual void run(void* msg);
+    virtual void run();
     // Factory method
     static std::unique_ptr<Go2RandomPosition> create(BehaviourContext& context) { return std::unique_ptr<Go2RandomPosition>(new Go2RandomPosition(context)); }
 

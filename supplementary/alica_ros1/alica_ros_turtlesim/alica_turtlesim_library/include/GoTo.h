@@ -11,7 +11,7 @@ class GoTo : public BasicBehaviour
 public:
     GoTo(BehaviourContext& context);
     virtual ~GoTo();
-    virtual void run(void* msg);
+    virtual void run();
     // Factory method
     static std::unique_ptr<GoTo> create(BehaviourContext& context) { return std::unique_ptr<GoTo>(new GoTo(context)); }
 

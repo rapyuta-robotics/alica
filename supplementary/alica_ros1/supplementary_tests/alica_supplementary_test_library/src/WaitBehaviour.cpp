@@ -10,7 +10,7 @@ WaitBehaviour::WaitBehaviour(BehaviourContext& context)
     std::cerr << "WaitBehaviour created" << std::endl;
 }
 
-void WaitBehaviour::run(void* msg)
+void WaitBehaviour::run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(1));
 }

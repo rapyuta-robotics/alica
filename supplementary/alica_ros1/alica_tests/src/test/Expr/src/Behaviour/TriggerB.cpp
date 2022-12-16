@@ -26,7 +26,7 @@ TriggerB::~TriggerB()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void TriggerB::run(void* msg)
+void TriggerB::run()
 {
     /*PROTECTED REGION ID(run1428508316905) ENABLED START*/
     // Add additional options here

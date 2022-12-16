@@ -14,7 +14,7 @@ class NotToTrigger : public DomainBehaviour
 public:
     NotToTrigger(BehaviourContext& context);
     virtual ~NotToTrigger();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1429017274116) ENABLED START*/
     // Add additional public methods here
     int callCounter;
