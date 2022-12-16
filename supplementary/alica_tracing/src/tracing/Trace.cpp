@@ -1,7 +1,19 @@
 #include "tracing/Trace.h"
 
+#include <variant>
+#include <utility>
+
 namespace alicaTracing
 {
+namespace
+{
+template <typename T>
+RawTraceValue prepareRawTraceValue(T&& value)
+{
+    return std::visit([](auto&& v) { return RawTraceValue(std::forward<decltype(v)>(v)); }, std::forward<T>(value));
+}
+} // namespace
+
 Trace::Trace(const std::string& opName, std::optional<const std::string> parent)
 {
     if (parent) {
@@ -18,9 +30,9 @@ Trace::~Trace()
     _rawTrace->Finish();
 }
 
-void Trace::setTag(const std::string& key, const std::string& value)
+void Trace::setTag(const std::string& key, const TraceValue& value)
 {
-    _rawTrace->SetTag(key, value);
+    _rawTrace->SetTag(key, prepareRawTraceValue(extractVariant(value)));
 }
 
 void Trace::setTag(const std::string& key, const RawTraceValue& value)
@@ -28,9 +40,10 @@ void Trace::setTag(const std::string& key, const RawTraceValue& value)
     _rawTrace->SetTag(key, value);
 }
 
-void Trace::setLog(std::pair<std::string, std::string> logEntry)
+void Trace::setLog(const std::pair<std::string, TraceValue>& logEntry)
 {
-    _rawTrace->Log({logEntry});
+    const auto& [key, value] = logEntry;
+    _rawTrace->Log({{key, prepareRawTraceValue(extractVariant(value))}});
 }
 
 void Trace::markError(const std::string& description)

@@ -42,7 +42,7 @@ public:
 
     // Tags are the key value pair you can search in tracing ui
     // If there is a pre-existing tag set for `key`, it is overwritten.
-    void setTag(const std::string& key, const std::string& value) override;
+    void setTag(const std::string& key, const TraceValue& value) override;
 
     // setLog is a timestamped way to record key:value logging data
     // about a trace. Here's an example:
@@ -52,7 +52,7 @@ public:
     //        {"wait.time", "waited 10 sec for agent 2"}});
     // BE CAREFUL about what you want to log,
     // These are supposed to be micro logs to be carried over the network.
-    void setLog(std::pair<std::string, std::string> logEntry) override;
+    void setLog(const std::pair<std::string, TraceValue>& logEntry) override;
 
     // When operation being traced by this instance fail, call this api
     // Error traces are highlighted in tracing ui.
