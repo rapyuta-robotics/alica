@@ -12,7 +12,7 @@ class AlwaysFail : public DomainBehaviour
 public:
     AlwaysFail(BehaviourContext& context);
     virtual ~AlwaysFail();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1532424188199) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

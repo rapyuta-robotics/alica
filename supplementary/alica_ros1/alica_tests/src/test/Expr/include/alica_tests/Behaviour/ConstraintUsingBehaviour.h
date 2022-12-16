@@ -14,7 +14,7 @@ class ConstraintUsingBehaviour : public DomainBehaviour
 public:
     ConstraintUsingBehaviour(BehaviourContext& context);
     virtual ~ConstraintUsingBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/
     // Add additional public methods here
     int getCallCounter() const;

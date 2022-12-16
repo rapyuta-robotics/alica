@@ -26,7 +26,7 @@ NotToTrigger::~NotToTrigger()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void NotToTrigger::run(void* msg)
+void NotToTrigger::run()
 {
     /*PROTECTED REGION ID(run1429017274116) ENABLED START*/
     // Add additional options here
