@@ -14,7 +14,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
 std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
-        TransitionConditionContext& context)
+        int64_t conditionConfId, TransitionConditionContext& context)
 {
     int64_t conditionId = context.conditionConfId;
     switch (conditionId) {

@@ -15,7 +15,7 @@ class DynamicTransitionConditionCreator : public ITransitionConditionCreator
 public:
     DynamicTransitionConditionCreator();
     virtual ~DynamicTransitionConditionCreator(){};
-    TransitionConditionCallback createConditions(TransitionConditionContext& context);
+    TransitionConditionCallback createConditions(int64_t conditionConfId, TransitionConditionContext& context) override;
 
 private:
     typedef bool(transitionConditionFunctionType)(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*);

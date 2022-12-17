@@ -11,6 +11,7 @@ public:
     TransitionConditionCreator();
     virtual ~TransitionConditionCreator();
 
-    std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(TransitionConditionContext& context);
+    std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(
+            int64_t conditionConfId, TransitionConditionContext& context) override;
 };
 } /* namespace alica */
