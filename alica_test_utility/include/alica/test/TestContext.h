@@ -110,8 +110,11 @@ public:
     bool isSuccess(const BasicBehaviour* beh) const;
     bool isSuccess(const BasicPlan* plan) const;
 
-private:
+    void sleep(const alica::AlicaTime& sleepTime) const;
+
     RunningPlan* getRunningPlan(const std::string& name);
+
+private:
     RunningPlan* searchRunningPlanTree(const std::string& name);
     RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
     static std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName);

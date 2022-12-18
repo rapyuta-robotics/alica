@@ -54,7 +54,7 @@ if(BUILD_TESTING)
         #src/test/test_alica_engine_plan_parser.cpp
         #src/test/test_alica_init_shutdown.cpp
         #src/test/test_alica_multi_agent_plan.cpp
-        #src/test/test_alica_simple_plan.cpp
+        src/test/test_alica_simple_plan.cpp
         #src/test/test_alica_sync_transition.cpp
         #src/test/test_alica_time.cpp
         #src/test/test_assignment.cpp
@@ -76,7 +76,7 @@ if(BUILD_TESTING)
         #src/test/test_inherit_blackboard.cpp
         #src/test/test_failure_handling.cpp
         #src/test/test_alica_logger.cpp
-        src/test/test_success.cpp
+        #src/test/test_success.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

@@ -21,60 +21,106 @@
 
 #include <gtest/gtest.h>
 
-namespace alica
-{
-namespace
+#include <alica/test/TestContext.h>
+#include <alica/test/Util.h>
+#include <alica_tests/BehaviourCreator.h>
+#include <alica_tests/ConditionCreator.h>
+#include <alica_tests/ConstraintCreator.h>
+#include <alica_tests/PlanCreator.h>
+#include <alica_tests/TestWorldModel.h>
+#include <alica_tests/TransitionConditionCreator.h>
+#include <alica_tests/UtilityFunctionCreator.h>
+#include <clock/AlicaRosTimer.h>
+#include <communication/AlicaDummyCommunication.h>
+#include <logger/AlicaRosLogger.h>
+
+#include <gtest/gtest.h>
+#include <ros/ros.h>
+
+namespace alica::test
 {
 
-class AlicaSimplePlan : public AlicaTestFixture
+class TestSimplePlanFixture : public ::testing::Test
 {
+
+public:
+    virtual void SetUp() override
+    {
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "SimpleTestPlan", false, 1);
+        ASSERT_TRUE(_tc->isValid());
+        const YAML::Node& config = _tc->getConfig();
+        _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        _tc->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        _tc->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
+        _tc->setWorldModel<alicaTests::TestWorldModelNew>(_tc.get());
+        _spinner->start();
+        AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>()};
+        _tc->init(std::move(creators));
+    }
+
+    void TearDown() override
+    {
+        _spinner->stop();
+        _tc->terminate();
+    }
+
 protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
-    const char* getMasterPlanName() const override { return "SimpleTestPlan"; }
-    bool stepEngine() const override { return false; }
+    std::unique_ptr<TestContext> _tc;
+    std::unique_ptr<ros::AsyncSpinner> _spinner;
 };
 
 /**
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
-TEST_F(AlicaSimplePlan, runBehaviourInSimplePlan)
+TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
     ASSERT_NO_SIGNAL
-    ae->start();
+    _tc->startEngine();
+
     alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
     uint8_t timeoutCount = 0;
-
     do {
-        ae->getAlicaClock().sleep(sleepTime);
-    } while (!alica::test::Util::isPlanActive(ae, 1412252439925));
+        _tc->sleep(sleepTime);
+    } while (!_tc->isPlanActive(1412252439925));
+
+    ASSERT_TRUE(_tc->getActivePlan("SimpleTestPlan"));
+    EXPECT_TRUE(_tc->isPlanActive(1412252439925));  // Plan: SimpleTestPlan
+    EXPECT_TRUE(_tc->isStateActive(1412761855746)); // State: TestState2
 
     // Check whether RC can be called
-    EXPECT_TRUE(ae->getPlanBase().getRootNode()->isRuntimeConditionValid());
+    EXPECT_TRUE(_tc->getRunningPlan("SimpleTestPlan")->isRuntimeConditionValid());
     // Check whether RC has been called
     EXPECT_GE(CounterClass::called, 1);
 
-    while (!alica::test::Util::isStateActive(ae, 1412761855746) && timeoutCount < 5) {
-        ae->getAlicaClock().sleep(sleepTime);
+    timeoutCount = 0;
+    while (!_tc->isStateActive(1412761855746) && timeoutCount < 5) {
+        _tc->sleep(sleepTime);
         timeoutCount++;
     }
     timeoutCount = 0;
 
     // Check final state
-    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1412761855746));
+    EXPECT_TRUE(_tc->isStateActive(1412761855746)); // State: TestState2
     // Check execution of final state behaviour
-    EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1402488848841));
+    EXPECT_TRUE(_tc->isPlanActive(1402488848841)); // Behaviour: Attack
 
     // We assume at least 30 calls to Attack in (3 * sleepTime) seconds.
-
-    while (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter < 30 && timeoutCount < 3) {
-        ae->getAlicaClock().sleep(sleepTime);
+    return;
+    std::string name = _tc->getName<BasicBehaviour>(1402488848841); // Behaviour: Attack
+    while (dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->callCounter < 30 && timeoutCount < 3) {
+        _tc->sleep(sleepTime);
         timeoutCount++;
     }
     timeoutCount = 0;
 
-    EXPECT_GE(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->callCounter, 30);
-    EXPECT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(ae, 1402488848841, 0))->initCounter, 0);
+    EXPECT_GE(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->callCounter, 30);
+    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->initCounter, 0);
     CounterClass::called = 0;
 }
-} // namespace
-} // namespace alica
+} // namespace alica::test
