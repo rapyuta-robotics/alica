@@ -120,6 +120,15 @@ bool TestContext::isSuccess(const BasicPlan* plan) const
     return plan->getPlanContext()->getActiveState()->isSuccessState();
 }
 
+bool TestContext::isStateActive(const std::string& runningPlanName, const std::string& stateName)
+{
+    auto* rp = getRunningPlan(runningPlanName);
+    if (!rp) {
+        return false;
+    }
+    return rp->getActiveState() ? (rp->getActiveState()->getName() == stateName) : false;
+}
+
 RunningPlan* TestContext::getRunningPlan(const std::string& name)
 {
     if (name.empty()) {

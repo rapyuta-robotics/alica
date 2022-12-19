@@ -110,6 +110,8 @@ public:
     bool isSuccess(const BasicBehaviour* beh) const;
     bool isSuccess(const BasicPlan* plan) const;
 
+    bool isStateActive(const std::string& runningPlanName, const std::string& stateName);
+
 private:
     RunningPlan* getRunningPlan(const std::string& name);
     RunningPlan* searchRunningPlanTree(const std::string& name);
