@@ -12,7 +12,7 @@ class SuccessOnInitBeh : public DomainBehaviour
 public:
     SuccessOnInitBeh(BehaviourContext& context);
     virtual ~SuccessOnInitBeh();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub3821787310391665935) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/
