@@ -9,7 +9,7 @@ class SuccessOrFailBehaviour : public alica::BasicBehaviour
 {
 public:
     SuccessOrFailBehaviour();
-    void run(void* msg) override;
+    void run() override;
     void setTriggerType(bool triggerSuccess);
 
 protected:
@@ -64,7 +64,7 @@ void SuccessOrFailBehaviour<iterationsBeforeTrigger>::initialiseParameters()
 }
 
 template <uint32_t iterationsBeforeTrigger>
-void SuccessOrFailBehaviour<iterationsBeforeTrigger>::run(void* msg)
+void SuccessOrFailBehaviour<iterationsBeforeTrigger>::run()
 {
     if (iterationsCounter() < _iterationsBeforeTrigger) {
         incIterationsCounter();

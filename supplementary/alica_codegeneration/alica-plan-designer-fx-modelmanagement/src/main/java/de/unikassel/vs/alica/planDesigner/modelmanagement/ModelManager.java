@@ -217,6 +217,18 @@ public class ModelManager implements Observer {
         return null;
     }
 
+    public ArrayList<Condition> getLegacyTransitionConditions() {
+        ArrayList<Condition> conditions = new ArrayList<>();
+        for (Plan plan : planMap.values()) {
+            for (Transition transition : plan.getTransitions()) {
+                conditions.add(transition.getPreCondition());
+            }
+        }
+        // remove all null values inserted before
+        conditions.removeIf(Objects::isNull);
+        return conditions;
+    }
+
     public ArrayList<Condition> getConditions() {
         ArrayList<Condition> conditions = new ArrayList<>();
         for (Plan plan : planMap.values()) {
@@ -240,6 +252,9 @@ public class ModelManager implements Observer {
     }
 
     public List<TransitionCondition> getTransitionConditions() {
+        if (conditionRepository == null) {
+            return new ArrayList<TransitionCondition>();
+        }
         return conditionRepository.getConditions();
     }
 
@@ -516,6 +531,9 @@ public class ModelManager implements Observer {
     }
 
     private void resolveReferences(ConditionRepository conditionRepo) {
+        if (conditionRepo == null) {
+            return;
+        }
         for (TransitionCondition condition : conditionRepo.getConditions()) {
             condition.setConditionRepository(conditionRepo);
         }
