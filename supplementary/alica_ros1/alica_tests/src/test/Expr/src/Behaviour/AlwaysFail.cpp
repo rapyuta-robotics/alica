@@ -24,7 +24,7 @@ AlwaysFail::~AlwaysFail()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void AlwaysFail::run(void* msg)
+void AlwaysFail::run()
 {
     /*PROTECTED REGION ID(run1532424188199) ENABLED START*/
     // Add additional options here

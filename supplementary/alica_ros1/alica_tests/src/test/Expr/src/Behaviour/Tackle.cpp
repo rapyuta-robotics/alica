@@ -24,7 +24,7 @@ Tackle::~Tackle()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void Tackle::run(void* msg)
+void Tackle::run()
 {
     /*PROTECTED REGION ID(run1402488939130) ENABLED START*/
     // Add additional options here

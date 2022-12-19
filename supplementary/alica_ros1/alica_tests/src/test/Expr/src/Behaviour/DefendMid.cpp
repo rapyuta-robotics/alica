@@ -24,7 +24,7 @@ DefendMid::~DefendMid()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void DefendMid::run(void* msg)
+void DefendMid::run()
 {
     /*PROTECTED REGION ID(run1402488730695) ENABLED START*/
     // Add additional options here

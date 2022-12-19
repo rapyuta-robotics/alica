@@ -15,7 +15,7 @@ DynamicConditionCreator::DynamicConditionCreator()
     _libraryPath = calculateLibraryPath();
 }
 
-std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(ConditionContext& context)
+std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_t conditionConfId, ConditionContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
     if (completeLibraryName.empty())

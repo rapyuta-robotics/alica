@@ -12,7 +12,7 @@ class DefendMid : public DomainBehaviour
 public:
     DefendMid(BehaviourContext& context);
     virtual ~DefendMid();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1402488730695) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

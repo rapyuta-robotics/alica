@@ -49,6 +49,75 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: 1413201368286 (1413201368286)
+ *   - Comment:
+ *   - Source2Dest: OtherState --> NewSuccessState1
+ *
+ * Precondition: 1413201370590 (1413201370590)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in OtherState:
+ *   - Attack (1402488848841)
+ */
+bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1413201368286) ENABLED START*/
+    std::cout << "The PreCondition 1413201370590 in Transition '1413201368286' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 1413201050743 (1413201050743)
+ *   - Comment:
+ *   - Source2Dest: State1 --> State2
+ *
+ * Precondition: 1413201052549 (1413201052549)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in State1:
+ *   - Attack (1402488848841)
+ */
+bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1413201050743) ENABLED START*/
+    std::cout << "The PreCondition 1413201052549 in Transition '1413201050743' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 1413201367062 (1413201367062)
+ *   - Comment:
+ *   - Source2Dest: State2 --> NewSuccessState2
+ *
+ * Precondition: 1413201367990 (1413201367990)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in State2:
+ *   - Attack (1402488848841)
+ */
+bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1413201367062) ENABLED START*/
+    std::cout << "The PreCondition 1413201367990 in Transition '1413201367062' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1413200862180) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

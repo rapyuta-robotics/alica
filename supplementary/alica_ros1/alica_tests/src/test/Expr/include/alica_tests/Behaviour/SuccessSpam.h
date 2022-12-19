@@ -12,7 +12,7 @@ class SuccessSpam : public DomainBehaviour
 public:
     SuccessSpam(BehaviourContext& context);
     virtual ~SuccessSpam();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1522377401286) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/

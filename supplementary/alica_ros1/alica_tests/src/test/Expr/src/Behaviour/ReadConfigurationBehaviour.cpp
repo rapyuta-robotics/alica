@@ -25,7 +25,7 @@ ReadConfigurationBehaviour::~ReadConfigurationBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void ReadConfigurationBehaviour::run(void* msg)
+void ReadConfigurationBehaviour::run()
 {
     /*PROTECTED REGION ID(run1588061129360) ENABLED START*/
     //    std::cout << this->getName() << ": TestValue is " << testValue << std::endl;

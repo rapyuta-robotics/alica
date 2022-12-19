@@ -32,7 +32,7 @@ TraceFactory::~TraceFactory()
     // allow termination to propogate,
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     opentracing::Tracer::Global()->Close();
-};
+}
 
 std::unique_ptr<alica::IAlicaTrace> TraceFactory::create(const std::string& opName, std::optional<const std::string> parent) const
 {

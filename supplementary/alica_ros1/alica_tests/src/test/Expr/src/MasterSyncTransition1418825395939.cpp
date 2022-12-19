@@ -45,6 +45,50 @@ std::shared_ptr<UtilityFunction> UtilityFunction1418825395939::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: FirstTaskTran (1418825425833)
+ *   - Comment:
+ *   - Source2Dest: FirstTaskFirstState --> FirstTaskSecondState
+ *
+ * Precondition: MISSING_NAME (1418825427317)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in FirstTaskFirstState:
+ */
+bool PreCondition1418825427317::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1418825425833) ENABLED START*/
+    std::cout << "The PreCondition 1418825427317 in Transition 'FirstTaskTran' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: SecondTaskTran (1418825427469)
+ *   - Comment:
+ *   - Source2Dest: SecondTaskFirstState --> SecondTaskSecondState
+ *
+ * Precondition: MISSING_NAME (1418825428924)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in SecondTaskFirstState:
+ */
+bool PreCondition1418825428924::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1418825427469) ENABLED START*/
+    std::cout << "The PreCondition 1418825428924 in Transition 'SecondTaskTran' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1418825395939) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

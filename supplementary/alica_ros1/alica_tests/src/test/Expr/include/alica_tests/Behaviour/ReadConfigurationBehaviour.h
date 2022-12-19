@@ -11,7 +11,7 @@ class ReadConfigurationBehaviour : public DomainBehaviour
 public:
     ReadConfigurationBehaviour(BehaviourContext& context);
     virtual ~ReadConfigurationBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1588061129360) ENABLED START*/
     std::string testValue;
     /*PROTECTED REGION END*/

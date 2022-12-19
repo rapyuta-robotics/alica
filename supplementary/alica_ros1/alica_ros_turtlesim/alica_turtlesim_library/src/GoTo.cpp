@@ -14,7 +14,7 @@ GoTo::GoTo(BehaviourContext& context)
 }
 
 GoTo::~GoTo() {}
-void GoTo::run(void* msg)
+void GoTo::run()
 {
     // solve constraints and get value
     if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {

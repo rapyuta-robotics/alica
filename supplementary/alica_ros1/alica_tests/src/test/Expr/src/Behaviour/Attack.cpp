@@ -26,7 +26,7 @@ Attack::~Attack()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void Attack::run(void* msg)
+void Attack::run()
 {
     /*PROTECTED REGION ID(run1402488848841) ENABLED START*/
     // Add additional options here

@@ -25,7 +25,7 @@ public:
 protected:
     /*PROTECTED REGION ID(pro3172561495666303184) ENABLED START*/
     // Override these methods for your use case
-    // virtual void run(void* msg) override;
+    // virtual void run() override;
     // virtual void onInit() override;
     // virtual void onTerminate() override;
     // Add/Override protected methods here
@@ -39,5 +39,10 @@ private:
 class UtilityFunction3172561495666303184 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
+};
+class PreCondition1943478533524176732 : public DomainCondition
+{
+public:
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 } /* namespace alica */

@@ -51,11 +51,12 @@ public class Codegenerator {
     private List<Behaviour> behaviours;
     private List<Condition> conditions;
     private List<TransitionCondition> transitionConditions;
+    private List<Condition> legacyTransitionConditions;
 
     /**
      * This constructor initializes a C++ code generator
      */
-    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, List<TransitionCondition> transitionConditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
+    public Codegenerator(List<Plan> plans, List<Behaviour> behaviours, List<Condition> conditions, List<TransitionCondition> transitionConditions, List<Condition> legacyTransitionConditions, String formatter, GeneratedSourcesManager generatedSourcesManager, String packageName) {
         // TODO: Document this! Here can the programming language be changed.
         languageSpecificGenerator = new CPPGeneratorImpl(generatedSourcesManager, packageName);
         languageSpecificGenerator.setFormatter(formatter);
@@ -69,6 +70,7 @@ public class Codegenerator {
         this.conditions = conditions;
         Collections.sort(conditions, new PlanElementComparator());
         this.transitionConditions = transitionConditions;
+        this.legacyTransitionConditions = legacyTransitionConditions;
     }
 
     /**
@@ -111,6 +113,7 @@ public class Codegenerator {
         languageSpecificGenerator.createConditionCreator(plans, behaviours, conditions);
         languageSpecificGenerator.createTransitionConditions(transitionConditions);
         languageSpecificGenerator.createTransitionConditionsCreator(transitionConditions);
+        languageSpecificGenerator.createLegacyTransitionConditionsCreator(plans, legacyTransitionConditions);
 
         /**
          * filter plans and behaviours for constraints before passing them to the creator, prevents

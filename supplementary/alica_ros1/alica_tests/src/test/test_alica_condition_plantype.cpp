@@ -1,5 +1,6 @@
 #include "test_alica.h"
 
+#include <alica/test/CounterClass.h>
 #include <alica_tests/TestConstantValueSummand.h>
 #include <alica_tests/TestWorldModel.h>
 
@@ -53,43 +54,17 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     ae->start();
     auto* wm = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
 
-    for (int i = 0; i < 21; i++) {
-        ac->stepEngine();
-
-        //		if(i > 1)
-        //		{
-        //			long id =
-        //(ae->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getId();
-        //			string name =
-        //(ae->getPlanBase().getRootNode()->getChildren()[0]->getActiveState()->getName();
-        //			cout << name << " : " << id  << " Iteration : " << i << endl;
-        //		}
-        if (i == 2) {
-            // Should be OtherPlan --> State
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
-        }
-        if (i == 5) {
-            wm->setRuntimeCondition1418042967134(true);
-        }
-        if (i == 6) {
-            // Should be RunTimeCondition --> State
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
-        }
-        if (i == 10) {
-            wm->setRuntimeCondition1418042967134(false);
-        }
-        if (i == 12) {
-            // Should be OtherPlan --> State
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
-        }
-        if (i == 13) {
-            wm->setPreCondition1418042929966(true);
-        }
-        if (i > 14) {
-            // Should be PreCondition --> State
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042796752));
-        }
-    }
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
+    wm->setRuntimeCondition1418042967134(true);
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042806576));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
+    wm->setRuntimeCondition1418042967134(false);
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
+    wm->setPreCondition1418042929966(true);
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042796752));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042796752));
 }
 } // namespace
 } // namespace alica
