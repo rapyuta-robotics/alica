@@ -87,6 +87,11 @@ bool Util::isPlanActive(alica::AlicaEngine* ae, int64_t id)
     return isPlanActiveHelper(ae->getPlanBase().getRootNode(), id);
 }
 
+bool Util::isPlanActive(const RunningPlan* rp, const std::string& name) 
+{
+    return isPlanActiveHelper(rp, name);
+}
+
 bool Util::isPlanActiveHelper(const RunningPlan* rp, int64_t id)
 {
     if (!rp) {
@@ -100,6 +105,25 @@ bool Util::isPlanActiveHelper(const RunningPlan* rp, int64_t id)
 
     for (const auto& child : rp->getChildren()) {
         if (isPlanActiveHelper(child, id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Util::isPlanActiveHelper(const RunningPlan* rp, const std::string& name)
+{
+    if (!rp) {
+        return false;
+    }
+
+    const AbstractPlan* abstractPlan = rp->getActivePlan();
+    if (abstractPlan && abstractPlan->getName() == name) {
+        return true;
+    }
+
+    for (const auto& child : rp->getChildren()) {
+        if (isPlanActiveHelper(child, name)) {
             return true;
         }
     }

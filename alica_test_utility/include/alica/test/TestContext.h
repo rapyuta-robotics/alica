@@ -99,6 +99,7 @@ public:
      * @return True if plan is active, false otherwise.
      */
     bool isPlanActive(int64_t id) const;
+    bool isPlanActive(const std::string& runningPlanName, const std::string& name);
 
     BasicBehaviour* getActiveBehaviour(const std::string& name);
     BasicPlan* getActivePlan(const std::string& name);
@@ -111,6 +112,8 @@ public:
     bool isSuccess(const BasicPlan* plan) const;
 
     void sleep(const alica::AlicaTime& sleepTime) const;
+
+    bool isStateActive(const std::string& runningPlanName, const std::string& stateName);
 
     RunningPlan* getRunningPlan(const std::string& name);
 

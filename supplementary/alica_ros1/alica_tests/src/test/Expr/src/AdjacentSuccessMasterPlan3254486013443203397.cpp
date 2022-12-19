@@ -39,6 +39,52 @@ std::shared_ptr<UtilityFunction> UtilityFunction3254486013443203397::getUtilityF
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: 3345031375302716643 (3345031375302716643)
+ *   - Comment:
+ *   - Source2Dest: EntryState --> SecondState
+ *
+ * Precondition: 807250359520655888 (807250359520655888)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in EntryState:
+ *   - AdjacentSuccessSubPlan (1682631238618360548)
+ */
+bool PreCondition807250359520655888::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(3345031375302716643) ENABLED START*/
+    std::cout << "The PreCondition 807250359520655888 in Transition '3345031375302716643' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 1914245867924544479 (1914245867924544479)
+ *   - Comment:
+ *   - Source2Dest: SecondState --> EntryState
+ *
+ * Precondition: 289358204208851392 (289358204208851392)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in SecondState:
+ *   - AdjacentSuccessSubPlan (1682631238618360548)
+ */
+bool PreCondition289358204208851392::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1914245867924544479) ENABLED START*/
+    std::cout << "The PreCondition 289358204208851392 in Transition '1914245867924544479' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods3254486013443203397) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

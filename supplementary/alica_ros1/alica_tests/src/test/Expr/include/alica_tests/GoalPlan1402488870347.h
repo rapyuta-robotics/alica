@@ -25,7 +25,7 @@ public:
 protected:
     /*PROTECTED REGION ID(pro1402488870347) ENABLED START*/
     // Override these methods for your use case
-    // virtual void run(void* msg) override;
+    // virtual void run() override;
     // virtual void onInit() override;
     // virtual void onTerminate() override;
     // Add additional protected methods here
@@ -46,6 +46,21 @@ class PreCondition1402489131988 : public DomainCondition
 };
 class RunTimeCondition1403773741874 : public DomainCondition
 {
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition1402489174338 : public DomainCondition
+{
+public:
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition1402489206278 : public DomainCondition
+{
+public:
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
+class PreCondition1402489218027 : public DomainCondition
+{
+public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
 class PostCondition1402489620773 : public DomainCondition

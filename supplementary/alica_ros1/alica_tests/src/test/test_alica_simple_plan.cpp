@@ -1,8 +1,8 @@
 #include "test_alica.h"
 
+#include <alica/test/CounterClass.h>
 #include <alica_tests/Behaviour/Attack.h>
 #include <alica_tests/Behaviour/MidFieldStandard.h>
-#include <alica_tests/CounterClass.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>
@@ -83,44 +83,29 @@ TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
     ASSERT_NO_SIGNAL
     _tc->startEngine();
 
-    alica::AlicaTime sleepTime = alica::AlicaTime::seconds(1);
-    uint8_t timeoutCount = 0;
-    do {
-        _tc->sleep(sleepTime);
-    } while (!_tc->isPlanActive(1412252439925));
+    SLEEP_UNTIL_SEC(_tc->isPlanActive("SimpleTestPlan", "SimpleTestPlan"), 1 /*sec*/, 100 /*maxrep*/);
 
     ASSERT_TRUE(_tc->getActivePlan("SimpleTestPlan"));
-    EXPECT_TRUE(_tc->isPlanActive(1412252439925));  // Plan: SimpleTestPlan
-    EXPECT_TRUE(_tc->isStateActive(1412761855746)); // State: TestState2
+    EXPECT_TRUE(_tc->isPlanActive("SimpleTestPlan", "SimpleTestPlan"));
+    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState2"));
 
     // Check whether RC can be called
     EXPECT_TRUE(_tc->getRunningPlan("SimpleTestPlan")->isRuntimeConditionValid());
     // Check whether RC has been called
     EXPECT_GE(CounterClass::called, 1);
 
-    timeoutCount = 0;
-    while (!_tc->isStateActive(1412761855746) && timeoutCount < 5) {
-        _tc->sleep(sleepTime);
-        timeoutCount++;
-    }
-    timeoutCount = 0;
+    SLEEP_UNTIL_SEC(_tc->isStateActive("SimpleTestPlan", "TestState2"), 1 /*sec*/, 5 /*maxrep*/);
 
     // Check final state
-    EXPECT_TRUE(_tc->isStateActive(1412761855746)); // State: TestState2
+    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState2"));
     // Check execution of final state behaviour
-    EXPECT_TRUE(_tc->isPlanActive(1402488848841)); // Behaviour: Attack
+    EXPECT_TRUE(_tc->isPlanActive("SimpleTestPlan", "Attack"));
 
     // We assume at least 30 calls to Attack in (3 * sleepTime) seconds.
-    return;
-    std::string name = _tc->getName<BasicBehaviour>(1402488848841); // Behaviour: Attack
-    while (dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->callCounter < 30 && timeoutCount < 3) {
-        _tc->sleep(sleepTime);
-        timeoutCount++;
-    }
-    timeoutCount = 0;
+    SLEEP_UNTIL_SEC((dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->callCounter < 30), 1, 3);
 
-    EXPECT_GE(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->callCounter, 30);
-    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour(name))->initCounter, 0);
+    EXPECT_GE(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->callCounter, 30);
+    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->initCounter, 0);
     CounterClass::called = 0;
 }
 } // namespace alica::test

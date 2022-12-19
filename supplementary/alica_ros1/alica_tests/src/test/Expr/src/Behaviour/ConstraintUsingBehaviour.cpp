@@ -29,7 +29,7 @@ ConstraintUsingBehaviour::~ConstraintUsingBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void ConstraintUsingBehaviour::run(void* msg)
+void ConstraintUsingBehaviour::run()
 {
     /*PROTECTED REGION ID(run1414068597716) ENABLED START*/
     // Add additional options here

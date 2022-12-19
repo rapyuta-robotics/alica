@@ -38,6 +38,29 @@ std::shared_ptr<UtilityFunction> UtilityFunction673160616613514188::getUtilityFu
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: 1123795990168202938 (1123795990168202938)
+ *   - Comment:
+ *   - Source2Dest: SuccessOnCondState --> WrappeASuccessState
+ *
+ * Precondition: 4605367163774150375 (4605367163774150375)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in SuccessOnCondState:
+ *   - SuccessOnCondPlan (3153116020668535682)
+ */
+bool PreCondition4605367163774150375::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1123795990168202938) ENABLED START*/
+    std::cout << "The PreCondition 4605367163774150375 in Transition '1123795990168202938' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods673160616613514188) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

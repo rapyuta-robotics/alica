@@ -64,6 +64,13 @@ bool TestContext::isPlanActive(int64_t id) const
     return Util::isPlanActive(_engine.get(), id);
 }
 
+bool TestContext::isPlanActive(const std::string& runningPlanName, const std::string& name)
+{
+    RunningPlan* rp;
+    rp = getRunningPlan(runningPlanName);
+    return Util::isPlanActive(rp, name);
+}
+
 BasicBehaviour* TestContext::getActiveBehaviour(const std::string& name)
 {
     auto rp = getRunningPlan(name);
@@ -118,6 +125,15 @@ bool TestContext::isSuccess(const BasicBehaviour* beh) const
 bool TestContext::isSuccess(const BasicPlan* plan) const
 {
     return plan->getPlanContext()->getActiveState()->isSuccessState();
+}
+
+bool TestContext::isStateActive(const std::string& runningPlanName, const std::string& stateName)
+{
+    auto* rp = getRunningPlan(runningPlanName);
+    if (!rp) {
+        return false;
+    }
+    return rp->getActiveState() ? (rp->getActiveState()->getName() == stateName) : false;
 }
 
 RunningPlan* TestContext::getRunningPlan(const std::string& name)

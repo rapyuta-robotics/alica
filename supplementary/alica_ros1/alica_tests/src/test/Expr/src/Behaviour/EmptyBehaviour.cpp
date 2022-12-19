@@ -3,7 +3,7 @@
 
 /*PROTECTED REGION ID(inccpp1625610857563) ENABLED START*/
 // Add additional includes here
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -25,7 +25,7 @@ EmptyBehaviour::~EmptyBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void EmptyBehaviour::run(void* msg)
+void EmptyBehaviour::run()
 {
     /*PROTECTED REGION ID(run1625610857563) ENABLED START*/
     // Add additional options here

@@ -14,7 +14,7 @@ class SolverTestBehaviour : public DomainBehaviour
 public:
     SolverTestBehaviour(BehaviourContext& context);
     virtual ~SolverTestBehaviour();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub1417424455986) ENABLED START*/
     // Add additional public methods here
     int getCallCounter();

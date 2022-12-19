@@ -37,7 +37,6 @@ if(BUILD_TESTING)
 
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
-        src/CounterClass.cpp
         src/DistBallRobot.cpp
         src/DistXContourTest.cpp
         src/DummyTestSummand.cpp

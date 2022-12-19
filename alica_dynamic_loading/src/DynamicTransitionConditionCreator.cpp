@@ -15,7 +15,7 @@ DynamicTransitionConditionCreator::DynamicTransitionConditionCreator()
     _libraryPath = calculateLibraryPath();
 }
 
-TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(int64_t conditionConfId, TransitionConditionContext& context)
+TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
     if (completeLibraryName.empty())
