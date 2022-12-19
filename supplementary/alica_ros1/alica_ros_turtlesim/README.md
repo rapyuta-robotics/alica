@@ -594,7 +594,7 @@ Go2RandomPosition::~Go2RandomPosition()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void Go2RandomPosition::run(void* msg)
+void Go2RandomPosition::run()
 {
     /*PROTECTED REGION ID(run4085572422059465423) ENABLED START*/
     if (isSuccess()) {
@@ -649,7 +649,7 @@ class GoTo : public DomainBehaviour
 public:
     GoTo();
     virtual ~GoTo();
-    virtual void run(void* msg);
+    virtual void run();
     /*PROTECTED REGION ID(pub4054297592460872311) ENABLED START*/
     // Add additional protected methods here
     /*PROTECTED REGION END*/
@@ -702,7 +702,7 @@ GoTo::~GoTo()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void GoTo::run(void* msg)
+void GoTo::run()
 {
     /*PROTECTED REGION ID(run4054297592460872311) ENABLED START*/
     // solve constraints and get value

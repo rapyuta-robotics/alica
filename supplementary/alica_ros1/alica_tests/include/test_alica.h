@@ -4,6 +4,7 @@
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
+#include <alica_tests/LegacyTransitionConditionCreator.h>
 #include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/TransitionConditionCreator.h>
@@ -303,6 +304,53 @@ protected:
     }
 
     virtual void TearDown() override
+    {
+        spinner->stop();
+        ac->terminate();
+        delete ac;
+    }
+
+    std::unique_ptr<ros::AsyncSpinner> spinner;
+};
+
+class AlicaLegacyConditionsFixture : public AlicaTestFixtureBase
+{
+protected:
+    alica::AlicaCreators creators;
+
+protected:
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+    virtual const char* getMasterPlanName() const = 0;
+    virtual bool stepEngine() const { return true; }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+
+    // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
+    virtual void SetUp() override
+    {
+        // determine the path to the test config
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
+        ASSERT_TRUE(ac->isValid());
+        const YAML::Node& config = ac->getConfig();
+        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        manageWorldModel(ac);
+        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setLogger<alica::AlicaDefaultLogger>();
+        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::LegacyTransitionConditionCreator>()};
+
+        ac->init(std::move(creators), true);
+        ae = AlicaTestsEngineGetter::getEngine(ac);
+        const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
+        spinner->start();
+    }
+
+    void TearDown() override
     {
         spinner->stop();
         ac->terminate();
