@@ -306,18 +306,17 @@ protected:
     // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
     virtual void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
+        // Path to test configs set by CMake
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
-
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
-        spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         manageWorldModel(ac);
-        ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -326,17 +325,13 @@ protected:
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-        spinner->start();
     }
 
     void TearDown() override
     {
-        spinner->stop();
         ac->terminate();
         delete ac;
     }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
