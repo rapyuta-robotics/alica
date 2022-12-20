@@ -64,6 +64,7 @@ public class StandaloneCodegenerator {
                 modelManager.getBehaviours(),
                 modelManager.getConditions(),
                 modelManager.getTransitionConditions(),
+                modelManager.getLegacyTransitionConditions(),
                 clangFormatPath,
                 generatedSourcesManager,
                 packageName);

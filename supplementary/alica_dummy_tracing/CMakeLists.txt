@@ -18,12 +18,15 @@ find_package(alica_engine REQUIRED)
 # Build
 include_directories(include)
 
-install(DIRECTORY include/${PROJECT_NAME}/
+
+#############
+## Install ##
+#############
+
+install(DIRECTORY include/
   DESTINATION include/
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  PATTERN ".svn" EXCLUDE
 )
-
 
 # Installing files to make a find_package()-able package
 write_basic_package_version_file(

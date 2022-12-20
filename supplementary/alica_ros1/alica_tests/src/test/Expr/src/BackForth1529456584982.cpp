@@ -41,6 +41,52 @@ std::shared_ptr<UtilityFunction> UtilityFunction1529456584982::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: MISSING_NAME (1529456609989)
+ *   - Comment: Forth
+ *   - Source2Dest: First --> Second
+ *
+ * Precondition: MISSING_NAME (1529456610697)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in First:
+ *   - CountIndefinitely (1529456643148)
+ */
+bool PreCondition1529456610697::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1529456609989) ENABLED START*/
+    std::cout << "The PreCondition 1529456610697 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (1529456610905)
+ *   - Comment: Back
+ *   - Source2Dest: Second --> First
+ *
+ * Precondition: MISSING_NAME (1529456611916)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Second:
+ *   - CountIndefinitely (1529456643148)
+ */
+bool PreCondition1529456611916::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1529456610905) ENABLED START*/
+    std::cout << "The PreCondition 1529456611916 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1529456584982) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
