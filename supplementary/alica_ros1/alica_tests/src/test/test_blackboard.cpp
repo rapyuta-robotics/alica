@@ -192,15 +192,16 @@ TEST_F(TestBlackboard, testBoolToString)
     srcLocked.set<bool>("valueSrc", true);
     targetLocked.set<std::string>("valueTarget", "");
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testInt64ToBool)
@@ -266,15 +267,16 @@ TEST_F(TestBlackboard, testInt64ToString)
     srcLocked.set<int64_t>("valueSrc", 1);
     targetLocked.set<std::string>("valueTarget", "");
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testDoubleToBool)
@@ -340,15 +342,16 @@ TEST_F(TestBlackboard, testDoubleToString)
     srcLocked.set<double>("valueSrc", 1.0);
     targetLocked.set<std::string>("valueTarget", "");
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testStringToBool)
@@ -360,15 +363,16 @@ TEST_F(TestBlackboard, testStringToBool)
     srcLocked.set<std::string>("valueSrc", "123");
     targetLocked.set<bool>("valueTarget", false);
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testStringToInt64)
@@ -380,15 +384,16 @@ TEST_F(TestBlackboard, testStringToInt64)
     srcLocked.set<std::string>("valueSrc", "123");
     targetLocked.set<int64_t>("valueTarget", 0);
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testStringToDouble)
@@ -400,15 +405,16 @@ TEST_F(TestBlackboard, testStringToDouble)
     srcLocked.set<std::string>("valueSrc", "123");
     targetLocked.set<double>("valueTarget", 0);
 
-    bool exceptionThrown = false;
-    try {
-        targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
-    } catch (const alica::BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
-    }
-
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    targetBb.impl().map("valueSrc", "valueTarget", srcBb.impl());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: variant construction failed");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testStringToString)
@@ -430,23 +436,27 @@ TEST_F(TestBlackboard, testAccessingWithWrongType)
     auto bb_locked = LockedBlackboardRW(bb);
     bb_locked.set<int64_t>("value", 1);
 
-    bool exceptionThrown = false;
-    try {
-        bb_locked.get<double>("value"); // try to access with a type we can cast to
-    } catch (const BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: double");
-    }
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    bb_locked.get<double>("value"); // try to access with a type we can cast to
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: double");
+                    throw;
+                }
+            },
+            BlackboardException);
 
-    exceptionThrown = false;
-    try {
-        bb_locked.get<std::string>("value"); // try to access with a type we cant cast to
-    } catch (const BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: std::string");
-    }
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    bb_locked.get<std::string>("value"); // try to access with a type we cant cast to
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: int64, getType: std::string");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
@@ -454,14 +464,16 @@ TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
     Blackboard bb;
     auto bb_locked = LockedBlackboardRW(bb);
 
-    bool exceptionThrown = false;
-    try {
-        bb_locked.get<double>("value");
-    } catch (const BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: get() failure, key: value is not yet set, so cannot get it");
-    }
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    bb_locked.get<double>("value");
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: get() failure, key: value is not yet set, so cannot get it");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
@@ -470,14 +482,16 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
     auto bb_locked = LockedBlackboardRW(bb);
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
-    bool exceptionThrown = false;
-    try {
-        bb_locked.get<double>("value");
-    } catch (const BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: std::any, getType: double");
-    }
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    bb_locked.get<double>("value");
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: std::any, getType: double");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
@@ -486,14 +500,16 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
     auto bb_locked = LockedBlackboardRW(bb);
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
-    bool exceptionThrown = false;
-    try {
-        bb_locked.get<UnknownType>("value");
-    } catch (const BlackboardException& e) {
-        exceptionThrown = true;
-        EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: unknown, getType: unknown");
-    }
-    EXPECT_TRUE(exceptionThrown);
+    EXPECT_THROW(
+            {
+                try {
+                    bb_locked.get<UnknownType>("value");
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: get() type mismatch, key: value, setType: unknown, getType: unknown");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
