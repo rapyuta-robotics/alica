@@ -162,7 +162,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
-    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0};
+    TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
 
     auto transitionCondition = creator->createConditions(1, ctx);
     bool res = transitionCondition(nullptr, nullptr, nullptr);

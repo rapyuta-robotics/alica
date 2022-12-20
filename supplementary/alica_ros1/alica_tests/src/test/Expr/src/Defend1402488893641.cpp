@@ -42,6 +42,97 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488893641::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: TackleToGetBall (1402488991762)
+ *   - Comment:
+ *   - Source2Dest: Tackle --> GetBall
+ *
+ * Precondition: MISSING_NAME (1402488993122)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Tackle:
+ *   - Tackle (1402488939130)
+ *   - Tackle (1402489318663)
+ */
+bool PreCondition1402488993122::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402488991762) ENABLED START*/
+    std::cout << "The PreCondition 1402488993122 in Transition 'TackleToGetBall' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: TackleToGetBall (1402488990761)
+ *   - Comment:
+ *   - Source2Dest: GetBall --> Tackle
+ *
+ * Precondition: MISSING_NAME (1402488991641)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in GetBall:
+ */
+bool PreCondition1402488991641::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402488990761) ENABLED START*/
+    std::cout << "The PreCondition 1402488991641 in Transition 'TackleToGetBall' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: GetBallToTryToDefendGoal (1402489064693)
+ *   - Comment:
+ *   - Source2Dest: GetBall --> TryToDefendGoal
+ *
+ * Precondition: MISSING_NAME (1402489065962)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in GetBall:
+ */
+bool PreCondition1402489065962::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489064693) ENABLED START*/
+    std::cout << "The PreCondition 1402489065962 in Transition 'GetBallToTryToDefendGoal' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: TryToDefendGoalToGetGoal (1402489071510)
+ *   - Comment:
+ *   - Source2Dest: TryToDefendGoal --> GetGoal
+ *
+ * Precondition: MISSING_NAME (1402489073613)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in TryToDefendGoal:
+ *   - PlanType (1402489564599)
+ */
+bool PreCondition1402489073613::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489071510) ENABLED START*/
+    std::cout << "The PreCondition 1402489073613 in Transition 'TryToDefendGoalToGetGoal' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1402488893641) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
