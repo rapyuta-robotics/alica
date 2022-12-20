@@ -21,7 +21,7 @@ class NonConstructable
 {
 public:
     NonConstructable() = delete;
-}
+};
 
 class TestBlackboard : public AlicaTestFixture
 {
@@ -498,12 +498,76 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
 
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 {
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("intVal", "int64", "14");
+    blueprint->addKey("doubleVal", "double", "2.7");
+    blueprint->addKey("boolVal", "bool", "true");
+    blueprint->addKey("stringVal", "std::string", "test string");
+    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
+    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
+    EXPECT_EQ(bb.get<double>("doubleVal"), 2.7);
+    EXPECT_EQ(bb.get<bool>("boolVal"), true);
+    EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
+
+    EXPECT_THROW(
+            {
+                try {
+                    bb.set<double>("intVal", 2.7);
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: set() type mismatch, key: intVal, set type: double, expected type (from yaml file): int64");
+                    throw;
+                }
+            },
+            BlackboardException);
+
+    EXPECT_THROW(
+            {
+                try {
+                    bb.set<std::string>("doubleVal", "test");
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(),
+                            "Blackboard exception: set() type mismatch, key: doubleVal, set type: std::string, expected type (from yaml file): double");
+                    throw;
+                }
+            },
+            BlackboardException);
+
+    EXPECT_THROW(
+            {
+                try {
+                    bb.set<std::string>("boolVal", "test");
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(
+                            e.what(), "Blackboard exception: set() type mismatch, key: boolVal, set type: std::string, expected type (from yaml file): bool");
+                    throw;
+                }
+            },
+            BlackboardException);
+
+    EXPECT_THROW(
+            {
+                try {
+                    bb.set<int64_t>("stringVal", 0);
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(),
+                            "Blackboard exception: set() type mismatch, key: stringVal, set type: int64, expected type (from yaml file): std::string");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
 {
+    Blackboard bb;
+    auto bb_locked = LockedBlackboardRW(bb);
+    bb_locked.set<PlanStatus>("value", PlanStatus::Success);
+    EXPECT_EQ(bb_locked.get<PlanStatus>("value"), PlanStatus::Success);
 
+    bb_locked.set<UnknownType>("value", UnknownType());
+    EXPECT_EQ(typeid(UnknownType), typeid(bb_locked.get<UnknownType>("value")));
 }
 
 TEST_F(TestBlackboard, testSetWithDifferentTypeNotInPML)
@@ -514,7 +578,7 @@ TEST_F(TestBlackboard, testSetWithDifferentTypeNotInPML)
     EXPECT_EQ(bb_locked.get<int64_t>("value"), 1);
 
     bb_locked.set<double>("value", 2.0);
-    EXPECT_EQ(bb_locked.get<double>("value"), 1.0);
+    EXPECT_EQ(bb_locked.get<double>("value"), 2.0);
 }
 
 TEST_F(TestBlackboard, testSetAnyWithDifferentType)
@@ -524,39 +588,162 @@ TEST_F(TestBlackboard, testSetAnyWithDifferentType)
     bb_locked.set<alica::PlanStatus>("value", alica::PlanStatus::Success);
     EXPECT_EQ(bb_locked.get<alica::PlanStatus>("value"), alica::PlanStatus::Success);
 
-    // TODO: find different unknown type
-    bb_locked.set<int64_t>("value", 2.0);
-    EXPECT_EQ(bb_locked.get<double>("value"), 1.0);
+    bb_locked.set<UnknownType>("value", UnknownType());
+    EXPECT_EQ(typeid(UnknownType), typeid(bb_locked.get<UnknownType>("value")));
+
+    bb_locked.set<int64_t>("value", 2);
+    EXPECT_EQ(bb_locked.get<int64_t>("value"), 2);
 }
 
 TEST_F(TestBlackboard, testInitWithUnsupportedType)
 {
-
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("unknown", "UnknownType", std::nullopt);
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: key: unknown has an unsupported type");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testInitWithDefaultValueForAny)
 {
-
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("anyWithDefault", "std::any", "defaultValue");
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: key: anyWithDefault cannot have a default value because it is of type std::any");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testInitWithWrongDefaultValueType)
 {
-
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("anyWithDefault", "int64", "defaultValue");
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: Could not set key: anyWithDefault, from default value: defaultValue, type: int64, details: "
+                                           "yaml-cpp: error at line 1, column 1: bad conversion");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testInitWithNonConstructable)
 {
-
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("anyWithDefault", "NonConstructable", std::nullopt);
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: key: anyWithDefault has an unsupported type");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 TEST_F(TestBlackboard, testInitWithDefaultValue)
 {
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("intVal", "int64", "14");
+    blueprint->addKey("doubleVal", "double", "2.7");
+    blueprint->addKey("boolVal", "bool", "true");
+    blueprint->addKey("stringVal", "std::string", "test string");
+    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
+    alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
+    EXPECT_EQ(bb.get<double>("doubleVal"), 2.7);
+    EXPECT_EQ(bb.get<bool>("boolVal"), true);
+    EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
 }
 
 TEST_F(TestBlackboard, testInitWithoutDefaultValue)
 {
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("intVal", "int64", std::nullopt);
+    blueprint->addKey("doubleVal", "double", std::nullopt);
+    blueprint->addKey("boolVal", "bool", std::nullopt);
+    blueprint->addKey("stringVal", "std::string", std::nullopt);
+    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
+    alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 0);
+    EXPECT_EQ(bb.get<double>("doubleVal"), 0.0);
+    EXPECT_EQ(bb.get<bool>("boolVal"), false);
+    EXPECT_EQ(bb.get<std::string>("stringVal"), "");
+}
+
+TEST_F(TestBlackboard, testInitWithConvertibleIntDefaultValue)
+{
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("intVal", "int64", "14.7");
+
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: Could not set key: intVal, from default value: 14.7, type: int64, details: yaml-cpp: error "
+                                           "at line 1, column 1: bad conversion");
+                    throw;
+                }
+            },
+            BlackboardException);
+}
+
+TEST_F(TestBlackboard, testInitWithConvertibleBoolDefaultValue)
+{
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("boolVal", "bool", "1");
+
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: Could not set key: boolVal, from default value: 1, type: bool, details: yaml-cpp: error at "
+                                           "line 1, column 1: bad conversion");
+                    throw;
+                }
+            },
+            BlackboardException);
+}
+
+TEST_F(TestBlackboard, testInitWithConvertibleDoubleDefaultValue)
+{
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("doubleVal", "double", "false");
+
+    EXPECT_THROW(
+            {
+                try {
+                    alica::Blackboard(blueprint.get());
+                } catch (const BlackboardException& e) {
+                    EXPECT_STREQ(e.what(), "Blackboard exception: Could not set key: doubleVal, from default value: false, type: double, details: yaml-cpp: "
+                                           "error at line 1, column 1: bad conversion");
+                    throw;
+                }
+            },
+            BlackboardException);
 }
 
 } // namespace
