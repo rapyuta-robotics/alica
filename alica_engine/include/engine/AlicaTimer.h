@@ -29,7 +29,7 @@ public:
 
     ~SyncStopTimerImpl()
     {
-        if (_active.load()) {
+        if (_active) {
             stop();
         }
     }
@@ -37,21 +37,25 @@ public:
     void start()
     {
 
-        if (_active.load()) {
+        if (_active) {
             stop();
         }
-        _active.store(true);
+        _active = true;
         _thread = std::thread([this]() {
-            while (_active.load()) {
+            while (_active) {
                 _userCb();
-                std::this_thread::sleep_for(std::chrono::milliseconds(_period));
+                int64_t sleep_duration = _period;
+                while ((sleep_duration > 0) && _active) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(std::min(int64_t(500), _period)));
+                    sleep_duration -= std::min(int64_t(500), _period);
+                }
             }
         });
     }
 
     void stop()
     {
-        _active.store(false);
+        _active = false;
         if (_thread.joinable()) {
             _thread.join();
         }
