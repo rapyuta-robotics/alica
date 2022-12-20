@@ -48,7 +48,7 @@ protected:
     bool stepEngine() const override { return false; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
+        ac->addWorldModelByType<alicaTests::TestWorldModel>();
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
         attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
@@ -64,7 +64,7 @@ protected:
     int getAgentCount() const override { return agentCount; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
+        ac->addWorldModelByType<alicaTests::TestWorldModel>();
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
         attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
@@ -84,7 +84,7 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    alicaTests::TestWorldModel* twm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
 
     twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
@@ -95,8 +95,8 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

@@ -196,9 +196,9 @@ const Blackboard& AlicaEngine::getWorldModels() const
     return _worldModels;
 }
 
-void AlicaEngine::addWorldModel(const std::string& libraryName, std::any worldModel)
+void AlicaEngine::addWorldModel(std::any worldModel)
 {
-    _worldModels.impl().addWorldModel(libraryName, worldModel);
+    _worldModels.impl().addWorldModel(worldModel);
 }
 
 /**

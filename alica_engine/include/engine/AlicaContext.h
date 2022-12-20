@@ -277,29 +277,26 @@ public:
     /**
      * Get a worldmodel by libratyName
      *
-     * @param libraryName Library in which the worldmodel is hosted.
      *
      */
     template <class T>
-    T* getWorldModel(const std::string& libraryName);
+    T* getWorldModel();
 
     /**
      * Add a new world model to AlicaEngine.
-     * @param libraryName Library in which the worldmodel is hosted.
      * @param worldModel The worldmodel to be added
      *
      */
-    void addWorldModel(const std::string& libraryName, std::any worldModel);
+    void addWorldModel(std::any worldModel);
 
     /**
      * Add a new world model to AlicaEngine passing the worldmodel type WM.
      *
-     * @param libraryName Library in which the worldmodel is hosted.
      * @param args Arguments to be forwarded to constructor of worldmodel. Might be empty.
      *
      */
     template <class WM, class... Args>
-    void addWorldModelByType(const std::string& libraryName, Args&&... args);
+    void addWorldModelByType(Args&&... args);
 
     /**
      * Add a solver to be used by this alica instance.
@@ -584,18 +581,18 @@ void AlicaContext::setTraceFactory(Args&&... args)
 }
 
 template <class WM, class... Args>
-void AlicaContext::addWorldModelByType(const std::string& libraryName, Args&&... args)
+void AlicaContext::addWorldModelByType(Args&&... args)
 {
     // std::unique_ptr can not be used it is not copyable so can't fit inside std::any
     std::shared_ptr<WM> toAdd = std::make_shared<WM>(std::forward<Args>(args)...);
-    addWorldModel(libraryName, toAdd);
+    addWorldModel(toAdd);
 }
 
 template <class T>
-T* AlicaContext::getWorldModel(const std::string& libraryName)
+T* AlicaContext::getWorldModel()
 {
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModels().impl());
-    T* wm = impl.getWorldModel<T>(libraryName);
+    T* wm = impl.getWorldModel<T>();
     return wm;
 }
 

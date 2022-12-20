@@ -29,7 +29,7 @@ void TestBehaviour::run()
 {
     /*PROTECTED REGION ID(run55178365253414982) ENABLED START*/
     // Add additional options here
-    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>("worldModel");
+    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>();
 
     if (wm->executeBehaviourRunCalled) {
         return;
@@ -42,7 +42,7 @@ void TestBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters55178365253414982) ENABLED START*/
     // Add additional options here
-    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>("worldModel");
+    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>();
     wm->execOrder += "TestBehaviour::Init\n";
     wm->executeBehaviourRunCalled = false;
 
@@ -53,7 +53,7 @@ void TestBehaviour::initialiseParameters()
 
 void TestBehaviour::onTermination()
 {
-    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>("worldModel");
+    auto* wm = getWorldModels().impl().getWorldModel<alica_test::SchedWM>();
     wm->execOrder += "TestBehaviour::Term\n";
 }
 /*PROTECTED REGION END*/

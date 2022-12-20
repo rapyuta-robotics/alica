@@ -80,7 +80,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
-        ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
+        ac->addWorldModelByType<alicaTests::TestWorldModel>();
     }
 
     virtual void TearDown() override
@@ -166,7 +166,7 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel");
+            ac->addWorldModelByType<alicaTests::TestWorldModel>();
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
@@ -249,7 +249,7 @@ protected:
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
-        ac->addWorldModelByType<alica_test::SchedWM>("worldModel");
+        ac->addWorldModelByType<alica_test::SchedWM>();
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -273,7 +273,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>("worldModel"); }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
 
     virtual void SetUp() override
     {
@@ -322,7 +322,7 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>("worldModel"); }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override

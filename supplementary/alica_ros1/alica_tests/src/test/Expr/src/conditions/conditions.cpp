@@ -18,7 +18,7 @@ bool conditionEntry2Wait19871606597697646(const Blackboard* input, const Running
 {
     /*PROTECTED REGION ID(condition19871606597697646) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1747408236004727286();
     /*PROTECTED REGION END*/
 }
@@ -26,7 +26,7 @@ bool conditionFailurePlan2FailureHandled190171326790683374(const Blackboard* inp
 {
     /*PROTECTED REGION ID(condition190171326790683374) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     if (worldModel->transitionCondition3194919312481305139Enabled()) {
         return rp->isAnyChildStatus(PlanStatus::Failed);
     }
@@ -44,7 +44,7 @@ bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const Runni
 {
     /*PROTECTED REGION ID(condition655002160731734731) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
     return worldModel->planB2PlanA;
     /*PROTECTED REGION END*/
 }
@@ -52,7 +52,7 @@ bool conditionPlanA2PlanB682216470625774387(const Blackboard* input, const Runni
 {
     /*PROTECTED REGION ID(condition682216470625774387) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
 
     return worldModel->planA2PlanB;
     /*PROTECTED REGION END*/
@@ -80,7 +80,7 @@ bool conditionSecondTaskFirstState2SecondTaskSecondState1221637895518338620(cons
 {
     /*PROTECTED REGION ID(condition1221637895518338620) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1418825428924();
     /*PROTECTED REGION END*/
 }
@@ -89,7 +89,7 @@ bool conditionSecondCall2FirstCall1237521027685048666(const Blackboard* input, c
     /*PROTECTED REGION ID(condition1237521027685048666) ENABLED START*/
     LockedBlackboardRO bb(*(rp->getBasicPlan()->getBlackboard()));
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* testWm = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* testWm = impl.getWorldModel<alicaTests::TestWorldModel>();
     testWm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
     return false;
     /*PROTECTED REGION END*/
@@ -98,7 +98,7 @@ bool conditionInit2Fail1291995818541962959(const Blackboard* input, const Runnin
 {
     /*PROTECTED REGION ID(condition1291995818541962959) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1446293122737278544();
     /*PROTECTED REGION END*/
 }
@@ -112,7 +112,7 @@ bool conditionStateOne2StateTwo1377356708472618789(const Blackboard* input, cons
 {
     /*PROTECTED REGION ID(condition1377356708472618789) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1413201052549();
     /*PROTECTED REGION END*/
 }
@@ -126,7 +126,7 @@ bool conditionStart2Finish1648591654803570403(const Blackboard* input, const Run
 {
     /*PROTECTED REGION ID(condition1648591654803570403) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1413201389955();
     /*PROTECTED REGION END*/
 }
@@ -140,7 +140,7 @@ bool conditionFail2Failed1770682125085719690(const Blackboard* input, const Runn
 {
     /*PROTECTED REGION ID(condition1770682125085719690) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1023566846009251524();
     /*PROTECTED REGION END*/
 }
@@ -148,7 +148,7 @@ bool conditionStateTwo2NewSuccessStateTwo2019050763618766552(const Blackboard* i
 {
     /*PROTECTED REGION ID(condition2019050763618766552) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1413201367990();
     /*PROTECTED REGION END*/
 }
@@ -162,7 +162,7 @@ bool conditionFirstTaskFirstState2FirstTaskSecondState2171152220550556375(const 
 {
     /*PROTECTED REGION ID(condition2171152220550556375) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1418825427317();
     /*PROTECTED REGION END*/
 }
@@ -170,7 +170,7 @@ bool conditionBehaviourSubPlan2ExecuteBehaviour2205566100638019970(const Blackbo
 {
     /*PROTECTED REGION ID(condition2205566100638019970) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
     return worldModel->transitionToExecuteBehaviour;
     /*PROTECTED REGION END*/
 }
@@ -178,7 +178,7 @@ bool conditionInit2Start2208457928613785430(const Blackboard* input, const Runni
 {
     /*PROTECTED REGION ID(condition2208457928613785430) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1413201227586();
     /*PROTECTED REGION END*/
 }
@@ -186,7 +186,7 @@ bool conditionStart2ExecBehaviourTest2452554857659522052(const Blackboard* input
 {
     /*PROTECTED REGION ID(condition2452554857659522052) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
     return worldModel->execBehaviourTest;
     /*PROTECTED REGION END*/
 }
@@ -194,7 +194,7 @@ bool conditionStart2ExecOrderTest2619422076497988080(const Blackboard* input, co
 {
     /*PROTECTED REGION ID(condition2619422076497988080) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
     return worldModel->execOrderTest;
     /*PROTECTED REGION END*/
 }
@@ -227,7 +227,7 @@ bool conditionWait2Suc3517323109117319233(const Blackboard* input, const Running
 {
     /*PROTECTED REGION ID(condition3517323109117319233) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1067314038887345208();
     /*PROTECTED REGION END*/
 }
@@ -274,7 +274,7 @@ bool conditionExecBehaviour2SubPlan4244459279660861567(const Blackboard* input, 
 {
     /*PROTECTED REGION ID(condition4244459279660861567) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>("worldModel");
+    alica_test::SchedWM* worldModel = impl.getWorldModel<alica_test::SchedWM>();
     return worldModel->transitionToExecuteBehaviourInSubPlan;
     /*PROTECTED REGION END*/
 }
@@ -290,7 +290,7 @@ bool conditionOther2NewSuccessStateOne4368560569514553226(const Blackboard* inpu
 {
     /*PROTECTED REGION ID(condition4368560569514553226) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isTransitionCondition1413201370590();
     /*PROTECTED REGION END*/
 }
@@ -298,7 +298,7 @@ bool conditionTestTracingMasterCondition4547372457936774346(const Blackboard* in
 {
     /*PROTECTED REGION ID(condition4547372457936774346) ENABLED START*/
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isPreCondition1840401110297459509();
     /*PROTECTED REGION END*/
 }

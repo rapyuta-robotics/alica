@@ -118,8 +118,8 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
 
     twm1->robotsXPos.push_back(0);
     twm1->robotsXPos.push_back(2000);

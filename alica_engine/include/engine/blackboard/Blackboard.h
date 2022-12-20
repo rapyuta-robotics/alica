@@ -48,25 +48,24 @@ public:
     std::unordered_map<std::string /*libraryname*/, std::any> _worldModels;
 
     template <class T>
-    T* getWorldModel(const std::string& libraryName)
+    T* getWorldModel()
     {
-        auto it = _worldModels.find(libraryName);
+        auto it = _worldModels.find("worldmodel");
         if (it == _worldModels.end()) {
-            Logging::logError("BB") << "Missing requested WM:" << libraryName << " Size:" << _worldModels.size();
+            Logging::logError("BB") << "Missing requested WM:"
+                                    << "worldmodel"
+                                    << " Size:" << _worldModels.size();
             return nullptr;
         }
         return std::any_cast<std::shared_ptr<T>>(it->second).get();
     }
 
-    void addWorldModel(const std::string& libraryName, std::any worldModel)
+    void addWorldModel(std::any worldModel)
     {
-        auto it = _worldModels.find(libraryName);
-        if (it != _worldModels.end()) {
-            Logging::logWarn("BB") << "This worldmodel is already present overwrite:" << libraryName;
-        }
-
-        _worldModels.insert({libraryName, worldModel});
-        Logging::logDebug("BB") << "Add WM:" << libraryName << " Size:" << _worldModels.size();
+        _worldModels.insert({"worldmodel", worldModel});
+        Logging::logDebug("BB") << "Add WM:"
+                                << "worldmodel"
+                                << " Size:" << _worldModels.size();
     }
 };
 

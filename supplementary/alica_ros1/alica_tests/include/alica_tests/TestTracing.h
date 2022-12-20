@@ -51,7 +51,7 @@ public:
     ~AlicaTestTraceFactory() = default;
     void setGlobalContext(const std::string& globalContext) override {}
     void unsetGlobalContext() override {}
-    void setWorldModel(alica::Blackboard* worldModels) { _wm = worldModels->impl().getWorldModel<alicaTests::TestWorldModel>("worldModel"); };
+    void setWorldModel(alica::Blackboard* worldModels) { _wm = worldModels->impl().getWorldModel<alicaTests::TestWorldModel>(); };
     alicaTests::TestWorldModel* _wm;
 
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const

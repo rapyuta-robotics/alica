@@ -48,8 +48,8 @@ protected:
 
 TEST_F(AlicaTestFixtureWM, simpleGetWM)
 {
-    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>();
     size_t bbSize = ac->getWorldModels().impl()._worldModels.size();
 
     EXPECT_NE(nullptr, wm1);
@@ -57,27 +57,12 @@ TEST_F(AlicaTestFixtureWM, simpleGetWM)
     EXPECT_EQ(1, bbSize);
 }
 
-TEST_F(AlicaTestFixtureWM, multipleGetWM)
+TEST_F(AlicaTestFixtureWM, singleGetWM)
 {
-    ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel1");
-    ac->addWorldModelByType<alicaTests::TestWorldModel>("worldModel2");
+    ac->addWorldModelByType<alicaTests::TestWorldModel>();
 
-    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    size_t bbSize = ac->getWorldModels().impl()._worldModels.size();
-
-    EXPECT_NE(nullptr, wm1);
-    EXPECT_NE(nullptr, wm2);
-    EXPECT_EQ(3, bbSize);
-
-    wm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel1");
-    wm2 = ae->getWorldModel<alicaTests::TestWorldModel>("worldModel1");
-
-    EXPECT_NE(nullptr, wm1);
-    EXPECT_NE(nullptr, wm2);
-
-    wm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel2");
-    wm2 = ae->getWorldModel<alicaTests::TestWorldModel>("worldModel2");
+    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>();
 
     EXPECT_NE(nullptr, wm1);
     EXPECT_NE(nullptr, wm2);

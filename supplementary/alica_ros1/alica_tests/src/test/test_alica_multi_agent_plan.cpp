@@ -55,8 +55,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
     aes[0]->start();
     aes[1]->start();
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 

@@ -40,7 +40,7 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const 
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
     return worldModel->isPreCondition1418042929966();
     /*PROTECTED REGION END*/
 }

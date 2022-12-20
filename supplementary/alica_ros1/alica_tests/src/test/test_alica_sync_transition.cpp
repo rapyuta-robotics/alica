@@ -56,8 +56,8 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
     aes[1]->start();
     // Allow agents to discover each other
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
 
     for (int i = 0; i < 20; i++) {
         std::cout << i << "AE ----------------------------------------------- " << acs[0]->getLocalAgentId() << std::endl;

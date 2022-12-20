@@ -36,7 +36,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
         }
 
         BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-        auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+        auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
         if (this->robotId == agentID8) {
             curPosition = worldModel->robotsXPos[pos];
         } else {
@@ -51,7 +51,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
         for (int i = 0; i < ass.getUnAssignedAgentCount(); ++i) {
             // curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
             BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-            auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>("worldModel");
+            auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
             if (this->robotId == agentID8) {
                 curPosition = worldModel->robotsXPos.at(i);
             } else {

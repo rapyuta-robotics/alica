@@ -62,7 +62,7 @@ protected:
 TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
 {
     // Checks if the FailurePlan is restarted on failure i.e. the redo plan rule should be applied if a plan fails once
-    alicaTests::TestWorldModel* twm1 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
@@ -84,7 +84,7 @@ TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
 TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
 {
     // Checks if nothing is done when a plan failure occurs when auto failure handling is disabled
-    alicaTests::TestWorldModel* twm2 = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm2 = ac->getWorldModel<alicaTests::TestWorldModel>();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
@@ -118,8 +118,8 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
 {
     // Checks if the FailurePlan is restarted on failure i.e. the redo plan rule should be applied if a plan fails once
     // The rule should only be applied for the robot that had the failure
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
@@ -153,8 +153,8 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
 TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisabledMultiAgentTest)
 {
     // Checks if nothing is done when a plan failure occurs when auto failure handling is disabled for both agents
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;

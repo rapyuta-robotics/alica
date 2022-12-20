@@ -22,7 +22,7 @@ protected:
 
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
-    alicaTests::TestWorldModel* worldModel = ac->getWorldModel<alicaTests::TestWorldModel>("worldModel");
+    alicaTests::TestWorldModel* worldModel = ac->getWorldModel<alicaTests::TestWorldModel>();
     ae->start();
 
     for (int i = 0; i < 10; i++) {

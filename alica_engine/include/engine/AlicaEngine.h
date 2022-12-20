@@ -99,8 +99,8 @@ public:
     const IAlicaTraceFactory* getTraceFactory() const;
     const Blackboard& getWorldModels() const;
     template <class T>
-    T* getWorldModel(const std::string& libraryName);
-    void addWorldModel(const std::string& libraryName, std::any worldModel);
+    T* getWorldModel();
+    void addWorldModel(std::any worldModel);
     std::string getLocalAgentName() const;
     template <class SolverType>
     SolverType& getSolver() const;
@@ -177,10 +177,10 @@ bool AlicaEngine::existSolver() const
 }
 
 template <class T>
-T* AlicaEngine::getWorldModel(const std::string& libraryName)
+T* AlicaEngine::getWorldModel()
 {
     BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModels().impl());
-    T* wm = impl.getWorldModel<T>(libraryName);
+    T* wm = impl.getWorldModel<T>();
     return wm;
 }
 
