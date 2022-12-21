@@ -12,7 +12,7 @@ WORKDIR /root/catkin_ws/
 RUN <<deps
   apt-get update
   apt-get install -y python3-catkin-tools libboost-all-dev
-  rosdep install -y --from-paths . --ignore-src --skip-keys='rclcpp ament_cmake' --rosdistro noetic
+  rosdep install -y --from-paths . --ignore-src --skip-keys='rclcpp ament_cmake ros2launch' --rosdistro noetic
 deps
 
 RUN <<build
