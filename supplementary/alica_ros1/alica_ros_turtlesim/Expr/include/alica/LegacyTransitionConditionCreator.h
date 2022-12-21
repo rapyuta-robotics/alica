@@ -5,11 +5,11 @@
 
 namespace alica
 {
-class TransitionConditionCreator : public ITransitionConditionCreator
+class LegacyTransitionConditionCreator : public ITransitionConditionCreator
 {
 public:
-    TransitionConditionCreator();
-    virtual ~TransitionConditionCreator();
+    LegacyTransitionConditionCreator();
+    virtual ~LegacyTransitionConditionCreator();
 
     std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
