@@ -43,7 +43,7 @@ int main(int argc, char** argv)
         RCLCPP_ERROR(nh->get_logger(), "Master plan or roleset location is not available");
         return 0;
     }
-
+    std::this_thread::sleep_for(1s);
     RCLCPP_INFO(nh->get_logger(), "Creating ALICA turtle Base.......");
     turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path);
 
