@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros2_turtlesim)
+include(CTest)
 
 include(../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
@@ -82,6 +83,8 @@ install(DIRECTORY launch Expr etc
     DESTINATION share/${PROJECT_NAME}
 )
 
-add_launch_test(test/turtlesim.test.py)
+if (BUILD_TESTING)
+    add_launch_test(test/turtlesim.test.py)
+endif()
 
 ament_package()
