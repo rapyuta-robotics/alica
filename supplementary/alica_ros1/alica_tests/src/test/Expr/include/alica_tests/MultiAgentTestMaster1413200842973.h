@@ -43,11 +43,11 @@ class UtilityFunction1413200842973 : public BasicUtilityFunction
 class PreCondition1413201227586 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
 };
 class PreCondition1413201389955 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
 };
 } /* namespace alica */

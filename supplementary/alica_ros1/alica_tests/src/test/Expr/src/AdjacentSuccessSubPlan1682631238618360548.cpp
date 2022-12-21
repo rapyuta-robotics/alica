@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1682631238618360548::getUtilityF
  *
  * Abstract Plans in WaitState:
  */
-bool PreCondition1067314038887345208::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1067314038887345208::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
 {
     /*PROTECTED REGION ID(4079672912751513705) ENABLED START*/
     std::cout << "The PreCondition 1067314038887345208 in Transition '4079672912751513705' is not implement yet!" << std::endl;
@@ -76,7 +76,7 @@ bool PreCondition1067314038887345208::evaluate(std::shared_ptr<RunningPlan> rp, 
  *
  * Abstract Plans in EntryState:
  */
-bool PreCondition597347780541336226::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition597347780541336226::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
 {
     /*PROTECTED REGION ID(1747408236004727286) ENABLED START*/
     std::cout << "The PreCondition 597347780541336226 in Transition '1747408236004727286' is not implement yet!" << std::endl;

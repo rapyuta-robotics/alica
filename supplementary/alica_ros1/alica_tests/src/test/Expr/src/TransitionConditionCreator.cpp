@@ -14,7 +14,6 @@ TransitionConditionCreator::~TransitionConditionCreator() {}
 
 std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(
         int64_t conditionId, TransitionConditionContext& context)
-
 {
     switch (conditionId) {
     case 19871606597697646:

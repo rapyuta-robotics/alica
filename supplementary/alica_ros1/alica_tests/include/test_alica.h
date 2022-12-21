@@ -321,7 +321,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
 
     // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
     virtual void SetUp() override

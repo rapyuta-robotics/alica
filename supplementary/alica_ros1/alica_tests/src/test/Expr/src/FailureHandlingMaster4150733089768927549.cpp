@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction4150733089768927549::getUtilityF
  * Abstract Plans in FailurePlan:
  *   - FailurePlan (631515556091266493)
  */
-bool PreCondition488794245455049811::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition488794245455049811::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
 {
     /*PROTECTED REGION ID(3194919312481305139) ENABLED START*/
     std::cout << "The PreCondition 488794245455049811 in Transition '3194919312481305139' is not implement yet!" << std::endl;

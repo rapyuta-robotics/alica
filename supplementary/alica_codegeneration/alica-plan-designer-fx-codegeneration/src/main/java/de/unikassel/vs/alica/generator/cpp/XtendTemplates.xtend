@@ -517,19 +517,19 @@ namespace alica
     «IF (behaviour.preCondition !== null)»
         class PreCondition«behaviour.preCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
         };
     «ENDIF»
     «IF (behaviour.runtimeCondition !== null)»
         class RunTimeCondition«behaviour.runtimeCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
         };
     «ENDIF»
     «IF (behaviour.postCondition !== null)»
         class PostCondition«behaviour.postCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
         };
     «ENDIF»
 } /* namespace alica */
@@ -1009,13 +1009,13 @@ namespace alica
     «IF (plan.preCondition !== null)»
         class PreCondition«plan.preCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
         };
     «ENDIF»
     «IF (plan.runtimeCondition !== null)»
         class RunTimeCondition«plan.runtimeCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
         };
     «ENDIF»
     «FOR s : states»
@@ -1024,7 +1024,7 @@ namespace alica
             «IF terminalSate.postCondition !== null»
                 class PostCondition«terminalSate.postCondition.id» : public DomainCondition
                 {
-                    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
                 };
             «ENDIF»
         «ENDIF»
@@ -1034,7 +1034,7 @@ namespace alica
                 class PreCondition«transition.preCondition.id» : public DomainCondition
                 {
                 public:
-                    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
                 };
             «ENDIF»
         «ENDFOR»
@@ -1137,10 +1137,9 @@ namespace alica
 {
 class Blackboard;
 class RunningPlan;
-class IAlicaWorldModel;
 
 «FOR condition : conditions»
-bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm);
 «ENDFOR»
 } /* namespace alica */
 '''
@@ -1155,7 +1154,7 @@ def String transitionConditionSource(List<TransitionCondition> conditions, Strin
 #include <iostream>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/RunningPlan.h>
-#include <engine/IAlicaWorldModel.h>
+
 
 /*PROTECTED REGION ID(conditionSource) ENABLED START*/
 «IF (protectedRegions.containsKey("conditionSource"))»
@@ -1168,7 +1167,7 @@ def String transitionConditionSource(List<TransitionCondition> conditions, Strin
 namespace alica
 {
 «FOR condition : conditions»
-bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm)
 {
 /*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
         «IF (protectedRegions.containsKey("condition" + condition.id))»
@@ -1196,7 +1195,7 @@ public:
     TransitionConditionCreator();
     virtual ~TransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
+    std::function<bool (const Blackboard*, const RunningPlan*, const Blackboard*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1214,7 +1213,7 @@ def String transitionConditionCreatorSource(List<TransitionCondition> conditions
 #include <iostream>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/RunningPlan.h>
-#include <engine/IAlicaWorldModel.h>
+
 
 namespace alica
 {
@@ -1223,7 +1222,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
+std::function<bool (const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId)
     {
@@ -1254,7 +1253,7 @@ public:
     LegacyTransitionConditionCreator();
     virtual ~LegacyTransitionConditionCreator();
 
-    std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
+    std::function<bool (const Blackboard*, const RunningPlan*, const Blackboard*)> createConditions(int64_t conditionId, TransitionConditionContext& context);
 };
 } /* namespace alica */
 '''
@@ -1272,7 +1271,7 @@ def String legacyTransitionConditionCreatorSource(List<Plan> plans, List<Conditi
 #include <iostream>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/RunningPlan.h>
-#include <engine/IAlicaWorldModel.h>
+
 
 namespace alica
 {
@@ -1281,7 +1280,7 @@ LegacyTransitionConditionCreator::LegacyTransitionConditionCreator() {}
 
 LegacyTransitionConditionCreator::~LegacyTransitionConditionCreator() {}
 
-std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> LegacyTransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
+std::function<bool (const Blackboard*, const RunningPlan*, const Blackboard*)> LegacyTransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     int64_t preConditionId = context.preConditionId;
     switch (preConditionId)
@@ -1290,7 +1289,7 @@ std::function<bool (const Blackboard*, const RunningPlan*, const IAlicaWorldMode
         case «con.id»:
             {
                 PreCondition«con.id» preCondition;
-                return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable
+                return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* wm) mutable
                 {
                     // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
                     std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
