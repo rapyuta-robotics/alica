@@ -79,6 +79,72 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488870347::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: MISSING_NAME (1402489173167)
+ *   - Comment:
+ *   - Source2Dest: Shoot --> Miss
+ *
+ * Precondition: MISSING_NAME (1402489174338)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Shoot:
+ */
+bool PreCondition1402489174338::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489173167) ENABLED START*/
+    std::cout << "The PreCondition 1402489174338 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (1402489205153)
+ *   - Comment:
+ *   - Source2Dest: Miss --> Shoot
+ *
+ * Precondition: MISSING_NAME (1402489206278)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Miss:
+ */
+bool PreCondition1402489206278::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489205153) ENABLED START*/
+    std::cout << "The PreCondition 1402489206278 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (1402489216617)
+ *   - Comment:
+ *   - Source2Dest: Miss --> Scored
+ *
+ * Precondition: MISSING_NAME (1402489218027)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Miss:
+ */
+bool PreCondition1402489218027::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489216617) ENABLED START*/
+    std::cout << "The PreCondition 1402489218027 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1402488870347) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

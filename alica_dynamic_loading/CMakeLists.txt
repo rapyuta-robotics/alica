@@ -20,7 +20,6 @@ endif (NOT Boost_FOUND)
 #Build
 include_directories(
   include
-  ${alica_common_config_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}
