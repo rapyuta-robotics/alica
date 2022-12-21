@@ -275,7 +275,7 @@ public:
     const Blackboard& getWorldModels() const;
 
     /**
-     * Get a worldmodel by libratyName
+     * Get a worldmodel by libraryName
      *
      *
      */

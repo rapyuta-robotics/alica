@@ -45,6 +45,7 @@ public:
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
 
+    /* Worldmodel depot*/
     std::unordered_map<std::string /*libraryname*/, std::any> _worldModels;
 
     template <class T>
