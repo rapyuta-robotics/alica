@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/SuccessOnInitBeh.h>
+#include <alica_tests/behaviours/SuccessOnInitBeh.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp3821787310391665935) ENABLED START*/
@@ -35,6 +35,7 @@ void SuccessOnInitBeh::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters3821787310391665935) ENABLED START*/
     // Add additional options here
     setSuccess();
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods3821787310391665935) ENABLED START*/

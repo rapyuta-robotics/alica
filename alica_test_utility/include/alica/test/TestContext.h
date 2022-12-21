@@ -106,6 +106,7 @@ public:
     bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
     bool resetTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
     bool resetAllTransitions(const std::string& runningPlanName);
+    bool resetAllTransitions(RunningPlan* rp);
 
     bool isSuccess(const BasicBehaviour* beh) const;
     bool isSuccess(const BasicPlan* plan) const;
@@ -120,6 +121,7 @@ private:
     static std::string getRunningPlanName(const RunningPlan* rp);
     static std::string getActiveStateName(const RunningPlan* rp);
     bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result);
+    bool setTransitionCond(RunningPlan* rp, const std::string& inState, const std::string& outState, bool result);
 
     struct hash_pair
     {

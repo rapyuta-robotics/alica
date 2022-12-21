@@ -18,7 +18,6 @@
 #include <alica_tests/Behaviour/MidFieldStandard1402488696205.h>
 #include <alica_tests/Behaviour/NotToTrigger1429017274116.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>
-#include <alica_tests/Behaviour/SuccessOnInitBeh3821787310391665935.h>
 #include <alica_tests/Behaviour/SuccessSpam1522377401286.h>
 #include <alica_tests/Behaviour/Tackle1402488939130.h>
 #include <alica_tests/Behaviour/TestInheritBlackboardBehaviour831400441334251600.h>
@@ -76,8 +75,8 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
 #include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
-#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
-#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
+#include <alica_tests/SuccessOnCondWrapperAPlan673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestBehaviour55178365253414982.h>
@@ -88,6 +87,7 @@
 #include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 #include <alica_tests/TestTracingMasterPlan691392966514374878.h>
 #include <alica_tests/TestTracingSubPlan1482512794732634139.h>
+#include <alica_tests/behaviours/SuccessOnInitBeh3821787310391665935.h>
 
 namespace alica
 {

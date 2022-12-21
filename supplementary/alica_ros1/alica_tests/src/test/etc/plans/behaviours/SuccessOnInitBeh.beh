@@ -9,7 +9,7 @@
   "name": "SuccessOnInitBeh",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "Behaviour",
+  "relativeDirectory": "behaviours",
   "runtimeCondition": null,
   "variables": []
 }

@@ -38,6 +38,7 @@ public:
                 std::make_unique<alica::TransitionConditionCreator>()};
         _tc->init(std::move(creators));
         _tc->startEngine();
+        _spinner->start();
         STEP_UNTIL2(_tc, _tc->getActivePlan("TestMasterPlan"));
         ASSERT_TRUE(_tc->getActivePlan("TestMasterPlan"));
     }
@@ -71,6 +72,39 @@ TEST_F(TestSuccessFixture, planSuccessTest)
     ASSERT_NE(plan, nullptr);
     STEP_UNTIL2(_tc, _tc->isSuccess(plan));
     ASSERT_TRUE(_tc->isSuccess(plan));
+}
+
+TEST_F(TestSuccessFixture, multiPlanInstanceSuccessTest)
+{
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "MultiPlanInstanceSuccessTestState"));
+    STEP_UNTIL2(_tc, _tc->getActivePlan("ParallelSuccessOnCondPlan"));
+    auto parallelPlan = _tc->getActivePlan("ParallelSuccessOnCondPlan");
+    ASSERT_NE(parallelPlan, nullptr);
+    ASSERT_TRUE(_tc->setTransitionCond("ParallelSuccessOnCondPlan", "WaitForTriggerState", "ParallelExecState"));
+    std::string fqnA = "/MultiPlanInstanceSuccessTestState/ParallelSuccessOnCondState/<ParallelExecState,SuccessOnCondWrapperAPlan>/SuccessOnCondState";
+    STEP_UNTIL2(_tc, _tc->getActivePlan(fqnA));
+    auto planInstanceA = _tc->getActivePlan(fqnA);
+    ASSERT_NE(planInstanceA, nullptr);
+    ASSERT_TRUE(_tc->setTransitionCond(fqnA, "WaitForCondState", "CondSuccessState"));
+    STEP_UNTIL2(_tc, false);
+    ASSERT_TRUE(_tc->isSuccess(planInstanceA));
+    ASSERT_TRUE(_tc->isStateActive("ParallelSuccessOnCondPlan", "ParallelExecState"));
+    std::string fqnB = "/MultiPlanInstanceSuccessTestState/ParallelSuccessOnCondState/<ParallelExecState,SuccessOnCondWrapperBPlan>/SuccessOnCondState";
+    STEP_UNTIL2(_tc, _tc->getActivePlan(fqnB));
+    auto planInstanceB = _tc->getActivePlan(fqnB);
+    ASSERT_NE(planInstanceB, nullptr);
+    ASSERT_FALSE(_tc->isSuccess(planInstanceB));
+    ASSERT_TRUE(_tc->setTransitionCond(fqnB, "WaitForCondState", "CondSuccessState"));
+    STEP_UNTIL2(_tc, _tc->isSuccess(planInstanceB));
+    ASSERT_TRUE(_tc->isSuccess(planInstanceB));
+    auto wrapperA = _tc->getActivePlan("SuccessOnCondWrapperAPlan");
+    auto wrapperB = _tc->getActivePlan("SuccessOnCondWrapperBPlan");
+    ASSERT_NE(wrapperA, nullptr);
+    ASSERT_NE(wrapperB, nullptr);
+    ASSERT_TRUE(_tc->setTransitionCond("SuccessOnCondWrapperAPlan", "SuccessOnCondState", "WrapperASuccessState"));
+    ASSERT_TRUE(_tc->setTransitionCond("SuccessOnCondWrapperBPlan", "SuccessOnCondState", "WrapperBSuccessState"));
+    STEP_UNTIL2(_tc, _tc->isSuccess(parallelPlan));
+    ASSERT_TRUE(_tc->isSuccess(parallelPlan));
 }
 
 } // namespace alica::test

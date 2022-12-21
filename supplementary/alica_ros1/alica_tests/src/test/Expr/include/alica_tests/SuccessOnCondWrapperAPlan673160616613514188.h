@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth673160616613514188) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
-class SuccessOnCondWrapperA673160616613514188 : public DomainPlan
+class SuccessOnCondWrapperAPlan673160616613514188 : public DomainPlan
 {
 public:
-    SuccessOnCondWrapperA673160616613514188(PlanContext& context);
-    virtual ~SuccessOnCondWrapperA673160616613514188();
+    SuccessOnCondWrapperAPlan673160616613514188(PlanContext& context);
+    virtual ~SuccessOnCondWrapperAPlan673160616613514188();
     /*PROTECTED REGION ID(pub673160616613514188) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
@@ -26,7 +26,7 @@ protected:
     /*PROTECTED REGION ID(pro673160616613514188) ENABLED START*/
     // Override these methods for your use case
     // virtual void run(void* msg) override;
-    // virtual void onInit() override;
+    virtual void onInit() override;
     // virtual void onTerminate() override;
     // Add additional protected methods here
     /*PROTECTED REGION END*/

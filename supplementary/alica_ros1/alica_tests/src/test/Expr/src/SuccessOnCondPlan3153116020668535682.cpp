@@ -12,8 +12,8 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 173667041779969680)
 //
 // States:
-//   - WaitForCondState (4012637487828402178)
 //   - CondSuccessState (327448157837662747)
+//   - WaitForCondState (4012637487828402178)
 SuccessOnCondPlan3153116020668535682::SuccessOnCondPlan3153116020668535682(PlanContext& context)
         : DomainPlan(context)
 {
@@ -67,7 +67,7 @@ void SuccessOnCondPlan3153116020668535682::onInit()
 {
     auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
     auto* tc = wm->getTestContext();
-    tc->resetAllTransitions(getName());
+    tc->resetAllTransitions(getPlanContext());
 }
 /*PROTECTED REGION END*/
 } // namespace alica

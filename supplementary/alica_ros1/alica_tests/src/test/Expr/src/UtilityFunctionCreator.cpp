@@ -55,8 +55,8 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
 #include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
-#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
-#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
+#include <alica_tests/SuccessOnCondWrapperAPlan673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>

@@ -94,10 +94,15 @@ bool TestContext::resetTransitionCond(const std::string& runningPlanName, const 
 
 bool TestContext::resetAllTransitions(const std::string& runningPlanName)
 {
-    const auto* rp = getRunningPlan(runningPlanName);
+    auto* rp = getRunningPlan(runningPlanName);
     if (!rp) {
         return false;
     }
+    return resetAllTransitions(rp);
+}
+
+bool TestContext::resetAllTransitions(RunningPlan* rp)
+{
     const auto* plan = rp->getActivePlanAsPlan();
     if (!plan) {
         return false;
@@ -105,7 +110,7 @@ bool TestContext::resetAllTransitions(const std::string& runningPlanName)
     for (const auto* transition : plan->getTransitions()) {
         const auto& inState = transition->getInState()->getName();
         const auto& outState = transition->getOutState()->getName();
-        resetTransitionCond(runningPlanName, inState, outState);
+        setTransitionCond(rp, inState, outState, false);
     }
     return true;
 }
@@ -198,6 +203,7 @@ RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifie
             return nullptr;
         }
         cur = next;
+        ++idx;
     }
     return cur;
 }
@@ -226,7 +232,7 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
     std::size_t start = 1;
     while (start < fqn.length()) {
         auto end = fqn.find("/", start);
-        auto count = (end == std::string::npos ? std::string::npos : end - start);
+        auto count = (end == std::string::npos ? fqn.length() - start : end - start);
         auto splitName = fqn.substr(start, count);
         if (splitName.empty()) {
             return {};
@@ -250,6 +256,7 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
         } else {
             statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(splitName), std::forward_as_tuple());
         }
+        start = (end == std::string::npos) ? fqn.length() : end + 1;
     }
     return statePlanPairs;
 }
@@ -266,7 +273,16 @@ std::string TestContext::getActiveStateName(const RunningPlan* rp)
 
 bool TestContext::setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result)
 {
-    auto plan = getActivePlan(runningPlanName);
+    auto rp = getRunningPlan(runningPlanName);
+    if (!rp) {
+        return false;
+    }
+    return setTransitionCond(rp, inState, outState, result);
+}
+
+bool TestContext::setTransitionCond(RunningPlan* rp, const std::string& inState, const std::string& outState, bool result)
+{
+    auto plan = rp->getBasicPlan();
     if (!plan) {
         return false;
     }
