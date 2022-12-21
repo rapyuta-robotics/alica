@@ -20,6 +20,7 @@ find_package(autodiff REQUIRED)
 find_package(alica_solver_interface)
 find_package(ament_cmake REQUIRED)
 find_package(alica_msgs REQUIRED)
+find_package(launch_testing_ament_cmake)
 
 ###########
 ## Build ##
@@ -80,5 +81,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 install(DIRECTORY launch Expr etc
     DESTINATION share/${PROJECT_NAME}
 )
+
+add_launch_test(test/turtlesim.test.py)
 
 ament_package()

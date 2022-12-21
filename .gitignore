@@ -23,6 +23,7 @@ log/
 *.*~
 _*.py
 _*.pyc
+*.pyc
 
 # clion
 **/.idea

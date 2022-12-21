@@ -58,7 +58,7 @@ bool ALICATurtle::move_toward_goal() const
     bool is_reachGoal = false;
     if (dx * dx + dy * dy <= goal_tolerance * goal_tolerance) {
         is_reachGoal = true;
-        RCLCPP_INFO_ONCE(_priv_nh->get_logger(), ("Turtle " + _name + " reached target: " + std::to_string(_goal.x) + " " + std::to_string(_goal.y)).c_str());
+        RCLCPP_INFO_ONCE(_priv_nh->get_logger(), ("Turtle " + _name + " reached target").c_str());
         return is_reachGoal;
     }
 
