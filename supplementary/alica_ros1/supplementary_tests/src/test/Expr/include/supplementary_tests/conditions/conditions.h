@@ -9,6 +9,6 @@ namespace alica
 class Blackboard;
 class RunningPlan;
 
-bool conditionVariableHandlingStart295816226925111421(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
-bool conditionDefaultCondition2011598442725310989(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
+bool conditionVariableHandlingStart295816226925111421(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm);
+bool conditionDefaultCondition2011598442725310989(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm);
 } /* namespace alica */
