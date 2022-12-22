@@ -25,6 +25,6 @@ build
 
 RUN <<runtests
   source install/setup.bash
-  colcon test --packages-skip alica_tests alica_ros_proxy alica_tracing alica_ros_turtlesim supplementary_tests alica_ros2_proxy
+  colcon test --packages-skip alica_tests alica_ros_proxy alica_tracing alica_ros_turtlesim supplementary_tests alica_ros2_turtlesim
   colcon test-result --verbose
 runtests
