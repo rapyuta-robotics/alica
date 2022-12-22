@@ -35,6 +35,7 @@ void SuccessOnInitBeh::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters3821787310391665935) ENABLED START*/
     // Add additional options here
     setSuccess();
+
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods3821787310391665935) ENABLED START*/
