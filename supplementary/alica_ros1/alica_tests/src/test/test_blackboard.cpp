@@ -233,23 +233,23 @@ TEST_F(TestBlackboard, testMappingFromDouble)
     targetLocked.set<bool>("valueTarget", false);
     EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
 
-    targetLocked.set<int64_t>("valueTarget", 0);
+    targetLocked.set<int64_t>("valueTarget", int64_t());
     EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1)));
 
-    targetLocked.set<double>("valueTarget", 0.0);
+    targetLocked.set<double>("valueTarget", double());
     EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0)));
 
     targetLocked.set<std::string>("valueTarget", "");
     EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
 
-    srcLocked.set<double>("valueSrc", 0.0);
+    srcLocked.set<double>("valueSrc", double());
     targetLocked.set<bool>("valueTarget", true);
     EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", false)));
 
-    targetLocked.set<int64_t>("valueTarget", 0);
+    targetLocked.set<int64_t>("valueTarget", int64_t());
     EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
 
-    targetLocked.set<double>("valueTarget", 0.0);
+    targetLocked.set<double>("valueTarget", double());
     EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0.0)));
 
     targetLocked.set<std::string>("valueTarget", "");
@@ -281,11 +281,11 @@ TEST_F(TestBlackboard, testMappingFromString)
     // throw exception because string can not be mapped to bool
     EXPECT_THROW(({ checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true); }), BlackboardException);
 
-    targetLocked.set<int64_t>("valueTarget", 0);
+    targetLocked.set<int64_t>("valueTarget", int64_t());
     // throw exception because string can not be mapped to int
     EXPECT_THROW(({ checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1); }), BlackboardException);
 
-    targetLocked.set<double>("valueTarget", 0);
+    targetLocked.set<double>("valueTarget", double());
     // throw exception because string can not be mapped to double
     EXPECT_THROW(({ checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0); }), BlackboardException);
 
@@ -458,8 +458,8 @@ TEST_F(TestBlackboard, testInitWithoutDefaultValue)
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
-    EXPECT_EQ(bb.get<int64_t>("intVal"), 0);
-    EXPECT_EQ(bb.get<double>("doubleVal"), 0.0);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), int64_t());
+    EXPECT_EQ(bb.get<double>("doubleVal"), double());
     EXPECT_EQ(bb.get<bool>("boolVal"), false);
     EXPECT_EQ(bb.get<std::string>("stringVal"), "");
 }
@@ -543,6 +543,47 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
     srcBb.impl().set<std::any>("anyTypeSrc", std::any{19L});
     targetBb.impl().map("anyTypeSrc", "anyTypeTarget", srcBb.impl());
     EXPECT_EQ(targetBb.impl().get<int64_t>("anyTypeTarget"), 19L);
+}
+
+TEST_F(TestBlackboard, setWithConvertibleType)
+{
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("intVal", INT64, "14");
+    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
+    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+
+    // EXPECT_THROW({ bb.set<int8_t>("intVal", 1); }, BlackboardException);
+    // EXPECT_THROW({ bb.set<int32_t>("intVal", 1); }, BlackboardException);
+    // EXPECT_THROW({ bb.set<uint8_t>("intVal", 1); }, BlackboardException);
+    // EXPECT_THROW({ bb.set<uint32_t>("intVal", 1); }, BlackboardException);
+    // EXPECT_THROW({ bb.set<uint64_t>("intVal", 1); }, BlackboardException);
+
+    EXPECT_NO_THROW({ bb.set<int64_t>("intVal", 1); });
+}
+
+TEST_F(TestBlackboard, setWithoutSpecifyingType)
+{
+    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    alica::Blackboard blackboard = alica::Blackboard();
+    alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+
+    // bb.set("intVal", 19);
+    bb.set("doubleVal", 3.3);
+    bb.set("boolVal", true);
+    bb.set("longIntVal", 1L);
+    // bb.set("usignedIntVal", 5u);
+    // bb.set("usignedLongIntVal", 7uL);
+    bb.set("stringVal", std::string("abc")); // has to be wrapped into std::string, otherwise is bool
+    bb.set("unknownType", UnknownType(123));
+
+    // EXPECT_EQ(bb.get<int64_t>("intVal"), 19);
+    EXPECT_EQ(bb.get<double>("doubleVal"), 3.3);
+    EXPECT_EQ(bb.get<bool>("boolVal"), true);
+    EXPECT_EQ(bb.get<int64_t>("longIntVal"), true);
+    // EXPECT_EQ(bb.get<uint32_t>("usignedIntVal"), true);
+    // EXPECT_EQ(bb.get<uint64_t>("usignedLongIntVal"), true);
+    EXPECT_EQ(bb.get<std::string>("stringVal"), "abc"); // will be interpreted as a bool (true)
+    EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 123);
 }
 
 } // namespace
