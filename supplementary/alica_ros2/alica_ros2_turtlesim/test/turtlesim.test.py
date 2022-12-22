@@ -21,7 +21,7 @@ def generate_test_description():
     roleset = launch.substitutions.LaunchConfiguration(
         'roleset', default='Roleset')
     alica_path = launch.substitutions.LaunchConfiguration(
-        'alica_path', default=get_package_share_directory('alica_ros2_turtlesim'))  # fix me
+        'alica_path', default=get_package_share_directory('alica_ros2_turtlesim'))
 
     turtlesim_node = launch_ros.actions.Node(
         package='turtlesim',
