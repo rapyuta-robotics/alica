@@ -93,7 +93,7 @@ public:
                 // key is not found in yaml file
                 if constexpr (isTypeInVariant<T, BBValueType>::value) {
                     // T is a known type or std::any, in either case use std::get directly to fetch from variant
-                    // Although std::any is considered an unknown type, we treat it as if its a known type here to avoid a double any_cast
+                    // Although std::any is considered an unknown type, we treat it as if its a known type here to avoid any_cast<const std::any&>
                     return std::get<T>(_vals.at(key));
                 } else {
                     // T is an unknown type, use std::any for variant type & any_cast to T
@@ -103,7 +103,12 @@ public:
                 // key is found in yaml file
                 if (yamlTypeIt->second == "std::any") {
                     // since yaml type is std::any, value would be stored as std::any, regardless of T being a known or unknown type
-                    return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                    if constexpr (std::is_same_v<std::decay_t<T>, std::any>) {
+                        // avoid any_cast<const std::any&>
+                        return std::get<T>(_vals.at(key));
+                    } else {
+                        return std::any_cast<const T&>(std::get<std::any>(_vals.at(key)));
+                    }
                 }
                 if constexpr (isTypeInVariant<T, BBValueType>::value) {
                     // T is a known type or std::any, in either case use std::get directly to fetch from variant

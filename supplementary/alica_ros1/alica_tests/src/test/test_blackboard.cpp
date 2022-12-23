@@ -10,11 +10,14 @@ namespace alica
 namespace
 {
 
-constexpr const char* BOOL = "bool";
-constexpr const char* INT64 = "int64";
-constexpr const char* DOUBLE = "double";
-constexpr const char* STRING = "std::string";
-constexpr const char* ANY = "std::any";
+struct BBType
+{
+    static constexpr const char* BOOL = "bool";
+    static constexpr const char* INT64 = "int64";
+    static constexpr const char* DOUBLE = "double";
+    static constexpr const char* STRING = "std::string";
+    static constexpr const char* ANY = "std::any";
+};
 
 // used for accessing bb values with an unknown type
 class UnknownType
@@ -39,11 +42,22 @@ protected:
     const char* getMasterPlanName() const override { return "TestParameterPassingMaster"; }
     bool stepEngine() const override { return false; }
 
-    template <class targetType>
-    bool checkMapping(BlackboardImpl& srcBB, BlackboardImpl& targetBB, const std::string& srcKey, const std::string& targetKey, targetType targetValue)
+    template <class SrcType, class TargetType>
+    bool checkMapping(const std::string& srcTypeName, const SrcType& srcValue, const std::string& targetTypeName, const TargetType& targetValue)
     {
-        targetBB.map(srcKey, targetKey, srcBB);
-        return targetBB.get<targetType>(targetKey) == targetValue;
+        BlackboardBlueprint srcBlueprint;
+        srcBlueprint.addKey("srcKey", srcTypeName, {});
+        BlackboardBlueprint targetBlueprint;
+        targetBlueprint.addKey("targetKey", targetTypeName, {});
+        Blackboard srcBB(&srcBlueprint);
+        Blackboard targetBB(&targetBlueprint);
+        srcBB.impl().set("srcKey", srcValue);
+        targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
+        if constexpr (std::is_same_v<TargetType, std::any>) {
+            return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+        } else {
+            return targetBB.impl().get<TargetType>("targetKey") == targetValue;
+        }
     }
 };
 
@@ -126,173 +140,40 @@ TEST_F(TestBlackboard, testWithoutPlan)
     EXPECT_EQ(bbrw.get<PlanStatus>("val5"), PlanStatus::Success);
 }
 
-TEST_F(TestBlackboard, testMapping)
-{
-    Blackboard srcBb, targetBb;
-    auto srcLocked = LockedBlackboardRW(srcBb);
-    auto targetLocked = LockedBlackboardRW(targetBb);
-
-    srcLocked.set<int64_t>("valueInt", 13);
-    srcLocked.set<bool>("valueBool", true);
-
-    targetLocked.set<double>("valueDouble", 3.7);
-    targetLocked.set<int64_t>("valueInt", 92);
-
-    targetBb.impl().map("valueInt", "valueDouble", srcBb.impl());
-    targetBb.impl().map("valueBool", "valueInt", srcBb.impl());
-
-    EXPECT_EQ(targetLocked.get<double>("valueDouble"), 13.0);
-    EXPECT_EQ(targetLocked.get<int64_t>("valueInt"), 1);
-}
-
 TEST_F(TestBlackboard, testMappingFromBool)
 {
-    Blackboard srcBb, targetBb;
-    auto srcLocked = LockedBlackboardRW(srcBb);
-    auto targetLocked = LockedBlackboardRW(targetBb);
-
-    srcLocked.set<bool>("valueSrc", true);
-    targetLocked.set<bool>("valueTarget", false);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
-
-    targetLocked.set<int64_t>("valueTarget", -1);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1)));
-
-    targetLocked.set<double>("valueTarget", -1.0);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
-
-    srcLocked.set<bool>("valueSrc", false);
-    targetLocked.set<bool>("valueTarget", true);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", false)));
-
-    targetLocked.set<int64_t>("valueTarget", 1);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-
-    targetLocked.set<double>("valueTarget", 1.0);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
+    EXPECT_TRUE((checkMapping<bool, bool>(BBType::BOOL, true, BBType::BOOL, true)));
+    EXPECT_TRUE((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)));
+    EXPECT_TRUE((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)));
+    EXPECT_THROW((checkMapping<bool, std::string>(BBType::BOOL, true, BBType::STRING, "true")), BlackboardException);
+    EXPECT_TRUE((checkMapping<bool, std::any>(BBType::BOOL, true, BBType::ANY, std::any{true})));
 }
 
 TEST_F(TestBlackboard, testMappingFromInt64)
 {
-    Blackboard srcBb, targetBb;
-    auto srcLocked = LockedBlackboardRW(srcBb);
-    auto targetLocked = LockedBlackboardRW(targetBb);
-
-    srcLocked.set<int64_t>("valueSrc", 1);
-    targetLocked.set<bool>("valueTarget", false);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
-
-    targetLocked.set<int64_t>("valueTarget", 0);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1)));
-
-    targetLocked.set<double>("valueTarget", 0.0);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
-
-    srcLocked.set<int64_t>("valueSrc", -1);
-    targetLocked.set<bool>("valueTarget", false);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
-
-    targetLocked.set<int64_t>("valueTarget", 0);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", -1)));
-
-    targetLocked.set<double>("valueTarget", 0.0);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", -1.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
-
-    srcLocked.set<int64_t>("valueSrc", 0);
-    targetLocked.set<bool>("valueTarget", true);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", false)));
-
-    targetLocked.set<int64_t>("valueTarget", -1);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-
-    targetLocked.set<double>("valueTarget", -1.0);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
+    EXPECT_TRUE((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)));
+    EXPECT_TRUE((checkMapping<int64_t, int64_t>(BBType::INT64, 1, BBType::INT64, 1)));
+    EXPECT_TRUE((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)));
+    EXPECT_THROW((checkMapping<int64_t, std::string>(BBType::INT64, 1, BBType::STRING, "1")), BlackboardException);
+    EXPECT_TRUE((checkMapping<int64_t, std::any>(BBType::INT64, 1, BBType::ANY, std::any{(int64_t) 1})));
 }
 
 TEST_F(TestBlackboard, testMappingFromDouble)
 {
-    Blackboard srcBb, targetBb;
-    auto srcLocked = LockedBlackboardRW(srcBb);
-    auto targetLocked = LockedBlackboardRW(targetBb);
-
-    srcLocked.set<double>("valueSrc", 1.0);
-    targetLocked.set<bool>("valueTarget", false);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
-
-    targetLocked.set<int64_t>("valueTarget", int64_t());
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1)));
-
-    targetLocked.set<double>("valueTarget", double());
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
-
-    srcLocked.set<double>("valueSrc", double());
-    targetLocked.set<bool>("valueTarget", true);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", false)));
-
-    targetLocked.set<int64_t>("valueTarget", int64_t());
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-
-    targetLocked.set<double>("valueTarget", double());
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0.0)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
-
-    srcLocked.set<double>("valueSrc", -0.001);
-    targetLocked.set<bool>("valueTarget", false);
-    EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true)));
-
-    targetLocked.set<int64_t>("valueTarget", -1);
-    EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-
-    targetLocked.set<double>("valueTarget", 1);
-    EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", -0.001)));
-
-    targetLocked.set<std::string>("valueTarget", "");
-    EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
+    EXPECT_TRUE((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)));
+    EXPECT_TRUE((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)));
+    EXPECT_TRUE((checkMapping<double, double>(BBType::DOUBLE, 1.0, BBType::DOUBLE, 1.0)));
+    EXPECT_THROW((checkMapping<double, std::string>(BBType::DOUBLE, 1.0, BBType::STRING, "1.0")), BlackboardException);
+    EXPECT_TRUE((checkMapping<double, std::any>(BBType::DOUBLE, 1.0, BBType::ANY, std::any{1.0})));
 }
 
 TEST_F(TestBlackboard, testMappingFromString)
 {
-    Blackboard srcBb, targetBb;
-    auto srcLocked = LockedBlackboardRW(srcBb);
-    auto targetLocked = LockedBlackboardRW(targetBb);
-
-    srcLocked.set<std::string>("valueSrc", "123");
-
-    targetLocked.set<bool>("valueTarget", false);
-    // throw exception because string can not be mapped to bool
-    EXPECT_THROW(({ checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", true); }), BlackboardException);
-
-    targetLocked.set<int64_t>("valueTarget", int64_t());
-    // throw exception because string can not be mapped to int
-    EXPECT_THROW(({ checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1); }), BlackboardException);
-
-    targetLocked.set<double>("valueTarget", double());
-    // throw exception because string can not be mapped to double
-    EXPECT_THROW(({ checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 1.0); }), BlackboardException);
-
-    srcLocked.set<std::string>("valueSrc", "123");
-    targetLocked.set<std::string>("valueTarget", "abc");
-    EXPECT_TRUE((checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", "123")));
+    EXPECT_THROW((checkMapping<std::string, bool>(BBType::STRING, "1", BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, int64_t>(BBType::STRING, "1", BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, double>(BBType::STRING, "1", BBType::DOUBLE, 1.0)), BlackboardException);
+    EXPECT_TRUE((checkMapping<std::string, std::string>(BBType::STRING, "1", BBType::STRING, "1")));
+    EXPECT_TRUE((checkMapping<std::string, std::any>(BBType::STRING, "1", BBType::ANY, std::any{std::string{"1"}})));
 }
 
 TEST_F(TestBlackboard, testAccessingWithWrongType)
@@ -340,10 +221,10 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", INT64, "14");
-    blueprint->addKey("doubleVal", DOUBLE, "2.7");
-    blueprint->addKey("boolVal", BOOL, "true");
-    blueprint->addKey("stringVal", STRING, "test string");
+    blueprint->addKey("intVal", BBType::INT64, "14");
+    blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
+    blueprint->addKey("boolVal", BBType::BOOL, "true");
+    blueprint->addKey("stringVal", BBType::STRING, "test string");
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
@@ -412,7 +293,7 @@ TEST_F(TestBlackboard, testInitWithUnsupportedType)
 TEST_F(TestBlackboard, testInitWithDefaultValueForAny)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyWithDefault", ANY, "defaultValue");
+    blueprint->addKey("anyWithDefault", BBType::ANY, "defaultValue");
     // throw exception because std::any type can not have a default value
     EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
 }
@@ -420,7 +301,7 @@ TEST_F(TestBlackboard, testInitWithDefaultValueForAny)
 TEST_F(TestBlackboard, testInitWithWrongDefaultValueType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyWithDefault", INT64, "defaultValue");
+    blueprint->addKey("anyWithDefault", BBType::INT64, "defaultValue");
     // throw exception because "defaultValue" is not of type int64
     EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
 }
@@ -436,10 +317,10 @@ TEST_F(TestBlackboard, testInitWithNonConstructable)
 TEST_F(TestBlackboard, testInitWithDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", INT64, "14");
-    blueprint->addKey("doubleVal", DOUBLE, "2.7");
-    blueprint->addKey("boolVal", BOOL, "true");
-    blueprint->addKey("stringVal", STRING, "test string");
+    blueprint->addKey("intVal", BBType::INT64, "14");
+    blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
+    blueprint->addKey("boolVal", BBType::BOOL, "true");
+    blueprint->addKey("stringVal", BBType::STRING, "test string");
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
@@ -452,10 +333,10 @@ TEST_F(TestBlackboard, testInitWithDefaultValue)
 TEST_F(TestBlackboard, testInitWithoutDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", INT64, std::nullopt);
-    blueprint->addKey("doubleVal", DOUBLE, std::nullopt);
-    blueprint->addKey("boolVal", BOOL, std::nullopt);
-    blueprint->addKey("stringVal", STRING, std::nullopt);
+    blueprint->addKey("intVal", BBType::INT64, std::nullopt);
+    blueprint->addKey("doubleVal", BBType::DOUBLE, std::nullopt);
+    blueprint->addKey("boolVal", BBType::BOOL, std::nullopt);
+    blueprint->addKey("stringVal", BBType::STRING, std::nullopt);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
@@ -468,7 +349,7 @@ TEST_F(TestBlackboard, testInitWithoutDefaultValue)
 TEST_F(TestBlackboard, testInitWithConvertibleIntDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", INT64, "14.7");
+    blueprint->addKey("intVal", BBType::INT64, "14.7");
     // throw exception because "14.7" is not of type int64
     EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
 }
@@ -476,7 +357,7 @@ TEST_F(TestBlackboard, testInitWithConvertibleIntDefaultValue)
 TEST_F(TestBlackboard, testInitWithConvertibleBoolDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("boolVal", BOOL, "1");
+    blueprint->addKey("boolVal", BBType::BOOL, "1");
     // throw exception because "1" is not of type bool
     EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
 }
@@ -484,7 +365,7 @@ TEST_F(TestBlackboard, testInitWithConvertibleBoolDefaultValue)
 TEST_F(TestBlackboard, testInitWithConvertibleDoubleDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("doubleVal", DOUBLE, "false");
+    blueprint->addKey("doubleVal", BBType::DOUBLE, "false");
     // throw exception, because of "false" is not of type double
     EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
 }
@@ -492,9 +373,9 @@ TEST_F(TestBlackboard, testInitWithConvertibleDoubleDefaultValue)
 TEST_F(TestBlackboard, testAnyWithDifferentTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyType", ANY, std::nullopt);
-    blueprint->addKey("knownType", ANY, std::nullopt);
-    blueprint->addKey("unknownType", ANY, std::nullopt);
+    blueprint->addKey("anyType", BBType::ANY, std::nullopt);
+    blueprint->addKey("knownType", BBType::ANY, std::nullopt);
+    blueprint->addKey("unknownType", BBType::ANY, std::nullopt);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     LockedBlackboardRW bb_locked = LockedBlackboardRW(blackboard);
 
@@ -512,21 +393,20 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
     EXPECT_THROW({ bb_locked.get<std::string>("unknownType"); }, BlackboardException);
     EXPECT_THROW({ bb_locked.get<std::string>("anyType"); }, BlackboardException);
 
-    // cant access any using std::any
-    EXPECT_THROW({ bb_locked.get<std::any>("anyType"); }, BlackboardException);
+    EXPECT_EQ(std::any_cast<bool>(bb_locked.get<std::any>("anyType")), true);
 }
 
 TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprintSrc = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintSrc->addKey("anyTypeSrc", ANY, std::nullopt);
-    blueprintSrc->addKey("knownTypeSrc", INT64, std::nullopt);
-    blueprintSrc->addKey("unknownTypeSrc", ANY, std::nullopt);
+    blueprintSrc->addKey("anyTypeSrc", BBType::ANY, std::nullopt);
+    blueprintSrc->addKey("knownTypeSrc", BBType::INT64, std::nullopt);
+    blueprintSrc->addKey("unknownTypeSrc", BBType::ANY, std::nullopt);
 
     std::unique_ptr<alica::BlackboardBlueprint> blueprintTarget = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintTarget->addKey("anyTypeTarget", ANY, std::nullopt);
-    blueprintTarget->addKey("knownTypeTarget", INT64, std::nullopt);
-    blueprintTarget->addKey("unknownTypeTarget", ANY, std::nullopt);
+    blueprintTarget->addKey("anyTypeTarget", BBType::ANY, std::nullopt);
+    blueprintTarget->addKey("knownTypeTarget", BBType::INT64, std::nullopt);
+    blueprintTarget->addKey("unknownTypeTarget", BBType::ANY, std::nullopt);
 
     alica::Blackboard srcBb = alica::Blackboard(blueprintSrc.get());
     alica::Blackboard targetBb = alica::Blackboard(blueprintTarget.get());
@@ -548,7 +428,7 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
 TEST_F(TestBlackboard, setWithConvertibleType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", INT64, "14");
+    blueprint->addKey("intVal", BBType::INT64, "14");
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
