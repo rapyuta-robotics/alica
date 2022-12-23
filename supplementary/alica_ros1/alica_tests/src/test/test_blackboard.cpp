@@ -505,7 +505,6 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
     // use get with correct types
     EXPECT_EQ(bb_locked.get<double>("knownType"), 17.3);
     EXPECT_EQ(bb_locked.get<UnknownType>("unknownType").value, 7198);
-    // EXPECT_EQ(std::any_cast<bool>(bb_locked.get<std::any>("anyType")), true);
     EXPECT_EQ(bb_locked.get<bool>("anyType"), true);
 
     // use get with wrong type
