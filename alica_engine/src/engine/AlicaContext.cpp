@@ -192,18 +192,14 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
     return (*(cit->second));
 }
 
-const Blackboard& AlicaContext::getWorldModels() const
+const Blackboard& AlicaContext::getBlackboard() const
 {
-    return _engine->getWorldModels();
+    return _engine->getBlackboard();
 }
 
-void AlicaContext::addWorldModel(std::any worldModel)
+Blackboard& AlicaContext::editBlackboard()
 {
-    if (!_initialized) {
-        Logging::logWarn("AC") << "Context not initialized. Can not set new worldmodeltype";
-        return;
-    }
-    _engine->addWorldModel(worldModel);
+    return _engine->editBlackboard();
 }
 
 } // namespace alica

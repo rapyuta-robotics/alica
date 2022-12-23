@@ -81,7 +81,10 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
-        ac->addWorldModelByType<alicaTests::TestWorldModel>();
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+#pragma GCC diagnostic pop
     }
 
     virtual void TearDown() override
@@ -167,7 +170,12 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            ac->addWorldModelByType<alicaTests::TestWorldModel>();
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+            LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+#pragma GCC diagnostic pop
+
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
@@ -250,7 +258,12 @@ protected:
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
-        ac->addWorldModelByType<alica_test::SchedWM>();
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+#pragma GCC diagnostic pop
+
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -274,7 +287,13 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+#pragma GCC diagnostic pop
+    }
 
     virtual void SetUp() override
     {
@@ -321,7 +340,14 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+#pragma GCC diagnostic pop
+    }
 
     // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
     virtual void SetUp() override
@@ -336,7 +362,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -344,6 +369,7 @@ protected:
                 std::make_unique<alica::LegacyTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
+        manageWorldModel(ac);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
@@ -370,7 +396,13 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->addWorldModelByType<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+#pragma GCC diagnostic pop
+    }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
@@ -398,7 +430,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             manageWorldModel(ac);
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getWorldModels()));
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getBlackboard()));
 
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();

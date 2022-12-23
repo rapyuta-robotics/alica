@@ -52,7 +52,7 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     ASSERT_NE(dbrRun, nullptr);
     dbrRun->robotId = ac->getLocalAgentId();
     ae->start();
-    alicaTests::TestWorldModel* wm = ac->getWorldModel<alicaTests::TestWorldModel>();
+    alicaTests::TestWorldModel* wm = LockedBlackboardRW(ac->editBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
 
     STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
     EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));

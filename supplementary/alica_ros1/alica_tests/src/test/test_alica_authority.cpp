@@ -118,8 +118,10 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    alicaTests::TestWorldModel* twm1 = acs[0]->getWorldModel<alicaTests::TestWorldModel>();
-    alicaTests::TestWorldModel* twm2 = acs[1]->getWorldModel<alicaTests::TestWorldModel>();
+    LockedBlackboardRW bbwm1(acs[0]->editBlackboard());
+    alicaTests::TestWorldModel* twm1 = bbwm1.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    LockedBlackboardRW bbwm2(acs[1]->editBlackboard());
+    alicaTests::TestWorldModel* twm2 = bbwm2.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
 
     twm1->robotsXPos.push_back(0);
     twm1->robotsXPos.push_back(2000);

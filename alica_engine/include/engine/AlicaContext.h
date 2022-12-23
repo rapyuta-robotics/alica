@@ -268,35 +268,12 @@ public:
     }
 
     /**
-     * Get worldModels list being used by this alica instance.
+     * Get blackboard list being used by this alica instance.
      *
-     * @return A reference to worldModels being used by context. Worldmodels are stored in Blackboard
+     * @return A reference to blackboard being used by context.
      */
-    const Blackboard& getWorldModels() const;
-
-    /**
-     * Get a worldmodel by libraryName
-     *
-     *
-     */
-    template <class T>
-    T* getWorldModel();
-
-    /**
-     * Add a new world model to AlicaEngine.
-     * @param worldModel The worldmodel to be added
-     *
-     */
-    void addWorldModel(std::any worldModel);
-
-    /**
-     * Add a new world model to AlicaEngine passing the worldmodel type WM.
-     *
-     * @param args Arguments to be forwarded to constructor of worldmodel. Might be empty.
-     *
-     */
-    template <class WM, class... Args>
-    void addWorldModelByType(Args&&... args);
+    const Blackboard& getBlackboard() const;
+    Blackboard& editBlackboard();
 
     /**
      * Add a solver to be used by this alica instance.
@@ -578,22 +555,6 @@ void AlicaContext::setTraceFactory(Args&&... args)
 #else
     _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
 #endif
-}
-
-template <class WM, class... Args>
-void AlicaContext::addWorldModelByType(Args&&... args)
-{
-    // std::unique_ptr can not be used it is not copyable so can't fit inside std::any
-    std::shared_ptr<WM> toAdd = std::make_shared<WM>(std::forward<Args>(args)...);
-    addWorldModel(toAdd);
-}
-
-template <class T>
-T* AlicaContext::getWorldModel()
-{
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(getWorldModels().impl());
-    T* wm = impl.getWorldModel<T>();
-    return wm;
 }
 
 template <class LoggerType, class... Args>

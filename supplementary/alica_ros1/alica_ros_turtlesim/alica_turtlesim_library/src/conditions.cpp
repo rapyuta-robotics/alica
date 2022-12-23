@@ -12,8 +12,8 @@ bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Bl
 {
     std::cerr << "Debug:"
               << "conditionMove2Init" << std::endl;
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    turtlesim::ALICATurtleWorldModel* wm = impl.getWorldModel<turtlesim::ALICATurtleWorldModel>();
+    LockedBlackboardRW bbwm(*worldModels);
+    turtlesim::ALICATurtleWorldModel* wm = bbwm.get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel").get();
     return wm->getInit();
 }
 bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels)

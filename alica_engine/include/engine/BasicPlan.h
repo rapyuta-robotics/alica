@@ -36,7 +36,7 @@ public:
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTrace;
-    using RunnableObject::getWorldModels;
+    using RunnableObject::getGlobalBlackboard;
     using RunnableObject::setAlicaTimerFactory;
     using RunnableObject::setAlicaTraceFactory;
     using RunnableObject::setTeamManager;

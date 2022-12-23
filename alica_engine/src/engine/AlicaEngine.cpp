@@ -117,7 +117,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan, getWorldModels());
+    _planBase.start(_masterPlan, getBlackboard());
     Logging::logDebug("AE") << "Engine started!";
 }
 /**
@@ -191,16 +191,6 @@ int AlicaEngine::getVersion() const
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
-}
-
-const Blackboard& AlicaEngine::getWorldModels() const
-{
-    return _worldModels;
-}
-
-void AlicaEngine::addWorldModel(std::any worldModel)
-{
-    _worldModels.impl().addWorldModel(worldModel);
 }
 
 /**

@@ -45,29 +45,6 @@ public:
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
 
-    /* Worldmodel depot*/
-    std::unordered_map<std::string /*libraryname*/, std::any> _worldModels;
-
-    template <class T>
-    T* getWorldModel()
-    {
-        auto it = _worldModels.find("worldmodel");
-        if (it == _worldModels.end()) {
-            Logging::logError("BB") << "Missing requested WM:"
-                                    << "worldmodel"
-                                    << " Size:" << _worldModels.size();
-            return nullptr;
-        }
-        return std::any_cast<std::shared_ptr<T>>(it->second).get();
-    }
-
-    void addWorldModel(std::any worldModel)
-    {
-        _worldModels.insert({"worldmodel", worldModel});
-        Logging::logDebug("BB") << "Add WM:"
-                                << "worldmodel"
-                                << " Size:" << _worldModels.size();
-    }
 };
 
 class Blackboard
@@ -114,7 +91,7 @@ public:
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
-    std::shared_lock<std::shared_mutex> _lk;
+    mutable std::shared_lock<std::shared_mutex> _lk;
     const BlackboardImpl* _impl;
 };
 
@@ -150,7 +127,7 @@ public:
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
-    std::unique_lock<std::shared_mutex> _lk;
+    mutable std::unique_lock<std::shared_mutex> _lk;
     BlackboardImpl* _impl;
 };
 

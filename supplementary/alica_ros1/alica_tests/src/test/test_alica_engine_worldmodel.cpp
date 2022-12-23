@@ -48,24 +48,9 @@ protected:
 
 TEST_F(AlicaTestFixtureWM, simpleGetWM)
 {
-    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
-    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>();
-    size_t bbSize = ac->getWorldModels().impl()._worldModels.size();
-
-    EXPECT_NE(nullptr, wm1);
-    EXPECT_NE(nullptr, wm2);
-    EXPECT_EQ(1, bbSize);
-}
-
-TEST_F(AlicaTestFixtureWM, singleGetWM)
-{
-    ac->addWorldModelByType<alicaTests::TestWorldModel>();
-
-    alicaTests::TestWorldModel* wm1 = ac->getWorldModel<alicaTests::TestWorldModel>();
-    alicaTests::TestWorldModel* wm2 = ae->getWorldModel<alicaTests::TestWorldModel>();
-
-    EXPECT_NE(nullptr, wm1);
-    EXPECT_NE(nullptr, wm2);
+    LockedBlackboardRW bbwm(ac->editBlackboard());
+    alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    EXPECT_NE(nullptr, wm);
 }
 
 } // namespace

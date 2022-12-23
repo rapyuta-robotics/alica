@@ -33,8 +33,9 @@ void TestInheritBlackboardBehaviour::run()
 void TestInheritBlackboardBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters831400441334251600) ENABLED START*/
+    LockedBlackboardRW bbwm(getGlobalBlackboard());
+    auto wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     LockedBlackboardRW bb(*(getBlackboard()));
-    auto wm = getWorldModels().impl().getWorldModel<alicaTests::TestWorldModel>();
     bb.set("masterKey", 3);
     wm->passedParameters["masterKeyInBehavior"] = bb.get<int>("masterKey");
     if (bb.hasValue("behaviorKey")) {

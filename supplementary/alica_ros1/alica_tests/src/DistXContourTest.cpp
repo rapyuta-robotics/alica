@@ -25,9 +25,9 @@ DistXContourTest::~DistXContourTest() {}
 
 void DistXContourTest::cacheEvalData(const Blackboard* worldModels)
 {
-    BlackboardImpl& impl = const_cast<BlackboardImpl&>(worldModels->impl());
-    auto* worldModel = impl.getWorldModel<alicaTests::TestWorldModel>();
-    xAlloBall = worldModel->x;
+    LockedBlackboardRW bbwm(*const_cast<Blackboard*>(worldModels));
+    alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    xAlloBall = wm->x;
 }
 
 double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) const
