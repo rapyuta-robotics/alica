@@ -552,13 +552,17 @@ TEST_F(TestBlackboard, setWithConvertibleType)
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
-    // EXPECT_THROW({ bb.set<int8_t>("intVal", 1); }, BlackboardException);
-    // EXPECT_THROW({ bb.set<int32_t>("intVal", 1); }, BlackboardException);
-    // EXPECT_THROW({ bb.set<uint8_t>("intVal", 1); }, BlackboardException);
-    // EXPECT_THROW({ bb.set<uint32_t>("intVal", 1); }, BlackboardException);
-    // EXPECT_THROW({ bb.set<uint64_t>("intVal", 1); }, BlackboardException);
+    bb.set<int8_t>("intVal", 1);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
+    bb.set<int32_t>("intVal", 1);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
 
-    EXPECT_NO_THROW({ bb.set<int64_t>("intVal", 1); });
+    bb.set<uint8_t>("intVal", 1);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
+    bb.set<uint32_t>("intVal", 1);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
+
+    EXPECT_THROW({bb.set<uint64_t>("intVal", 1);}, BlackboardException);
 }
 
 TEST_F(TestBlackboard, setWithoutSpecifyingType)
@@ -567,23 +571,25 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     alica::Blackboard blackboard = alica::Blackboard();
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
-    // bb.set("intVal", 19);
+    bb.set("intVal", 19);
     bb.set("doubleVal", 3.3);
     bb.set("boolVal", true);
     bb.set("longIntVal", 1L);
-    // bb.set("usignedIntVal", 5u);
-    // bb.set("usignedLongIntVal", 7uL);
+    bb.set("usignedLongIntVal", 7uL);
     bb.set("stringVal", std::string("abc")); // has to be wrapped into std::string, otherwise is bool
     bb.set("unknownType", UnknownType(123));
 
-    // EXPECT_EQ(bb.get<int64_t>("intVal"), 19);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 19);
     EXPECT_EQ(bb.get<double>("doubleVal"), 3.3);
     EXPECT_EQ(bb.get<bool>("boolVal"), true);
     EXPECT_EQ(bb.get<int64_t>("longIntVal"), true);
-    // EXPECT_EQ(bb.get<uint32_t>("usignedIntVal"), true);
-    // EXPECT_EQ(bb.get<uint64_t>("usignedLongIntVal"), true);
+    EXPECT_EQ(bb.get<uint64_t>("usignedLongIntVal"), 7uL);
     EXPECT_EQ(bb.get<std::string>("stringVal"), "abc"); // will be interpreted as a bool (true)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 123);
+
+    bb.set("usignedIntVal", 5u);
+    EXPECT_THROW({bb.get<uint64_t>("usignedIntVal");}, BlackboardException);
+    EXPECT_EQ(bb.get<int64_t>("usignedIntVal"), 5u);
 }
 
 } // namespace
