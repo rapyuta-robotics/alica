@@ -21,7 +21,8 @@ class UnknownType
 {
 public:
     UnknownType() = default;
-    UnknownType(int64_t input): value(input) {};
+    UnknownType(int64_t input)
+            : value(input){};
     int64_t value;
 };
 
@@ -166,13 +167,13 @@ TEST_F(TestBlackboard, testMappingFromBool)
     srcLocked.set<bool>("valueSrc", false);
     targetLocked.set<bool>("valueTarget", true);
     EXPECT_TRUE((checkMapping<bool>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", false)));
-    
+
     targetLocked.set<int64_t>("valueTarget", 1);
     EXPECT_TRUE((checkMapping<int64_t>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-    
+
     targetLocked.set<double>("valueTarget", 1.0);
     EXPECT_TRUE((checkMapping<double>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", 0)));
-    
+
     targetLocked.set<std::string>("valueTarget", "");
     EXPECT_THROW(({ checkMapping<std::string>(srcBb.impl(), targetBb.impl(), "valueSrc", "valueTarget", ""); }), BlackboardException);
 }
@@ -562,7 +563,7 @@ TEST_F(TestBlackboard, setWithConvertibleType)
     bb.set<uint32_t>("intVal", 1);
     EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
 
-    EXPECT_THROW({bb.set<uint64_t>("intVal", 1);}, BlackboardException);
+    EXPECT_THROW({ bb.set<uint64_t>("intVal", 1); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, setWithoutSpecifyingType)
@@ -588,7 +589,7 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 123);
 
     bb.set("usignedIntVal", 5u);
-    EXPECT_THROW({bb.get<uint64_t>("usignedIntVal");}, BlackboardException);
+    EXPECT_THROW({ bb.get<uint64_t>("usignedIntVal"); }, BlackboardException);
     EXPECT_EQ(bb.get<int64_t>("usignedIntVal"), 5u);
 }
 
