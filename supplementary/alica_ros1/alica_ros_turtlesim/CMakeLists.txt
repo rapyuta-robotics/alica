@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(alica_ros_turtlesim)
+include(CTest)
 
 include(../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
@@ -86,3 +87,17 @@ install(DIRECTORY include/${PROJECT_NAME}/
 install(DIRECTORY launch Expr etc
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+if (BUILD_TESTING)
+    find_package(rostest REQUIRED)
+    add_rostest_gtest(${PROJECT_NAME}-test test/alica_ros_turtlesim.test test/test_main.cpp)
+    target_link_libraries(${PROJECT_NAME}-test 
+        Boost::system
+        Boost::filesystem
+        ${CMAKE_DL_LIBS}
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+        alica_dynamic_loading
+        autodiff
+        constraintsolver)
+endif()
