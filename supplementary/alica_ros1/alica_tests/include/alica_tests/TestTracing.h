@@ -53,8 +53,7 @@ public:
     void unsetGlobalContext() override {}
     void setWorldModel(alica::Blackboard* worldModels)
     {
-        alica::LockedBlackboardRW bbwm(*worldModels);
-        _wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+        _wm = alica::LockedBlackboardRW(*worldModels).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     };
     alicaTests::TestWorldModel* _wm;
 

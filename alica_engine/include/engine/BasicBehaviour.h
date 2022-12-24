@@ -43,11 +43,11 @@ public:
     // Use of private inheritance and explicitly making members public
     // to share code between BasicBehaviour and Runnable object but not expose internals to further derived classes
     using RunnableObject::getBlackboard;
+    using RunnableObject::getGlobalBlackboard;
     using RunnableObject::getInheritBlackboard;
     using RunnableObject::getName;
     using RunnableObject::getPlanContext;
     using RunnableObject::getTeamManager;
-    using RunnableObject::getGlobalBlackboard;
     using RunnableObject::setAlicaCommunication;
     using RunnableObject::setAlicaTimerFactory;
     using RunnableObject::setAlicaTraceFactory;

@@ -42,8 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895853508::getUtilityFunctio
 // Add additional options here
 void PlanB1629895853508::onInit()
 {
-    LockedBlackboardRW bbwm(getGlobalBlackboard());
-    _wm = bbwm.get<std::shared_ptr<alica_test::SchedWM>>("worldmodel").get();
+    _wm = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel").get();
     _wm->execOrder += "PlanB::Init\n";
 }
 

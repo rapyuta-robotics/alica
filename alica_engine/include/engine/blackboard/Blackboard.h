@@ -44,7 +44,6 @@ public:
     bool empty() const { return vals.empty(); }
     size_t size() const { return vals.size(); }
     std::unordered_map<std::string, std::any> vals;
-
 };
 
 class Blackboard

@@ -39,8 +39,8 @@ bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const 
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
-    LockedBlackboardRW bbwm(*const_cast<Blackboard*>(wm));
-    alicaTests::TestWorldModel* worldModel = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* worldModel =
+            LockedBlackboardRO(*wm).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     return worldModel->isPreCondition1418042929966();
     /*PROTECTED REGION END*/
 }
