@@ -112,12 +112,21 @@ public:
     bool isSuccess(const BasicPlan* plan) const;
 
     bool isStateActive(const std::string& runningPlanName, const std::string& stateName);
+    std::string getLastFailure() const { return _lastFailureInfo; }
 
 private:
+    template <class... Args>
+    void setFailureInfo(Args&&... args) const
+    {
+        std::ostringstream oss;
+        (oss << ... << std::forward<Args>(args));
+        _lastFailureInfo = oss.str();
+    }
+
     RunningPlan* getRunningPlan(const std::string& name);
     RunningPlan* searchRunningPlanTree(const std::string& name);
     RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
-    static std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName);
+    std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName) const;
     static std::string getRunningPlanName(const RunningPlan* rp);
     static std::string getActiveStateName(const RunningPlan* rp);
     bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result);
@@ -135,6 +144,7 @@ private:
     };
 
     bool _initCalled;
+    mutable std::string _lastFailureInfo;
 };
 
 template <typename AlicaElementType>
