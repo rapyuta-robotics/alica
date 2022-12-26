@@ -55,7 +55,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -82,7 +82,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
         const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -104,7 +104,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
         const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -124,7 +124,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -221,7 +221,7 @@ bool RunningPlan::evalPreCondition() const
         return true;
     }
     try {
-        return preCondition->evaluate(*this, &_worldModels);
+        return preCondition->evaluate(*this, &_globalBlackboard);
     } catch (const std::exception& e) {
         Logging::logError("RP") << "Exception in precondition: " << e.what();
         return false;
@@ -250,7 +250,7 @@ bool RunningPlan::evalRuntimeCondition() const
         return true;
     }
     try {
-        bool ret = runtimeCondition->evaluate(*this, &_worldModels);
+        bool ret = runtimeCondition->evaluate(*this, &_globalBlackboard);
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {

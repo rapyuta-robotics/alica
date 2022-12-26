@@ -40,7 +40,7 @@ private:
     const TeamManager& _teamManager;
 
     PlanBase* _pb;
-    const Blackboard* _worldModels;
+    const Blackboard* _globalBlackboard;
 };
 
 } /* namespace alica */

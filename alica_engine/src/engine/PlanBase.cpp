@@ -46,7 +46,7 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _planRepository(planRepository)
         , _stepEngine(stepEngine)
         , _stepCalled(stepCalled)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(globalBlackboard, traceFactory, teamManager, timerFactory)
         , _runTimeBehaviourFactory(globalBlackboard, teamManager, *this, communicator, traceFactory, timerFactory)
         , _resultStore(resultStore)
@@ -368,22 +368,22 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModels, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _resultStore, _solvers, plan, configuration));
     return _runningPlans.back().get();
 }
 
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModels, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
 
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModels, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, planType, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _resultStore, _solvers, planType, configuration));
     return _runningPlans.back().get();
 }
 

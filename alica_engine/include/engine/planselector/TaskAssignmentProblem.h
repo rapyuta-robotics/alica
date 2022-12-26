@@ -64,7 +64,7 @@ private:
     PlanGrp _plans;
     AgentGrp _agents;
     std::vector<SuccessCollection> _successData;
-    const Blackboard* _worldModels;
+    const Blackboard* _globalBlackboard;
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;

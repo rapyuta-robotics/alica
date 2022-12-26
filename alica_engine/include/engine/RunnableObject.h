@@ -98,7 +98,7 @@ protected:
     void sendLogMessage(int level, const std::string& message) const;
     RunningPlan* getPlanContext() const { return _runningplanContext; }
     const std::shared_ptr<Blackboard> getBlackboard() { return _blackboard; }
-    Blackboard& getGlobalBlackboard() { return _worldModels; };
+    Blackboard& getGlobalBlackboard() { return _globalBlackboard; };
 
     void start(RunningPlan* rp);
     void stop();
@@ -137,7 +137,7 @@ private:
     std::unique_ptr<IAlicaTimer> _activeRunTimer;
     const BlackboardBlueprint* _blackboardBlueprint;
     std::shared_ptr<Blackboard> _blackboard;
-    Blackboard& _worldModels;
+    Blackboard& _globalBlackboard;
 
     // Map from ConfAbstractPlanWrapper id to associated attachment
     // Only plan will have these

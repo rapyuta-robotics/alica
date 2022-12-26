@@ -30,7 +30,7 @@ public:
 
 private:
     std::unique_ptr<IBehaviourCreator> _creator;
-    Blackboard& _worldModels;
+    Blackboard& _globalBlackboard;
     TeamManager& _teamManager;
     PlanBase& _planBase;
     const IAlicaCommunication& _communication;

@@ -56,7 +56,7 @@ private:
     int _maxConsecutiveChanges;
     bool _autoFailureHandlingEnabled;
     bool _changeOccurred;
-    const Blackboard* _worldModels;
+    const Blackboard* _globalBlackboard;
 
     PlanChange synchTransitionRule(RunningPlan& rp);
     PlanChange transitionRule(RunningPlan& r);

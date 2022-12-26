@@ -17,7 +17,7 @@ RunnableObject::RunnableObject(Blackboard& globalBlackboard, const IAlicaTraceFa
         : _name(name)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
-        , _worldModels(globalBlackboard)
+        , _globalBlackboard(globalBlackboard)
         , _runnableObjectTracer(tf)
         , _blackboard(nullptr)
         , _started(false)

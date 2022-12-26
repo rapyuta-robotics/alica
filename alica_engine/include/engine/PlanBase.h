@@ -96,7 +96,7 @@ private:
     const PlanRepository& _planRepository;
     bool& _stepEngine;
     bool& _stepCalled;
-    Blackboard& _worldModels;
+    Blackboard& _globalBlackboard;
     RuntimePlanFactory _runTimePlanFactory;
     RuntimeBehaviourFactory _runTimeBehaviourFactory;
     VariableSyncModule& _resultStore;

@@ -267,7 +267,7 @@ private:
 
     // engine Pointer
     const AlicaClock& _clock;
-    const Blackboard& _worldModels;
+    const Blackboard& _globalBlackboard;
     const RuntimePlanFactory& _runTimePlanFactory;
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;
