@@ -49,7 +49,7 @@ RuleBook::~RuleBook() {}
 void RuleBook::init(const Blackboard& globalBlackboard)
 {
     _globalBlackboard = &globalBlackboard;
-    _ps->setWorldModels(globalBlackboard);
+    _ps->setGlobalBlackboard(globalBlackboard);
 }
 
 void RuleBook::reload(const YAML::Node& config)

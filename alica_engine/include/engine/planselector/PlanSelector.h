@@ -29,7 +29,7 @@ public:
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs,
             const RunningPlan* oldRp, const PlanType* relevantPlanType, double& o_oldUtility);
-    void setWorldModels(const Blackboard& globalBlackboard);
+    void setGlobalBlackboard(const Blackboard& globalBlackboard);
 
 private:
     bool getPlansForStateInternal(
