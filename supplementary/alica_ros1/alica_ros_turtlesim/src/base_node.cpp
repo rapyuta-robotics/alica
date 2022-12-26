@@ -7,9 +7,9 @@
 #include <turtlesim/Kill.h>
 #include <turtlesim/Spawn.h>
 
-void killMyTurtle(const std::string& name, ros::NodeHandle& nh)
+void killMyTurtle(const std::string& name, ros::NodeHandle& priv_nh)
 {
-    ros::ServiceClient kill_client = nh.serviceClient<turtlesim::Kill>("/kill");
+    ros::ServiceClient kill_client = priv_nh.serviceClient<turtlesim::Kill>("/kill");
     turtlesim::Kill kill_srv;
     kill_srv.request.name = name;
     if (kill_client.waitForExistence() && kill_client.call(kill_srv)) {
@@ -19,9 +19,9 @@ void killMyTurtle(const std::string& name, ros::NodeHandle& nh)
     }
 }
 
-bool spawnMyTurtle(const std::string& name, ros::NodeHandle& nh)
+bool spawnMyTurtle(const std::string& name, ros::NodeHandle& priv_nh)
 {
-    ros::ServiceClient spawn_client = nh.serviceClient<turtlesim::Spawn>("/spawn");
+    ros::ServiceClient spawn_client = priv_nh.serviceClient<turtlesim::Spawn>("/spawn");
     turtlesim::Spawn spawn_srv;
     spawn_srv.request.x = 1;
     spawn_srv.request.y = 1;
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     } else {
         ROS_INFO("Creating ALICA turtle Base.......");
     }
-    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, dynamic);
+    turtlesim::Base base(name, agent_id, roleset, master_plan, alica_path, dynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
     base.start(nh, priv_nh);

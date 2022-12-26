@@ -24,8 +24,8 @@
 namespace turtlesim
 {
 
-Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path, bool loadDynamically)
+Base::Base(
+        const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan, const std::string& path, bool loadDynamically)
         : spinner(0)
         , _loadDynamically(loadDynamically)
 {

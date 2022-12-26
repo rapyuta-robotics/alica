@@ -1,6 +1,7 @@
 #pragma once
 
 #include "alica_ros_turtlesim/turtle.hpp"
+#include <boost/dll/alias.hpp>
 #include <engine/AlicaContext.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
