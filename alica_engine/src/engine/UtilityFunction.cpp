@@ -38,7 +38,7 @@ UtilityFunction::~UtilityFunction() {}
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
-UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* worldModels) const
+UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* globalBlackboard) const
 {
     if (!newAss->isValid()) {
         return UtilityInterval(-1.0, -1.0);
@@ -60,7 +60,7 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     UtilityInterval curUI;
 
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-        curUI = us->eval(wrapper, oldAss, worldModels);
+        curUI = us->eval(wrapper, oldAss, globalBlackboard);
         // if a summand deny assignment, return -1 for forbidden assignments
         if (curUI.getMax() <= -1.0) {
             sumOfUI.setMax(-1.0);
@@ -82,10 +82,10 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     return UtilityInterval(0.0, 0.0);
 }
 
-void UtilityFunction::cacheEvalData(const Blackboard* worldModels)
+void UtilityFunction::cacheEvalData(const Blackboard* globalBlackboard)
 {
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-        us->cacheEvalData(worldModels);
+        us->cacheEvalData(globalBlackboard);
     }
 }
 

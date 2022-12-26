@@ -48,7 +48,7 @@ protected:
 
 TEST_F(AlicaTestFixtureWM, simpleGetWM)
 {
-    alicaTests::TestWorldModel* wm = LockedBlackboardRW(ac->editBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* wm = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     EXPECT_NE(nullptr, wm);
 }
 

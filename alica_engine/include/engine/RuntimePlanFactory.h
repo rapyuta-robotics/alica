@@ -17,7 +17,7 @@ class IAlicaTimerFactory;
 class RuntimePlanFactory
 {
 public:
-    RuntimePlanFactory(Blackboard& worldModels, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
+    RuntimePlanFactory(Blackboard& globalBlackboard, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory);
     ~RuntimePlanFactory() = default;
     void init(std::unique_ptr<IPlanCreator>&& pc);
 

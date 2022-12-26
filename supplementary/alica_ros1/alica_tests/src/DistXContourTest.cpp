@@ -23,9 +23,9 @@ DistXContourTest::DistXContourTest(double weight, const std::vector<std::pair<do
 
 DistXContourTest::~DistXContourTest() {}
 
-void DistXContourTest::cacheEvalData(const Blackboard* worldModels)
+void DistXContourTest::cacheEvalData(const Blackboard* globalBlackboard)
 {
-    LockedBlackboardRO bbwm(*worldModels);
+    LockedBlackboardRO bbwm(*globalBlackboard);
     alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     xAlloBall = wm->x;
 }
@@ -35,7 +35,7 @@ double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y
     return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 }
 
-UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* worldModels) const
+UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* globalBlackboard) const
 {
     UtilityInterval ui(0.0, 0.0);
 

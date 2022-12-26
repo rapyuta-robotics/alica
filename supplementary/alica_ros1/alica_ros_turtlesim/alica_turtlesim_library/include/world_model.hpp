@@ -35,7 +35,7 @@ inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::Nod
 {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    alica::LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
 #pragma GCC diagnostic pop
 }
 

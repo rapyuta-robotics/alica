@@ -38,8 +38,8 @@ public:
     int getEntryPointCount() const { return _cardinalities.size(); }
     const SuccessCollection* getSuccessData() const;
 
-    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const Blackboard* worldModels);
-    void evaluate(const Assignment* old, const Blackboard* worldModels) { _utility = _plan->getUtilityFunction()->eval(this, old, worldModels); }
+    bool expand(std::vector<PartialAssignment*>& o_container, PartialAssignmentPool& pool, const Assignment* old, const Blackboard* globalBlackboard);
+    void evaluate(const Assignment* old, const Blackboard* globalBlackboard) { _utility = _plan->getUtilityFunction()->eval(this, old, globalBlackboard); }
     static bool compare(const PartialAssignment* a, const PartialAssignment* b);
 
     static void allowIdling(bool allowed) { s_allowIdling = allowed; }

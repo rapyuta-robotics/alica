@@ -32,7 +32,7 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& worldModels, VariableSyncModule& resultStore,
+        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory, const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
@@ -46,9 +46,9 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _planRepository(planRepository)
         , _stepEngine(stepEngine)
         , _stepCalled(stepCalled)
-        , _worldModels(worldModels)
-        , _runTimePlanFactory(worldModels, traceFactory, teamManager, timerFactory)
-        , _runTimeBehaviourFactory(worldModels, teamManager, *this, communicator, traceFactory, timerFactory)
+        , _worldModels(globalBlackboard)
+        , _runTimePlanFactory(globalBlackboard, traceFactory, teamManager, timerFactory)
+        , _runTimeBehaviourFactory(globalBlackboard, teamManager, *this, communicator, traceFactory, timerFactory)
         , _resultStore(resultStore)
         , _solvers(solvers)
         , _rootNode(nullptr)
@@ -116,9 +116,9 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan, const Blackboard& worldModels)
+void PlanBase::start(const Plan* masterPlan, const Blackboard& globalBlackboard)
 {
-    _ruleBook.init(worldModels);
+    _ruleBook.init(globalBlackboard);
     if (!_running) {
         _running = true;
         if (_statusMessage) {

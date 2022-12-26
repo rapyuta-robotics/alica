@@ -239,9 +239,9 @@ bool PlanSelector::getPlansForStateInternal(
     return true;
 }
 
-void PlanSelector::setWorldModels(const Blackboard& worldModels)
+void PlanSelector::setWorldModels(const Blackboard& globalBlackboard)
 {
-    _worldModels = &worldModels;
+    _worldModels = &globalBlackboard;
 }
 
 } /* namespace alica */

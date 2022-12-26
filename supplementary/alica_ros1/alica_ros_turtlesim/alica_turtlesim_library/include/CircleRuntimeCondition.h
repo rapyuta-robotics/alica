@@ -12,7 +12,7 @@ class CircleRuntimeCondition : public BasicCondition
 {
 public:
     CircleRuntimeCondition();
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard);
     // Factory method
     static std::shared_ptr<CircleRuntimeCondition> create()
     {

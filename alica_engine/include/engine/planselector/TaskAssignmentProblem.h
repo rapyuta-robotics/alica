@@ -29,7 +29,7 @@ class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
     TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
-            PartialAssignmentPool& pool, const Blackboard* worldModels);
+            PartialAssignmentPool& pool, const Blackboard* globalBlackboard);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 

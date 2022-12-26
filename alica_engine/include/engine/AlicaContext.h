@@ -272,8 +272,8 @@ public:
      *
      * @return A reference to blackboard being used by context.
      */
-    const Blackboard& getBlackboard() const;
-    Blackboard& editBlackboard();
+    const Blackboard& getGlobalBlackboard() const;
+    Blackboard& editGlobalBlackboard();
 
     /**
      * Add a solver to be used by this alica instance.

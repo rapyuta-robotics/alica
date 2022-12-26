@@ -9,9 +9,9 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(Blackboard& worldModels, TeamManager& teamManager, PlanBase& planBase,
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(Blackboard& globalBlackboard, TeamManager& teamManager, PlanBase& planBase,
         const IAlicaCommunication& communication, const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
-        : _worldModels(worldModels)
+        : _worldModels(globalBlackboard)
         , _teamManager(teamManager)
         , _planBase(planBase)
         , _communication(communication)

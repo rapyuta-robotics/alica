@@ -51,11 +51,11 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
     s_assignmentProtectionTime = t;
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -77,12 +77,12 @@ RunningPlan::~RunningPlan()
     }
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
         const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -99,12 +99,12 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
     _activeTriple.abstractPlan = plan;
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
         const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)
@@ -119,12 +119,12 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
 {
 }
 
-RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& worldModels,
+RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
         , _teamObserver(teamObserver)
         , _teamManager(teamManager)

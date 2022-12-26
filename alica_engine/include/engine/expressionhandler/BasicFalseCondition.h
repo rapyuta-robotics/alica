@@ -11,7 +11,7 @@ public:
     BasicFalseCondition();
     virtual ~BasicFalseCondition();
 
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels) override;
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard) override;
 };
 
 } /* namespace alica */

@@ -12,11 +12,11 @@ namespace alica
 {
 
 RuntimePlanFactory::RuntimePlanFactory(
-        Blackboard& worldModels, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+        Blackboard& globalBlackboard, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
         : _traceFactory(traceFactory)
         , _teamManager(teamManager)
         , _timerFactory(timerFactory)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
 {
 }
 

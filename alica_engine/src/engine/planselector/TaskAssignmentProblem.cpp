@@ -33,10 +33,10 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
-        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const Blackboard* worldModels)
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const Blackboard* globalBlackboard)
         : _agents(paraAgents)
         , _plans(planList)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif

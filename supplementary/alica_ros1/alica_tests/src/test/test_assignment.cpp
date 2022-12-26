@@ -45,7 +45,7 @@ TEST(Assignment, RobotsInserted)
     EXPECT_EQ(0, ac->init(std::move(creators)));
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    alica::LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 #pragma GCC diagnostic pop
 
     PlanRepository repo;

@@ -12,7 +12,7 @@ class DummyTestSummand : public USummand
 public:
     DummyTestSummand(double weight);
     virtual ~DummyTestSummand();
-    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const Blackboard* worldModels) const override;
+    UtilityInterval eval(IAssignment ass, const Assignment* oldAss, const Blackboard* globalBlackboard) const override;
     AgentId robotId;
 
 protected:

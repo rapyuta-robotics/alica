@@ -55,7 +55,7 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, editBlackboard(), editResultStore(), _ctx.getSolvers(),
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, editGlobalBlackboard(), editResultStore(), _ctx.getSolvers(),
                   getTimerFactory(), getTraceFactory())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
@@ -117,7 +117,7 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan, getBlackboard());
+    _planBase.start(_masterPlan, getGlobalBlackboard());
     Logging::logDebug("AE") << "Engine started!";
 }
 /**

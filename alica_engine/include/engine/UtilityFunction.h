@@ -30,9 +30,9 @@ public:
     std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
     // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
-    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* worldModels) const;
+    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* globalBlackboard) const;
     // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
-    void cacheEvalData(const Blackboard* worldModels);
+    void cacheEvalData(const Blackboard* globalBlackboard);
     void init(const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager);
 
     static void initDataStructures(

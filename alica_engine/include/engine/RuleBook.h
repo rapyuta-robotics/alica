@@ -44,7 +44,7 @@ public:
     void resetChangeOccurred() { _changeOccurred = false; }
     PlanSelector* getPlanSelector() const { return _ps.get(); }
     void reload(const YAML::Node& config);
-    void init(const Blackboard& worldModels);
+    void init(const Blackboard& globalBlackboard);
 
 private:
     Logger& _logger;

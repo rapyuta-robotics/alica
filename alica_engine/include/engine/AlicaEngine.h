@@ -80,8 +80,8 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const Blackboard& getBlackboard() const { return _worldModels; }
-    Blackboard& editBlackboard() { return _worldModels; }
+    const Blackboard& getGlobalBlackboard() const { return _globalBlackboard; }
+    Blackboard& editGlobalBlackboard() { return _globalBlackboard; }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -147,7 +147,7 @@ private:
 
     bool _initialized{false};
 
-    Blackboard _worldModels;
+    Blackboard _globalBlackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
 };

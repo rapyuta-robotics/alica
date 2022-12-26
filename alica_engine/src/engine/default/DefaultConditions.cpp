@@ -5,7 +5,7 @@
 
 namespace alica
 {
-bool defaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels)
+bool defaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard)
 {
     return false;
 }

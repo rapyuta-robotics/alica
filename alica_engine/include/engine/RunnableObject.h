@@ -77,7 +77,7 @@ class RunnableObject
 protected:
     using TracingType = TraceRunnableObject::TracingType;
 
-    RunnableObject(Blackboard& worldModels, const IAlicaTraceFactory* tf, const std::string& name = "");
+    RunnableObject(Blackboard& globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name = "");
     virtual ~RunnableObject() = default;
 
     static constexpr int DEFAULT_MS_INTERVAL = 100;

@@ -13,11 +13,11 @@
 
 namespace alica
 {
-RunnableObject::RunnableObject(Blackboard& worldModels, const IAlicaTraceFactory* tf, const std::string& name)
+RunnableObject::RunnableObject(Blackboard& globalBlackboard, const IAlicaTraceFactory* tf, const std::string& name)
         : _name(name)
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
-        , _worldModels(worldModels)
+        , _worldModels(globalBlackboard)
         , _runnableObjectTracer(tf)
         , _blackboard(nullptr)
         , _started(false)

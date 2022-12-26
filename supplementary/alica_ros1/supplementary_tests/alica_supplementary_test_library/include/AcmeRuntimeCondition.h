@@ -11,7 +11,7 @@ class AcmeRuntimeCondition : public BasicCondition
 public:
     AcmeRuntimeCondition();
 
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard);
     // Factory method
     static std::shared_ptr<AcmeRuntimeCondition> create()
     {

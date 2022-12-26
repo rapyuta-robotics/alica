@@ -46,10 +46,10 @@ RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, Sync
 
 RuleBook::~RuleBook() {}
 
-void RuleBook::init(const Blackboard& worldModels)
+void RuleBook::init(const Blackboard& globalBlackboard)
 {
-    _worldModels = &worldModels;
-    _ps->setWorldModels(worldModels);
+    _worldModels = &globalBlackboard;
+    _ps->setWorldModels(globalBlackboard);
 }
 
 void RuleBook::reload(const YAML::Node& config)

@@ -21,7 +21,7 @@ class IAlicaTimerFactory;
 class RuntimeBehaviourFactory
 {
 public:
-    RuntimeBehaviourFactory(Blackboard& worldModels, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
+    RuntimeBehaviourFactory(Blackboard& globalBlackboard, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
             const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory);
     ~RuntimeBehaviourFactory() = default;
     void init(std::unique_ptr<IBehaviourCreator>&& bc);

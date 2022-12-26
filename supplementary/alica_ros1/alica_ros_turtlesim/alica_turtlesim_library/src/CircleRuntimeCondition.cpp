@@ -9,7 +9,7 @@ CircleRuntimeCondition::CircleRuntimeCondition()
               << "CircleRuntimeCondition created" << std::endl;
 }
 
-bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* worldModels)
+bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard)
 {
     std::cerr << "Debug:"
               << "CircleRuntimeCondition::evaluate" << std::endl;

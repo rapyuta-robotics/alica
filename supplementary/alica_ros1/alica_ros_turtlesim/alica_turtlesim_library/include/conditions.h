@@ -6,9 +6,9 @@ namespace alica
 class Blackboard;
 class RunningPlan;
 
-bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
-bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
-bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* worldModels);
+bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard);
+bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard);
+bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard);
 
 BOOST_DLL_ALIAS(alica::conditionMove2Init, Move2Init)
 BOOST_DLL_ALIAS(alica::conditionInit2Move, Init2Move)

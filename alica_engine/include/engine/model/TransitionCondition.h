@@ -21,7 +21,7 @@ class TransitionCondition : public AlicaElement
 {
 public:
     TransitionCondition(std::unique_ptr<BlackboardBlueprint> blackboardBlueprint);
-    bool evaluate(const RunningPlan* rp, const Blackboard* worldModels, const KeyMapping* keyMapping);
+    bool evaluate(const RunningPlan* rp, const Blackboard* globalBlackboard, const KeyMapping* keyMapping);
     void setEvalCallback(TransitionConditionCallback cb) { _evalCallback = cb; };
 
     std::string getLibraryName() const;

@@ -78,7 +78,7 @@ void Base::start(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
         ac->init(std::move(creators), true); // Do not start engine, I need to add WM before
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        alica::LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
+        alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
 #pragma GCC diagnostic pop
         ac->addSolver<alica::reasoner::CGSolver>();
         ac->startEngine(); // Now I can start engine

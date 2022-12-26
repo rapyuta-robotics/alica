@@ -192,14 +192,14 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
     return (*(cit->second));
 }
 
-const Blackboard& AlicaContext::getBlackboard() const
+const Blackboard& AlicaContext::getGlobalBlackboard() const
 {
-    return _engine->getBlackboard();
+    return _engine->getGlobalBlackboard();
 }
 
-Blackboard& AlicaContext::editBlackboard()
+Blackboard& AlicaContext::editGlobalBlackboard()
 {
-    return _engine->editBlackboard();
+    return _engine->editGlobalBlackboard();
 }
 
 } // namespace alica

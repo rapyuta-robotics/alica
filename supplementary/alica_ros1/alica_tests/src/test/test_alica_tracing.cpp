@@ -50,12 +50,12 @@ protected:
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 #pragma GCC diagnostic pop
 
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getBlackboard()));
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
     }
 };
 
@@ -70,11 +70,11 @@ protected:
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 #pragma GCC diagnostic pop
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getBlackboard()));
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
     }
     const char* getHostName(int agentNumber) const override
     {
@@ -91,7 +91,7 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(ac->editBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
 
     twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
@@ -102,8 +102,8 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(acs[0]->editBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
-    alicaTests::TestWorldModel* twm2 = LockedBlackboardRW(acs[1]->editBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* twm2 = LockedBlackboardRW(acs[1]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

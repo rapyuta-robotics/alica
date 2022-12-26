@@ -83,7 +83,7 @@ protected:
         ae = AlicaTestsEngineGetter::getEngine(ac);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 #pragma GCC diagnostic pop
     }
 
@@ -173,7 +173,7 @@ protected:
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+            LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 #pragma GCC diagnostic pop
 
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
@@ -261,7 +261,7 @@ protected:
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
 #pragma GCC diagnostic pop
 
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
@@ -291,7 +291,7 @@ protected:
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
 #pragma GCC diagnostic pop
     }
 
@@ -345,7 +345,7 @@ protected:
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
 #pragma GCC diagnostic pop
     }
 
@@ -400,7 +400,7 @@ protected:
     {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        LockedBlackboardRW(ac->editBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alica_test::SchedWM>());
 #pragma GCC diagnostic pop
     }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
@@ -430,7 +430,7 @@ protected:
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
             manageWorldModel(ac);
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getBlackboard()));
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
 
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
