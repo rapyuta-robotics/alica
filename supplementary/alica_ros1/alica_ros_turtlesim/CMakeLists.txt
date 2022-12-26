@@ -91,7 +91,7 @@ install(DIRECTORY launch Expr etc
 if (BUILD_TESTING)
     find_package(rostest REQUIRED)
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_ros_turtlesim.test test/test_main.cpp)
-    target_link_libraries(${PROJECT_NAME}-test 
+    target_link_libraries(${PROJECT_NAME}-test
         Boost::system
         Boost::filesystem
         ${CMAKE_DL_LIBS}

@@ -24,6 +24,6 @@ build
 
 RUN <<runtests
   source devel/setup.bash
-  catkin run_tests --no-status
+  catkin run_tests --no-status alica_dummy_proxy alica_dummy_tracing alica_engine_ alica_msgs alica_ros_proxy alica_simple_solver alica_solver_interface alica_test_utility alica_tests autodiff constraintsolver supplementary_tests
   catkin_test_results --verbose
 runtests

@@ -7,9 +7,9 @@
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
     <arg name="dynamic"        default="false" />
-    
+
     <node pkg="turtlesim" type="turtlesim_node" name="turtlesim" />
-   
+
     <node name="turtle1" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
         <param name="name"         value="turtle1" />
         <param name="agent_id"     value="1" />
@@ -26,7 +26,7 @@
         <param name="roleset"      value="$(arg roleset)" />
         <param name="alica_path"   value="$(arg alica_path)" />
         <param name="dynamic"      value="$(arg dynamic)" />
-    </node> 
+    </node>
 
     <node name="turtle3" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
         <param name="name"         value="turtle3" />
@@ -35,7 +35,7 @@
         <param name="roleset"      value="$(arg roleset)" />
         <param name="alica_path"   value="$(arg alica_path)" />
         <param name="dynamic"      value="$(arg dynamic)" />
-    </node>  
+    </node>
 
     <node name="turtle4" pkg="alica_ros_turtlesim" type="alica_ros_turtlesim" output="screen" launch-prefix="$(arg launch_prefix)">
         <param name="name"         value="turtle4" />
