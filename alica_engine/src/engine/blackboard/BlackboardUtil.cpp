@@ -10,22 +10,22 @@ namespace alica
 {
 void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb, const KeyMapping* keyMapping)
 {
-    const auto lockedParentBb = LockedBlackboardRO(*parent_bb);
-    auto& childBb = child_bb->impl(); // Child not started yet, no other user exists, dont' use lock
+    const LockedBlackboardRO lockedParentBb(*parent_bb);
+    auto& childBb = child_bb->impl(); // Child not started yet, no other user exists, don't use lock
     for (const auto& [parentKey, childKey] : keyMapping->getInputMapping()) {
         try {
             childBb.map(parentKey, childKey, parent_bb->impl());
             Logging::logDebug("BlackboardUtil") << "passing " << parentKey << " into " << childKey;
         } catch (std::exception& e) {
             Logging::logError("BlackboardUtil") << "Blackboard error passing " << parentKey << " into " << childKey << ". " << e.what();
-            std::rethrow_exception(std::current_exception());
+            throw;
         }
     }
 }
 
 void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb, const KeyMapping* keyMapping)
 {
-    const auto lockedParentBb = LockedBlackboardRW(*parent_bb);
+    LockedBlackboardRW lockedParentBb(*parent_bb);
     const auto& childBb = child_bb->impl(); // Child is terminated, no other users exists, don't use lock
     for (const auto& [parentKey, childKey] : keyMapping->getOutputMapping()) {
         try {
@@ -33,7 +33,7 @@ void BlackboardUtil::setOutput(Blackboard* parent_bb, const Blackboard* child_bb
             Logging::logDebug("BlackboardUtil") << "passing " << childKey << " into " << parentKey;
         } catch (std::exception& e) {
             Logging::logError("BlackboardUtil") << "Blackboard error passing " << childKey << " into " << parentKey << ". " << e.what();
-            std::rethrow_exception(std::current_exception());
+            throw;
         }
     }
 }

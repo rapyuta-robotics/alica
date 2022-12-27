@@ -20,7 +20,7 @@ public:
 
     void addKey(const std::string& key, const std::string& type, std::optional<std::string> defaultValue)
     {
-        _keyInfo.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(KeyInfo{.type = type, .defaultValue = defaultValue}));
+        _keyInfo.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(KeyInfo{type, defaultValue}));
     }
     const_iterator begin() const { return _keyInfo.begin(); }
     const_iterator end() const { return _keyInfo.end(); }

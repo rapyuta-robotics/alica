@@ -48,8 +48,7 @@ public:
     BlackboardImpl(const BlackboardImpl&) = delete;
     BlackboardImpl(const BlackboardBlueprint* blueprint)
     {
-        for (auto it = blueprint->begin(); it != blueprint->end(); ++it) {
-            const auto& [key, keyInfo] = *it;
+        for (const auto& [key, keyInfo] : *blueprint) {
             auto typeIndex = getTypeIndex(keyInfo.type);
             if (!typeIndex.has_value() && keyInfo.type != "std::any") {
                 throw BlackboardException(stringify("key: ", key, " has an unsupported type"));
@@ -85,7 +84,7 @@ public:
     template <typename T>
     const T& get(const std::string& key) const
     {
-        // T must be an exact match to the T used while setting this key (i.e. no type conversions taken into account)
+        // T must be an exact match to the type stored in the variant (i.e. no type conversions taken into account)
         // Exact matches are required because we return by reference
         try {
             const auto yamlTypeIt = _yamlType.find(key);
@@ -142,8 +141,6 @@ public:
     {
         return const_cast<T&>(static_cast<const BlackboardImpl*>(this)->get<T>(key));
     }
-    BBValueType& get(const std::string& key) { return _vals.at(key); }
-    const BBValueType& get(const std::string& key) const { return _vals.at(key); }
 
     template <class T>
     void set(const std::string& key, T&& value)
@@ -209,13 +206,7 @@ private:
     template <class T>
     static const char* getTypeName()
     {
-        auto typeIndex = BBValueType{T{}}.index() - 1;
-        if (typeIndex < BB_VALUE_TYPE_NAMES_SIZE) {
-            // known type (after conversions to supported types in the the variant are taken into account)
-            return BB_VALUE_TYPE_NAMES[typeIndex];
-        }
-        // Note: std::any is also considered to be an unknown type
-        return nullptr;
+        return getTypeName(BBValueType{T{}}.index());
     }
 
     static const char* getTypeName(std::size_t index)
@@ -253,6 +244,7 @@ private:
             // Note: index cannot be std::monostate
             // throws if variant construction fails
             assert(index > 0);
+            // Note: make index sequence equal to the number of types in BBValueType
             return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 2>(), std::forward<Args>(args)...);
         }
 
@@ -368,7 +360,7 @@ public:
     size_t size() const { return _impl->size(); }
 
     template <typename T>
-    const T& get(const std::string& key) const
+    decltype(auto) get(const std::string& key) const
     {
         return _impl->get<T>(key);
     }
@@ -392,12 +384,12 @@ public:
     LockedBlackboardRW(LockedBlackboardRW&) = delete;
 
     template <typename T>
-    const T& get(const std::string& key) const
+    decltype(auto) get(const std::string& key) const
     {
         return _impl->get<T>(key);
     }
     template <typename T>
-    T& get(const std::string& key)
+    decltype(auto) get(const std::string& key)
     {
         return _impl->get<T>(key);
     }
@@ -405,7 +397,7 @@ public:
     template <typename T>
     void set(const std::string& key, T&& value)
     {
-        _impl->set<T>(key, std::forward<T>(value));
+        _impl->set(key, std::forward<T>(value));
     }
 
     bool empty() const { return _impl->empty(); }
