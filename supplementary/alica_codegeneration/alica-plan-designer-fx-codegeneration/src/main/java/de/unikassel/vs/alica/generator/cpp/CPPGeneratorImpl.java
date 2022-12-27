@@ -434,6 +434,9 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createTransitionConditions(List<TransitionCondition> conditions) {
+        if (conditions.isEmpty()) {
+            return;
+        }
         String destinationPath = cutDestinationPathToDirectory(conditions.get(0));
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), destinationPath, "conditions.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionHeader(conditions);
@@ -448,6 +451,9 @@ public class CPPGeneratorImpl implements IGenerator {
 
     @Override
     public void createTransitionConditionsCreator(List<TransitionCondition> conditions) {
+        if (conditions.isEmpty()) {
+            return;
+        }
         String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "TransitionConditionCreator.h").toString();
         String fileContentHeader = xtendTemplates.transitionConditionCreatorHeader(conditions);
         writeSourceFile(headerPath, fileContentHeader);
@@ -455,6 +461,19 @@ public class CPPGeneratorImpl implements IGenerator {
 
         String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "TransitionConditionCreator.cpp").toString();
         String fileContentSource = xtendTemplates.transitionConditionCreatorSource(conditions, packageName);
+        writeSourceFile(srcPath, fileContentSource);
+        formatFile(srcPath);
+    }
+
+    @Override
+    public void createLegacyTransitionConditionsCreator(List<Plan> plans, List<Condition> conditions) {
+        String headerPath = Paths.get(generatedSourcesManager.getIncludeDir(), "LegacyTransitionConditionCreator.h").toString();
+        String fileContentHeader = xtendTemplates.legacyTransitionConditionCreatorHeader(conditions);
+        writeSourceFile(headerPath, fileContentHeader);
+        formatFile(headerPath);
+
+        String srcPath = Paths.get(generatedSourcesManager.getSrcDir(), "LegacyTransitionConditionCreator.cpp").toString();
+        String fileContentSource = xtendTemplates.legacyTransitionConditionCreatorSource(plans, conditions, packageName);
         writeSourceFile(srcPath, fileContentSource);
         formatFile(srcPath);
     }

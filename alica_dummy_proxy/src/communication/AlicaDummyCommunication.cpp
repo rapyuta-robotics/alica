@@ -216,7 +216,6 @@ AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunication
         : alica::IAlicaCommunication(callbacks)
         , _isRunning(false)
 {
-    // s_modContainer.registerModule(this);
 }
 
 AlicaDummyCommunication::~AlicaDummyCommunication()

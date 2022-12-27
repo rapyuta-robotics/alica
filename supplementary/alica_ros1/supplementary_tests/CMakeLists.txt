@@ -28,7 +28,6 @@ find_package(alica_dynamic_loading REQUIRED)
 
 
 include_directories(include
-    ${alica_common_config_INCLUDE_DIRS}
 )
 
 catkin_package(

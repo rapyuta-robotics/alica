@@ -139,11 +139,13 @@ void AlicaEngine::initTransitionConditions(ITransitionConditionCreator* creator)
 {
     for (const Transition* transition : _planRepository.getTransitions()) {
         TransitionCondition* transitionCondition = transition->getTransitionCondition();
+
         if (_defaultTransitionConditionCreator.isDefaultTransitionCondition(transitionCondition->getName())) {
             transitionCondition->setEvalCallback(_defaultTransitionConditionCreator.createConditions(transitionCondition->getName()));
         } else {
-            TransitionConditionContext ctx{transitionCondition->getName(), transitionCondition->getLibraryName(), transitionCondition->getId()};
-            transitionCondition->setEvalCallback(creator->createConditions(ctx));
+            TransitionConditionContext ctx{
+                    transitionCondition->getName(), transitionCondition->getLibraryName(), transitionCondition->getId(), transition->getPreConditionId()};
+            transitionCondition->setEvalCallback(creator->createConditions(ctx.conditionConfId, ctx));
         }
     }
 }

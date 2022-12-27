@@ -15,7 +15,7 @@ Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
 
 Go2RandomPosition::~Go2RandomPosition() {}
 
-void Go2RandomPosition::run(void* msg)
+void Go2RandomPosition::run()
 {
     if (isSuccess()) {
         return;

@@ -14,6 +14,6 @@ class IdleBehaviour : public BasicBehaviour
 public:
     explicit IdleBehaviour(BehaviourContext& context)
             : BasicBehaviour(context){};
-    void run(void* msg) override;
+    void run() override;
 };
 } // namespace alica::test

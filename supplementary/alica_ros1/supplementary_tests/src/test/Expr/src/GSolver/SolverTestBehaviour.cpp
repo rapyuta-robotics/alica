@@ -28,7 +28,7 @@ SolverTestBehaviour::~SolverTestBehaviour()
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void SolverTestBehaviour::run(void* msg)
+void SolverTestBehaviour::run()
 {
     /*PROTECTED REGION ID(run1417424455986) ENABLED START*/
     // Add additional options here

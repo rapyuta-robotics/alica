@@ -1,7 +1,7 @@
 #include <alica_tests/SimpleTestPlan1412252439925.h>
 /*PROTECTED REGION ID(eph1412252439925) ENABLED START*/
 // Add additional using directives here
-#include <alica_tests/CounterClass.h>
+#include <alica/test/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -62,6 +62,28 @@ std::shared_ptr<UtilityFunction> UtilityFunction1412252439925::getUtilityFunctio
     shared_ptr<UtilityFunction> defaultFunction = make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 1412761925032 (1412761925032)
+ *   - Comment:
+ *   - Source2Dest: TestState1 --> TestState2
+ *
+ * Precondition: 1412761926856 (1412761926856)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in TestState1:
+ *   - MidFieldStandard (1402488696205)
+ */
+bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1412761925032) ENABLED START*/
+    return rp->isAnyChildStatus(PlanStatus::Success);
     /*PROTECTED REGION END*/
 }
 

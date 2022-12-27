@@ -39,6 +39,50 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061334567::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: FromDefault NameTo Default Name (1588069612659)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: DecisionState --> StateA
+ *
+ * Precondition: 1588069612661 (1588069612661)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in DecisionState:
+ */
+bool PreCondition1588069612661::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1588069612659) ENABLED START*/
+    std::cout << "The PreCondition 1588069612661 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: FromDefault NameTo Default Name (1588069615552)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: DecisionState --> StateB
+ *
+ * Precondition: 1588069615553 (1588069615553)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in DecisionState:
+ */
+bool PreCondition1588069615553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1588069615552) ENABLED START*/
+    std::cout << "The PreCondition 1588069615553 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1588061334567) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

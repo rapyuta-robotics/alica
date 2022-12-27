@@ -55,6 +55,74 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: MISSING_NAME (1402489257607)
+ *   - Comment:
+ *   - Source2Dest: Wander --> Tackle
+ *
+ * Precondition: MISSING_NAME (1402489258509)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Wander:
+ *   - MidFieldStandard (1402488696205)
+ */
+bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489257607) ENABLED START*/
+    std::cout << "The PreCondition 1402489258509 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (1402489276995)
+ *   - Comment:
+ *   - Source2Dest: Wander --> Sync
+ *
+ * Precondition: MISSING_NAME (1402489278408)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Wander:
+ *   - MidFieldStandard (1402488696205)
+ */
+bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402489276995) ENABLED START*/
+    std::cout << "The PreCondition 1402489278408 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: MISSING_NAME (1402500843072)
+ *   - Comment:
+ *   - Source2Dest: Kill --> Shoot
+ *
+ * Precondition: MISSING_NAME (1402500844446)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Kill:
+ */
+bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1402500843072) ENABLED START*/
+    std::cout << "The PreCondition 1402500844446 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1402488770050) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

@@ -21,7 +21,7 @@ TEST_F(AlicaDefaultLoggerTest, testSettingDefaultLogger)
 {
     ASSERT_NO_SIGNAL
     // check that AlicaRosLogger is set.
-    alicaRosLogger::AlicaRosLogger* logger = dynamic_cast<alicaRosLogger::AlicaRosLogger*>(AlicaLogger::instance());
+    alica::AlicaDefaultLogger* logger = dynamic_cast<alica::AlicaDefaultLogger*>(AlicaLogger::instance());
     EXPECT_NE(logger, nullptr);
 }
 } // namespace

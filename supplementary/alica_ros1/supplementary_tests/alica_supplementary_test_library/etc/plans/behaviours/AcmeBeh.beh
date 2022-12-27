@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 4027024785691951817,
+  "inheritBlackboard": false,
+  "name": "AcmeBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": [],
+  "libraryName": "alica_supplementary_test_library"
+}

@@ -40,7 +40,7 @@ TeamObserver::TeamObserver(ConfigChangeListener& configChangeListener, Logger& l
     auto reloadFunctionPtr = std::bind(&TeamObserver::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
     reload(configChangeListener.getConfig());
-};
+}
 
 TeamObserver::~TeamObserver() {}
 

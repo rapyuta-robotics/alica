@@ -1,6 +1,5 @@
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 /*PROTECTED REGION ID(eph1588060981661) ENABLED START*/
-#include <alica_tests/CounterClass.h>
 /*PROTECTED REGION END*/
 
 namespace alica
@@ -35,6 +34,32 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
     /*PROTECTED REGION ID(1588060981661) ENABLED START*/
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: FromDefault NameTo Default Name (1588253347211)
+ *   - Comment: MISSING_COMMENT
+ *   - Source2Dest: Default Name --> Default Name
+ *
+ * Precondition: 1588253347213 (1588253347213)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Default Name:
+ *   - ReadConfigurationBehaviour (1588061129360)
+ *   - ReadConfigurationBehaviour (1588061129360)
+ *   - ReadConfigurationPlantype (1588061351007)
+ *   - ReadConfigurationPlan (1588061334567)
+ */
+bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1588253347211) ENABLED START*/
+    std::cout << "The PreCondition 1588253347213 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
+    return false;
     /*PROTECTED REGION END*/
 }
 
