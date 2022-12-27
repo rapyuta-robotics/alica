@@ -75,6 +75,7 @@ if(BUILD_TESTING)
         src/test/test_inherit_blackboard.cpp
         src/test/test_failure_handling.cpp
         src/test/test_alica_logger.cpp
+        src/test/test_legacy_conditions.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

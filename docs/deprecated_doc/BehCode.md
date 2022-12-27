@@ -25,7 +25,7 @@ namespace alica
         /*PROTECTED REGION ID(dcon1427727877859) ENABLED START*/ //Add additional options here
         /*PROTECTED REGION END*/
     }
-    void StartDrive::run(void* msg)
+    void StartDrive::run()
     {
         /*PROTECTED REGION ID(run1427727877859) ENABLED START*/ //Add additional options here
 	**---> the engine will call this method with 30 Hz**

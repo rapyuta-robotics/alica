@@ -46,4 +46,8 @@ public class DefaultConstraintCodeGenerator implements IConstraintCodeGenerator 
     public String constraintStateCheckingMethods(State state) {
         return defaultTemplate.constraintStateCheckingMethods(state);
     }
+
+    public String expressionsStateCheckingMethods(State state) {
+        return defaultTemplate.expressionsStateCheckingMethods(state);
+    }
 }

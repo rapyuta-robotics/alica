@@ -43,6 +43,51 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200842973::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: 1413201226246 (1413201226246)
+ *   - Comment:
+ *   - Source2Dest: Init --> Start
+ *
+ * Precondition: 1413201227586 (1413201227586)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Init:
+ */
+bool PreCondition1413201227586::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1413201226246) ENABLED START*/
+    std::cout << "The PreCondition 1413201227586 in Transition '1413201226246' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 1413201388722 (1413201388722)
+ *   - Comment:
+ *   - Source2Dest: Start --> Finished
+ *
+ * Precondition: 1413201389955 (1413201389955)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Start:
+ *   - MultiAgentTestPlan (1413200862180)
+ */
+bool PreCondition1413201389955::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1413201388722) ENABLED START*/
+    std::cout << "The PreCondition 1413201389955 in Transition '1413201388722' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1413200842973) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
