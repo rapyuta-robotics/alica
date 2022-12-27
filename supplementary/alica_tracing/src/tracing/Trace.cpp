@@ -25,7 +25,8 @@ struct TraceValueConverter
     {
         return RawTraceValue(std::forward<T>(value));
     }
-    auto operator()(std::string_view value) const {
+    auto operator()(std::string_view value) const
+    {
         // The rest of the tracing process didn't work properly with string views, so construct the string here.
         return RawTraceValue(std::string(value));
     }
