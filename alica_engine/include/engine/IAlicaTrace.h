@@ -3,7 +3,9 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <type_traits>
+#include <unordered_map>
 #include <utility>
 #include <variant>
 
@@ -22,12 +24,12 @@ public:
     {
         friend IAlicaTrace;
 
-        using Variant = std::variant<bool, long long int, unsigned long long int, double, std::string>;
+        using Variant = std::variant<bool, long long int, unsigned long long int, double, std::string_view>;
 
     public:
-        template <typename T, typename = std::enable_if_t<std::is_constructible_v<Variant, PromotedType<T>>>>
+        template <typename T, typename = std::enable_if_t<std::is_constructible_v<Variant, PromotedType<T&&>>>>
         TraceValue(T&& val)
-                : variant(static_cast<PromotedType<T>>(val))
+                : variant(static_cast<PromotedType<decltype(val)>>(val))
         {
         }
 
@@ -37,9 +39,10 @@ public:
 
 public:
     virtual ~IAlicaTrace() = default;
-    virtual void setTag(const std::string& key, const TraceValue& value) = 0;
-    virtual void setLog(const std::pair<std::string, TraceValue>& fields) = 0;
-    virtual void markError(const std::string& description) = 0;
+    virtual void setTag(std::string_view key, TraceValue value) = 0;
+    void setLog(const std::pair<std::string_view, TraceValue>& fields) { log({{fields.first, fields.second}}); }
+    virtual void log(const std::unordered_map<std::string_view, TraceValue>& fields) = 0;
+    virtual void markError(std::string_view description) = 0;
     // Explicitly set the trace as finished. Any calls to setTag, setLog & markError after this call should
     // leave the trace in a valid but unspecified state. Calling context on a finished trace is a valid operation
     virtual void finish() = 0;

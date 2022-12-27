@@ -42,9 +42,9 @@ public:
 
     // Tags are the key value pair you can search in tracing ui
     // If there is a pre-existing tag set for `key`, it is overwritten.
-    void setTag(const std::string& key, const TraceValue& value) override;
+    void setTag(std::string_view key, TraceValue value) override;
 
-    // setLog is a timestamped way to record key:value logging data
+    // log is a timestamped way to record key:value logging data
     // about a trace. Here's an example:
     //
     //    trace.Log({
@@ -52,11 +52,11 @@ public:
     //        {"wait.time", "waited 10 sec for agent 2"}});
     // BE CAREFUL about what you want to log,
     // These are supposed to be micro logs to be carried over the network.
-    void setLog(const std::pair<std::string, TraceValue>& logEntry) override;
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields) override;
 
     // When operation being traced by this instance fail, call this api
     // Error traces are highlighted in tracing ui.
-    void markError(const std::string& description) override;
+    void markError(std::string_view description) override;
 
     // Explicitly set the trace as finished. Any calls to setTag, setLog & markError after this call leaves
     // the trace in a valid but unspecified state. Calling context on a finished trace is a valid operation
