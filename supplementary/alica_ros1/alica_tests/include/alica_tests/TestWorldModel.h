@@ -25,7 +25,7 @@ private:
     alica::test::TestContext* _tc;
 };
 
-class TestWorldModel : public alica::IAlicaWorldModel
+class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel : public alica::IAlicaWorldModel
 {
 public:
     TestWorldModel();

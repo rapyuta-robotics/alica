@@ -1,26 +1,27 @@
-#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperAPlan673160616613514188.h>
 /*PROTECTED REGION ID(eph673160616613514188) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-// Plan:  SuccessOnCondWrapperA (673160616613514188)
+// Plan:  SuccessOnCondWrapperAPlan (673160616613514188)
 //
 // Tasks:
 //   - DefaultTask (1225112227903) (Entrypoint: 1329563598549023051)
 //
 // States:
+//   - WrapperASuccessState (309824621058621265)
 //   - SuccessOnCondState (2511956906797886911)
-//   - WrappeASuccessState (309824621058621265)
-SuccessOnCondWrapperA673160616613514188::SuccessOnCondWrapperA673160616613514188(PlanContext& context)
+SuccessOnCondWrapperAPlan673160616613514188::SuccessOnCondWrapperAPlan673160616613514188(PlanContext& context)
         : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con673160616613514188) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-SuccessOnCondWrapperA673160616613514188::~SuccessOnCondWrapperA673160616613514188()
+SuccessOnCondWrapperAPlan673160616613514188::~SuccessOnCondWrapperAPlan673160616613514188()
 {
     /*PROTECTED REGION ID(dcon673160616613514188) ENABLED START*/
     // Add additional options here
@@ -41,7 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction673160616613514188::getUtilityFu
 /**
  * Transition: 1123795990168202938 (1123795990168202938)
  *   - Comment:
- *   - Source2Dest: SuccessOnCondState --> WrappeASuccessState
+ *   - Source2Dest: SuccessOnCondState --> WrapperASuccessState
  *
  * Precondition: 4605367163774150375 (4605367163774150375)
  *   - Enabled: true
@@ -63,5 +64,11 @@ bool PreCondition4605367163774150375::evaluate(std::shared_ptr<RunningPlan> rp, 
 
 /*PROTECTED REGION ID(methods673160616613514188) ENABLED START*/
 // Add additional options here
+void SuccessOnCondWrapperAPlan673160616613514188::onInit()
+{
+    auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
+    auto* tc = wm->getTestContext();
+    tc->resetAllTransitions(getPlanContext());
+}
 /*PROTECTED REGION END*/
 } // namespace alica

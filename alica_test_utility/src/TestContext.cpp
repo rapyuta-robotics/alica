@@ -59,23 +59,15 @@ bool TestContext::isStateActive(int64_t id) const
     return Util::isStateActive(_engine.get(), id);
 }
 
-bool TestContext::isPlanActive(int64_t id) const
-{
-    return Util::isPlanActive(_engine.get(), id);
-}
-
-bool TestContext::isPlanActive(const std::string& runningPlanName, const std::string& name)
-{
-    RunningPlan* rp;
-    rp = getRunningPlan(runningPlanName);
-    return Util::isPlanActive(rp, name);
-}
-
 BasicBehaviour* TestContext::getActiveBehaviour(const std::string& name)
 {
     auto rp = getRunningPlan(name);
     if (rp != nullptr) {
-        return rp->isBehaviour() ? rp->getBasicBehaviour() : nullptr;
+        if (!rp->isBehaviour()) {
+            setFailureInfo(name, " exists, but it is not a behaviour");
+            return nullptr;
+        }
+        return rp->getBasicBehaviour();
     }
     return nullptr;
 }
@@ -84,7 +76,11 @@ BasicPlan* TestContext::getActivePlan(const std::string& name)
 {
     auto rp = getRunningPlan(name);
     if (rp != nullptr) {
-        return rp->isBehaviour() ? nullptr : rp->getBasicPlan();
+        if (rp->isBehaviour()) {
+            setFailureInfo(name, " is not a plan, it is a behaviour");
+            return nullptr;
+        }
+        return rp->getBasicPlan();
     }
     return nullptr;
 }
@@ -101,18 +97,24 @@ bool TestContext::resetTransitionCond(const std::string& runningPlanName, const 
 
 bool TestContext::resetAllTransitions(const std::string& runningPlanName)
 {
-    const auto* rp = getRunningPlan(runningPlanName);
+    auto* rp = getRunningPlan(runningPlanName);
     if (!rp) {
         return false;
     }
+    return resetAllTransitions(rp);
+}
+
+bool TestContext::resetAllTransitions(RunningPlan* rp)
+{
     const auto* plan = rp->getActivePlanAsPlan();
     if (!plan) {
+        setFailureInfo("could not reset transitions since the running plan is not a plan but a behaviour");
         return false;
     }
     for (const auto* transition : plan->getTransitions()) {
         const auto& inState = transition->getInState()->getName();
         const auto& outState = transition->getOutState()->getName();
-        resetTransitionCond(runningPlanName, inState, outState);
+        setTransitionCond(rp, inState, outState, false);
     }
     return true;
 }
@@ -133,12 +135,21 @@ bool TestContext::isStateActive(const std::string& runningPlanName, const std::s
     if (!rp) {
         return false;
     }
-    return rp->getActiveState() ? (rp->getActiveState()->getName() == stateName) : false;
+    if (!rp->getActiveState()) {
+        setFailureInfo(runningPlanName, " exists, but it has no active state");
+        return false;
+    }
+    if (rp->getActiveState()->getName() != stateName) {
+        setFailureInfo(runningPlanName, "'s actual active state: ", rp->getActiveState()->getName(), ", expected active state: ", stateName);
+        return false;
+    }
+    return true;
 }
 
 RunningPlan* TestContext::getRunningPlan(const std::string& name)
 {
     if (name.empty()) {
+        setFailureInfo("name cannot be empty");
         return nullptr;
     }
     return name[0] == '/' ? /* fully qualified name */ followRunningPlanPath(name) : /* just name of beh/plan */ searchRunningPlanTree(name);
@@ -147,6 +158,7 @@ RunningPlan* TestContext::getRunningPlan(const std::string& name)
 RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
 {
     if (!_engine->getPlanBase().getRootNode()) {
+        setFailureInfo("running plan tree is empty");
         return nullptr;
     }
     std::vector<RunningPlan*> results;
@@ -156,7 +168,7 @@ RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
         auto cur = q.front();
         q.pop();
         if (!cur->isActive()) {
-            return nullptr;
+            continue;
         }
         if (getRunningPlanName(cur) == name) {
             results.push_back(cur);
@@ -165,7 +177,12 @@ RunningPlan* TestContext::searchRunningPlanTree(const std::string& name)
             q.push(child);
         }
     }
-    if (results.empty() || results.size() > 1) {
+    if (results.empty()) {
+        setFailureInfo("running plan with name: ", name, " is not active or is not found");
+        return nullptr;
+    }
+    if (results.size() > 1) {
+        setFailureInfo("more than one running plan with name: ", name, " is active");
         return nullptr;
     }
     return results.front();
@@ -182,14 +199,17 @@ RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifie
     while (cur && idx < statePlanPairs.size()) {
         const auto& [state, plan] = statePlanPairs[idx];
         if (!cur->isActive()) {
+            setFailureInfo("plan ", plan, " in state ", state, " is not active");
             return nullptr;
         }
         if (getActiveStateName(cur) != state) {
+            setFailureInfo("state ", state, " in plan ", plan, " is not active");
             return nullptr;
         }
         RunningPlan* next = nullptr;
         if (plan.empty()) {
             if (cur->getChildren().size() != 1) {
+                setFailureInfo("more than 1 plan in state ", state, ", however plan is not specified");
                 return nullptr;
             }
             next = cur->getChildren().front();
@@ -202,14 +222,16 @@ RunningPlan* TestContext::followRunningPlanPath(const std::string& fullyQualifie
             }
         }
         if (!next) {
+            setFailureInfo("plan ", plan, " in state ", state, " is not found");
             return nullptr;
         }
         cur = next;
+        ++idx;
     }
     return cur;
 }
 
-std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifiedName(const std::string& fullyQualifiedName)
+std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifiedName(const std::string& fullyQualifiedName) const
 {
     /*
      * fullyQualifiedName (FQN) syntax
@@ -233,30 +255,38 @@ std::vector<std::pair<std::string, std::string>> TestContext::parseFullyQualifie
     std::size_t start = 1;
     while (start < fqn.length()) {
         auto end = fqn.find("/", start);
-        auto count = (end == std::string::npos ? std::string::npos : end - start);
+        auto count = (end == std::string::npos ? fqn.length() - start : end - start);
         auto splitName = fqn.substr(start, count);
         if (splitName.empty()) {
+            setFailureInfo("parse failure, `/` not found");
             return {};
         }
         if (splitName[0] == '<') {
             if (splitName.back() != '>') {
+                setFailureInfo("parse failure, `>` not found");
                 return {};
             }
             auto commaPos = splitName.find(",");
             if (commaPos == std::string::npos) {
+                setFailureInfo("parse failure, `,` not found");
                 return {};
             }
             // substring [1, commaPos)
             auto state = splitName.substr(1, commaPos - 1);
             // substring [commaPos + 1, last_char_of_splitName)
             auto plan = splitName.substr(commaPos + 1, (splitName.length() - 1) - (commaPos + 1));
-            if (state.empty() || plan.empty()) {
+            if (state.empty()) {
+                setFailureInfo("parse failure, state not specified");
+                return {};
+            } else if (plan.empty()) {
+                setFailureInfo("parse failure, plan not specified");
                 return {};
             }
             statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(std::move(state)), std::forward_as_tuple(std::move(plan)));
         } else {
             statePlanPairs.emplace_back(std::piecewise_construct, std::forward_as_tuple(splitName), std::forward_as_tuple());
         }
+        start = (end == std::string::npos) ? fqn.length() : end + 1;
     }
     return statePlanPairs;
 }
@@ -273,13 +303,24 @@ std::string TestContext::getActiveStateName(const RunningPlan* rp)
 
 bool TestContext::setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState, bool result)
 {
-    auto plan = getActivePlan(runningPlanName);
+    auto rp = getRunningPlan(runningPlanName);
+    if (!rp) {
+        return false;
+    }
+    return setTransitionCond(rp, inState, outState, result);
+}
+
+bool TestContext::setTransitionCond(RunningPlan* rp, const std::string& inState, const std::string& outState, bool result)
+{
+    auto plan = rp->getBasicPlan();
     if (!plan) {
+        setFailureInfo("cannot set transition result, running plan is not a plan");
         return false;
     }
     LockedBlackboardRW bb(*(plan->getBlackboard()));
     auto key = inState + "2" + outState;
     if (!bb.hasValue(key)) {
+        setFailureInfo("plan does not have key ", key, " to set the corresponding transition's result");
         return false;
     }
     bb.set(key, result);

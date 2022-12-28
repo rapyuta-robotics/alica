@@ -13,9 +13,9 @@ namespace alica
 //
 // States:
 //   - PlanSuccessTestState (2212831089687963769)
+//   - MultiPlanInstanceSuccessTestState (3960396736820956915)
 //   - ChooseTestState (4098979167613947533)
 //   - BehSuccessTestState (4487929496627066142)
-//   - MultiPlanInstanceSuccessTestState (3960396736820956915)
 TestMasterPlan2521443078354411465::TestMasterPlan2521443078354411465(PlanContext& context)
         : DomainPlan(context)
 {
@@ -113,7 +113,7 @@ void TestMasterPlan2521443078354411465::onInit()
 {
     auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
     auto* tc = wm->getTestContext();
-    tc->resetAllTransitions(getName());
+    tc->resetAllTransitions(getPlanContext());
 }
 /*PROTECTED REGION END*/
 } // namespace alica

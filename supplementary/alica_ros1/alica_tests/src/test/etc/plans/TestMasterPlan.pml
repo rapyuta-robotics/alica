@@ -85,6 +85,36 @@
     },
     {
       "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
+          "comment": "",
+          "configuration": null,
+          "id": 2887093750412106903,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3960396736820956915,
+      "inTransitions": [
+        4120890224163547783
+      ],
+      "name": "MultiPlanInstanceSuccessTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 739.1787599282301,
+        "y": 593.7031666785609
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
       "confAbstractPlanWrappers": [],
       "entryPoint": 3091576485060406140,
       "id": 4098979167613947533,
@@ -129,36 +159,6 @@
       "positionWeb": {
         "x": 728,
         "y": 110
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
-          "comment": "",
-          "configuration": null,
-          "id": 2887093750412106903,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3960396736820956915,
-      "inTransitions": [
-        4120890224163547783
-      ],
-      "name": "MultiPlanInstanceSuccessTestState",
-      "outTransitions": [],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 739.1787599282301,
-        "y": 593.7031666785609
       },
       "type": "State",
       "variableBindings": []

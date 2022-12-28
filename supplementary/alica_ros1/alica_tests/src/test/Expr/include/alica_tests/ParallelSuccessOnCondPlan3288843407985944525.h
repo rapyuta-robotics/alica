@@ -40,12 +40,12 @@ class UtilityFunction3288843407985944525 : public BasicUtilityFunction
 {
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
-class PreCondition1470823850869867131 : public DomainCondition
+class PreCondition2767999024419231358 : public DomainCondition
 {
 public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
-class PreCondition2767999024419231358 : public DomainCondition
+class PreCondition1470823850869867131 : public DomainCondition
 {
 public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);

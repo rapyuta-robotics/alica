@@ -39,50 +39,12 @@
   "states": [
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 4136091023931334823,
-      "inTransitions": [
-        602472383731208509
-      ],
-      "name": "ParallelPlanSuccessState",
-      "outTransitions": [],
-      "parentPlan": 3288843407985944525,
-      "positionWeb": {
-        "x": 986,
-        "y": 294.99999237060547
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": 1461040637399587631,
-      "id": 1899337663064771436,
-      "inTransitions": [],
-      "name": "WaitForTriggerState",
-      "outTransitions": [
-        4409408749212342883
-      ],
-      "parentPlan": 3288843407985944525,
-      "positionWeb": {
-        "x": 512,
-        "y": 288.99999237060547
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "SuccessOnCondWrapperA.pml#673160616613514188",
+          "abstractPlan": "SuccessOnCondWrapperBPlan.pml#2869465844414224272",
           "comment": "",
           "configuration": null,
-          "id": 2172941199313750227,
+          "id": 1533990533001566061,
           "keyMapping": {
             "input": [],
             "output": []
@@ -90,10 +52,10 @@
           "name": ""
         },
         {
-          "abstractPlan": "SuccessOnCondWrapperB.pml#2869465844414224272",
+          "abstractPlan": "SuccessOnCondWrapperAPlan.pml#673160616613514188",
           "comment": "",
           "configuration": null,
-          "id": 1533990533001566061,
+          "id": 2172941199313750227,
           "keyMapping": {
             "input": [],
             "output": []
@@ -116,6 +78,44 @@
         "y": 435.99999237060547
       },
       "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": 1461040637399587631,
+      "id": 1899337663064771436,
+      "inTransitions": [],
+      "name": "WaitForTriggerState",
+      "outTransitions": [
+        4409408749212342883
+      ],
+      "parentPlan": 3288843407985944525,
+      "positionWeb": {
+        "x": 512,
+        "y": 288.99999237060547
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 4136091023931334823,
+      "inTransitions": [
+        602472383731208509
+      ],
+      "name": "ParallelPlanSuccessState",
+      "outTransitions": [],
+      "parentPlan": 3288843407985944525,
+      "positionWeb": {
+        "x": 986,
+        "y": 294.99999237060547
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],

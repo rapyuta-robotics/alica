@@ -1,5 +1,14 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 1051145281711502661,
+      "key": "SuccessOnCondState2WrapperASuccessState",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -23,11 +32,31 @@
   "id": 673160616613514188,
   "inheritBlackboard": false,
   "masterPlan": false,
-  "name": "SuccessOnCondWrapperA",
+  "name": "SuccessOnCondWrapperAPlan",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
   "states": [
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 309824621058621265,
+      "inTransitions": [
+        1123795990168202938
+      ],
+      "name": "WrapperASuccessState",
+      "outTransitions": [],
+      "parentPlan": 673160616613514188,
+      "positionWeb": {
+        "x": 723.078844916524,
+        "y": 506.0480382779285
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
+    },
     {
       "comment": "",
       "confAbstractPlanWrappers": [
@@ -57,37 +86,22 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 309824621058621265,
-      "inTransitions": [
-        1123795990168202938
-      ],
-      "name": "WrappeASuccessState",
-      "outTransitions": [],
-      "parentPlan": 673160616613514188,
-      "positionWeb": {
-        "x": 723.078844916524,
-        "y": 506.8854819953427
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 1123795990168202938,
       "inState": 2511956906797886911,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "SuccessOnCondState2WrapperASuccessState"
+          }
+        ],
         "output": []
       },
       "name": "",

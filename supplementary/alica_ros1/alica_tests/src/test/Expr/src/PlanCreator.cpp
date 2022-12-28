@@ -57,8 +57,8 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
 #include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
-#include <alica_tests/SuccessOnCondWrapperA673160616613514188.h>
-#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
+#include <alica_tests/SuccessOnCondWrapperAPlan673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>
@@ -227,7 +227,7 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
         return std::make_unique<FailurePlan631515556091266493>(context);
         break;
     case 673160616613514188:
-        return std::make_unique<SuccessOnCondWrapperA673160616613514188>(context);
+        return std::make_unique<SuccessOnCondWrapperAPlan673160616613514188>(context);
         break;
     case 691392966514374878:
         return std::make_unique<TestTracingMasterPlan691392966514374878>(context);
@@ -260,7 +260,7 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
         return std::make_unique<TestMasterPlan2521443078354411465>(context);
         break;
     case 2869465844414224272:
-        return std::make_unique<SuccessOnCondWrapperB2869465844414224272>(context);
+        return std::make_unique<SuccessOnCondWrapperBPlan2869465844414224272>(context);
         break;
     case 3153116020668535682:
         return std::make_unique<SuccessOnCondPlan3153116020668535682>(context);

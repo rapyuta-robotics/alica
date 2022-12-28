@@ -1,26 +1,27 @@
-#include <alica_tests/SuccessOnCondWrapperB2869465844414224272.h>
+#include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
 /*PROTECTED REGION ID(eph2869465844414224272) ENABLED START*/
 // Add additional options here
+#include <alica_tests/TestWorldModel.h>
 /*PROTECTED REGION END*/
 
 namespace alica
 {
-// Plan:  SuccessOnCondWrapperB (2869465844414224272)
+// Plan:  SuccessOnCondWrapperBPlan (2869465844414224272)
 //
 // Tasks:
 //   - DefaultTask (1225112227903) (Entrypoint: 4028079325935958114)
 //
 // States:
-//   - SuccessOnCondState (3041287508452800918)
 //   - WrapperBSuccessState (27419054733292598)
-SuccessOnCondWrapperB2869465844414224272::SuccessOnCondWrapperB2869465844414224272(PlanContext& context)
+//   - SuccessOnCondState (3041287508452800918)
+SuccessOnCondWrapperBPlan2869465844414224272::SuccessOnCondWrapperBPlan2869465844414224272(PlanContext& context)
         : DomainPlan(context)
 {
     /*PROTECTED REGION ID(con2869465844414224272) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-SuccessOnCondWrapperB2869465844414224272::~SuccessOnCondWrapperB2869465844414224272()
+SuccessOnCondWrapperBPlan2869465844414224272::~SuccessOnCondWrapperBPlan2869465844414224272()
 {
     /*PROTECTED REGION ID(dcon2869465844414224272) ENABLED START*/
     // Add additional options here
@@ -63,5 +64,11 @@ bool PreCondition914907830776317719::evaluate(std::shared_ptr<RunningPlan> rp, c
 
 /*PROTECTED REGION ID(methods2869465844414224272) ENABLED START*/
 // Add additional options here
+void SuccessOnCondWrapperBPlan2869465844414224272::onInit()
+{
+    auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
+    auto* tc = wm->getTestContext();
+    tc->resetAllTransitions(getPlanContext());
+}
 /*PROTECTED REGION END*/
 } // namespace alica
