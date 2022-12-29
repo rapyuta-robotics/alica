@@ -99,6 +99,8 @@ protected:
     void setFailure();
 
 private:
+    static constexpr const char* LOGNAME = "Behaviour";
+
     friend alica::test::TestContext;
     enum class BehResult : uint8_t
     {

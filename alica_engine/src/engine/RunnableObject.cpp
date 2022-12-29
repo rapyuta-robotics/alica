@@ -42,6 +42,7 @@ void RunnableObject::stop()
 
     stopRunCalls();
     doTerminate();
+    _runnableObjectTracer.traceTerminateCall();
     _runnableObjectTracer.cleanupTraceContext();
     cleanupBlackboard();
 
@@ -60,6 +61,7 @@ void RunnableObject::start(RunningPlan* rp)
     _runnableObjectTracer.setupTraceContext(_name, _runningplanContext);
     setupBlackboard();
 
+    _runnableObjectTracer.traceInitCall();
     doInit();
     scheduleRunCalls();
 }
@@ -141,6 +143,25 @@ const TeamManager& RunnableObject::getTeamManager() const
     return *_teamManager;
 }
 
+void RunnableObject::handleException(const std::string& exceptionOriginClass, const std::string& exceptionOriginMethod, std::exception_ptr eptr)
+{
+    std::string details;
+    try {
+        std::rethrow_exception(eptr);
+    } catch (const std::exception& e) {
+        details = e.what();
+    } catch (...) {
+    }
+    std::string msg = "Exception thrown from: " + getName() + "'s " + exceptionOriginMethod + " method";
+    if (!details.empty()) {
+        msg.append(", details: " + std::move(details));
+    }
+    Logging::logFatal(exceptionOriginClass) << msg;
+    _runnableObjectTracer.traceException();
+    _runnableObjectTracer.finishTrace();
+    std::rethrow_exception(eptr);
+}
+
 // Tracing methods
 void TraceRunnableObject::setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter)
 {
@@ -190,6 +211,20 @@ void TraceRunnableObject::traceRunCall()
     if (_trace && !_runTraced) {
         _trace->setLog({"status", "run"});
         _runTraced = true;
+    }
+}
+
+void TraceRunnableObject::traceInitCall()
+{
+    if (_trace) {
+        _trace->setLog({"status", "init"});
+    }
+}
+
+void TraceRunnableObject::traceTerminateCall()
+{
+    if (_trace) {
+        _trace->setLog({"status", "terminate"});
     }
 }
 

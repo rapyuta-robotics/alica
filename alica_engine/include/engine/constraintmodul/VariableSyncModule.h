@@ -45,6 +45,8 @@ public:
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
 private:
+    static constexpr const char* LOGNAME = "ConstraintSolver";
+
     class VotedSeed
     {
     public:
@@ -121,7 +123,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
         ss << endl;
     }
-    Logging::logDebug("RS", ss.str())
+    Logging::logDebug(ConstraintSolver, ss.str());
 #endif
 
             std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {

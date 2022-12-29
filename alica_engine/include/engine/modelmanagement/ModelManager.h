@@ -37,6 +37,8 @@ public:
     void reload(const YAML::Node& config);
 
 private:
+    static constexpr const char* LOGNAME = "ModelManager";
+
     friend Factory;
 
     ConfigChangeListener& _configChangeListener;

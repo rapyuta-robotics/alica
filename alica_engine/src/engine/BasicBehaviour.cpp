@@ -56,8 +56,8 @@ void BasicBehaviour::doInit()
 {
     try {
         initialiseParameters();
-    } catch (const std::exception& e) {
-        Logging::logError("BasicBehaviour") << "Exception in Behaviour-INIT of: " << getName() << ": " << e.what();
+    } catch (...) {
+        handleException(LOGNAME, "initialise", std::current_exception());
     }
 }
 
@@ -65,9 +65,8 @@ void BasicBehaviour::doRun()
 {
     try {
         run();
-    } catch (const std::exception& e) {
-        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-        sendLogMessage(4, err);
+    } catch (...) {
+        handleException(LOGNAME, "run", std::current_exception());
     }
     _triggeredJobRunning = false;
 }
@@ -76,20 +75,22 @@ void BasicBehaviour::doTerminate()
 {
     try {
         onTermination();
-    } catch (const std::exception& e) {
-        Logging::logError("BasicBehaviour") << "Exception in Behaviour-TERMINATE of: " << getName() << ": " << e.what();
+    } catch (...) {
+        handleException(LOGNAME, "terminate", std::current_exception());
     }
-
     _behResult.store(BehResult::UNKNOWN);
 }
 
 void BasicBehaviour::doTrigger()
 {
-    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
-        return;
+    if (!_behaviour->isEventDriven()) {
+        Logging::logError(LOGNAME) << "Trying to trigger a behaviour that is not event driven";
+    } else if (!isTriggeredRunFinished()) {
+        Logging::logError(LOGNAME) << "Cannot trigger behaviour because the previous run is not yet finished";
+    } else {
+        _triggeredJobRunning = true;
+        doRun();
     }
-    _triggeredJobRunning = true;
-    doRun();
 }
 
 void BasicBehaviour::setSuccess()

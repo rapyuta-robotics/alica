@@ -55,15 +55,15 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     }
 
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized.";
+        Logging::logWarn(LOGNAME) << "Context already initialized.";
         return -1;
     }
 
     if (!_communicator) {
-        AlicaEngine::abort("AC: Communicator not set");
+        AlicaEngine::abort(LOGNAME, "Communicator not set");
     }
     if (!_timerFactory) {
-        AlicaEngine::abort("AC: TimerFactory not set");
+        AlicaEngine::abort(LOGNAME, "TimerFactory not set");
     }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
@@ -73,9 +73,12 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     if (_engine->init(std::move(creatorCtx))) {
         if (!delayStart) {
             _engine->start();
+        } else {
+            Logging::logInfo(LOGNAME) << "engine start delayed";
         }
         _initialized = true;
 
+        Logging::logInfo(LOGNAME) << "context initialized";
         return 0;
     }
     return -1;
@@ -88,6 +91,7 @@ int AlicaContext::terminate()
     }
     _engine->terminate();
     _initialized = false;
+    Logging::logInfo(LOGNAME) << "context terminated";
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
@@ -134,9 +138,9 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         return node;
     } catch (YAML::BadFile& badFile) {
         if (Logging::isInitialized()) {
-            Logging::logWarn("AC") << "Could not parse file: " << configFile << " - " << badFile.msg;
+            Logging::logWarn(LOGNAME) << "Could not parse file: " << configFile << " - " << badFile.msg;
         } else {
-            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
+            std::cerr << LOGNAME << ": Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
         }
     }
 
@@ -144,7 +148,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         configFile = essentials::FileSystem::combinePaths(configPath, "Alica.yaml");
         node = YAML::LoadFile(configFile);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("AC: Could not parse file: ", configFile + " - " + badFile.msg);
+        AlicaEngine::abort(LOGNAME, "Could not parse file: ", configFile + " - " + badFile.msg);
     }
 
     return node;

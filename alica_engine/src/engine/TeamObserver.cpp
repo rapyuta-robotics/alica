@@ -83,7 +83,7 @@ bool TeamObserver::updateTeamPlanTrees()
 void TeamObserver::tick(RunningPlan* root)
 {
     AlicaTime time = _clock.now();
-    Logging::logDebug("TO") << "tick(..) called at " << time;
+    Logging::logDebug(LOGNAME) << "tick(..) called at " << time;
 
     bool someChanges = updateTeamPlanTrees();
     // notifications for teamchanges, you can add some code below if you want to be notified when the team changed
@@ -106,14 +106,14 @@ void TeamObserver::tick(RunningPlan* root)
 
             if (ele.second->isNewSimplePlanTree()) {
                 updatespts.push_back(ele.second.get());
-                Logging::logDebug("TO") << "added to update";
+                Logging::logDebug(LOGNAME) << "added to update";
                 ele.second->setProcessed();
             } else {
-                Logging::logDebug("TO") << "added to noupdate";
+                Logging::logDebug(LOGNAME) << "added to noupdate";
                 noUpdates.push_back(ele.second->getAgentId());
             }
         }
-        Logging::logDebug("TO") << "spts size " << updatespts.size();
+        Logging::logDebug(LOGNAME) << "spts size " << updatespts.size();
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
             _logger.eventOccurred("MsgUpdate");
@@ -123,7 +123,7 @@ void TeamObserver::tick(RunningPlan* root)
 
 void TeamObserver::close()
 {
-    Logging::logInfo("TO") << "Closed Team Observer";
+    Logging::logInfo(LOGNAME) << "Closed Team Observer";
 }
 
 /**
@@ -141,7 +141,7 @@ void TeamObserver::doBroadCast(const IdGrp& msg) const
     pti.stateIDs = msg;
     pti.succeededEPs = _me->getEngineData().getSuccessMarks().toIdGrp();
     _communicator.sendPlanTreeInfo(pti);
-    Logging::logDebug("TO") << "Sending Plan Message: " << msg;
+    Logging::logDebug(LOGNAME) << "Sending Plan Message: " << msg;
 }
 
 /**
@@ -285,7 +285,7 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
     }
 
     lock_guard<mutex> lock(_msgQueueMutex);
-    Logging::logDebug("TO") << "Message received " << _clock.now();
+    Logging::logDebug(LOGNAME) << "Message received " << _clock.now();
     _msgQueue.emplace_back(std::move(incoming), _clock.now());
 }
 
@@ -297,11 +297,11 @@ void TeamObserver::handlePlanTreeInfo(std::shared_ptr<PlanTreeInfo> incoming)
  */
 std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, const IdGrp& ids, AlicaTime time) const
 {
-    Logging::logDebug("TO") << "Spt from robot " << agentId;
-    Logging::logDebug("TO") << ids;
+    Logging::logDebug(LOGNAME) << "Spt from robot " << agentId;
+    Logging::logDebug(LOGNAME) << ids;
 
     if (ids.empty()) {
-        Logging::logError("TO") << "Empty state list for agent " << agentId;
+        Logging::logError(LOGNAME) << "Empty state list for agent " << agentId;
         return nullptr;
     }
 
@@ -331,7 +331,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
         } else if (id == -2) {
             cur = curParent;
             if (cur == nullptr) {
-                Logging::logWarn("TO") << "Malformed SptMessage from " << agentId;
+                Logging::logWarn(LOGNAME) << "Malformed SptMessage from " << agentId;
                 return nullptr;
             }
             curParent = cur->getParent();
@@ -346,7 +346,7 @@ std::unique_ptr<SimplePlanTree> TeamObserver::sptFromMessage(AgentId agentId, co
                 cur->setState(s2);
                 cur->setEntryPoint(s2->getEntryPoint());
             } else {
-                Logging::logWarn("TO") << "Unknown State (" << id << ") received from " << agentId;
+                Logging::logWarn(LOGNAME) << "Unknown State (" << id << ") received from " << agentId;
                 return nullptr;
             }
         }

@@ -58,7 +58,11 @@ public:
     void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
     void setupTraceContext(const std::string& name, RunningPlan* rp);
     void cleanupTraceContext();
+    void traceInitCall();
     void traceRunCall();
+    void traceTerminateCall();
+    void traceException();
+    void finishTrace() { _trace.reset(); }
 
 private:
     TracingType _tracingType;
@@ -116,6 +120,8 @@ protected:
     void setPlanBase(PlanBase* planBase);
     void setAlicaCommunication(const IAlicaCommunication* communication);
     void setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory);
+
+    void handleException(const std::string& exceptionOriginClass, const std::string& exceptionOriginMethod, std::exception_ptr eptr);
 
     TraceRunnableObject _runnableObjectTracer;
     const TeamManager* _teamManager{nullptr};

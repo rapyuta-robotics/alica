@@ -37,7 +37,7 @@ void BasicPlan::doInit()
     try {
         onInit();
     } catch (const std::exception& e) {
-        Logging::logError("BasicPlan") << "Exception in Plan-INIT: " << e.what();
+        handleException("BasicPlan", "initialise", std::current_exception());
     }
 }
 
@@ -46,8 +46,7 @@ void BasicPlan::doRun()
     try {
         run();
     } catch (const std::exception& e) {
-        std::string err = std::string("Exception caught") + std::string(" - ") + std::string(e.what());
-        sendLogMessage(4, err);
+        handleException("BasicPlan", "initialise", std::current_exception());
     }
 }
 
@@ -56,7 +55,7 @@ void BasicPlan::doTerminate()
     try {
         onTerminate();
     } catch (const std::exception& e) {
-        Logging::logError("BasicPlan") << "Exception in Plan-TERMINATE: " << e.what();
+        handleException("BasicPlan", "initialise", std::current_exception());
     }
 }
 
