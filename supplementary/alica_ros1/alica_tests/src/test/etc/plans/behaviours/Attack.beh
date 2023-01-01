@@ -1,5 +1,14 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "defaultValue": "10",
+      "id": 2735744751726699404,
+      "key": "callCount",
+      "type": "std::any"
+    }
+  ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,

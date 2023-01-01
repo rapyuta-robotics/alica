@@ -40,7 +40,7 @@
 namespace alica::test
 {
 
-class TestSimplePlanFixture : public ::testing::Test
+class TestSimplePlanFixture : public ::testing::Test // Generalize fixture todo luca (use a new .h file)
 {
 
 public:
@@ -49,7 +49,7 @@ public:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "SimpleTestPlan", false, 1);
+        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "SimpleTestPlan", true, 1); // TestMasterPlan todo in plan gui luca
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
         _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
@@ -62,6 +62,8 @@ public:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         _tc->init(std::move(creators));
+        _tc->startEngine();
+        _spinner->start();
     }
 
     void TearDown() override
@@ -81,30 +83,24 @@ protected:
 TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
     ASSERT_NO_SIGNAL
-    _tc->startEngine();
+    // ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlan")) << _tc->getLastFailure(); todo in plan gui luca
 
-    SLEEP_UNTIL_SEC((_tc->getActivePlan("SimpleTestPlan")->getName() == "SimpleTestPlan"), 1 /*sec*/, 100 /*maxrep*/);
+    EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
 
-    ASSERT_TRUE(_tc->getActivePlan("SimpleTestPlan"));
-    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState2"));
+    // TestState1
+    STEP_UNTIL(_tc, _tc->getActivePlan("SimpleTestPlan"));
+    EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
+    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState1"));
+    EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
 
-    // Check whether RC can be called
-    //EXPECT_TRUE(_tc->getRunningPlan("SimpleTestPlan")->isRuntimeConditionValid()); todo luca add again
-    // Check whether RC has been called
-    EXPECT_GE(CounterClass::called, 1);
+    // TestState2
+    STEP_UNTIL(_tc, _tc->isStateActive("SimpleTestPlan", "TestState2"));
+    EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
 
-    SLEEP_UNTIL_SEC(_tc->isStateActive("SimpleTestPlan", "TestState2"), 1 /*sec*/, 5 /*maxrep*/);
+    STEP_UNTIL(_tc, _tc->getActiveBehaviour("Attack"));
+    STEP_UNTIL(_tc, dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter() > 20);
+    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter(), 20);
 
-    // Check final state
-    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState2"));
-    // Check execution of final state behaviour
-    EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "Attack");
-
-    // We assume at least 30 calls to Attack in (3 * sleepTime) seconds.
-    SLEEP_UNTIL_SEC((dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->callCounter < 30), 1, 3);
-
-    EXPECT_GE(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->callCounter, 30);
-    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->initCounter, 0);
-    CounterClass::called = 0;
+    return;
 }
 } // namespace alica::test
