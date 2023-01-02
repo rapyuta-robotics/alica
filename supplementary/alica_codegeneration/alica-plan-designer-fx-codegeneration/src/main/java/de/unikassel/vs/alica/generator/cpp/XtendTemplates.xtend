@@ -517,19 +517,19 @@ namespace alica
     «IF (behaviour.preCondition !== null)»
         class PreCondition«behaviour.preCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
         };
     «ENDIF»
     «IF (behaviour.runtimeCondition !== null)»
         class RunTimeCondition«behaviour.runtimeCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
         };
     «ENDIF»
     «IF (behaviour.postCondition !== null)»
         class PostCondition«behaviour.postCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
         };
     «ENDIF»
 } /* namespace alica */
@@ -1009,13 +1009,13 @@ namespace alica
     «IF (plan.preCondition !== null)»
         class PreCondition«plan.preCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
         };
     «ENDIF»
     «IF (plan.runtimeCondition !== null)»
         class RunTimeCondition«plan.runtimeCondition.id» : public DomainCondition
         {
-            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+            bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
         };
     «ENDIF»
     «FOR s : states»
@@ -1024,7 +1024,7 @@ namespace alica
             «IF terminalSate.postCondition !== null»
                 class PostCondition«terminalSate.postCondition.id» : public DomainCondition
                 {
-                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
                 };
             «ENDIF»
         «ENDIF»
@@ -1034,7 +1034,7 @@ namespace alica
                 class PreCondition«transition.preCondition.id» : public DomainCondition
                 {
                 public:
-                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm);
+                    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
                 };
             «ENDIF»
         «ENDFOR»
@@ -1139,7 +1139,7 @@ class Blackboard;
 class RunningPlan;
 
 «FOR condition : conditions»
-bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm);
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 «ENDFOR»
 } /* namespace alica */
 '''
@@ -1167,7 +1167,7 @@ def String transitionConditionSource(List<TransitionCondition> conditions, Strin
 namespace alica
 {
 «FOR condition : conditions»
-bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* wm)
+bool condition«condition.getName()»«condition.getId()»(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
 /*PROTECTED REGION ID(condition«condition.id») ENABLED START*/
         «IF (protectedRegions.containsKey("condition" + condition.id))»
@@ -1289,11 +1289,11 @@ std::function<bool (const Blackboard*, const RunningPlan*, const Blackboard*)> L
         case «con.id»:
             {
                 PreCondition«con.id» preCondition;
-                return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* wm) mutable
+                return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable
                 {
                     // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
                     std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-                    return preCondition.evaluate(temp, wm);
+                    return preCondition.evaluate(temp, gb);
                 };
             }
         «ENDFOR»

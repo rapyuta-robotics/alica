@@ -1,4 +1,4 @@
-#include <alica/Master2425328142973735249.h>
+#include <alica_ros_turtlesim/Master2425328142973735249.h>
 /*PROTECTED REGION ID(eph2425328142973735249) ENABLED START*/
 // Add additional options here
 #include <alica_ros_turtlesim/world_model.hpp>
@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityF
  * Abstract Plans in Move:
  *   - Move (1889749086610694100)
  */
-bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(635844345274619238) ENABLED START*/
     std::cout << "The PreCondition 1136497454350831106 in Transition '635844345274619238' is not implement yet!" << std::endl;
@@ -77,7 +77,7 @@ bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, 
  * Abstract Plans in Init:
  *   - Go2RandomPosition (4085572422059465423)
  */
-bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(3486027875296378577) ENABLED START*/
     std::cout << "The PreCondition 1597434482701133956 in Transition '3486027875296378577' is not implement yet!" << std::endl;

@@ -58,7 +58,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1530004915640::getUtilityFunctio
  *
  * Abstract Plans in A:
  */
-bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1530004992551) ENABLED START*/
     std::cout << "The PreCondition 1530004993493 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -81,7 +81,7 @@ bool PreCondition1530004993493::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in B:
  *   - FailsOnOne (1530069246103)
  */
-bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1530004993680) ENABLED START*/
     std::cout << "The PreCondition 1530004994611 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -103,7 +103,7 @@ bool PreCondition1530004994611::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in C:
  */
-bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1532424092280) ENABLED START*/
     std::cout << "The PreCondition 1532424093178 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -126,7 +126,7 @@ bool PreCondition1532424093178::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in D:
  *   - AlwaysFail (1532424188199)
  */
-bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1532424112331) ENABLED START*/
     std::cout << "The PreCondition 1532424113475 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;

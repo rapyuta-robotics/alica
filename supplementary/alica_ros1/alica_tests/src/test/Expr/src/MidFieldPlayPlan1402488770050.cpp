@@ -35,7 +35,7 @@ MidFieldPlayPlan1402488770050::~MidFieldPlayPlan1402488770050()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool RunTimeCondition1402489260911::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402489260911) ENABLED START*/
     return true;
@@ -70,7 +70,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488770050::getUtilityFunctio
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402489257607) ENABLED START*/
     std::cout << "The PreCondition 1402489258509 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -93,7 +93,7 @@ bool PreCondition1402489258509::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Wander:
  *   - MidFieldStandard (1402488696205)
  */
-bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402489276995) ENABLED START*/
     std::cout << "The PreCondition 1402489278408 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -115,7 +115,7 @@ bool PreCondition1402489278408::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Kill:
  */
-bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1402500844446::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402500843072) ENABLED START*/
     std::cout << "The PreCondition 1402500844446 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;

@@ -29,18 +29,18 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
     switch (preConditionId) {
     case 1479557592662: {
         PreCondition1479557592662 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* wm) mutable {
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, wm);
+            return preCondition.evaluate(temp, gb);
         };
     }
     case 1524453491764: {
         PreCondition1524453491764 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* wm) mutable {
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, wm);
+            return preCondition.evaluate(temp, gb);
         };
     }
     default:

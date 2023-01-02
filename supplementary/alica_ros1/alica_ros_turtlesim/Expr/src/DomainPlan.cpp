@@ -1,4 +1,4 @@
-#include <alica/DomainPlan.h>
+#include <alica_ros_turtlesim/DomainPlan.h>
 /*PROTECTED REGION ID(domainPlanSrcHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

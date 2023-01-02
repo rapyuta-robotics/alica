@@ -34,10 +34,10 @@ RuntimeConditionPlan1418042806575::~RuntimeConditionPlan1418042806575()
 /**
  * Available Vars:
  */
-bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool RunTimeCondition1418042967134::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1418042967134) ENABLED START*/
-    alicaTests::TestWorldModel* worldModel = LockedBlackboardRO(*wm).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    alicaTests::TestWorldModel* worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     return worldModel->isRuntimeCondition1418042967134();
     /*PROTECTED REGION END*/
 }

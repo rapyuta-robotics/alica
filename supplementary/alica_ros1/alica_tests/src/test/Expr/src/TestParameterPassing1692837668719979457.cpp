@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1692837668719979457::getUtilityF
  * Abstract Plans in SecondCall:
  *   - TestParameterPassingBehaviour (831400441334251602)
  */
-bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(2229456609900) ENABLED START*/
     std::cout << "The PreCondition 2529456610600 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -77,7 +77,7 @@ bool PreCondition2529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in FirstCall:
  *   - TestParameterPassingBehaviour (831400441334251602)
  */
-bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1129456609900) ENABLED START*/
     std::cout << "The PreCondition 1529456610600 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;

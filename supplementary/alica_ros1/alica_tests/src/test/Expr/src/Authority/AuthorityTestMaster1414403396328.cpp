@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1414403396328::getUtilityFunctio
  *
  * Abstract Plans in Init:
  */
-bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1414403842622::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1414403840950) ENABLED START*/
     std::cout << "The PreCondition 1414403842622 in Transition '1414403840950' is not implement yet!" << std::endl;

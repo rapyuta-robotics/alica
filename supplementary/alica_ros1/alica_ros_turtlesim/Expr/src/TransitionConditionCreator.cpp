@@ -1,6 +1,6 @@
-#include "alica/TransitionConditionCreator.h"
+#include "alica_ros_turtlesim/TransitionConditionCreator.h"
 
-#include "alica/conditions/conditions.h"
+#include "alica_ros_turtlesim/conditions/conditions.h"
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
 #include <iostream>

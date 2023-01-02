@@ -58,7 +58,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1479556022226::getUtilityFunctio
  * Abstract Plans in State1:
  *   - ProbBuildingLevel1 (1479557378264)
  */
-bool PreCondition1479557592662::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* wm)
+bool PreCondition1479557592662::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1479557591331) ENABLED START*/
     std::cout << "The PreCondition 1479557592662 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
