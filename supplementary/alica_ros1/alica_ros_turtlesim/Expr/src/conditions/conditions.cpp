@@ -1,4 +1,4 @@
-#include <alica_ros_turtlesim/conditions/conditions.h>
+#include <alica/conditions/conditions.h>
 
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>

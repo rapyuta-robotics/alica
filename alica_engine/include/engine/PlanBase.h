@@ -58,7 +58,7 @@ public:
     const AlicaTime getLoopInterval() const;
     void setLoopInterval(AlicaTime loopInterval);
     void stop();
-    void start(const Plan* masterPlan, const Blackboard& globalBlackboard);
+    void start(const Plan* masterPlan);
     void addFastPathEvent(RunningPlan* p);
     bool isWaiting() const { return _isWaiting; }
 

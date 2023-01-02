@@ -116,9 +116,9 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan, const Blackboard& globalBlackboard)
+void PlanBase::start(const Plan* masterPlan)
 {
-    _ruleBook.init(globalBlackboard);
+    _ruleBook.init(_globalBlackboard);
     if (!_running) {
         _running = true;
         if (_statusMessage) {

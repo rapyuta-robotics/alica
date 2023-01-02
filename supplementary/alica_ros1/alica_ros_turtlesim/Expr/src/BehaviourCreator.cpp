@@ -1,7 +1,7 @@
 #include "engine/BasicBehaviour.h"
-#include <alica_ros_turtlesim/BehaviourCreator.h>
-#include <alica_ros_turtlesim/Go2RandomPosition.h>
-#include <alica_ros_turtlesim/GoTo.h>
+#include <alica/BehaviourCreator.h>
+#include <alica/Go2RandomPosition.h>
+#include <alica/GoTo.h>
 
 namespace alica
 {

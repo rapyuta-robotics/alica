@@ -1,4 +1,4 @@
-#include <alica_ros_turtlesim/DomainBehaviour.h>
+#include <alica/DomainBehaviour.h>
 /*PROTECTED REGION ID(domainBehaviourSrcHeaders) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
