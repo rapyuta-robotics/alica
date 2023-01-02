@@ -119,8 +119,8 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
 
     // insert into general element map
     if (modelManager->elements.find(ael->getId()) != modelManager->elements.end()) {
-        AlicaEngine::abort(LOGNAME, "ERROR: ID utilised twice: ", ael->getId(), "\n",
-        "ELEMENT >", ael->getName(), "< >", modelManager->elements[ael->getId()]->getName(), "<", "\n");
+        AlicaEngine::abort(LOGNAME, "ERROR: ID utilised twice: ", ael->getId(), "\n", "ELEMENT >", ael->getName(), "< >",
+                modelManager->elements[ael->getId()]->getName(), "<", "\n");
     }
     modelManager->elements.insert(std::pair<int64_t, AlicaElement*>(ael->getId(), ael));
 

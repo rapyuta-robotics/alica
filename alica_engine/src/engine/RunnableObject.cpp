@@ -18,7 +18,7 @@ RunnableObject::RunnableObject(IAlicaWorldModel* wm, const IAlicaTraceFactory* t
         , _msInterval(AlicaTime::milliseconds(DEFAULT_MS_INTERVAL))
         , _blackboardBlueprint(nullptr)
         , _wm(wm)
-        , _runnableObjectTracer(tf)
+        , _runnableObjectTracer(tf, _name)
         , _blackboard(nullptr)
         , _started(false)
 {
@@ -143,7 +143,16 @@ const TeamManager& RunnableObject::getTeamManager() const
     return *_teamManager;
 }
 
-void RunnableObject::handleException(const std::string& exceptionOriginClass, const std::string& exceptionOriginMethod, std::exception_ptr eptr)
+void TraceRunnableObject::traceException(const std::string& exceptionOriginMethod, const std::string& details)
+{
+    std::string msg = "Exception thrown from: " + getName() + "'s " + exceptionOriginMethod + " method";
+    if (!details.empty()) {
+        msg.append(", details: " + std::move(details));
+    }
+    Logging::logFatal(LOGNAME) << msg;
+}
+
+void RunnableObject::handleException(const std::string& exceptionOriginMethod, std::exception_ptr eptr)
 {
     std::string details;
     try {
@@ -152,12 +161,7 @@ void RunnableObject::handleException(const std::string& exceptionOriginClass, co
         details = e.what();
     } catch (...) {
     }
-    std::string msg = "Exception thrown from: " + getName() + "'s " + exceptionOriginMethod + " method";
-    if (!details.empty()) {
-        msg.append(", details: " + std::move(details));
-    }
-    Logging::logFatal(exceptionOriginClass) << msg;
-    _runnableObjectTracer.traceException();
+    _runnableObjectTracer.traceException(exceptionOriginMethod, details);
     _runnableObjectTracer.finishTrace();
     std::rethrow_exception(eptr);
 }
@@ -168,7 +172,9 @@ void TraceRunnableObject::setTracing(TracingType type, std::function<std::option
     _tracingType = type;
     _customTraceContextGetter = std::move(customTraceContextGetter);
     if (_tracingType == TracingType::CUSTOM && !_customTraceContextGetter) {
-        Logging::logError("RO") << "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead";
+        Logging::logError(LOGNAME)
+                << "Error in " << getName()
+                << "Custom tracing type specified, but no getter for the trace context is provided. Switching to default tracing type instead";
         _tracingType = TracingType::DEFAULT;
     }
 }
@@ -208,14 +214,18 @@ void TraceRunnableObject::cleanupTraceContext()
 
 void TraceRunnableObject::traceRunCall()
 {
-    if (_trace && !_runTraced) {
-        _trace->setLog({"status", "run"});
+    if (!_runTraced) {
+        Logging::logInfo(LOGNAME) << "Runnable object: " << getName() << ", status: run";
+        if (_trace) {
+            _trace->setLog({"status", "run"});
+        }
         _runTraced = true;
     }
 }
 
 void TraceRunnableObject::traceInitCall()
 {
+    Logging::logInfo(LOGNAME) << "Runnable object: " << getName() << ", status: init";
     if (_trace) {
         _trace->setLog({"status", "init"});
     }
@@ -223,6 +233,7 @@ void TraceRunnableObject::traceInitCall()
 
 void TraceRunnableObject::traceTerminateCall()
 {
+    Logging::logInfo(LOGNAME) << "Runnable object: " << getName() << ", status: terminate";
     if (_trace) {
         _trace->setLog({"status", "terminate"});
     }

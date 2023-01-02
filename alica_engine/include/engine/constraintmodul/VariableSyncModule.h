@@ -126,13 +126,13 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
     Logging::logDebug(ConstraintSolver, ss.str());
 #endif
 
-            std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
-                if (a._totalSupCount != b._totalSupCount) {
-                    return a._totalSupCount > b._totalSupCount;
-                } else {
-                    return a._hash > b._hash;
-                }
-            });
+    std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
+        if (a._totalSupCount != b._totalSupCount) {
+            return a._totalSupCount > b._totalSupCount;
+        } else {
+            return a._hash > b._hash;
+        }
+    });
 
     int maxNum = std::min(static_cast<int>(seeds.size()), dim);
     o_seeds.resize(dim * maxNum);

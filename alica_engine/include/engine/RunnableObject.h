@@ -28,13 +28,16 @@ class IAlicaCommunication;
 class IAlicaTraceFactory;
 class IAlicaTimerFactory;
 
+static constexpr const char* LOGNAME = "RunnableObject";
+
 class TraceRunnableObject
 {
 public:
-    TraceRunnableObject(const IAlicaTraceFactory* tf)
+    TraceRunnableObject(const IAlicaTraceFactory* tf, const std::string& name)
             : _tracingType(TracingType::DEFAULT)
             , _runTraced(false)
             , _tf(tf)
+            , _name(name)
     {
     }
 
@@ -61,8 +64,9 @@ public:
     void traceInitCall();
     void traceRunCall();
     void traceTerminateCall();
-    void traceException();
+    void traceException(const std::string& exceptionOriginMethod, const std::string& details);
     void finishTrace() { _trace.reset(); }
+    const std::string& getName() const { return _name; }
 
 private:
     TracingType _tracingType;
@@ -71,6 +75,7 @@ private:
     std::unique_ptr<IAlicaTrace> _trace;
     // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
+    const std::string& _name;
 };
 
 /**
@@ -94,7 +99,7 @@ protected:
     {
         _runnableObjectTracer.setTracing(type, customTraceContextGetter);
     }
-    const std::string& getName() { return _name; };
+    const std::string& getName() const { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
     // Helper to allow applications to generate their own trace.
     const IAlicaTraceFactory* getTraceFactory() const { return _runnableObjectTracer.getTraceFactory(); }
@@ -121,7 +126,7 @@ protected:
     void setAlicaCommunication(const IAlicaCommunication* communication);
     void setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory);
 
-    void handleException(const std::string& exceptionOriginClass, const std::string& exceptionOriginMethod, std::exception_ptr eptr);
+    void handleException(const std::string& exceptionOriginMethod, std::exception_ptr eptr);
 
     TraceRunnableObject _runnableObjectTracer;
     const TeamManager* _teamManager{nullptr};

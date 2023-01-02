@@ -57,7 +57,7 @@ void BasicBehaviour::doInit()
     try {
         initialiseParameters();
     } catch (...) {
-        handleException(LOGNAME, "initialise", std::current_exception());
+        handleException("initialise", std::current_exception());
     }
 }
 
@@ -66,7 +66,7 @@ void BasicBehaviour::doRun()
     try {
         run();
     } catch (...) {
-        handleException(LOGNAME, "run", std::current_exception());
+        handleException("run", std::current_exception());
     }
     _triggeredJobRunning = false;
 }
@@ -76,7 +76,7 @@ void BasicBehaviour::doTerminate()
     try {
         onTermination();
     } catch (...) {
-        handleException(LOGNAME, "terminate", std::current_exception());
+        handleException("terminate", std::current_exception());
     }
     _behResult.store(BehResult::UNKNOWN);
 }
@@ -109,7 +109,9 @@ void BasicBehaviour::setResult(BehResult result)
     if (prev != result) {
         _planBase->addFastPathEvent(getPlanContext());
         if (getTrace()) {
-            getTrace()->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
+            const char* resultStr = (result == BehResult::SUCCESS ? "Success" : "Fail");
+            Logging::logInfo(LOGNAME) << "Behaviour: " << getName() << ", result: " << resultStr;
+            getTrace()->setTag("Result", resultStr);
         }
     }
 }

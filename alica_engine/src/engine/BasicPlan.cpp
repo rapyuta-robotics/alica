@@ -37,7 +37,7 @@ void BasicPlan::doInit()
     try {
         onInit();
     } catch (const std::exception& e) {
-        handleException("BasicPlan", "initialise", std::current_exception());
+        handleException("initialise", std::current_exception());
     }
 }
 
@@ -46,7 +46,7 @@ void BasicPlan::doRun()
     try {
         run();
     } catch (const std::exception& e) {
-        handleException("BasicPlan", "initialise", std::current_exception());
+        handleException("run", std::current_exception());
     }
 }
 
@@ -55,7 +55,7 @@ void BasicPlan::doTerminate()
     try {
         onTerminate();
     } catch (const std::exception& e) {
-        handleException("BasicPlan", "initialise", std::current_exception());
+        handleException("terminate", std::current_exception());
     }
 }
 

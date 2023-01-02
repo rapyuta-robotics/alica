@@ -175,14 +175,14 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
     Logging::logDebug(LOGNAME) << "Old U " << curUtil << " | "
-                            << " New U:" << possibleUtil;
+                               << " New U:" << possibleUtil;
 
     if (curUtil < -0.99) {
         Logging::logDebug(LOGNAME) << "#############Assignment is valid?: " << r.getAssignment().isValid() << "\n" << r;
     }
 
     Logging::logDebug(LOGNAME) << "New Assignment" << newr->getAssignment() << "\n"
-                            << "Old Assignment" << r.getAssignment();
+                               << "Old Assignment" << r.getAssignment();
 
     if (possibleUtil - curUtil > p->getUtilityThreshold()) {
         // cout, "AllocationDifference::Reason::utility ", endl;
@@ -194,9 +194,9 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
         }
 
         Logging::logInfo(LOGNAME) << "B4 dynChange: Util is " << curUtil << " | "
-                               << " suggested is " << possibleUtil << " | "
-                               << " threshold " << p->getUtilityThreshold() << "\n"
-                               << "DynAlloc in " << p->getName();
+                                  << " suggested is " << possibleUtil << " | "
+                                  << " threshold " << p->getUtilityThreshold() << "\n"
+                                  << "DynAlloc in " << p->getName();
 
         _logger.eventOccurred("DynAlloc(", p->getName(), ")");
         return PlanChange::InternalChange;
@@ -280,7 +280,7 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
     if (r.getActiveState() == r.getActiveEntryPoint()->getState()) {
         r.addFailure();
         Logging::logDebug(LOGNAME) << "PlanRedoRule not executed for " << r.getActivePlan()->getName()
-                                << "- Unable to repair, as the current state is already the initial state.";
+                                   << "- Unable to repair, as the current state is already the initial state.";
 
         return PlanChange::FailChange;
     }

@@ -24,14 +24,14 @@ std::vector<std::string> calculateLibraryPath()
     const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
     if (!ldLibraryPath) {
         Logging::logError(LOGNAME) << "Error:"
-                                << "Missing LD_LIBRARY_PATH variable";
+                                   << "Missing LD_LIBRARY_PATH variable";
         return std::vector<std::string>();
     }
 
     auto tokens = tokenizeStr(ldLibraryPath, ':');
     if (tokens.empty()) {
         Logging::logError(LOGNAME) << "Error:"
-                                << "Missing LD_LIBRARY_PATH";
+                                   << "Missing LD_LIBRARY_PATH";
         return std::vector<std::string>();
     }
 
@@ -42,7 +42,7 @@ std::string calculateLibraryCompleteName(const std::vector<std::string>& library
 {
     if (libraryName == "") {
         Logging::logError(LOGNAME) << "Error:"
-                                << "Empty library name";
+                                   << "Empty library name";
         return "";
     }
 
@@ -50,12 +50,12 @@ std::string calculateLibraryCompleteName(const std::vector<std::string>& library
         std::string completeName = current + "/lib" + libraryName + ".so";
         if (std::filesystem::exists(completeName)) {
             Logging::logDebug(LOGNAME) << "Debug:"
-                                    << "Lib exixts in this path:" << completeName;
+                                       << "Lib exixts in this path:" << completeName;
             return completeName;
         }
     }
     Logging::logError(LOGNAME) << "Error:"
-                            << "Lib not exixts in LD_CONFIG_PATH library name:" << libraryName;
+                               << "Lib not exixts in LD_CONFIG_PATH library name:" << libraryName;
     return "";
 }
 
