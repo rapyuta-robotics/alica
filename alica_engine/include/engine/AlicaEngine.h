@@ -36,7 +36,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams, Blackboard& globalBlackboard);
     ~AlicaEngine();
 
     // State modifiers:
@@ -121,6 +121,7 @@ private:
     bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
+    Blackboard& _globalBlackboard;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
@@ -147,7 +148,6 @@ private:
 
     bool _initialized{false};
 
-    Blackboard _globalBlackboard;
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
 };

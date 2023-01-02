@@ -64,7 +64,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         AlicaEngine::abort("AC: TimerFactory not set");
     }
 
-    _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
+    _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams,_globalBlackboard);
 
     _communicator->startCommunication();
 
@@ -80,12 +80,6 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         return 0;
     }
     return -1;
-}
-
-void AlicaContext::startEngine()
-{
-    Logging::logWarn("AC") << "Engine started now.";
-    _engine->start();
 }
 
 int AlicaContext::terminate()
@@ -194,12 +188,12 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
 
 const Blackboard& AlicaContext::getGlobalBlackboard() const
 {
-    return _engine->getGlobalBlackboard();
+    return _globalBlackboard;
 }
 
 Blackboard& AlicaContext::editGlobalBlackboard()
 {
-    return _engine->editGlobalBlackboard();
+    return _globalBlackboard;
 }
 
 } // namespace alica
