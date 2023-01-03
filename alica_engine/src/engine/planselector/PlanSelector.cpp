@@ -147,13 +147,10 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
         rp->setAssignment(ta.getNextBestAssignment(oldAss));
 
         if (rp->getAssignment().getPlan() == nullptr) {
-            Logging::logDebug(LOGNAME) << "No good assignment found!!!!";
             return nullptr;
         }
         // PLAN (needed for Conditionchecks)
         rp->usePlan(rp->getAssignment().getPlan());
-
-        Logging::logDebug(LOGNAME) << "rp.Assignment of Plan " << rp->getActivePlan()->getName() << " is: " << rp->getAssignment();
 
         // CONDITIONCHECK
         if (!rp->evalPreCondition()) {
@@ -186,7 +183,6 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 
             found = getPlansForStateInternal(rp, rp->getActiveState()->getConfAbstractPlanWrappers(), agents, rpChildren);
         } else {
-            Logging::logDebug(LOGNAME) << "no recursion due to utilitycheck";
             // Don't calculate children, because we have an
             // oldRp -> we just replace the oldRp
             // (not its children -> this will happen in an extra call)
@@ -196,11 +192,8 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
     // WHEN WE GOT HERE, THIS ROBOT WONT IDLE AND WE HAVE A
     // VALID ASSIGNMENT, WHICH PASSED ALL RUNTIME CONDITIONS
     if (found && !rpChildren.empty()) {
-        Logging::logDebug(LOGNAME) << "Set child -> parent reference";
         rp->addChildren(rpChildren);
     }
-
-    Logging::logDebug(LOGNAME) << "Created RunningPlan: \n" << *rp;
 
     return rp; // If we return here, this robot is normal assigned
 }
@@ -208,8 +201,6 @@ RunningPlan* PlanSelector::createRunningPlan(RunningPlan* planningParent, const 
 bool PlanSelector::getPlansForStateInternal(
         RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans)
 {
-    Logging::logDebug(LOGNAME) << "<###### GetPlansForState: Parent: " << (planningParent != nullptr ? planningParent->getActivePlan()->getName() : "null")
-                               << " Plan count: " << wrappers.size() << " Robot count: " << robotIDs.size() << " ######>";
     for (const ConfAbstractPlanWrapper* wrapper : wrappers) {
         const AbstractPlan* ap = wrapper->getAbstractPlan();
         if (const Behaviour* beh = dynamic_cast<const Behaviour*>(ap)) {
@@ -218,7 +209,6 @@ bool PlanSelector::getPlansForStateInternal(
             rp->usePlan(beh);
             o_plans.push_back(rp);
             rp->setParent(planningParent);
-            Logging::logDebug(LOGNAME) << "Added Behaviour " << beh->getName();
         } else if (const Plan* p = dynamic_cast<const Plan*>(ap)) {
             double zeroValue;
             RunningPlan* rp = createRunningPlan(planningParent, {p}, wrapper->getConfiguration(), robotIDs, nullptr, nullptr, zeroValue);
