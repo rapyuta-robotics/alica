@@ -171,15 +171,10 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
     const Plan* p = static_cast<const Plan*>(r.getActivePlan());
 
     double possibleUtil = newr->getAssignment().getLastUtilityValue();
-    Logging::logDebug(LOGNAME) << "Old U " << curUtil << " | "
-                               << " New U:" << possibleUtil;
 
     if (curUtil < -0.99) {
         Logging::logDebug(LOGNAME) << "#############Assignment is valid?: " << r.getAssignment().isValid() << "\n" << r;
     }
-
-    Logging::logDebug(LOGNAME) << "New Assignment" << newr->getAssignment() << "\n"
-                               << "Old Assignment" << r.getAssignment();
 
     if (possibleUtil - curUtil > p->getUtilityThreshold()) {
         // cout, "AllocationDifference::Reason::utility ", endl;
