@@ -138,9 +138,11 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         return node;
     } catch (YAML::BadFile& badFile) {
         if (Logging::isInitialized()) {
-            Logging::logWarn(LOGNAME) << "Could not parse file: " << configFile << " - " << badFile.msg;
+            Logging::logWarn(LOGNAME) << "Agent wise config file could not be used, file: " << configFile << ", error details- " << badFile.msg
+                                      << ", will try to use the global config file";
         } else {
-            std::cerr << LOGNAME << ": Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
+            std::cerr << "[WARN]" << LOGNAME << "Agent wise config file could not be used, file:  " << configFile << ", error details - " << badFile.msg
+                      << ", will try to use the global config file" << std::endl;
         }
     }
 
@@ -148,7 +150,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         configFile = essentials::FileSystem::combinePaths(configPath, "Alica.yaml");
         node = YAML::LoadFile(configFile);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort(LOGNAME, "Could not parse file: ", configFile + " - " + badFile.msg);
+        AlicaEngine::abort(LOGNAME, "Global config file could not be used, file: ", configFile + ", error details - " + badFile.msg);
     }
 
     return node;

@@ -61,10 +61,12 @@ void BasicPlan::doTerminate()
 
 void BasicPlan::traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents)
 {
+    Logging::logInfo(LOGNAME) << "Task assignment change, old utility: " << oldUtility << ", new utility: " << newUtility << ", num agents: " << numberOfAgents
+                              << " assigned entry point: " << assignedEntryPoint;
     if (_traceFactory && getTrace()) {
-        getTrace()->setLog(
-                {"TaskAssignmentChange", "{\"old\": " + std::to_string(oldUtility) + ", " + "\"new\": " + std::to_string(newUtility) + ", " +
-                                                 "\"agents\": " + std::to_string(numberOfAgents) + ", " + "\"ep\": \"" + assignedEntryPoint + "\"}"});
+        getTrace()->setLog({"TaskAssignmentChange",
+                "{\"old utility\": " + std::to_string(oldUtility) + ", " + "\"new utility\": " + std::to_string(newUtility) + ", " +
+                        "\"num agents\": " + std::to_string(numberOfAgents) + ", " + "\"assigned entry point\": \"" + assignedEntryPoint + "\"}"});
     }
 }
 

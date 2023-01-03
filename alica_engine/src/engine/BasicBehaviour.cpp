@@ -84,9 +84,9 @@ void BasicBehaviour::doTerminate()
 void BasicBehaviour::doTrigger()
 {
     if (!_behaviour->isEventDriven()) {
-        Logging::logError(LOGNAME) << "Trying to trigger a behaviour that is not event driven";
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Trying to trigger a behaviour that is not event driven";
     } else if (!isTriggeredRunFinished()) {
-        Logging::logError(LOGNAME) << "Cannot trigger behaviour because the previous run is not yet finished";
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Cannot trigger behaviour because the previous run is not yet finished";
     } else {
         _triggeredJobRunning = true;
         doRun();
