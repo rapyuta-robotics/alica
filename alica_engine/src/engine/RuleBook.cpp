@@ -66,7 +66,6 @@ void RuleBook::reload(const YAML::Node& config)
  */
 RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
 {
-    Logging::logDebug(LOGNAME) << "Init-Rule called.";
     if (masterPlan->getEntryPoints().size() != 1) {
         AlicaEngine::abort(LOGNAME, "Masterplan does not have exactly one task!");
     }
@@ -149,8 +148,6 @@ PlanChange RuleBook::visit(RunningPlan& r)
 PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "dynAlloc-Rule called.";
-    Logging::logDebug(LOGNAME) << "dynAlloc RP \n" << r;
 
     if (r.isAllocationNeeded() || r.isBehaviour()) {
         return PlanChange::NoChange;
@@ -211,12 +208,10 @@ PlanChange RuleBook::dynamicAllocationRule(RunningPlan& r)
 PlanChange RuleBook::authorityOverrideRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "AuthorityOverride-Rule called.";
 
     if (r.isBehaviour()) {
         return PlanChange::NoChange;
     }
-    Logging::logDebug(LOGNAME) << "AuthorityOverride RP \n" << r;
 
     if (r.getCycleManagement().isOverridden()) {
         if (r.editCycleManagement().applyAssignment()) {
@@ -268,8 +263,6 @@ PlanChange RuleBook::planRedoRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "PlanRedoRule-Rule called.";
-    Logging::logDebug(LOGNAME) << "PlanRedoRule RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -309,8 +302,6 @@ PlanChange RuleBook::planReplaceRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "PlanReplace-Rule called.";
-    Logging::logDebug(LOGNAME) << "PlanReplace RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -342,8 +333,6 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "PlanPropagation-Rule called.";
-    Logging::logDebug(LOGNAME) << "PlanPropagation RP \n" << r;
 
     if (!r.getParent() || !r.isFailureHandlingNeeded() || r.isBehaviour())
         return PlanChange::NoChange;
@@ -366,8 +355,6 @@ PlanChange RuleBook::planPropagationRule(RunningPlan& r)
 PlanChange RuleBook::allocationRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    Logging::logDebug(LOGNAME) << "Allocation-Rule called.";
-    Logging::logDebug(LOGNAME) << "Allocation RP \n" << rp;
 
     if (!rp.isAllocationNeeded()) {
         return PlanChange::NoChange;
@@ -376,8 +363,6 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
 
     AgentGrp agents;
     rp.getAssignment().getAgentsInState(rp.getActiveState(), agents);
-
-    Logging::logDebug(LOGNAME) << rp.getActiveState()->getConfAbstractPlanWrappers().size() << " Plans in State " << rp.getActiveState()->getName();
 
     std::vector<RunningPlan*> children;
     bool ok = _ps->getPlansForState(&rp, rp.getActiveState()->getConfAbstractPlanWrappers(), agents, children);
@@ -409,8 +394,6 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
         return PlanChange::NoChange;
 
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "TopFail-Rule called.";
-    Logging::logDebug(LOGNAME) << "TopFail RP \n" << r;
 
     if (r.getParent())
         return PlanChange::NoChange;
@@ -447,8 +430,6 @@ PlanChange RuleBook::topFailRule(RunningPlan& r)
 PlanChange RuleBook::transitionRule(RunningPlan& r)
 {
     assert(!r.isRetired());
-    Logging::logDebug(LOGNAME) << "Transition-Rule called.";
-    Logging::logDebug(LOGNAME) << "Transition RP \n" << r;
 
     if (r.getActiveState() == nullptr)
         return PlanChange::NoChange;
@@ -494,8 +475,6 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
 PlanChange RuleBook::synchTransitionRule(RunningPlan& rp)
 {
     assert(!rp.isRetired());
-    Logging::logDebug(LOGNAME) << "Sync-Rule called.";
-    Logging::logDebug(LOGNAME) << "Sync RP \n" << rp;
 
     if (rp.getActiveState() == nullptr) {
         return PlanChange::NoChange;

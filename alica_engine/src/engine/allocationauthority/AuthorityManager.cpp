@@ -86,8 +86,6 @@ void AuthorityManager::handleIncomingAuthorityMessage(const AllocationAuthorityI
  */
 void AuthorityManager::tick(RunningPlan* rp)
 {
-    Logging::logDebug("AM") << "Tick called!";
-
     std::lock_guard<std::mutex> lock(_mutex);
     if (rp) {
         processPlan(*rp);
@@ -104,8 +102,6 @@ void AuthorityManager::processPlan(RunningPlan& rp)
         sendAllocation(rp);
         rp.editCycleManagement().sent();
     }
-
-    Logging::logDebug("AM") << "Queue size of AuthorityInfos is " << _queue.size();
 
     for (int i = 0; i < static_cast<int>(_queue.size()); ++i) {
         if (authorityMatchesPlan(_queue[i], rp)) {
