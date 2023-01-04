@@ -16,7 +16,7 @@ class Transition;
 
 struct PlanContext
 {
-    Blackboard& worldModels;
+    Blackboard& globalBlackboard;
     const std::string name;
     const Plan* planModel;
     const IAlicaTraceFactory* traceFactory;

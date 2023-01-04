@@ -43,10 +43,7 @@ TEST(Assignment, RobotsInserted)
             std::make_unique<alica::TransitionConditionCreator>()};
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
-#pragma GCC diagnostic pop
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);

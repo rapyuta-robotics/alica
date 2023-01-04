@@ -8,7 +8,7 @@ namespace alica
 {
 
 BasicPlan::BasicPlan(PlanContext& context)
-        : RunnableObject(context.worldModels, context.traceFactory, context.name)
+        : RunnableObject(context.globalBlackboard, context.traceFactory, context.name)
         , _isMasterPlan(context.planModel->isMasterPlan())
         , _plan(context.planModel)
 {

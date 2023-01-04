@@ -64,7 +64,7 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
         AlicaEngine::abort("AC: TimerFactory not set");
     }
 
-    _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams,_globalBlackboard);
+    _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams, _globalBlackboard);
 
     _communicator->startCommunication();
 

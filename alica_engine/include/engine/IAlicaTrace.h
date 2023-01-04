@@ -33,7 +33,6 @@ public:
         {
         }
 
-    private:
         Variant variant;
     };
 
