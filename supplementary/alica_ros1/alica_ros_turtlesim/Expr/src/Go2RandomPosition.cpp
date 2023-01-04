@@ -39,7 +39,8 @@ void Go2RandomPosition::run()
     std::uniform_real_distribution<> dist(0, 10.0);
 
     // teleport turtle to random place
-    turtlesim::ALICATurtleWorldModel* wm = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel").get();
+    std::shared_ptr<turtlesim::ALICATurtleWorldModel> wm =
+            LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
 
     wm->turtle.teleport(dist(engine), dist(engine));
     wm->setInit(false);
