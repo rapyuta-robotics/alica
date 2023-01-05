@@ -21,17 +21,18 @@ public:
     }
     ~AlicaTestTrace(){};
 
-    virtual void log(const std::unordered_map<std::string_view, TraceValue>& fields){};
-    void setTag(std::string_view key, TraceValue value)
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields) override{};
+    void setTag(std::string_view key, TraceValue value) override
     {
-        _wm->tracingTags.push_back({std::string(key), std::string(std::get<std::string_view>(value.variant))});
+        auto tmp = std::get<std::string_view>(extractVariant(std::move(value)));
+        _wm->tracingTags.push_back({std::string(key), std::string(tmp)});
     }
     void setLog(std::pair<std::string, std::string> logEntry)
     {
         assert(_wm);
         _wm->tracingLogs.push_back({logEntry.first, logEntry.second});
     }
-    void markError(std::string_view description)
+    void markError(std::string_view description) override
     {
         assert(_wm);
 
