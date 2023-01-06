@@ -50,6 +50,10 @@
     STEP_UNTIL(ac, condition);                                                                                                                                 \
     ASSERT_TRUE(condition)
 
+#define STEP_UNTIL_ASSERT_EQ(ac, lhs, rhs)                                                                                                                     \
+    STEP_UNTIL(ac, ((lhs) == (rhs)))                                                                                                                           \
+    ASSERT_EQ(lhs, rhs)
+
 #define SLEEP_UNTIL(condition)                                                                                                                                 \
     do {                                                                                                                                                       \
         for (int i = 0; i < 100; ++i) {                                                                                                                        \
