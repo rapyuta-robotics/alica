@@ -5,6 +5,7 @@
 #include <engine/BasicPlan.h>
 
 #include <chrono>
+#include <gtest/gtest.h>
 #include <memory>
 
 #define STEP_UNTIL1(condition)                                                                                                                                 \
@@ -44,6 +45,10 @@
         }                                                                                                                                                      \
         std::this_thread::sleep_for(std::chrono::milliseconds(10));                                                                                            \
     } while (0)
+
+#define STEP_UNTIL_ASSERT_TRUE(ac, condition)                                                                                                                  \
+    STEP_UNTIL(ac, condition);                                                                                                                                 \
+    ASSERT_TRUE(condition)
 
 #define SLEEP_UNTIL(condition)                                                                                                                                 \
     do {                                                                                                                                                       \
