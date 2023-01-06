@@ -25,19 +25,24 @@ public:
     void setTag(std::string_view key, TraceValue value) override
     {
         auto tmp = std::get<std::string_view>(extractVariant(std::move(value)));
-        _wm->tracingTags.push_back({std::string(key), std::string(tmp)});
+        _wm->tracingTags.push_back({key, tmp});
     }
-    void setLog(std::pair<std::string, std::string> logEntry)
+
+    void setLog(const std::pair<std::string_view, TraceValue>& fields) override
     {
         assert(_wm);
-        _wm->tracingLogs.push_back({logEntry.first, logEntry.second});
+        auto tmp = extractVariant(std::move(fields.second));
+        if (!std::holds_alternative<std::string_view>(tmp))
+            return;
+        auto value = std::get<std::string_view>(tmp);
+        _wm->tracingLogs.push_back({fields.first, value});
     }
     void markError(std::string_view description) override
     {
         assert(_wm);
 
         _wm->tracingTags.push_back({"error", "true"});
-        _wm->tracingTags.push_back({"error.description", std::string(description)});
+        _wm->tracingTags.push_back({"error.description", description});
     }
     void finish() {}
 

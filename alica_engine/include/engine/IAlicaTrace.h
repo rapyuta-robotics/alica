@@ -40,7 +40,7 @@ public:
 public:
     virtual ~IAlicaTrace() = default;
     virtual void setTag(std::string_view key, TraceValue value) = 0;
-    void setLog(const std::pair<std::string_view, TraceValue>& fields) { log({{fields.first, fields.second}}); }
+    virtual void setLog(const std::pair<std::string_view, TraceValue>& fields) { log({{fields.first, fields.second}}); }
     virtual void log(const std::unordered_map<std::string_view, TraceValue>& fields) = 0;
     virtual void markError(std::string_view description) = 0;
     // Explicitly set the trace as finished. Any calls to setTag, setLog & markError after this call should

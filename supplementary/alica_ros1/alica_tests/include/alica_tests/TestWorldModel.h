@@ -64,8 +64,8 @@ public:
 
     std::unordered_map<std::string, int> passedParameters;
     std::vector<std::string> configParameter;
-    std::vector<std::pair<std::string, std::string>> tracingTags;
-    std::vector<std::pair<std::string, std::string>> tracingLogs;
+    std::vector<std::pair<std::string_view, std::string_view>> tracingTags;
+    std::vector<std::pair<std::string_view, std::string_view>> tracingLogs;
     std::unordered_map<std::string, std::string> tracingParents;
 
     void reset();
