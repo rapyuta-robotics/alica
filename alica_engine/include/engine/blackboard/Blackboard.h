@@ -170,6 +170,22 @@ public:
                 srcBb._vals.at(srcKey));
     }
 
+    void setConstValue(const std::string& targetKey, const std::string& value)
+    {
+        const auto yamlTypeIt = _yamlType.find(targetKey);
+        if (yamlTypeIt == _yamlType.end()) {
+            // key is not found in yaml file, invalid. Throw exception
+            throw BlackboardException(stringify("setConstValue() failure, unknown key used: ", targetKey, " is not defined in the yaml file"));
+        }
+        // key is found in yaml file
+        auto typeIndex = getTypeIndex(yamlTypeIt->second);
+        // TODO: maybe add some checks here to make sure childType is correct, throw exception if not supported
+        // also check that variant has been constructed correctly, otherwise throw exception
+        if (typeIndex.has_value()) {
+            _vals.at(targetKey) = makeBBValueForIndex<false>::make(typeIndex.value(), value);
+        }
+    }
+
     bool hasValue(const std::string& key) const { return _vals.count(key); }
     void removeValue(const std::string& key) { _vals.erase(key); }
 
