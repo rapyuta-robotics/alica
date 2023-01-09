@@ -4,6 +4,7 @@
 #include "engine/Types.h"
 #include "engine/modelmanagement/Strings.h"
 #include <any>
+#include <array>
 #include <cassert>
 #include <exception>
 #include <mutex>
@@ -13,7 +14,6 @@
 #include <unordered_map>
 #include <variant>
 #include <yaml-cpp/yaml.h>
-#include <array>
 
 namespace alica
 {
