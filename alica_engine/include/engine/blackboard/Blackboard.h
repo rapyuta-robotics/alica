@@ -181,11 +181,10 @@ public:
     void map(const std::string& srcKey, const std::string& targetKey, const BlackboardImpl& srcBb)
     {
         // Note: srcKey & targetKey has to be set & both have to be found in the yaml (pml or beh) file
-        // mapping succeeds as long as targetType is constructible from srcType (so conversions are supported)
         std::visit(
                 [srcKey, targetKey, this](auto&& srcValue) {
-                    // set the target as a side effect, throws if targetType is not constructible from srcType
-                    _vals.at(targetKey) = makeBBValueForIndex<false>::make(_vals.at(targetKey).index(), std::forward<decltype(srcValue)>(srcValue));
+                    // set the target as a side effect
+                    set(targetKey, std::forward<decltype(srcValue)>(srcValue));
                 },
                 srcBb._vals.at(srcKey));
     }
@@ -285,14 +284,9 @@ private:
                         return index == INDEX ? BBValueType{TypeAtIndex{Parser<TypeAtIndex>{}(args)...}} : BBValueType{};
                     }
                 } else {
-// TODO: figure out a way to disable warnings, caused due to std::visit. Note: really tricky since small changes can cause unexpected behaviour, so best to
-// disable the warning for now
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wnarrowing"
                     if constexpr (std::is_constructible_v<TypeAtIndex, Args&&...>) {
                         return index == INDEX ? BBValueType{TypeAtIndex{std::forward<Args>(args)...}} : BBValueType{};
                     }
-#pragma GCC diagnostic pop
                 }
                 return BBValueType{};
             }

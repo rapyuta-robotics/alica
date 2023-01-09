@@ -143,25 +143,25 @@ TEST_F(TestBlackboard, testWithoutPlan)
 TEST_F(TestBlackboard, testMappingFromBool)
 {
     EXPECT_TRUE((checkMapping<bool, bool>(BBType::BOOL, true, BBType::BOOL, true)));
-    EXPECT_TRUE((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)));
-    EXPECT_TRUE((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)));
+    EXPECT_THROW((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_THROW((checkMapping<bool, std::string>(BBType::BOOL, true, BBType::STRING, "true")), BlackboardException);
     EXPECT_TRUE((checkMapping<bool, std::any>(BBType::BOOL, true, BBType::ANY, std::any{true})));
 }
 
 TEST_F(TestBlackboard, testMappingFromInt64)
 {
-    EXPECT_TRUE((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)));
+    EXPECT_THROW((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, int64_t>(BBType::INT64, 1, BBType::INT64, 1)));
-    EXPECT_TRUE((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)));
+    EXPECT_THROW((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_THROW((checkMapping<int64_t, std::string>(BBType::INT64, 1, BBType::STRING, "1")), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, std::any>(BBType::INT64, 1, BBType::ANY, std::any{(int64_t) 1})));
 }
 
 TEST_F(TestBlackboard, testMappingFromDouble)
 {
-    EXPECT_TRUE((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)));
-    EXPECT_TRUE((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)));
+    EXPECT_THROW((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)), BlackboardException);
     EXPECT_TRUE((checkMapping<double, double>(BBType::DOUBLE, 1.0, BBType::DOUBLE, 1.0)));
     EXPECT_THROW((checkMapping<double, std::string>(BBType::DOUBLE, 1.0, BBType::STRING, "1.0")), BlackboardException);
     EXPECT_TRUE((checkMapping<double, std::any>(BBType::DOUBLE, 1.0, BBType::ANY, std::any{1.0})));
