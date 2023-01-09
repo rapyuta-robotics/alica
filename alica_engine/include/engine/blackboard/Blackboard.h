@@ -32,8 +32,8 @@ struct BlackboardException : public std::logic_error
 
 class BlackboardImpl
 {
-    using BBValueType = std::variant<std::monostate, bool, int64_t, double, std::string, std::any>;
-    static constexpr std::size_t BB_VALUE_TYPE_ANY_INDEX = 5;
+    using BBValueType = std::variant<std::monostate, bool, int64_t, uint64_t, double, std::string, std::any>;
+    static constexpr std::size_t BB_VALUE_TYPE_ANY_INDEX = 6;
 
     template <class... Args>
     static std::string stringify(Args&&... args)
@@ -145,36 +145,14 @@ public:
     template <class T>
     void set(const std::string& key, T&& value)
     {
-        const char* type = getTypeName<T>();
-        const auto yamlTypeIt = _yamlType.find(key);
-        if (yamlTypeIt == _yamlType.end()) {
-            // key is not found in yaml file
-            if (!type) {
-                // T is an unknown type, use std::any
-                _vals[key] = std::any{std::forward<T>(value)};
-            } else {
-                // T is a known type, just assign (type conversions are taken into account)
-                _vals[key] = std::forward<T>(value);
-            }
+        using Type = std::decay_t<T>;
+        // Promote signed integers to int64 & unsigned integers to uint64 to avoid compiler error in variant constructor/assignment operator (due to ambiguity)
+        using PromotedType = std::conditional_t<std::is_integral_v<Type> && !std::is_same_v<Type, bool>,
+                std::conditional_t<std::is_signed_v<Type>, int64_t, uint64_t>, Type>;
+        if constexpr (std::is_same_v<Type, PromotedType>) {
+            setImpl(key, std::forward<T>(value));
         } else {
-            // key is found in yaml file
-            const auto& yamlType = yamlTypeIt->second;
-            if (yamlType == "std::any") {
-                // yaml type is std::any, so can store values of any type, therefore use std::any for variant type
-                _vals[key] = std::any{std::forward<T>(value)};
-            } else {
-                if (!type) {
-                    // T is an unknown type, but yaml type is always known
-                    throw BlackboardException(stringify("set() failure, unknown type used to set key: ", key, ", expected type (from yaml file): ", yamlType));
-                } else if (yamlType != type) {
-                    // T is a known type, but type mismatch
-                    throw BlackboardException(
-                            stringify("set() type mismatch, key: ", key, ", set type: ", type, ", expected type (from yaml file): ", yamlType));
-                } else {
-                    // T is a known type & types match, assign
-                    _vals[key] = std::forward<T>(value);
-                }
-            }
+            setImpl(key, PromotedType(value));
         }
     }
 
@@ -203,6 +181,42 @@ private:
     friend BlackboardUtil;
 
     template <class T>
+    void setImpl(const std::string& key, T&& value)
+    {
+        const char* type = getTypeName<T>();
+        const auto yamlTypeIt = _yamlType.find(key);
+        if (yamlTypeIt == _yamlType.end()) {
+            // key is not found in yaml file
+            if (!type) {
+                // T is an unknown type, use std::any
+                _vals[key] = std::any{std::forward<T>(value)};
+            } else {
+                // T is a known type, just assign
+                _vals[key] = std::forward<T>(value);
+            }
+        } else {
+            // key is found in yaml file
+            const auto& yamlType = yamlTypeIt->second;
+            if (yamlType == "std::any") {
+                // yaml type is std::any, so can store values of any type, therefore use std::any for variant type
+                _vals[key] = std::any{std::forward<T>(value)};
+            } else {
+                if (!type) {
+                    // T is an unknown type, but yaml type is always known
+                    throw BlackboardException(stringify("set() failure, unknown type used to set key: ", key, ", expected type (from yaml file): ", yamlType));
+                } else if (yamlType != type) {
+                    // T is a known type, but type mismatch
+                    throw BlackboardException(
+                            stringify("set() type mismatch, key: ", key, ", set type: ", type, ", expected type (from yaml file): ", yamlType));
+                } else {
+                    // T is a known type & types match, assign
+                    _vals[key] = std::forward<T>(value);
+                }
+            }
+        }
+    }
+
+    template <class T>
     static const char* getTypeName()
     {
         return getTypeName(BBValueType{T{}}.index());
@@ -229,7 +243,7 @@ private:
         return {};
     }
 
-    static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "double", "std::string"};
+    static constexpr const char* BB_VALUE_TYPE_NAMES[] = {"bool", "int64", "uint64", "double", "std::string"};
     static constexpr std::size_t BB_VALUE_TYPE_NAMES_SIZE = sizeof(BB_VALUE_TYPE_NAMES) / sizeof(const char*);
 
     template <bool PARSE_ARGS = false>

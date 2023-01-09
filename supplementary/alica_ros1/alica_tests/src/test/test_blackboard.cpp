@@ -14,6 +14,7 @@ struct BBType
 {
     static constexpr const char* BOOL = "bool";
     static constexpr const char* INT64 = "int64";
+    static constexpr const char* UINT64 = "uint64";
     static constexpr const char* DOUBLE = "double";
     static constexpr const char* STRING = "std::string";
     static constexpr const char* ANY = "std::any";
@@ -144,6 +145,7 @@ TEST_F(TestBlackboard, testMappingFromBool)
 {
     EXPECT_TRUE((checkMapping<bool, bool>(BBType::BOOL, true, BBType::BOOL, true)));
     EXPECT_THROW((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<bool, uint64_t>(BBType::BOOL, true, BBType::UINT64, 1u)), BlackboardException);
     EXPECT_THROW((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_THROW((checkMapping<bool, std::string>(BBType::BOOL, true, BBType::STRING, "true")), BlackboardException);
     EXPECT_TRUE((checkMapping<bool, std::any>(BBType::BOOL, true, BBType::ANY, std::any{true})));
@@ -153,15 +155,27 @@ TEST_F(TestBlackboard, testMappingFromInt64)
 {
     EXPECT_THROW((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, int64_t>(BBType::INT64, 1, BBType::INT64, 1)));
+    EXPECT_THROW((checkMapping<int64_t, uint64_t>(BBType::INT64, 1, BBType::UINT64, 1u)), BlackboardException);
     EXPECT_THROW((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_THROW((checkMapping<int64_t, std::string>(BBType::INT64, 1, BBType::STRING, "1")), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, std::any>(BBType::INT64, 1, BBType::ANY, std::any{(int64_t) 1})));
+}
+
+TEST_F(TestBlackboard, testMappingFromUnsignedInt64)
+{
+    EXPECT_THROW((checkMapping<uint64_t, bool>(BBType::UINT64, 1, BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, int64_t>(BBType::UINT64, 1, BBType::INT64, 1)), BlackboardException);
+    EXPECT_TRUE((checkMapping<uint64_t, uint64_t>(BBType::UINT64, 1, BBType::UINT64, 1u)));
+    EXPECT_THROW((checkMapping<uint64_t, double>(BBType::UINT64, 1, BBType::DOUBLE, 1.0)), BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, std::string>(BBType::UINT64, 1, BBType::STRING, "1")), BlackboardException);
+    EXPECT_TRUE((checkMapping<uint64_t, std::any>(BBType::UINT64, 1, BBType::ANY, std::any{(uint64_t) 1u})));
 }
 
 TEST_F(TestBlackboard, testMappingFromDouble)
 {
     EXPECT_THROW((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)), BlackboardException);
     EXPECT_THROW((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<double, uint64_t>(BBType::DOUBLE, 1.0, BBType::UINT64, 1u)), BlackboardException);
     EXPECT_TRUE((checkMapping<double, double>(BBType::DOUBLE, 1.0, BBType::DOUBLE, 1.0)));
     EXPECT_THROW((checkMapping<double, std::string>(BBType::DOUBLE, 1.0, BBType::STRING, "1.0")), BlackboardException);
     EXPECT_TRUE((checkMapping<double, std::any>(BBType::DOUBLE, 1.0, BBType::ANY, std::any{1.0})));
@@ -171,6 +185,7 @@ TEST_F(TestBlackboard, testMappingFromString)
 {
     EXPECT_THROW((checkMapping<std::string, bool>(BBType::STRING, "1", BBType::BOOL, true)), BlackboardException);
     EXPECT_THROW((checkMapping<std::string, int64_t>(BBType::STRING, "1", BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, uint64_t>(BBType::STRING, "1", BBType::UINT64, 1u)), BlackboardException);
     EXPECT_THROW((checkMapping<std::string, double>(BBType::STRING, "1", BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_TRUE((checkMapping<std::string, std::string>(BBType::STRING, "1", BBType::STRING, "1")));
     EXPECT_TRUE((checkMapping<std::string, std::any>(BBType::STRING, "1", BBType::ANY, std::any{std::string{"1"}})));
@@ -187,6 +202,9 @@ TEST_F(TestBlackboard, testAccessingWithWrongType)
 
     // throw exception because string does not match int64
     EXPECT_THROW({ bb_locked.get<std::string>("value"); }, BlackboardException);
+
+    // throw exception because uint64 does not match int64, because signed -> unsigned conversions are not supported
+    EXPECT_THROW({ bb_locked.get<uint64_t>("value"); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
@@ -222,6 +240,7 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64, "14");
+    blueprint->addKey("uintVal", BBType::UINT64, "15");
     blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
     blueprint->addKey("boolVal", BBType::BOOL, "true");
     blueprint->addKey("stringVal", BBType::STRING, "test string");
@@ -229,6 +248,7 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
     EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
+    EXPECT_EQ(bb.get<uint64_t>("uintVal"), 15u);
     EXPECT_EQ(bb.get<double>("doubleVal"), 2.7);
     EXPECT_EQ(bb.get<bool>("boolVal"), true);
     EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
@@ -244,6 +264,12 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 
     // throw exception because value is not of type int64, but string
     EXPECT_THROW({ bb.set<int64_t>("stringVal", 0); }, BlackboardException);
+
+    // throw exception because value is not of type int64, but uint64
+    EXPECT_THROW({ bb.set<int64_t>("uintVal", 0); }, BlackboardException);
+
+    // throw exception because value is not of type unt64, but int64
+    EXPECT_THROW({ bb.set<uint64_t>("intVal", 0); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
@@ -318,6 +344,7 @@ TEST_F(TestBlackboard, testInitWithDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64, "14");
+    blueprint->addKey("uintVal", BBType::UINT64, "15");
     blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
     blueprint->addKey("boolVal", BBType::BOOL, "true");
     blueprint->addKey("stringVal", BBType::STRING, "test string");
@@ -325,6 +352,7 @@ TEST_F(TestBlackboard, testInitWithDefaultValue)
     alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
     EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
+    EXPECT_EQ(bb.get<uint64_t>("uintVal"), 15u);
     EXPECT_EQ(bb.get<double>("doubleVal"), 2.7);
     EXPECT_EQ(bb.get<bool>("boolVal"), true);
     EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
@@ -334,6 +362,7 @@ TEST_F(TestBlackboard, testInitWithoutDefaultValue)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64, std::nullopt);
+    blueprint->addKey("uintVal", BBType::UINT64, std::nullopt);
     blueprint->addKey("doubleVal", BBType::DOUBLE, std::nullopt);
     blueprint->addKey("boolVal", BBType::BOOL, std::nullopt);
     blueprint->addKey("stringVal", BBType::STRING, std::nullopt);
@@ -341,6 +370,7 @@ TEST_F(TestBlackboard, testInitWithoutDefaultValue)
     alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
 
     EXPECT_EQ(bb.get<int64_t>("intVal"), int64_t());
+    EXPECT_EQ(bb.get<uint64_t>("uintVal"), uint64_t());
     EXPECT_EQ(bb.get<double>("doubleVal"), double());
     EXPECT_EQ(bb.get<bool>("boolVal"), false);
     EXPECT_EQ(bb.get<std::string>("stringVal"), "");
@@ -429,6 +459,9 @@ TEST_F(TestBlackboard, setWithConvertibleType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
     blueprint->addKey("intVal", BBType::INT64, "14");
+    blueprint->addKey("uintVal", BBType::UINT64, "15");
+    blueprint->addKey("decimal", BBType::DOUBLE, "1.0");
+    blueprint->addKey("string", BBType::STRING, "str");
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
@@ -437,12 +470,13 @@ TEST_F(TestBlackboard, setWithConvertibleType)
     bb.set<int32_t>("intVal", 1);
     EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
 
-    bb.set<uint8_t>("intVal", 1);
-    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
-    bb.set<uint32_t>("intVal", 1);
-    EXPECT_EQ(bb.get<int64_t>("intVal"), 1);
+    bb.set<uint8_t>("uintVal", 1u);
+    EXPECT_EQ(bb.get<uint64_t>("uintVal"), 1u);
+    bb.set<uint32_t>("uintVal", 1u);
+    EXPECT_EQ(bb.get<uint64_t>("uintVal"), 1u);
 
-    EXPECT_THROW({ bb.set<uint64_t>("intVal", 1); }, BlackboardException);
+    bb.set<float>("decimal", 2.0);
+    EXPECT_EQ(bb.get<double>("decimal"), 2.0);
 }
 
 TEST_F(TestBlackboard, setWithoutSpecifyingType)
@@ -468,8 +502,7 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 123);
 
     bb.set("usignedIntVal", 5u);
-    EXPECT_THROW({ bb.get<uint64_t>("usignedIntVal"); }, BlackboardException);
-    EXPECT_EQ(bb.get<int64_t>("usignedIntVal"), 5u);
+    EXPECT_EQ(bb.get<uint64_t>("usignedIntVal"), 5u);
 }
 
 } // namespace
