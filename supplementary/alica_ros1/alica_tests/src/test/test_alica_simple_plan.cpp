@@ -49,7 +49,7 @@ public:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "SimpleTestPlan", true, 1); // TestMasterPlan todo in plan gui luca
+        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "TestMasterPlan", true, 1); // TestMasterPlan todo in plan gui luca
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
         _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
@@ -64,6 +64,8 @@ public:
         _tc->init(std::move(creators));
         _tc->startEngine();
         _spinner->start();
+        STEP_UNTIL(_tc, _tc->getActivePlan("TestMasterPlan"));
+        ASSERT_TRUE(_tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
     }
 
     void TearDown() override
@@ -82,7 +84,8 @@ protected:
  */
 TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
-    ASSERT_NO_SIGNAL
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
+
     // ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlan")) << _tc->getLastFailure(); todo in plan gui luca
 
     EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));

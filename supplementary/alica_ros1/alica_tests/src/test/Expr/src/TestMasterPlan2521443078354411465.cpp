@@ -16,6 +16,7 @@ namespace alica
 //   - MultiPlanInstanceSuccessTestState (3960396736820956915)
 //   - ChooseTestState (4098979167613947533)
 //   - BehSuccessTestState (4487929496627066142)
+//   - SimpleTestPlanState (1506398272124884391)
 TestMasterPlan2521443078354411465::TestMasterPlan2521443078354411465(PlanContext& context)
         : DomainPlan(context)
 {
@@ -103,6 +104,28 @@ bool PreCondition2733591692277574870::evaluate(std::shared_ptr<RunningPlan> rp, 
 {
     /*PROTECTED REGION ID(4120890224163547783) ENABLED START*/
     std::cout << "The PreCondition 2733591692277574870 in Transition '4120890224163547783' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 2550214909296500141 (2550214909296500141)
+ *   - Comment:
+ *   - Source2Dest: ChooseTestState --> SimpleTestPlanState
+ *
+ * Precondition: 2616157902346364992 (2616157902346364992)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ChooseTestState:
+ */
+bool PreCondition2616157902346364992::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(2550214909296500141) ENABLED START*/
+    std::cout << "The PreCondition 2616157902346364992 in Transition '2550214909296500141' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

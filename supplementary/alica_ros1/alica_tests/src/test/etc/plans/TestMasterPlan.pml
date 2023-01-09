@@ -23,6 +23,14 @@
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 2284164419875100184,
+      "key": "ChooseTestState2SimpleTestPlanState",
+      "type": "std::any"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -78,7 +86,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 737.2753842205811,
-        "y": 370.44923155883777
+        "y": 369.4071287679432
       },
       "type": "State",
       "variableBindings": []
@@ -108,7 +116,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 739.1787599282301,
-        "y": 593.7031666785609
+        "y": 592.6610638876664
       },
       "type": "State",
       "variableBindings": []
@@ -123,12 +131,13 @@
       "outTransitions": [
         846865468084822174,
         2841206023261337744,
-        4120890224163547783
+        4120890224163547783,
+        2550214909296500141
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 459,
-        "y": 278
+        "y": 274.8736916273164
       },
       "type": "State",
       "variableBindings": []
@@ -158,7 +167,37 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 728,
-        "y": 110
+        "y": 107.91579441821094
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "SimpleTestPlan.pml#1412252439925",
+          "comment": "",
+          "configuration": null,
+          "id": 2160624187610871467,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1506398272124884391,
+      "inTransitions": [
+        2550214909296500141
+      ],
+      "name": "SimpleTestPlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 728.3083341508035,
+        "y": -156.82283404963664
       },
       "type": "State",
       "variableBindings": []
@@ -246,6 +285,35 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 2550214909296500141,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2SimpleTestPlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1506398272124884391,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2616157902346364992,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

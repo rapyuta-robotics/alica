@@ -53,6 +53,29 @@ std::shared_ptr<UtilityFunction> UtilityFunction1524452759599::getUtilityFunctio
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: MISSING_NAME (1524453490345)
+ *   - Comment: Lvl1 Transition
+ *   - Source2Dest: BeforeTrans --> NewState
+ *
+ * Precondition: MISSING_NAME (1524453491764)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *	   - MISSING_NAME (1524453546255)
+ *
+ * Abstract Plans in BeforeTrans:
+ */
+bool PreCondition1524453491764::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(1524453490345) ENABLED START*/
+    std::cout << "The PreCondition 1524453491764 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods1524452759599) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/
