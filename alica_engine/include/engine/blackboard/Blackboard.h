@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <variant>
 #include <yaml-cpp/yaml.h>
+#include <array>
 
 namespace alica
 {
@@ -256,7 +257,7 @@ private:
             // The value itself is either constructed from args or parsed from args
             // Note: index cannot be std::monostate
             // throws if variant construction fails
-            assert(index > 0);
+            assert(index != 0);
             // Note: make index sequence equal to the number of types in BBValueType
             return makeHelper(index, std::make_index_sequence<BB_VALUE_TYPE_NAMES_SIZE + 2>(), std::forward<Args>(args)...);
         }
@@ -275,7 +276,7 @@ private:
         template <class... Args, std::size_t... Is>
         static BBValueType makeHelper(std::size_t index, std::index_sequence<Is...>, Args&&... args)
         {
-            BBValueType vals[] = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
+            std::array<BBValueType, sizeof...(Is)> vals = {makeBBValueIfIndex<Is>::make(index, std::forward<Args>(args)...)...};
             if (!vals[index].index()) {
                 // variant construction failed, throw exception
                 throw BlackboardException("variant construction failed");
@@ -291,7 +292,7 @@ private:
             template <class... Args>
             static BBValueType make(std::size_t index, Args&&... args)
             {
-                // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, intialized (or parsed) with value
+                // if INDEX == index, make a variant with a value of type that is same as the variant's type at index INDEX, initialized (or parsed) with value
                 // else makes a invalid variant, i.e. with value monostate
                 if constexpr (PARSE_ARGS) {
                     if constexpr (!std::is_same_v<TypeAtIndex, std::monostate> && !std::is_same_v<TypeAtIndex, std::any>) {
