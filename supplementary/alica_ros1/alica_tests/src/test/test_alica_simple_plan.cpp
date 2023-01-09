@@ -86,21 +86,21 @@ TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
 
-    // ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlan")) << _tc->getLastFailure(); todo in plan gui luca
-
     EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
 
     // TestState1
     STEP_UNTIL(_tc, _tc->getActivePlan("SimpleTestPlan"));
     EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
     EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState1"));
-    EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
+    EXPECT_EQ(nullptr, _tc->getActiveBehaviour("SimpleTestPlan"));
 
     // TestState2
     STEP_UNTIL(_tc, _tc->isStateActive("SimpleTestPlan", "TestState2"));
     EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
 
     STEP_UNTIL(_tc, _tc->getActiveBehaviour("Attack"));
+    EXPECT_NE(nullptr, _tc->getActiveBehaviour("Attack"));
+
     STEP_UNTIL(_tc, dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter() > 20);
     EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter(), 20);
 

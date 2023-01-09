@@ -87,7 +87,7 @@ bool Util::isPlanActive(alica::AlicaEngine* ae, int64_t id)
     return isPlanActiveHelper(ae->getPlanBase().getRootNode(), id);
 }
 
-bool Util::isPlanActive(const RunningPlan* rp, const std::string& name) 
+bool Util::isPlanActive(const RunningPlan* rp, const std::string& name)
 {
     return isPlanActiveHelper(rp, name);
 }
