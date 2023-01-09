@@ -3,7 +3,6 @@
 #include "engine/BasicCondition.h"
 #include "engine/RunningPlan.h"
 #include <boost/dll/alias.hpp>
-#include <engine/logging/Logging.h>
 
 class IAlicaWorldModel;
 

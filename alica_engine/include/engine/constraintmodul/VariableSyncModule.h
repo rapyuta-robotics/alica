@@ -123,7 +123,7 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
         ss << endl;
     }
-    Logging::logDebug(ConstraintSolver, ss.str());
+    Logging::logDebug(LOGNAME, ss.str());
 #endif
 
     std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
