@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": null,
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     },
     {
       "access": "protected",
@@ -22,7 +22,7 @@
       "defaultValue": null,
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",

@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 3797646244448202675,
       "key": "WaitForTriggerState2ParallelExecState",
-      "type": "std::any"
+      "type": "bool"
     }
   ],
   "comment": "",

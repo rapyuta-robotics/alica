@@ -63,11 +63,6 @@ bool PreCondition92747471708069515::evaluate(std::shared_ptr<RunningPlan> rp, co
 
 /*PROTECTED REGION ID(methods3153116020668535682) ENABLED START*/
 // Add additional options here
-void SuccessOnCondPlan3153116020668535682::onInit()
-{
-    auto* wm = dynamic_cast<alicaTests::TestWorldModelNew*>(getWorldModel());
-    auto* tc = wm->getTestContext();
-    tc->resetAllTransitions(getPlanContext());
-}
+void SuccessOnCondPlan3153116020668535682::onInit() {}
 /*PROTECTED REGION END*/
 } // namespace alica
