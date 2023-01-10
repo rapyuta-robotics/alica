@@ -66,7 +66,6 @@ public:
     static bool hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id);
     static bool isStateActive(alica::AlicaEngine* ae, int64_t id);
     static bool isPlanActive(alica::AlicaEngine* ae, int64_t id);
-
     static const alica::Agent* getLocalAgent(alica::AlicaEngine* ae);
     static int getTeamSize(alica::AlicaEngine* ae);
     static const alica::Agent* getAgentByID(alica::AlicaEngine* ae, AgentId agentID);

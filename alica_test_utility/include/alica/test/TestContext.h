@@ -169,7 +169,6 @@ private:
     }
 
     RunningPlan* getRunningPlan(const std::string& name);
-
     RunningPlan* searchRunningPlanTree(const std::string& name);
     RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
     std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName) const;

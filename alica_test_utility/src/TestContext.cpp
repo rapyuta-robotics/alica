@@ -59,6 +59,11 @@ bool TestContext::isStateActive(int64_t id) const
     return Util::isStateActive(_engine.get(), id);
 }
 
+bool TestContext::isPlanActive(int64_t id) const
+{
+    return Util::isPlanActive(_engine.get(), id);
+}
+
 BasicBehaviour* TestContext::getActiveBehaviour(const std::string& name)
 {
     auto rp = getRunningPlan(name);
