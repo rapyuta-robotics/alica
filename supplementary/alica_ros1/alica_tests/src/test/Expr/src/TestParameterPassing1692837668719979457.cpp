@@ -88,7 +88,7 @@ bool PreCondition1529456610600::evaluate(std::shared_ptr<RunningPlan> rp, const 
 /*PROTECTED REGION ID(methods1692837668719979457) ENABLED START*/
 void TestParameterPassing1692837668719979457::onInit()
 {
-    auto* wm = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    auto wm = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.set<PlanStatus>("targetChildStatus", PlanStatus::Success);

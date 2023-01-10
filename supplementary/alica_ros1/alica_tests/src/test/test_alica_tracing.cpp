@@ -84,7 +84,7 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    std::shared_ptr<alicaTests::TestWorldModel> twm1 = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
     twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
@@ -95,8 +95,8 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    alicaTests::TestWorldModel* twm1 = LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
-    alicaTests::TestWorldModel* twm2 = LockedBlackboardRW(acs[1]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    std::shared_ptr<alicaTests::TestWorldModel> twm1 = LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+    std::shared_ptr<alicaTests::TestWorldModel> twm2 = LockedBlackboardRW(acs[1]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";

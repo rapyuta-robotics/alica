@@ -26,7 +26,7 @@ DistXContourTest::~DistXContourTest() {}
 void DistXContourTest::cacheEvalData(const Blackboard* globalBlackboard)
 {
     LockedBlackboardRO bbwm(*globalBlackboard);
-    alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     xAlloBall = wm->x;
 }
 

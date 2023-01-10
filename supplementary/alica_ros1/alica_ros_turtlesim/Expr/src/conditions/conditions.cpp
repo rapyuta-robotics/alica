@@ -14,7 +14,7 @@ namespace alica
 bool conditionMove2Init748720375848597116(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(condition748720375848597116) ENABLED START*/
-    turtlesim::ALICATurtleWorldModel* worldmodel = LockedBlackboardRO(*gb).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel").get();
+    turtlesim::ALICATurtleWorldModel* worldmodel = LockedBlackboardRO(*gb).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
     return worldmodel->getInit();
     /*PROTECTED REGION END*/
 }

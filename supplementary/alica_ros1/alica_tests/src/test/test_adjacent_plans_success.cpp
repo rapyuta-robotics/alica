@@ -22,8 +22,8 @@ protected:
 
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
-    alicaTests::TestWorldModel* worldModel =
-            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    std::shared_ptr<alicaTests::TestWorldModel> worldModel =
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     ae->start();
 
     for (int i = 0; i < 10; i++) {

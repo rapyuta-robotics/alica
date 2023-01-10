@@ -36,7 +36,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
         }
 
         LockedBlackboardRO bbwm(*globalBlackboard);
-        alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+        std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
         if (this->robotId == agentID8) {
             curPosition = wm->robotsXPos[pos];
@@ -52,7 +52,7 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
         for (int i = 0; i < ass.getUnAssignedAgentCount(); ++i) {
             // curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
             LockedBlackboardRO bbwm(*globalBlackboard);
-            alicaTests::TestWorldModel* wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+            std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
             if (this->robotId == agentID8) {
                 curPosition = wm->robotsXPos.at(i);
             } else {
