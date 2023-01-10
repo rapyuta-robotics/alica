@@ -33,7 +33,7 @@ private:
 
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel)

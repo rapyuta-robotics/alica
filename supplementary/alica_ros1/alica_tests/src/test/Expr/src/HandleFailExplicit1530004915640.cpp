@@ -139,8 +139,8 @@ bool PreCondition1532424113475::evaluate(std::shared_ptr<RunningPlan> rp, const 
 void HandleFailExplicit1530004915640::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    bb.set("aToBSwitch", 0);
-    bb.set("cToDSwitch", 2);
+    bb.set<int64_t>("aToBSwitch", 0);
+    bb.set<int64_t>("cToDSwitch", 2);
 }
 /*PROTECTED REGION END*/
 } // namespace alica

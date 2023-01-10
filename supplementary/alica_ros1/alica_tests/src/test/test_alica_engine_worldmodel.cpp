@@ -51,7 +51,7 @@ TEST_F(AlicaTestFixtureWM, simpleGetWM)
     alicaTests::TestWorldModel* wm1 = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     EXPECT_NE(nullptr, wm1);
 
-    LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel2", std::make_shared<alicaTests::TestWorldModel>());
+    LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel2", std::make_shared<alicaTests::TestWorldModel>());
     alicaTests::TestWorldModel* wm2 = LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel2").get();
     EXPECT_NE(nullptr, wm2);
 }

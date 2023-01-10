@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 2539111367556229723,
       "key": "numberOfCalls",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",

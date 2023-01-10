@@ -87,7 +87,7 @@ bool conditionSecondCall2FirstCall1237521027685048666(const Blackboard* input, c
     /*PROTECTED REGION ID(condition1237521027685048666) ENABLED START*/
     alicaTests::TestWorldModel* worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
     LockedBlackboardRO bb(*(rp->getBasicPlan()->getBlackboard()));
-    worldModel->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
+    worldModel->passedParameters["planInputKey"] = bb.get<int64_t>("planInputKey");
     return false;
     /*PROTECTED REGION END*/
 }
@@ -203,7 +203,7 @@ bool conditionCounterCalled2901825906319407673(const Blackboard* input, const Ru
 {
     /*PROTECTED REGION ID(condition2901825906319407673) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return CounterClass::called == bb.get<int>("numberOfCalls");
+    return CounterClass::called == bb.get<int64_t>("numberOfCalls");
     /*PROTECTED REGION END*/
 }
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
@@ -244,7 +244,7 @@ bool conditionSimpleSwitchIsSet3787001793582633602(const Blackboard* input, cons
 {
     /*PROTECTED REGION ID(condition3787001793582633602) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return SimpleSwitches::isSet(bb.get<int>("idx"));
+    return SimpleSwitches::isSet(bb.get<int64_t>("idx"));
     /*PROTECTED REGION END*/
 }
 bool conditionBehaviourInSubPlan2EndTest3828316183435191952(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)

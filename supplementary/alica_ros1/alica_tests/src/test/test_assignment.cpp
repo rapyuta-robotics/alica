@@ -43,7 +43,7 @@ TEST(Assignment, RobotsInserted)
             std::make_unique<alica::TransitionConditionCreator>()};
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
-    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);

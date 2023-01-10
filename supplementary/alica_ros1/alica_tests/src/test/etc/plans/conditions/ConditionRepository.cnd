@@ -162,7 +162,7 @@
           "defaultValue": null,
           "id": 4032224399589857774,
           "key": "numberOfCalls",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",
@@ -235,7 +235,7 @@
           "defaultValue": null,
           "id": 2902028793069019089,
           "key": "numberOfCalls",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",
@@ -292,7 +292,7 @@
           "defaultValue": null,
           "id": 4313717753229417761,
           "key": "idx",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",

@@ -4,8 +4,12 @@
 #include <engine/IAlicaTrace.h>
 #include <engine/blackboard/Blackboard.h>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <unordered_map>
+#include <utility>
+
+#include <alica_tests/TestWorldModel.h>
 
 namespace alicaTestTracing
 {
@@ -21,37 +25,45 @@ public:
     }
     ~AlicaTestTrace(){};
 
-    void log(const std::unordered_map<std::string_view, TraceValue>& fields) override{};
     void setTag(std::string_view key, TraceValue value) override
     {
-        auto tmp = std::get<std::string_view>(extractVariant(std::move(value)));
-        _wm->tracingTags.push_back({key, tmp});
+        assert(_wm);
+        _wm->tracingTags.push_back({std::string(key), formatTraceValue(value)});
     }
-
-    void setLog(const std::pair<std::string_view, TraceValue>& fields) override
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields) override
     {
         assert(_wm);
-        auto tmp = extractVariant(std::move(fields.second));
-        if (!std::holds_alternative<std::string_view>(tmp))
-            return;
-        auto value = std::get<std::string_view>(tmp);
-        _wm->tracingLogs.push_back({fields.first, value});
+        for (const auto& p : fields) {
+            _wm->tracingLogs.push_back({std::string(p.first), formatTraceValue(p.second)});
+        }
     }
     void markError(std::string_view description) override
     {
         assert(_wm);
 
         _wm->tracingTags.push_back({"error", "true"});
-        _wm->tracingTags.push_back({"error.description", description});
+        _wm->tracingTags.push_back({"error.description", std::string(description)});
     }
-    void finish() {}
+    void finish() override {}
 
     void setWorldModel(alicaTests::TestWorldModel* wm) { _wm = wm; };
-    std::string context() const { return _opName; }
+    std::string context() const override { return _opName; }
 
     std::string _opName;
     std::string _parent;
     alicaTests::TestWorldModel* _wm;
+
+private:
+    static std::string formatTraceValue(const TraceValue& val)
+    {
+        return std::visit(
+                [](const auto& v) {
+                    std::stringstream ss;
+                    ss << v;
+                    return std::move(ss).str();
+                },
+                extractVariant(val));
+    }
 };
 
 class AlicaTestTraceFactory : public alica::IAlicaTraceFactory

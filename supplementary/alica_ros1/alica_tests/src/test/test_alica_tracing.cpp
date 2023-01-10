@@ -48,7 +48,7 @@ protected:
     bool stepEngine() const override { return false; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
         attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
@@ -64,7 +64,7 @@ protected:
     int getAgentCount() const override { return agentCount; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        LockedBlackboardRW(ac->editGlobalBlackboard()).registerValue("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
         attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
