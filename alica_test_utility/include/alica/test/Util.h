@@ -55,15 +55,6 @@
         }                                                                                                                                                      \
     } while (0)
 
-#define SLEEP_UNTIL_SEC(condition, sec, maxRepetition)                                                                                                         \
-    {                                                                                                                                                          \
-        int currentRepetitions = 0;                                                                                                                            \
-        do {                                                                                                                                                   \
-            ++currentRepetitions;                                                                                                                              \
-            std::this_thread::sleep_for(std::chrono::seconds(sec));                                                                                            \
-        } while (!condition && (currentRepetitions < maxRepetition));                                                                                          \
-    }
-
 namespace alica::test
 {
 
@@ -75,7 +66,6 @@ public:
     static bool hasPlanSucceeded(alica::AlicaEngine* ae, int64_t id);
     static bool isStateActive(alica::AlicaEngine* ae, int64_t id);
     static bool isPlanActive(alica::AlicaEngine* ae, int64_t id);
-    static bool isPlanActive(const RunningPlan* rp, const std::string& name);
 
     static const alica::Agent* getLocalAgent(alica::AlicaEngine* ae);
     static int getTeamSize(alica::AlicaEngine* ae);
@@ -86,7 +76,6 @@ private:
     static BasicPlan* getBasicPlanHelper(const RunningPlan* rp, int64_t planId);
     static bool hasPlanSucceededHelper(const RunningPlan* rp, int64_t id);
     static bool isPlanActiveHelper(const RunningPlan* rp, int64_t id);
-    static bool isPlanActiveHelper(const RunningPlan* rp, const std::string& name);
     static bool isStateActiveHelper(const RunningPlan* rp, int64_t id);
 };
 } // namespace alica::test

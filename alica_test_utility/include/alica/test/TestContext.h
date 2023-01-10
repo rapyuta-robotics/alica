@@ -153,8 +153,6 @@ public:
     bool isSuccess(const BasicBehaviour* beh) const;
     bool isSuccess(const BasicPlan* plan) const;
 
-    void sleep(const alica::AlicaTime& sleepTime) const;
-
     // Check if a state is active in the given plan
     bool isStateActive(const std::string& runningPlanName, const std::string& stateName);
 
@@ -172,7 +170,6 @@ private:
 
     RunningPlan* getRunningPlan(const std::string& name);
 
-private:
     RunningPlan* searchRunningPlanTree(const std::string& name);
     RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
     std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName) const;

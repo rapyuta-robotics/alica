@@ -327,9 +327,4 @@ bool TestContext::setTransitionCond(RunningPlan* rp, const std::string& inState,
     return true;
 }
 
-void TestContext::sleep(const alica::AlicaTime& sleepTime) const
-{
-    _engine->getAlicaClock().sleep(sleepTime);
-}
-
 } // namespace alica::test
