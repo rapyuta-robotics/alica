@@ -6,7 +6,7 @@
       "defaultValue": "2",
       "id": 1998335174749558241,
       "key": "Sequenze2SubPlan",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": "3",
       "id": 620992452739501207,
       "key": "SubOne2SubTwo",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -22,7 +22,7 @@
       "defaultValue": "4",
       "id": 3390934806840785672,
       "key": "InitSubThree2TermSubThree",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",

@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 4227261568323854459,
       "key": "aToBSwitch",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": null,
       "id": 4460455267274597988,
       "key": "cToDSwitch",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",
