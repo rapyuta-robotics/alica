@@ -9,17 +9,21 @@ COPY . .
 
 WORKDIR /root/catkin_ws/
 
-RUN apt-get update && \
-    apt-get install -y python3-catkin-tools libboost-all-dev && \
-    rosdep install -y --from-paths . --ignore-src --skip-keys='rclcpp ament_cmake' --rosdistro noetic
+RUN <<deps
+  apt-get update || exit 1
+  apt-get install -y python3-catkin-tools libboost-all-dev || exit 1
+  rosdep install -y --from-paths . --ignore-src --skip-keys='rclcpp ament_cmake' --rosdistro noetic
+deps
 
+RUN <<build
+  source /opt/ros/noetic/setup.bash || exit 1
+  catkin init || exit 1
+  catkin config --install --skiplist alica_tracing alica_ros2_proxy alica_ros2_turtlesim || exit 1
+  catkin build --no-status
+build
 
-RUN source /opt/ros/noetic/setup.bash && \
-    catkin init && \
-    catkin config --install --skiplist alica_tracing alica_ros2_proxy alica_ros2_turtlesim && \
-    catkin build --no-status
-
-
-RUN source devel/setup.bash && \
-    catkin run_tests --no-status && \
-    catkin_test_results --verbose
+RUN <<runtests
+  source devel/setup.bash || exit 1
+  catkin run_tests --no-status || exit 1
+  catkin_test_results --verbose
+runtests
