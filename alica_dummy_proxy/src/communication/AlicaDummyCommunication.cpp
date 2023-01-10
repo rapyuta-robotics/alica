@@ -218,10 +218,7 @@ AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunication
 {
 }
 
-AlicaDummyCommunication::~AlicaDummyCommunication()
-{
-    s_modContainer.deregisterModule(this);
-}
+AlicaDummyCommunication::~AlicaDummyCommunication() {}
 
 void AlicaDummyCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const
 {

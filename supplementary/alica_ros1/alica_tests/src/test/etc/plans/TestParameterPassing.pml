@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 3008593874445613740,
       "key": "planOutputKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": null,
       "id": 4362502621284224779,
       "key": "planInputKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -22,7 +22,7 @@
       "defaultValue": null,
       "id": 1779079550934584473,
       "key": "planSecondOutputKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -30,7 +30,7 @@
       "defaultValue": null,
       "id": 1907383426694952412,
       "key": "planKey",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "input",
@@ -38,7 +38,7 @@
       "defaultValue": null,
       "id": 785752561217999359,
       "key": "planInputFromMaster",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
