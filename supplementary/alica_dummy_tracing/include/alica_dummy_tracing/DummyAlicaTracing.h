@@ -14,7 +14,7 @@ public:
 
     void setTag(std::string_view key, TraceValue value) {}
     void setLog(const std::pair<std::string_view, TraceValue>& fields) {}
-    void log(const std::unordered_map<std::string_view, TraceValue>& fields) {};
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields){};
     void markError(std::string_view description) {}
     void finish() {}
     std::string context() const { return _opName; }
