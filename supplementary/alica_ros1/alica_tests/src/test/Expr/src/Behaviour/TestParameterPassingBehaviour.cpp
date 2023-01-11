@@ -37,17 +37,17 @@ void TestParameterPassingBehaviour::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters831400441334251602) ENABLED START*/
     LockedBlackboardRW bb(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    bb.set("behaviorKey", 2);
-    wm->passedParameters["behaviorKey"] = bb.get<int>("behaviorKey");
+    bb.set<int64_t>("behaviorKey", 2);
+    wm->passedParameters["behaviorKey"] = bb.get<int64_t>("behaviorKey");
 
-    auto value = bb.get<int>("behaviorInputKey");
+    auto value = bb.get<int64_t>("behaviorInputKey");
     if (value == 5) {
         wm->passedParameters["behaviorInputKey"] = value;
     } else if (value == 7) {
         wm->passedParameters["behaviorSecondInputKey"] = value;
     }
 
-    bb.set("behaviorOutputKey", 6);
+    bb.set<int64_t>("behaviorOutputKey", 6);
 
     /*PROTECTED REGION END*/
 }

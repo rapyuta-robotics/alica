@@ -11,10 +11,86 @@
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/test_sched_world_model.h>
 #include <engine/BasicPlan.h>
+
+namespace alica
+{
+
+bool isSuccess(const alica::RunningPlan* rp)
+{
+    if (rp->isBehaviour()) {
+        return rp->getStatus() == alica::PlanStatus::Success;
+    } else {
+        return rp->getActiveState()->isSuccessState();
+    }
+}
+
+bool isFailure(const alica::RunningPlan* rp)
+{
+    if (rp->isBehaviour()) {
+        return rp->getStatus() == alica::PlanStatus::Failed;
+    } else {
+        return rp->getActiveState()->isFailureState();
+    }
+}
+
+} // namespace alica
+
 /*PROTECTED REGION END*/
 
 namespace alica
 {
+bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition1) ENABLED START*/
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (isSuccess(child)) {
+            return true;
+        }
+    }
+    return false;
+    /*PROTECTED REGION END*/
+}
+bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition2) ENABLED START*/
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (!isSuccess(child)) {
+            return false;
+        }
+    }
+    // In case of a state, make sure that all children are actually running
+    if (rp->getActiveTriple().state) {
+        return rp->getChildren().size() >= rp->getActiveTriple().state->getConfAbstractPlanWrappers().size();
+    }
+    return true;
+    /*PROTECTED REGION END*/
+}
+bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition3) ENABLED START*/
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (isFailure(child)) {
+            return true;
+        }
+    }
+    return false;
+    /*PROTECTED REGION END*/
+}
+bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition4) ENABLED START*/
+    for (const alica::RunningPlan* child : rp->getChildren()) {
+        if (!isFailure(child)) {
+            return false;
+        }
+    }
+    // In case of a state, make sure that all children are actually running
+    if (rp->getActiveTriple().state) {
+        return rp->getChildren().size() >= rp->getActiveTriple().state->getConfAbstractPlanWrappers().size();
+    }
+    return true;
+    /*PROTECTED REGION END*/
+}
 bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition19871606597697646) ENABLED START*/
@@ -37,6 +113,12 @@ bool conditionisAnyChildTaskSuccessfull330238006348384830(const Blackboard* inpu
 {
     /*PROTECTED REGION ID(condition330238006348384830) ENABLED START*/
     return rp->isAnyChildTaskSuccessful();
+    /*PROTECTED REGION END*/
+}
+bool conditionTriggerCond593157092542472645(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition593157092542472645) ENABLED START*/
+    return LockedBlackboardRO(*input).get<bool>("trigger");
     /*PROTECTED REGION END*/
 }
 bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -84,7 +166,7 @@ bool conditionSecondCall2FirstCall1237521027685048666(const Blackboard* input, c
     /*PROTECTED REGION ID(condition1237521027685048666) ENABLED START*/
     LockedBlackboardRO bb(*(rp->getBasicPlan()->getBlackboard()));
     auto* testWm = const_cast<alicaTests::TestWorldModel*>(dynamic_cast<const alicaTests::TestWorldModel*>(wm));
-    testWm->passedParameters["planInputKey"] = bb.get<int>("planInputKey");
+    testWm->passedParameters["planInputKey"] = bb.get<int64_t>("planInputKey");
     return false;
     /*PROTECTED REGION END*/
 }
@@ -188,7 +270,7 @@ bool conditionInit2End2711102114821139213(const Blackboard* input, const Running
     return CounterClass::called == 8;
     /*PROTECTED REGION END*/
 }
-bool conditionAlwaysTrue2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+bool conditionAlwaysTrueCond2872265442510628524(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition2872265442510628524) ENABLED START*/
     return true;
@@ -198,7 +280,7 @@ bool conditionCounterCalled2901825906319407673(const Blackboard* input, const Ru
 {
     /*PROTECTED REGION ID(condition2901825906319407673) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return CounterClass::called == bb.get<int>("numberOfCalls");
+    return CounterClass::called == bb.get<int64_t>("numberOfCalls");
     /*PROTECTED REGION END*/
 }
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -212,6 +294,13 @@ bool conditionWait2Suc3517323109117319233(const Blackboard* input, const Running
     /*PROTECTED REGION ID(condition3517323109117319233) ENABLED START*/
     auto* worldmodel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
     return worldmodel->isTransitionCondition1067314038887345208();
+    /*PROTECTED REGION END*/
+}
+bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
+{
+    /*PROTECTED REGION ID(condition3592699233854318376) ENABLED START*/
+    LockedBlackboardRO bb(*input);
+    return bb.get<bool>("result");
     /*PROTECTED REGION END*/
 }
 bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
@@ -238,7 +327,7 @@ bool conditionSimpleSwitchIsSet3787001793582633602(const Blackboard* input, cons
 {
     /*PROTECTED REGION ID(condition3787001793582633602) ENABLED START*/
     LockedBlackboardRO bb(*input);
-    return SimpleSwitches::isSet(bb.get<int>("idx"));
+    return SimpleSwitches::isSet(bb.get<int64_t>("idx"));
     /*PROTECTED REGION END*/
 }
 bool conditionBehaviourInSubPlan2EndTest3828316183435191952(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)

@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 1944554894288661764,
       "key": "masterKey",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",
