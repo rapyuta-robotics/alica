@@ -10,7 +10,7 @@
 namespace alicaTests
 {
 
-class TestWorldModelNew 
+class TestWorldModelNew
 {
 public:
     TestWorldModelNew(alica::test::TestContext* tc)
@@ -24,7 +24,7 @@ private:
     alica::test::TestContext* _tc;
 };
 
-class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel 
+class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel
 {
 public:
     TestWorldModel();
