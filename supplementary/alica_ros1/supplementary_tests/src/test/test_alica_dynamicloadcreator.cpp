@@ -80,7 +80,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     std::string path = getRootPath();
     std::string libPath = getLibRootPath();
 
-    YAML::Node globalNode;
+    YAML::Node node, globalNode;
     ASSERT_NO_THROW((globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml")));
     ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/AcmePlan.pml")));
 
@@ -126,6 +126,7 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 {
     std::string libPath = getLibRootPath();
 
+    YAML::Node node;
     ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/conditions/ConditionRepository.cnd")));
     ASSERT_NO_THROW((node = node["conditions"][0]));
     // Load model
