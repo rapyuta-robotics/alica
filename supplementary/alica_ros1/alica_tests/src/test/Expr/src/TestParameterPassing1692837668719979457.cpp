@@ -90,13 +90,13 @@ void TestParameterPassing1692837668719979457::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
     auto wm = dynamic_cast<alicaTests::TestWorldModel*>(getWorldModel());
-    bb.set("targetChildStatus", PlanStatus::Success);
-    bb.set("planKey", 1);
-    wm->passedParameters["planKey"] = bb.get<int>("planKey");
-    bb.set("planOutputKey", 5);
-    bb.set("planSecondOutputKey", 7);
-    bb.set("planInputKey", 1);
-    wm->passedParameters["planInputFromMaster"] = bb.get<int>("planInputFromMaster");
+    bb.set<PlanStatus>("targetChildStatus", PlanStatus::Success);
+    bb.set<int64_t>("planKey", 1);
+    wm->passedParameters["planKey"] = bb.get<int64_t>("planKey");
+    bb.set<int64_t>("planOutputKey", 5);
+    bb.set<int64_t>("planSecondOutputKey", 7);
+    bb.set<int64_t>("planInputKey", 1);
+    wm->passedParameters["planInputFromMaster"] = bb.get<int64_t>("planInputFromMaster");
 }
 /*PROTECTED REGION END*/
 } // namespace alica

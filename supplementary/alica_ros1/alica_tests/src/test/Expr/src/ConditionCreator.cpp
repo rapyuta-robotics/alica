@@ -4,6 +4,7 @@
 #include <alica_tests/Authority/AuthorityTest1414403413451.h>
 #include <alica_tests/Authority/AuthorityTestMaster1414403396328.h>
 #include <alica_tests/BackForth1529456584982.h>
+#include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/Behaviour/AlwaysFail1532424188199.h>
 #include <alica_tests/Behaviour/Attack1402488848841.h>
@@ -17,6 +18,7 @@
 #include <alica_tests/Behaviour/MidFieldStandard1402488696205.h>
 #include <alica_tests/Behaviour/NotToTrigger1429017274116.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>
+#include <alica_tests/Behaviour/SuccessOnInitBeh3821787310391665935.h>
 #include <alica_tests/Behaviour/SuccessSpam1522377401286.h>
 #include <alica_tests/Behaviour/Tackle1402488939130.h>
 #include <alica_tests/Behaviour/TestInheritBlackboardBehaviour831400441334251600.h>
@@ -47,8 +49,10 @@
 #include <alica_tests/MidFieldPlayPlan1402488770050.h>
 #include <alica_tests/MultiAgentTestMaster1413200842973.h>
 #include <alica_tests/MultiAgentTestPlan1413200862180.h>
+#include <alica_tests/MultiPlanInstanceSuccessTestPlan3392981108193862307.h>
 #include <alica_tests/OrderedSchedulingTestPlan1629895582410.h>
 #include <alica_tests/OtherPlan1418042819203.h>
+#include <alica_tests/ParallelSuccessOnCondPlan3288843407985944525.h>
 #include <alica_tests/PlanA1629895837159.h>
 #include <alica_tests/PlanAA1629895864090.h>
 #include <alica_tests/PlanB1629895853508.h>
@@ -56,6 +60,7 @@
 #include <alica_tests/PlanFive1407153703092.h>
 #include <alica_tests/PlanFour1407153683051.h>
 #include <alica_tests/PlanOne1407153611768.h>
+#include <alica_tests/PlanSuccessTestPlan3870436056558842479.h>
 #include <alica_tests/PlanThree1407153663917.h>
 #include <alica_tests/PlanTwo1407153645238.h>
 #include <alica_tests/PreConditionPlan1418042796751.h>
@@ -70,10 +75,15 @@
 #include <alica_tests/SchedulingTestSequenceSubPlan21614964444419.h>
 #include <alica_tests/SchedulingTestSequenceSubPlan31614964478264.h>
 #include <alica_tests/SimpleTestPlan1412252439925.h>
+#include <alica_tests/SuccessOnCondPlan3153116020668535682.h>
+#include <alica_tests/SuccessOnCondWrapperAPlan673160616613514188.h>
+#include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
+#include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
 #include <alica_tests/TestBehaviour55178365253414982.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>
 #include <alica_tests/TestInheritBlackboardMaster1179066429431332056.h>
+#include <alica_tests/TestMasterPlan2521443078354411465.h>
 #include <alica_tests/TestParameterPassing1692837668719979457.h>
 #include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 #include <alica_tests/TestTracingMasterPlan691392966514374878.h>

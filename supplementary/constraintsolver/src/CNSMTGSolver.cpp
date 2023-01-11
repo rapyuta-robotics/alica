@@ -59,9 +59,9 @@ CNSMTGSolver::CNSMTGSolver(YAML::Node config)
     ip = make_shared<intervalpropagation::IntervalPropagator>();
 
     //    essentials::SystemConfig& sc = essentials::SystemConfig::getInstance();
-    maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int>();
+    maxfevals = config["Alica"]["CSPSolving"]["MaxFunctionEvaluations"].as<int64_t>();
     //    maxfevals = sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxFunctionEvaluations", NULL);
-    maxSolveTime = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["MaxSolveTime"].as<int>());
+    maxSolveTime = AlicaTime::milliseconds(config["Alica"]["CSPSolving"]["MaxSolveTime"].as<int64_t>());
     //    maxSolveTime = AlicaTime::milliseconds(sc["Alica"]->get<int>("Alica", "CSPSolving", "MaxSolveTime", NULL));
     rPropConvergenceStepSize = 0;
     useIntervalProp = true;

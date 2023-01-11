@@ -42,7 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1179066429431332055::getUtilityF
 void TestParameterPassingMaster1179066429431332055::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    bb.set("masterKey", 8);
+    bb.set<int64_t>("masterKey", 8);
 }
 /*PROTECTED REGION END*/
 } // namespace alica
