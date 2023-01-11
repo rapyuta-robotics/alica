@@ -16,14 +16,14 @@ RUN <<deps
 deps
 
 RUN <<build
-  source /opt/ros/noetic/setup.bash || exit 1
+  source /opt/ros/noetic/setup.bash
   catkin init || exit 1
   catkin config --install --skiplist alica_tracing alica_ros2_proxy alica_ros2_turtlesim || exit 1
   catkin build --no-status
 build
 
 RUN <<runtests
-  source devel/setup.bash || exit 1
+  source devel/setup.bash
   catkin run_tests --no-status || exit 1
   catkin_test_results --verbose
 runtests
