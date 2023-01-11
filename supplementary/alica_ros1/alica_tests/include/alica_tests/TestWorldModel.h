@@ -1,5 +1,7 @@
 #pragma once
 
+#include <alica/test/TestContext.h>
+
 #include <atomic>
 #include <string>
 #include <unordered_map>
@@ -8,7 +10,21 @@
 namespace alicaTests
 {
 
-class TestWorldModel
+class TestWorldModelNew 
+{
+public:
+    TestWorldModelNew(alica::test::TestContext* tc)
+            : _tc(tc)
+    {
+    }
+
+    alica::test::TestContext* getTestContext() { return _tc; }
+
+private:
+    alica::test::TestContext* _tc;
+};
+
+class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel 
 {
 public:
     TestWorldModel();

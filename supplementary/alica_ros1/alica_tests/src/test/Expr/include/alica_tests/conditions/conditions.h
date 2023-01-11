@@ -9,9 +9,14 @@ namespace alica
 class Blackboard;
 class RunningPlan;
 
+bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionEntry2Wait19871606597697646(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionFailurePlan2FailureHandled190171326790683374(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionisAnyChildTaskSuccessfull330238006348384830(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionTriggerCond593157092542472645(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionPlanB2PlanA655002160731734731(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionPlanA2PlanB682216470625774387(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionIsAnyChildStatusFailed711536493236439192(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
@@ -34,10 +39,11 @@ bool conditionInit2Start2208457928613785430(const Blackboard* input, const Runni
 bool conditionStart2ExecBehaviourTest2452554857659522052(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionStart2ExecOrderTest2619422076497988080(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionInit2End2711102114821139213(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
-bool conditionAlwaysTrue2872265442510628524(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionAlwaysTrueCond2872265442510628524(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionCounterCalled2901825906319407673(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionWait2Suc3517323109117319233(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionDecision2B3684268241099966909(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionStart2Default3726136276355540527(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);

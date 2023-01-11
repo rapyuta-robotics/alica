@@ -77,6 +77,7 @@ if(BUILD_TESTING)
         src/test/test_alica_logger.cpp
         src/test/test_alica_engine_worldmodel.cpp
         src/test/test_legacy_conditions.cpp
+        src/test/test_success.cpp
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})

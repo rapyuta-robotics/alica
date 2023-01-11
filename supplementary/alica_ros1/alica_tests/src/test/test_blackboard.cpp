@@ -491,6 +491,7 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     alica::Blackboard blackboard = alica::Blackboard();
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
+    // set using r values
     bb.set("intVal", 19);
     bb.set("doubleVal", 3.3);
     bb.set("boolVal", true);
@@ -509,6 +510,30 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
 
     bb.set("usignedIntVal", 5u);
     EXPECT_EQ(bb.get<uint64_t>("usignedIntVal"), 5u);
+
+    // set using lvalues
+    int intVal = 20;
+    bb.set("intVal", intVal);
+    double doubleVal = 20.5;
+    bb.set("doubleVal", doubleVal);
+    bool boolVal = true;
+    bb.set("boolVal", boolVal);
+    int64_t longVal = 8ll;
+    bb.set("longIntVal", longVal);
+    uint64_t ulongVal = 9ull;
+    bb.set("usignedLongIntVal", ulongVal);
+    std::string stringVal = "str";
+    bb.set("stringVal", stringVal);
+    UnknownType unknown(1234);
+    bb.set("unknownType", unknown);
+
+    EXPECT_EQ(bb.get<int64_t>("intVal"), intVal);
+    EXPECT_EQ(bb.get<double>("doubleVal"), doubleVal);
+    EXPECT_EQ(bb.get<bool>("boolVal"), boolVal);
+    EXPECT_EQ(bb.get<int64_t>("longIntVal"), longVal);
+    EXPECT_EQ(bb.get<uint64_t>("usignedLongIntVal"), ulongVal);
+    EXPECT_EQ(bb.get<std::string>("stringVal"), stringVal); // will be interpreted as a bool (true)
+    EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 1234);
 }
 
 } // namespace

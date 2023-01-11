@@ -16,12 +16,22 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
         int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
+    case 1:
+        return std::bind(conditionAnyChildSuccess1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 2:
+        return std::bind(conditionAllChildSuccess2, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3:
+        return std::bind(conditionAnyChildFailure3, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 4:
+        return std::bind(conditionAllChildFailure4, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 19871606597697646:
         return std::bind(conditionEntry2Wait19871606597697646, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 190171326790683374:
         return std::bind(conditionFailurePlan2FailureHandled190171326790683374, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 330238006348384830:
         return std::bind(conditionisAnyChildTaskSuccessfull330238006348384830, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 593157092542472645:
+        return std::bind(conditionTriggerCond593157092542472645, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 655002160731734731:
         return std::bind(conditionPlanB2PlanA655002160731734731, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 682216470625774387:
@@ -69,13 +79,15 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
     case 2711102114821139213:
         return std::bind(conditionInit2End2711102114821139213, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2872265442510628524:
-        return std::bind(conditionAlwaysTrue2872265442510628524, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        return std::bind(conditionAlwaysTrueCond2872265442510628524, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2901825906319407673:
         return std::bind(conditionCounterCalled2901825906319407673, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3016035752801585170:
         return std::bind(conditionSwitchIsNotSet3016035752801585170, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3517323109117319233:
         return std::bind(conditionWait2Suc3517323109117319233, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3592699233854318376:
+        return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3604374027783683696:
         return std::bind(conditionIsAnyChildStatusSuccess3604374027783683696, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3684268241099966909:

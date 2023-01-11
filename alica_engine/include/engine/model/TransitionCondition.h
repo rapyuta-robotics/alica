@@ -17,6 +17,11 @@ class KeyMapping;
 class Blackboard;
 class RunningPlan;
 
+namespace test
+{
+class TestContext;
+}
+
 class TransitionCondition : public AlicaElement
 {
 public:
@@ -28,6 +33,7 @@ public:
     void setLibraryName(const std::string& libraryname);
 
 private:
+    friend class ::alica::test::TestContext;
     std::unique_ptr<Blackboard> _blackboard;
     TransitionConditionCallback _evalCallback;
 

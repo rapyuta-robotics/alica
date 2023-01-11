@@ -12,9 +12,9 @@ public:
     DummyAlicaTestTrace(const std::string& opName, std::optional<const std::string> parent) {}
     ~DummyAlicaTestTrace(){};
 
-    void setTag(const std::string& key, const std::string& value) {}
-    void setLog(std::pair<std::string, std::string> logEntry) {}
-    void markError(const std::string& description) {}
+    void setTag(std::string_view key, TraceValue value) {}
+    void log(const std::unordered_map<std::string_view, TraceValue>& fields){};
+    void markError(std::string_view description) {}
     void finish() {}
     std::string context() const { return _opName; }
 
