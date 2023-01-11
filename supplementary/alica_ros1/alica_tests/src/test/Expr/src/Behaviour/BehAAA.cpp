@@ -59,7 +59,7 @@ void BehAAA::initialiseParameters()
     /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
     // Add additional options here
     runCount = 0;
-    _wm = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
+    _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     _wm->execOrder += "BehAAA::Init\n";
     _inRunContext = true;
 

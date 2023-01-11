@@ -88,7 +88,7 @@ bool PreCondition2038762164340314344::evaluate(std::shared_ptr<RunningPlan> rp, 
 // Add additional options here
 void FailurePlan631515556091266493::onInit()
 {
-    auto worldModel = LockedBlackboardRW(getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+    auto worldModel = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     worldModel->failurePlanInitCalled();
 }
 /*PROTECTED REGION END*/
