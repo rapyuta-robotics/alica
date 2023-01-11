@@ -263,7 +263,7 @@ public:
     /**
      * Get blackboard list being used by this alica instance.
      *
-     * @return A reference to blackboard being used by context.
+     * @return A reference to the global blackboard
      */
     const Blackboard& getGlobalBlackboard() const;
     Blackboard& editGlobalBlackboard();
