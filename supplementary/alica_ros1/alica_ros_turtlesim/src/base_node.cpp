@@ -78,10 +78,10 @@ int main(int argc, char** argv)
     } else {
         ROS_INFO("Creating ALICA turtle Base.......");
     }
-    turtlesim::Base base(name, agent_id, roleset, master_plan, alica_path, dynamic);
+    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path, dynamic);
 
     ROS_INFO("Starting ALICA turtle Base.......");
-    base.start(nh, priv_nh);
+    base.start();
 
     // Wait for ctrl+c
     sigset_t signal_set;

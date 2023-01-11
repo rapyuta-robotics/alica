@@ -378,7 +378,7 @@ public:
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
-    mutable std::shared_lock<std::shared_mutex> _lk;
+    std::shared_lock<std::shared_mutex> _lk;
     const BlackboardImpl* _impl;
 };
 
@@ -416,7 +416,7 @@ public:
     bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
 
 private:
-    mutable std::unique_lock<std::shared_mutex> _lk;
+    std::unique_lock<std::shared_mutex> _lk;
     BlackboardImpl* _impl;
 };
 

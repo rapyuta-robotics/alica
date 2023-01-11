@@ -36,7 +36,7 @@ public:
     template <typename T>
     static void abort(const std::string&, const T& tail);
 
-    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams, Blackboard& globalBlackboard);
+    AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams);
     ~AlicaEngine();
 
     // State modifiers:
@@ -80,8 +80,8 @@ public:
     const TeamObserver& getTeamObserver() const { return _teamObserver; }
     TeamObserver& editTeamObserver() { return _teamObserver; }
 
-    const Blackboard& getGlobalBlackboard() const { return _globalBlackboard; }
-    Blackboard& editGlobalBlackboard() { return _globalBlackboard; }
+    const Blackboard& getGlobalBlackboard() const { return _ctx.getGlobalBlackboard(); }
+    Blackboard& editGlobalBlackboard() { return _ctx.editGlobalBlackboard(); }
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
@@ -121,7 +121,6 @@ private:
     bool _stepCalled; /**< Flag against spurious wakeups on the condition variable for step mode*/ // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     ConfigChangeListener _configChangeListener;
-    Blackboard& _globalBlackboard;
     AlicaContext& _ctx;
     PlanRepository _planRepository;
     ModelManager _modelManager;
