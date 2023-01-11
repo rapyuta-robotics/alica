@@ -220,7 +220,7 @@ private:
     template <class T>
     static const char* getTypeName()
     {
-        return getTypeName(BBValueType{T{}}.index());
+        return getTypeName(BBValueType{std::decay_t<T>{}}.index());
     }
 
     static const char* getTypeName(std::size_t index)
