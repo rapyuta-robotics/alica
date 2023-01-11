@@ -239,9 +239,9 @@ bool PlanSelector::getPlansForStateInternal(
     return true;
 }
 
-void PlanSelector::setGlobalBlackboard(const Blackboard& globalBlackboard)
+void PlanSelector::setGlobalBlackboard(const Blackboard* globalBlackboard)
 {
-    _globalBlackboard = &globalBlackboard;
+    _globalBlackboard = globalBlackboard;
 }
 
 } /* namespace alica */

@@ -46,9 +46,9 @@ RuleBook::RuleBook(ConfigChangeListener& configChangeListener, Logger& log, Sync
 
 RuleBook::~RuleBook() {}
 
-void RuleBook::init(const Blackboard& globalBlackboard)
+void RuleBook::init(const Blackboard* globalBlackboard)
 {
-    _globalBlackboard = &globalBlackboard;
+    _globalBlackboard = globalBlackboard;
     _ps->setGlobalBlackboard(globalBlackboard);
 }
 
