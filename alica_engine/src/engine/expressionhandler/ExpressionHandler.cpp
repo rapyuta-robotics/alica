@@ -33,7 +33,8 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
     for (const std::pair<const int64_t, Plan*>& it : pr._plans) {
         Plan* p = it.second;
 
-        auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId());
+        UtilityFunctionContext ufContext{p->getName(), p->getLibraryName(), p->getId()};
+        auto ufGen = creatorCtx.utilityCreator->createUtility(p->getId(), ufContext);
         p->_utilityFunction = ufGen->getUtilityFunction(p);
 
         if (p->getPreCondition() != nullptr) {
@@ -56,10 +57,11 @@ void ExpressionHandler::attachAll(PlanRepository& pr, AlicaCreators& creatorCtx)
 
 void ExpressionHandler::attachConstraint(Condition* c, IConstraintCreator& crc)
 {
+    ConstraintContext context{c->getName(), c->getLibraryName(), c->getId()};
     if (c->getVariables().size() == 0 && c->getQuantifiers().size() == 0) {
         c->setBasicConstraint(make_shared<DummyConstraint>());
     } else {
-        c->setBasicConstraint(crc.createConstraint(c->getId()));
+        c->setBasicConstraint(crc.createConstraint(c->getId(), context));
     }
 }
 

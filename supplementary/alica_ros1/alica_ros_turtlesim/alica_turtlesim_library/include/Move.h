@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/BasicPlan.h"
+#include "engine/BasicUtilityFunction.h"
 #include <boost/dll/alias.hpp>
 
 namespace alica
@@ -16,4 +17,18 @@ public:
 };
 
 BOOST_DLL_ALIAS(alica::Move::create, Move)
+
+class MoveUtilityFunction : public BasicUtilityFunction
+{
+public:
+    MoveUtilityFunction() = default;
+    std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan) override;
+    // Factory method
+    static std::shared_ptr<MoveUtilityFunction> create(UtilityFunctionContext& context)
+    {
+        (void) context;
+        return std::make_shared<MoveUtilityFunction>();
+    }
+};
+BOOST_DLL_ALIAS(alica::MoveUtilityFunction::create, MoveUtilityFunction)
 } /* namespace alica */
