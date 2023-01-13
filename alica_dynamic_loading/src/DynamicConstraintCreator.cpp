@@ -22,9 +22,9 @@ std::shared_ptr<BasicConstraint> DynamicConstraintCreator::createConstraint(int6
         return nullptr;
 
     _constraintCreator = boost::dll::import_alias<constraintCreatorType>( // type of imported symbol must be explicitly specified
-            completeLibraryName,                                        // complete path to library also with file name
-            context.name + "Constraint",                                // symbol to import, append `Constraint` to name because the name is the same as the condition's name
-            boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
+            completeLibraryName,                                          // complete path to library also with file name
+            context.name + "Constraint",              // symbol to import, append `Constraint` to name because the name is the same as the condition's name
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
     );
 
     std::shared_ptr<BasicConstraint> createdConstraint = _constraintCreator(context);

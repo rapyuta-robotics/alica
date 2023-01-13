@@ -1,6 +1,6 @@
 #include "engine/BasicUtilityFunction.h"
-#include <DynamicUtilityFunctionCreator.h>
 #include <DynamicLoadingUtils.h>
+#include <DynamicUtilityFunctionCreator.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <filesystem>
 #include <iostream>
@@ -22,9 +22,9 @@ std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtili
         return nullptr;
 
     _utilityFunctionCreator = boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
-            completeLibraryName,                                        // complete path to library also with file name
-            context.name + "UtilityFunction",                           // symbol to import, append `UtilityFunction` to name because the name is the same as the plan's name
-            boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
+            completeLibraryName,                                                    // complete path to library also with file name
+            context.name + "UtilityFunction",         // symbol to import, append `UtilityFunction` to name because the name is the same as the plan's name
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
     );
 
     std::shared_ptr<BasicUtilityFunction> createdUtilityFunction = _utilityFunctionCreator(context);
