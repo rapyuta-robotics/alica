@@ -6,7 +6,7 @@
       "defaultValue": "2",
       "id": 683514589549348538,
       "key": "Plan2Sub",
-      "type": "std::any"
+      "type": "int64"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": "5",
       "id": 1571743223454861605,
       "key": "Init2Term",
-      "type": "std::any"
+      "type": "int64"
     }
   ],
   "comment": "",

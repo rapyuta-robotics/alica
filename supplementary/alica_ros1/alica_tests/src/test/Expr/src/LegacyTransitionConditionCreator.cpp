@@ -397,14 +397,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
             return preCondition.evaluate(temp, wm);
         };
     }
-    case 488794245455049811: {
-        PreCondition488794245455049811 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, wm);
-        };
-    }
     case 1529456610697: {
         PreCondition1529456610697 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
@@ -415,6 +407,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
     }
     case 1529456611916: {
         PreCondition1529456611916 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, wm);
+        };
+    }
+    case 488794245455049811: {
+        PreCondition488794245455049811 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
@@ -461,6 +461,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
             return preCondition.evaluate(temp, wm);
         };
     }
+    case 914907830776317719: {
+        PreCondition914907830776317719 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, wm);
+        };
+    }
     case 1402489174338: {
         PreCondition1402489174338 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
@@ -479,14 +487,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
     }
     case 1402489218027: {
         PreCondition1402489218027 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, wm);
-        };
-    }
-    case 914907830776317719: {
-        PreCondition914907830776317719 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });

@@ -92,7 +92,7 @@ bool PreCondition1412761926856::evaluate(std::shared_ptr<RunningPlan> rp, const 
 void SimpleTestPlan1412252439925::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    bb.set("targetChildStatus", PlanStatus::Success);
+    bb.set<PlanStatus>("targetChildStatus", PlanStatus::Success);
 }
 /*PROTECTED REGION END*/
 } // namespace alica

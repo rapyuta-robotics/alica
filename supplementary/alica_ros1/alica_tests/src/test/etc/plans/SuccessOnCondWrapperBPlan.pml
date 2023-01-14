@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 429816023887602514,
       "key": "SuccessOnCondState2WrapperBSuccessState",
-      "type": "std::any"
+      "type": "bool"
     }
   ],
   "comment": "",

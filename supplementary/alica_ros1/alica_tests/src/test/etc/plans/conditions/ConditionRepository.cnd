@@ -62,7 +62,7 @@
         {
           "access": "input",
           "comment": "If set to true the transition will evaluate to true",
-          "defaultValue": "",
+          "defaultValue": null,
           "id": 2436156389323048245,
           "key": "trigger",
           "type": "std::any"
@@ -211,7 +211,7 @@
           "defaultValue": null,
           "id": 4032224399589857774,
           "key": "numberOfCalls",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",
@@ -284,7 +284,7 @@
           "defaultValue": null,
           "id": 2902028793069019089,
           "key": "numberOfCalls",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",
@@ -314,10 +314,10 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": null,
+          "defaultValue": "false",
           "id": 924760096646037639,
           "key": "result",
-          "type": "std::any"
+          "type": "bool"
         }
       ],
       "comment": "",
@@ -358,7 +358,7 @@
           "defaultValue": null,
           "id": 4313717753229417761,
           "key": "idx",
-          "type": "std::any"
+          "type": "int64"
         }
       ],
       "comment": "",

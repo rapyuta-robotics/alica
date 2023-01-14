@@ -6,7 +6,7 @@
       "defaultValue": null,
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     },
     {
       "access": "protected",
@@ -14,7 +14,7 @@
       "defaultValue": null,
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     },
     {
       "access": "protected",
@@ -22,7 +22,7 @@
       "defaultValue": null,
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
-      "type": "std::any"
+      "type": "bool"
     },
     {
       "access": "protected",
@@ -30,7 +30,7 @@
       "defaultValue": null,
       "id": 2284164419875100184,
       "key": "ChooseTestState2SimpleTestPlanState",
-      "type": "std::any"
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -86,7 +86,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 737.2753842205811,
-        "y": 369.4071287679432
+        "y": 370.44923155883777
       },
       "type": "State",
       "variableBindings": []
@@ -116,7 +116,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 739.1787599282301,
-        "y": 592.6610638876664
+        "y": 593.7031666785609
       },
       "type": "State",
       "variableBindings": []
@@ -137,7 +137,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 459,
-        "y": 274.8736916273164
+        "y": 278
       },
       "type": "State",
       "variableBindings": []

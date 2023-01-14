@@ -128,6 +128,11 @@ public:
      * @param runningPlanName The name (fully qualified if required) of the plan in which the transition is present. This plan should be active
      * @param inState The name of the incoming state of the transition
      * @param outState The name of the outgoing state of the transition
+     * @return True if the transition could be set correctly, false otherwise
+     * Possible reasons for failure could be:
+     * 1. inState or outState is not found
+     * 2. Corresponding blackboard key is not found
+     * 3. Running plan is not not a plan or is not active or does not exist
      */
     bool setTransitionCond(const std::string& runningPlanName, const std::string& inState, const std::string& outState);
 

@@ -64,6 +64,7 @@ public:
         _tc->init(std::move(creators));
         _tc->startEngine();
         _spinner->start();
+
         STEP_UNTIL(_tc, _tc->getActivePlan("TestMasterPlan"));
         ASSERT_TRUE(_tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
     }
@@ -86,6 +87,7 @@ TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
 
+    
     EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
 
     // TestState1

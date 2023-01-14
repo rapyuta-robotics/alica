@@ -9,10 +9,10 @@ WORKDIR /root/ws/src
 COPY . src
 
 RUN <<deps
-  apt-get update
-  apt-get install -y libboost-all-dev
+  apt-get update || exit 1
+  apt-get install -y libboost-all-dev || exit 1
   source /opt/ros/humble/setup.bash
-  rosdep update
+  rosdep update || exit 1
   rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
 deps
 
