@@ -87,7 +87,6 @@ TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
 
-    
     EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
 
     // TestState1
