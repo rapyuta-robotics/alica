@@ -85,25 +85,28 @@ protected:
  */
 TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
 {
+    // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
-
-    EXPECT_TRUE(nullptr == _tc->getActiveBehaviour("SimpleTestPlan"));
+    STEP_UNTIL(_tc, _tc->getActivePlan("SimpleTestPlan"));
+    ASSERT_NE(_tc->getActivePlan("SimpleTestPlan"), nullptr) << _tc->getLastFailure();
 
     // TestState1
-    STEP_UNTIL(_tc, _tc->getActivePlan("SimpleTestPlan"));
-    EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
-    EXPECT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState1"));
-    EXPECT_EQ(nullptr, _tc->getActiveBehaviour("SimpleTestPlan"));
+    ASSERT_TRUE(_tc->isStateActive("SimpleTestPlan", "TestState1")) << _tc->getLastFailure();
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("MidFieldStandard")) << _tc->getLastFailure();
+    ASSERT_EQ(nullptr, _tc->getActiveBehaviour("Attack")) << _tc->getLastFailure();
 
     // TestState2
-    STEP_UNTIL(_tc, _tc->isStateActive("SimpleTestPlan", "TestState2"));
-    EXPECT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan");
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("SimpleTestPlan", "TestState2"));
+    ASSERT_EQ(_tc->getActivePlan("SimpleTestPlan")->getName(), "SimpleTestPlan") << _tc->getLastFailure();
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("Attack")) << _tc->getLastFailure();
+    ASSERT_EQ(nullptr, _tc->getActiveBehaviour("MidFieldStandard")) << _tc->getLastFailure();
 
-    STEP_UNTIL(_tc, _tc->getActiveBehaviour("Attack"));
-    EXPECT_NE(nullptr, _tc->getActiveBehaviour("Attack"));
-
+    // Check callcount
     STEP_UNTIL(_tc, dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter() > 20);
-    EXPECT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter(), 20);
+    ASSERT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter(), 20) << _tc->getLastFailure();
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("Attack")) << _tc->getLastFailure();
+
+    //  STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(beh));
 
     return;
 }
