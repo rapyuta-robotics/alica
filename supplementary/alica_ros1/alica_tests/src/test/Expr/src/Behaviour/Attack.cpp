@@ -16,7 +16,6 @@ Attack::Attack(BehaviourContext& context)
 {
     /*PROTECTED REGION ID(con1402488848841) ENABLED START*/
     // Add additional options here
-    this->initCounter = 0;
     /*PROTECTED REGION END*/
 }
 Attack::~Attack()
@@ -29,16 +28,15 @@ void Attack::run()
 {
     /*PROTECTED REGION ID(run1402488848841) ENABLED START*/
     // Add additional options here
-    const int64_t& callCounter = LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
-    int64_t newCallCounter = callCounter + 1;
-    LockedBlackboardRW(*getBlackboard()).set("callCount", newCallCounter);
+    int64_t callCounter = LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
+    ++callCounter;
+    LockedBlackboardRW(*getBlackboard()).set("callCount", callCounter);
     /*PROTECTED REGION END*/
 }
 void Attack::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1402488848841) ENABLED START*/
     // Add additional options here
-    initCounter++;
     LockedBlackboardRW(*getBlackboard()).set("callCount", 0);
 
     /*PROTECTED REGION END*/
