@@ -106,8 +106,6 @@ TEST_F(TestSimplePlanFixture, runBehaviourInSimplePlan)
     ASSERT_GT(dynamic_cast<alica::Attack*>(_tc->getActiveBehaviour("Attack"))->getCallCounter(), 20) << _tc->getLastFailure();
     ASSERT_NE(nullptr, _tc->getActiveBehaviour("Attack")) << _tc->getLastFailure();
 
-    //  STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(beh));
-
     return;
 }
 } // namespace alica::test
