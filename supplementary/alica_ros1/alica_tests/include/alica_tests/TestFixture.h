@@ -1,6 +1,6 @@
+#include <alica/test/TestContext.h>
 #include <gtest/gtest.h>
 #include <ros/ros.h>
-#include <alica/test/TestContext.h>
 
 namespace alica::test
 {
@@ -16,4 +16,4 @@ protected:
     std::unique_ptr<TestContext> _tc;
     std::unique_ptr<ros::AsyncSpinner> _spinner;
 };
-} // namespace alicaTests
+} // namespace alica::test

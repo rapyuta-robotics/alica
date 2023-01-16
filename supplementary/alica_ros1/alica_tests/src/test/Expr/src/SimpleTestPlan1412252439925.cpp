@@ -48,8 +48,15 @@ bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const 
 bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(1412781693884) ENABLED START*/
-    CounterClass::called++;
+    if (rp->getBasicPlan()->getBlackboard() == nullptr) {
+        return true;
+    }
+
+    int64_t runTimeConditionCounter = LockedBlackboardRW(*(rp->getBlackboard())).get<int64_t>("runTimeConditionCounter");
+    ++runTimeConditionCounter;
+    LockedBlackboardRW(*(rp->getBlackboard())).set("runTimeConditionCounter", runTimeConditionCounter);
     return true;
+
     /*PROTECTED REGION END*/
 }
 /**
@@ -93,6 +100,13 @@ void SimpleTestPlan1412252439925::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.set<PlanStatus>("targetChildStatus", PlanStatus::Success);
+    bb.set("runTimeConditionCounter", 0);
 }
+
+int64_t SimpleTestPlan1412252439925::getRunTimeConditionCounter()
+{
+    return LockedBlackboardRW(*getBlackboard()).get<int64_t>("runTimeConditionCounter");
+}
+
 /*PROTECTED REGION END*/
 } // namespace alica

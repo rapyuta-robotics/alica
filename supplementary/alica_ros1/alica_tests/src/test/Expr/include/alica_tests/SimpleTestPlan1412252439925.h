@@ -21,6 +21,7 @@ public:
     virtual ~SimpleTestPlan1412252439925();
     /*PROTECTED REGION ID(pub1412252439925) ENABLED START*/
     // Add additional public methods here
+    int64_t getRunTimeConditionCounter();
     /*PROTECTED REGION END*/
 protected:
     /*PROTECTED REGION ID(pro1412252439925) ENABLED START*/

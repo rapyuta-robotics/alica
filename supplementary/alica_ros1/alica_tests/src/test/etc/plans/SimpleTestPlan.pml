@@ -7,6 +7,14 @@
       "id": 3196801973742034307,
       "key": "targetChildStatus",
       "type": "std::any"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": "0",
+      "id": 1080853611634572214,
+      "key": "runTimeConditionCounter",
+      "type": "int64"
     }
   ],
   "comment": "",
