@@ -13,7 +13,6 @@
 
 namespace alica
 {
-
 Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         : AbstractPlan(id)
         , _minCardinality(0)
@@ -96,24 +95,9 @@ void Plan::setMasterPlan(bool masterPlan)
     _masterPlan = masterPlan;
 }
 
-void Plan::setStates(const StateGrp& states)
-{
-    _states = states;
-}
-
 void Plan::setSuccessStates(const SuccessStateGrp& successStates)
 {
     _successStates = successStates;
-}
-
-void Plan::setSynchronisations(const SynchronisationGrp& synchronisations)
-{
-    _synchronisations = synchronisations;
-}
-
-void Plan::setTransitions(const TransitionGrp& transitions)
-{
-    _transitions = transitions;
 }
 
 std::string Plan::toString(std::string indent) const

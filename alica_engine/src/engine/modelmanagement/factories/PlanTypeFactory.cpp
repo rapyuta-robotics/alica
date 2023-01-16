@@ -9,7 +9,6 @@
 
 namespace alica
 {
-
 PlanType* PlanTypeFactory::create(const YAML::Node& planTypeNode)
 {
     PlanType* planType = new PlanType();

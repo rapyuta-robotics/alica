@@ -29,31 +29,6 @@ State::State(StateType t)
 
 State::~State() {}
 
-void State::setInPlan(const Plan* inPlan)
-{
-    _inPlan = inPlan;
-}
-
-void State::setInTransitions(const TransitionGrp& inTransitions)
-{
-    _inTransitions = inTransitions;
-}
-
-void State::setOutTransitions(const TransitionGrp& outTransition)
-{
-    _outTransitions = outTransition;
-}
-
-void State::setVariableBindings(const VariableBindingGrp& variableBindingGrp)
-{
-    _variableBindingGrp = variableBindingGrp;
-}
-
-void State::setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers)
-{
-    _confAbstractPlanWrappers = wrappers;
-}
-
 std::string State::toString(std::string indent) const
 {
     std::stringstream ss;
