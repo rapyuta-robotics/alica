@@ -16,23 +16,6 @@
 
 namespace alica
 {
-Plan::Plan(AlicaEngine* ae, int64_t id)
-        : AbstractPlan(ae, id)
-        , _minCardinality(0)
-        , _maxCardinality(0)
-        , _masterPlan(false)
-        , _utilityFunction(nullptr)
-        , _utilityThreshold(1.0)
-        , _runtimeCondition(nullptr)
-        , _preCondition(nullptr)
-        , _frequency(0)
-        , _blackboardBlueprint(nullptr)
-{
-    auto reloadFunctionPtr = std::bind(&Plan::reload, this, std::placeholders::_1);
-    ae->subscribe(reloadFunctionPtr);
-    reload(ae->getConfigChangeListener().getConfig());
-}
-
 Plan::Plan(ConfigChangeListener& configChangeListener, int64_t id)
         : AbstractPlan(id)
         , _minCardinality(0)
@@ -114,24 +97,9 @@ void Plan::setMasterPlan(bool masterPlan)
     _masterPlan = masterPlan;
 }
 
-void Plan::setStates(const StateGrp& states)
-{
-    _states = states;
-}
-
 void Plan::setSuccessStates(const SuccessStateGrp& successStates)
 {
     _successStates = successStates;
-}
-
-void Plan::setSynchronisations(const SynchronisationGrp& synchronisations)
-{
-    _synchronisations = synchronisations;
-}
-
-void Plan::setTransitions(const TransitionGrp& transitions)
-{
-    _transitions = transitions;
 }
 
 std::string Plan::toString(std::string indent) const

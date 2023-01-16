@@ -18,8 +18,6 @@ class AlicaEngine;
 class PlanType : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    PlanType(AlicaEngine* ae); // TOBE removed
     PlanType();
     virtual ~PlanType();
 
@@ -32,8 +30,6 @@ public:
 private:
     friend ModelFactory;
     friend PlanTypeFactory;
-    void setVariableBindings(const VariableBindingGrp& variableBindings);
-    void setPlans(const PlanGrp& plans);
 
     PlanGrp _plans;
     VariableBindingGrp _variableBindings;

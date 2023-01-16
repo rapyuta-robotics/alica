@@ -26,8 +26,6 @@ class ConfigChangeListener;
 class Plan : public AbstractPlan
 {
 public:
-    //[[deprecated("It will be removed in the last PR")]]
-    Plan(AlicaEngine* ae, int64_t id); // TOBE removed
     Plan(ConfigChangeListener& configChangeListener, int64_t id);
     virtual ~Plan();
 
@@ -75,9 +73,6 @@ private:
     void setMinCardinality(int minCardinality);
     void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
-    void setStates(const StateGrp& states);
-    void setSynchronisations(const SynchronisationGrp& synchronisations);
-    void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
 
