@@ -94,7 +94,6 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
     while (filesToParse.size() > 0) {
         std::string fileToParse = filesToParse.front();
         filesToParse.pop_front();
-
         ALICA_DEBUG_MSG("MM: fileToParse: " << fileToParse);
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
@@ -227,7 +226,7 @@ const AlicaElement* ModelManager::getElement(const int64_t id)
 {
     auto mapEntry = elements.find(id);
     if (mapEntry != elements.end()) {
-        return mapEntry->second;
+        return mapEntry->second.get();
     }
     return nullptr;
 }

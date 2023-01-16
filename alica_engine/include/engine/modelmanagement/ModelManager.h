@@ -51,7 +51,7 @@ private:
     std::list<std::string> filesParsed;
 
     PlanRepository& _planRepository;
-    std::map<int64_t, AlicaElement*> elements;
+    std::map<int64_t, std::unique_ptr<AlicaElement>> elements;
 
     const AlicaElement* getElement(const int64_t id);
     std::string getBasePath(const std::string& configKey);

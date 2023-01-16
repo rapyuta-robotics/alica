@@ -93,6 +93,8 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
+    delete wrapper;
+    delete rp;
 }
 
 TEST_F(TaskAssignmentTest, switchEntryPoints)
@@ -166,6 +168,8 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     // Harry has to be inside MidField state again
     EXPECT_EQ((rpSwitched->getAssignment().getAgentsInState(1407152951886).begin()).operator*(), harryId);
     //    std::cout << "2nd Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
+    delete wrapper;
+    delete rp;
 }
 } // namespace
 } // namespace alica

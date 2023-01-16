@@ -94,4 +94,6 @@ TEST(Assignment, RobotsInserted)
         ++i;
     }
     ASSERT_EQ(i, 2);
+    ac->terminate();
+    delete ac;
 }

@@ -4,6 +4,7 @@
 #include "engine/RuleBook.h"
 #include "engine/RunningPlan.h"
 #include <algorithm>
+#include <atomic>
 #include <condition_variable>
 #include <engine/containers/AlicaEngineInfo.h>
 #include <math.h>
@@ -66,7 +67,7 @@ public:
 private:
     void run(const Plan* masterPlan);
 
-    // Owning container of running plans (replace with uniqueptrs once possibe)
+    // Owning container of running plans (replace with uniqueptrs once possible)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
 
     /**
@@ -98,7 +99,7 @@ private:
     RuleBook _ruleBook;
 
     int _treeDepth;
-    bool _running;
+    std::atomic<bool> _running;
     bool _sendStatusMessages;
     bool _isWaiting;
 };

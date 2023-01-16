@@ -89,7 +89,7 @@ public:
 
     // Data Access:
     const RoleSet* getRoleSet() const { return _roleSet; }
-    const uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
+    uint64_t getMasterPlanId() const { return _masterPlan->getId(); }
 
     // internals
     void setStepCalled(bool stepCalled);

@@ -102,7 +102,7 @@ const AlicaElement* Factory::getElement(const int64_t id)
 {
     auto mapEntry = Factory::modelManager->elements.find(id);
     if (mapEntry != Factory::modelManager->elements.end()) {
-        return mapEntry->second;
+        return mapEntry->second.get();
     }
     return nullptr;
 }
@@ -116,7 +116,7 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         ss << "ELEMENT >" << ael->getName() << "< >" << modelManager->elements[ael->getId()]->getName() << "<" << std::endl;
         AlicaEngine::abort(ss.str());
     }
-    modelManager->elements.insert(std::pair<int64_t, AlicaElement*>(ael->getId(), ael));
+    modelManager->elements.insert(std::pair<int64_t, std::unique_ptr<AlicaElement>>(ael->getId(), ael));
 
     // insert into plan repository
     if (alica::Strings::plan.compare(type) == 0) {

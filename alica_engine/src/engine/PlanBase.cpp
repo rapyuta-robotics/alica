@@ -325,17 +325,21 @@ void PlanBase::stop()
     if (_mainThread != nullptr) {
         _mainThread->join();
         delete _mainThread;
+        _mainThread = nullptr;
     }
 
     if (_rootNode) {
         _rootNode->deactivate();
     }
-
-    _mainThread = nullptr;
 }
 
 PlanBase::~PlanBase()
 {
+    if (_mainThread != nullptr) {
+        _running = false;
+        _mainThread->join();
+        delete _mainThread;
+    }
     delete _statusMessage;
     // Destroy running plans from most recent to least recent
     while (!_runningPlans.empty()) {
