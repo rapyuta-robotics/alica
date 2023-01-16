@@ -82,19 +82,17 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    auto rp = std::make_unique<RunningPlan>(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
-    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
-    inputWrappers.push_back(wrapper);
+    inputWrappers.push_back(wrapper.get());
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp.get(), inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
-    delete wrapper;
-    delete rp;
 }
 
 TEST_F(TaskAssignmentTest, switchEntryPoints)
@@ -135,15 +133,15 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     ae->editRoleAssignment().tick();
 
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+    auto rp = std::make_unique<RunningPlan>(ae, ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
-    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
-    inputWrappers.push_back(wrapper);
+    inputWrappers.push_back(wrapper.get());
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp.get(), inputWrappers, robots, o_plans);
     //    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
 
     uint64_t harryId = 8;
@@ -168,8 +166,6 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     // Harry has to be inside MidField state again
     EXPECT_EQ((rpSwitched->getAssignment().getAgentsInState(1407152951886).begin()).operator*(), harryId);
     //    std::cout << "2nd Switched Assignment: " << rpSwitched->getAssignment() << std::endl;
-    delete wrapper;
-    delete rp;
 }
 } // namespace
 } // namespace alica
