@@ -291,7 +291,6 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
-
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
@@ -412,7 +411,6 @@ protected:
             manageWorldModel(ac);
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
-
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);

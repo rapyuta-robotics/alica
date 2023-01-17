@@ -70,7 +70,6 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
 
     if (_engine->init(std::move(creatorCtx))) {
         if (!delayStart) {
-
             _engine->start();
         } else {
             Logging::logWarn("AC") << "Engine not started during init.";
