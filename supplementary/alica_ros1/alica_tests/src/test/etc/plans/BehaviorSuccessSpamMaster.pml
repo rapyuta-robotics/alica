@@ -1,5 +1,22 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 3124386063659432983,
+      "key": "Normal2Dummy",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 3558181855747400341,
+      "key": "Dummy2Normal",
+      "type": "bool"
+    }
+  ],
   "comment": "",
   "entryPoints": [
     {
@@ -54,8 +71,8 @@
       ],
       "parentPlan": 1522377375148,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 420.0892857142857,
+        "y": 260.31919642857144
       },
       "type": "State",
       "variableBindings": []
@@ -86,8 +103,8 @@
       ],
       "parentPlan": 1522377375148,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 716.6540178571429,
+        "y": 133.74776785714286
       },
       "type": "State",
       "variableBindings": []
@@ -97,11 +114,16 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 1522377944058,
       "inState": 1522377375149,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "Normal2Dummy"
+          }
+        ],
         "output": []
       },
       "name": "MISSING_NAME",
@@ -126,11 +148,16 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3604374027783683696",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 1522377945069,
       "inState": 1522377929290,
       "keyMapping": {
-        "input": [],
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "Dummy2Normal"
+          }
+        ],
         "output": []
       },
       "name": "MISSING_NAME",

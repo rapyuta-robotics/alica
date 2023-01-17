@@ -39,17 +39,6 @@ bool isFailure(const alica::RunningPlan* rp)
 
 namespace alica
 {
-bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(condition1) ENABLED START*/
-    for (const alica::RunningPlan* child : rp->getChildren()) {
-        if (isSuccess(child)) {
-            return true;
-        }
-    }
-    return false;
-    /*PROTECTED REGION END*/
-}
 bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
 {
     /*PROTECTED REGION ID(condition2) ENABLED START*/
@@ -301,12 +290,6 @@ bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, c
     /*PROTECTED REGION ID(condition3592699233854318376) ENABLED START*/
     LockedBlackboardRO bb(*input);
     return bb.get<bool>("result");
-    /*PROTECTED REGION END*/
-}
-bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)
-{
-    /*PROTECTED REGION ID(condition3604374027783683696) ENABLED START*/
-    return false;
     /*PROTECTED REGION END*/
 }
 bool conditionDecision2B3684268241099966909(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm)

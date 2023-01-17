@@ -60,7 +60,7 @@ if(BUILD_TESTING)
         src/test/test_assignment.cpp
         src/test/test_back_forth.cpp
         src/test/test_continue_on_fail.cpp
-        src/test/test_success_spam.cpp
+        src/test/test_success_spam.cpp #new
         src/test/test_task_assignment.cpp
         src/test/test_variant.cpp
         src/test/test_varsync.cpp

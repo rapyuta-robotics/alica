@@ -125,6 +125,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
             return preCondition.evaluate(temp, wm);
         };
     }
+    case 4584434546591332490: {
+        PreCondition4584434546591332490 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, wm);
+        };
+    }
     case 2733591692277574870: {
         PreCondition2733591692277574870 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const IAlicaWorldModel* wm) mutable {

@@ -10,6 +10,7 @@ namespace alica::test
 
 TEST_F(TestFixture, simplePlanTestWithLegacyConditions)
 {
+    // Transition to the plan corresponding to this test case
     ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "SimpleTestPlanState")) << _tc->getLastFailure();
     STEP_UNTIL(_tc, _tc->getActivePlan("SimpleTestPlan"));
     ASSERT_NE(nullptr, _tc->getActivePlan("SimpleTestPlan")) << _tc->getLastFailure();

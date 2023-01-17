@@ -55,6 +55,11 @@ class PreCondition3883605426713053219 : public DomainCondition
 public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
 };
+class PreCondition4584434546591332490 : public DomainCondition
+{
+public:
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+};
 class PreCondition2733591692277574870 : public DomainCondition
 {
 public:

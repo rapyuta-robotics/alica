@@ -87,8 +87,8 @@
       ],
       "parentPlan": 1412252439925,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 427.2088491045265,
+        "y": 123.25836313907006
       },
       "type": "State",
       "variableBindings": []
@@ -117,8 +117,8 @@
       "outTransitions": [],
       "parentPlan": 1412252439925,
       "positionWeb": {
-        "x": 874.3829160530191,
-        "y": 200.69513991163475
+        "x": 882.2944250077542,
+        "y": 154.01723707869797
       },
       "type": "State",
       "variableBindings": []

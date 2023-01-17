@@ -10,7 +10,6 @@ class Blackboard;
 class RunningPlan;
 class IAlicaWorldModel;
 
-bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
@@ -45,7 +44,6 @@ bool conditionCounterCalled2901825906319407673(const Blackboard* input, const Ru
 bool conditionSwitchIsNotSet3016035752801585170(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionWait2Suc3517323109117319233(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionTriggerFromInputCond3592699233854318376(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
-bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionDecision2B3684268241099966909(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionStart2Default3726136276355540527(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);
 bool conditionSimpleSwitchIsSet3787001793582633602(const Blackboard* input, const RunningPlan* rp, const IAlicaWorldModel* wm);

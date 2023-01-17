@@ -17,8 +17,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
-    case 1:
-        return std::bind(conditionAnyChildSuccess1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2:
         return std::bind(conditionAllChildSuccess2, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3:
@@ -89,8 +87,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel
         return std::bind(conditionWait2Suc3517323109117319233, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3592699233854318376:
         return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-    case 3604374027783683696:
-        return std::bind(conditionIsAnyChildStatusSuccess3604374027783683696, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3684268241099966909:
         return std::bind(conditionDecision2B3684268241099966909, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3726136276355540527:

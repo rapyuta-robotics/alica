@@ -1,49 +1,36 @@
-#include "test_alica.h"
-
-#include <alica_tests/BehaviourCreator.h>
-#include <alica_tests/ConditionCreator.h>
-#include <alica_tests/ConstraintCreator.h>
-#include <alica_tests/PlanCreator.h>
-#include <alica_tests/UtilityFunctionCreator.h>
-
+#include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/Assignment.h>
-#include <engine/BasicBehaviour.h>
-#include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/PlanBase.h>
-#include <engine/PlanRepository.h>
-#include <engine/TeamObserver.h>
-#include <engine/model/Behaviour.h>
-#include <engine/model/Plan.h>
-#include <engine/model/RuntimeCondition.h>
-#include <engine/model/State.h>
-
+#include <alica_tests/Behaviour/Attack.h>
+#include <alica_tests/SimpleTestPlan1412252439925.h>
+#include <alica_tests/TestFixture.h>
 #include <gtest/gtest.h>
 
-namespace alica
+namespace alica::test
 {
-namespace
-{
-
-class AlicaSpamSuccess : public AlicaTestFixture
-{
-protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
-    const char* getMasterPlanName() const override { return "BehaviorSuccessSpamMaster"; }
-};
 
 /**
  * Tests whether it is possible to run a behaviour in a primitive plan.
  */
-TEST_F(AlicaSpamSuccess, runBehaviour)
+TEST_F(TestFixture, runBehaviour)
 {
-    ASSERT_NO_SIGNAL
-    ae->start();
-    STEP_UNTIL(alica::test::Util::isPlanActive(ae, 1522377375148));
-    EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehaviorSuccessSpamMasterState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BehaviorSuccessSpamMaster"));
+    ASSERT_NE(nullptr, _tc->getActivePlan("BehaviorSuccessSpamMaster")) << _tc->getLastFailure();
+
+    // Normal state
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("BehaviorSuccessSpamMaster"));
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("SuccessSpam")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->isStateActive("BehaviorSuccessSpamMaster", "Normal"));
+
+    // Move from state
+    ASSERT_TRUE(_tc->setTransitionCond("BehaviorSuccessSpamMaster", "Normal", "Dummy")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->resetTransitionCond("BehaviorSuccessSpamMaster", "Dummy", "Normal")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("BehaviorSuccessSpamMaster", "Dummy"));
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("SuccessSpam")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->setTransitionCond("BehaviorSuccessSpamMaster", "Dummy", "Normal")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->resetTransitionCond("BehaviorSuccessSpamMaster", "Normal", "Dummy")) << _tc->getLastFailure();
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isStateActive("BehaviorSuccessSpamMaster", "Normal"));
+    ASSERT_NE(nullptr, _tc->getActiveBehaviour("SuccessSpam")) << _tc->getLastFailure();
 }
-} // namespace
-} // namespace alica
+} // namespace alica::test

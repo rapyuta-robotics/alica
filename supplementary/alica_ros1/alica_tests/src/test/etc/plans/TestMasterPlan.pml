@@ -31,6 +31,14 @@
       "id": 2284164419875100184,
       "key": "ChooseTestState2SimpleTestPlanState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 4524822962425938639,
+      "key": "ChooseTestState2BehaviorSuccessSpamMasterState",
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -44,8 +52,8 @@
       "name": "",
       "plan": 2521443078354411465,
       "positionWeb": {
-        "x": 250,
-        "y": 289
+        "x": 200,
+        "y": 612
       },
       "state": 4098979167613947533,
       "successRequired": false,
@@ -85,8 +93,38 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 728.3083341508035,
-        "y": -156.82283404963664
+        "x": 686,
+        "y": 400
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BehaviorSuccessSpamMaster.pml#1522377375148",
+          "comment": "",
+          "configuration": null,
+          "id": 3077878256972628511,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1552041115313373349,
+      "inTransitions": [
+        3219105289339324342
+      ],
+      "name": "BehaviorSuccessSpamMasterState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 798.4015247776366
       },
       "type": "State",
       "variableBindings": []
@@ -115,8 +153,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 737.2753842205811,
-        "y": 370.44923155883777
+        "x": 686,
+        "y": 600
       },
       "type": "State",
       "variableBindings": []
@@ -145,8 +183,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 739.1787599282301,
-        "y": 593.7031666785609
+        "x": 686,
+        "y": 1000
       },
       "type": "State",
       "variableBindings": []
@@ -162,12 +200,13 @@
         846865468084822174,
         2550214909296500141,
         2841206023261337744,
+        3219105289339324342,
         4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 459,
-        "y": 278
+        "x": 428,
+        "y": 600
       },
       "type": "State",
       "variableBindings": []
@@ -196,8 +235,8 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 728,
-        "y": 107.91579441821094
+        "x": 686,
+        "y": 200
       },
       "type": "State",
       "variableBindings": []
@@ -221,7 +260,12 @@
       },
       "name": "",
       "outState": 4487929496627066142,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 229
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -250,7 +294,12 @@
       },
       "name": "",
       "outState": 1506398272124884391,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 429
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
@@ -279,12 +328,51 @@
       },
       "name": "",
       "outState": 2212831089687963769,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 629
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
         "id": 3883605426713053219,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 3219105289339324342,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2BehaviorSuccessSpamMasterState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1552041115313373349,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 829
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4584434546591332490,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -308,7 +396,12 @@
       },
       "name": "",
       "outState": 3960396736820956915,
-      "pointsWeb": [],
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1029
+        }
+      ],
       "preCondition": {
         "comment": "",
         "conditionString": "",
