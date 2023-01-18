@@ -19,7 +19,6 @@
 namespace alica
 {
 class Plan;
-
 class TeamObserver;
 class IRoleAssignment;
 class Logger;
