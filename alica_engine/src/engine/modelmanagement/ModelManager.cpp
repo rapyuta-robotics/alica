@@ -18,6 +18,7 @@
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
+#include "engine/modelmanagement/factories/VariableFactory.h"
 #include "engine/util/HashFunctions.h"
 
 #include <alica_common_config/debug_output.h>
@@ -251,7 +252,7 @@ void ModelManager::generateTemplateVariables()
             if (vit != _planRepository._variables.end()) {
                 v = vit->second;
             } else {
-                v = new Variable(id, s, "Template");
+                v = VariableFactory::create(id, s, "Template");
                 _planRepository._variables.emplace(id, v);
             }
             q->_templateVars.push_back(v);

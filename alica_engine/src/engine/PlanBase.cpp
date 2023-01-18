@@ -334,9 +334,8 @@ void PlanBase::stop()
 
 PlanBase::~PlanBase()
 {
-    if (_mainThread != nullptr) {
-        _running = false;
-        _mainThread->join();
+    if (_running) {
+        stop();
     }
     delete _statusMessage;
     // Destroy running plans from most recent to least recent

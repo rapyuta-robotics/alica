@@ -43,7 +43,7 @@ struct AlicaTestsEngineGetter
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    alica::AlicaContext* ac{nullptr};
+    std::unique_ptr<alica::AlicaContext> ac;
     alica::AlicaEngine* ae{nullptr};
     virtual bool getDelayStart() { return true; }
 };
@@ -68,7 +68,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -81,14 +81,13 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
-        ae = AlicaTestsEngineGetter::getEngine(ac);
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
     }
 
     virtual void TearDown() override
     {
         spinner->stop();
         ac->terminate();
-        delete ac;
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -204,7 +203,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
@@ -217,7 +216,6 @@ protected:
     void TearDown() override
     {
         spinner->stop();
-        delete ac;
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -241,7 +239,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -253,7 +251,7 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
 
         ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac);
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -262,7 +260,6 @@ protected:
     {
         spinner->stop();
         ac->terminate();
-        delete ac;
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
@@ -286,7 +283,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -298,7 +295,7 @@ protected:
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>()};
         ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac);
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -307,7 +304,6 @@ protected:
     {
         spinner->stop();
         ac->terminate();
-        delete ac;
     }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
