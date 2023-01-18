@@ -103,7 +103,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
             _statusMessage->senderID = _ae->getTeamManager().getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
-        _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
+        _mainThread = std::make_unique<std::thread>(&PlanBase::run, this, masterPlan);
     }
 }
 
@@ -324,8 +324,7 @@ void PlanBase::stop()
 
     if (_mainThread != nullptr) {
         _mainThread->join();
-        delete _mainThread;
-        _mainThread = nullptr;
+        _mainThread.reset();
     }
 
     if (_rootNode) {
@@ -338,7 +337,6 @@ PlanBase::~PlanBase()
     if (_mainThread != nullptr) {
         _running = false;
         _mainThread->join();
-        delete _mainThread;
     }
     delete _statusMessage;
     // Destroy running plans from most recent to least recent

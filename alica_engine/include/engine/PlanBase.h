@@ -79,7 +79,7 @@ private:
 
     const RunningPlan* _deepestNode;
 
-    std::thread* _mainThread;
+    std::unique_ptr<std::thread> _mainThread;
     AlicaEngineInfo* _statusMessage;
 
     AlicaTime _loopTime;
