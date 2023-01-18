@@ -14,7 +14,7 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
 std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
-        int64_t conditionId, TransitionConditionContext& context) override
+        int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
     case 748720375848597116:
