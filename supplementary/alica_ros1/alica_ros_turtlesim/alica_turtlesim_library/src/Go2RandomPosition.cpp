@@ -9,8 +9,6 @@ namespace alica
 Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
         : BasicBehaviour(context)
 {
-    std::cerr << "Debug:"
-              << "Go2RandomPosition created" << std::endl;
 }
 
 Go2RandomPosition::~Go2RandomPosition() {}

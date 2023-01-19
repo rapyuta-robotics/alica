@@ -417,6 +417,8 @@ public:
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& getSolvers() const { return _solvers; };
 
 private:
+    static constexpr const char* LOGNAME = "AlicaContext";
+
     friend class ::alica::AlicaTestsEngineGetter;
     friend class ::alica::test::TestContext;
 
@@ -465,7 +467,7 @@ template <class ClockType, class... Args>
 void AlicaContext::setClock(Args&&... args)
 {
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new clock";
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new clock";
         return;
     }
 
@@ -481,7 +483,7 @@ template <class CommunicatorType, class... Args>
 void AlicaContext::setCommunicator(Args&&... args)
 {
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new communicator";
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new communicator";
         return;
     }
 
@@ -524,7 +526,7 @@ template <class TimerFactoryType, class... Args>
 void AlicaContext::setTimerFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new timerfactory";
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new timerfactory";
         return;
     }
 
@@ -540,7 +542,7 @@ template <class TraceFactoryType, class... Args>
 void AlicaContext::setTraceFactory(Args&&... args)
 {
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new tracefactory";
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new tracefactory";
         return;
     }
 
@@ -556,7 +558,7 @@ template <class LoggerType, class... Args>
 void AlicaContext::setLogger(Args&&... args)
 {
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized. Can not set new loggertype";
+        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new loggertype";
         return;
     }
 
@@ -589,9 +591,9 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         currentNode = value;
     } catch (const YAML::Exception& e) {
         if (!Logging::isInitialized()) {
-            std::cerr << "AC: Could not set config value: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
+            std::cerr << LOGNAME << ": Could not set config value: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
         } else {
-            Logging::logWarn("AC") << "Could not set config value: " << e.msg;
+            Logging::logWarn(LOGNAME) << "Could not set config value: " << e.msg;
         }
 
         return false;
@@ -626,9 +628,9 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
         }
     } catch (const YAML::Exception& e) {
         if (!Logging::isInitialized()) {
-            std::cerr << "AC: Could not set config values: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
+            std::cerr << LOGNAME << ": Could not set config values: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
         } else {
-            Logging::logWarn("AC") << "Could not set config values: " << e.msg;
+            Logging::logWarn(LOGNAME) << "Could not set config values: " << e.msg;
         }
 
         // revert changes

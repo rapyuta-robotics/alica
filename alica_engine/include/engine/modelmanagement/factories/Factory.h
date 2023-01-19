@@ -25,6 +25,8 @@ public:
     static void setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id);
 
 protected:
+    static constexpr const char* LOGNAME = "Factory";
+
     static ReferenceList stateInTransitionReferences;
     static ReferenceList stateOutTransitionReferences;
     static ReferenceList transitionSynchReferences;
@@ -58,8 +60,8 @@ T Factory::getValue(const YAML::Node& node, const std::string& key)
     if (isValid(node[key])) {
         return node[key].as<T>();
     } else {
-        Logging::logError("Factory") << "Error Node: " << node;
-        AlicaEngine::abort("Factory: Node does not provide an value for: ", key);
+        Logging::logError(LOGNAME) << "Error Node: " << node;
+        AlicaEngine::abort(LOGNAME, "Factory: Node does not provide an value for: ", key);
         // does not happen, because abort() cancels the current process
         return T();
     }

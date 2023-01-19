@@ -31,7 +31,7 @@ void GoTo::run()
     /*PROTECTED REGION ID(run4054297592460872311) ENABLED START*/
     // solve constraints and get value
     if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
-        std::cout << getName() << " - Solution to query not found." << std::endl;
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
         return;
     }
     // move turtle to goal

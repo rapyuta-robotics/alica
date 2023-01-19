@@ -76,6 +76,8 @@ public:
     void reload(const YAML::Node& config);
 
 private:
+    static constexpr const char* LOGNAME = "Logger";
+
     void processString(const std::string& str);
 
     std::shared_ptr<std::list<std::string>> createHumanReadablePlanTree(const IdGrp& list) const;

@@ -32,9 +32,14 @@ class VariableSyncModule;
 class AlicaEngine
 {
 public:
-    static void abort(const std::string& msg);
-    template <typename T>
-    static void abort(const std::string&, const T& tail);
+    template <class... Args>
+    static void abort(const std::string& logName, Args&&... args)
+    {
+        std::ostringstream oss;
+        (oss << ... << std::forward<Args>(args));
+        Logging::logFatal(logName) << "!!ABORT!! " << oss.str();
+        std::abort();
+    }
 
     AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaContextParams& alicaContextParams);
     ~AlicaEngine();
@@ -115,6 +120,8 @@ public:
     ConfigChangeListener& getConfigChangeListener(); // Used for test purpouse
 
 private:
+    static constexpr const char* LOGNAME = "AlicaEngine";
+
     // void setStepEngine(bool stepEngine);
     void initTransitionConditions(ITransitionConditionCreator* creator);
     bool _stepEngine; /**< Set to have the engine's main loop wait on a signal via MayStep*/
@@ -150,14 +157,6 @@ private:
     bool _useStaticRoles;  /**< Indicates whether the engine should run with a static role assignment that is based on default roles, or not. */
     bool _maySendMessages; /**< If false, engine sends only debugging information and does not participate in teamwork. Useful for hot standby. */
 };
-
-template <typename T>
-void AlicaEngine::abort(const std::string& msg, const T& tail)
-{
-    std::stringstream ss;
-    ss << msg << tail;
-    AlicaEngine::abort(ss.str());
-}
 
 template <class SolverType>
 SolverType& AlicaEngine::getSolver() const

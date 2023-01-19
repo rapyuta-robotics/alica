@@ -74,15 +74,15 @@ void PlanBase::reload(const YAML::Node& config)
     double maxbcfreq = config["Alica"]["MaxBroadcastFrequency"].as<double>();
 
     if (freq > 1000) {
-        AlicaEngine::abort("PB: ALICA should not be used with more than 1000Hz");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: engine frequency should not be more than 1000Hz");
     }
 
     if (maxbcfreq > freq) {
-        AlicaEngine::abort("PB: Alica.conf: Maximum broadcast frequency must not exceed the engine frequency");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: Maximum broadcast frequency must not exceed the engine frequency");
     }
 
     if (minbcfreq > maxbcfreq) {
-        AlicaEngine::abort("PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
     }
 
     _loopTime = AlicaTime::seconds(1.0 / freq);
@@ -95,7 +95,7 @@ void PlanBase::reload(const YAML::Node& config)
     if (_sendStatusMessages) {
         double stfreq = config["Alica"]["StatusMessages"]["Frequency"].as<double>();
         if (stfreq > freq) {
-            AlicaEngine::abort("PB: Alica.conf: Status messages frequency must not exceed the engine frequency");
+            AlicaEngine::abort(LOGNAME, "Alica.conf: Status messages frequency must not exceed the engine frequency");
         }
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
@@ -104,8 +104,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    Logging::logInfo("PB") << "Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds()
-                           << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
+    Logging::logInfo(LOGNAME) << "Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds()
+                              << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -134,7 +134,7 @@ void PlanBase::start(const Plan* masterPlan)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    Logging::logDebug("PB") << "Run-Method of PlanBase started.";
+    Logging::logDebug(LOGNAME) << "Run-Method of PlanBase started.";
     Logger& log = _logger;
 
     while (_running) {
@@ -143,13 +143,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
-            Logging::logDebug("PB") << "===CUR TREE===";
+            Logging::logDebug(LOGNAME) << "===CUR TREE===";
             if (_rootNode == nullptr) {
-                Logging::logDebug("PB") << "NULL";
+                Logging::logDebug(LOGNAME) << "NULL";
             } else {
                 _rootNode->printRecursive();
             }
-            Logging::logDebug("PB") << "===END CUR TREE===";
+            Logging::logDebug(LOGNAME) << "===END CUR TREE===";
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -177,7 +177,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            Logging::logInfo("PB") << "MasterPlan Failed";
+            Logging::logInfo(LOGNAME) << "MasterPlan Failed";
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -208,8 +208,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        Logging::logDebug("PB") << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
-                                << " inactive deleted: " << deleteCount;
+        Logging::logDebug(LOGNAME) << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                                   << " inactive deleted: " << deleteCount;
 #endif
         // lock for fpEvents
         {
@@ -220,7 +220,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = _clock.now();
 
         if (now < _lastSendTime) {
-            Logging::logWarn("PB") << "lastSendTime is in the future of the current system time, did the system time change?";
+            Logging::logWarn(LOGNAME) << "lastSendTime is in the future of the current system time, did the system time change?";
             _lastSendTime = now;
         }
 

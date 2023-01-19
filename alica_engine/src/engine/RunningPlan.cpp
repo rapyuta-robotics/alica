@@ -206,7 +206,7 @@ void RunningPlan::setAllocationNeeded(bool need)
 bool RunningPlan::evalPreCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
+        Logging::logError(LOGNAME) << "Cannot Eval Condition, Plan is null";
         assert(false);
     }
 
@@ -223,7 +223,7 @@ bool RunningPlan::evalPreCondition() const
     try {
         return preCondition->evaluate(*this, &_globalBlackboard);
     } catch (const std::exception& e) {
-        Logging::logError("RP") << "Exception in precondition: " << e.what();
+        Logging::logError(LOGNAME) << "Exception in precondition: " << e.what();
         return false;
     }
 }
@@ -235,7 +235,7 @@ bool RunningPlan::evalPreCondition() const
 bool RunningPlan::evalRuntimeCondition() const
 {
     if (_activeTriple.abstractPlan == nullptr) {
-        Logging::logError("RP") << "Cannot Eval Condition, Plan is null";
+        Logging::logError(LOGNAME) << "Cannot Eval Condition, Plan is null";
         throw std::exception();
     }
     const RuntimeCondition* runtimeCondition = nullptr;
@@ -254,7 +254,7 @@ bool RunningPlan::evalRuntimeCondition() const
         _status.runTimeConditionStatus = (ret ? EvalStatus::True : EvalStatus::False);
         return ret;
     } catch (const std::exception& e) {
-        Logging::logError("RP") << "Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what();
+        Logging::logError(LOGNAME) << "Exception in runtimecondition: " << _activeTriple.abstractPlan->getName() << " " << e.what();
         _status.runTimeConditionStatus = EvalStatus::False;
         return false;
     }
@@ -305,7 +305,7 @@ void RunningPlan::printRecursive() const
         c->printRecursive();
     }
     if (_children.empty()) {
-        Logging::logInfo("RP") << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName());
+        Logging::logInfo(LOGNAME) << "END CHILDREN of " << (_activeTriple.abstractPlan == nullptr ? "NULL" : _activeTriple.abstractPlan->getName());
     }
 }
 

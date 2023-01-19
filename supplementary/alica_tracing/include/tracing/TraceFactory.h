@@ -28,6 +28,8 @@ public:
     void unsetGlobalContext() override;
 
 private:
+    static constexpr const char* LOGNAME = "TraceFactory";
+
     bool _initialized = false;
     std::unordered_map<std::string, RawTraceValue> _defaultTags;
     std::string _serviceName;

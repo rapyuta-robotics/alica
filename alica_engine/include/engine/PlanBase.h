@@ -74,6 +74,8 @@ public:
     void stepNotify();
 
 private:
+    static constexpr const char* LOGNAME = "PlanBase";
+
     void run(const Plan* masterPlan);
 
     // Owning container of running plans (replace with uniqueptrs once possibe)

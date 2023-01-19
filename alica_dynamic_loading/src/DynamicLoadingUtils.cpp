@@ -4,6 +4,8 @@
 namespace alica
 {
 
+static constexpr const char* LOGNAME = "DynamicLoading";
+
 std::vector<std::string> tokenizeStr(const std::string& toTokenize, char delimter)
 {
     std::vector<std::string> tokens;
@@ -21,15 +23,15 @@ std::vector<std::string> calculateLibraryPath()
 {
     const char* ldLibraryPath = std::getenv("LD_LIBRARY_PATH");
     if (!ldLibraryPath) {
-        Logging::logError("DL") << "Error:"
-                                << "Missing LD_LIBRARY_PATH variable";
+        Logging::logError(LOGNAME) << "Error:"
+                                   << "Missing LD_LIBRARY_PATH variable";
         return std::vector<std::string>();
     }
 
     auto tokens = tokenizeStr(ldLibraryPath, ':');
     if (tokens.empty()) {
-        Logging::logError("DL") << "Error:"
-                                << "Missing LD_LIBRARY_PATH";
+        Logging::logError(LOGNAME) << "Error:"
+                                   << "Missing LD_LIBRARY_PATH";
         return std::vector<std::string>();
     }
 
@@ -39,21 +41,21 @@ std::vector<std::string> calculateLibraryPath()
 std::string calculateLibraryCompleteName(const std::vector<std::string>& libraryPath, const std::string& libraryName)
 {
     if (libraryName == "") {
-        Logging::logError("DL") << "Error:"
-                                << "Empty library name";
+        Logging::logError(LOGNAME) << "Error:"
+                                   << "Empty library name";
         return "";
     }
 
     for (const std::string& current : libraryPath) {
         std::string completeName = current + "/lib" + libraryName + ".so";
         if (std::filesystem::exists(completeName)) {
-            Logging::logDebug("DL") << "Debug:"
-                                    << "Lib exixts in this path:" << completeName;
+            Logging::logDebug(LOGNAME) << "Debug:"
+                                       << "Lib exists in this path:" << completeName;
             return completeName;
         }
     }
-    Logging::logError("DL") << "Error:"
-                            << "Lib not exixts in LD_CONFIG_PATH library name:" << libraryName;
+    Logging::logError(LOGNAME) << "Error:"
+                               << "Lib not exists in LD_CONFIG_PATH library name:" << libraryName;
     return "";
 }
 

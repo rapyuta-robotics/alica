@@ -94,18 +94,13 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    Logging::logDebug("TA") << "Calculating next best PartialAssignment...";
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    Logging::logDebug("TA") << "... calculated this PartialAssignment:\n" << *calculatedPa;
-
     Assignment newAss = Assignment(*calculatedPa);
-
-    Logging::logDebug("TA") << "Return this Assignment to PS:" << newAss;
 
     return newAss;
 }
@@ -116,17 +111,11 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        Logging::logDebug("TA") << "<--- NEXT PA from fringe:"
-                                << "\n"
-                                << *curPa << "--->";
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            Logging::logDebug("TA") << "<--- TA: BEFORE fringe exp:" << _fringe << "--->";
             curPa->expand(_fringe, _pool, oldAss, _globalBlackboard);
-            Logging::logDebug("TA") << "<--- TA: AFTER fringe exp:\n"
-                                    << "TA: fringe size " << _fringe.size() << _fringe << "--->";
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

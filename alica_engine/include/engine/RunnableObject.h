@@ -28,13 +28,16 @@ class IAlicaCommunication;
 class IAlicaTraceFactory;
 class IAlicaTimerFactory;
 
+static constexpr const char* LOGNAME = "RunnableObject";
+
 class TraceRunnableObject
 {
 public:
-    TraceRunnableObject(const IAlicaTraceFactory* tf)
+    TraceRunnableObject(const IAlicaTraceFactory* tf, const std::string& name)
             : _tracingType(TracingType::DEFAULT)
             , _runTraced(false)
             , _tf(tf)
+            , _name(name)
     {
     }
 
@@ -58,7 +61,12 @@ public:
     void setTracing(TracingType type, std::function<std::optional<std::string>()> customTraceContextGetter = {});
     void setupTraceContext(const std::string& name, RunningPlan* rp);
     void cleanupTraceContext();
+    void traceInitCall();
     void traceRunCall();
+    void traceTerminateCall();
+    void traceException(const std::string& exceptionOriginMethod, const std::string& details);
+    void finishTrace() { _trace.reset(); }
+    const std::string& getName() const { return _name; }
 
 private:
     TracingType _tracingType;
@@ -67,6 +75,7 @@ private:
     std::unique_ptr<IAlicaTrace> _trace;
     // True if the behaviour/plan's run method has already been logged in the trace
     bool _runTraced;
+    const std::string& _name;
 };
 
 /**
@@ -90,7 +99,7 @@ protected:
     {
         _runnableObjectTracer.setTracing(type, customTraceContextGetter);
     }
-    const std::string& getName() { return _name; };
+    const std::string& getName() const { return _name; };
     IAlicaTrace* getTrace() const { return _runnableObjectTracer.getTrace(); };
     // Helper to allow applications to generate their own trace.
     const IAlicaTraceFactory* getTraceFactory() const { return _runnableObjectTracer.getTraceFactory(); }
@@ -116,6 +125,8 @@ protected:
     void setPlanBase(PlanBase* planBase);
     void setAlicaCommunication(const IAlicaCommunication* communication);
     void setAlicaTimerFactory(const IAlicaTimerFactory* timerFactory);
+
+    void handleException(const std::string& exceptionOriginMethod, std::exception_ptr eptr);
 
     TraceRunnableObject _runnableObjectTracer;
     const TeamManager* _teamManager{nullptr};

@@ -32,6 +32,8 @@ public:
     void setGlobalBlackboard(const Blackboard* globalBlackboard);
 
 private:
+    static constexpr const char* LOGNAME = "PlanSelector";
+
     bool getPlansForStateInternal(
             RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
