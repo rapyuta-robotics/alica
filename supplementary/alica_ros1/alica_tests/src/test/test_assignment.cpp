@@ -36,7 +36,6 @@ TEST(Assignment, RobotsInserted)
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-    ac->setWorldModel<alicaTests::TestWorldModel>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
 
     alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -44,6 +43,7 @@ TEST(Assignment, RobotsInserted)
             std::make_unique<alica::TransitionConditionCreator>()};
 
     EXPECT_EQ(0, ac->init(std::move(creators)));
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 
     PlanRepository repo;
     alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);

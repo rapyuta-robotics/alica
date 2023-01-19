@@ -20,7 +20,8 @@ TEST_F(TestInheritBlackboard, testInheritBlackboard)
     // Use inherited blackboards and check if keys are accessible
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["masterKeyInBehavior"], 3); // Read a key defined in the master plan inside the behavior
     EXPECT_EQ(wm->passedParameters["hasBehaviorKey"], 4);      // Check that a key defined in the behavior is not available in the master plan
 }

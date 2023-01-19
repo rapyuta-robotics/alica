@@ -8,7 +8,6 @@
 #include "engine/IAlicaCommunication.h"
 #include "engine/IAlicaTimer.h"
 #include "engine/IAlicaTrace.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/IBehaviourCreator.h"
 #include "engine/IConditionCreator.h"
 #include "engine/IConstraintCreator.h"
@@ -16,6 +15,7 @@
 #include "engine/ITransitionConditionCreator.h"
 #include "engine/IUtilityCreator.h"
 #include "engine/Types.h"
+#include "engine/blackboard/Blackboard.h"
 #include "engine/constraintmodul/ISolver.h"
 #include "engine/logging/IAlicaLogger.h"
 #include "engine/logging/Logging.h"
@@ -201,7 +201,7 @@ public:
      * Initialize alica framework and related modules.
      *
      * @param creatorCtx Creator functions for utility, behaviour, constraint and condition
-     * @param delayStarted does not start _engine. Set to true only for testing purpose
+     * @param delayStarted does not start _engine if true.
      *
      * @return Return code '0' stands for success, any other for corresponding error
      *
@@ -261,24 +261,12 @@ public:
     }
 
     /**
-     * Set world model to be used by this alica framework instance.
-     * Example usage: setWorldModel<alicaDummyProxy::alicaDummyWorldModel>();
+     * Get the global blackboard associated with this instance of the alica context
      *
-     * @note WorldModelType must be a derived class of IAlicaWorldModel
-     * @note This must be called before initializing context
-     *
-     * @param args Arguments to be forwarded to constructor of world model. Might be empty.
+     * @return A reference to the global blackboard
      */
-    template <class WorldModelType, class... Args>
-    void setWorldModel(Args&&... args);
-
-    /**
-     * Get worldModel being used by this alica instance. If no worldModel has been set,
-     * the returned value will be a nullptr.
-     *
-     * @return A pointer to worldModel object being used by context
-     */
-    IAlicaWorldModel* getWorldModel() const { return _worldModel.get(); }
+    const Blackboard& getGlobalBlackboard() const;
+    Blackboard& editGlobalBlackboard();
 
     /**
      * Add a solver to be used by this alica instance.
@@ -446,7 +434,6 @@ private:
     std::unordered_map<size_t, std::unique_ptr<ISolverBase>> _solvers;
     std::unique_ptr<IAlicaTimerFactory> _timerFactory;
     std::unique_ptr<IAlicaTraceFactory> _traceFactory;
-    std::unique_ptr<IAlicaWorldModel> _worldModel;
     const AlicaContextParams _alicaContextParams;
     static const std::unordered_map<std::string, Verbosity> _verbosityStringToVerbosityMap;
 
@@ -472,6 +459,8 @@ private:
      * Get communication Handlers
      */
     AlicaCommunicationHandlers getCommunicationHandlers();
+
+    Blackboard _globalBlackboard;
 };
 
 template <class ClockType, class... Args>
@@ -562,22 +551,6 @@ void AlicaContext::setTraceFactory(Args&&... args)
     _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
 #else
     _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
-#endif
-}
-
-template <class WorldModelType, class... Args>
-void AlicaContext::setWorldModel(Args&&... args)
-{
-    if (_initialized) {
-        Logging::logWarn(LOGNAME) << "Context already initialized. Can not set new worldmodeltype";
-        return;
-    }
-
-    static_assert(std::is_base_of<IAlicaWorldModel, WorldModelType>::value, "Must be derived from IAlicaWorldModel");
-#if (defined __cplusplus && __cplusplus >= 201402L)
-    _worldModel = std::make_unique<WorldModelType>(std::forward<Args>(args)...);
-#else
-    _worldModel = std::unique_ptr<WorldModelType>(new WorldModelType(std::forward<Args>(args)...));
 #endif
 }
 

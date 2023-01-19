@@ -52,7 +52,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1863216812678266511::getUtilityF
  *
  * Abstract Plans in DummyInitState:
  */
-bool PreCondition4197030928062612573::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition4197030928062612573::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(4061633193878470475) ENABLED START*/
     std::cout << "The PreCondition 4197030928062612573 in Transition '4061633193878470475' is not implement yet!" << std::endl;

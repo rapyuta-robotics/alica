@@ -20,7 +20,6 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
@@ -30,7 +29,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
 {
@@ -189,6 +187,16 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
     auto cit = _solvers.find(solverType.hash_code());
     assert(cit != _solvers.end());
     return (*(cit->second));
+}
+
+const Blackboard& AlicaContext::getGlobalBlackboard() const
+{
+    return _globalBlackboard;
+}
+
+Blackboard& AlicaContext::editGlobalBlackboard()
+{
+    return _globalBlackboard;
 }
 
 } // namespace alica

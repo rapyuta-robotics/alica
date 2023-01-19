@@ -2,11 +2,13 @@
 
 #include "BlackboardBlueprint.h"
 #include "engine/Types.h"
+#include "engine/logging/Logging.h"
 #include "engine/modelmanagement/Strings.h"
 #include <any>
 #include <array>
 #include <cassert>
 #include <exception>
+#include <iostream>
 #include <mutex>
 #include <shared_mutex>
 #include <string>

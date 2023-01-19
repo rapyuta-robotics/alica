@@ -9,9 +9,9 @@
 namespace alica
 {
 
-RuntimeBehaviourFactory::RuntimeBehaviourFactory(IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
-        const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
-        : _wm(wm)
+RuntimeBehaviourFactory::RuntimeBehaviourFactory(Blackboard& globalBlackboard, TeamManager& teamManager, PlanBase& planBase,
+        const IAlicaCommunication& communication, const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory)
+        : _globalBlackboard(globalBlackboard)
         , _teamManager(teamManager)
         , _planBase(planBase)
         , _communication(communication)
@@ -27,7 +27,7 @@ void RuntimeBehaviourFactory::init(std::unique_ptr<IBehaviourCreator>&& bc)
 
 std::unique_ptr<BasicBehaviour> RuntimeBehaviourFactory::create(int64_t id, const Behaviour* behaviourModel) const
 {
-    BehaviourContext ctx{_wm, behaviourModel->getName(), behaviourModel, _traceFactory};
+    BehaviourContext ctx{_globalBlackboard, behaviourModel->getName(), behaviourModel, _traceFactory};
     std::unique_ptr<BasicBehaviour> basicBeh = _creator->createBehaviour(id, ctx);
     if (!basicBeh) {
         Logging::logError("RuntimeBehaviourFactory") << "Behaviour creation failed: " << id;

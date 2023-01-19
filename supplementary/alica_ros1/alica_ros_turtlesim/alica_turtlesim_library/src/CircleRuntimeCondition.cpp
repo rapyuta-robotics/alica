@@ -5,7 +5,7 @@ namespace alica
 
 CircleRuntimeCondition::CircleRuntimeCondition() {}
 
-bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard)
 {
     return true;
 }

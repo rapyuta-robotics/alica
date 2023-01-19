@@ -9,7 +9,7 @@ AcmeRuntimeCondition::AcmeRuntimeCondition()
               << "AcmeRuntimeCondition created" << std::endl;
 }
 
-bool AcmeRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool AcmeRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard)
 {
     std::cerr << "AcmeRuntimeCondition::evaluate" << std::endl;
     return true;

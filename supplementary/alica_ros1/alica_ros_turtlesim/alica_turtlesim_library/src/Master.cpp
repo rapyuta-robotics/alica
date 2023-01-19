@@ -9,4 +9,6 @@ Master::Master(PlanContext& context)
 }
 Master::~Master() {}
 
+void Master::onInit() {}
+
 } // namespace alica

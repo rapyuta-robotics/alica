@@ -33,10 +33,10 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
-        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const Blackboard* globalBlackboard)
         : _agents(paraAgents)
         , _plans(planList)
-        , _wm(wm)
+        , _globalBlackboard(globalBlackboard)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
@@ -54,7 +54,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, c
         // prep successinfo for this plan
         _successData.push_back(_teamObserver.createSuccessCollection(curPlan));
         // allow caching of eval data
-        curPlan->getUtilityFunction()->cacheEvalData(_wm);
+        curPlan->getUtilityFunction()->cacheEvalData(_globalBlackboard);
         // seed the fringe with a partial assignment
         PartialAssignment* curPa = _pool.getNext();
 
@@ -77,7 +77,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr, _wm);
+            curPa->evaluate(nullptr, _globalBlackboard);
             changed = true;
         }
         ++i;
@@ -115,7 +115,7 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            curPa->expand(_fringe, _pool, oldAss, _wm);
+            curPa->expand(_fringe, _pool, oldAss, _globalBlackboard);
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

@@ -35,7 +35,10 @@ void GoTo::run()
         return;
     }
     // move turtle to goal
-    if (dynamic_cast<turtlesim::ALICATurtleWorldModel*>(getWorldModel())->turtle.move_toward_goal(_results[0], _results[1])) {
+    std::shared_ptr<turtlesim::ALICATurtleWorldModel> wm =
+            LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
+
+    if (wm->turtle.move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
     /*PROTECTED REGION END*/

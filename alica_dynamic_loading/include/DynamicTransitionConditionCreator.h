@@ -18,7 +18,7 @@ public:
     TransitionConditionCallback createConditions(int64_t conditionId, TransitionConditionContext& context);
 
 private:
-    typedef bool(transitionConditionFunctionType)(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*);
+    typedef bool(transitionConditionFunctionType)(const Blackboard*, const RunningPlan*, const Blackboard*);
     std::vector<std::string> _libraryPath;
 };
 

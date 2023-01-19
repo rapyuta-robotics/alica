@@ -35,12 +35,11 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
-
     // create world model
     if (_loadDynamically) {
         ALICASetWorldModel(nh, priv_nh);
     } else {
-        ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
+        alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
     }
 }
 
@@ -71,14 +70,14 @@ void Base::start()
                 std::make_unique<alica::DynamicTransitionConditionCreator>());
 
         spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators));
+        ac->init(std::move(creators), false);
         ac->addSolver<alica::reasoner::CGSolver>();
     } else {
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>());
-        spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators));
+        spinner.start();                      // start spinner before initializing engine, but after setting context
+        ac->init(std::move(creators), false); // Do not start engine, I need to add WM before
         ac->addSolver<alica::reasoner::CGSolver>();
     }
 }
