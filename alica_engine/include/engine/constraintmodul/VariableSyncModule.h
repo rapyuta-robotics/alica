@@ -45,6 +45,8 @@ public:
     VariableSyncModule& operator=(VariableSyncModule&&) = delete;
 
 private:
+    static constexpr const char* LOGNAME = "ConstraintSolver";
+
     class VotedSeed
     {
     public:
@@ -121,16 +123,16 @@ int VariableSyncModule::getSeeds(const std::vector<VarType*>& query, const std::
         }
         ss << endl;
     }
-    Logging::logDebug("RS", ss.str())
+    Logging::logDebug(LOGNAME, ss.str());
 #endif
 
-            std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
-                if (a._totalSupCount != b._totalSupCount) {
-                    return a._totalSupCount > b._totalSupCount;
-                } else {
-                    return a._hash > b._hash;
-                }
-            });
+    std::sort(seeds.begin(), seeds.end(), [](const VotedSeed& a, const VotedSeed& b) {
+        if (a._totalSupCount != b._totalSupCount) {
+            return a._totalSupCount > b._totalSupCount;
+        } else {
+            return a._hash > b._hash;
+        }
+    });
 
     int maxNum = std::min(static_cast<int>(seeds.size()), dim);
     o_seeds.resize(dim * maxNum);

@@ -47,6 +47,8 @@ public:
     void init(const IAlicaWorldModel* wm);
 
 private:
+    static constexpr const char* LOGNAME = "Rulebook";
+
     Logger& _logger;
     SyncModule& _syncModule;
     const TeamManager& _teamManager;

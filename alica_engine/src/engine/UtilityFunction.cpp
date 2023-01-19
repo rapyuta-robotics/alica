@@ -170,24 +170,16 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
                 return UtilityInterval(-1.0, -1.0);
             }
             priResult.setMin(priResult.getMin() + curPrio);
-
-            Logging::logDebug("UF") << "taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _teamManager->getTeamSize());
-
-    Logging::logDebug("UF") << "##\n"
-                            << "prioUI = " << priResult;
-    Logging::logDebug("UF") << "denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    Logging::logDebug("UF") << "prioUI = " << priResult << "\n"
-                            << "##";
     return priResult;
 }
 

@@ -17,7 +17,7 @@
 #include <communication/AlicaRosCommunication.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaContext.h>
-#include <engine/logging/AlicaDefaultLogger.h>
+#include <engine/logging/Logging.h>
 #include <logger/AlicaRosLogger.h>
 #include <ros/ros.h>
 
@@ -49,8 +49,7 @@ void Base::ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
     std::vector<std::string> tmp = calculateLibraryPath();
     std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
     if (libraryPath.empty()) {
-        std::cerr << "Error:"
-                  << "Lib not exists" << std::endl;
+        Logging::logError("Turtlesim") << "Library: " << libraryPath << "does not exist";
         return;
     }
 

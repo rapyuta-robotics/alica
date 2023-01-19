@@ -243,6 +243,8 @@ public:
     TeamManager& getTeamManager() const;
 
 private:
+    static constexpr const char* LOGNAME = "RunningPlan";
+
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
     // Status Information

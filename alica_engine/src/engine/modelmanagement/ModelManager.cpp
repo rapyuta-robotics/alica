@@ -54,7 +54,7 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     try {
         basePath = config["Alica"][configKey].as<std::string>();
     } catch (const std::runtime_error& error) {
-        AlicaEngine::abort("MM: Directory for config key '" + configKey + "' does not exist in the Alica config file.\n", error.what());
+        AlicaEngine::abort(LOGNAME, "Directory for config key '", configKey, "' does not exist in the Alica config file.\n", error.what());
     }
 
     if (!essentials::FileSystem::endsWith(basePath, essentials::FileSystem::PATH_SEPARATOR)) {
@@ -66,10 +66,10 @@ std::string ModelManager::getBasePath(const std::string& configKey)
     }
 
     if (!essentials::FileSystem::pathExists(basePath)) {
-        AlicaEngine::abort("MM: Base path '" + basePath + "' does not exist for '" + configKey + "'");
+        AlicaEngine::abort(LOGNAME, "Base path '", basePath, "' does not exist for '" + configKey + "'");
     }
 
-    Logging::logInfo("MM") << "Config key '" << configKey << "' maps to '" << basePath << "'";
+    Logging::logDebug(LOGNAME) << "Config key '" << configKey << "' maps to '" << basePath << "'";
     return basePath;
 }
 
@@ -77,7 +77,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 {
     std::string masterPlanPath;
     if (!essentials::FileSystem::findFile(basePlanPath, masterPlanName + alica::Strings::plan_extension, masterPlanPath)) {
-        AlicaEngine::abort("MM: Cannot find MasterPlan '" + masterPlanName + "'");
+        AlicaEngine::abort(LOGNAME, "Cannot find MasterPlan '", masterPlanName, "'");
     }
 
     filesParsed.push_back(masterPlanPath);
@@ -86,10 +86,10 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         std::string fileToParse = filesToParse.front();
         filesToParse.pop_front();
 
-        Logging::logDebug("MM") << "fileToParse: " << fileToParse;
+        Logging::logDebug(LOGNAME) << "fileToParse: " << fileToParse;
 
         if (!essentials::FileSystem::pathExists(fileToParse)) {
-            AlicaEngine::abort("MM: Cannot find referenced file:", fileToParse);
+            AlicaEngine::abort(LOGNAME, "Cannot find referenced file:", fileToParse);
         }
         filesParsed.push_back(fileToParse);
         if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::plan_extension)) {
@@ -105,17 +105,13 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         } else if (essentials::FileSystem::endsWith(fileToParse, alica::Strings::condition_extension)) {
             parseFile(fileToParse, alica::Strings::transitionCondition);
         } else {
-            AlicaEngine::abort("MM: Cannot parse file type: ", fileToParse);
+            AlicaEngine::abort(LOGNAME, "Cannot parse file type: ", fileToParse);
         }
     }
 
     attachReferences();
     generateTemplateVariables();
     computeReachabilities();
-
-    for (const Behaviour* beh : _planRepository.getBehaviours()) {
-        Logging::logInfo("MM") << beh->toString();
-    }
 
     return masterPlan;
 }
@@ -128,12 +124,11 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
     }
 
     if (!essentials::FileSystem::pathExists(roleSetPath)) {
-        AlicaEngine::abort("MM: Cannot find RoleSet '" + roleSetPath + "'");
+        AlicaEngine::abort(LOGNAME, "Cannot find RoleSet '", roleSetPath, "'");
     }
 
     RoleSet* roleSet = (RoleSet*) parseFile(roleSetPath, alica::Strings::roleset);
     RoleSetFactory::attachReferences();
-    Logging::logInfo("MM") << "Parsed the following role set: \n" << roleSet->toString();
     return roleSet;
 }
 
@@ -149,7 +144,7 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
         rolesetDir = essentials::FileSystem::combinePaths(baseRolePath, rolesetDir);
     }
     if (!essentials::FileSystem::isDirectory(rolesetDir)) {
-        AlicaEngine::abort("MM: RoleSet directory does not exist: " + rolesetDir);
+        AlicaEngine::abort(LOGNAME, "RoleSet directory does not exist: ", rolesetDir);
     }
 
     std::vector<std::string> files = essentials::FileSystem::findAllFiles(rolesetDir, alica::Strings::roleset_extension);
@@ -163,11 +158,11 @@ std::string ModelManager::findDefaultRoleSet(const std::string& dir)
                 return file;
             }
         } catch (const YAML::BadFile& badFile) {
-            AlicaEngine::abort("MM: Could not parse roleset file: ", badFile.msg);
+            AlicaEngine::abort(LOGNAME, "Could not parse roleset file: ", badFile.msg);
         }
     }
 
-    AlicaEngine::abort("MM: Could not find any default role set in '" + rolesetDir + "'");
+    AlicaEngine::abort(LOGNAME, "Could not find any default role set in '", rolesetDir, "'");
 
     // need to return something, but it should never be reached (either found something, or abort)
     return files[0];
@@ -179,7 +174,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
     try {
         node = YAML::LoadFile(currentFile);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("MM: Could not parse file: ", badFile.msg);
+        AlicaEngine::abort(LOGNAME, "Could not parse file: ", badFile.msg);
     }
     if (alica::Strings::plan.compare(type) == 0) {
         Plan* plan = PlanFactory::create(_configChangeListener, node);
@@ -210,7 +205,7 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         conditionRepository->setFileName(currentFile);
         return conditionRepository;
     } else {
-        AlicaEngine::abort("MM: Parsing type not handled: ", type);
+        AlicaEngine::abort(LOGNAME, "Parsing type not handled: ", type);
         return nullptr;
     }
 }
