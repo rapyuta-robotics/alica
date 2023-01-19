@@ -14,4 +14,12 @@ Variable* VariableFactory::create(const YAML::Node& variableNode)
 
     return variable;
 }
+
+Variable* VariableFactory::create(int64_t id, const std::string& name, const std::string& type)
+{
+    Variable* variable = new Variable(id, name, type);
+    Factory::storeElement(variable, alica::Strings::variable);
+
+    return variable;
+}
 } // namespace alica

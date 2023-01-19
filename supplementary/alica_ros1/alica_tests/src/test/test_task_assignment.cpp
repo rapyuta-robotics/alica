@@ -83,20 +83,20 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
 
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
+    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
             ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
             ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
 
     // fake inform the team
 
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
-    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
-    inputWrappers.push_back(wrapper);
+    inputWrappers.push_back(wrapper.get());
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp.get(), inputWrappers, robots, o_plans);
     EXPECT_TRUE(ok);
     EXPECT_EQ(o_plans.size(), 1u);
 }
@@ -139,19 +139,19 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
 
     const std::unordered_map<size_t, std::unique_ptr<ISolverBase>> solvers;
     // fake inform the team observer about roles of none existing robots
-    alica::RunningPlan* rp = new RunningPlan(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
+    auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
             ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
             ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
 
     // fake inform the team observer about roles of none existing robots
     alica::ConfAbstractPlanWrapperGrp inputWrappers;
-    ConfAbstractPlanWrapper* wrapper = new ConfAbstractPlanWrapper();
+    auto wrapper = std::make_unique<ConfAbstractPlanWrapper>();
     wrapper->setAbstractPlan(ae->getPlanRepository().getPlans().find(1407152758497));
-    inputWrappers.push_back(wrapper);
+    inputWrappers.push_back(wrapper.get());
     alica::PlanSelector* ps = ae->getPlanBase().getPlanSelector();
 
     std::vector<alica::RunningPlan*> o_plans;
-    bool ok = ps->getPlansForState(rp, inputWrappers, robots, o_plans);
+    bool ok = ps->getPlansForState(rp.get(), inputWrappers, robots, o_plans);
     //    std::cout << "Initial Assignment: " << o_plans[0]->getAssignment() << std::endl;
 
     uint64_t harryId = 8;

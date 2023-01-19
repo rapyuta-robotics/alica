@@ -21,7 +21,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
     EXPECT_EQ(0, ac->init(std::move(creators), true));
-    ae = AlicaTestsEngineGetter::getEngine(ac);
+    ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
     EXPECT_TRUE(ae->maySendMessages());
 }
@@ -33,7 +33,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", true));
     EXPECT_EQ(0, ac->init(std::move(creators), true));
-    ae = AlicaTestsEngineGetter::getEngine(ac);
+    ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
     EXPECT_FALSE(ae->maySendMessages());
 }
@@ -51,7 +51,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
     EXPECT_EQ(0, ac->init(std::move(creators), true));
-    ae = AlicaTestsEngineGetter::getEngine(ac);
+    ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
     EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 }

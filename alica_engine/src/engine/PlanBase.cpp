@@ -100,7 +100,7 @@ void PlanBase::reload(const YAML::Node& config)
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
         if (!_statusMessage) {
-            _statusMessage = new AlicaEngineInfo();
+            _statusMessage = std::make_unique<AlicaEngineInfo>();
         }
     }
 
@@ -125,7 +125,7 @@ void PlanBase::start(const Plan* masterPlan)
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
-        _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
+        _mainThread = std::make_unique<std::thread>(&PlanBase::run, this, masterPlan);
     }
 }
 
@@ -338,19 +338,19 @@ void PlanBase::stop()
 
     if (_mainThread != nullptr) {
         _mainThread->join();
-        delete _mainThread;
+        _mainThread.reset();
     }
 
     if (_rootNode) {
         _rootNode->deactivate();
     }
-
-    _mainThread = nullptr;
 }
 
 PlanBase::~PlanBase()
 {
-    delete _statusMessage;
+    if (_running) {
+        stop();
+    }
     // Destroy running plans from most recent to least recent
     while (!_runningPlans.empty()) {
         _runningPlans.pop_back();

@@ -49,8 +49,9 @@ private:
     std::list<std::string> filesToParse;
     std::list<std::string> filesParsed;
 
+    // destruction order between elements and planRepository seems important here
+    std::map<int64_t, std::unique_ptr<AlicaElement>> elements;
     PlanRepository& _planRepository;
-    std::map<int64_t, AlicaElement*> elements;
 
     const AlicaElement* getElement(const int64_t id);
     std::string getBasePath(const std::string& configKey);
