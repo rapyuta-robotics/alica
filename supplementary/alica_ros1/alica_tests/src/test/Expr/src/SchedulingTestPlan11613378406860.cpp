@@ -92,8 +92,6 @@ bool PreCondition1614960063843::evaluate(std::shared_ptr<RunningPlan> rp, const 
 void SchedulingTestPlan11613378406860::onInit()
 {
     LockedBlackboardRW bb(*(getBlackboard()));
-    bb.set<int64_t>("Plan2Sub", 2);
-    bb.set<int64_t>("Init2Term", 5);
     CounterClass::called = 1;
 }
 

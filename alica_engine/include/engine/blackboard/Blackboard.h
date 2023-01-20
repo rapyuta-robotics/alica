@@ -179,10 +179,8 @@ public:
         }
         // key is found in yaml file
         auto typeIndex = getTypeIndex(yamlTypeIt->second);
-        // TODO: maybe add some checks here to make sure childType is correct, throw exception if not supported
-        // also check that variant has been constructed correctly, otherwise throw exception
         if (typeIndex.has_value()) {
-            _vals.at(targetKey) = makeBBValueForIndex<false>::make(typeIndex.value(), value);
+            _vals.at(targetKey) = makeBBValueForIndex<true>::make(typeIndex.value(), value);
         }
     }
 

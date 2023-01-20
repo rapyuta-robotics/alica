@@ -12,7 +12,7 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
 {
     const LockedBlackboardRO lockedParentBb(*parent_bb);
     auto& childBb = child_bb->impl(); // Child not started yet, no other user exists, don't use lock
-    for (const auto& [parentKey, value, childKey] : keyMapping->getInputMapping()) {
+    for (const auto& [parentKey, childKey, value] : keyMapping->getInputMapping()) {
         if (parentKey.empty()) {
             // parentKey does not exist, setting constant value for child key
             try {

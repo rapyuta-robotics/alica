@@ -136,7 +136,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "Plan2Sub"
+            "parentKey": "",
+            "value": "2" # MANUALLY ADDED, NEEDS CHANGES TO BACKEND
           }
         ],
         "output": []
@@ -170,7 +171,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "Init2Term"
+            "parentKey": "",
+            "value": "5" # MANUALLY ADDED, NEEDS CHANGES TO BACKEND
           }
         ],
         "output": []

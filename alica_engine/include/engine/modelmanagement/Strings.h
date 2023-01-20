@@ -39,6 +39,7 @@ static const std::string input = "input";
 static const std::string output = "output";
 static const std::string parentKey = "parentKey";
 static const std::string childKey = "childKey";
+static const std::string value = "value";
 
 static const std::string id = "id";
 static const std::string name = "name";
