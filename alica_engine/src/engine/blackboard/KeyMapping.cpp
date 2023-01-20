@@ -21,8 +21,9 @@ const KeyMapping::KeyMappingList& KeyMapping::getOutputMapping() const
 
 void KeyMapping::addInputMapping(const std::string& parentKey, const std::string& childKey, const std::string& value)
 {
-    // TODO: check that combination of parentKey and childKey doesnt exist, dont allow multiple value parameters for one combination
-    assert(std::count(_inputMapping.begin(), _inputMapping.end(), std::make_tuple(parentKey, childKey, value)) == 0);
+    assert(std::count_if(_inputMapping.begin(), _inputMapping.end(), [parentKey, childKey](std::tuple<std::string, std::string, std::string>& entry) {
+        return std::get<0>(entry) == parentKey && std::get<1>(entry) == childKey;
+    }) == 0);
     _inputMapping.push_back(std::make_tuple(parentKey, childKey, value));
 }
 
