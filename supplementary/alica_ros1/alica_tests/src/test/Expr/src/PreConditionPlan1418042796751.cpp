@@ -34,12 +34,12 @@ PreConditionPlan1418042796751::~PreConditionPlan1418042796751()
 /**
  * Available Vars:
  */
-bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1418042929966::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1418042929966) ENABLED START*/
     //--> "PreCondition:1418042929966  not implemented";
     //    	return true;
-    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+    std::shared_ptr<alicaTests::TestWorldModel> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     return worldModel->isPreCondition1418042929966();
     /*PROTECTED REGION END*/
 }

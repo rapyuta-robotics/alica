@@ -6,7 +6,7 @@
  */
 #include <alica_tests/DistXContourTest.h>
 #include <alica_tests/TestWorldModel.h>
-
+#include <engine/blackboard/Blackboard.h>
 #include <engine/planselector/IAssignment.h>
 
 namespace alica
@@ -23,10 +23,11 @@ DistXContourTest::DistXContourTest(double weight, const std::vector<std::pair<do
 
 DistXContourTest::~DistXContourTest() {}
 
-void DistXContourTest::cacheEvalData(const IAlicaWorldModel* wm)
+void DistXContourTest::cacheEvalData(const Blackboard* globalBlackboard)
 {
-    auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
-    xAlloBall = worldModel->x;
+    LockedBlackboardRO bbwm(*globalBlackboard);
+    std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+    xAlloBall = wm->x;
 }
 
 double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y2, double xPoint) const
@@ -34,7 +35,7 @@ double DistXContourTest::interpolate2D(double X1, double Y1, double X2, double Y
     return ((Y2 - Y1) / (X2 - X1) * (xPoint - X1) + Y1);
 }
 
-UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
+UtilityInterval DistXContourTest::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* globalBlackboard) const
 {
     UtilityInterval ui(0.0, 0.0);
 

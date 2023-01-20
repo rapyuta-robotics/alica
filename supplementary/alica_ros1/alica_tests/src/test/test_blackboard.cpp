@@ -67,7 +67,9 @@ TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
     // Two parent values mapped to same behavior input value to differentiate call contexts
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5);       // Value set in first behavior call
     EXPECT_EQ(wm->passedParameters["behaviorSecondInputKey"], 7); // Value set in second behavior call
 }
@@ -77,7 +79,8 @@ TEST_F(TestBlackboard, testJsonPlanKeyMapping)
     // Pass values of mapped keys form a plan into another plan
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["planInputFromMaster"], 8);
 }
 
@@ -86,7 +89,8 @@ TEST_F(TestBlackboard, testJsonBehaviorKeyMapping)
     // Pass values of mapped keys form a plan into a behavior and out of a bahavior into a plan
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorInputKey"], 5); // Value set in plan init -> read in behavior
     EXPECT_EQ(wm->passedParameters["planInputKey"], 6);     // Value set in behavior -> read in plan termination
 }
@@ -96,7 +100,8 @@ TEST_F(TestBlackboard, testJsonBlackboardPlan)
     // Check if a key defined in json of a plan is accessible
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["planKey"], 1);
 }
 
@@ -105,7 +110,8 @@ TEST_F(TestBlackboard, testJsonBlackboardBehavior)
     // Check if a key defined in json of a behavior is accessible
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(100));
-    auto wm = dynamic_cast<alicaTests::TestWorldModel*>(ae->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> wm =
+            LockedBlackboardRW(ae->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     EXPECT_EQ(wm->passedParameters["behaviorKey"], 2);
 }
 

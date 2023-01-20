@@ -2,7 +2,6 @@
 
 #include "engine/Assignment.h"
 #include "engine/DefaultUtilityFunction.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/IRoleAssignment.h"
 #include "engine/RunningPlan.h"
 #include "engine/TaskRoleStruct.h"
@@ -39,7 +38,7 @@ UtilityFunction::~UtilityFunction() {}
  * ATTENTION PLZ: Return value is only significant with respect to current Utility of oldAss! (SimilarityMeasure)
  * @return The utility interval
  */
-UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel* wm) const
+UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* globalBlackboard) const
 {
     if (!newAss->isValid()) {
         return UtilityInterval(-1.0, -1.0);
@@ -61,7 +60,7 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     UtilityInterval curUI;
 
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-        curUI = us->eval(wrapper, oldAss, wm);
+        curUI = us->eval(wrapper, oldAss, globalBlackboard);
         // if a summand deny assignment, return -1 for forbidden assignments
         if (curUI.getMax() <= -1.0) {
             sumOfUI.setMax(-1.0);
@@ -83,10 +82,10 @@ UtilityInterval UtilityFunction::eval(const PartialAssignment* newAss, const Ass
     return UtilityInterval(0.0, 0.0);
 }
 
-void UtilityFunction::cacheEvalData(const IAlicaWorldModel* wm)
+void UtilityFunction::cacheEvalData(const Blackboard* globalBlackboard)
 {
     for (const std::unique_ptr<USummand>& us : _utilSummands) {
-        us->cacheEvalData(wm);
+        us->cacheEvalData(globalBlackboard);
     }
 }
 
@@ -170,24 +169,16 @@ UtilityInterval UtilityFunction::getPriorityResult(IAssignment ass) const
                 return UtilityInterval(-1.0, -1.0);
             }
             priResult.setMin(priResult.getMin() + curPrio);
-
-            Logging::logDebug("UF") << "taskId:" << taskId << " roleId:" << roleId << " prio: " << curPrio;
         }
     }
     // for better comparability of different utility functions
     int denum = std::min(_plan->getMaxCardinality(), _teamManager->getTeamSize());
-
-    Logging::logDebug("UF") << "##\n"
-                            << "prioUI = " << priResult;
-    Logging::logDebug("UF") << "denum = " << denum;
 
     priResult.setMax(priResult.getMax() + priResult.getMin());
     if (denum != 0) {
         priResult /= denum;
     }
 
-    Logging::logDebug("UF") << "prioUI = " << priResult << "\n"
-                            << "##";
     return priResult;
 }
 

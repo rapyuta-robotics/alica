@@ -49,6 +49,8 @@ public:
     void reload(const YAML::Node& config);
 
 private:
+    static constexpr const char* LOGNAME = "TeamObserver";
+
     bool updateTeamPlanTrees();
     void cleanOwnSuccessMarks(RunningPlan* root);
     std::unique_ptr<SimplePlanTree> sptFromMessage(AgentId agent, const IdGrp& ids, AlicaTime time) const;

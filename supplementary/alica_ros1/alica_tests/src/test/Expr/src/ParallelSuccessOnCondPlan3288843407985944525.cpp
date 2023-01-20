@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction3288843407985944525::getUtilityF
  *   - SuccessOnCondWrapperBPlan (2869465844414224272)
  *   - SuccessOnCondWrapperAPlan (673160616613514188)
  */
-bool PreCondition2767999024419231358::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition2767999024419231358::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(602472383731208509) ENABLED START*/
     std::cout << "The PreCondition 2767999024419231358 in Transition '602472383731208509' is not implement yet!" << std::endl;
@@ -78,7 +78,7 @@ bool PreCondition2767999024419231358::evaluate(std::shared_ptr<RunningPlan> rp, 
  *
  * Abstract Plans in WaitForTriggerState:
  */
-bool PreCondition1470823850869867131::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1470823850869867131::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(4409408749212342883) ENABLED START*/
     std::cout << "The PreCondition 1470823850869867131 in Transition '4409408749212342883' is not implement yet!" << std::endl;

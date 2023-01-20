@@ -73,7 +73,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -82,6 +81,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
     }
 
     virtual void TearDown() override
@@ -160,7 +160,6 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
@@ -168,6 +167,9 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+
+            LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
+
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);
@@ -207,7 +209,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         spinner->start();
@@ -243,7 +244,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -252,6 +252,9 @@ protected:
 
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
+
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
+
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -275,7 +278,10 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
+    }
 
     virtual void SetUp() override
     {
@@ -285,13 +291,11 @@ protected:
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
         ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
-
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -299,6 +303,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
+        manageWorldModel(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
     }
@@ -322,7 +327,10 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
+    }
 
     // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
     virtual void SetUp() override
@@ -337,7 +345,6 @@ protected:
         const YAML::Node& config = ac->getConfig();
         spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -345,6 +352,7 @@ protected:
                 std::make_unique<alica::LegacyTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
+        manageWorldModel(ac);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
         spinner->start();
@@ -371,7 +379,10 @@ protected:
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName(int agentNumber) const { return "nase"; }
-    virtual void manageWorldModel(alica::AlicaContext* ac) { ac->setWorldModel<alica_test::SchedWM>(); }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
+    }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
@@ -392,15 +403,14 @@ protected:
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-            manageWorldModel(ac);
             auto tf = ac->getTraceFactory();
-            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(ac->getWorldModel());
-
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
             alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+            manageWorldModel(ac);
+            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
+            attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
             spinners.back()->start();
             acs.push_back(ac);

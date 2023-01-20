@@ -22,7 +22,8 @@ protected:
 
 TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
 {
-    auto worldModel = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> worldModel =
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     ae->start();
 
     for (int i = 0; i < 10; i++) {

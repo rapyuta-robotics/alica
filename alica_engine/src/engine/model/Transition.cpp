@@ -1,5 +1,4 @@
 #include "engine/model/Transition.h"
-#include "engine/IAlicaWorldModel.h"
 #include "engine/RunningPlan.h"
 #include "engine/blackboard/KeyMapping.h"
 #include "engine/model/PostCondition.h"

@@ -48,10 +48,10 @@ protected:
     bool stepEngine() const override { return false; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        ac->setWorldModel<alicaTests::TestWorldModel>();
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(ac->getWorldModel());
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
     }
 };
 
@@ -64,10 +64,10 @@ protected:
     int getAgentCount() const override { return agentCount; }
     void manageWorldModel(alica::AlicaContext* ac) override
     {
-        ac->setWorldModel<alicaTests::TestWorldModel>();
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
         auto tf = ac->getTraceFactory();
         auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-        attf->setWorldModel(ac->getWorldModel());
+        attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
     }
     const char* getHostName(int agentNumber) const override
     {
@@ -84,7 +84,8 @@ TEST_F(AlicaTracingTest, runTracing)
     ASSERT_NO_SIGNAL
     ae->start();
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
-    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(ac->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> twm1 =
+            LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
     twm1->setPreCondition1840401110297459509(true);
     ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(200));
@@ -95,8 +96,10 @@ TEST_F(AlicaTracingTest, runTracing)
 
 TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
 {
-    auto twm1 = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto twm2 = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> twm1 =
+            LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+    std::shared_ptr<alicaTests::TestWorldModel> twm2 =
+            LockedBlackboardRW(acs[1]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
     const Plan* plan = aes[0]->getPlanRepository().getPlans().find(1414403413451);
     ASSERT_NE(plan, nullptr) << "Plan 1414403413451 is unknown";
@@ -141,7 +144,7 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     }
     EXPECT_TRUE(foundTaskAssignmentChangeLog);
     EXPECT_EQ(twm1->tracingParents["EmptyBehaviour"], "AuthorityTest");
-    EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest"); // added by Luca
+    EXPECT_EQ(twm2->tracingParents["EmptyBehaviour"], "AuthorityTest");
 }
 
 } // namespace

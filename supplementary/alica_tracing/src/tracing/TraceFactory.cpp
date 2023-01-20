@@ -11,7 +11,7 @@ namespace alicaTracing
 TraceFactory::TraceFactory(const std::string& serviceName, const std::string& configFilePath, const std::unordered_map<std::string, RawTraceValue>& defaultTags)
         : _defaultTags(defaultTags)
 {
-    alica::Logging::logInfo("AlicaTracing") << __func__ << " Initializing tracing for service " << serviceName;
+    alica::Logging::logInfo(LOGNAME) << __func__ << " Initializing tracing for service " << serviceName;
     _serviceName = serviceName;
     try {
         auto configYAML = YAML::LoadFile(configFilePath);
@@ -19,16 +19,16 @@ TraceFactory::TraceFactory(const std::string& serviceName, const std::string& co
         auto tracer = jaegertracing::Tracer::make(_serviceName, config, jaegertracing::logging::consoleLogger());
         opentracing::Tracer::InitGlobal(std::static_pointer_cast<opentracing::Tracer>(tracer));
     } catch (std::exception& e) {
-        alica::Logging::logError("AlicaTracing") << __func__ << " Failed to initialize jaeger: " << e.what();
+        alica::Logging::logError(LOGNAME) << __func__ << " Failed to initialize jaeger: " << e.what();
         throw e;
     }
     _initialized = true;
-    alica::Logging::logInfo("AlicaTracing") << __func__ << " tracing for service " << _serviceName;
+    alica::Logging::logInfo(LOGNAME) << __func__ << " tracing for service " << _serviceName;
 }
 
 TraceFactory::~TraceFactory()
 {
-    alica::Logging::logInfo("AlicaTracing") << __func__ << " Terminating tracing for service " << _serviceName;
+    alica::Logging::logInfo(LOGNAME) << __func__ << " Terminating tracing for service " << _serviceName;
     // allow termination to propogate,
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     opentracing::Tracer::Global()->Close();

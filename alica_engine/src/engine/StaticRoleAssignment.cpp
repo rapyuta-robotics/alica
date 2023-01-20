@@ -85,7 +85,7 @@ void StaticRoleAssignment::calculateRoles()
         }
 
         if (!roleIsAssigned) {
-            AlicaEngine::abort("RA: Could not set a role (Default: " + prop.getDefaultRole() + ") for robot: ", agent->getId());
+            AlicaEngine::abort(LOGNAME, "Could not set a role (Default: ", prop.getDefaultRole(), ") for robot: ", agent->getId());
         }
     }
 }

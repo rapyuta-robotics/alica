@@ -6,8 +6,9 @@ namespace alica
 Master::Master(PlanContext& context)
         : BasicPlan(context)
 {
-    std::cerr << "Masterr created" << std::endl;
 }
 Master::~Master() {}
+
+void Master::onInit() {}
 
 } // namespace alica

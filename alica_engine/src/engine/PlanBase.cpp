@@ -32,7 +32,7 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, IAlicaWorldModel* worldModel, VariableSyncModule& resultStore,
+        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
         const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory, const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
@@ -46,9 +46,9 @@ PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock&
         , _planRepository(planRepository)
         , _stepEngine(stepEngine)
         , _stepCalled(stepCalled)
-        , _worldModel(worldModel)
-        , _runTimePlanFactory(worldModel, traceFactory, teamManager, timerFactory)
-        , _runTimeBehaviourFactory(worldModel, teamManager, *this, communicator, traceFactory, timerFactory)
+        , _globalBlackboard(globalBlackboard)
+        , _runTimePlanFactory(globalBlackboard, traceFactory, teamManager, timerFactory)
+        , _runTimeBehaviourFactory(globalBlackboard, teamManager, *this, communicator, traceFactory, timerFactory)
         , _resultStore(resultStore)
         , _solvers(solvers)
         , _rootNode(nullptr)
@@ -74,15 +74,15 @@ void PlanBase::reload(const YAML::Node& config)
     double maxbcfreq = config["Alica"]["MaxBroadcastFrequency"].as<double>();
 
     if (freq > 1000) {
-        AlicaEngine::abort("PB: ALICA should not be used with more than 1000Hz");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: engine frequency should not be more than 1000Hz");
     }
 
     if (maxbcfreq > freq) {
-        AlicaEngine::abort("PB: Alica.conf: Maximum broadcast frequency must not exceed the engine frequency");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: Maximum broadcast frequency must not exceed the engine frequency");
     }
 
     if (minbcfreq > maxbcfreq) {
-        AlicaEngine::abort("PB: Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
+        AlicaEngine::abort(LOGNAME, "Alica.conf: Minimal broadcast frequency must be lower or equal to maximal broadcast frequency!");
     }
 
     _loopTime = AlicaTime::seconds(1.0 / freq);
@@ -95,7 +95,7 @@ void PlanBase::reload(const YAML::Node& config)
     if (_sendStatusMessages) {
         double stfreq = config["Alica"]["StatusMessages"]["Frequency"].as<double>();
         if (stfreq > freq) {
-            AlicaEngine::abort("PB: Alica.conf: Status messages frequency must not exceed the engine frequency");
+            AlicaEngine::abort(LOGNAME, "Alica.conf: Status messages frequency must not exceed the engine frequency");
         }
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
@@ -104,8 +104,8 @@ void PlanBase::reload(const YAML::Node& config)
         }
     }
 
-    Logging::logInfo("PB") << "Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds()
-                           << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
+    Logging::logInfo(LOGNAME) << "Engine loop time is " << _loopTime.inMilliseconds() << "ms, broadcast interval is " << _minSendInterval.inMilliseconds()
+                              << "ms - " << _maxSendInterval.inMilliseconds() << "ms";
 
     if (halfLoopTime < _minSendInterval) {
         _minSendInterval -= halfLoopTime;
@@ -116,9 +116,9 @@ void PlanBase::reload(const YAML::Node& config)
 /**
  * Starts execution of the plan tree, call once all necessary modules are initialised.
  */
-void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
+void PlanBase::start(const Plan* masterPlan)
 {
-    _ruleBook.init(wm);
+    _ruleBook.init(&_globalBlackboard);
     if (!_running) {
         _running = true;
         if (_statusMessage) {
@@ -134,7 +134,7 @@ void PlanBase::start(const Plan* masterPlan, const IAlicaWorldModel* wm)
  */
 void PlanBase::run(const Plan* masterPlan)
 {
-    Logging::logDebug("PB") << "Run-Method of PlanBase started.";
+    Logging::logDebug(LOGNAME) << "Run-Method of PlanBase started.";
     Logger& log = _logger;
 
     while (_running) {
@@ -143,13 +143,13 @@ void PlanBase::run(const Plan* masterPlan)
 
         if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
-            Logging::logDebug("PB") << "===CUR TREE===";
+            Logging::logDebug(LOGNAME) << "===CUR TREE===";
             if (_rootNode == nullptr) {
-                Logging::logDebug("PB") << "NULL";
+                Logging::logDebug(LOGNAME) << "NULL";
             } else {
                 _rootNode->printRecursive();
             }
-            Logging::logDebug("PB") << "===END CUR TREE===";
+            Logging::logDebug(LOGNAME) << "===END CUR TREE===";
 #endif
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
@@ -177,7 +177,7 @@ void PlanBase::run(const Plan* masterPlan)
         }
         _rootNode->preTick();
         if (_rootNode->tick(&_ruleBook) == PlanChange::FailChange) {
-            Logging::logInfo("PB") << "MasterPlan Failed";
+            Logging::logInfo(LOGNAME) << "MasterPlan Failed";
         }
         // clear deepest node pointer before deleting plans:
         if (_deepestNode && _deepestNode->isRetired()) {
@@ -208,8 +208,8 @@ void PlanBase::run(const Plan* masterPlan)
             }
         }
 #ifdef ALICA_DEBUG_ENABLED
-        Logging::logDebug("PB") << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
-                                << " inactive deleted: " << deleteCount;
+        Logging::logDebug(LOGNAME) << (totalCount - inActiveCount - retiredCount) << " active " << retiredCount << " retired " << inActiveCount
+                                   << " inactive deleted: " << deleteCount;
 #endif
         // lock for fpEvents
         {
@@ -220,7 +220,7 @@ void PlanBase::run(const Plan* masterPlan)
         AlicaTime now = _clock.now();
 
         if (now < _lastSendTime) {
-            Logging::logWarn("PB") << "lastSendTime is in the future of the current system time, did the system time change?";
+            Logging::logWarn(LOGNAME) << "lastSendTime is in the future of the current system time, did the system time change?";
             _lastSendTime = now;
         }
 
@@ -368,22 +368,22 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
 
 RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _resultStore, _solvers, plan, configuration));
     return _runningPlans.back().get();
 }
 
 RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
     return _runningPlans.back().get();
 }
 
 RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _worldModel, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository,
-            _resultStore, _solvers, planType, configuration));
+    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
+            _planRepository, _resultStore, _solvers, planType, configuration));
     return _runningPlans.back().get();
 }
 

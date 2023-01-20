@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <engine/IAlicaTrace.h>
+#include <engine/blackboard/Blackboard.h>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -72,7 +73,10 @@ public:
     ~AlicaTestTraceFactory() = default;
     void setGlobalContext(const std::string& globalContext) override {}
     void unsetGlobalContext() override {}
-    void setWorldModel(alica::IAlicaWorldModel* wm) { _wm = dynamic_cast<alicaTests::TestWorldModel*>(wm); };
+    void setWorldModel(alica::Blackboard* globalBlackboard)
+    {
+        _wm = alica::LockedBlackboardRW(*globalBlackboard).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel").get();
+    };
     alicaTests::TestWorldModel* _wm;
 
     std::unique_ptr<alica::IAlicaTrace> create(const std::string& opName, std::optional<const std::string> parent = std::nullopt) const

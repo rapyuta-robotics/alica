@@ -15,7 +15,7 @@ class Plan;
 class IRoleAssignment;
 class USummand;
 class IAssignment;
-class IAlicaWorldModel;
+class Blackboard;
 struct TaskRoleStruct;
 class RoleSet;
 class TeamManager;
@@ -30,9 +30,9 @@ public:
     std::vector<std::unique_ptr<USummand>>& editUtilSummands() { return _utilSummands; };
 
     // double eval(const RunningPlan* newRp, const RunningPlan* oldRp) const;
-    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const IAlicaWorldModel* wm) const;
+    UtilityInterval eval(const PartialAssignment* newAss, const Assignment* oldAss, const Blackboard* globalBlackboard) const;
     // void updateAssignment(IAssignment* newAss, const Assignment* oldAss);
-    void cacheEvalData(const IAlicaWorldModel* wm);
+    void cacheEvalData(const Blackboard* globalBlackboard);
     void init(const RoleSet* roleSet, const IRoleAssignment& roleAssignment, const TeamManager& teamManager);
 
     static void initDataStructures(

@@ -26,6 +26,8 @@ public:
     void setCommunication(const IAlicaCommunication* communication);
 
 protected:
+    static constexpr const char* LOGNAME = "RoleAssignment";
+
     /**
      * Current Robot's role.
      */

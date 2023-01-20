@@ -29,9 +29,11 @@ public:
 
     RunningPlan* createRunningPlan(RunningPlan* planningParent, const PlanGrp& plans, const Configuration* configuration, const AgentGrp& robotIDs,
             const RunningPlan* oldRp, const PlanType* relevantPlanType, double& o_oldUtility);
-    void setWorldModel(const IAlicaWorldModel* wm);
+    void setGlobalBlackboard(const Blackboard* globalBlackboard);
 
 private:
+    static constexpr const char* LOGNAME = "PlanSelector";
+
     bool getPlansForStateInternal(
             RunningPlan* planningParent, const ConfAbstractPlanWrapperGrp& wrappers, const AgentGrp& robotIDs, std::vector<RunningPlan*>& o_plans);
 
@@ -40,7 +42,7 @@ private:
     const TeamManager& _teamManager;
 
     PlanBase* _pb;
-    const IAlicaWorldModel* _wm;
+    const Blackboard* _globalBlackboard;
 };
 
 } /* namespace alica */

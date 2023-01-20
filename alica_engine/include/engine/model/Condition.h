@@ -16,7 +16,7 @@ class ProblemDescriptor;
 class ModelFactory;
 class ConditionFactory;
 class ExpressionHandler;
-class IAlicaWorldModel;
+class Blackboard;
 
 /**
  * A condition encapsulates expressions and constraint specific to a AlicaElement, e.g., a Transition, or a Plan.
@@ -42,7 +42,7 @@ public:
 
     const std::shared_ptr<BasicCondition>& getBasicCondition() const { return _basicCondition; }
 
-    bool evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const;
+    bool evaluate(const RunningPlan& rp, const Blackboard* globalBlackboard) const;
 
     std::string getLibraryName() const;
 
