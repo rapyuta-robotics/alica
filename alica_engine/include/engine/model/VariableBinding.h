@@ -26,10 +26,6 @@ protected:
     friend ModelFactory;
     friend VariableBindingFactory;
 
-    void setSubPlan(const AbstractPlan* subPlan);
-    void setSubVar(const Variable* subVar);
-    void setVar(const Variable* var);
-
     const Variable* _var;
     const Variable* _subVar;
     const AbstractPlan* _subPlan;

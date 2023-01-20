@@ -48,14 +48,6 @@ private:
     friend StateFactory;
     friend TerminalStateFactory;
     friend ModelManager;
-    void setInPlan(const Plan* inPlan);
-
-    void setInTransitions(const TransitionGrp& inTransitions);
-    void setOutTransitions(const TransitionGrp& outTransition);
-
-    void setVariableBindings(const VariableBindingGrp& variableBindingGrp);
-
-    void setConfAbstractPlanWrappers(const ConfAbstractPlanWrapperGrp& wrappers);
 
     /**
      * The list of AbstractPlans meant to be executed in the context of this state.
