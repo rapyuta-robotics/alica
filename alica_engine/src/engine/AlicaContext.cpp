@@ -20,7 +20,6 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
@@ -30,7 +29,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
         , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _worldModel(nullptr)
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
 {
@@ -55,15 +53,15 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     }
 
     if (_initialized) {
-        Logging::logWarn("AC") << "Context already initialized.";
+        Logging::logWarn(LOGNAME) << "Context already initialized.";
         return -1;
     }
 
     if (!_communicator) {
-        AlicaEngine::abort("AC: Communicator not set");
+        AlicaEngine::abort(LOGNAME, "Communicator not set");
     }
     if (!_timerFactory) {
-        AlicaEngine::abort("AC: TimerFactory not set");
+        AlicaEngine::abort(LOGNAME, "TimerFactory not set");
     }
 
     _engine = std::make_unique<AlicaEngine>(*this, _configRootNode, _alicaContextParams);
@@ -73,9 +71,12 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     if (_engine->init(std::move(creatorCtx))) {
         if (!delayStart) {
             _engine->start();
+        } else {
+            Logging::logInfo(LOGNAME) << "engine start delayed";
         }
         _initialized = true;
 
+        Logging::logInfo(LOGNAME) << "context initialized";
         return 0;
     }
     return -1;
@@ -88,6 +89,7 @@ int AlicaContext::terminate()
     }
     _engine->terminate();
     _initialized = false;
+    Logging::logInfo(LOGNAME) << "context terminated";
     // TODO: Fix this (add proper return code in engine shutdown)
     return 0;
 }
@@ -134,9 +136,11 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         return node;
     } catch (YAML::BadFile& badFile) {
         if (Logging::isInitialized()) {
-            Logging::logWarn("AC") << "Could not parse file: " << configFile << " - " << badFile.msg;
+            Logging::logWarn(LOGNAME) << "Agent wise config file could not be used, file: " << configFile << ", error details- " << badFile.msg
+                                      << ", will try to use the global config file";
         } else {
-            std::cerr << "AC: Could not parse file: " << configFile << " - " << badFile.msg << std::endl;
+            std::cerr << "[WARN]" << LOGNAME << "Agent wise config file could not be used, file:  " << configFile << ", error details - " << badFile.msg
+                      << ", will try to use the global config file" << std::endl;
         }
     }
 
@@ -144,7 +148,7 @@ YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::st
         configFile = essentials::FileSystem::combinePaths(configPath, "Alica.yaml");
         node = YAML::LoadFile(configFile);
     } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort("AC: Could not parse file: ", configFile + " - " + badFile.msg);
+        AlicaEngine::abort(LOGNAME, "Global config file could not be used, file: ", configFile + ", error details - " + badFile.msg);
     }
 
     return node;
@@ -183,6 +187,16 @@ ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const
     auto cit = _solvers.find(solverType.hash_code());
     assert(cit != _solvers.end());
     return (*(cit->second));
+}
+
+const Blackboard& AlicaContext::getGlobalBlackboard() const
+{
+    return _globalBlackboard;
+}
+
+Blackboard& AlicaContext::editGlobalBlackboard()
+{
+    return _globalBlackboard;
 }
 
 } // namespace alica

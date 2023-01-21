@@ -1,7 +1,6 @@
 #pragma once
 
 #include <alica/test/TestContext.h>
-#include <engine/IAlicaWorldModel.h>
 
 #include <atomic>
 #include <string>
@@ -11,7 +10,7 @@
 namespace alicaTests
 {
 
-class TestWorldModelNew : public alica::IAlicaWorldModel
+class TestWorldModelNew
 {
 public:
     TestWorldModelNew(alica::test::TestContext* tc)
@@ -25,7 +24,7 @@ private:
     alica::test::TestContext* _tc;
 };
 
-class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel : public alica::IAlicaWorldModel
+class [[deprecated("Use TestWorldModelNew instead")]] TestWorldModel
 {
 public:
     TestWorldModel();

@@ -11,6 +11,7 @@ class Master : public BasicPlan
 public:
     Master(PlanContext& context);
     virtual ~Master();
+    void onInit() override;
     // Factory method
     static std::unique_ptr<Master> create(PlanContext& context) { return std::make_unique<Master>(context); }
 };

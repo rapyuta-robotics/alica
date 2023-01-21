@@ -59,7 +59,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1613378382024::getUtilityFunctio
  * Abstract Plans in InitTest:
  *   - SchedulingTestPlan1 (1613378406860)
  */
-bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1613530643879) ENABLED START*/
     std::cout << "The PreCondition 1613530643882 in Transition 'FromDefault NameTo EndTest' is not implement yet!" << std::endl;
@@ -81,7 +81,7 @@ bool PreCondition1613530643882::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1615797316170) ENABLED START*/
     std::cout << "The PreCondition 1615797316171 in Transition 'FromDefault NameTo InitTest' is not implement yet!" << std::endl;
@@ -103,7 +103,7 @@ bool PreCondition1615797316171::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1615797327076) ENABLED START*/
     std::cout << "The PreCondition 1615797327077 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
@@ -125,7 +125,7 @@ bool PreCondition1615797327077::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1629895598464) ENABLED START*/
     std::cout << "The PreCondition 1629895598471 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
@@ -147,7 +147,7 @@ bool PreCondition1629895598471::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition61978004585920576::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition61978004585920576::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(3351673290341906102) ENABLED START*/
     std::cout << "The PreCondition 61978004585920576 in Transition '3351673290341906102' is not implement yet!" << std::endl;
@@ -170,7 +170,7 @@ bool PreCondition61978004585920576::evaluate(std::shared_ptr<RunningPlan> rp, co
  * Abstract Plans in Default Name:
  *   - SchedulingTestSequencePlan1 (1614963946725)
  */
-bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1615797365363) ENABLED START*/
     std::cout << "The PreCondition 1615797365364 in Transition 'FromDefault NameTo EndTest' is not implement yet!" << std::endl;
@@ -193,7 +193,7 @@ bool PreCondition1615797365364::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in OrderedSchedulingTestPlan:
  *   - OrderedSchedulingTestPlan (1629895582410)
  */
-bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1629895607017) ENABLED START*/
     std::cout << "The PreCondition 1629895607018 in Transition 'FromDefault NameTo EndTest' is not implement yet!" << std::endl;
@@ -216,7 +216,7 @@ bool PreCondition1629895607018::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in ExecuteBehaviour:
  *   - TestBehaviour (55178365253414982)
  */
-bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(383854659955639601) ENABLED START*/
     std::cout << "The PreCondition 3213510506830850443 in Transition 'ExecuteBehaviourToExecuteBehaviourInSubPlan' is not implement yet!" << std::endl;
@@ -239,7 +239,7 @@ bool PreCondition3213510506830850443::evaluate(std::shared_ptr<RunningPlan> rp, 
  * Abstract Plans in ExecuteBehaviourInSubPlan:
  *   - ExecuteBehaviourInSubPlan (3172561495666303184)
  */
-bool PreCondition68542020926196536::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition68542020926196536::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1506708037135242126) ENABLED START*/
     std::cout << "The PreCondition 68542020926196536 in Transition '1506708037135242126' is not implement yet!" << std::endl;
@@ -262,7 +262,7 @@ bool PreCondition68542020926196536::evaluate(std::shared_ptr<RunningPlan> rp, co
  * Abstract Plans in ExecuteBehaviourInSubPlan:
  *   - ExecuteBehaviourInSubPlan (3172561495666303184)
  */
-bool PreCondition4165333637052704488::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition4165333637052704488::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1773144683253207826) ENABLED START*/
     std::cout << "The PreCondition 4165333637052704488 in Transition 'ExecuteBehaviourInSubPlanToExecuteBehaviour' is not implement yet!" << std::endl;

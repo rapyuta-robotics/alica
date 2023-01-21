@@ -30,7 +30,7 @@ void Condition::setConditionString(const std::string& conditionString)
     _conditionString = conditionString;
 }
 
-bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) const
+bool Condition::evaluate(const RunningPlan& rp, const Blackboard* globalBlackboard) const
 {
     if (_basicCondition == nullptr) {
         Logging::logDebug("Condition") << "Condition: Missing implementation of condition: ID " << getId();
@@ -39,7 +39,7 @@ bool Condition::evaluate(const RunningPlan& rp, const IAlicaWorldModel* wm) cons
         bool ret = false;
         try {
             // TODO: fix const cast below
-            ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), wm);
+            ret = _basicCondition->evaluate(const_cast<RunningPlan&>(rp).getSharedPointer(), globalBlackboard);
         } catch (const std::exception& e) {
             Logging::logDebug("Condition") << "Condition: Exception during evaluation catched:\n" << e.what();
         }

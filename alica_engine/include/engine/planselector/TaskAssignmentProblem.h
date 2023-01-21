@@ -19,7 +19,7 @@ class PartialAssignment;
 class SimplePlanTree;
 class TeamManager;
 class TeamObserver;
-class IAlicaWorldModel;
+class Blackboard;
 
 /**
  * Represents an instance of an assignment problem for one plan or a plantype.
@@ -29,7 +29,7 @@ class TaskAssignmentProblem final : public ITaskAssignmentProblem
 {
 public:
     TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList, const AgentGrp& paraAgents,
-            PartialAssignmentPool& pool, const IAlicaWorldModel* wm);
+            PartialAssignmentPool& pool, const Blackboard* globalBlackboard);
     virtual ~TaskAssignmentProblem();
     void preassignOtherAgents();
 
@@ -64,7 +64,7 @@ private:
     PlanGrp _plans;
     AgentGrp _agents;
     std::vector<SuccessCollection> _successData;
-    const IAlicaWorldModel* _wm;
+    const Blackboard* _globalBlackboard;
 
     // Fringe of the search tree
     std::vector<PartialAssignment*> _fringe;

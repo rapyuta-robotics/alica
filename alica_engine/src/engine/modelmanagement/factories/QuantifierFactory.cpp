@@ -15,7 +15,7 @@ Quantifier* QuantifierFactory::create(const YAML::Node& quantifierNode)
     if (quantifierType.compare(alica::Strings::forAllAgents) == 0) {
         quantifier = new ForallAgents();
     } else {
-        AlicaEngine::abort("QuantifierFactory: Unknown quantifier type encountered!");
+        AlicaEngine::abort(LOGNAME, "Unknown quantifier type encountered!");
     }
     Factory::setAttributes(quantifierNode, quantifier);
     Factory::storeElement(quantifier, alica::Strings::quantifier);

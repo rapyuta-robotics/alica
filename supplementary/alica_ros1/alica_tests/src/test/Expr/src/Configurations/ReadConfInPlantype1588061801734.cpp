@@ -53,7 +53,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588061801734::getUtilityFunctio
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1588246141557::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1588246141557::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1588246141555) ENABLED START*/
     std::cout << "The PreCondition 1588246141557 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;
@@ -75,7 +75,7 @@ bool PreCondition1588246141557::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *
  * Abstract Plans in Default Name:
  */
-bool PreCondition1588246144841::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1588246144841::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1588246144840) ENABLED START*/
     std::cout << "The PreCondition 1588246144841 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;

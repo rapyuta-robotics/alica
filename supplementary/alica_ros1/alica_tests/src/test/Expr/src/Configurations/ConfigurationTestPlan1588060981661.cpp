@@ -55,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1588060981661::getUtilityFunctio
  *   - ReadConfigurationPlantype (1588061351007)
  *   - ReadConfigurationPlan (1588061334567)
  */
-bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1588253347213::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1588253347211) ENABLED START*/
     std::cout << "The PreCondition 1588253347213 in Transition 'FromDefault NameTo Default Name' is not implement yet!" << std::endl;

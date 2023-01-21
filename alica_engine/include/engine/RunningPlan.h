@@ -39,7 +39,7 @@ class IPlanTreeVisitor;
 class SimplePlanTree;
 class Blackboard;
 class KeyMapping;
-class IAlicaWorldModel;
+class Blackboard;
 class RuntimePlanFactory;
 class RuntimeBehaviourFactory;
 class VariableSyncModule;
@@ -102,19 +102,21 @@ public:
         bool allocationNeeded;
         mutable EvalStatus runTimeConditionStatus;
     };
-    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel,
+    explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
             VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt, const Configuration* configuration);
-    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, IAlicaWorldModel* worldModel, const RuntimePlanFactory& runTimePlanFactory,
-            TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository, const RuntimeBehaviourFactory& runTimeBehaviourFactory,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b,
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
             const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+            const Configuration* configuration);
+    RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
+            const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
+            const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -243,6 +245,8 @@ public:
     TeamManager& getTeamManager() const;
 
 private:
+    static constexpr const char* LOGNAME = "RunningPlan";
+
     friend std::ostream& operator<<(std::ostream& out, const RunningPlan& r);
     bool evalRuntimeCondition() const;
     // Status Information
@@ -265,7 +269,7 @@ private:
 
     // engine Pointer
     const AlicaClock& _clock;
-    IAlicaWorldModel* _worldModel;
+    const Blackboard& _globalBlackboard;
     const RuntimePlanFactory& _runTimePlanFactory;
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;

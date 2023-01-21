@@ -74,9 +74,6 @@ private:
     void setMinCardinality(int minCardinality);
     void setMasterPlan(bool isMasterPlan);
     void setPostCondition(const PostCondition* postCondition);
-    void setStates(const StateGrp& states);
-    void setSynchronisations(const SynchronisationGrp& synchronisations);
-    void setTransitions(const TransitionGrp& transitions);
     void setRuntimeCondition(RuntimeCondition* runtimeCondition);
     void setPreCondition(PreCondition* preCondition);
 

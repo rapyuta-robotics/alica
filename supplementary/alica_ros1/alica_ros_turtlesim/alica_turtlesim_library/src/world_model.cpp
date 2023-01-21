@@ -1,4 +1,4 @@
-#include <alica_ros_turtlesim/world_model.hpp>
+#include "world_model.hpp"
 #include <geometry_msgs/Twist.h>
 
 namespace turtlesim

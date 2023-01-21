@@ -29,7 +29,6 @@ public:
      * The default interface, used by the ALICA Engine to retrieve
      * an instance of a behaviour.
      * @param behaviourID Id of the requested behaviour.
-     * @param IAlicaWorldModel WorldModel used by the agent.
      * @return std::unique_ptr<BasicBehaviour> pointing to the requested behaviour.
      */
     std::unique_ptr<BasicBehaviour> createBehaviour(int64_t behaviourID, alica::BehaviourContext& context) override;

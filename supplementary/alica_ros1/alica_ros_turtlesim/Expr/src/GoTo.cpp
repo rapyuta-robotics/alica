@@ -31,11 +31,14 @@ void GoTo::run()
     /*PROTECTED REGION ID(run4054297592460872311) ENABLED START*/
     // solve constraints and get value
     if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
-        std::cout << getName() << " - Solution to query not found." << std::endl;
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
         return;
     }
     // move turtle to goal
-    if (dynamic_cast<turtlesim::ALICATurtleWorldModel*>(getWorldModel())->turtle.move_toward_goal(_results[0], _results[1])) {
+    std::shared_ptr<turtlesim::ALICATurtleWorldModel> wm =
+            LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
+
+    if (wm->turtle.move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
     /*PROTECTED REGION END*/

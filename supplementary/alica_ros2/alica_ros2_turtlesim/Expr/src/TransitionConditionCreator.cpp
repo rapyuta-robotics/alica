@@ -1,7 +1,6 @@
 #include "alica/TransitionConditionCreator.h"
 
 #include "alica/conditions/conditions.h"
-#include <engine/IAlicaWorldModel.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
 #include <iostream>
@@ -13,8 +12,9 @@ TransitionConditionCreator::TransitionConditionCreator() {}
 
 TransitionConditionCreator::~TransitionConditionCreator() {}
 
-std::function<bool(const Blackboard*, const RunningPlan*, const IAlicaWorldModel*)> TransitionConditionCreator::createConditions(
+std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> TransitionConditionCreator::createConditions(
         int64_t conditionId, TransitionConditionContext& context)
+
 {
     switch (conditionId) {
     case 748720375848597116:

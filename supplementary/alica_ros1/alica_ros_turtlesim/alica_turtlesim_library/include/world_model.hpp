@@ -1,8 +1,8 @@
 #pragma once
 
 #include "alica_ros_turtlesim/turtle.hpp"
+#include <boost/dll/alias.hpp>
 #include <engine/AlicaContext.h>
-#include <engine/IAlicaWorldModel.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 
@@ -14,7 +14,8 @@ namespace turtlesim
         - ROS:
                 - Subscribe: t/init
 */
-class ALICATurtleWorldModel : public alica::IAlicaWorldModel
+
+class ALICATurtleWorldModel
 {
 public:
     ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
@@ -32,7 +33,7 @@ private:
 
 inline void setWorldModel(alica::AlicaContext* ac, ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
 {
-    ac->setWorldModel<turtlesim::ALICATurtleWorldModel>(nh, priv_nh);
+    alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
 }
 
 BOOST_DLL_ALIAS(turtlesim::setWorldModel, setWorldModel)

@@ -30,7 +30,7 @@ protected:
 private:
     /*PROTECTED REGION ID(prv1629895911592) ENABLED START*/
     // Add additional private methods here
-    alica_test::SchedWM* _wm;
+    std::shared_ptr<alica_test::SchedWM> _wm;
     /*PROTECTED REGION END*/
 };
 } /* namespace alica */

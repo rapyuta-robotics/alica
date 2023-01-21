@@ -10,7 +10,6 @@
 #include "engine/SimplePlanTree.h"
 #include "engine/TeamObserver.h"
 #include "engine/Types.h"
-#include "engine/logging/Logging.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Plan.h"
 #include "engine/model/State.h"
@@ -57,7 +56,7 @@ void Logger::reload(const YAML::Node& config)
         std::string logPath = config["Alica"]["EventLogging"]["LogFolder"].as<std::string>();
         if (!essentials::FileSystem::isDirectory(logPath)) {
             if (!essentials::FileSystem::createDirectory(logPath, 0777)) {
-                AlicaEngine::abort("Cannot create log folder: ", logPath);
+                AlicaEngine::abort(LOGNAME, "Cannot create log folder: ", logPath);
             }
         }
         std::stringstream sb;
@@ -83,7 +82,7 @@ void Logger::processString(const std::string& event)
         _eventStrings.push_back(event + "(FP)");
     }
     _receivedEvent = true;
-    Logging::logDebug("Logger") << _eventStrings.back();
+    Logging::logDebug(LOGNAME) << _eventStrings.back();
 }
 
 /**

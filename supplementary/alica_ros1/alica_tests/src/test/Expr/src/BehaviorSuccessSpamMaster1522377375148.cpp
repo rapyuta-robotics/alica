@@ -55,7 +55,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
  * Abstract Plans in Normal:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1522377944058) ENABLED START*/
     std::cout << "The PreCondition 1522377944921 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -78,7 +78,7 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Dummy:
  *   - SuccessSpam (1522377401286)
  */
-bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1522377945069) ENABLED START*/
     std::cout << "The PreCondition 1522377946607 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;

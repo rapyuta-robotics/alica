@@ -60,7 +60,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1402488634525::getUtilityFunctio
  *   - Tackle (1402489318663)
  *   - AttackOpp (1402489351885)
  */
-bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402489459382) ENABLED START*/
     std::cout << "The PreCondition 1402489460549 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
@@ -87,7 +87,7 @@ bool PreCondition1402489460549::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in Shoot:
  *   - Attack (1402488848841)
  */
-bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1402489462088::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1402489460694) ENABLED START*/
     std::cout << "The PreCondition 1402489462088 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;

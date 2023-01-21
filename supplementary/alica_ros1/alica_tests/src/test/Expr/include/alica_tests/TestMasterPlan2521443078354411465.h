@@ -43,26 +43,26 @@ class UtilityFunction2521443078354411465 : public BasicUtilityFunction
 class PreCondition1879497210052616817 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 class PreCondition2616157902346364992 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 class PreCondition3883605426713053219 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 class PreCondition4584434546591332490 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 class PreCondition2733591692277574870 : public DomainCondition
 {
 public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 } /* namespace alica */

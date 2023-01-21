@@ -64,7 +64,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1413200862180::getUtilityFunctio
  * Abstract Plans in OtherState:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1413201368286) ENABLED START*/
     std::cout << "The PreCondition 1413201370590 in Transition '1413201368286' is not implement yet!" << std::endl;
@@ -87,7 +87,7 @@ bool PreCondition1413201370590::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in State1:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1413201050743) ENABLED START*/
     std::cout << "The PreCondition 1413201052549 in Transition '1413201050743' is not implement yet!" << std::endl;
@@ -110,7 +110,7 @@ bool PreCondition1413201052549::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in State2:
  *   - Attack (1402488848841)
  */
-bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1413201367990::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1413201367062) ENABLED START*/
     std::cout << "The PreCondition 1413201367990 in Transition '1413201367062' is not implement yet!" << std::endl;

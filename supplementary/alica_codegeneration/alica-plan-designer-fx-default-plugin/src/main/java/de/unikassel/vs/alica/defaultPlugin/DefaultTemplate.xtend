@@ -48,7 +48,7 @@ class DefaultTemplate {
                 *   - «wrapper.abstractPlan.name» («wrapper.abstractPlan.id»)
                 «ENDFOR»
                 */
-                bool PreCondition«transition.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+                bool PreCondition«transition.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
                  {
                     /*PROTECTED REGION ID(«transition.id») ENABLED START*/
                     «IF (protectedRegions.containsKey(transition.id + ""))»
@@ -72,7 +72,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables =  plan.preCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool PreCondition«plan.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+            bool PreCondition«plan.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
             {
                 /*PROTECTED REGION ID(«plan.preCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(plan.preCondition.id + ""))»
@@ -91,7 +91,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables = plan.runtimeCondition.variables»«FOR variable : variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm) {
+            bool RunTimeCondition«plan.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb) {
                 /*PROTECTED REGION ID(«plan.runtimeCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(plan.runtimeCondition.id + ""))»
                     «protectedRegions.get(plan.runtimeCondition.id + "")»
@@ -113,7 +113,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables =  terminalState.postCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool PostCondition«terminalState.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+            bool PostCondition«terminalState.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
             {
                 /*PROTECTED REGION ID(«terminalState.postCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(terminalState.postCondition.id + ""))»
@@ -138,7 +138,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables = behaviour.runtimeCondition.variables»«FOR variable : variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool RunTimeCondition«behaviour.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm) {
+            bool RunTimeCondition«behaviour.runtimeCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb) {
                 /*PROTECTED REGION ID(«behaviour.runtimeCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(behaviour.runtimeCondition.id + ""))»
                     «protectedRegions.get(behaviour.runtimeCondition.id + "")»
@@ -156,7 +156,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables =  behaviour.preCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool PreCondition«behaviour.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+            bool PreCondition«behaviour.preCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
             {
                 /*PROTECTED REGION ID(«behaviour.preCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(behaviour.preCondition.id + ""))»
@@ -175,7 +175,7 @@ class DefaultTemplate {
              * Available Vars:«var  List<Variable> variables =  behaviour.postCondition.variables»«FOR variable :variables»
              *	- «variable.name» («variable.id»)«ENDFOR»
              */
-            bool PostCondition«behaviour.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+            bool PostCondition«behaviour.postCondition.id»::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
             {
                 /*PROTECTED REGION ID(«behaviour.postCondition.id») ENABLED START*/
                 «IF (protectedRegions.containsKey(behaviour.postCondition.id + ""))»

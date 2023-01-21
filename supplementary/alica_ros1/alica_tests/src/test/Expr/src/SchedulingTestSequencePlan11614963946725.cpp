@@ -56,7 +56,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1614963946725::getUtilityFunctio
  *
  * Abstract Plans in InitSequencePlan1:
  */
-bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1614964566530) ENABLED START*/
     std::cout << "The PreCondition 1614964566531 in Transition 'FromInitSequencePlan1To InitSequenceSubPlan1' is not implement yet!" << std::endl;
@@ -79,7 +79,7 @@ bool PreCondition1614964566531::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan1:
  *   - SchedulingTestSequenceSubPlan1 (1614964379654)
  */
-bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1614964572494) ENABLED START*/
     std::cout << "The PreCondition 1614964572495 in Transition 'FromInitSequenceSubPlan1To InitSequenceSubPlan2' is not implement yet!" << std::endl;
@@ -102,7 +102,7 @@ bool PreCondition1614964572495::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan2:
  *   - SchedulingTestSequenceSubPlan2 (1614964444419)
  */
-bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1614964575552) ENABLED START*/
     std::cout << "The PreCondition 1614964575553 in Transition 'FromInitSequenceSubPlan2To InitSequenceSubPlan3' is not implement yet!" << std::endl;
@@ -125,7 +125,7 @@ bool PreCondition1614964575553::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in InitSequenceSubPlan3:
  *   - SchedulingTestSequenceSubPlan3 (1614964478264)
  */
-bool PreCondition1614964578016::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1614964578016::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1614964578015) ENABLED START*/
     std::cout << "The PreCondition 1614964578016 in Transition 'FromInitSequenceSubPlan3To TerminateSequenceSubPlan3' is not implement yet!" << std::endl;

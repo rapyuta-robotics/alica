@@ -54,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1629895582410::getUtilityFunctio
  * Abstract Plans in PlanA:
  *   - PlanA (1629895837159)
  */
-bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1629895758611) ENABLED START*/
     std::cout << "The PreCondition 1629895758612 in Transition 'FromPlanATo PlanB' is not implement yet!" << std::endl;
@@ -77,7 +77,7 @@ bool PreCondition1629895758612::evaluate(std::shared_ptr<RunningPlan> rp, const 
  * Abstract Plans in PlanB:
  *   - PlanB (1629895853508)
  */
-bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool PreCondition1629895768182::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1629895768181) ENABLED START*/
     std::cout << "The PreCondition 1629895768182 in Transition 'FromPlanBTo PlanA' is not implement yet!" << std::endl;

@@ -39,7 +39,7 @@ private:
     /*PROTECTED REGION ID(prv1629895837159) ENABLED START*/
     // Add additional private methods here
     std::atomic<bool> _inRunContext;
-    alica_test::SchedWM* _wm;
+    std::shared_ptr<alica_test::SchedWM> _wm;
     /*PROTECTED REGION END*/
 };
 

@@ -83,6 +83,8 @@ public:
     void tick();
 
 private:
+    static constexpr const char* LOGNAME = "TeamManager";
+
     void readSelfFromConfig(const YAML::Node& config);
     void announcePresence() const;
     void queryPresence() const;

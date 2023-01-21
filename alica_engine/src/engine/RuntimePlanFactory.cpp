@@ -12,11 +12,11 @@ namespace alica
 {
 
 RuntimePlanFactory::RuntimePlanFactory(
-        IAlicaWorldModel* wm, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
+        Blackboard& globalBlackboard, const IAlicaTraceFactory* traceFactory, const TeamManager& teamManager, const IAlicaTimerFactory& timerFactory)
         : _traceFactory(traceFactory)
         , _teamManager(teamManager)
         , _timerFactory(timerFactory)
-        , _wm(wm)
+        , _globalBlackboard(globalBlackboard)
 {
 }
 
@@ -27,7 +27,7 @@ void RuntimePlanFactory::init(std::unique_ptr<IPlanCreator>&& pc)
 
 std::unique_ptr<BasicPlan> RuntimePlanFactory::create(int64_t id, const Plan* planModel) const
 {
-    PlanContext ctx{_wm, planModel->getName(), planModel, _traceFactory};
+    PlanContext ctx{_globalBlackboard, planModel->getName(), planModel, _traceFactory};
     std::unique_ptr<BasicPlan> basicPlan = _creator->createPlan(id, ctx);
     if (!basicPlan) {
         Logging::logError("RuntimePlanFactory") << "Plan creation failed: " << id;

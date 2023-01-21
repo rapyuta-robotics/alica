@@ -1,7 +1,6 @@
 #pragma once
 
 #include "alica_ros_turtlesim/turtle.hpp"
-#include <engine/IAlicaWorldModel.h>
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 
@@ -13,7 +12,7 @@ namespace turtlesim
         - ROS:
                 - Subscribe: t/init
 */
-class ALICATurtleWorldModel : public alica::IAlicaWorldModel
+class ALICATurtleWorldModel
 {
 public:
     ALICATurtleWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);

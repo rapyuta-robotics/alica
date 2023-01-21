@@ -24,7 +24,7 @@ namespace alica
  * @param name The name of the behaviour
  */
 BasicBehaviour::BasicBehaviour(BehaviourContext& context)
-        : RunnableObject(context.worldModel, context.traceFactory, context.name)
+        : RunnableObject(context.globalBlackboard, context.traceFactory, context.name)
         , _behaviour(context.behaviourModel)
         , _behResult(BehResult::UNKNOWN)
         , _triggeredJobRunning(false)
@@ -56,8 +56,8 @@ void BasicBehaviour::doInit()
 {
     try {
         initialiseParameters();
-    } catch (const std::exception& e) {
-        Logging::logError("BasicBehaviour") << "Exception in Behaviour-INIT of: " << getName() << ": " << e.what();
+    } catch (...) {
+        handleException("initialise", std::current_exception());
     }
 }
 
@@ -65,9 +65,8 @@ void BasicBehaviour::doRun()
 {
     try {
         run();
-    } catch (const std::exception& e) {
-        std::string err = std::string("Exception caught:  ") + getName() + std::string(" - ") + std::string(e.what());
-        sendLogMessage(4, err);
+    } catch (...) {
+        handleException("run", std::current_exception());
     }
     _triggeredJobRunning = false;
 }
@@ -76,20 +75,22 @@ void BasicBehaviour::doTerminate()
 {
     try {
         onTermination();
-    } catch (const std::exception& e) {
-        Logging::logError("BasicBehaviour") << "Exception in Behaviour-TERMINATE of: " << getName() << ": " << e.what();
+    } catch (...) {
+        handleException("terminate", std::current_exception());
     }
-
     _behResult.store(BehResult::UNKNOWN);
 }
 
 void BasicBehaviour::doTrigger()
 {
-    if (!_behaviour->isEventDriven() || !isTriggeredRunFinished()) {
-        return;
+    if (!_behaviour->isEventDriven()) {
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Trying to trigger a behaviour that is not event driven";
+    } else if (!isTriggeredRunFinished()) {
+        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", Error: Cannot trigger behaviour because the previous run is not yet finished";
+    } else {
+        _triggeredJobRunning = true;
+        doRun();
     }
-    _triggeredJobRunning = true;
-    doRun();
 }
 
 void BasicBehaviour::setSuccess()
@@ -108,7 +109,9 @@ void BasicBehaviour::setResult(BehResult result)
     if (prev != result) {
         _planBase->addFastPathEvent(getPlanContext());
         if (getTrace()) {
-            getTrace()->setTag("Result", (result == BehResult::SUCCESS ? "Success" : "Fail"));
+            const char* resultStr = (result == BehResult::SUCCESS ? "Success" : "Fail");
+            Logging::logInfo(LOGNAME) << "Behaviour: " << getName() << ", result: " << resultStr;
+            getTrace()->setTag("Result", resultStr);
         }
     }
 }
