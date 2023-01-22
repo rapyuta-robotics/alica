@@ -53,7 +53,7 @@ if(BUILD_TESTING)
         src/test/test_alica_condition_plantype.cpp
         src/test/test_alica_engine_plan_parser.cpp
         src/test/test_alica_init_shutdown.cpp
-        ##src/test/test_alica_multi_agent_plan.cpp
+        src/test/test_alica_multi_agent_plan.cpp
         src/test/test_alica_simple_plan.cpp #new
         src/test/test_alica_sync_transition.cpp
         src/test/test_alica_time.cpp
@@ -77,7 +77,7 @@ if(BUILD_TESTING)
         src/test/test_failure_handling.cpp
         src/test/test_alica_logger.cpp
         src/test/test_alica_engine_worldmodel.cpp
-        src/test/test_legacy_conditions.cpp
+        src/test/test_legacy_conditions.cpp #new
         src/test/test_success.cpp
     )
 

@@ -86,8 +86,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 1413200862180));
         }
         if (i == 15) {
-            ASSERT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter, 5);
-            if (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter > 3) {
+            ASSERT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->getCallCounter(), 5);
+            if (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->getCallCounter() > 3) {
                 twm1->setTransitionCondition1413201052549(true);
                 twm2->setTransitionCondition1413201052549(true);
                 twm1->setTransitionCondition1413201370590(true);
