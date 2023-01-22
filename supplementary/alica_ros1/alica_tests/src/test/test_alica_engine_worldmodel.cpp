@@ -1,45 +1,40 @@
 #include "test_alica.h"
 
-#include <alica_tests/Behaviour/Attack.h>
-#include <alica_tests/Behaviour/MidFieldStandard.h>
-#include <alica_tests/BehaviourCreator.h>
-#include <alica_tests/ConditionCreator.h>
-#include <alica_tests/ConstraintCreator.h>
-#include <alica_tests/PlanCreator.h>
-#include <alica_tests/UtilityFunctionCreator.h>
-
-#include <alica_tests/DummyTestSummand.h>
-#include <alica_tests/TestWorldModel.h>
-
+#include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
-#include <communication/AlicaDummyCommunication.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/Assignment.h>
-#include <engine/BasicBehaviour.h>
-#include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/PlanBase.h>
-#include <engine/PlanRepository.h>
-#include <engine/TeamObserver.h>
-#include <engine/UtilityFunction.h>
-#include <engine/allocationauthority/AllocationDifference.h>
-#include <engine/allocationauthority/EntryPointRobotPair.h>
-#include <engine/model/Behaviour.h>
-#include <engine/model/Plan.h>
-#include <engine/model/RuntimeCondition.h>
-#include <engine/model/State.h>
-#include <engine/model/Task.h>
-#include <engine/modelmanagement/factories/TaskFactory.h>
-#include <engine/teammanager/TeamManager.h>
-
+#include <alica_tests/TestFixture.h>
 #include <gtest/gtest.h>
+
+/*
+TODO Luca 
+uncomment when it will be possible to add transition TestMasterPlan->ConstraintTestPlan
+namespace alica::test
+{
+
+TEST_F(TestFixture, simpleGetWM)
+{
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "ConstraintTestPlanState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("ConstraintTestPlan"));
+    ASSERT_NE(nullptr, _tc->getActivePlan("ConstraintTestPlan")) << _tc->getLastFailure();
+
+    LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel1", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
+    std::shared_ptr<alicaTests::TestWorldModelNew> wm1 =
+            LockedBlackboardRO(_tc->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModelNew>>("worldmodel1");
+    EXPECT_NE(nullptr, wm1);
+
+    LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel2", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
+    std::shared_ptr<alicaTests::TestWorldModelNew> wm2 =
+            LockedBlackboardRO(_tc->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModelNew>>("worldmodel2");
+    EXPECT_NE(nullptr, wm2);
+}
+} // namespace alica::test
+*/
 
 namespace alica
 {
 namespace
 {
-
 class AlicaTestFixtureWM : public AlicaTestFixture
 {
 protected:
