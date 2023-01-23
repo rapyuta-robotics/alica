@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 
 /*
-TODO Luca 
+TODO Luca
 uncomment when it will be possible to add transition TestMasterPlan->ConstraintTestPlan
 namespace alica::test
 {

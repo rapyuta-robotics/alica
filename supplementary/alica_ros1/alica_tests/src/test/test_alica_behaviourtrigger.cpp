@@ -1,70 +1,61 @@
 #include "test_alica.h"
-
+#include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
 #include <alica_tests/Behaviour/NotToTrigger.h>
 #include <alica_tests/Behaviour/TriggerA.h>
 #include <alica_tests/Behaviour/TriggerB.h>
 #include <alica_tests/Behaviour/TriggerC.h>
-#include <alica_tests/TestWorldModel.h>
-#include <engine/BasicBehaviour.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/PlanBase.h>
-#include <engine/model/ConfAbstractPlanWrapper.h>
-
-#include <condition_variable>
-#include <mutex>
-
-namespace alica
-{
-namespace
+#include <alica_tests/TestFixture.h>
+#include <gtest/gtest.h>
+namespace alica::test
 {
 
-class AlicaBehaviourTrigger : public AlicaTestFixture
+/*
+TODO Luca
+uncomment when it will be possible to add transition TestMasterPlan->BehaviourTriggerTestPlan
+*/
+TEST_F(TestFixture, triggerTest)
 {
-protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
-    const char* getMasterPlanName() const override { return "BehaviourTriggerTestPlan"; }
-    bool stepEngine() const override { return false; }
-};
 
-TEST_F(AlicaBehaviourTrigger, triggerTest)
-{
-    ASSERT_NO_SIGNAL
-    ae->start();
-    alica::AlicaTime duration = alica::AlicaTime::milliseconds(100);
-    ae->getAlicaClock().sleep(duration);
+    // Transition to the plan corresponding to this test case
+    // ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehaviourTriggerTestPlanState")) << _tc->getLastFailure();
+    // STEP_UNTIL(_tc, _tc->getActivePlan("BehaviourTriggerTestPlan"));
+    // ASSERT_NE(nullptr, _tc->getActivePlan("BehaviourTriggerTestPlan")) << _tc->getLastFailure();
 
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 0);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
+    ASSERT_EQ(dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter, 0);
+    ASSERT_EQ(dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter, 0);
+    ASSERT_EQ(dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->callCounter, 0);
+    ASSERT_EQ(dynamic_cast<alica::NotToTrigger*>(_tc->getActiveBehaviour("NotToTrigger"))->callCounter, 0);
 
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->doTrigger();
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter == 1);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter == 1);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->callCounter == 1);
 
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->doTrigger();
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter == 2);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter == 2);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->callCounter == 2);
 
-    dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->doTrigger();
-    dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->doTrigger();
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->doTrigger();
+    dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->doTrigger();
 
-    ae->getAlicaClock().sleep(alica::AlicaTime::milliseconds(33));
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter == 3);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter == 3);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->callCounter == 3);
 
-    dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->doTrigger();
+    dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->doTrigger();
 
-    ae->getAlicaClock().sleep(duration * 2);
-
-    EXPECT_EQ(dynamic_cast<alica::TriggerA*>(alica::test::Util::getBasicBehaviour(ae, 1428508297492, 0))->callCounter, 3);
-    EXPECT_EQ(dynamic_cast<alica::TriggerB*>(alica::test::Util::getBasicBehaviour(ae, 1428508316905, 0))->callCounter, 3);
-    EXPECT_EQ(dynamic_cast<alica::TriggerC*>(alica::test::Util::getBasicBehaviour(ae, 1428508355209, 0))->callCounter, 4);
-    EXPECT_EQ(dynamic_cast<alica::NotToTrigger*>(alica::test::Util::getBasicBehaviour(ae, 1429017274116, 0))->callCounter, 0);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter == 3);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter == 3);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::TriggerC*>(_tc->getActiveBehaviour("TriggerC"))->callCounter == 4);
+    STEP_UNTIL_ASSERT_TRUE(_tc, dynamic_cast<alica::NotToTrigger*>(_tc->getActiveBehaviour("NotToTrigger"))->callCounter == 0);
 }
-} // namespace
-} // namespace alica
+} // namespace alica::test
