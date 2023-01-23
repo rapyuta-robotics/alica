@@ -350,6 +350,8 @@ public:
     BlackboardImpl& impl() { return _impl; }
     const BlackboardImpl& impl() const { return _impl; }
 
+    virtual ~Blackboard() = default;
+
 private:
     BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
