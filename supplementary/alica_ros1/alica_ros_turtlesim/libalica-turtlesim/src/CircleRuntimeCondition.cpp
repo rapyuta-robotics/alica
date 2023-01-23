@@ -1,23 +1,24 @@
 #include "CircleRuntimeCondition.h"
-#include <alica_ros_turtlesim/world_model.hpp>
+
 #include <autodiff/AutoDiff.h>
 #include <engine/RunningPlan.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Task.h>
 
-namespace alica
+namespace turtlesim
 {
 
-CircleRuntimeCondition::CircleRuntimeCondition() {}
-
-bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard)
+bool CircleRuntimeCondition::evaluate(std::shared_ptr<alica::RunningPlan> rp, const alica::Blackboard* globalBlackboard)
 {
     return true;
 }
 
-CircleRuntimeConditionConstraint::CircleRuntimeConditionConstraint() {}
+std::shared_ptr<CircleRuntimeCondition> CircleRuntimeCondition::create(alica::ConditionContext&)
+{
+    return std::make_shared<CircleRuntimeCondition>();
+}
 
-void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
+void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<alica::ProblemDescriptor> c, std::shared_ptr<alica::RunningPlan> rp)
 {
     using autodiff::TermPtr;
     autodiff::TermHolder* h = static_cast<autodiff::TermHolder*>(c->getContext());
@@ -98,4 +99,9 @@ void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDesc
     c->setConstraint(constraint);
 }
 
-} // namespace alica
+std::shared_ptr<CircleRuntimeConditionConstraint> CircleRuntimeConditionConstraint::create(alica::ConstraintContext&)
+{
+    return std::make_shared<CircleRuntimeConditionConstraint>();
+}
+
+} // namespace turtlesim

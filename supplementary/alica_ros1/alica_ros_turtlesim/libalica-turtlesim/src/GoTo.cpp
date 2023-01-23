@@ -1,32 +1,34 @@
 #include "GoTo.h"
 #include "world_model.hpp"
+
 #include <constraintsolver/CGSolver.h>
 #include <engine/logging/Logging.h>
+
 #include <memory>
 
-namespace alica
+namespace turtlesim
 {
 
-GoTo::GoTo(BehaviourContext& context)
+GoTo::GoTo(alica::BehaviourContext& context)
         : BasicBehaviour(context)
 {
 }
 
-GoTo::~GoTo() {}
 void GoTo::run()
 {
     // solve constraints and get value
-    if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
-        Logging::logError(LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
+    if (!_query.getSolution<alica::reasoner::CGSolver, double>(getPlanContext(), _results)) {
+        alica::Logging::logError(alica::LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
     }
     // move turtle to goal
     std::shared_ptr<turtlesim::ALICATurtleWorldModel> wm =
-            LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
+            alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
 
     if (wm->turtle.move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
 }
+
 void GoTo::initialiseParameters()
 {
     _query.clearDomainVariables();
@@ -34,4 +36,9 @@ void GoTo::initialiseParameters()
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "y"));
 }
 
-} /* namespace alica */
+std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<GoTo>(context);
+}
+
+} // namespace turtlesim
