@@ -6,11 +6,11 @@
   "frequency": 30,
   "id": 4085572422059465423,
   "inheritBlackboard": false,
-  "name": "Go2RandomPosition",
+  "libraryName": "libalica-turtlesim",
+  "name": "Teleport2RandomPosition",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
-  "variables": [],
-  "libraryName": "alica_turtlesim_library"
+  "variables": []
 }

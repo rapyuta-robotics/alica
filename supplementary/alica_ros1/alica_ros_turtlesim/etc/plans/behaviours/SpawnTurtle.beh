@@ -3,14 +3,14 @@
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
-  "frequency": 30,
-  "id": 4054297592460872311,
+  "frequency": 5,
+  "id": 1689864767393644654,
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
-  "name": "GoTo",
+  "name": "SpawnTurtle",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "",
+  "relativeDirectory": "behaviours",
   "runtimeCondition": null,
   "variables": []
 }

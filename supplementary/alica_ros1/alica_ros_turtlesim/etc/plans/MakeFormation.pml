@@ -38,8 +38,9 @@
   "frequency": 0,
   "id": 1889749086610694100,
   "inheritBlackboard": false,
+  "libraryName": "libalica-turtlesim",
   "masterPlan": false,
-  "name": "Move",
+  "name": "MakeFormation",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": {
@@ -62,8 +63,7 @@
         ]
       }
     ],
-    "variables": [],
-    "libraryName": "alica_turtlesim_library"
+    "variables": []
   },
   "states": [
     {
@@ -126,6 +126,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "libraryName": "alica_turtlesim_library"
+  "variables": []
 }
