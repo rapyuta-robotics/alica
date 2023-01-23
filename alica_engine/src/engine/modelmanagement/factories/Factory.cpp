@@ -119,10 +119,8 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
 
     // insert into general element map
     if (modelManager->elements.find(ael->getId()) != modelManager->elements.end()) {
-        std::stringstream ss;
-        ss << "Factory: ERROR: ID utilised twice: " << ael->getId() << std::endl;
-        ss << "ELEMENT >" << ael->getName() << "< >" << modelManager->elements[ael->getId()]->getName() << "<" << std::endl;
-        AlicaEngine::abort(ss.str());
+        AlicaEngine::abort(LOGNAME, "ERROR: ID utilised twice: ", ael->getId(), "\n", "ELEMENT >", ael->getName(), "< >",
+                modelManager->elements[ael->getId()]->getName(), "<", "\n");
     }
     modelManager->elements.insert(std::pair<int64_t, AlicaElement*>(ael->getId(), ael));
 
@@ -165,9 +163,9 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
         modelManager->_planRepository._transitionConditionRepositories.emplace(ael->getId(), (TransitionConditionRepository*) ael);
     } else if (alica::Strings::variableBinding.compare(type) == 0) {
         // case for ignored types
-        Logging::logInfo("Factory") << "Element type " << type << " is not stored in plan repository.";
+        Logging::logInfo(LOGNAME) << "Element type " << type << " is not stored in plan repository.";
     } else {
-        AlicaEngine::abort("Factory: Element type unhandled for storing: Type is '" + type + "'");
+        AlicaEngine::abort(LOGNAME, "Element type unhandled for storing: Type is '" + type + "'");
     }
 }
 

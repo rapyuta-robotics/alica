@@ -8,16 +8,10 @@
 namespace alica
 {
 
-CircleRuntimeCondition::CircleRuntimeCondition()
-{
-    std::cerr << "Debug:"
-              << "CircleRuntimeCondition created" << std::endl;
-}
+CircleRuntimeCondition::CircleRuntimeCondition() {}
 
-bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm)
+bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard)
 {
-    std::cerr << "Debug:"
-              << "CircleRuntimeCondition::evaluate" << std::endl;
     return true;
 }
 

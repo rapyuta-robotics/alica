@@ -9,7 +9,7 @@ namespace alica
 class Behaviour;
 class BasicBehaviour;
 class IBehaviourCreator;
-class IAlicaWorldModel;
+class Blackboard;
 class TeamManager;
 class PlanBase;
 class IAlicaCommunication;
@@ -21,7 +21,7 @@ class IAlicaTimerFactory;
 class RuntimeBehaviourFactory
 {
 public:
-    RuntimeBehaviourFactory(IAlicaWorldModel* wm, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
+    RuntimeBehaviourFactory(Blackboard& globalBlackboard, TeamManager& teamManager, PlanBase& planBase, const IAlicaCommunication& communication,
             const IAlicaTraceFactory* traceFactory, const IAlicaTimerFactory& timerFactory);
     ~RuntimeBehaviourFactory() = default;
     void init(std::unique_ptr<IBehaviourCreator>&& bc);
@@ -30,7 +30,7 @@ public:
 
 private:
     std::unique_ptr<IBehaviourCreator> _creator;
-    IAlicaWorldModel* _wm;
+    Blackboard& _globalBlackboard;
     TeamManager& _teamManager;
     PlanBase& _planBase;
     const IAlicaCommunication& _communication;

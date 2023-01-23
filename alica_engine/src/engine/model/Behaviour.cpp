@@ -8,7 +8,6 @@
 
 namespace alica
 {
-
 Behaviour::Behaviour()
         : _preCondition(nullptr)
         , _runtimeCondition(nullptr)

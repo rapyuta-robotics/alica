@@ -1,6 +1,6 @@
 #include <alica_tests/DistBallRobot.h>
 #include <alica_tests/TestWorldModel.h>
-#include <engine/IAlicaWorldModel.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/model/EntryPoint.h>
 #include <engine/planselector/IAssignment.h>
 
@@ -18,7 +18,7 @@ DistBallRobot::DistBallRobot(double weight)
 
 DistBallRobot::~DistBallRobot() {}
 
-UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const IAlicaWorldModel* wm) const
+UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, const Blackboard* globalBlackboard) const
 {
     UtilityInterval ui(0.0, 1.0);
 
@@ -35,11 +35,13 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
             pos = 1;
         }
 
-        auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+        LockedBlackboardRO bbwm(*globalBlackboard);
+        std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+
         if (this->robotId == agentID8) {
-            curPosition = worldModel->robotsXPos[pos];
+            curPosition = wm->robotsXPos[pos];
         } else {
-            curPosition = worldModel->robotsXPos[pos];
+            curPosition = wm->robotsXPos[pos];
         }
         // if no opp is near ball
         ui.setMin(std::max(ui.getMin(), 1 - std::abs(sb - curPosition) / 18000));
@@ -49,11 +51,12 @@ UtilityInterval DistBallRobot::eval(IAssignment ass, const Assignment* oldAss, c
     if (_relevantEntryPoints[0]->getMaxCardinality() > numAssignedRobots && ass.getUnAssignedAgentCount() > 0) {
         for (int i = 0; i < ass.getUnAssignedAgentCount(); ++i) {
             // curPosition = this.playerPositions.GetValue(ass.UnAssignedRobots[i]);
-            auto* worldModel = dynamic_cast<const alicaTests::TestWorldModel*>(wm);
+            LockedBlackboardRO bbwm(*globalBlackboard);
+            std::shared_ptr<alicaTests::TestWorldModel> wm = bbwm.get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
             if (this->robotId == agentID8) {
-                curPosition = worldModel->robotsXPos.at(i);
+                curPosition = wm->robotsXPos.at(i);
             } else {
-                curPosition = worldModel->robotsXPos.at(i);
+                curPosition = wm->robotsXPos.at(i);
             }
             ui.setMax(std::max(ui.getMax(), 1 - std::abs(sb - curPosition) / 18000));
         }

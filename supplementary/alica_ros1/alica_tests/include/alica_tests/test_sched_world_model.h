@@ -3,12 +3,10 @@
 #include <atomic>
 #include <string>
 
-#include <engine/IAlicaWorldModel.h>
-
 namespace alica_test
 {
 
-class SchedWM : public alica::IAlicaWorldModel
+class SchedWM
 {
 public:
     SchedWM() { reset(); }

@@ -42,6 +42,8 @@ public:
     void reload(const YAML::Node& config);
 
 private:
+    static constexpr const char* LOGNAME = "CycleManager";
+
     enum CycleState
     {
         observing,

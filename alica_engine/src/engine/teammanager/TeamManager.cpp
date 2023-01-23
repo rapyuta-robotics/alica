@@ -76,7 +76,7 @@ TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const Model
     auto reloadFunctionPtr = std::bind(&TeamManager::reload, this, std::placeholders::_1);
     configChangeListener.subscribe(reloadFunctionPtr);
     reload(configChangeListener.getConfig());
-    Logging::logInfo("TM") << "Own ID is " << _localAnnouncement.senderID;
+    Logging::logInfo(LOGNAME) << "Own ID is " << _localAnnouncement.senderID;
 }
 
 TeamManager::~TeamManager() {}
@@ -114,7 +114,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
             _localAnnouncement.senderID = id;
         } else {
             _localAnnouncement.senderID = generateID();
-            Logging::logDebug("TM") << "Auto generated id " << _localAnnouncement.senderID;
+            Logging::logDebug(LOGNAME) << "Auto generated id " << _localAnnouncement.senderID;
         }
     } else {
         _localAnnouncement.senderID = _localAgentID;
@@ -282,11 +282,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aq.senderSdk != _localAgent->getSdk() || aq.planHash != _localAgent->getPlanHash()) {
-        Logging::logWarn("TM") << "Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash;
+        Logging::logWarn(LOGNAME) << "Version mismatch ignoring: " << aq.senderID << " sdk: " << aq.senderSdk << " ph: " << aq.planHash;
         return;
     }
 
-    Logging::logDebug("TM") << "Responding to agent: " << aq.senderID;
+    Logging::logDebug(LOGNAME) << "Responding to agent: " << aq.senderID;
     announcePresence();
 }
 
@@ -295,7 +295,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
-            Logging::logError("TM") << "Duplicate Agent(" << aa.senderID << ") discovered";
+            Logging::logError(LOGNAME) << "Duplicate Agent(" << aa.senderID << ") discovered";
         }
         return;
     }
@@ -306,7 +306,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 
     // TODO: Add sdk compatibility check with comparing major version numbers
     if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        Logging::logWarn("TM") << "Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
+        Logging::logWarn(LOGNAME) << "Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
         return;
     }
 
@@ -344,7 +344,7 @@ void TeamManager::init()
 
 void TeamManager::announcePresence() const
 {
-    Logging::logDebug("TM") << "Announcing presence " << _localAnnouncement.senderID;
+    Logging::logDebug(LOGNAME) << "Announcing presence " << _localAnnouncement.senderID;
     for (int i = 0; i < _announcementRetries; ++i) {
         _communicator.sendAgentAnnouncement(_localAnnouncement);
     }

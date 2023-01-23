@@ -23,15 +23,6 @@
 
 namespace alica
 {
-/**
- * Abort execution with a message, called if initialization fails.
- * @param msg A string
- */
-void AlicaEngine::abort(const std::string& msg)
-{
-    Logging::logFatal("AE") << "ABORT: " << msg;
-    exit(EXIT_FAILURE);
-}
 
 /**
  * The main class.
@@ -55,18 +46,18 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
         , _variableSyncModule(std::make_unique<VariableSyncModule>(
                   _configChangeListener, _ctx.getCommunicator(), _ctx.getAlicaClock(), editTeamManager(), _ctx.getTimerFactory()))
         , _planBase(_configChangeListener, _ctx.getAlicaClock(), _log, _ctx.getCommunicator(), editRoleAssignment(), editSyncModul(), editAuth(),
-                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, getWorldModel(), editResultStore(), _ctx.getSolvers(),
-                  getTimerFactory(), getTraceFactory())
+                  editTeamObserver(), editTeamManager(), getPlanRepository(), _stepEngine, _stepCalled, editGlobalBlackboard(), editResultStore(),
+                  _ctx.getSolvers(), getTimerFactory(), getTraceFactory())
 {
     auto reloadFunctionPtr = std::bind(&AlicaEngine::reload, this, std::placeholders::_1);
     _configChangeListener.subscribe(reloadFunctionPtr);
     reload(_ctx.getConfig());
 
     if (!_planRepository.verifyPlanBase()) {
-        AlicaEngine::abort("Error in parsed plans.");
+        AlicaEngine::abort(LOGNAME, "Error in parsed plans.");
     }
 
-    Logging::logDebug("AE") << "Constructor finished!";
+    Logging::logDebug(LOGNAME) << "Constructor finished!";
 }
 
 AlicaEngine::~AlicaEngine()
@@ -81,7 +72,7 @@ void AlicaEngine::reload(const YAML::Node& config)
     _maySendMessages = !config["Alica"]["SilentStart"].as<bool>();
     _useStaticRoles = config["Alica"]["UseStaticRoles"].as<bool>();
     if (!_useStaticRoles) {
-        AlicaEngine::abort("Unknown RoleAssignment Type!");
+        AlicaEngine::abort(LOGNAME, "Unknown RoleAssignment Type!");
     }
 }
 
@@ -92,7 +83,7 @@ void AlicaEngine::reload(const YAML::Node& config)
 bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 {
     if (_initialized) {
-        Logging::logWarn("AE") << "Already initialized.";
+        Logging::logWarn(LOGNAME) << "Already initialized.";
         return true; // todo false?
     }
 
@@ -117,8 +108,8 @@ bool AlicaEngine::init(AlicaCreators&& creatorCtx)
 void AlicaEngine::start()
 {
     // TODO: Removing this api need major refactoring of unit tests.
-    _planBase.start(_masterPlan, _ctx.getWorldModel());
-    Logging::logDebug("AE") << "Engine started!";
+    _planBase.start(_masterPlan);
+    Logging::logInfo(LOGNAME) << "Engine started!";
 }
 /**
  * Closes the engine for good.
@@ -191,11 +182,6 @@ int AlicaEngine::getVersion() const
 const YAML::Node& AlicaEngine::getConfig() const
 {
     return _ctx.getConfig();
-}
-
-IAlicaWorldModel* AlicaEngine::getWorldModel() const
-{
-    return _ctx.getWorldModel();
 }
 
 /**

@@ -29,7 +29,8 @@ void TestBehaviour::run()
 {
     /*PROTECTED REGION ID(run55178365253414982) ENABLED START*/
     // Add additional options here
-    auto* wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
+    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
+
     if (wm->executeBehaviourRunCalled) {
         return;
     }
@@ -41,7 +42,7 @@ void TestBehaviour::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters55178365253414982) ENABLED START*/
     // Add additional options here
-    auto* wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
+    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     wm->execOrder += "TestBehaviour::Init\n";
     wm->executeBehaviourRunCalled = false;
 
@@ -52,7 +53,7 @@ void TestBehaviour::initialiseParameters()
 
 void TestBehaviour::onTermination()
 {
-    auto* wm = dynamic_cast<alica_test::SchedWM*>(getWorldModel());
+    auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     wm->execOrder += "TestBehaviour::Term\n";
 }
 /*PROTECTED REGION END*/

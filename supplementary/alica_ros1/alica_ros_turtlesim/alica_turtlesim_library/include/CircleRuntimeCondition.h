@@ -5,7 +5,7 @@
 #include "engine/RunningPlan.h"
 #include <boost/dll/alias.hpp>
 
-class IAlicaWorldModel;
+class Blackboard;
 
 namespace alica
 {
@@ -13,7 +13,7 @@ class CircleRuntimeCondition : public BasicCondition
 {
 public:
     CircleRuntimeCondition();
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const IAlicaWorldModel* wm);
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard);
     // Factory method
     static std::shared_ptr<CircleRuntimeCondition> create(ConditionContext& context)
     {

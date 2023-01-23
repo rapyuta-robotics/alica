@@ -33,10 +33,10 @@ TaskAssignmentProblem::~TaskAssignmentProblem() {}
  * @param a bool
  */
 TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, const TeamManager& teamManager, const PlanGrp& planList,
-        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const IAlicaWorldModel* wm)
+        const AgentGrp& paraAgents, PartialAssignmentPool& pool, const Blackboard* globalBlackboard)
         : _agents(paraAgents)
         , _plans(planList)
-        , _wm(wm)
+        , _globalBlackboard(globalBlackboard)
 #ifdef EXPANSIONEVAL
         , _expansionCount(0)
 #endif
@@ -54,7 +54,7 @@ TaskAssignmentProblem::TaskAssignmentProblem(const TeamObserver& teamObserver, c
         // prep successinfo for this plan
         _successData.push_back(_teamObserver.createSuccessCollection(curPlan));
         // allow caching of eval data
-        curPlan->getUtilityFunction()->cacheEvalData(_wm);
+        curPlan->getUtilityFunction()->cacheEvalData(_globalBlackboard);
         // seed the fringe with a partial assignment
         PartialAssignment* curPa = _pool.getNext();
 
@@ -77,7 +77,7 @@ void TaskAssignmentProblem::preassignOtherAgents()
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
             // reevaluate this pa
-            curPa->evaluate(nullptr, _wm);
+            curPa->evaluate(nullptr, _globalBlackboard);
             changed = true;
         }
         ++i;
@@ -94,18 +94,13 @@ void TaskAssignmentProblem::preassignOtherAgents()
  */
 Assignment TaskAssignmentProblem::getNextBestAssignment(const Assignment* oldAss)
 {
-    Logging::logDebug("TA") << "Calculating next best PartialAssignment...";
     PartialAssignment* calculatedPa = calcNextBestPartialAssignment(oldAss);
 
     if (calculatedPa == nullptr) {
         return Assignment();
     }
 
-    Logging::logDebug("TA") << "... calculated this PartialAssignment:\n" << *calculatedPa;
-
     Assignment newAss = Assignment(*calculatedPa);
-
-    Logging::logDebug("TA") << "Return this Assignment to PS:" << newAss;
 
     return newAss;
 }
@@ -116,17 +111,11 @@ PartialAssignment* TaskAssignmentProblem::calcNextBestPartialAssignment(const As
     while (!_fringe.empty() && goal == nullptr) {
         PartialAssignment* curPa = _fringe.back();
         _fringe.pop_back();
-        Logging::logDebug("TA") << "<--- NEXT PA from fringe:"
-                                << "\n"
-                                << *curPa << "--->";
 
         if (curPa->isGoal()) {
             goal = curPa;
         } else {
-            Logging::logDebug("TA") << "<--- TA: BEFORE fringe exp:" << _fringe << "--->";
-            curPa->expand(_fringe, _pool, oldAss, _wm);
-            Logging::logDebug("TA") << "<--- TA: AFTER fringe exp:\n"
-                                    << "TA: fringe size " << _fringe.size() << _fringe << "--->";
+            curPa->expand(_fringe, _pool, oldAss, _globalBlackboard);
         }
 #ifdef EXPANSIONEVAL
         ++_expansionCount;

@@ -25,20 +25,4 @@ std::string VariableBinding::toString(std::string indent) const
     ss << " SubPlan=" << _subPlan->getName() << "]" << std::endl;
     return ss.str();
 }
-
-void VariableBinding::setSubPlan(const AbstractPlan* subPlan)
-{
-    _subPlan = subPlan;
-}
-
-void VariableBinding::setSubVar(const Variable* subVar)
-{
-    _subVar = subVar;
-}
-
-void VariableBinding::setVar(const Variable* var)
-{
-    _var = var;
-}
-
 } // namespace alica

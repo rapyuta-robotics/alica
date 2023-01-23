@@ -118,14 +118,16 @@ TEST_F(AlicaEngineAuthorityManager, authority)
 
     aes[0]->getAlicaClock().sleep(getDiscoveryTimeout());
 
-    auto* wmOne = dynamic_cast<alicaTests::TestWorldModel*>(acs[0]->getWorldModel());
-    auto* wmTwo = dynamic_cast<alicaTests::TestWorldModel*>(acs[1]->getWorldModel());
+    std::shared_ptr<alicaTests::TestWorldModel> twm1 =
+            LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
+    std::shared_ptr<alicaTests::TestWorldModel> twm2 =
+            LockedBlackboardRW(acs[1]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
-    wmOne->robotsXPos.push_back(0);
-    wmOne->robotsXPos.push_back(2000);
+    twm1->robotsXPos.push_back(0);
+    twm1->robotsXPos.push_back(2000);
 
-    wmTwo->robotsXPos.push_back(2000);
-    wmTwo->robotsXPos.push_back(0);
+    twm2->robotsXPos.push_back(2000);
+    twm2->robotsXPos.push_back(0);
 
     STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
@@ -134,5 +136,6 @@ TEST_F(AlicaEngineAuthorityManager, authority)
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
     EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
 }
+
 } // namespace
 } // namespace alica

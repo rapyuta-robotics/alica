@@ -17,14 +17,14 @@ TransitionCondition::TransitionCondition(std::unique_ptr<BlackboardBlueprint> bl
 {
 }
 
-bool TransitionCondition::evaluate(const RunningPlan* rp, const IAlicaWorldModel* wm, const KeyMapping* keyMapping)
+bool TransitionCondition::evaluate(const RunningPlan* rp, const Blackboard* globalBlackboard, const KeyMapping* keyMapping)
 {
     if (rp->isBehaviour()) {
         return false;
     }
     assert(_evalCallback);
     BlackboardUtil::setInput(rp->getBasicPlan()->getBlackboard().get(), _blackboard.get(), keyMapping);
-    return _evalCallback(_blackboard.get(), rp, wm);
+    return _evalCallback(_blackboard.get(), rp, globalBlackboard);
 }
 
 std::string TransitionCondition::getLibraryName() const

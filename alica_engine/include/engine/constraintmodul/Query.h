@@ -96,6 +96,8 @@ public:
     const UniqueVarStore& getUniqueVariableStore() const; /*< for testing only!!! */
 
 private:
+    static constexpr const char* LOGNAME = "ConstraintSolver";
+
     void clearTemporaries();
     void fillBufferFromQuery();
     bool collectProblemStatement(const RunningPlan* pi, ISolverBase& solver, std::vector<std::shared_ptr<ProblemDescriptor>>& cds, int& domOffset);
@@ -136,7 +138,7 @@ bool Query::getSolution(const RunningPlan* pi, std::vector<ResultType>& result)
     int domOffset;
 
     if (!pi->existSolver<SolverType>()) {
-        Logging::logError("Query::getSolution") << "The engine does not have a suitable solver for the given type available.";
+        Logging::logError(LOGNAME) << "The engine does not have a suitable solver for the given type available.";
         return false;
     }
 
