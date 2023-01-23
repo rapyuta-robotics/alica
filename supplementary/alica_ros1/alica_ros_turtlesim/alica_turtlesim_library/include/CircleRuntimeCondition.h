@@ -15,14 +15,7 @@ public:
     CircleRuntimeCondition();
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* globalBlackboard);
     // Factory method
-    static std::shared_ptr<CircleRuntimeCondition> create(ConditionContext& context)
-    {
-        (void) context;
-        std::cerr << "Debug:"
-                  << "CircleRuntimeCondition created static" << std::endl;
-
-        return std::shared_ptr<CircleRuntimeCondition>(new CircleRuntimeCondition());
-    }
+    static std::shared_ptr<CircleRuntimeCondition> create(ConditionContext&) { return std::shared_ptr<CircleRuntimeCondition>(new CircleRuntimeCondition()); }
 };
 BOOST_DLL_ALIAS(alica::CircleRuntimeCondition::create, CircleRuntimeCondition)
 
@@ -32,11 +25,7 @@ public:
     CircleRuntimeConditionConstraint();
     void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) override;
     // Factory method
-    static std::shared_ptr<CircleRuntimeConditionConstraint> create(ConstraintContext& context)
-    {
-        (void) context;
-        return std::make_shared<CircleRuntimeConditionConstraint>();
-    }
+    static std::shared_ptr<CircleRuntimeConditionConstraint> create(ConstraintContext&) { return std::make_shared<CircleRuntimeConditionConstraint>(); }
 };
 BOOST_DLL_ALIAS(alica::CircleRuntimeConditionConstraint::create, CircleRuntimeConditionConstraint)
 } // namespace alica

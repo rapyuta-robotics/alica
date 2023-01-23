@@ -25,11 +25,7 @@ public:
     MasterUtilityFunction() = default;
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan) override;
     // Factory method
-    static std::shared_ptr<MasterUtilityFunction> create(UtilityFunctionContext& context)
-    {
-        (void) context;
-        return std::make_shared<MasterUtilityFunction>();
-    }
+    static std::shared_ptr<MasterUtilityFunction> create(UtilityFunctionContext&) { return std::make_shared<MasterUtilityFunction>(); }
 };
 BOOST_DLL_ALIAS(alica::MasterUtilityFunction::create, MasterUtilityFunction)
 } /* namespace alica */
