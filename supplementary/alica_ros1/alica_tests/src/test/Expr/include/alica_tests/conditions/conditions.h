@@ -9,7 +9,7 @@ namespace alica
 class Blackboard;
 class RunningPlan;
 
-bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
+bool conditionTriggerFromInputCond1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionAnyChildFailure3(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);
 bool conditionAllChildFailure4(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb);

@@ -3,17 +3,17 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "3",
-      "id": 620992452739501207,
-      "key": "SubOne2SubTwo",
+      "defaultValue": "2",
+      "id": 1998335174749558241,
+      "key": "Sequenze2SubPlan",
       "type": "int64"
     },
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "2",
-      "id": 1998335174749558241,
-      "key": "Sequenze2SubPlan",
+      "defaultValue": "3",
+      "id": 620992452739501207,
+      "key": "SubOne2SubTwo",
       "type": "int64"
     },
     {

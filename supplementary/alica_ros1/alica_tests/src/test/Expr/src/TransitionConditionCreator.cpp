@@ -17,7 +17,7 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
 {
     switch (conditionId) {
     case 1:
-        return std::bind(conditionAnyChildSuccess1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        return std::bind(conditionTriggerFromInputCond1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2:
         return std::bind(conditionAllChildSuccess2, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3:

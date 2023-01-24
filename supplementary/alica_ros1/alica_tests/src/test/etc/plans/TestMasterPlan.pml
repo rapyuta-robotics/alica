@@ -4,6 +4,14 @@
       "access": "protected",
       "comment": "",
       "defaultValue": null,
+      "id": 4584562513518521788,
+      "key": "ChooseTestState2ConstraintTestPlanState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
       "id": 416655236463623339,
       "key": "ChooseTestState2BehaviourTriggerTestPlanState",
       "type": "bool"
@@ -102,7 +110,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 400
+        "y": 600
       },
       "type": "State",
       "variableBindings": []
@@ -132,7 +140,37 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 800
+        "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "ConstraintTestPlan.pml#1414068524245",
+          "comment": "",
+          "configuration": null,
+          "id": 3708003994572953896,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1614096900023460978,
+      "inTransitions": [
+        4395515746620538120
+      ],
+      "name": "ConstraintTestPlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -162,7 +200,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 600
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -192,7 +230,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 1200
+        "y": 400
       },
       "type": "State",
       "variableBindings": []
@@ -222,7 +260,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 1000
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -240,7 +278,8 @@
         2550214909296500141,
         2841206023261337744,
         3219105289339324342,
-        4120890224163547783
+        4120890224163547783,
+        4395515746620538120
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -336,7 +375,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 1229
+          "y": 429
         }
       ],
       "preCondition": {
@@ -370,7 +409,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 429
+          "y": 629
         }
       ],
       "preCondition": {
@@ -404,7 +443,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 629
+          "y": 829
         }
       ],
       "preCondition": {
@@ -438,7 +477,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 829
+          "y": 1029
         }
       ],
       "preCondition": {
@@ -472,7 +511,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 1029
+          "y": 1229
         }
       ],
       "preCondition": {
@@ -480,6 +519,40 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 4395515746620538120,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2ConstraintTestPlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 1614096900023460978,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1429
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1116445858325947631,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
