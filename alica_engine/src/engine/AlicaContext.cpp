@@ -24,6 +24,9 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
 {
+    LockedBlackboardRW gbb(_globalBlackboard);
+    gbb.set("agentName", alicaContextParams.agentName);
+    gbb.set("agentID", alicaContextParams.agentID);
 }
 
 AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)

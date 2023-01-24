@@ -24,5 +24,13 @@ TEST_F(AlicaEngineTestInit, initAndShutdown)
     ASSERT_NO_SIGNAL
     EXPECT_NE(ac, nullptr);
 }
+
+TEST_F(AlicaEngineTestInit, globalBlackboardInit)
+{
+    LockedBlackboardRO gbb(ac->getGlobalBlackboard());
+    ASSERT_EQ(gbb.get<std::string>("agentName"), getHostName());
+    ASSERT_EQ(gbb.get<AgentId>("agentID"), ac->getConfig()["Local"]["ID"].as<AgentId>());
+}
+
 } // namespace
 } // namespace alica
