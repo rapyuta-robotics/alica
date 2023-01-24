@@ -108,6 +108,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
             return preCondition.evaluate(temp, gb);
         };
     }
+    case 4225206153314616208: {
+        PreCondition4225206153314616208 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
     case 2616157902346364992: {
         PreCondition2616157902346364992 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {

@@ -4,6 +4,14 @@
       "access": "protected",
       "comment": "",
       "defaultValue": null,
+      "id": 416655236463623339,
+      "key": "ChooseTestState2BehaviourTriggerTestPlanState",
+      "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
       "type": "bool"
@@ -53,7 +61,7 @@
       "plan": 2521443078354411465,
       "positionWeb": {
         "x": 200,
-        "y": 612
+        "y": 812
       },
       "state": 4098979167613947533,
       "successRequired": false,
@@ -124,7 +132,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 798.4015247776366
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -155,6 +163,36 @@
       "positionWeb": {
         "x": 686,
         "y": 600
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "BehaviourTriggerTestPlan.pml#1428508768572",
+          "comment": "",
+          "configuration": null,
+          "id": 1259100544142830589,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 2414949370302704713,
+      "inTransitions": [
+        1708634417409350170
+      ],
+      "name": "BehaviourTriggerTestPlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -198,6 +236,7 @@
       "name": "ChooseTestState",
       "outTransitions": [
         846865468084822174,
+        1708634417409350170,
         2550214909296500141,
         2841206023261337744,
         3219105289339324342,
@@ -206,7 +245,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 428,
-        "y": 600
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -271,6 +310,40 @@
         "conditionString": "",
         "enabled": true,
         "id": 1879497210052616817,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 1708634417409350170,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2BehaviourTriggerTestPlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 2414949370302704713,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1229
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4225206153314616208,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

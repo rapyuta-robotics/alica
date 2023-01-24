@@ -45,6 +45,11 @@ class PreCondition1879497210052616817 : public DomainCondition
 public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
+class PreCondition4225206153314616208 : public DomainCondition
+{
+public:
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+};
 class PreCondition2616157902346364992 : public DomainCondition
 {
 public:

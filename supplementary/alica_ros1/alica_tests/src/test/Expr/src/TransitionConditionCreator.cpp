@@ -16,6 +16,8 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
         int64_t conditionId, TransitionConditionContext& context)
 {
     switch (conditionId) {
+    case 1:
+        return std::bind(conditionAnyChildSuccess1, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 2:
         return std::bind(conditionAllChildSuccess2, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3:

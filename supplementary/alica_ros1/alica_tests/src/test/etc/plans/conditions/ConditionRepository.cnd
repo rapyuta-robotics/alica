@@ -3,6 +3,14 @@
   "conditions": [
     {
       "blackboard": [],
+      "comment": "AnyChildSuccess",
+      "conditionRepository": 0,
+      "id": 1,
+      "name": "AnyChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
       "comment": "AllChildSuccess",
       "conditionRepository": 0,
       "id": 2,

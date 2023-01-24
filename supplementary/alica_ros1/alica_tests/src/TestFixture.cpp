@@ -46,7 +46,7 @@ void TestFixture::SetUp()
     ros::NodeHandle nh;
     std::string path;
     nh.param<std::string>("/rootPath", path, ".");
-    _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "BehaviourTriggerTestPlan", true, 1);
+    _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "TestMasterPlan", true, 1);
     ASSERT_TRUE(_tc->isValid());
     const YAML::Node& config = _tc->getConfig();
     _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
@@ -62,8 +62,8 @@ void TestFixture::SetUp()
     _tc->startEngine();
     _spinner->start();
 
-    STEP_UNTIL(_tc, _tc->getActivePlan("BehaviourTriggerTestPlan"));
-    ASSERT_TRUE(_tc->getActivePlan("BehaviourTriggerTestPlan")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("TestMasterPlan"));
+    ASSERT_TRUE(_tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
 }
 
 void TestFixture::TearDown()

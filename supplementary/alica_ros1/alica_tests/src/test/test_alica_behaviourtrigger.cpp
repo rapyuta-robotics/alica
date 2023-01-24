@@ -10,17 +10,13 @@
 namespace alica::test
 {
 
-/*
-TODO Luca
-uncomment when it will be possible to add transition TestMasterPlan->BehaviourTriggerTestPlan
-*/
 TEST_F(TestFixture, triggerTest)
 {
 
     // Transition to the plan corresponding to this test case
-    // ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehaviourTriggerTestPlanState")) << _tc->getLastFailure();
-    // STEP_UNTIL(_tc, _tc->getActivePlan("BehaviourTriggerTestPlan"));
-    // ASSERT_NE(nullptr, _tc->getActivePlan("BehaviourTriggerTestPlan")) << _tc->getLastFailure();
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BehaviourTriggerTestPlanState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BehaviourTriggerTestPlan"));
+    ASSERT_NE(nullptr, _tc->getActivePlan("BehaviourTriggerTestPlan")) << _tc->getLastFailure();
 
     ASSERT_EQ(dynamic_cast<alica::TriggerA*>(_tc->getActiveBehaviour("TriggerA"))->callCounter, 0);
     ASSERT_EQ(dynamic_cast<alica::TriggerB*>(_tc->getActiveBehaviour("TriggerB"))->callCounter, 0);
