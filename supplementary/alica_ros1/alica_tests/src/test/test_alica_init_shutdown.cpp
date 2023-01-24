@@ -29,7 +29,7 @@ TEST_F(AlicaEngineTestInit, globalBlackboardInit)
 {
     LockedBlackboardRO gbb(ac->getGlobalBlackboard());
     ASSERT_EQ(gbb.get<std::string>("agentName"), getHostName());
-    ASSERT_EQ(gbb.get<AgentId>("agentID"), ac->getConfig()["Local"]["ID"].as<AgentId>());
+    ASSERT_EQ(gbb.get<AgentId>("agentId"), ac->getConfig()["Local"]["ID"].as<AgentId>());
 }
 
 } // namespace

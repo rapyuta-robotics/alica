@@ -24,17 +24,6 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
 {
-    LockedBlackboardRW gbb(_globalBlackboard);
-    gbb.set("agentName", alicaContextParams.agentName);
-    gbb.set("agentID", alicaContextParams.agentID);
-}
-
-AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
-        : _validTag(ALICA_CTX_GOOD)
-        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
-        , _alicaContextParams(alicaContextParams)
-        , _clock(std::make_unique<AlicaClock>())
-{
 }
 
 AlicaContext::~AlicaContext()
@@ -72,6 +61,9 @@ int AlicaContext::init(AlicaCreators&& creatorCtx, bool delayStart)
     _communicator->startCommunication();
 
     if (_engine->init(std::move(creatorCtx))) {
+        LockedBlackboardRW gbb(_globalBlackboard);
+        gbb.set("agentName", _engine->getLocalAgentName());
+        gbb.set("agentId", _engine->getTeamManager().getLocalAgentID());
         if (!delayStart) {
             _engine->start();
         } else {
