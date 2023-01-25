@@ -177,7 +177,6 @@ public:
      * @note Can throw an exception if some necessary configurations dont exist in the config file.
      */
     AlicaContext(const AlicaContextParams& alicaContextParams);
-    AlicaContext(const AlicaContextParams&& alicaContextParams);
 
     /**
      * Destroys AlicaContext object.
