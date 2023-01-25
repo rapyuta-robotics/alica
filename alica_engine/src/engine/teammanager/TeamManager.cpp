@@ -292,6 +292,11 @@ void TeamManager::handleAgentQuery(const AgentQuery& aq) const
 
 void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
 {
+    if (aa.planHash != _localAgent->getPlanHash()) {
+        // Agent belongs to another team, ignore msg
+        return;
+    }
+
     if (aa.senderID == _localAgent->getId()) {
         if (aa.token != _localAgent->getToken()) {
             // Shall abort ?
@@ -305,8 +310,8 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
     }
 
     // TODO: Add sdk compatibility check with comparing major version numbers
-    if (aa.senderSdk != _localAgent->getSdk() || aa.planHash != _localAgent->getPlanHash()) {
-        Logging::logWarn(LOGNAME) << "Version mismatch ignoring: " << aa.senderID << " sdk: " << aa.senderSdk << " ph: " << aa.planHash;
+    if (aa.senderSdk != _localAgent->getSdk()) {
+        Logging::logWarn(LOGNAME) << "Version mismatch, ignoring agent: " << aa.senderID << ", sdk: " << aa.senderSdk << ", plan hash: " << aa.planHash;
         return;
     }
 
