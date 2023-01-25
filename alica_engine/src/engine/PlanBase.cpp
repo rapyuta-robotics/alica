@@ -32,8 +32,9 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
-        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory, const IAlicaTraceFactory* traceFactory)
+        const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
+        const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
         , _logger(log)
@@ -154,7 +155,7 @@ void PlanBase::run(const Plan* masterPlan)
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
                 _isWaiting = true;
-                _stepModeCV.wait(lckStep, [&] { return _stepCalled; });
+                _stepModeCV.wait(lckStep, [&] { return _stepCalled.load(); });
                 _stepCalled = false;
                 _isWaiting = false;
                 if (!_running) {
@@ -328,8 +329,9 @@ void PlanBase::run(const Plan* masterPlan)
  */
 void PlanBase::stop()
 {
-    _running = false;
     _stepCalled = true;
+    _running = false;
+    _stepModeCV.notify_one();
 
     if (_stepEngine) {
         _stepCalled = true;

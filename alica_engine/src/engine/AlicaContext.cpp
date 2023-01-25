@@ -36,6 +36,7 @@ AlicaContext::AlicaContext(const AlicaContextParams&& alicaContextParams)
 
 AlicaContext::~AlicaContext()
 {
+    _engine.reset();
     _validTag = ALICA_CTX_BAD;
 }
 
@@ -87,7 +88,10 @@ int AlicaContext::terminate()
     if (_communicator) {
         _communicator->stopCommunication();
     }
-    _engine->terminate();
+    if (_engine) {
+        _engine->terminate();
+        _engine.reset();
+    }
     _initialized = false;
     Logging::logInfo(LOGNAME) << "context terminated";
     // TODO: Fix this (add proper return code in engine shutdown)

@@ -3,6 +3,9 @@
 #include <iostream>
 #include <memory>
 
+#include <condition_variable>
+#include <mutex>
+
 namespace alica
 {
 
@@ -30,6 +33,10 @@ private:
     const IAlicaTraceFactory* _traceFactory;
     const TeamManager& _teamManager;
     const IAlicaTimerFactory& _timerFactory;
+
+    mutable std::mutex _m;
+    mutable std::condition_variable _cv;
+    bool _initialized{false};
 };
 
 } /* namespace alica */
