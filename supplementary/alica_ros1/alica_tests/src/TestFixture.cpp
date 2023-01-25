@@ -1,26 +1,3 @@
-#include "test_alica.h"
-
-#include <alica/test/CounterClass.h>
-#include <alica_tests/Behaviour/Attack.h>
-#include <alica_tests/Behaviour/MidFieldStandard.h>
-
-#include <alica/test/Util.h>
-#include <engine/AlicaClock.h>
-#include <engine/AlicaEngine.h>
-#include <engine/Assignment.h>
-#include <engine/BasicBehaviour.h>
-#include <engine/DefaultUtilityFunction.h>
-#include <engine/IAlicaCommunication.h>
-#include <engine/PlanBase.h>
-#include <engine/PlanRepository.h>
-#include <engine/TeamObserver.h>
-#include <engine/model/Behaviour.h>
-#include <engine/model/Plan.h>
-#include <engine/model/RuntimeCondition.h>
-#include <engine/model/State.h>
-
-#include <gtest/gtest.h>
-
 #include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
 #include <alica_tests/BehaviourCreator.h>
@@ -33,10 +10,10 @@
 #include <alica_tests/UtilityFunctionCreator.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
-#include <logger/AlicaRosLogger.h>
-
+#include <engine/AlicaEngine.h>
+#include <engine/IAlicaCommunication.h>
 #include <gtest/gtest.h>
-#include <ros/ros.h>
+#include <logger/AlicaRosLogger.h>
 
 namespace alica::test
 {

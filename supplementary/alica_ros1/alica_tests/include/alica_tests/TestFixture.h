@@ -8,11 +8,10 @@ namespace alica::test
 class TestFixture : public ::testing::Test
 {
 
-public:
+protected:
     void SetUp() override;
     void TearDown() override;
 
-protected:
     std::unique_ptr<TestContext> _tc;
     std::unique_ptr<ros::AsyncSpinner> _spinner;
 };
