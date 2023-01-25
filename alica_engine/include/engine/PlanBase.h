@@ -47,8 +47,8 @@ class PlanBase
 public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-            const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
+            const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
             const IAlicaTraceFactory* traceFactory);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
