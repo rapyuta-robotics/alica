@@ -31,7 +31,6 @@ void TestFixture::SetUp()
     _tc->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     _tc->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
     LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
-    _spinner->start();
     AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>()};
