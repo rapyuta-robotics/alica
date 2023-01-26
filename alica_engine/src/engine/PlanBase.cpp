@@ -318,7 +318,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = _clock.now();
         availTime = _loopTime - (now - beginTime);
 
-        if (availTime > AlicaTime::microseconds(100) && !_stepEngine) {
+        if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
             _clock.sleep(availTime);
         }
     }

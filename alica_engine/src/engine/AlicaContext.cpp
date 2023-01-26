@@ -28,7 +28,9 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 
 AlicaContext::~AlicaContext()
 {
-    _engine.reset();
+    if (_initialized) {
+        terminate();
+    }
     _validTag = ALICA_CTX_BAD;
 }
 
