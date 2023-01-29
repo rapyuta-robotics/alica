@@ -18,6 +18,7 @@ namespace alica
 //   - MultiPlanInstanceSuccessTestState (3960396736820956915)
 //   - ChooseTestState (4098979167613947533)
 //   - BehSuccessTestState (4487929496627066142)
+//   - RunBehaviourInSimplePlanState (3760344851508420724)
 TestMasterPlan2521443078354411465::TestMasterPlan2521443078354411465(PlanContext& context)
         : DomainPlan(context)
 {
@@ -149,6 +150,28 @@ bool PreCondition2733591692277574870::evaluate(std::shared_ptr<RunningPlan> rp, 
 {
     /*PROTECTED REGION ID(4120890224163547783) ENABLED START*/
     std::cout << "The PreCondition 2733591692277574870 in Transition '4120890224163547783' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 3312785896666601377 (3312785896666601377)
+ *   - Comment:
+ *   - Source2Dest: ChooseTestState --> RunBehaviourInSimplePlanState
+ *
+ * Precondition: 4585303539252259897 (4585303539252259897)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in ChooseTestState:
+ */
+bool PreCondition4585303539252259897::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+{
+    /*PROTECTED REGION ID(3312785896666601377) ENABLED START*/
+    std::cout << "The PreCondition 4585303539252259897 in Transition '3312785896666601377' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }

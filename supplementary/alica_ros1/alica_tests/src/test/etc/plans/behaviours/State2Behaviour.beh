@@ -1,0 +1,24 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "defaultValue": "0",
+      "id": 3930608502327483118,
+      "key": "callCount",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 2219945377054027027,
+  "inheritBlackboard": false,
+  "name": "State2Behaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": []
+}

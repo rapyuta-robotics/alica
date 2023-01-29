@@ -2,11 +2,20 @@
   "comment": "",
   "conditions": [
     {
-      "blackboard": [],
+      "blackboard": [
+        {
+          "access": "input",
+          "comment": "",
+          "defaultValue": "false",
+          "id": 581875874063336332,
+          "key": "result",
+          "type": "bool"
+        }
+      ],
       "comment": "AnyChildSuccess",
       "conditionRepository": 0,
       "id": 1,
-      "name": "AnyChildSuccess",
+      "name": "TriggerMyTest",
       "relativeDirectory": "conditions"
     },
     {

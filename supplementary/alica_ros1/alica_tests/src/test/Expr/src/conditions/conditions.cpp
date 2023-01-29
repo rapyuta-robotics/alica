@@ -38,9 +38,11 @@ bool isFailure(const alica::RunningPlan* rp)
 
 namespace alica
 {
-bool conditionAnyChildSuccess1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool conditionTriggerMyTest1(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(condition1) ENABLED START*/
+    LockedBlackboardRO bb(*input);
+    return bb.get<bool>("result");
     /*PROTECTED REGION END*/
 }
 bool conditionAllChildSuccess2(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)

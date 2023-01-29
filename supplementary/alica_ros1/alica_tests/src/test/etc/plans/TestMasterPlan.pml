@@ -39,6 +39,14 @@
       "id": 4524822962425938639,
       "key": "ChooseTestState2BehaviorSuccessSpamMasterState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 1893470949290061309,
+      "key": "ChooseTestState2RunBehaviourInSimplePlanState",
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -124,7 +132,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 798.4015247776366
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -201,7 +209,8 @@
         2550214909296500141,
         2841206023261337744,
         3219105289339324342,
-        4120890224163547783
+        4120890224163547783,
+        3312785896666601377
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -237,6 +246,36 @@
       "positionWeb": {
         "x": 686,
         "y": 200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "RunBehaviourInSimplePlan.pml#2504351804499332310",
+          "comment": "",
+          "configuration": null,
+          "id": 119936314569061232,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3760344851508420724,
+      "inTransitions": [
+        3312785896666601377
+      ],
+      "name": "RunBehaviourInSimplePlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 113.0162002945508,
+        "y": 66.69808541973491
       },
       "type": "State",
       "variableBindings": []
@@ -407,6 +446,35 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 3312785896666601377,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2RunBehaviourInSimplePlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3760344851508420724,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4585303539252259897,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

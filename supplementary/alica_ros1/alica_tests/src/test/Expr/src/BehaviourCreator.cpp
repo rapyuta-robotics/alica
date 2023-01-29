@@ -21,6 +21,8 @@
 #include <alica_tests/Behaviour/TriggerC.h>
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/TestBehaviour.h>
+#include <alica_tests/behaviours/State1Behaviour.h>
+#include <alica_tests/behaviours/State2Behaviour.h>
 
 namespace alica
 {
@@ -91,6 +93,12 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 831400441334251602:
         return std::make_unique<TestParameterPassingBehaviour>(context);
+        break;
+    case 2219945377054027027:
+        return std::make_unique<State2Behaviour>(context);
+        break;
+    case 3563417394101512880:
+        return std::make_unique<State1Behaviour>(context);
         break;
     case 3821787310391665935:
         return std::make_unique<SuccessOnInitBeh>(context);

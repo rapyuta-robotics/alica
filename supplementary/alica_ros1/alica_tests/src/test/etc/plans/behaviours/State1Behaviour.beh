@@ -1,0 +1,15 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 3563417394101512880,
+  "inheritBlackboard": false,
+  "name": "State1Behaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": []
+}

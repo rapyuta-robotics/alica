@@ -65,6 +65,7 @@
 #include <alica_tests/PlanTwo1407153645238.h>
 #include <alica_tests/PreConditionPlan1418042796751.h>
 #include <alica_tests/RealMasterPlanForSyncTest1418902217839.h>
+#include <alica_tests/RunBehaviourInSimplePlan2504351804499332310.h>
 #include <alica_tests/RuntimeConditionPlan1418042806575.h>
 #include <alica_tests/SchedulingTestMasterPlan1613378382024.h>
 #include <alica_tests/SchedulingTestPlan11613378406860.h>
@@ -88,6 +89,8 @@
 #include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 #include <alica_tests/TestTracingMasterPlan691392966514374878.h>
 #include <alica_tests/TestTracingSubPlan1482512794732634139.h>
+#include <alica_tests/behaviours/State1Behaviour3563417394101512880.h>
+#include <alica_tests/behaviours/State2Behaviour2219945377054027027.h>
 
 namespace alica
 {
@@ -127,6 +130,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 1530069251117:
         return std::make_shared<RunTimeCondition1530069251117>();
+        break;
+    case 4404788800584486714:
+        return std::make_shared<RunTimeCondition4404788800584486714>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;
