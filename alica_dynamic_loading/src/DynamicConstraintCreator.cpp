@@ -18,8 +18,10 @@ DynamicConstraintCreator::DynamicConstraintCreator()
 std::shared_ptr<BasicConstraint> DynamicConstraintCreator::createConstraint(int64_t constraintConfId, ConstraintContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (completeLibraryName.empty())
+    if (completeLibraryName.empty()) {
+        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the constraint: " << context.name;
         return nullptr;
+    }
 
     _constraintCreator = boost::dll::import_alias<constraintCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                          // complete path to library also with file name

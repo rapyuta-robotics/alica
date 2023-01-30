@@ -14,6 +14,7 @@ class Simulation : public alica::BasicPlan
 {
 public:
     Simulation(alica::PlanContext& context);
+    void onInit() override;
     static std::unique_ptr<Simulation> create(alica::PlanContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::Simulation::create, Simulation)

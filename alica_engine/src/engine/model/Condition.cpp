@@ -13,7 +13,6 @@ namespace alica
 Condition::Condition()
         : _abstractPlan(nullptr)
         , _basicCondition(nullptr)
-        , _libraryName("")
 {
 }
 

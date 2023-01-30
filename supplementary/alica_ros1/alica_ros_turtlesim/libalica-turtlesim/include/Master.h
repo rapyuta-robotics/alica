@@ -14,6 +14,7 @@ class Master : public alica::BasicPlan
 {
 public:
     Master(alica::PlanContext& context);
+    void onInit() override;
     static std::unique_ptr<Master> create(alica::PlanContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::Master::create, Master)

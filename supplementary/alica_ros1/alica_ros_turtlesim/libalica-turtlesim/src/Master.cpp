@@ -1,5 +1,6 @@
 #include "Master.h"
 
+#include "turtle.hpp"
 #include <engine/DefaultUtilityFunction.h>
 
 namespace turtlesim
@@ -8,6 +9,14 @@ namespace turtlesim
 Master::Master(alica::PlanContext& context)
         : BasicPlan(context)
 {
+}
+
+void Master::onInit()
+{
+    alica::LockedBlackboardRW bb{*getGlobalBlackboard()};
+    if (!bb.hasValue("turtle")) {
+        bb.set("turtle", std::make_shared<ALICATurtle>(bb.get<std::string>("agentName")));
+    }
 }
 
 std::unique_ptr<Master> Master::create(alica::PlanContext& context)

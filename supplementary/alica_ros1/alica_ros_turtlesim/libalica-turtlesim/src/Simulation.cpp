@@ -1,6 +1,8 @@
+#include "Simulation.h"
+
 #include <engine/DefaultUtilityFunction.h>
 
-#include "Simulation.h"
+#include "ros/ros.h"
 
 namespace turtlesim
 {
@@ -8,6 +10,13 @@ namespace turtlesim
 Simulation::Simulation(alica::PlanContext& context)
         : BasicPlan(context)
 {
+}
+
+void Simulation::onInit()
+{
+    alica::LockedBlackboardRW bb{*getBlackboard()};
+    bb.set("join_formation_topic", std::string{"join_formation"});
+    bb.set("leave_formation_topic", std::string{"leave_formation"});
 }
 
 std::unique_ptr<Simulation> Simulation::create(alica::PlanContext& context)

@@ -1,5 +1,5 @@
 #include "Teleport2RandomPosition.h"
-#include "world_model.hpp"
+#include "turtle.hpp"
 
 #include <memory>
 #include <random>
@@ -22,10 +22,9 @@ void Teleport2RandomPosition::run()
     std::mt19937 engine(seed_gen());
     std::uniform_real_distribution<> dist(0, 10.0);
     // teleport turtle to random place
-    std::shared_ptr<turtlesim::ALICATurtleWorldModel> wm =
-            alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtleWorldModel>>("worldmodel");
+    auto turtle = alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
 
-    wm->turtle.teleport(dist(engine), dist(engine));
+    turtle->teleport(dist(engine), dist(engine));
     setSuccess();
 }
 

@@ -7,9 +7,7 @@
 namespace turtlesim
 {
 /*
-    ALICATurtleWorldModel
-    - Turtle control classfor ALICA ros turtlesim which interface between ALICA and ROS.
-    - A few class is static since one robot has one world model
+    - Turtle control class for ALICA ros turtlesim which interfaces between ALICA and ROS
     - ROS:
         - Publish: turtleX/cmd_vel
         - Subscribe: turtleX/pose
@@ -19,7 +17,7 @@ namespace turtlesim
 class ALICATurtle
 {
 public:
-    ALICATurtle(ros::NodeHandle& priv_nh);
+    ALICATurtle(const std::string& name);
     void teleport(const float x, const float y);         // teleport turtle to (x,y)
     bool move_toward_goal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
     bool move_toward_goal() const;                       // publish cmd_vel based on goal and current pose

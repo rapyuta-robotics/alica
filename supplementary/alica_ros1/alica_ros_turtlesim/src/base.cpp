@@ -6,8 +6,6 @@
 #include <DynamicTransitionConditionCreator.h>
 #include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros_turtlesim/base.hpp>
-#include <alica_ros_turtlesim/world_model.hpp>
-#include <boost/dll/import.hpp> // for import_alias
 #include <clock/AlicaROSClock.h>
 #include <clock/AlicaRosTimer.h>
 #include <communication/AlicaRosCommunication.h>
@@ -21,9 +19,8 @@ namespace turtlesim
 {
 
 Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path, bool loadDynamically)
+        const std::string& master_plan, const std::string& path)
         : spinner(0)
-        , _loadDynamically(loadDynamically)
 {
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
@@ -31,47 +28,17 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& nam
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
     ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
-    // create world model
-    if (_loadDynamically) {
-        ALICASetWorldModel(nh, priv_nh);
-    } else {
-        alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<turtlesim::ALICATurtleWorldModel>(nh, priv_nh));
-    }
-}
-
-void Base::ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh)
-{
-    std::vector<std::string> tmp = calculateLibraryPath();
-    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica_turtlesim_library");
-    if (libraryPath.empty()) {
-        Logging::logError("Turtlesim") << "Library: " << libraryPath << "does not exist";
-        return;
-    }
-
-    typedef void(InitType)(alica::AlicaContext*, ros::NodeHandle&, ros::NodeHandle&);
-    std::function<InitType> setWm;
-    setWm = boost::dll::import_alias<InitType>(       // type of imported symbol must be explicitly specified
-            libraryPath,                              // complete path to library also with file name
-            "setWorldModel",                          // symbol to import
-            boost::dll::load_mode::append_decorations // do append extensions and prefixes
-    );
-    setWm(ac, nh, priv_nh);
 }
 
 void Base::start()
 {
-    if (_loadDynamically) {
-        alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
-                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
-                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
-        spinner.start(); // start spinner before initializing engine, but after setting context
-        ac->init(std::move(creators), false);
-        ac->addSolver<alica::reasoner::CGSolver>();
-    } else {
-        std::cerr << "fatal: only dynamic loading supported" << std::endl;
-        exit(1);
-    }
+    spinner.start(); // start spinner before initializing engine, but after setting context
+    ac->init(std::move(creators), false);
+    ac->addSolver<alica::reasoner::CGSolver>();
 }
 
 Base::~Base()

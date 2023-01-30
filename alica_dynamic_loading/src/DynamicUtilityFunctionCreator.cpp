@@ -18,8 +18,10 @@ DynamicUtilityFunctionCreator::DynamicUtilityFunctionCreator()
 std::shared_ptr<BasicUtilityFunction> DynamicUtilityFunctionCreator::createUtility(int64_t utilityFunctionConfId, UtilityFunctionContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (completeLibraryName.empty())
+    if (completeLibraryName.empty()) {
+        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the utility function: " << context.name;
         return nullptr;
+    }
 
     _utilityFunctionCreator = boost::dll::import_alias<utilityFunctionCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                                    // complete path to library also with file name

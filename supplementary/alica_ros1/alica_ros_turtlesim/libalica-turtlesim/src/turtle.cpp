@@ -1,18 +1,19 @@
 #include "turtle.hpp"
+
 #include <geometry_msgs/Twist.h>
 #include <turtlesim/TeleportAbsolute.h>
 
 namespace turtlesim
 {
 
-ALICATurtle::ALICATurtle(ros::NodeHandle& priv_nh)
+ALICATurtle::ALICATurtle(const std::string& name)
+        : _name(name)
 {
-    priv_nh.getParam("name", _name);
-
     // initialize publisher, subscriber and service client.
-    _vel_pub = priv_nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    _pose_sub = priv_nh.subscribe("pose", 1, &ALICATurtle::pose_sub_callback, this);
-    _teleport_client = priv_nh.serviceClient<TeleportAbsolute>("teleport_absolute");
+    ros::NodeHandle nh("~");
+    _vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    _pose_sub = nh.subscribe("pose", 1, &ALICATurtle::pose_sub_callback, this);
+    _teleport_client = nh.serviceClient<TeleportAbsolute>("teleport_absolute");
 }
 
 void ALICATurtle::teleport(float x, float y)
