@@ -391,6 +391,7 @@ RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configura
 
 void PlanBase::init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator)
 {
+    // due communication could be already started, this factories should handle concurrent access properly
     _runTimeBehaviourFactory.init(std::move(behaviourCreator));
     _runTimePlanFactory.init(std::move(planCreator));
 }
