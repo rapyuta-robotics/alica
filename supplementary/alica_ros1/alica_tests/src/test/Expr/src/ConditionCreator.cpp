@@ -18,6 +18,8 @@
 #include <alica_tests/Behaviour/MidFieldStandard1402488696205.h>
 #include <alica_tests/Behaviour/NotToTrigger1429017274116.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>
+#include <alica_tests/Behaviour/State1Behaviour3563417394101512880.h>
+#include <alica_tests/Behaviour/State2Behaviour2219945377054027027.h>
 #include <alica_tests/Behaviour/SuccessOnInitBeh3821787310391665935.h>
 #include <alica_tests/Behaviour/SuccessSpam1522377401286.h>
 #include <alica_tests/Behaviour/Tackle1402488939130.h>
@@ -89,8 +91,6 @@
 #include <alica_tests/TestParameterPassingMaster1179066429431332055.h>
 #include <alica_tests/TestTracingMasterPlan691392966514374878.h>
 #include <alica_tests/TestTracingSubPlan1482512794732634139.h>
-#include <alica_tests/behaviours/State1Behaviour3563417394101512880.h>
-#include <alica_tests/behaviours/State2Behaviour2219945377054027027.h>
 
 namespace alica
 {

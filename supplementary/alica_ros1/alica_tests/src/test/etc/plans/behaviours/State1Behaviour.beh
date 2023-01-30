@@ -9,7 +9,7 @@
   "name": "State1Behaviour",
   "postCondition": null,
   "preCondition": null,
-  "relativeDirectory": "behaviours",
+  "relativeDirectory": "Behaviour",
   "runtimeCondition": null,
   "variables": []
 }

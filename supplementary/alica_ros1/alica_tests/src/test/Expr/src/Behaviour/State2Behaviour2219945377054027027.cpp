@@ -1,4 +1,4 @@
-#include <alica_tests/behaviours/State2Behaviour2219945377054027027.h>
+#include <alica_tests/Behaviour/State2Behaviour2219945377054027027.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccppBC2219945377054027027) ENABLED START*/

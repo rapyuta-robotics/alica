@@ -11,6 +11,8 @@
 #include <alica_tests/Behaviour/MidFieldStandard.h>
 #include <alica_tests/Behaviour/NotToTrigger.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
+#include <alica_tests/Behaviour/State1Behaviour.h>
+#include <alica_tests/Behaviour/State2Behaviour.h>
 #include <alica_tests/Behaviour/SuccessOnInitBeh.h>
 #include <alica_tests/Behaviour/SuccessSpam.h>
 #include <alica_tests/Behaviour/Tackle.h>
@@ -21,8 +23,6 @@
 #include <alica_tests/Behaviour/TriggerC.h>
 #include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/TestBehaviour.h>
-#include <alica_tests/behaviours/State1Behaviour.h>
-#include <alica_tests/behaviours/State2Behaviour.h>
 
 namespace alica
 {
