@@ -1,8 +1,8 @@
 #include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
-#include <alica_tests/TestFixture.h>
 #include <alica_tests/Behaviour/State1Behaviour.h>
 #include <alica_tests/Behaviour/State2Behaviour.h>
+#include <alica_tests/TestFixture.h>
 #include <gtest/gtest.h>
 
 namespace alica::test
