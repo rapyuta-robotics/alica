@@ -9,7 +9,15 @@ namespace alica::test
 {
 /**
  * Tests whether it is possible to run a behaviour in a primitive plan.
- * State1Behaviour return success after 10 counts
+ *
+ * Steps:
+ * 1) Run State1Behaviour in State1
+ * 2) Count steps up to 10
+ * 3) State1 success
+ * 4) Transition to State2
+ * 5) Run State2Behaviour in State2
+ * 6) Do 20 steps
+ *
  */
 TEST_F(TestFixture, runBehaviourInSimplePlan)
 {

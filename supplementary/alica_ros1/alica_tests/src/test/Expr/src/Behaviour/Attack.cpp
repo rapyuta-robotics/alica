@@ -28,7 +28,6 @@ void Attack::run()
 {
     /*PROTECTED REGION ID(run1402488848841) ENABLED START*/
     // Add additional options here
-    return;
     int64_t callCounter = LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
     ++callCounter;
     LockedBlackboardRW(*getBlackboard()).set("callCount", callCounter);
@@ -38,7 +37,6 @@ void Attack::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1402488848841) ENABLED START*/
     // Add additional options here
-    return;
     LockedBlackboardRW(*getBlackboard()).set("callCount", 0);
 
     /*PROTECTED REGION END*/
@@ -46,7 +44,6 @@ void Attack::initialiseParameters()
 /*PROTECTED REGION ID(methods1402488848841) ENABLED START*/
 int Attack::getCallCounter()
 {
-    return 0;
     return LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
 }
 /*PROTECTED REGION END*/

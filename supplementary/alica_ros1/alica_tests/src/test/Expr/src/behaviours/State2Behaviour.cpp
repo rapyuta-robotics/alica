@@ -30,6 +30,9 @@ void State2Behaviour::run()
     // Add additional options here
     int64_t callCounter = LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
     ++callCounter;
+    if (callCounter > 20) {
+        setSuccess();
+    }
     LockedBlackboardRW(*getBlackboard()).set("callCount", callCounter);
     /*PROTECTED REGION END*/
 }
