@@ -21,6 +21,7 @@
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
 #include "engine/modelmanagement/factories/TaskRepositoryFactory.h"
 #include "engine/modelmanagement/factories/TransitionConditionRepositoryFactory.h"
+#include "engine/modelmanagement/factories/VariableFactory.h"
 #include "engine/util/HashFunctions.h"
 
 #include <engine/FileSystem.h>
@@ -219,7 +220,7 @@ const AlicaElement* ModelManager::getElement(const int64_t id)
 {
     auto mapEntry = elements.find(id);
     if (mapEntry != elements.end()) {
-        return mapEntry->second;
+        return mapEntry->second.get();
     }
     return nullptr;
 }
@@ -244,7 +245,7 @@ void ModelManager::generateTemplateVariables()
             if (vit != _planRepository._variables.end()) {
                 v = vit->second;
             } else {
-                v = new Variable(id, s, "Template");
+                v = VariableFactory::create(id, s, "Template");
                 _planRepository._variables.emplace(id, v);
             }
             q->_templateVars.push_back(v);
