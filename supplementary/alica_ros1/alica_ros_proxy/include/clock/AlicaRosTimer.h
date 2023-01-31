@@ -30,8 +30,8 @@ public:
             , _timer()
             , _stopMutex()
             , _stopCv()
-            , _userCbInProgress(false)
             , _stop(false)
+            , _userCbInProgress(false)
     {
         _nh.setCallbackQueue(std::addressof(cbQ));
     }
