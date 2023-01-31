@@ -32,8 +32,9 @@ namespace alica
  */
 PlanBase::PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
         IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-        const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
-        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory, const IAlicaTraceFactory* traceFactory)
+        const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
+        const IAlicaTraceFactory* traceFactory)
         : _configChangeListener(configChangeListener)
         , _clock(clock)
         , _logger(log)
@@ -100,7 +101,7 @@ void PlanBase::reload(const YAML::Node& config)
 
         _sendStatusInterval = AlicaTime::seconds(1.0 / stfreq);
         if (!_statusMessage) {
-            _statusMessage = new AlicaEngineInfo();
+            _statusMessage = std::make_unique<AlicaEngineInfo>();
         }
     }
 
@@ -125,7 +126,7 @@ void PlanBase::start(const Plan* masterPlan)
             _statusMessage->senderID = _teamManager.getLocalAgentID();
             _statusMessage->masterPlan = masterPlan->getName();
         }
-        _mainThread = new std::thread(&PlanBase::run, this, masterPlan);
+        _mainThread = std::make_unique<std::thread>(&PlanBase::run, this, masterPlan);
     }
 }
 
@@ -154,7 +155,7 @@ void PlanBase::run(const Plan* masterPlan)
             {
                 std::unique_lock<std::mutex> lckStep(_stepMutex);
                 _isWaiting = true;
-                _stepModeCV.wait(lckStep, [&] { return _stepCalled; });
+                _stepModeCV.wait(lckStep, [&] { return _stepCalled.load(); });
                 _stepCalled = false;
                 _isWaiting = false;
                 if (!_running) {
@@ -317,7 +318,7 @@ void PlanBase::run(const Plan* masterPlan)
         now = _clock.now();
         availTime = _loopTime - (now - beginTime);
 
-        if (availTime > AlicaTime::microseconds(100) && !_stepEngine) {
+        if (_running && availTime > AlicaTime::microseconds(100) && !_stepEngine) {
             _clock.sleep(availTime);
         }
     }
@@ -328,8 +329,9 @@ void PlanBase::run(const Plan* masterPlan)
  */
 void PlanBase::stop()
 {
-    _running = false;
     _stepCalled = true;
+    _running = false;
+    _stepModeCV.notify_one();
 
     if (_stepEngine) {
         _stepCalled = true;
@@ -338,19 +340,19 @@ void PlanBase::stop()
 
     if (_mainThread != nullptr) {
         _mainThread->join();
-        delete _mainThread;
+        _mainThread.reset();
     }
 
     if (_rootNode) {
         _rootNode->deactivate();
     }
-
-    _mainThread = nullptr;
 }
 
 PlanBase::~PlanBase()
 {
-    delete _statusMessage;
+    if (_running) {
+        stop();
+    }
     // Destroy running plans from most recent to least recent
     while (!_runningPlans.empty()) {
         _runningPlans.pop_back();
@@ -389,6 +391,7 @@ RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configura
 
 void PlanBase::init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator)
 {
+    // due communication could be already started, this factories should handle concurrent access properly
     _runTimeBehaviourFactory.init(std::move(behaviourCreator));
     _runTimePlanFactory.init(std::move(planCreator));
 }
