@@ -218,7 +218,12 @@ AlicaDummyCommunication::AlicaDummyCommunication(const alica::AlicaCommunication
 {
 }
 
-AlicaDummyCommunication::~AlicaDummyCommunication() {}
+AlicaDummyCommunication::~AlicaDummyCommunication()
+{
+    if (_isRunning) {
+        stopCommunication();
+    }
+}
 
 void AlicaDummyCommunication::sendAllocationAuthority(const alica::AllocationAuthorityInfo& aai) const
 {
