@@ -12,11 +12,8 @@ Teleport2RandomPosition::Teleport2RandomPosition(alica::BehaviourContext& contex
 {
 }
 
-void Teleport2RandomPosition::run()
+void Teleport2RandomPosition::initialiseParameters()
 {
-    if (isSuccess()) {
-        return;
-    }
     // code for generate random value between 0 and 10 which is default turtlesim area size
     std::random_device seed_gen;
     std::mt19937 engine(seed_gen());
@@ -27,6 +24,8 @@ void Teleport2RandomPosition::run()
     turtle->teleport(dist(engine), dist(engine));
     setSuccess();
 }
+
+void Teleport2RandomPosition::run() {}
 
 std::unique_ptr<Teleport2RandomPosition> Teleport2RandomPosition::create(alica::BehaviourContext& context)
 {

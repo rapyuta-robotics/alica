@@ -4,10 +4,15 @@ project(libalica-turtlesim)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
-file(GLOB_RECURSE sources "src/*.cpp")
-
 add_library(${PROJECT_NAME} SHARED
-  ${sources};
+  src/CircleRuntimeCondition.cpp
+  src/GoTo.cpp
+  src/MakeFormation.cpp
+  src/Master.cpp
+  src/Simulation.cpp
+  src/SpawnTurtle.cpp
+  src/Teleport2RandomPosition.cpp
+  src/turtle.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

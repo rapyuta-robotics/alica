@@ -12,9 +12,10 @@ class GoTo : public alica::BasicBehaviour
 {
 public:
     GoTo(alica::BehaviourContext& context);
-    void run() override;
-    static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
     void initialiseParameters() override;
+    void run() override;
+    void onTermination() override;
+    static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
 
 private:
     alica::Query _query;

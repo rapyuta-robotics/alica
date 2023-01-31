@@ -11,6 +11,7 @@ WaitForTrigger::WaitForTrigger(alica::BehaviourContext& context)
 
 void WaitForTrigger::initialiseParameters()
 {
+    _triggered = false;
     alica::LockedBlackboardRO bb{*getBlackboard()};
     _topic = bb.get<std::string>("topic");
     ROS_INFO_STREAM_NAMED(__func__, "Waiting for trigger on " << _topic);

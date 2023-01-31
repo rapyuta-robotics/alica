@@ -1,5 +1,4 @@
-#ifndef ALICA_TURTLE_SIM_TURTLE_HPP
-#define ALICA_TURTLE_SIM_TURTLE_HPP
+#pragma once
 
 #include <ros/ros.h>
 #include <turtlesim/Pose.h>
@@ -18,21 +17,19 @@ class ALICATurtle
 {
 public:
     ALICATurtle(const std::string& name);
-    void teleport(const float x, const float y);         // teleport turtle to (x,y)
-    bool move_toward_goal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
-    bool move_toward_goal() const;                       // publish cmd_vel based on goal and current pose
-    Pose get_current_pose() const { return _current; };
+    void teleport(const float x, const float y);       // teleport turtle to (x,y)
+    bool moveTowardGoal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
+    bool moveTowardGoal() const;                       // publish cmd_vel based on goal and current pose
+    Pose getCurrentPose() const { return _current; };
 
 private:
-    void pose_sub_callback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
-    std::string _name;                               // name of turtle
-    ros::Publisher _vel_pub;                         // publish cmd_vel to the turtlesim
-    ros::Subscriber _pose_sub;                       // subscribe turtleX/pose from the turtlesim
-    ros::ServiceClient _teleport_client;             // client of teleportAbsolute service
-    Pose _current;                                   // current position
-    Pose _goal;                                      // goal position
+    void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
+    std::string _name;                             // name of turtle
+    ros::Publisher _velPub;                        // publish cmd_vel to the turtlesim
+    ros::Subscriber _poseSub;                      // subscribe turtleX/pose from the turtlesim
+    ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
+    Pose _current;                                 // current position
+    Pose _goal;                                    // goal position
 };
 
 } // namespace turtlesim
-
-#endif /* ALICA_TURTLE_ALICA_TURTLE_HPP */

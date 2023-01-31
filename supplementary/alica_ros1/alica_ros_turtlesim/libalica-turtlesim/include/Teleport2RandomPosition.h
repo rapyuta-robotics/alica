@@ -11,6 +11,7 @@ class Teleport2RandomPosition : public alica::BasicBehaviour
 {
 public:
     Teleport2RandomPosition(alica::BehaviourContext& context);
+    void initialiseParameters() override;
     void run() override;
     static std::unique_ptr<Teleport2RandomPosition> create(alica::BehaviourContext& context);
 };

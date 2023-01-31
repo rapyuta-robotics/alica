@@ -21,18 +21,22 @@ void GoTo::run()
         alica::Logging::logError(alica::LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
     }
     // move turtle to goal
-    auto turtle = alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
+    auto turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
 
-    if (turtle->move_toward_goal(_results[0], _results[1])) {
+    if (turtle->moveTowardGoal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
 }
 
 void GoTo::initialiseParameters()
 {
-    _query.clearDomainVariables();
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "x"));
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "y"));
+}
+
+void GoTo::onTermination()
+{
+    _query.clearDomainVariables();
 }
 
 std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)

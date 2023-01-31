@@ -4,10 +4,8 @@ project(libalica-utils)
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
-file(GLOB_RECURSE sources "src/*.cpp")
-
 add_library(${PROJECT_NAME} SHARED
-  ${sources};
+  src/Conditions.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

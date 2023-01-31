@@ -190,7 +190,10 @@ Run application with roslaunch. video
 - Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
   `roslaunch alica_ros_turtlesim turtle.launch turtles:=2`
 - Make formation by asking any number of robots to join the formation
-  `rostopic pub turtle<x>/join_formation std_msgs/Empty "{}" `
+  `rostopic pub turtle<x>/join_formation std_msgs/Empty "{}"`
+  where x is the turtle number
+- Can ask a robot to leave the formation using
+  `rostopic pub turtle<x>/leave_formation std_msgs/Empty "{}"`
   where x is the turtle number
 
 ## 9. Troubleshooting

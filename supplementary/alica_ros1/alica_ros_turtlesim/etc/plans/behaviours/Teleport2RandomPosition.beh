@@ -3,7 +3,7 @@
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
-  "frequency": 30,
+  "frequency": 0,
   "id": 4085572422059465423,
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
