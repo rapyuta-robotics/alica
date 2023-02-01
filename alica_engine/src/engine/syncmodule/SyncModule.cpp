@@ -84,8 +84,10 @@ void SyncModule::tick()
     // delete the failed processes from the mapping
     for (const SynchronisationProcess* s : endedSyncProcesses) {
         const auto* const sync = s->getSynchronisation();
-        delete _synchProcessMapping[sync];
-        _synchProcessMapping.erase(sync);
+        if (auto it = _synchProcessMapping.find(sync); it != _synchProcessMapping.end()) {
+            delete it->second;
+            _synchProcessMapping.erase(it);
+        }
     }
 }
 /**
