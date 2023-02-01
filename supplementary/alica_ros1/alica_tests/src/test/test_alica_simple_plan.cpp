@@ -40,6 +40,7 @@ TEST_F(TestFixture, runBehaviourInSimplePlan)
     ASSERT_EQ(nullptr, _tc->getActiveBehaviour("State1Behaviour")) << _tc->getLastFailure();
 
     // Check callcount
+    ASSERT_FALSE(_tc->isSuccess(_tc->getActivePlan("RunBehaviourInSimplePlan"))) << _tc->getLastFailure(); // Plan not sill success
     STEP_UNTIL(_tc, dynamic_cast<alica::State2Behaviour*>(_tc->getActiveBehaviour("State2Behaviour"))->getCallCounter() > 20);
     ASSERT_GT(dynamic_cast<alica::State2Behaviour*>(_tc->getActiveBehaviour("State2Behaviour"))->getCallCounter(), 20) << _tc->getLastFailure();
     ASSERT_NE(nullptr, _tc->getActiveBehaviour("State2Behaviour")) << _tc->getLastFailure();
