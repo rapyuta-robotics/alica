@@ -6,7 +6,7 @@ namespace alica
 {
 
 class BasicPlan;
-class PlanContext;
+struct PlanContext;
 
 class IPlanCreator
 {

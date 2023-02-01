@@ -4,19 +4,25 @@
 
 #include <iterator>
 #include <ostream>
+#include <type_traits>
 
 namespace alica
 {
 
-inline std::ostream& operator<<(std::ostream& out, const AgentGrp& ag)
+template <typename T, std::enable_if_t<std::is_pointer<T>::value, bool> = true>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& gr)
 {
-    std::copy(ag.begin(), ag.end(), std::ostream_iterator<AgentId>(out, " "));
+    for (const auto* const v : gr) {
+        out << *v << " ";
+    }
     return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, const IdGrp& ig)
+template <typename T, std::enable_if_t<std::is_integral<T>::value, bool> = true>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& gr)
 {
-    std::copy(ig.begin(), ig.end(), std::ostream_iterator<int64_t>(out, " "));
+    std::copy(gr.begin(), gr.end(), std::ostream_iterator<T>(out, " "));
     return out;
 }
+
 } // namespace alica

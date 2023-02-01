@@ -106,9 +106,9 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
 
     if (!inheritBlackboard) {
         if (Factory::isValid(node[alica::Strings::blackboard])) {
-            plan->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]));
+            plan->_blackboardBlueprint = BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]);
         } else {
-            plan->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
+            plan->_blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
         }
     } else {
         plan->_blackboardBlueprint = nullptr;

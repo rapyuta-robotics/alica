@@ -72,7 +72,6 @@ void TaskAssignmentProblem::preassignOtherAgents()
     // this call should only be made before the search starts
     assert(_fringe.size() == _plans.size());
     // ASSIGN PREASSIGNED OTHER ROBOTS
-    int i = 0;
     bool changed = false;
     for (PartialAssignment* curPa : _fringe) {
         if (addAlreadyAssignedRobots(curPa, simplePlanTreeMap)) {
@@ -80,7 +79,6 @@ void TaskAssignmentProblem::preassignOtherAgents()
             curPa->evaluate(nullptr, _globalBlackboard);
             changed = true;
         }
-        ++i;
     }
     if (changed) {
         stable_sort(_fringe.begin(), _fringe.end(), PartialAssignment::compare);

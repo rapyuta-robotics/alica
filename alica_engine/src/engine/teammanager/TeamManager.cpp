@@ -18,12 +18,6 @@
 
 namespace alica
 {
-
-namespace
-{
-constexpr int DEFAULT_AGENT_ID_SIZE = 8;
-}
-
 AgentsCache::AgentsCache()
         : _agents(std::make_shared<AgentMap>())
 {

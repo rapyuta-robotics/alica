@@ -15,7 +15,7 @@ class Logger;
 class SuccessCollection;
 class TeamManager;
 class Agent;
-class PlanTreeInfo;
+struct PlanTreeInfo;
 class RunningPlan;
 class SimplePlanTree;
 class IRoleAssignment;

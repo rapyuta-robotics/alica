@@ -5,7 +5,7 @@
 namespace alica
 {
 class BasicBehaviour;
-class BehaviourContext;
+struct BehaviourContext;
 
 class IBehaviourCreator
 {
