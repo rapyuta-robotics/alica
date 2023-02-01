@@ -17,7 +17,7 @@ ConstraintCreator::ConstraintCreator() {}
 
 ConstraintCreator::~ConstraintCreator() {}
 
-std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t constraintConfId)
+std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t constraintConfId, ConstraintContext& constraintContext)
 {
     switch (constraintConfId) {
     case 1417424512343:

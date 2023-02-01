@@ -10,7 +10,7 @@ UtilityFunctionCreator::~UtilityFunctionCreator() {}
 
 UtilityFunctionCreator::UtilityFunctionCreator() {}
 
-std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
+std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId, UtilityFunctionContext& context)
 {
     switch (utilityfunctionConfId) {
     case 1889749086610694100:

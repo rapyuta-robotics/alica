@@ -49,8 +49,6 @@ std::string calculateLibraryCompleteName(const std::vector<std::string>& library
     for (const std::string& current : libraryPath) {
         std::string completeName = current + "/lib" + libraryName + ".so";
         if (std::filesystem::exists(completeName)) {
-            Logging::logDebug(LOGNAME) << "Debug:"
-                                       << "Lib exists in this path:" << completeName;
             return completeName;
         }
     }

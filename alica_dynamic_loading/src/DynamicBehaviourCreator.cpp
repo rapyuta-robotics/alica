@@ -3,6 +3,7 @@
 #include <DynamicLoadingUtils.h>
 #include <boost/dll/import.hpp> // for import_alias
 #include <cstdlib>
+#include <engine/logging/Logging.h>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -19,8 +20,10 @@ DynamicBehaviourCreator::DynamicBehaviourCreator()
 std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t behaviourId, BehaviourContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.behaviourModel->getLibraryName());
-    if (completeLibraryName.empty())
+    if (completeLibraryName.empty()) {
+        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the behaviour: " << context.name;
         return nullptr;
+    }
 
     _behaviourCreator = boost::dll::import_alias<behaviourCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                        // complete path to library also with file name

@@ -4,24 +4,25 @@
   "entryPoints": [
     {
       "comment": "",
-      "id": 2741715629576575326,
+      "id": 53133849509772171,
       "isDynamic": false,
       "maxCardinality": 2147483647,
-      "minCardinality": 1,
+      "minCardinality": 0,
       "name": "",
-      "plan": 2425328142973735249,
+      "plan": 1449843163261594615,
       "positionWeb": {
-        "x": 200,
-        "y": 212
+        "x": 522,
+        "y": 421.99999237060547
       },
-      "state": 3997532517592149463,
+      "state": 1256477521278293720,
       "successRequired": false,
       "task": "TaskRepository.tsk#3310236980587704776"
     }
   ],
   "frequency": 0,
-  "id": 2425328142973735249,
+  "id": 1449843163261594615,
   "inheritBlackboard": false,
+  "libraryName": "libalica-turtlesim",
   "masterPlan": true,
   "name": "Master",
   "preCondition": null,
@@ -32,10 +33,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "Move.pml#1889749086610694100",
+          "abstractPlan": "behaviours/SpawnTurtle.beh#1689864767393644654",
           "comment": "",
           "configuration": null,
-          "id": 496472308860171093,
+          "id": 4220525235259193568,
           "keyMapping": {
             "input": [],
             "output": []
@@ -43,19 +44,17 @@
           "name": ""
         }
       ],
-      "entryPoint": null,
-      "id": 2405597980801916441,
-      "inTransitions": [
-        3486027875296378577
-      ],
-      "name": "Move",
+      "entryPoint": 53133849509772171,
+      "id": 1256477521278293720,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
       "outTransitions": [
-        635844345274619238
+        1701344904592867727
       ],
-      "parentPlan": 2425328142973735249,
+      "parentPlan": 1449843163261594615,
       "positionWeb": {
-        "x": 686,
-        "y": 200
+        "x": 762,
+        "y": 408.99999237060547
       },
       "type": "State",
       "variableBindings": []
@@ -64,10 +63,10 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Go2RandomPosition.beh#4085572422059465423",
+          "abstractPlan": "Simulation.pml#2425328142973735249",
           "comment": "",
           "configuration": null,
-          "id": 586073573470828748,
+          "id": 814335721917579950,
           "keyMapping": {
             "input": [],
             "output": []
@@ -75,19 +74,17 @@
           "name": ""
         }
       ],
-      "entryPoint": 2741715629576575326,
-      "id": 3997532517592149463,
+      "entryPoint": null,
+      "id": 3424972982848590838,
       "inTransitions": [
-        635844345274619238
+        1701344904592867727
       ],
-      "name": "Init",
-      "outTransitions": [
-        3486027875296378577
-      ],
-      "parentPlan": 2425328142973735249,
+      "name": "Simulation",
+      "outTransitions": [],
+      "parentPlan": 1449843163261594615,
       "positionWeb": {
-        "x": 428,
-        "y": 200
+        "x": 1147,
+        "y": 406.99999237060547
       },
       "type": "State",
       "variableBindings": []
@@ -97,56 +94,22 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#974606107671315045",
-      "id": 635844345274619238,
-      "inState": 2405597980801916441,
+      "condition": "conditions/ConditionRepository.cnd#2190266318562141841",
+      "id": 1701344904592867727,
+      "inState": 1256477521278293720,
       "keyMapping": {
         "input": [],
         "output": []
       },
       "name": "",
-      "outState": 3997532517592149463,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 229
-        }
-      ],
+      "outState": 3424972982848590838,
+      "pointsWeb": [],
       "preCondition": {
         "comment": "",
         "conditionString": "",
         "enabled": true,
-        "id": 1136497454350831106,
-        "name": "Move2Init",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#748720375848597116",
-      "id": 3486027875296378577,
-      "inState": 3997532517592149463,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 2405597980801916441,
-      "pointsWeb": [
-        {
-          "x": 586,
-          "y": 29
-        }
-      ],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1597434482701133956,
-        "name": "Init2Move",
+        "id": 1158412559413860996,
+        "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []
@@ -155,6 +118,5 @@
     }
   ],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "libraryName": "alica_turtlesim_library"
+  "variables": []
 }
