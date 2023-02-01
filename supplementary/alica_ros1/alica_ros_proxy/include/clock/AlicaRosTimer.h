@@ -23,7 +23,7 @@ class SyncStopTimerRosImpl : public std::enable_shared_from_this<SyncStopTimerRo
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerRosImpl(CallbackQ& cbQ, TimerCb&& userCb, alica::AlicaTime period)
+    SyncStopTimerRosImpl(CallbackQ& cbQ, TimerCb&& userCb, const alica::AlicaTime& period)
             : _userCb(std::move(userCb))
             , _period(toRosDuration(period))
             , _nh()
@@ -76,11 +76,12 @@ public:
         std::unique_lock<std::mutex> lock(_stopMutex);
         _userCbInProgress = false;
         if (_stop) {
-            _stopCv.notify_one();
+            lock.unlock();
+            _stopCv.notify_all();
         }
     }
 
-    static ros::Duration toRosDuration(alica::AlicaTime period)
+    static ros::Duration toRosDuration(const alica::AlicaTime& period)
     {
         auto sec = period.inSeconds();
         auto nanosec = period.inNanoseconds();
