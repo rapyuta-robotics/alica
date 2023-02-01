@@ -5,7 +5,6 @@
 #include <alica_tests/Authority/AuthorityTestMaster1414403396328.h>
 #include <alica_tests/BackForth1529456584982.h>
 #include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
-#include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 #include <alica_tests/Configurations/ReadConfInPlantype1588061801734.h>
@@ -38,6 +37,7 @@
 #include <alica_tests/PlanBA1629895873188.h>
 #include <alica_tests/PlanFive1407153703092.h>
 #include <alica_tests/PlanFour1407153683051.h>
+#include <alica_tests/PlanIsSuccess1522377375148.h>
 #include <alica_tests/PlanOne1407153611768.h>
 #include <alica_tests/PlanSuccessTestPlan3870436056558842479.h>
 #include <alica_tests/PlanThree1407153663917.h>

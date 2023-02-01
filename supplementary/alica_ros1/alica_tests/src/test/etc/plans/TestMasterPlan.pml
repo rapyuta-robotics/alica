@@ -36,16 +36,16 @@
       "access": "protected",
       "comment": "",
       "defaultValue": null,
-      "id": 4524822962425938639,
-      "key": "ChooseTestState2BehaviorSuccessSpamMasterState",
+      "id": 1893470949290061309,
+      "key": "ChooseTestState2RunBehaviourInSimplePlanState",
       "type": "bool"
     },
     {
       "access": "protected",
       "comment": "",
       "defaultValue": null,
-      "id": 1893470949290061309,
-      "key": "ChooseTestState2RunBehaviourInSimplePlanState",
+      "id": 4524822962425938639,
+      "key": "ChooseTestState2PlanIsSuccessState",
       "type": "bool"
     }
   ],
@@ -61,7 +61,7 @@
       "plan": 2521443078354411465,
       "positionWeb": {
         "x": 200,
-        "y": 612
+        "y": 812
       },
       "state": 4098979167613947533,
       "successRequired": false,
@@ -111,7 +111,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "BehaviorSuccessSpamMaster.pml#1522377375148",
+          "abstractPlan": "PlanIsSuccess.pml#1522377375148",
           "comment": "",
           "configuration": null,
           "id": 3077878256972628511,
@@ -127,7 +127,7 @@
       "inTransitions": [
         3219105289339324342
       ],
-      "name": "BehaviorSuccessSpamMasterState",
+      "name": "PlanIsSuccess",
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -171,6 +171,36 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "RunBehaviourInSimplePlan.pml#2504351804499332310",
+          "comment": "",
+          "configuration": null,
+          "id": 119936314569061232,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3760344851508420724,
+      "inTransitions": [
+        3312785896666601377
+      ],
+      "name": "RunBehaviourInSimplePlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 686,
+        "y": 1000
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
           "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
           "comment": "",
           "configuration": null,
@@ -192,7 +222,7 @@
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 686,
-        "y": 1000
+        "y": 1200
       },
       "type": "State",
       "variableBindings": []
@@ -209,13 +239,13 @@
         2550214909296500141,
         2841206023261337744,
         3219105289339324342,
-        4120890224163547783,
-        3312785896666601377
+        3312785896666601377,
+        4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
         "x": 428,
-        "y": 600
+        "y": 800
       },
       "type": "State",
       "variableBindings": []
@@ -246,36 +276,6 @@
       "positionWeb": {
         "x": 686,
         "y": 200
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "RunBehaviourInSimplePlan.pml#2504351804499332310",
-          "comment": "",
-          "configuration": null,
-          "id": 119936314569061232,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3760344851508420724,
-      "inTransitions": [
-        3312785896666601377
-      ],
-      "name": "RunBehaviourInSimplePlanState",
-      "outTransitions": [],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 113.0162002945508,
-        "y": 66.69808541973491
       },
       "type": "State",
       "variableBindings": []
@@ -394,7 +394,7 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "ChooseTestState2BehaviorSuccessSpamMasterState"
+            "parentKey": "ChooseTestState2PlanIsSuccessState"
           }
         ],
         "output": []
@@ -422,6 +422,40 @@
     {
       "comment": "",
       "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 3312785896666601377,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2RunBehaviourInSimplePlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3760344851508420724,
+      "pointsWeb": [
+        {
+          "x": 586,
+          "y": 1029
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 4585303539252259897,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
       "id": 4120890224163547783,
       "inState": 4098979167613947533,
       "keyMapping": {
@@ -438,7 +472,7 @@
       "pointsWeb": [
         {
           "x": 586,
-          "y": 1029
+          "y": 1229
         }
       ],
       "preCondition": {
@@ -446,35 +480,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
-      "id": 3312785896666601377,
-      "inState": 4098979167613947533,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "result",
-            "parentKey": "ChooseTestState2RunBehaviourInSimplePlanState"
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 3760344851508420724,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 4585303539252259897,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

@@ -14,11 +14,11 @@ namespace alica
 /*PROTECTED REGION ID(meth1522377375148) ENABLED START*/
 // Add other things here
 /*PROTECTED REGION END*/
-class BehaviorSuccessSpamMaster1522377375148 : public DomainPlan
+class PlanIsSuccess1522377375148 : public DomainPlan
 {
 public:
-    BehaviorSuccessSpamMaster1522377375148(PlanContext& context);
-    virtual ~BehaviorSuccessSpamMaster1522377375148();
+    PlanIsSuccess1522377375148(PlanContext& context);
+    virtual ~PlanIsSuccess1522377375148();
     /*PROTECTED REGION ID(pub1522377375148) ENABLED START*/
     // Add additional public methods here
     /*PROTECTED REGION END*/
