@@ -40,7 +40,6 @@ void IntervalPropagator::setGlobalRanges(
         holder.getVariables()[i]->editRange().setMax(ranges->at(i)->at(1));
     }
     this->globalRanges = ranges;
-    this->vars = vars;
     this->dim = vars->size();
     this->solver = solver;
     this->updates = 0;

@@ -53,7 +53,6 @@ private:
     bool updateInterval(autodiff::TermPtr t, double min, double max) const { return updateInterval(t, Interval<double>(min, max)); }
 
     autodiff::TermList* _changed;
-    DownwardPropagator* _dp;
 };
 
 } /* namespace intervalpropagation */
