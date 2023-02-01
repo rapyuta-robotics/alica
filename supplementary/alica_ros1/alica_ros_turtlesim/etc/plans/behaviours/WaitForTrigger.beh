@@ -1,0 +1,25 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "subscriber topic on which to listen for trigger msgs",
+      "defaultValue": null,
+      "id": 2590992428289220704,
+      "key": "topic",
+      "type": "std::string"
+    }
+  ],
+  "comment": "Given the topic name as input, waits until an empty msg is published on that topic",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 1320667069122998665,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-ros-utils",
+  "name": "WaitForTrigger",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": []
+}

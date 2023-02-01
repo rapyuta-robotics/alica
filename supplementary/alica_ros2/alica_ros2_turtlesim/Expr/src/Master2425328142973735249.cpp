@@ -39,6 +39,52 @@ std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityF
     /*PROTECTED REGION END*/
 }
 
+/**
+ * Transition: 635844345274619238 (635844345274619238)
+ *   - Comment:
+ *   - Source2Dest: Move --> Init
+ *
+ * Precondition: Move2Init (1136497454350831106)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Move:
+ *   - Move (1889749086610694100)
+ */
+bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+{
+    /*PROTECTED REGION ID(635844345274619238) ENABLED START*/
+    std::cout << "The PreCondition 1136497454350831106 in Transition '635844345274619238' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 3486027875296378577 (3486027875296378577)
+ *   - Comment:
+ *   - Source2Dest: Init --> Move
+ *
+ * Precondition: Init2Move (1597434482701133956)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Init:
+ *   - Go2RandomPosition (4085572422059465423)
+ */
+bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+{
+    /*PROTECTED REGION ID(3486027875296378577) ENABLED START*/
+    std::cout << "The PreCondition 1597434482701133956 in Transition '3486027875296378577' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
 /*PROTECTED REGION ID(methods2425328142973735249) ENABLED START*/
 // Add additional options here
 /*PROTECTED REGION END*/

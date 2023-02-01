@@ -179,7 +179,7 @@ PlanChange RunningPlan::tick(RuleBook* rules)
     }
     PlanChange childChange = PlanChange::NoChange;
     // attention: do not use for each here: children are modified
-    for (int i = 0; i < static_cast<int>(_children.size()); ++i) {
+    for (std::size_t i = 0; i < _children.size(); ++i) {
         RunningPlan* rp = _children[i];
         childChange = rules->updateChange(childChange, rp->tick(rules));
     }
@@ -284,7 +284,7 @@ void RunningPlan::removeChild(RunningPlan* rp)
     }
 }
 /**
- * Move this very robot to another state. Performs all neccessary operations, such as updating the assignment.
+ * Move this very robot to another state. Performs all necessary operations, such as updating the assignment.
  * @param nextState A State
  */
 void RunningPlan::moveState(const State* nextState)

@@ -9,11 +9,19 @@
 #define ALICA_ALICA_ENGINE_SRC_ENGINE_BASICUTILITYFUNCTION_H_
 
 #include <memory>
+#include <string>
 
 namespace alica
 {
 class Plan;
 class UtilityFunction;
+
+struct UtilityFunctionContext
+{
+    const std::string name;
+    const std::string libraryName;
+    int64_t utilityFunctionId;
+};
 
 class BasicUtilityFunction
 {

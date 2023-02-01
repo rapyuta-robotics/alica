@@ -94,7 +94,7 @@ void PartialAssignment::prepare(const Plan* p, const TaskAssignmentProblem* prob
     _assignment.clear();
     _assignment.resize(problem->getAgentCount(), -1);
     _cardinalities.clear();
-    _cardinalities.reserve(p->getEntryPoints().size() + s_allowIdling ? 1 : 0);
+    _cardinalities.reserve(p->getEntryPoints().size() + static_cast<std::size_t>(s_allowIdling));
     for (const EntryPoint* ep : p->getEntryPoints()) {
         _cardinalities.push_back(ep->getCardinality() - static_cast<int>(problem->getSuccessData(p)->getAgents(ep)->size()));
     }

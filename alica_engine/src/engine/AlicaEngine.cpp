@@ -62,6 +62,9 @@ AlicaEngine::AlicaEngine(AlicaContext& ctx, YAML::Node& config, const AlicaConte
 
 AlicaEngine::~AlicaEngine()
 {
+    if (_initialized) {
+        terminate();
+    }
     _roleSet = nullptr;
     _masterPlan = nullptr;
 }

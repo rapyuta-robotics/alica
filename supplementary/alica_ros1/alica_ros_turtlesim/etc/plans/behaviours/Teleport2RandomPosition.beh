@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 0,
+  "id": 4085572422059465423,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-turtlesim",
+  "name": "Teleport2RandomPosition",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}
