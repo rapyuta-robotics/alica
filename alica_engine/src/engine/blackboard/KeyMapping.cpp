@@ -31,10 +31,15 @@ void KeyMapping::addInputMapping(const std::variant<std::string, std::string>& p
 void KeyMapping::addOutputMapping(const std::string& parentKey, const std::string& childKey)
 {
     // output mapping does not support constant values, so we pass an empty string as value
-    assert(std::count(_outputMapping.begin(), _outputMapping.end(), {{parentKey, ""}, childKey}) == 0);
-    std::variant<std::string, std::string> var;
-    var.emplace<0>(parentKey);
-    _outputMapping.push_back({var, childKey});
+    std::variant<std::string, std::string> parentKeyVar;
+    parentKeyVar.emplace<0>(parentKey);
+
+    assert(std::count_if(_outputMapping.begin(), _outputMapping.end(), [parentKeyVar, childKey](Mapping& entry) {
+        return entry.parentKeyOrConstant.index() == 0 && std::get<std::string>(entry.parentKeyOrConstant) == std::get<std::string>(parentKeyVar) &&
+               entry.childKey == childKey;
+    }) == 0);
+
+    _outputMapping.push_back({parentKeyVar, childKey});
 }
 
 } /* namespace alica */
