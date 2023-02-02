@@ -13,7 +13,11 @@ template <typename T, std::enable_if_t<std::is_pointer<T>::value, bool> = true>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& gr)
 {
     for (const auto* const v : gr) {
-        out << *v << " ";
+        if (v) {
+            out << *v << " ";
+        } else {
+            out << "*nullptr* ";
+        }
     }
     return out;
 }
