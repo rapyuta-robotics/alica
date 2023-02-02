@@ -23,7 +23,7 @@ void KeyMapping::addInputMapping(const std::variant<std::string, std::string>& p
 {
     assert(std::count_if(_inputMapping.begin(), _inputMapping.end(), [parentKeyOrConstant, childKey](Mapping& entry) {
         return entry.parentKeyOrConstant.index() == 0 && parentKeyOrConstant.index() == 0 &&
-               std::get<std::string>(entry.parentKeyOrConstant) == std::get<std::string>(parentKeyOrConstant) && entry.childKey == childKey;
+               std::get<0>(entry.parentKeyOrConstant) == std::get<0>(parentKeyOrConstant) && entry.childKey == childKey;
     }) == 0);
     _inputMapping.push_back({parentKeyOrConstant, childKey});
 }
@@ -35,8 +35,7 @@ void KeyMapping::addOutputMapping(const std::string& parentKey, const std::strin
     parentKeyVar.emplace<0>(parentKey);
 
     assert(std::count_if(_outputMapping.begin(), _outputMapping.end(), [parentKeyVar, childKey](Mapping& entry) {
-        return entry.parentKeyOrConstant.index() == 0 && std::get<std::string>(entry.parentKeyOrConstant) == std::get<std::string>(parentKeyVar) &&
-               entry.childKey == childKey;
+        return entry.parentKeyOrConstant.index() == 0 && std::get<0>(entry.parentKeyOrConstant) == std::get<0>(parentKeyVar) && entry.childKey == childKey;
     }) == 0);
 
     _outputMapping.push_back({parentKeyVar, childKey});
