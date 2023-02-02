@@ -12,13 +12,15 @@ std::unique_ptr<KeyMapping> KeyMappingFactory::create(const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::input])) {
         const auto& inputList = node[alica::Strings::input];
         for (const auto& entry : inputList) {
-            // TODO: Remove ifelse once backend has been updated and all keymapping nodes have an (empty) value field
+            // TODO: Remove ifelse once backend has been updated
             if ((Factory::isValid(entry[alica::Strings::value]))) {
-                keyMapping->addInputMapping(Factory::getValue<std::string>(entry, alica::Strings::parentKey),
-                        Factory::getValue<std::string>(entry, alica::Strings::childKey), Factory::getValue<std::string>(entry, alica::Strings::value));
+                std::variant<std::string, std::string> constantValue;
+                constantValue.emplace<1>(Factory::getValue<std::string>(entry, alica::Strings::value));
+                keyMapping->addInputMapping(constantValue, Factory::getValue<std::string>(entry, alica::Strings::childKey));
             } else {
-                keyMapping->addInputMapping(
-                        Factory::getValue<std::string>(entry, alica::Strings::parentKey), Factory::getValue<std::string>(entry, alica::Strings::childKey));
+                std::variant<std::string, std::string> parentKey;
+                parentKey.emplace<0>(Factory::getValue<std::string>(entry, alica::Strings::parentKey));
+                keyMapping->addInputMapping(parentKey, Factory::getValue<std::string>(entry, alica::Strings::childKey));
             }
         }
     }

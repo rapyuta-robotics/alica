@@ -181,6 +181,8 @@ public:
         auto typeIndex = getTypeIndex(yamlTypeIt->second);
         if (typeIndex.has_value()) {
             _vals.at(targetKey) = makeBBValueForIndex<true>::make(typeIndex.value(), value);
+        } else {
+            throw BlackboardException(stringify("setConstValue() failure, type of ", value, " is either unknown or std::any and can not be constructed"));
         }
     }
 
