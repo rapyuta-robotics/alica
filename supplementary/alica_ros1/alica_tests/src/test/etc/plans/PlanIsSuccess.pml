@@ -49,15 +49,15 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "behaviours/SuccessNormal.beh#2951008684180289642",
           "comment": "",
           "configuration": null,
-          "id": 1587718663016,
+          "id": 3260483930806017445,
           "keyMapping": {
             "input": [],
             "output": []
           },
-          "name": "1587718663016"
+          "name": ""
         }
       ],
       "entryPoint": 1522377375150,
@@ -81,15 +81,15 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SuccessSpam.beh#1522377401286",
+          "abstractPlan": "behaviours/SuccessDummy.beh#3505111757300078074",
           "comment": "",
           "configuration": null,
-          "id": 1587718663020,
+          "id": 3078258125660157248,
           "keyMapping": {
             "input": [],
             "output": []
           },
-          "name": "1587718663020"
+          "name": ""
         }
       ],
       "entryPoint": null,
@@ -99,7 +99,8 @@
       ],
       "name": "Dummy",
       "outTransitions": [
-        1522377945069
+        1522377945069,
+        3694363277253985460
       ],
       "parentPlan": 1522377375148,
       "positionWeb": {
@@ -107,6 +108,26 @@
         "y": 160.87615779372496
       },
       "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 4341767214611490181,
+      "inTransitions": [
+        3694363277253985460
+      ],
+      "name": "End",
+      "outTransitions": [],
+      "parentPlan": 1522377375148,
+      "positionWeb": {
+        "x": 865.0147473263322,
+        "y": 41.051844408155404
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],
@@ -174,6 +195,30 @@
         "enabled": true,
         "id": 1522377946607,
         "name": "MISSING_NAME",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#2872265442510628524",
+      "id": 3694363277253985460,
+      "inState": 1522377929290,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 4341767214611490181,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2098555926520572428,
+        "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
         "variables": []

@@ -13,6 +13,8 @@
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
 #include <alica_tests/Behaviour/State1Behaviour.h>
 #include <alica_tests/Behaviour/State2Behaviour.h>
+#include <alica_tests/Behaviour/SuccessDummy.h>
+#include <alica_tests/Behaviour/SuccessNormal.h>
 #include <alica_tests/Behaviour/SuccessOnInitBeh.h>
 #include <alica_tests/Behaviour/SuccessSpam.h>
 #include <alica_tests/Behaviour/Tackle.h>
@@ -96,6 +98,12 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 2219945377054027027:
         return std::make_unique<State2Behaviour>(context);
+        break;
+    case 2951008684180289642:
+        return std::make_unique<SuccessNormal>(context);
+        break;
+    case 3505111757300078074:
+        return std::make_unique<SuccessDummy>(context);
         break;
     case 3563417394101512880:
         return std::make_unique<State1Behaviour>(context);

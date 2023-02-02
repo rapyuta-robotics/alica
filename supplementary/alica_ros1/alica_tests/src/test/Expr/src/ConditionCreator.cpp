@@ -19,6 +19,8 @@
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>
 #include <alica_tests/Behaviour/State1Behaviour3563417394101512880.h>
 #include <alica_tests/Behaviour/State2Behaviour2219945377054027027.h>
+#include <alica_tests/Behaviour/SuccessDummy3505111757300078074.h>
+#include <alica_tests/Behaviour/SuccessNormal2951008684180289642.h>
 #include <alica_tests/Behaviour/SuccessOnInitBeh3821787310391665935.h>
 #include <alica_tests/Behaviour/SuccessSpam1522377401286.h>
 #include <alica_tests/Behaviour/Tackle1402488939130.h>

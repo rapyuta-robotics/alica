@@ -13,6 +13,7 @@ namespace alica
 // States:
 //   - Normal (1522377375149)
 //   - Dummy (1522377929290)
+//   - End (4341767214611490181)
 PlanIsSuccess1522377375148::PlanIsSuccess1522377375148(PlanContext& context)
         : DomainPlan(context)
 {
@@ -53,7 +54,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction1522377375148::getUtilityFunctio
  *   - Quantifiers:
  *
  * Abstract Plans in Normal:
- *   - SuccessSpam (1522377401286)
+ *   - SuccessNormal (2951008684180289642)
  */
 bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
@@ -76,12 +77,35 @@ bool PreCondition1522377944921::evaluate(std::shared_ptr<RunningPlan> rp, const 
  *   - Quantifiers:
  *
  * Abstract Plans in Dummy:
- *   - SuccessSpam (1522377401286)
+ *   - SuccessDummy (3505111757300078074)
  */
 bool PreCondition1522377946607::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(1522377945069) ENABLED START*/
     std::cout << "The PreCondition 1522377946607 in Transition 'MISSING_NAME' is not implement yet!" << std::endl;
+    return false;
+    /*PROTECTED REGION END*/
+}
+
+/**
+ * Transition: 3694363277253985460 (3694363277253985460)
+ *   - Comment:
+ *   - Source2Dest: Dummy --> End
+ *
+ * Precondition: 2098555926520572428 (2098555926520572428)
+ *   - Enabled: true
+ *   - PluginName: DefaultPlugin
+ *   - ConditionString:
+ *   - Variables:
+ *   - Quantifiers:
+ *
+ * Abstract Plans in Dummy:
+ *   - SuccessDummy (3505111757300078074)
+ */
+bool PreCondition2098555926520572428::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+{
+    /*PROTECTED REGION ID(3694363277253985460) ENABLED START*/
+    std::cout << "The PreCondition 2098555926520572428 in Transition '3694363277253985460' is not implement yet!" << std::endl;
     return false;
     /*PROTECTED REGION END*/
 }
