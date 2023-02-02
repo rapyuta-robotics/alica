@@ -6,7 +6,7 @@
  */
 
 #include "intervals/UpwardPropagator.h"
-//#define DEBUG_UP
+// #define DEBUG_UP
 
 #include "intervals/DownwardPropagator.h"
 #include "intervals/IntervalPropagator.h"
@@ -31,7 +31,6 @@ using std::numeric_limits;
 
 UpwardPropagator::UpwardPropagator()
         : _changed(nullptr)
-        , _dp(nullptr)
 {
 }
 
