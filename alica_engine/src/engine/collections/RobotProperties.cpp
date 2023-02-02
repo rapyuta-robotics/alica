@@ -5,7 +5,7 @@
 namespace alica
 {
 
-RobotProperties::RobotProperties(const PlanRepository&, const std::string& defaultRole, const AgentAnnouncement& aa)
+RobotProperties::RobotProperties(const std::string& defaultRole, const AgentAnnouncement& aa)
         : _defaultRole(defaultRole.empty() ? "NOROLESPECIFIED" : defaultRole)
 {
     // TODO: develop proper Role-Capability-Stuff when we need it
@@ -22,7 +22,5 @@ RobotProperties::RobotProperties(const PlanRepository&, const std::string& defau
     //        }
     //    }
 }
-
-RobotProperties::~RobotProperties() {}
 
 } /* namespace alica */

@@ -17,8 +17,8 @@ struct AgentAnnouncement;
 class RobotProperties
 {
 public:
-    RobotProperties(const PlanRepository&, const std::string& defaultRole, const AgentAnnouncement& aa);
-    ~RobotProperties();
+    RobotProperties(const std::string& defaultRole, const AgentAnnouncement& aa);
+    ~RobotProperties() = default;
 
     const std::string& getDefaultRole() const { return _defaultRole; }
 
