@@ -6,7 +6,7 @@ class RunningPlan;
 class Plan;
 class Condition;
 class PlanRepository;
-class AlicaCreators;
+struct AlicaCreators;
 class IConstraintCreator;
 
 /**

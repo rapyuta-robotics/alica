@@ -46,14 +46,12 @@ private:
     SyncModule* _syncModule;
     const Synchronisation* _synchronisation;
     AgentId _myID;
-    SyncData* _lastTalkData;
     AlicaTime _lastTalkTime;
     AlicaTime _syncStartTime;
     bool _readyForSync;
     uint64_t _lastTick;
     std::vector<std::shared_ptr<SyncReady>> _receivedSyncReadys;
     std::vector<int64_t> _connectedTransitions;
-    RunningPlan* _runningPlan;
     std::vector<SyncRow*> _rowsOK;
     std::vector<SyncRow*> _syncMatrix;
     SyncRow* _myRow;

@@ -18,7 +18,7 @@ Agent::Agent(const ModelManager& modelManager, const PlanRepository& planReposit
         , _planHash(aa.planHash)
         , _sdk(aa.senderSdk)
         , _clock(clock)
-        , _properties(planRepository, defaultRole, aa)
+        , _properties(defaultRole, aa)
         , _engineData(modelManager, planRepository, aa.senderID)
         , _timeout(timeout)
         , _active(false)

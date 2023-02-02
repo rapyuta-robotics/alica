@@ -6,7 +6,7 @@ namespace alica
 {
 class RunningPlan;
 class Blackboard;
-class TransitionConditionContext;
+struct TransitionConditionContext;
 
 class ITransitionConditionCreator
 {

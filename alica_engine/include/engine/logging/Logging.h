@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/Output.h"
 #include "engine/logging/AlicaLogger.h"
 namespace alica
 {
