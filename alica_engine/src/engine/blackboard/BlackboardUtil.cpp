@@ -27,7 +27,6 @@ void BlackboardUtil::setInput(const Blackboard* parent_bb, Blackboard* child_bb,
         } else {
             // parent key exists, mapping from parentKey to childKey
             try {
-
                 childBb.map(std::get<std::string>(mapping.parentKeyOrConstant), mapping.childKey, parent_bb->impl());
                 Logging::logDebug("BlackboardUtil") << "passing " << std::get<std::string>(mapping.parentKeyOrConstant) << " into " << mapping.childKey;
             } catch (std::exception& e) {
