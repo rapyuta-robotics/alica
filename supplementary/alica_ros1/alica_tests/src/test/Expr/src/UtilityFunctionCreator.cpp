@@ -45,6 +45,7 @@
 #include <alica_tests/PreConditionPlan1418042796751.h>
 #include <alica_tests/RealMasterPlanForSyncTest1418902217839.h>
 #include <alica_tests/RunBehaviourInSimplePlan2504351804499332310.h>
+#include <alica_tests/RuntimeConditionCalledPlan3213121947038933654.h>
 #include <alica_tests/RuntimeConditionPlan1418042806575.h>
 #include <alica_tests/SchedulingTestMasterPlan1613378382024.h>
 #include <alica_tests/SchedulingTestPlan11613378406860.h>
@@ -271,6 +272,9 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 3172561495666303184:
         return std::make_shared<UtilityFunction3172561495666303184>();
+        break;
+    case 3213121947038933654:
+        return std::make_shared<UtilityFunction3213121947038933654>();
         break;
     case 3254486013443203397:
         return std::make_shared<UtilityFunction3254486013443203397>();

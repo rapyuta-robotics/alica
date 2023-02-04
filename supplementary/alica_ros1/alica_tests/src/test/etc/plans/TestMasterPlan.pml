@@ -47,6 +47,14 @@
       "id": 4524822962425938639,
       "key": "ChooseTestState2PlanIsSuccessState",
       "type": "bool"
+    },
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 2919359051772364441,
+      "key": "ChooseTestState2RuntimeConditionCalledPlanState",
+      "type": "bool"
     }
   ],
   "comment": "The master plan of the alica tests. It is used to choose which test to execute",
@@ -101,7 +109,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 400
       },
       "type": "State",
@@ -131,7 +139,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 800
       },
       "type": "State",
@@ -161,7 +169,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 600
       },
       "type": "State",
@@ -191,7 +199,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 1000
       },
       "type": "State",
@@ -221,8 +229,38 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 1200
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "RuntimeConditionCalledPlan.pml#3213121947038933654",
+          "comment": "",
+          "configuration": null,
+          "id": 1956335922990661751,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 4045273565408236318,
+      "inTransitions": [
+        4209515495416542644
+      ],
+      "name": "RuntimeConditionCalledPlanState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 685.96875,
+        "y": 1400
       },
       "type": "State",
       "variableBindings": []
@@ -240,11 +278,12 @@
         2841206023261337744,
         3219105289339324342,
         3312785896666601377,
-        4120890224163547783
+        4120890224163547783,
+        4209515495416542644
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 428,
+        "x": 427.984375,
         "y": 800
       },
       "type": "State",
@@ -274,7 +313,7 @@
       "outTransitions": [],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
-        "x": 686,
+        "x": 685.96875,
         "y": 200
       },
       "type": "State",
@@ -301,8 +340,8 @@
       "outState": 4487929496627066142,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 229
+          "x": 585.96875,
+          "y": 228.9921875
         }
       ],
       "preCondition": {
@@ -335,8 +374,8 @@
       "outState": 1506398272124884391,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 429
+          "x": 585.96875,
+          "y": 428.9921875
         }
       ],
       "preCondition": {
@@ -369,8 +408,8 @@
       "outState": 2212831089687963769,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 629
+          "x": 585.96875,
+          "y": 628.9921875
         }
       ],
       "preCondition": {
@@ -403,8 +442,8 @@
       "outState": 1552041115313373349,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 829
+          "x": 585.96875,
+          "y": 828.9921875
         }
       ],
       "preCondition": {
@@ -437,8 +476,8 @@
       "outState": 3760344851508420724,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 1029
+          "x": 585.96875,
+          "y": 1028.9921875
         }
       ],
       "preCondition": {
@@ -471,8 +510,8 @@
       "outState": 3960396736820956915,
       "pointsWeb": [
         {
-          "x": 586,
-          "y": 1229
+          "x": 585.96875,
+          "y": 1228.9921875
         }
       ],
       "preCondition": {
@@ -480,6 +519,40 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 4209515495416542644,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2RuntimeConditionCalledPlanState"
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 4045273565408236318,
+      "pointsWeb": [
+        {
+          "x": 585.96875,
+          "y": 1428.9921875
+        }
+      ],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 685495107222979467,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

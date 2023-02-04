@@ -1,0 +1,15 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 2580864383983173919,
+  "inheritBlackboard": false,
+  "name": "RuntimeConditionCalledPlanState1Behaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

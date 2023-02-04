@@ -1,7 +1,5 @@
 #include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
-#include <alica_tests/Behaviour/Attack.h>
-#include <alica_tests/SimpleTestPlan1412252439925.h>
 #include <alica_tests/TestFixture.h>
 #include <gtest/gtest.h>
 

@@ -17,6 +17,8 @@
 #include <alica_tests/Behaviour/MidFieldStandard1402488696205.h>
 #include <alica_tests/Behaviour/NotToTrigger1429017274116.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>
+#include <alica_tests/Behaviour/RuntimeConditionCalledPlanState1Behaviour2580864383983173919.h>
+#include <alica_tests/Behaviour/RuntimeConditionCalledPlanState2Behaviour704908733785015826.h>
 #include <alica_tests/Behaviour/State1Behaviour3563417394101512880.h>
 #include <alica_tests/Behaviour/State2Behaviour2219945377054027027.h>
 #include <alica_tests/Behaviour/SuccessDummy3505111757300078074.h>
@@ -70,6 +72,7 @@
 #include <alica_tests/PreConditionPlan1418042796751.h>
 #include <alica_tests/RealMasterPlanForSyncTest1418902217839.h>
 #include <alica_tests/RunBehaviourInSimplePlan2504351804499332310.h>
+#include <alica_tests/RuntimeConditionCalledPlan3213121947038933654.h>
 #include <alica_tests/RuntimeConditionPlan1418042806575.h>
 #include <alica_tests/SchedulingTestMasterPlan1613378382024.h>
 #include <alica_tests/SchedulingTestPlan11613378406860.h>
@@ -135,6 +138,9 @@ std::shared_ptr<BasicCondition> ConditionCreator::createConditions(int64_t condi
         break;
     case 4404788800584486714:
         return std::make_shared<RunTimeCondition4404788800584486714>();
+        break;
+    case 4595076014383940051:
+        return std::make_shared<RunTimeCondition4595076014383940051>();
         break;
     default:
         std::cerr << "ConditionCreator: Unknown condition id requested: " << conditionConfId << std::endl;

@@ -1,0 +1,24 @@
+{
+  "blackboard": [
+    {
+      "access": "protected",
+      "comment": "",
+      "defaultValue": null,
+      "id": 1071634371389014933,
+      "key": "runtimeConditionBehaviourCounter",
+      "type": "int64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 704908733785015826,
+  "inheritBlackboard": false,
+  "name": "RuntimeConditionCalledPlanState2Behaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

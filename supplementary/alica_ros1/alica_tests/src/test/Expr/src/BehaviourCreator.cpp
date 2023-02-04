@@ -11,6 +11,8 @@
 #include <alica_tests/Behaviour/MidFieldStandard.h>
 #include <alica_tests/Behaviour/NotToTrigger.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
+#include <alica_tests/Behaviour/RuntimeConditionCalledPlanState1Behaviour.h>
+#include <alica_tests/Behaviour/RuntimeConditionCalledPlanState2Behaviour.h>
 #include <alica_tests/Behaviour/State1Behaviour.h>
 #include <alica_tests/Behaviour/State2Behaviour.h>
 #include <alica_tests/Behaviour/SuccessDummy.h>
@@ -90,6 +92,9 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
     case 55178365253414982:
         return std::make_unique<TestBehaviour>(context);
         break;
+    case 704908733785015826:
+        return std::make_unique<RuntimeConditionCalledPlanState2Behaviour>(context);
+        break;
     case 831400441334251600:
         return std::make_unique<TestInheritBlackboardBehaviour>(context);
         break;
@@ -98,6 +103,9 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         break;
     case 2219945377054027027:
         return std::make_unique<State2Behaviour>(context);
+        break;
+    case 2580864383983173919:
+        return std::make_unique<RuntimeConditionCalledPlanState1Behaviour>(context);
         break;
     case 2951008684180289642:
         return std::make_unique<SuccessNormal>(context);
