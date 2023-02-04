@@ -14,16 +14,6 @@
 
 namespace alica
 {
-namespace
-{
-std::ostream& operator<<(std::ostream& out, const VariableGrp& vg)
-{
-    for (const Variable* v : vg) {
-        out << v->getName() << "(" << v->getId() << "), ";
-    }
-    return out;
-}
-} // namespace
 /**
  * Default constructor
  */

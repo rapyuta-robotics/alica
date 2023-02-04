@@ -36,9 +36,9 @@ Behaviour* BehaviourFactory::create(const YAML::Node& node)
     auto inheritBlackboard = Factory::getValue<bool>(node, alica::Strings::inheritBlackboard, true);
     if (!inheritBlackboard) {
         if (Factory::isValid(node[alica::Strings::blackboard])) {
-            behaviour->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]));
+            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]);
         } else {
-            behaviour->_blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
+            behaviour->_blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
         }
     } else {
         behaviour->_blackboardBlueprint = nullptr;
