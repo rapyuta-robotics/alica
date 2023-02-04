@@ -12,11 +12,11 @@ namespace alica::test
  *
  * Steps:
  * 1) Run State1Behaviour in State1
- * 2) Count steps up to 10
+ * 2) Count steps up to 10 for State1Behaviour
  * 3) State1 success
  * 4) Transition to State2
  * 5) Run State2Behaviour in State2
- * 6) Do 20 steps
+ * 6) Do 20 steps for State2Behaviour
  *
  */
 TEST_F(TestFixture, runBehaviourInSimplePlan)
