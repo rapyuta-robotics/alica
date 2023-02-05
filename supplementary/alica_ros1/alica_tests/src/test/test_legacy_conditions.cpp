@@ -15,7 +15,7 @@ namespace alica::test
  * 1) Move to RuntimeConditionCalledPlanState1 state
  * 2) Check if runtimecondition for RuntimeConditionCalledPlan is called
  * 3) Move to RuntimeConditionCalledPlanState2 state
- * 4) Check if runtimecondition for RuntimeConditionCalledPlanState2Behaviour is called
+ * 4) Check if runtimecondition for RuntimeConditionCalledPlanState2Behaviour is called (TODO)
  *
  */
 
@@ -44,19 +44,11 @@ TEST_F(TestFixture, runtimeConditionCalled)
     ASSERT_NE(nullptr, _tc->getActiveBehaviour("RuntimeConditionCalledPlanState2Behaviour")) << _tc->getLastFailure();
     ASSERT_EQ(nullptr, _tc->getActiveBehaviour("RuntimeConditionCalledPlanState1Behaviour")) << _tc->getLastFailure();
     return;
-    // TODO Luca
-    int runTimeConditionCounterMiddle = dynamic_cast<RuntimeConditionCalledPlan3213121947038933654*>(plan)->getRunTimeConditionCounter();
-    ASSERT_LT(1, runTimeConditionCounterMiddle);
 
-    // Check callcount and runTimeConditionCounter
-    /*STEP_UNTIL(_tc,
-    dynamic_cast<alica::RuntimeConditionCalledPlanState2Behaviour*>(_tc->getActiveBehaviour("RuntimeConditionCalledPlanState2Behaviour"))->getCallCounter() >
-    20);
-    ASSERT_GT(dynamic_cast<alica::RuntimeConditionCalledPlanState2Behaviour*>(_tc->getActiveBehaviour("RuntimeConditionCalledPlanState2Behaviour"))->getCallCounter(),
-    20)
-    << _tc->getLastFailure(); ASSERT_NE(nullptr, _tc->getActiveBehaviour("RuntimeConditionCalledPlanState2Behaviour")) << _tc->getLastFailure(); int
-    runTimeConditionCounterEnd = dynamic_cast<RuntimeConditionCalledPlan3213121947038933654*>(plan)->getRunTimeConditionCounter();
-    ASSERT_LT(runTimeConditionCounterMiddle, runTimeConditionCounterEnd);
+    // TODO - Check unTimeConditionCounter for RuntimeConditionCalledPlanState2Behaviour
+    /*
+    int runTimeConditionCounterEnd = dynamic_cast<RuntimeConditionCalledPlan3213121947038933654*>(plan)->getRunTimeConditionCounter();
+    ASSERT_FALSE(0, runTimeConditionCounterEnd);
 */
 }
 
