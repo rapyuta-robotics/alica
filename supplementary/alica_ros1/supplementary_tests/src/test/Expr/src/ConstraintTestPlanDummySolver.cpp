@@ -39,11 +39,9 @@ bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std
 
 bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
-    Blackboard& bb = getAlicaEngine()->editGlobalBlackboard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
-        LockedBlackboardRW(bb).set(s, var->getId());
         results.push_back(var->getId());
     }
     ++getSolutionCallCounter;

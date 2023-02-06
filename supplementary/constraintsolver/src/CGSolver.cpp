@@ -63,7 +63,7 @@ bool CGSolver::existsSolutionImpl(SolverContext* ctx, const std::vector<std::sha
     }
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getResultStore()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
@@ -124,7 +124,7 @@ bool CGSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::shared
     TermPtr all = holder->constraintUtility(constraint, utility);
 
     std::vector<Variant> serial_seeds;
-    int seed_num = getAlicaEngine()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
+    int seed_num = getResultStore()->getResultStore().getSeeds(holder->getVariables(), ranges, serial_seeds);
 
     std::vector<double> seeds;
     seeds.reserve(seed_num * dim);
