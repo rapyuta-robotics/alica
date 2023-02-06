@@ -164,8 +164,6 @@ public:
     // Retrieve the last failure that occured when any of the other API's are called
     std::string getLastFailure() const { return _lastFailureInfo; }
 
-    RunningPlan* getRunningPlan(const std::string& name);
-
 private:
     template <class... Args>
     void setFailureInfo(Args&&... args) const
@@ -175,7 +173,7 @@ private:
         _lastFailureInfo = oss.str();
     }
 
-    // RunningPlan* getRunningPlan(const std::string& name);
+    RunningPlan* getRunningPlan(const std::string& name);
     RunningPlan* searchRunningPlanTree(const std::string& name);
     RunningPlan* followRunningPlanPath(const std::string& fullyQualifiedName);
     std::vector<std::pair<std::string /* state name */, std::string /* plan/beh name */>> parseFullyQualifiedName(const std::string& fullyQualifiedName) const;

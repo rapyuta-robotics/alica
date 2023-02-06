@@ -16,6 +16,8 @@ Attack::Attack(BehaviourContext& context)
 {
     /*PROTECTED REGION ID(con1402488848841) ENABLED START*/
     // Add additional options here
+    this->callCounter = 0;
+    this->initCounter = 0;
     /*PROTECTED REGION END*/
 }
 Attack::~Attack()
@@ -28,24 +30,20 @@ void Attack::run()
 {
     /*PROTECTED REGION ID(run1402488848841) ENABLED START*/
     // Add additional options here
-    int64_t callCounter = LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
-    ++callCounter;
-    LockedBlackboardRW(*getBlackboard()).set("callCount", callCounter);
+    callCounter++;
     /*PROTECTED REGION END*/
 }
 void Attack::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1402488848841) ENABLED START*/
     // Add additional options here
-    LockedBlackboardRW(*getBlackboard()).set("callCount", 0);
+    callCounter = 0;
+    initCounter++;
 
     /*PROTECTED REGION END*/
 }
 /*PROTECTED REGION ID(methods1402488848841) ENABLED START*/
-int Attack::getCallCounter()
-{
-    return LockedBlackboardRW(*getBlackboard()).get<int64_t>("callCount");
-}
+// Add additional methods here
 /*PROTECTED REGION END*/
 
 } /* namespace alica */

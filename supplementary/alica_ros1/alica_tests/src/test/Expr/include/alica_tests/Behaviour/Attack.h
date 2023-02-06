@@ -15,7 +15,8 @@ public:
     virtual void run();
     /*PROTECTED REGION ID(pub1402488848841) ENABLED START*/
     // Add additional public methods here
-    int getCallCounter();
+    int callCounter;
+    int initCounter;
     /*PROTECTED REGION END*/
 protected:
     virtual void initialiseParameters();
