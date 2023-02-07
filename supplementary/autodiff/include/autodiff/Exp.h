@@ -7,7 +7,7 @@ namespace autodiff
 class Exp : public UnaryFunction
 {
 public:
-    int accept(ITermVisitor* visitor);
+    int accept(ITermVisitor* visitor) override;
     void acceptRecursive(ITermVisitor* visitor) override;
 
     TermPtr aggregateConstants() override;

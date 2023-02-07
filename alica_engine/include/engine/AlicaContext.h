@@ -21,6 +21,7 @@
 #include "engine/logging/Logging.h"
 #include "engine/util/ConfigPathParser.h"
 
+#include <atomic>
 #include <cassert>
 #include <memory>
 #include <string>
@@ -424,7 +425,7 @@ private:
     std::string _localAgentName;
     YAML::Node _configRootNode;
 
-    uint32_t _validTag;
+    std::atomic<uint32_t> _validTag;
     // WARNING: Initialization order dependencies!
     // Please do not change the declaration order of members.
     std::unique_ptr<AlicaClock> _clock;

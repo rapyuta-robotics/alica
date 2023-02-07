@@ -20,7 +20,7 @@ class IConstraintCreator
 {
 public:
     virtual ~IConstraintCreator() {}
-    virtual std::shared_ptr<BasicConstraint> createConstraint(int64_t constraintConfId) = 0;
+    virtual std::shared_ptr<BasicConstraint> createConstraint(int64_t constraintConfId, ConstraintContext& constraintContext) = 0;
 };
 
 } /* namespace alica */

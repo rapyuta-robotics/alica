@@ -17,7 +17,7 @@ struct SyncReady;
 struct SyncReady;
 struct AgentQuery;
 struct AgentAnnouncement;
-class RoleSwitch;
+struct RoleSwitch;
 
 struct AlicaCommunicationHandlers
 {

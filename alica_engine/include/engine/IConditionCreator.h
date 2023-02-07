@@ -11,7 +11,7 @@
 namespace alica
 {
 class BasicCondition;
-class ConditionContext;
+struct ConditionContext;
 
 class IConditionCreator
 {

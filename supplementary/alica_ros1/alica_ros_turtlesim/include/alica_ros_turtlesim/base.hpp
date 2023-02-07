@@ -1,8 +1,8 @@
-#ifndef IO_TURTLE_BASE_BASE_HPP
-#define IO_TURTLE_BASE_BASE_HPP
+#pragma once
 
-#include "world_model.hpp"
-#include <engine/AlicaEngine.h>
+#include <engine/AlicaContext.h>
+
+#include <ros/ros.h>
 
 namespace turtlesim
 {
@@ -11,18 +11,13 @@ class Base
 {
 public:
     Base(ros::NodeHandle& nh, ros::NodeHandle& priv_nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
-            const std::string& path, bool dynamic);
+            const std::string& path);
     ~Base();
     void start();
 
 private:
     ros::AsyncSpinner spinner;
     alica::AlicaContext* ac;
-
-    void ALICASetWorldModel(ros::NodeHandle& nh, ros::NodeHandle& priv_nh);
-    bool _loadDynamically{false};
 };
 
 } // namespace turtlesim
-
-#endif /* IO_TURTLE_BASE_BASE_HPP */

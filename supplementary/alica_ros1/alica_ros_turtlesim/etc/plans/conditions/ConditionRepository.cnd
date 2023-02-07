@@ -3,33 +3,60 @@
   "conditions": [
     {
       "blackboard": [],
-      "comment": "",
-      "conditionRepository": 1,
-      "id": 748720375848597116,
-      "name": "Move2Init",
-      "relativeDirectory": "conditions",
-      "libraryName": "alica_turtlesim_library"
+      "comment": "Is true if atleast 1 child attached to a state succeeds",
+      "conditionRepository": 0,
+      "id": 1,
+      "libraryName": "libalica-utils",
+      "name": "AnyChildSuccess",
+      "relativeDirectory": "conditions"
     },
     {
       "blackboard": [],
-      "comment": "",
-      "conditionRepository": 1,
+      "comment": "Is true if all children attached to a state succeed",
+      "conditionRepository": 0,
+      "id": 2,
+      "libraryName": "libalica-utils",
+      "name": "AllChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AnyChildFailure",
+      "conditionRepository": 0,
+      "id": 3,
+      "libraryName": "libalica-utils",
+      "name": "AnyChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildFailure",
+      "conditionRepository": 0,
+      "id": 4,
+      "libraryName": "libalica-utils",
+      "name": "AllChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "Equivalent to AllChildSucces but used here for demonstration purposes to show how to implement a custom condition",
+      "conditionRepository": 0,
       "id": 974606107671315045,
-      "name": "Init2Move",
-      "relativeDirectory": "conditions",
-      "libraryName": "alica_turtlesim_library"
+      "libraryName": "libalica-turtlesim",
+      "name": "CustomAllChildSuccess",
+      "relativeDirectory": "conditions"
     },
     {
       "blackboard": [],
-      "comment": "",
-      "conditionRepository": 1,
+      "comment": "Equivalent to AnyChildSucces but used here for demonstration purposes to show how to implement a custom condition",
+      "conditionRepository": 0,
       "id": 2190266318562141841,
-      "name": "DefaultCondition",
-      "relativeDirectory": "conditions",
-      "libraryName": "alica_turtlesim_library"
+      "libraryName": "libalica-turtlesim",
+      "name": "CustomAnyChildSuccess",
+      "relativeDirectory": "conditions"
     }
   ],
-  "id": 1,
+  "id": 0,
   "name": "ConditionRepository",
   "relativeDirectory": ""
 }

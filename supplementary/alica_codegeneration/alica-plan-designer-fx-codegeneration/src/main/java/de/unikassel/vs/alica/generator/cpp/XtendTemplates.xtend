@@ -295,7 +295,7 @@ namespace alica
         public:
         virtual ~UtilityFunctionCreator();
         UtilityFunctionCreator();
-        std::shared_ptr<BasicUtilityFunction> createUtility(int64_t utilityfunctionConfId);
+        std::shared_ptr<BasicUtilityFunction> createUtility(int64_t utilityfunctionConfId, UtilityFunctionContext& context);
     };
 
 } /* namespace alica */
@@ -324,7 +324,7 @@ namespace alica
     {
     }
 
-    std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId)
+    std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int64_t utilityfunctionConfId, UtilityFunctionContext& context)
     {
         switch(utilityfunctionConfId)
         {
@@ -432,7 +432,7 @@ namespace alica
         public:
         ConstraintCreator();
         virtual ~ConstraintCreator();
-        std::shared_ptr<BasicConstraint> createConstraint(int64_t constraintConfId) override;
+        std::shared_ptr<BasicConstraint> createConstraint(int64_t constraintConfId, ConstraintContext& constraintContext) override;
     };
 
 } /* namespace alica */
@@ -470,7 +470,7 @@ namespace alica
     }
 
 
-    std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t constraintConfId)
+    std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t constraintConfId, ConstraintContext& constraintContext)
     {
         switch(constraintConfId)
         {

@@ -1,7 +1,7 @@
 
 #include "intervals/DownwardPropagator.h"
-//#define DEBUG_DP
-//#define DownwardPropagator_Call_Debug
+// #define DEBUG_DP
+// #define DownwardPropagator_Call_Debug
 
 #include "intervals/IntervalPropagator.h"
 #include "intervals/UnsolveableException.h"
@@ -26,7 +26,6 @@ using namespace autodiff;
 
 DownwardPropagator::DownwardPropagator()
         : _changed(nullptr)
-        , _up(nullptr)
 {
 }
 

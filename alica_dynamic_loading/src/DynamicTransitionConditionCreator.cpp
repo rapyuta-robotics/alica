@@ -18,8 +18,11 @@ DynamicTransitionConditionCreator::DynamicTransitionConditionCreator()
 TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(int64_t conditionId, TransitionConditionContext& context)
 {
     std::string completeLibraryName = calculateLibraryCompleteName(_libraryPath, context.libraryName);
-    if (completeLibraryName.empty())
+    if (completeLibraryName.empty()) {
+        Logging::logError("DynamicLoading") << "Could not compute the complete library name for creating the transition condition: " << context.name;
         return nullptr;
+    }
+
     auto fun = boost::dll::import_alias<transitionConditionFunctionType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                                          // complete path to library also with file name
             context.name,                                                 // symbol to import

@@ -7,7 +7,7 @@ namespace alica
 {
 Quantifier* QuantifierFactory::create(const YAML::Node& quantifierNode)
 {
-    Quantifier* quantifier;
+    Quantifier* quantifier = nullptr;
     std::string quantifierType;
     if (Factory::isValid(quantifierNode[alica::Strings::quantifierType])) {
         quantifierType = Factory::getValue<std::string>(quantifierNode, alica::Strings::quantifierType);
