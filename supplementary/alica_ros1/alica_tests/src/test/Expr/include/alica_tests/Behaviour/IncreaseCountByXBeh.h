@@ -7,11 +7,11 @@
 
 namespace alica
 {
-class IncreaseCountByX : public DomainBehaviour
+class IncreaseCountByXBeh : public DomainBehaviour
 {
 public:
-    IncreaseCountByX(BehaviourContext& context);
-    virtual ~IncreaseCountByX();
+    IncreaseCountByXBeh(BehaviourContext& context);
+    virtual ~IncreaseCountByXBeh();
     virtual void run();
     /*PROTECTED REGION ID(pub1084111613399827667) ENABLED START*/
     // Add additional protected methods here

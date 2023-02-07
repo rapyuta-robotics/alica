@@ -11,9 +11,9 @@ namespace alica
 //   - DefaultTask (1225112227903) (Entrypoint: 2887699715416306214)
 //
 // States:
-//   - BlackboardTestSuccess (3712638990152664591)
 //   - WaitForTriggerState (924545140283507160)
-//   - BlackboardMapConstantTest (3364273219038396425)
+//   - BlackboardMapConstantTestState (3364273219038396425)
+//   - BlackboardTestSuccessState (3712638990152664591)
 BlackboardTestPlan4610306063152670816::BlackboardTestPlan4610306063152670816(PlanContext& context)
         : DomainPlan(context)
 {
@@ -42,7 +42,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction4610306063152670816::getUtilityF
 /**
  * Transition: 464426070784430186 (464426070784430186)
  *   - Comment:
- *   - Source2Dest: WaitForTriggerState --> BlackboardMapConstantTest
+ *   - Source2Dest: WaitForTriggerState --> BlackboardMapConstantTestState
  *
  * Precondition: 1007584014468848906 (1007584014468848906)
  *   - Enabled: true
@@ -64,7 +64,7 @@ bool PreCondition1007584014468848906::evaluate(std::shared_ptr<RunningPlan> rp, 
 /**
  * Transition: 3130108995589923014 (3130108995589923014)
  *   - Comment:
- *   - Source2Dest: BlackboardMapConstantTest --> BlackboardTestSuccess
+ *   - Source2Dest: BlackboardMapConstantTestState --> BlackboardTestSuccessState
  *
  * Precondition: 1204246573426302524 (1204246573426302524)
  *   - Enabled: true
@@ -73,7 +73,7 @@ bool PreCondition1007584014468848906::evaluate(std::shared_ptr<RunningPlan> rp, 
  *   - Variables:
  *   - Quantifiers:
  *
- * Abstract Plans in BlackboardMapConstantTest:
+ * Abstract Plans in BlackboardMapConstantTestState:
  *   - BlackboardMapConstantTestPlan (2390819177564329533)
  */
 bool PreCondition1204246573426302524::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)

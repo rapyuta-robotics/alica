@@ -92,6 +92,36 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
+          "abstractPlan": "BlackboardTestPlan.pml#4610306063152670816",
+          "comment": "",
+          "configuration": null,
+          "id": 3024879078219750906,
+          "keyMapping": {
+            "input": [],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 3789769699871163821,
+      "inTransitions": [
+        1714211356334603515
+      ],
+      "name": "BlackboardTestState",
+      "outTransitions": [],
+      "parentPlan": 2521443078354411465,
+      "positionWeb": {
+        "x": 715.9036833816042,
+        "y": -46.231682782429765
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
           "abstractPlan": "MultiPlanInstanceSuccessTestPlan.pml#3392981108193862307",
           "comment": "",
           "configuration": null,
@@ -127,9 +157,9 @@
       "name": "ChooseTestState",
       "outTransitions": [
         846865468084822174,
+        1714211356334603515,
         2841206023261337744,
-        4120890224163547783,
-        1714211356334603515
+        4120890224163547783
       ],
       "parentPlan": 2521443078354411465,
       "positionWeb": {
@@ -168,36 +198,6 @@
       },
       "type": "State",
       "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
-          "abstractPlan": "BlackboardTestPlan.pml#4610306063152670816",
-          "comment": "",
-          "configuration": null,
-          "id": 3024879078219750906,
-          "keyMapping": {
-            "input": [],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 3789769699871163821,
-      "inTransitions": [
-        1714211356334603515
-      ],
-      "name": "BlackboardTestState",
-      "outTransitions": [],
-      "parentPlan": 2521443078354411465,
-      "positionWeb": {
-        "x": 715.9036833816042,
-        "y": -46.231682782429765
-      },
-      "type": "State",
-      "variableBindings": []
     }
   ],
   "synchronisations": [],
@@ -225,6 +225,36 @@
         "conditionString": "",
         "enabled": true,
         "id": 1879497210052616817,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
+      "id": 1714211356334603515,
+      "inState": 4098979167613947533,
+      "keyMapping": {
+        "input": [
+          {
+            "childKey": "result",
+            "parentKey": "ChooseTestState2BlackboardTestState",
+            "value": null
+          }
+        ],
+        "output": []
+      },
+      "name": "",
+      "outState": 3789769699871163821,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2975581900704004835,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],
@@ -285,36 +315,6 @@
         "conditionString": "",
         "enabled": true,
         "id": 2733591692277574870,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#3592699233854318376",
-      "id": 1714211356334603515,
-      "inState": 4098979167613947533,
-      "keyMapping": {
-        "input": [
-          {
-            "childKey": "result",
-            "parentKey": "ChooseTestState2BlackboardTestState",
-            "value": null
-          }
-        ],
-        "output": []
-      },
-      "name": "",
-      "outState": 3789769699871163821,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2975581900704004835,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

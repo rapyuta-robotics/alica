@@ -15,7 +15,7 @@
   "id": 1084111613399827667,
   "inheritBlackboard": false,
   "libraryName": "",
-  "name": "IncreaseCountByX",
+  "name": "IncreaseCountByXBeh",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "Behaviour",

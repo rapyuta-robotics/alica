@@ -12,8 +12,8 @@ namespace alica
 //
 // States:
 //   - InitState (602978301530919579)
-//   - BlackboardMapConstantTestSuccess (4000951790164702175)
 //   - MapConstantTestState (2937672201731359801)
+//   - BlackboardMapConstantTestSuccess (4000951790164702175)
 BlackboardMapConstantTestPlan2390819177564329533::BlackboardMapConstantTestPlan2390819177564329533(PlanContext& context)
         : DomainPlan(context)
 {
@@ -52,7 +52,7 @@ std::shared_ptr<UtilityFunction> UtilityFunction2390819177564329533::getUtilityF
  *   - Quantifiers:
  *
  * Abstract Plans in InitState:
- *   - IncreaseCountByX (1084111613399827667)
+ *   - IncreaseCountByXBeh (1084111613399827667)
  */
 bool PreCondition170416006263862082::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
@@ -75,7 +75,7 @@ bool PreCondition170416006263862082::evaluate(std::shared_ptr<RunningPlan> rp, c
  *   - Quantifiers:
  *
  * Abstract Plans in MapConstantTestState:
- *   - IncreaseCountByX (1084111613399827667)
+ *   - IncreaseCountByXBeh (1084111613399827667)
  */
 bool PreCondition3743250903768144590::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {

@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/IncreaseCountByX1084111613399827667.h>
+#include <alica_tests/Behaviour/IncreaseCountByXBeh1084111613399827667.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccppBC1084111613399827667) ENABLED START*/
@@ -7,6 +7,6 @@
 
 namespace alica
 {
-// Behaviour:IncreaseCountByX
+// Behaviour:IncreaseCountByXBeh
 
 } /* namespace alica */

@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/IncreaseCountByX.beh#1084111613399827667",
+          "abstractPlan": "behaviours/IncreaseCountByXBeh.beh#1084111613399827667",
           "comment": "",
           "configuration": null,
           "id": 1360305241920069641,
@@ -67,29 +67,9 @@
     },
     {
       "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 4000951790164702175,
-      "inTransitions": [
-        1658993097517406800
-      ],
-      "name": "BlackboardMapConstantTestSuccess",
-      "outTransitions": [],
-      "parentPlan": 2390819177564329533,
-      "positionWeb": {
-        "x": 944,
-        "y": 200
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/IncreaseCountByX.beh#1084111613399827667",
+          "abstractPlan": "behaviours/IncreaseCountByXBeh.beh#1084111613399827667",
           "comment": "",
           "configuration": null,
           "id": 2061186418395123093,
@@ -121,6 +101,26 @@
         "y": 200
       },
       "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 4000951790164702175,
+      "inTransitions": [
+        1658993097517406800
+      ],
+      "name": "BlackboardMapConstantTestSuccess",
+      "outTransitions": [],
+      "parentPlan": 2390819177564329533,
+      "positionWeb": {
+        "x": 944,
+        "y": 200
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],

@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/IncreaseCountByX.h>
+#include <alica_tests/Behaviour/IncreaseCountByXBeh.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1084111613399827667) ENABLED START*/
@@ -13,26 +13,26 @@ namespace alica
 // initialise static variables here
 /*PROTECTED REGION END*/
 
-IncreaseCountByX::IncreaseCountByX(BehaviourContext& context)
+IncreaseCountByXBeh::IncreaseCountByXBeh(BehaviourContext& context)
         : DomainBehaviour(context)
 {
     /*PROTECTED REGION ID(con1084111613399827667) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-IncreaseCountByX::~IncreaseCountByX()
+IncreaseCountByXBeh::~IncreaseCountByXBeh()
 {
     /*PROTECTED REGION ID(dcon1084111613399827667) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void IncreaseCountByX::run()
+void IncreaseCountByXBeh::run()
 {
     /*PROTECTED REGION ID(run1084111613399827667) ENABLED START*/
     // Add additional options here
     /*PROTECTED REGION END*/
 }
-void IncreaseCountByX::initialiseParameters()
+void IncreaseCountByXBeh::initialiseParameters()
 {
     /*PROTECTED REGION ID(initialiseParameters1084111613399827667) ENABLED START*/
     // Add additional options here

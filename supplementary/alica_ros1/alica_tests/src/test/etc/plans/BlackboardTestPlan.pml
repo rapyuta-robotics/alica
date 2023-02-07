@@ -40,26 +40,6 @@
     {
       "comment": "",
       "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 3712638990152664591,
-      "inTransitions": [
-        3130108995589923014
-      ],
-      "name": "BlackboardTestSuccess",
-      "outTransitions": [],
-      "parentPlan": 4610306063152670816,
-      "positionWeb": {
-        "x": 1219,
-        "y": 363
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
       "entryPoint": 2887699715416306214,
       "id": 924545140283507160,
       "inTransitions": [],
@@ -95,7 +75,7 @@
       "inTransitions": [
         464426070784430186
       ],
-      "name": "BlackboardMapConstantTest",
+      "name": "BlackboardMapConstantTestState",
       "outTransitions": [
         3130108995589923014
       ],
@@ -105,6 +85,26 @@
         "y": 335
       },
       "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 3712638990152664591,
+      "inTransitions": [
+        3130108995589923014
+      ],
+      "name": "BlackboardTestSuccessState",
+      "outTransitions": [],
+      "parentPlan": 4610306063152670816,
+      "positionWeb": {
+        "x": 1219,
+        "y": 363
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
       "variableBindings": []
     }
   ],

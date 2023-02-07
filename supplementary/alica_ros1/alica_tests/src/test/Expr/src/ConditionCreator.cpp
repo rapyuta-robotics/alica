@@ -15,7 +15,7 @@
 #include <alica_tests/Behaviour/CountIndefinitely1529456643148.h>
 #include <alica_tests/Behaviour/DefendMid1402488730695.h>
 #include <alica_tests/Behaviour/EmptyBehaviour1625610857563.h>
-#include <alica_tests/Behaviour/IncreaseCountByX1084111613399827667.h>
+#include <alica_tests/Behaviour/IncreaseCountByXBeh1084111613399827667.h>
 #include <alica_tests/Behaviour/MidFieldStandard1402488696205.h>
 #include <alica_tests/Behaviour/NotToTrigger1429017274116.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour1588061129360.h>

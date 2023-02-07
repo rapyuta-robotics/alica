@@ -8,7 +8,7 @@
 #include <alica_tests/Behaviour/CountIndefinitely.h>
 #include <alica_tests/Behaviour/DefendMid.h>
 #include <alica_tests/Behaviour/EmptyBehaviour.h>
-#include <alica_tests/Behaviour/IncreaseCountByX.h>
+#include <alica_tests/Behaviour/IncreaseCountByXBeh.h>
 #include <alica_tests/Behaviour/MidFieldStandard.h>
 #include <alica_tests/Behaviour/NotToTrigger.h>
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
@@ -94,7 +94,7 @@ std::unique_ptr<BasicBehaviour> BehaviourCreator::createBehaviour(int64_t behavi
         return std::make_unique<TestParameterPassingBehaviour>(context);
         break;
     case 1084111613399827667:
-        return std::make_unique<IncreaseCountByX>(context);
+        return std::make_unique<IncreaseCountByXBeh>(context);
         break;
     case 3821787310391665935:
         return std::make_unique<SuccessOnInitBeh>(context);
