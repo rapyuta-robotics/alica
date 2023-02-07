@@ -42,7 +42,7 @@ private:
     const TeamManager& _teamManager;
 
     PlanBase* _pb;
-    const Blackboard* _globalBlackboard;
+    std::atomic<const Blackboard*> _globalBlackboard;
 };
 
 } /* namespace alica */

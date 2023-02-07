@@ -129,7 +129,7 @@ private:
     int _treeDepth;
     std::atomic<bool> _running;
     bool _sendStatusMessages;
-    bool _isWaiting;
+    std::atomic<bool> _isWaiting;
 };
 
 } // namespace alica

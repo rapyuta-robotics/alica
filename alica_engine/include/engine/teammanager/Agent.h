@@ -5,6 +5,7 @@
 #include "engine/collections/RobotEngineData.h"
 #include "engine/collections/RobotProperties.h"
 
+#include <atomic>
 #include <list>
 #include <memory>
 #include <string>
@@ -28,7 +29,7 @@ class Agent
     friend ::alica::TeamObserver;
 
 public:
-    ~Agent();
+    ~Agent() = default;
 
     AgentId getId() const { return _id; }
     const std::string& getName() const { return _name; }
@@ -52,7 +53,7 @@ private:
     bool _local;
     const AlicaClock& _clock;
     AlicaTime _timeout;
-    AlicaTime _timeLastMsgReceived;
+    std::atomic<AlicaTime> _timeLastMsgReceived{AlicaTime()};
     RobotProperties _properties;
     RobotEngineData _engineData;
     std::string _name;
@@ -64,7 +65,7 @@ private:
     void setIgnored(const bool ignored) { _ignored = ignored; }
     void setTimeLastMsgReceived(AlicaTime timeLastMsgReceived) { _timeLastMsgReceived = timeLastMsgReceived; }
     void setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint);
-    void setSuccessMarks(const IdGrp& suceededEps);
+    void setSuccessMarks(const IdGrp& succeededEps);
     const DomainVariable* getDomainVariable(const std::string& sort) const;
     const EntryPointGrp* getSucceededEntryPoints(const AbstractPlan* plan) const;
     bool update();

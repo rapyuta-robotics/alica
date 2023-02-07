@@ -57,7 +57,10 @@ public:
 
     ~InProcQueue()
     {
-        _isRunning = false;
+        {
+            std::unique_lock<std::mutex> lck(_qmutex);
+            _isRunning = false;
+        }
         _qcondition.notify_one();
         _cbThread->join();
         delete _cbThread;
@@ -75,7 +78,7 @@ public:
 private:
     void run()
     {
-        while (_isRunning) {
+        while (true) {
             std::unique_ptr<T> first;
             {
                 std::unique_lock<std::mutex> lck(_qmutex);
