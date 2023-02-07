@@ -22,9 +22,7 @@ SynchronisationProcess::SynchronisationProcess(const AlicaClock& clock, AgentId 
         , _syncModule(sm)
         , _readyForSync(false)
         , _lastTick(0)
-        , _runningPlan(nullptr)
         , _myRow(nullptr)
-        , _lastTalkData(nullptr)
         , _synchronisationDone(false)
         , _clock(clock)
 {

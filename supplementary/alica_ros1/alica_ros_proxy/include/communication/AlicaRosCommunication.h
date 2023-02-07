@@ -26,7 +26,7 @@ public:
     AlicaRosCommunication(const AlicaCommunicationHandlers& callbacks, ros::CallbackQueue& cb_queue = *ros::getGlobalCallbackQueue());
     virtual ~AlicaRosCommunication();
 
-    void tick();
+    void tick() override;
 
     void sendAllocationAuthority(const AllocationAuthorityInfo& aai) const override;
     void sendAlicaEngineInfo(const AlicaEngineInfo& bi) const override;

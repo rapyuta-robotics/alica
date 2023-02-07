@@ -75,8 +75,8 @@ TEST_F(AlicaConditionPlan, solverTest)
 
     ASSERT_GT(alica::reasoner::ConstraintTestPlanDummySolver::getGetSolutionCallCounter(), 0);
     ASSERT_EQ(alica::ConstraintUsingBehaviour::result.size(), 1u) << "Wrong result size";
-    int64_t res = LockedBlackboardRO(ae->getGlobalBlackboard()).get<int64_t>(std::to_string(alica::ConstraintUsingBehaviour::result[0]));
-    EXPECT_EQ(1414068576620, res); // id of variable at highest level
+    // Solver just sets the result as the ids of the used variables
+    ASSERT_EQ(alica::ConstraintUsingBehaviour::result.at(0), 1414068576620);
 }
 } // namespace
 } // namespace alica

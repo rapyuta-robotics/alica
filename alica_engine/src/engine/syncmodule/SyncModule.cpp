@@ -38,6 +38,7 @@ SyncModule::SyncModule(ConfigChangeListener& configChangeListener, const TeamMan
 
 SyncModule::~SyncModule()
 {
+    lock_guard<mutex> lock(_lomutex);
     for (auto iter : _synchProcessMapping) {
         delete iter.second;
     }
@@ -82,8 +83,11 @@ void SyncModule::tick()
 
     // delete the failed processes from the mapping
     for (const SynchronisationProcess* s : endedSyncProcesses) {
-        delete _synchProcessMapping[s->getSynchronisation()];
-        _synchProcessMapping.erase(s->getSynchronisation());
+        const auto* const sync = s->getSynchronisation();
+        if (auto it = _synchProcessMapping.find(sync); it != _synchProcessMapping.end()) {
+            delete it->second;
+            _synchProcessMapping.erase(it);
+        }
     }
 }
 /**
@@ -93,6 +97,7 @@ void SyncModule::tick()
  */
 void SyncModule::setSynchronisation(const Transition* trans, bool holds)
 {
+    lock_guard<mutex> lock(_lomutex);
     map<const Synchronisation*, SynchronisationProcess*>::iterator i = _synchProcessMapping.find(trans->getSynchronisation());
     if (i != _synchProcessMapping.end()) {
         i->second->setTick(_ticks);
@@ -101,7 +106,6 @@ void SyncModule::setSynchronisation(const Transition* trans, bool holds)
         SynchronisationProcess* synchProcess = new SynchronisationProcess(_clock, _myId, trans->getSynchronisation(), this);
         synchProcess->setTick(_ticks);
         synchProcess->changeOwnData(trans->getId(), holds);
-        lock_guard<mutex> lock(_lomutex);
         _synchProcessMapping.insert(pair<const Synchronisation*, SynchronisationProcess*>(trans->getSynchronisation(), synchProcess));
     }
 }

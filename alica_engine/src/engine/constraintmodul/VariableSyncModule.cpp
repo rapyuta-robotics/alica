@@ -70,7 +70,7 @@ void VariableSyncModule::reload(const YAML::Node& config)
         double communicationFrequency = config["Alica"]["CSPSolving"]["CommunicationFrequency"].as<double>();
         AlicaTime interval = AlicaTime::seconds(1.0 / communicationFrequency);
         if (_timer == nullptr) {
-            _timer = _timerFactory.createTimer(std::move(std::bind(&VariableSyncModule::publishContent, this)), interval);
+            _timer = _timerFactory.createTimer(std::bind(&VariableSyncModule::publishContent, this), interval);
         }
     }
 }

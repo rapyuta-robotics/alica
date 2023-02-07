@@ -13,9 +13,9 @@ TransitionCondition* TransitionConditionFactory::create(const YAML::Node& condit
 {
     std::unique_ptr<BlackboardBlueprint> blackboardBlueprint;
     if (Factory::isValid(conditionNode[alica::Strings::blackboard])) {
-        blackboardBlueprint = std::move(BlackboardBlueprintFactory::create(conditionNode[alica::Strings::blackboard]));
+        blackboardBlueprint = BlackboardBlueprintFactory::create(conditionNode[alica::Strings::blackboard]);
     } else {
-        blackboardBlueprint = std::move(BlackboardBlueprintFactory::createEmpty());
+        blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
     }
     TransitionCondition* transitionCondition = new TransitionCondition(std::move(blackboardBlueprint));
     Factory::setAttributes(conditionNode, transitionCondition);

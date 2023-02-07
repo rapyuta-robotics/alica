@@ -28,6 +28,9 @@ AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
 
 AlicaContext::~AlicaContext()
 {
+    if (_initialized) {
+        terminate();
+    }
     _validTag = ALICA_CTX_BAD;
 }
 
@@ -82,7 +85,10 @@ int AlicaContext::terminate()
     if (_communicator) {
         _communicator->stopCommunication();
     }
-    _engine->terminate();
+    if (_engine) {
+        _engine->terminate();
+        _engine.reset();
+    }
     _initialized = false;
     Logging::logInfo(LOGNAME) << "context terminated";
     // TODO: Fix this (add proper return code in engine shutdown)
@@ -118,6 +124,11 @@ AgentId AlicaContext::getLocalAgentId() const
 std::string AlicaContext::getLocalAgentName() const
 {
     return _localAgentName;
+}
+
+VariableSyncModule& AlicaContext::editSyncModule()
+{
+    return _engine->editResultStore();
 }
 
 YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
@@ -168,13 +179,34 @@ void AlicaContext::reloadConfig()
 
 AlicaCommunicationHandlers AlicaContext::getCommunicationHandlers()
 {
-    return AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) { _engine->editSyncModul().onSyncTalk(st); },
-            [this](std::shared_ptr<SyncReady> sr) { _engine->editSyncModul().onSyncReady(sr); },
-            [this](const AllocationAuthorityInfo& aai) { _engine->editAuth().handleIncomingAuthorityMessage(aai); },
-            [this](std::shared_ptr<PlanTreeInfo> st) { _engine->editTeamObserver().handlePlanTreeInfo(st); },
-            [this](const SolverResult& sr) { _engine->editResultStore().onSolverResult(sr); },
-            [this](const AgentQuery& pq) { _engine->getTeamManager().handleAgentQuery(pq); },
-            [this](const AgentAnnouncement& pa) { _engine->editTeamManager().handleAgentAnnouncement(pa); }};
+    return AlicaCommunicationHandlers{[this](std::shared_ptr<SyncTalk> st) {
+                                          if (_engine)
+                                              _engine->editSyncModul().onSyncTalk(st);
+                                      },
+            [this](std::shared_ptr<SyncReady> sr) {
+                if (_engine)
+                    _engine->editSyncModul().onSyncReady(sr);
+            },
+            [this](const AllocationAuthorityInfo& aai) {
+                if (_engine)
+                    _engine->editAuth().handleIncomingAuthorityMessage(aai);
+            },
+            [this](std::shared_ptr<PlanTreeInfo> st) {
+                if (_engine)
+                    _engine->editTeamObserver().handlePlanTreeInfo(st);
+            },
+            [this](const SolverResult& sr) {
+                if (_engine)
+                    _engine->editResultStore().onSolverResult(sr);
+            },
+            [this](const AgentQuery& pq) {
+                if (_engine)
+                    _engine->getTeamManager().handleAgentQuery(pq);
+            },
+            [this](const AgentAnnouncement& pa) {
+                if (_engine)
+                    _engine->editTeamManager().handleAgentAnnouncement(pa);
+            }};
 }
 
 ISolverBase& AlicaContext::getSolverBase(const std::type_info& solverType) const

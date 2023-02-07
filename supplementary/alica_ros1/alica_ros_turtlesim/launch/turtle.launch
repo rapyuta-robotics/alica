@@ -21,7 +21,12 @@
     </node>
 
     <include file="$(dirname)/turtle.launch"   if="$(eval turtles > 1)">
-        <arg name="turtles"     value="$(eval turtles - 1)" />
+        <arg name="turtles"         value="$(eval turtles - 1)" />
+        <arg name="use_gdb"         value="$(arg use_gdb)"/>
+        <arg name="master_plan"     value="$(arg master_plan)" />
+        <arg name="roleset"         value="$(arg roleset)" />
+        <arg name="alica_path"      value="$(arg alica_path)" />
+        <arg name="dynamic"         value="$(arg dynamic)" />
     </include>
 
 </launch>

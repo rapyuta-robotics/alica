@@ -7,6 +7,7 @@
 #include "engine/RuntimePlanFactory.h"
 #include "engine/containers/AlicaEngineInfo.h"
 #include <algorithm>
+#include <atomic>
 #include <condition_variable>
 #include <math.h>
 #include <memory>
@@ -46,8 +47,8 @@ class PlanBase
 public:
     PlanBase(ConfigChangeListener& configChangeListener, const AlicaClock& clock, Logger& log, const IAlicaCommunication& communicator,
             IRoleAssignment& roleAssignment, SyncModule& syncModule, AuthorityManager& authorityManager, TeamObserver& teamObserver, TeamManager& teamManager,
-            const PlanRepository& planRepository, bool& stepEngine, bool& stepCalled, Blackboard& globalBlackboard, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
+            const PlanRepository& planRepository, std::atomic<bool>& stepEngine, std::atomic<bool>& stepCalled, Blackboard& globalBlackboard,
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const IAlicaTimerFactory& timerFactory,
             const IAlicaTraceFactory* traceFactory);
     ~PlanBase();
     RunningPlan* getRootNode() const { return _runningPlans.empty() ? nullptr : _runningPlans[0].get(); }
@@ -78,7 +79,7 @@ private:
 
     void run(const Plan* masterPlan);
 
-    // Owning container of running plans (replace with uniqueptrs once possibe)
+    // Owning container of running plans (replace with uniqueptrs once possible)
     std::vector<std::shared_ptr<RunningPlan>> _runningPlans;
 
     /**
@@ -95,8 +96,8 @@ private:
     TeamObserver& _teamObserver;
     TeamManager& _teamManager;
     const PlanRepository& _planRepository;
-    bool& _stepEngine;
-    bool& _stepCalled;
+    std::atomic<bool>& _stepEngine;
+    std::atomic<bool>& _stepCalled;
     Blackboard& _globalBlackboard;
     RuntimePlanFactory _runTimePlanFactory;
     RuntimeBehaviourFactory _runTimeBehaviourFactory;
@@ -106,8 +107,8 @@ private:
 
     const RunningPlan* _deepestNode;
 
-    std::thread* _mainThread;
-    AlicaEngineInfo* _statusMessage;
+    std::unique_ptr<std::thread> _mainThread;
+    std::unique_ptr<AlicaEngineInfo> _statusMessage;
 
     AlicaTime _loopTime;
     AlicaTime _lastSendTime;
@@ -126,7 +127,7 @@ private:
     RuleBook _ruleBook;
 
     int _treeDepth;
-    bool _running;
+    std::atomic<bool> _running;
     bool _sendStatusMessages;
     bool _isWaiting;
 };

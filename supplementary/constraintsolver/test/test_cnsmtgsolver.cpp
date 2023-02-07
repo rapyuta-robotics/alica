@@ -19,12 +19,12 @@ using namespace alica::reasoner;
 using namespace alica::reasoner::cnsat;
 using namespace autodiff;
 
-const int minCount = 2, maxCount = 20;
-const int minform = 2, maxform = 2;
+// const int minCount = 2, maxCount = 20;
+// const int minform = 2, maxform = 2;
 const long maxTime = 15000; // 000000; //nanos
-const int solverCount = 3;
-const int count = 1000; // solving count
-const double delta = 0.01;
+// const int solverCount = 3;
+// const int count = 1000; // solving count
+// const double delta = 0.01;
 
 class SolverStats
 {

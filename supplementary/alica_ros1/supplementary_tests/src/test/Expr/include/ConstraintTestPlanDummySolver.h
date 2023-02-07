@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/constraintmodul/ISolver.h>
+#include <engine/constraintmodul/VariableSyncModule.h>
 #include <memory>
 #include <vector>
 
@@ -14,7 +15,7 @@ namespace reasoner
 class ConstraintTestPlanDummySolver : public ISolver<ConstraintTestPlanDummySolver, int64_t>
 {
 public:
-    ConstraintTestPlanDummySolver(AlicaEngine* ae);
+    ConstraintTestPlanDummySolver(VariableSyncModule* vsm);
     virtual ~ConstraintTestPlanDummySolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);
