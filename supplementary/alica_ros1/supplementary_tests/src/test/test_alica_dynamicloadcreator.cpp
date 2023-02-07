@@ -72,6 +72,7 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
     BehaviourContext ctx{wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
+    ASSERT_NE(behaviour, nullptr);
     ASSERT_EQ("AcmeBeh", behaviour->getName());
 }
 
@@ -96,6 +97,7 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
     PlanContext ctx{wm, planModel->getName(), planModel, nullptr};
 
     std::unique_ptr<BasicPlan> plan = creator->createPlan(10, ctx);
+    ASSERT_NE(plan, nullptr);
     ASSERT_EQ("AcmePlan", plan->getName());
 }
 
@@ -118,6 +120,10 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
     std::shared_ptr<BasicCondition> condition1 = creator->createConditions(1, ctx);
     std::shared_ptr<BasicCondition> condition2 = creator->createConditions(2, ctx);
+
+    ASSERT_NE(condition1, nullptr);
+    ASSERT_NE(condition2, nullptr);
+
     ASSERT_EQ(true, condition1->evaluate(nullptr, nullptr));
     ASSERT_EQ(true, condition2->evaluate(nullptr, nullptr));
 }
@@ -161,6 +167,7 @@ TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
     BehaviourContext ctx{wm, behaviourModel->getName(), behaviourModel, nullptr};
     std::unique_ptr<BasicBehaviour> behaviour = creator->createBehaviour(10, ctx);
 
+    ASSERT_NE(behaviour, nullptr);
     ASSERT_EQ("WaitBehaviour", behaviour->getName());
 }
 
