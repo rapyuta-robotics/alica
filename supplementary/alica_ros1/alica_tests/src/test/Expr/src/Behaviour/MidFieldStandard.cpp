@@ -1,50 +1,29 @@
 #include <alica_tests/Behaviour/MidFieldStandard.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1402488696205) ENABLED START*/
-// Add additional includes here
-/*PROTECTED REGION END*/
-
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1402488696205) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 MidFieldStandard::MidFieldStandard(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1402488696205) ENABLED START*/
-    // Add additional options here
     this->callCounter = 0;
-    /*PROTECTED REGION END*/
 }
-MidFieldStandard::~MidFieldStandard()
-{
-    /*PROTECTED REGION ID(dcon1402488696205) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+MidFieldStandard::~MidFieldStandard() {}
 void MidFieldStandard::run()
 {
-    /*PROTECTED REGION ID(run1402488696205) ENABLED START*/
-    // Add additional options here
     callCounter++;
     if (callCounter > 10) {
         this->setSuccess();
     }
-    /*PROTECTED REGION END*/
 }
 void MidFieldStandard::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters1402488696205) ENABLED START*/
-    // Add additional options here
     this->callCounter = 0;
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods1402488696205) ENABLED START*/
-// Add additional methods here
-/*PROTECTED REGION END*/
+std::unique_ptr<MidFieldStandard> MidFieldStandard::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<MidFieldStandard>(context);
+}
 
 } /* namespace alica */

@@ -1,35 +1,19 @@
 #include <alica_tests/Behaviour/BehAAA.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1629895901559) ENABLED START*/
-// Add additional includes here
 #include <alica_tests/test_sched_world_model.h>
-/*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1629895901559) ENABLED START*/
-// initialise static variables here
 int BehAAA::runCount;
-/*PROTECTED REGION END*/
 
 BehAAA::BehAAA(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1629895901559) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-BehAAA::~BehAAA()
-{
-    /*PROTECTED REGION ID(dcon1629895901559) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+BehAAA::~BehAAA() {}
 void BehAAA::run()
 {
-    /*PROTECTED REGION ID(run1629895901559) ENABLED START*/
-    // Add additional options here
     ++runCount;
     _wm->behAAARunCalled = true;
     if (!_inRunContext) {
@@ -52,12 +36,9 @@ void BehAAA::run()
     while (_wm->behAAABlockRun) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
-    /*PROTECTED REGION END*/
 }
 void BehAAA::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters1629895901559) ENABLED START*/
-    // Add additional options here
     runCount = 0;
     _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     _wm->execOrder += "BehAAA::Init\n";
@@ -69,11 +50,8 @@ void BehAAA::initialiseParameters()
     if (isFailure()) {
         _wm->behAAAFailureInInit = true;
     }
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods1629895901559) ENABLED START*/
-// Add additional options here
+
 void BehAAA::onTermination()
 {
     runCount = 0;
@@ -96,6 +74,10 @@ void BehAAA::onTermination()
         _wm->behAAAFailureInTerminate = true;
     }
 }
-/*PROTECTED REGION END*/
+
+std::unique_ptr<BehAAA> BehAAA::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<BehAAA>(context);
+}
 
 } /* namespace alica */
