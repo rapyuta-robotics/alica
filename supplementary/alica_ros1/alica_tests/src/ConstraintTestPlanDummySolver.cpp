@@ -2,7 +2,6 @@
 
 #include <alica_solver_interface/SimpleContext.h>
 #include <alica_solver_interface/SolverVariable.h>
-#include <engine/AlicaEngine.h>
 #include <engine/blackboard/Blackboard.h>
 #include <engine/model/Variable.h>
 
@@ -22,8 +21,8 @@ namespace reasoner
 int ConstraintTestPlanDummySolver::s_existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::s_getSolutionCallCounter = 0;
 
-ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-        : ISolver(ae)
+ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(VariableSyncModule* vsm)
+        : ISolver(vsm)
 {
 }
 
@@ -32,8 +31,6 @@ ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std::vector<shared_ptr<ProblemDescriptor>>&)
 {
     ++s_existsSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << s_existsSolutionCallCounter
-    //		<< " times!" << std::endl;
     return false;
 }
 
@@ -45,8 +42,6 @@ bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const st
         results.push_back(var->getId());
     }
     ++s_getSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << s_getSolutionCallCounter << " times!"
-    //		<< std::endl;
     return true;
 }
 

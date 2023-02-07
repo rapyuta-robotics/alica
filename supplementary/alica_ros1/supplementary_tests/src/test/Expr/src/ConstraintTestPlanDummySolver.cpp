@@ -22,8 +22,8 @@ namespace reasoner
 int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
 
-ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-        : ISolver(ae)
+ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(VariableSyncModule* vsm)
+        : ISolver(vsm)
 {
 }
 
@@ -32,8 +32,6 @@ ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std::vector<shared_ptr<ProblemDescriptor>>&)
 {
     ++existsSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
-    //		<< " times!" << std::endl;
     return false;
 }
 
@@ -45,8 +43,6 @@ bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const st
         results.push_back(var->getId());
     }
     ++getSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
-    //		<< std::endl;
     return true;
 }
 

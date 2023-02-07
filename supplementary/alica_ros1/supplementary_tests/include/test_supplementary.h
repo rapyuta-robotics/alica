@@ -95,7 +95,7 @@ protected:
     {
         AlicaTestFixture::SetUp();
         ac->addSolver<alica::reasoner::ConstraintTestPlanDummySolver>();
-        ac->addSolver<alica::reasoner::CGSolver>();
+        ac->addSolver<alica::reasoner::CGSolver>(ae->getConfig());
     }
     void TearDown() override { AlicaTestFixture::TearDown(); }
 };

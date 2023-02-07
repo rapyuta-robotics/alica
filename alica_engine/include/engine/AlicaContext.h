@@ -454,6 +454,13 @@ private:
      */
     void reloadConfig();
 
+    /**
+     * @brief Retrieve this object from the engine.
+     * This is implemented in the cpp file rather than called directly just so that we don't have to include AlicaEngine header here
+     * This lets us avoid circular dependency and speed compile time
+     */
+    VariableSyncModule& editSyncModule();
+
     /*
      * Get communication Handlers
      */
@@ -500,9 +507,9 @@ void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
 #if (defined __cplusplus && __cplusplus >= 201402L)
-    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(_engine.get(), std::forward<Args>(args)...));
+    _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(&editSyncModule(), std::forward<Args>(args)...));
 #else
-    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(_engine.get(), std::forward<Args>(args)...)));
+    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(&editSyncModule(), std::forward<Args>(args)...)));
 #endif
 }
 
