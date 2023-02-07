@@ -12,7 +12,6 @@ std::unique_ptr<KeyMapping> KeyMappingFactory::create(const YAML::Node& node)
     if (Factory::isValid(node[alica::Strings::input])) {
         const auto& inputList = node[alica::Strings::input];
         for (const auto& entry : inputList) {
-            // TODO: Remove ifelse once backend has been updated
             if ((Factory::isValid(entry[alica::Strings::value]))) {
                 std::variant<std::string, std::string> constantValue;
                 constantValue.emplace<1>(Factory::getValue<std::string>(entry, alica::Strings::value));
