@@ -1,7 +1,7 @@
 {
   "blackboard": [
     {
-      "access": "input",
+      "access": "protected",
       "comment": "Subscriber topic to listen for trigger msgs to join the formation",
       "defaultValue": null,
       "id": 4387163444028990842,
@@ -9,7 +9,7 @@
       "type": "std::string"
     },
     {
-      "access": "input",
+      "access": "protected",
       "comment": "Subscriber topic to listen for trigger msgs to leave the formation",
       "defaultValue": null,
       "id": 1679753874536868957,
