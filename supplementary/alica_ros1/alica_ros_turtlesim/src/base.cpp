@@ -71,14 +71,14 @@ void Base::start()
 
         spinner.start(); // start spinner before initializing engine, but after setting context
         ac->init(std::move(creators), false);
-        ac->addSolver<alica::reasoner::CGSolver>();
+        ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
     } else {
         alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>());
         spinner.start();                      // start spinner before initializing engine, but after setting context
         ac->init(std::move(creators), false); // Do not start engine, I need to add WM before
-        ac->addSolver<alica::reasoner::CGSolver>();
+        ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
     }
 }
 
