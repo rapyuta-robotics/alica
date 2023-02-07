@@ -1,11 +1,11 @@
 #pragma once
 
 #include "engine/Types.h"
+#include "engine/constraintmodul/VariableSyncModule.h"
 #include <memory>
 
 namespace alica
 {
-class AlicaEngine;
 class ProblemDescriptor;
 class Variable;
 class SolverVariable;
@@ -14,8 +14,8 @@ class SolverContext;
 class ISolverBase
 {
 public:
-    ISolverBase(AlicaEngine* ae)
-            : _ae(ae)
+    ISolverBase(VariableSyncModule* vsm)
+            : _vsm(vsm)
     {
     }
     virtual ~ISolverBase() {}
@@ -23,18 +23,18 @@ public:
     virtual std::unique_ptr<SolverContext> createSolverContext() = 0;
 
 protected:
-    AlicaEngine* getAlicaEngine() const { return _ae; }
+    VariableSyncModule* getResultStore() { return _vsm; }
 
 private:
-    AlicaEngine* _ae;
+    VariableSyncModule* _vsm;
 };
 
 template <class SolverType, typename ResultType>
 class ISolver : public ISolverBase
 {
 public:
-    ISolver(AlicaEngine* ae)
-            : ISolverBase(ae)
+    ISolver(VariableSyncModule* vsm)
+            : ISolverBase(vsm)
     {
     }
     virtual ~ISolver() {}

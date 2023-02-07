@@ -22,8 +22,8 @@ namespace reasoner
 int ConstraintTestPlanDummySolver::existsSolutionCallCounter = 0;
 int ConstraintTestPlanDummySolver::getSolutionCallCounter = 0;
 
-ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(AlicaEngine* ae)
-        : ISolver(ae)
+ConstraintTestPlanDummySolver::ConstraintTestPlanDummySolver(VariableSyncModule* vsm)
+        : ISolver(vsm)
 {
 }
 
@@ -32,23 +32,17 @@ ConstraintTestPlanDummySolver::~ConstraintTestPlanDummySolver() {}
 bool ConstraintTestPlanDummySolver::existsSolutionImpl(SolverContext*, const std::vector<shared_ptr<ProblemDescriptor>>&)
 {
     ++existsSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::existsSolution was called " << existsSolutionCallCounter
-    //		<< " times!" << std::endl;
     return false;
 }
 
 bool ConstraintTestPlanDummySolver::getSolutionImpl(SolverContext* ctx, const std::vector<shared_ptr<ProblemDescriptor>>& calls, std::vector<int64_t>& results)
 {
-    Blackboard& bb = getAlicaEngine()->editGlobalBlackboard();
     SimpleContext<SolverVariable>* tdc = static_cast<SimpleContext<SolverVariable>*>(ctx);
     for (const auto& var : tdc->getVariables()) {
         std::string s = std::to_string(var->getId());
-        LockedBlackboardRW(bb).set(s, var->getId());
         results.push_back(var->getId());
     }
     ++getSolutionCallCounter;
-    // std::cout << "ConstraintTestPlanDummySolver::getSolution was called " << getSolutionCallCounter << " times!"
-    //		<< std::endl;
     return true;
 }
 

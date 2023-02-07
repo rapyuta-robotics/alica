@@ -126,6 +126,11 @@ std::string AlicaContext::getLocalAgentName() const
     return _localAgentName;
 }
 
+VariableSyncModule& AlicaContext::editSyncModule()
+{
+    return _engine->editResultStore();
+}
+
 YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
 {
     YAML::Node node;

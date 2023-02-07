@@ -80,7 +80,7 @@ void Base::start()
     killMyTurtle(_name, _nh);
     spawnMyTurtle(_name, _nh);
     ac->init(std::move(creators));
-    ac->addSolver<alica::reasoner::CGSolver>();
+    ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }
 
 Base::~Base()

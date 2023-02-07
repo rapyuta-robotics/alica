@@ -3,7 +3,7 @@
 #include "alica/reasoner/SimpleVariable.h"
 #include "alica_solver_interface/SimpleContext.h"
 
-#include <engine/AlicaEngine.h>
+#include "engine/constraintmodul/VariableSyncModule.h"
 #include <engine/blackboard/Blackboard.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Variable.h>
@@ -14,8 +14,8 @@ namespace alica
 namespace reasoner
 {
 
-SimpleSolver::SimpleSolver(AlicaEngine* ae)
-        : ISolver(ae)
+SimpleSolver::SimpleSolver(VariableSyncModule* vsm)
+        : ISolver(vsm)
 {
 }
 
@@ -32,10 +32,7 @@ bool SimpleSolver::getSolutionImpl(SolverContext* ctx, const std::vector<std::sh
 
     results.reserve(dc->getVariables().size());
 
-    Blackboard& bb = getAlicaEngine()->editGlobalBlackboard();
     for (const std::unique_ptr<SimpleVariable>& dummyVariable : dc->getVariables()) {
-        const std::string& val = getValue(dummyVariable->getId(), calls);
-        LockedBlackboardRW(bb).set(val, dummyVariable->getId());
         results.push_back(dummyVariable->getId());
     }
 

@@ -38,7 +38,7 @@ void Base::start()
 
     spinner.start(); // start spinner before initializing engine, but after setting context
     ac->init(std::move(creators), false);
-    ac->addSolver<alica::reasoner::CGSolver>();
+    ac->addSolver<alica::reasoner::CGSolver>(ac->getConfig());
 }
 
 Base::~Base()
