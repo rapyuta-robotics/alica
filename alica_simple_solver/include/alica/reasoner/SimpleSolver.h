@@ -7,11 +7,11 @@
 namespace alica
 {
 
-class AlicaEngine;
 class ProblemDescriptor;
 class Variable;
 class SolverVariable;
 class SolverContext;
+class VariableSyncModule;
 
 namespace reasoner
 {
@@ -19,7 +19,7 @@ namespace reasoner
 class SimpleSolver : public alica::ISolver<SimpleSolver, int64_t>
 {
 public:
-    SimpleSolver(AlicaEngine* ae);
+    SimpleSolver(VariableSyncModule* vsm);
     virtual ~SimpleSolver();
 
     bool existsSolutionImpl(SolverContext* ctx, const std::vector<std::shared_ptr<ProblemDescriptor>>& calls);

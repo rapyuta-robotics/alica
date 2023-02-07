@@ -45,8 +45,8 @@ protected:
     void SetUp() override
     {
         AlicaTestMultiAgentFixture::SetUp();
-        acs[0]->addSolver<alica::reasoner::CGSolver>();
-        acs[1]->addSolver<alica::reasoner::CGSolver>();
+        acs[0]->addSolver<alica::reasoner::CGSolver>(aes[0]->getConfig());
+        acs[1]->addSolver<alica::reasoner::CGSolver>(aes[1]->getConfig());
     }
 
     bool stepEngine() const override { return true; }
