@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1522377375148,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "BehaviorSuccessSpamMaster",
   "preCondition": null,

@@ -1,15 +1,15 @@
 #include "alica_tests/TestWorldModel.h"
 #include "test_alica.h"
+#include <alica/test/CounterClass.h>
+#include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
 #include <engine/PlanStatus.h>
 #include <engine/Types.h>
+#include <logger/AlicaRosLogger.h>
 #include <variant>
 
-namespace alica
+namespace alica::test
 {
-namespace
-{
-
 struct BBType
 {
     static constexpr const char* BOOL = "bool";
@@ -61,6 +61,79 @@ protected:
         }
     }
 };
+
+class TestBlackboardNew : public ::testing::Test
+{
+public:
+    virtual void SetUp() override
+    {
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "TestMasterPlan", true, 1);
+        ASSERT_TRUE(_tc->isValid());
+        const YAML::Node& config = _tc->getConfig();
+        _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+        _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
+        _tc->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
+        _tc->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
+        LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
+        AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::TransitionConditionCreator>()};
+        _tc->init(std::move(creators));
+        _tc->startEngine();
+        _spinner->start();
+        STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
+    }
+
+    virtual void TearDown() override
+    {
+        _spinner->stop();
+        _tc->terminate();
+    }
+
+protected:
+    std::unique_ptr<TestContext> _tc;
+    std::unique_ptr<ros::AsyncSpinner> _spinner;
+};
+
+TEST_F(TestBlackboardNew, testConstantMapping)
+{
+    // Checks if constant values are mapped and used correctly for transition conditions
+    CounterClass::called = 0;
+
+    // Transition to the plan corresponding to this test case
+    ASSERT_TRUE(_tc->setTransitionCond("TestMasterPlan", "ChooseTestState", "BlackboardTestState")) << _tc->getLastFailure();
+    STEP_UNTIL(_tc, _tc->getActivePlan("BlackboardTestPlan"));
+    auto blackboardTestPlan = _tc->getActivePlan("BlackboardTestPlan");
+    ASSERT_NE(blackboardTestPlan, nullptr) << _tc->getLastFailure();
+
+    ASSERT_TRUE(_tc->setTransitionCond("BlackboardTestPlan", "WaitForTriggerState", "BlackboardMapConstantTest")) << _tc->getLastFailure();
+
+    // Step until blackboard test plan succeeded
+    STEP_UNTIL_ASSERT_TRUE(_tc, _tc->isSuccess(blackboardTestPlan));
+}
+// void addInputMapping(const std::variant<std::string, std::string>& parentKeyOrConstant, const std::string& childKey);
+TEST_F(TestBlackboardNew, testConstantMappingSeparately)
+{
+    // create KeyMapping, check that mapping is created correctly
+    alica::KeyMapping keyMapping;
+    std::variant<std::string, std::string> value;
+    value.emplace<1>("1");
+    keyMapping.addInputMapping(value, "key");
+    ASSERT_EQ(keyMapping.getInputMapping().size(), 1);
+    ASSERT_EQ(keyMapping.getInputMapping().at(0).childKey, "key");
+    ASSERT_EQ(std::get<1>(keyMapping.getInputMapping().at(0).parentKeyOrConstant), "1");
+
+    // create blackboard, use mapping to set a constant value, check that constant value is set correctly
+    auto blueprint = std::make_unique<alica::BlackboardBlueprint>();
+    blueprint->addKey("key", "int64", std::nullopt);
+    alica::Blackboard bb = alica::Blackboard(blueprint.get());
+    Mapping mapping = keyMapping.getInputMapping().at(0);
+    bb.impl().setConstValue(mapping.childKey, std::get<1>(mapping.parentKeyOrConstant));
+    ASSERT_EQ(bb.impl().get<int64_t>("key"), 1);
+}
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
 {
@@ -536,5 +609,4 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 1234);
 }
 
-} // namespace
-} // namespace alica
+} // namespace alica::test

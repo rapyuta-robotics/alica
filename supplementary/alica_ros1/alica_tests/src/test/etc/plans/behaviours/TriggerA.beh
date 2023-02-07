@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1428508297492,
   "inheritBlackboard": false,
+  "libraryName": "",
   "name": "TriggerA",
   "postCondition": null,
   "preCondition": null,

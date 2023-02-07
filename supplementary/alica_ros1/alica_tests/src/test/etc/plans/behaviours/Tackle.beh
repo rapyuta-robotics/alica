@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1402488939130,
   "inheritBlackboard": false,
+  "libraryName": "",
   "name": "Tackle",
   "postCondition": null,
   "preCondition": null,

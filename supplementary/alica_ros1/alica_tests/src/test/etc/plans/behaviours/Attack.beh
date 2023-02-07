@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1402488848841,
   "inheritBlackboard": false,
+  "libraryName": "",
   "name": "Attack",
   "postCondition": null,
   "preCondition": null,

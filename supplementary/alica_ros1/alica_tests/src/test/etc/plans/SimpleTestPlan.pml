@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 3196801973742034307,
       "key": "targetChildStatus",
       "type": "std::any"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 1412252439925,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "SimpleTestPlan",
   "preCondition": {
@@ -127,7 +127,8 @@
         "input": [
           {
             "childKey": "childStatus",
-            "parentKey": "targetChildStatus"
+            "parentKey": "targetChildStatus",
+            "value": null
           }
         ],
         "output": []

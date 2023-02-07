@@ -54,6 +54,7 @@
   "frequency": 0,
   "id": 1413200862180,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "MultiAgentTestPlan",
   "preCondition": null,

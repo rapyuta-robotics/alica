@@ -231,7 +231,8 @@ bool conditionStateTwo2NewSuccessStateTwo2019050763618766552(const Blackboard* i
 bool conditionCounterClassCalled2163654295690873706(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(condition2163654295690873706) ENABLED START*/
-    return false;
+    LockedBlackboardRO bb(*input);
+    return CounterClass::called == bb.get<int64_t>("numberOfCalls");
     /*PROTECTED REGION END*/
 }
 bool conditionFirstTaskFirstState2FirstTaskSecondState2171152220550556375(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)

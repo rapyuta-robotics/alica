@@ -38,6 +38,7 @@
   "frequency": 0,
   "id": 1407153683051,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "PlanFour",
   "preCondition": null,

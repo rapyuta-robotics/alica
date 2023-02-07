@@ -1,0 +1,24 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 3031131250996193643,
+      "key": "increaseBy",
+      "type": "uint64"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 5,
+  "id": 1084111613399827667,
+  "inheritBlackboard": false,
+  "libraryName": "",
+  "name": "IncreaseCountByX",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 429816023887602514,
       "key": "SuccessOnCondState2WrapperBSuccessState",
       "type": "bool"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 2869465844414224272,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SuccessOnCondWrapperBPlan",
   "preCondition": null,
@@ -99,7 +99,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "SuccessOnCondState2WrapperBSuccessState"
+            "parentKey": "SuccessOnCondState2WrapperBSuccessState",
+            "value": null
           }
         ],
         "output": []

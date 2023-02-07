@@ -8,6 +8,8 @@
 #include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
+#include <alica_tests/BlackboardMapConstantTestPlan2390819177564329533.h>
+#include <alica_tests/BlackboardTestPlan4610306063152670816.h>
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 #include <alica_tests/Configurations/ReadConfInPlantype1588061801734.h>
 #include <alica_tests/Configurations/ReadConfigurationPlan1588061334567.h>
@@ -256,6 +258,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
     case 2189867578804904568:
         return std::make_unique<BehSuccessTestPlan2189867578804904568>(context);
         break;
+    case 2390819177564329533:
+        return std::make_unique<BlackboardMapConstantTestPlan2390819177564329533>(context);
+        break;
     case 2521443078354411465:
         return std::make_unique<TestMasterPlan2521443078354411465>(context);
         break;
@@ -282,6 +287,9 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
         break;
     case 4150733089768927549:
         return std::make_unique<FailureHandlingMaster4150733089768927549>(context);
+        break;
+    case 4610306063152670816:
+        return std::make_unique<BlackboardTestPlan4610306063152670816>(context);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

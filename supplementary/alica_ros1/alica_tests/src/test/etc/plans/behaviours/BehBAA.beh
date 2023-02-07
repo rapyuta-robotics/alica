@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1629895911592,
   "inheritBlackboard": false,
+  "libraryName": "",
   "name": "BehBAA",
   "postCondition": null,
   "preCondition": null,

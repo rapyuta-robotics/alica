@@ -9,6 +9,8 @@
 #include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
+#include <alica_tests/BlackboardMapConstantTestPlan2390819177564329533.h>
+#include <alica_tests/BlackboardTestPlan4610306063152670816.h>
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 #include <alica_tests/Configurations/ReadConfInPlantype1588061801734.h>
 #include <alica_tests/Configurations/ReadConfigurationPlan1588061334567.h>
@@ -118,6 +120,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
     }
     case 2733591692277574870: {
         PreCondition2733591692277574870 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
+    case 2975581900704004835: {
+        PreCondition2975581900704004835 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
@@ -260,6 +270,22 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
             return preCondition.evaluate(temp, gb);
         };
     }
+    case 3743250903768144590: {
+        PreCondition3743250903768144590 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
+    case 170416006263862082: {
+        PreCondition170416006263862082 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
     case 1588246141557: {
         PreCondition1588246141557 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
@@ -388,14 +414,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
             return preCondition.evaluate(temp, gb);
         };
     }
-    case 488794245455049811: {
-        PreCondition488794245455049811 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, gb);
-        };
-    }
     case 1529456610697: {
         PreCondition1529456610697 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
@@ -406,6 +424,14 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
     }
     case 1529456611916: {
         PreCondition1529456611916 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
+    case 488794245455049811: {
+        PreCondition488794245455049811 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
@@ -526,6 +552,22 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
     }
     case 1067314038887345208: {
         PreCondition1067314038887345208 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
+    case 1007584014468848906: {
+        PreCondition1007584014468848906 preCondition;
+        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
+            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
+            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
+            return preCondition.evaluate(temp, gb);
+        };
+    }
+    case 1204246573426302524: {
+        PreCondition1204246573426302524 preCondition;
         return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
             // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
             std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });

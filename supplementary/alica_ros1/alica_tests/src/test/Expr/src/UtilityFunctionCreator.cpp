@@ -7,6 +7,8 @@
 #include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
 #include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
+#include <alica_tests/BlackboardMapConstantTestPlan2390819177564329533.h>
+#include <alica_tests/BlackboardTestPlan4610306063152670816.h>
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
 #include <alica_tests/Configurations/ReadConfInPlantype1588061801734.h>
 #include <alica_tests/Configurations/ReadConfigurationPlan1588061334567.h>
@@ -256,6 +258,9 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
     case 2189867578804904568:
         return std::make_shared<UtilityFunction2189867578804904568>();
         break;
+    case 2390819177564329533:
+        return std::make_shared<UtilityFunction2390819177564329533>();
+        break;
     case 2521443078354411465:
         return std::make_shared<UtilityFunction2521443078354411465>();
         break;
@@ -282,6 +287,9 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
         break;
     case 4150733089768927549:
         return std::make_shared<UtilityFunction4150733089768927549>();
+        break;
+    case 4610306063152670816:
+        return std::make_shared<UtilityFunction4610306063152670816>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;
