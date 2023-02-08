@@ -6,9 +6,6 @@
 #include <alica_tests/BackForth1529456584982.h>
 #include <alica_tests/BehSuccessTestPlan2189867578804904568.h>
 #include <alica_tests/BehaviorSuccessSpamMaster1522377375148.h>
-#include <alica_tests/Behaviour/TriggerA1428508297492.h>
-#include <alica_tests/Behaviour/TriggerB1428508316905.h>
-#include <alica_tests/Behaviour/TriggerC1428508355209.h>
 #include <alica_tests/BehaviourTriggerTestPlan1428508768572.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/Configurations/ConfigurationTestPlan1588060981661.h>
