@@ -27,8 +27,6 @@ Agent::Agent(const ModelManager& modelManager, const PlanRepository& planReposit
 {
 }
 
-Agent::~Agent() {}
-
 void Agent::setLocal(bool local)
 {
     if (local) {
@@ -47,9 +45,9 @@ void Agent::setSuccess(const AbstractPlan* plan, const EntryPoint* entryPoint)
     _engineData.editSuccessMarks().markSuccessful(plan, entryPoint);
 }
 
-void Agent::setSuccessMarks(const IdGrp& suceededEps)
+void Agent::setSuccessMarks(const IdGrp& succeededEps)
 {
-    _engineData.updateSuccessMarks(suceededEps);
+    _engineData.updateSuccessMarks(succeededEps);
 }
 
 const DomainVariable* Agent::getDomainVariable(const std::string& sort) const
@@ -67,14 +65,15 @@ bool Agent::update()
     if (_local) {
         return false;
     }
-    if (_active && _timeLastMsgReceived + _timeout < _clock.now()) {
+    const auto time = _timeLastMsgReceived.load() + _timeout;
+    if (_active && time < _clock.now()) {
         // timeout triggered
         _engineData.clearSuccessMarks();
         _active = false;
         return true;
     }
 
-    if (!_active && _timeLastMsgReceived + _timeout > _clock.now()) {
+    if (!_active && time > _clock.now()) {
         // reactivate because of new messages
         _active = true;
         return true;
