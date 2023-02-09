@@ -113,13 +113,14 @@ In this section, you will create plans using the ALICA plan designer.
 2. Enter 'Master' as the plan name and check the Master Plan checkbox at the bottom.
 3. Set the frequency of the plan to 0.
 4. Set the library name to libalica-turtlesim (Note: for all alica elements fill in the library name as libalica-turtlesim with the exceptions being:
-Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
+   Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
 5. Click on "Create New" to create the Master Plan.
 
 On the top left you will see a tab for your newly created Master Plan.
 
 6. Add two states and set their names to `SpawnTurtle` and `Simulation`.
 7. Add a transition from `SpawnTurtle` to `Simulation`
+
    1. Hover over the state `SpawnTurtle`.
    2. Click and hold while your cursor is on the plus symbol inside the circle appearing
       at the top of the state.
