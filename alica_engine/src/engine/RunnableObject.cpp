@@ -58,8 +58,9 @@ void RunnableObject::start(RunningPlan* rp)
 
     _runningplanContext = rp;
 
-    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext);
     setupBlackboard();
+    // setup the trace context after setting up the blackboard so that the blackboard can be used for setting up custom tracing
+    _runnableObjectTracer.setupTraceContext(_name, _runningplanContext);
 
     _runnableObjectTracer.traceInitCall();
     doInit();
