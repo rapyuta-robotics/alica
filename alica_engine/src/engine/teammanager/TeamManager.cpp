@@ -33,8 +33,8 @@ AgentsCache::~AgentsCache()
 const std::shared_ptr<AgentsCache::AgentMap>& AgentsCache::get() const
 {
     static thread_local std::shared_ptr<alica::AgentsCache::AgentMap> s_agents;
+    std::lock_guard<std::mutex> guard(_agentsMutex);
     if (s_agents != _agents) {
-        std::lock_guard<std::mutex> guard(_agentsMutex);
         s_agents = _agents;
     }
     return s_agents;
@@ -229,11 +229,11 @@ bool TeamManager::setSuccess(AgentId agentId, const AbstractPlan* plan, const En
     return false;
 }
 
-bool TeamManager::setSuccessMarks(AgentId agentId, const IdGrp& suceededEps)
+bool TeamManager::setSuccessMarks(AgentId agentId, const IdGrp& succeededEps)
 {
     Agent* agent = getAgent(agentId);
     if (agent) {
-        agent->setSuccessMarks(suceededEps);
+        agent->setSuccessMarks(succeededEps);
         return true;
     }
     return false;

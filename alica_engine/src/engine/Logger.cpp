@@ -88,7 +88,7 @@ void Logger::processString(const std::string& event)
 /**
  * Notify the logger of a new iteration, called by the PlanBase
  */
-void Logger::itertionStarts()
+void Logger::iterationStarts()
 {
     _inIteration = true;
     _startTime = _clock.now();

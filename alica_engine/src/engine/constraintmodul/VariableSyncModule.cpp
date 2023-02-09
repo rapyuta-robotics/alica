@@ -17,8 +17,7 @@ namespace alica
 {
 VariableSyncModule::VariableSyncModule(ConfigChangeListener& configChangeListener, const IAlicaCommunication& communicator, const AlicaClock& clock,
         TeamManager& teamManager, IAlicaTimerFactory& timerFactory)
-        : _running(false)
-        , _timer(nullptr)
+        : _timer(nullptr)
         , _distThreshold(0)
         , _ttl4Communication(AlicaTime::zero())
         , _ttl4Usage(AlicaTime::zero())
@@ -77,10 +76,10 @@ void VariableSyncModule::reload(const YAML::Node& config)
 
 void VariableSyncModule::close()
 {
-    _running = false;
     if (_timer) {
         _timer.reset();
     }
+    _running = false;
 }
 
 void VariableSyncModule::clear()
