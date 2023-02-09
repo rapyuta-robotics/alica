@@ -127,7 +127,7 @@ On the top left you will see a tab for your newly created Master Plan.
       inside the circle appearing at the top of the state `Simulation`.
    4. Select the transition from `SpawnTurtle` to `Simulation`, press delete to delete the generated condition and create a new one.
    5. Select the `Condition` icon on the top right corner to create a new condition & fill in the details
-   6. Drage the condition to the transition that it needs to be attached to
+   6. Drag the condition to the transition that it needs to be attached to
 
 8. Create an entrypoint. Select `DefaultTask` as a Task and click on "Select".
 9. Connect the entrypoint with the `SpawnTurtle` state.
