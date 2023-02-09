@@ -65,7 +65,7 @@ git clone https://github.com/rapyuta-robotics/alica.git
 2. Remove existing turtlesim files. You will reproduce these files (You can jump to step 8. "Build and Run" for testing application before deleting the files):
 
 ```
-cd src/alica/supplementary
+cd src/alica/supplementary/alica_ros1
 rm -r alica_ros_turtlesim/etc/
 ```
 
@@ -100,8 +100,8 @@ In this section, you will create plans using the ALICA plan designer.
 1. In the top right corner, click on "More" and select "Task".
 2. Go to the tab "Task Repository", enter `TaskRepository` as the name of your
    TaskRepository and click on "Create New".
-3. Repeat step 1.
-4. In the tab "Task", enter `DefaultTask` for the Task Name, select the TaskRepository `TaskRepository` in the
+3. Again open "More" -> "Task" from the top right menu and open the "Task" tab
+4. Enter `DefaultTask` for the Task Name, select the TaskRepository `TaskRepository` in the
    drop down menu and click on "Create New".
 
 ### 6.2 Create the Master Plan
@@ -111,14 +111,16 @@ In this section, you will create plans using the ALICA plan designer.
 1. Click on the menu button "Plan" in the top right corner. This will open a window
    for creating a new plan on the right side of your browser window.
 2. Enter 'Master' as the plan name and check the Master Plan checkbox at the bottom.
-3. Set the frequency of the plan to 0.
-4. Set the library name to libalica-turtlesim (Note: for all alica elements fill in the library name as libalica-turtlesim with the exceptions being:
-   Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
-5. Click on "Create New" to create the Master Plan.
+3. Set the frequency of the plan to 0. [TODO: Explain how to decide frequency for other plans. I.e. if there is a run() implemented, should set frequency nonzero]
+4. Leave Library Name blank for now: We can fill this in later.
+5. Set the library name to libalica-turtlesim (Note: for all alica elements fill in the library name as libalica-turtlesim with the exceptions being:
+   Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils) [TODO: move this step to the end]
+6. Click on "Create Now" to create the Master Plan.
 
 On the top left you will see a tab for your newly created Master Plan.
 
 6. Add two states and set their names to `SpawnTurtle` and `Simulation`.
+   [TODO: Add picture showing node creation tool]
 7. Add a transition from `SpawnTurtle` to `Simulation`
 
    1. Hover over the state `SpawnTurtle`.
@@ -127,13 +129,16 @@ On the top left you will see a tab for your newly created Master Plan.
    3. Drag your mouse to the `Simulation` state. Let go of your mouse when your cursor is on the plus symbol
       inside the circle appearing at the top of the state `Simulation`.
    4. Select the transition from `SpawnTurtle` to `Simulation`, press delete to delete the generated condition and create a new one.
-   5. Select the `Condition` icon on the top right corner to create a new condition & fill in the details
-   6. Drag the condition to the transition that it needs to be attached to
+   5. Select the `Condition` icon on the top right corner to create a new condition.
+   6. Call the condition "CustomAnyChildSuccess" and set the library name to "libalica-turtlesim"
+   7. Drag the condition to the transition that it needs to be attached to
 
 8. Create an entrypoint. Select `DefaultTask` as a Task and click on "Select".
+   [TODO: Add picture showing entrypoint creation tool]
 9. Connect the entrypoint with the `SpawnTurtle` state.
 10. Set the "Minimum Cardinality" of the entrypoint to 1 and the "Maximum Cardinality" to 2147483647.
-11. Similarly create the other plans, behaviours & conditions as shown in the figure
+
+After creating the SpawnTurtle
 
 ### 6.3 MakeFormation plan
 
@@ -162,12 +167,13 @@ On the top left you will see a tab for your newly created Master Plan.
 
 ![Blackboard setup](doc/blackboard_setup.png)
 
-4. Select the `WaitForTrigger` behaviour attached to the `WaitForTrigger` state by clicking on it & setup the blackboard for the behaviour in the same way
+4. Select the `WaitForTrigger` behaviour attached to the `WaitForTrigger` state and click "Setup Blackboard"
 5. Add a single key called `topic` with type std::string & access type as input. Close the window
 6. Select the table like icon next to the `WaitForTrigger` behaviour name & setup the blackboard key mapping from `Simulation` plan (parent) to `WaitForTrigger` behaviour (child)
 7. Map the key `join_formation_topic` in `Simulation` plan to the `topic` key in the `WaitForTrigger` behaviour
-8. This is an example of passing parameters from parent to child. Essentially, here the Simulation plan passes the ROS topic name on which the `WaitForTrigger` behaviour should listen for the trigger (user input). The trigger in this case is publishing an Empty msg on the join_formation_topic topic
-9. Since `WaitForTrigger` behaviour is attached to 2 states in this plan, the key mapping needs to be setup for both instances. For the instance attached to the `MakeFormation` state, map the `leave_formation_topic` key to the `topic` key
+8. Since `WaitForTrigger` behaviour is attached to 2 states in this plan, the key mapping needs to be setup for both instances. For the instance attached to the `MakeFormation` state, map the `leave_formation_topic` key to the `topic` key
+
+This is an example of passing parameters from parent to child. Essentially, here the Simulation plan passes the ROS topic name on which the `WaitForTrigger` behaviour should listen for the trigger (user input). The trigger in this case is publishing an Empty msg on the join_formation_topic topic
 
 ### 6.4 Create the RoleSet
 
@@ -177,6 +183,10 @@ On the top left you will see a tab for your newly created Master Plan.
 3. Repeat step 1. and create a role with the name `Turtle`. Select `RoleSet` as your Role Set.
 4. Go to the tab `Task Priorities`, click on `Apply Task Priority`. Select the task `Follower` and set the
    priority to 0.1.
+
+### 6.5 Complete Master plan
+
+Now that simulation plan is complete, complete the master plan as per the screenshot at the beginning
 
 ## 7. Logic
 
@@ -192,7 +202,14 @@ the symbols is done using the boost dll library. Have a look at the code to see 
 
 ## 8. Build and Run
 
-### 8.1 Build
+### 8.1 Export
+
+From the plan designer's top left menu, export the plans to zip. Unzip the downloaded file and use the result to replace the etc folder deleted at the beginning of this tutorial
+
+[TODO] Alica.yml got deleted????
+[TODO] ConditionREpository renamed???
+
+### 8.2 Build
 
 follow the standard ros build step.
 
@@ -203,7 +220,7 @@ catkin build alica_ros_turtlesim
 source ./devel/setup.bash
 ```
 
-### 8.2 Run
+### 8.3 Run
 
 Run application with roslaunch. video
 
