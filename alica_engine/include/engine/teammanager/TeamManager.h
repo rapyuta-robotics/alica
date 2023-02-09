@@ -72,7 +72,7 @@ public:
     bool isAgentActive(AgentId agentId) const;
     void setAgentIgnored(AgentId, bool) const;
     bool setSuccess(AgentId agentId, const AbstractPlan* plan, const EntryPoint* entryPoint);
-    bool setSuccessMarks(AgentId agentId, const IdGrp& suceededEps);
+    bool setSuccessMarks(AgentId agentId, const IdGrp& succeededEps);
     const DomainVariable* getDomainVariable(AgentId agentId, const std::string& sort) const;
 
     void setTeamTimeout(AlicaTime t);
@@ -94,7 +94,7 @@ private:
     AlicaTime _teamTimeOut;
     AlicaTime _agentAnnouncementTimeInterval;
     AlicaTime _timeLastAnnouncement;
-    int _announcementRetries;
+    std::atomic<int> _announcementRetries;
     AgentAnnouncement _localAnnouncement;
 
     Agent* _localAgent;
@@ -104,7 +104,7 @@ private:
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;
     Logger& _log;
-    bool _useAutoDiscovery;
+    std::atomic<bool> _useAutoDiscovery;
     AgentId _localAgentID;
     int _version;
     uint64_t _masterPlanId;

@@ -1,5 +1,5 @@
 #pragma once
-//#define RS_DEBUG
+// #define RS_DEBUG
 #include "engine/constraintmodul/ResultEntry.h"
 #include "engine/containers/SolverResult.h"
 #include "engine/logging/IAlicaLogger.h"
@@ -7,6 +7,7 @@
 
 #include <alica_solver_interface/Interval.h>
 
+#include <atomic>
 #include <memory>
 #include <vector>
 
@@ -67,7 +68,7 @@ private:
     std::vector<std::unique_ptr<ResultEntry>> _store;
     SolverResult _publishData;
 
-    bool _running;
+    std::atomic<bool> _running{false};
     double _distThreshold;
     std::unique_ptr<IAlicaTimer> _timer;
     AlicaTime _ttl4Communication;
@@ -78,7 +79,7 @@ private:
     const AlicaClock& _clock;
     TeamManager& _teamManager;
     IAlicaTimerFactory& _timerFactory;
-    bool _maySendMessages;
+    std::atomic<bool> _maySendMessages{false};
 
     mutable std::mutex _mutex;
 };

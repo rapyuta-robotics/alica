@@ -140,7 +140,7 @@ void PlanBase::run(const Plan* masterPlan)
 
     while (_running) {
         AlicaTime beginTime = _clock.now();
-        log.itertionStarts();
+        log.iterationStarts();
 
         if (_stepEngine) {
 #ifdef ALICA_DEBUG_ENABLED
