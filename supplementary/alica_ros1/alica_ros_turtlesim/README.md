@@ -112,19 +112,24 @@ In this section, you will create plans using the ALICA plan designer.
    for creating a new plan on the right side of your browser window.
 2. Enter 'Master' as the plan name and check the Master Plan checkbox at the bottom.
 3. Set the frequency of the plan to 0.
-4. Set the library name to libalica-turtlesim
+4. Set the library name to libalica-turtlesim (Note: for all alica elements fill in the library name as libalica-turtlesim with the exceptions being:
+   Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
 5. Click on "Create New" to create the Master Plan.
 
 On the top left you will see a tab for your newly created Master Plan.
 
 6. Add two states and set their names to `SpawnTurtle` and `Simulation`.
 7. Add a transition from `SpawnTurtle` to `Simulation`
+
    1. Hover over the state `SpawnTurtle`.
    2. Click and hold while your cursor is on the plus symbol inside the circle appearing
       at the top of the state.
    3. Drag your mouse to the `Simulation` state. Let go of your mouse when your cursor is on the plus symbol
       inside the circle appearing at the top of the state `Simulation`.
-   4. Select the transition from `SpawnTurtle` to `Simulation`, delete the generated condition and create a new one.
+   4. Select the transition from `SpawnTurtle` to `Simulation`, press delete to delete the generated condition and create a new one.
+   5. Select the `Condition` icon on the top right corner to create a new condition & fill in the details
+   6. Drag the condition to the transition that it needs to be attached to
+
 8. Create an entrypoint. Select `DefaultTask` as a Task and click on "Select".
 9. Connect the entrypoint with the `SpawnTurtle` state.
 10. Set the "Minimum Cardinality" of the entrypoint to 1 and the "Maximum Cardinality" to 2147483647.
@@ -134,7 +139,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 ![make_formation](doc/make_formation_plan.png)
 
-1. Open the `MakeFormation` plan by selecting it in the "Plans" tab.
+1. Create the `MakeFormation` plan in the same way as the Master plan
 2. Create two states `Move2Center` and `AlignCircle`.
 3. Create two entrypoints with new tasks `Leader` and `Follower`.
 4. For the Leader entrypoint, select it and set the value of "Minimum Cardinality" and "Maximum Cardinality" both to 1.
@@ -146,6 +151,23 @@ On the top left you will see a tab for your newly created Master Plan.
 10. Choose `MakeFormation` as the "Entity Name". Enter `x` and `y` separately into the "Sorts" field
     and click on "Create New".
 11. Close the edit window of CircleRuntimeConditon.
+
+### 6.4 Simulation plan
+
+![Simulation](doc/Simulation.png)
+
+1. Create the Simulation plan state machine as shown in the figure above by following the a similar procedure as outlined above for other plans
+2. Additionally, in the Simulation plan, select Blackboard in the right bottom menu. Click on setup blackboard. A blackboard is essentially a data store for plans/behaviours & can be used to pass data from parent to child or child to parent via key mapping
+3. Add 2 blackboard keys: `join_formation_topic` & `leave_formation_topic` as shown in the figure below
+
+![Blackboard setup](doc/blackboard_setup.png)
+
+4. Select the `WaitForTrigger` behaviour attached to the `WaitForTrigger` state by clicking on it & setup the blackboard for the behaviour in the same way
+5. Add a single key called `topic` with type std::string & access type as input. Close the window
+6. Select the table like icon next to the `WaitForTrigger` behaviour name & setup the blackboard key mapping from `Simulation` plan (parent) to `WaitForTrigger` behaviour (child)
+7. Map the key `join_formation_topic` in `Simulation` plan to the `topic` key in the `WaitForTrigger` behaviour
+8. This is an example of passing parameters from parent to child. Essentially, here the Simulation plan passes the ROS topic name on which the `WaitForTrigger` behaviour should listen for the trigger (user input). The trigger in this case is publishing an Empty msg on the join_formation_topic topic
+9. Since `WaitForTrigger` behaviour is attached to 2 states in this plan, the key mapping needs to be setup for both instances. For the instance attached to the `MakeFormation` state, map the `leave_formation_topic` key to the `topic` key
 
 ### 6.4 Create the RoleSet
 
