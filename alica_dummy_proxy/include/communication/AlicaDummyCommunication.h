@@ -12,7 +12,7 @@ class AlicaDummyCommunication : public alica::IAlicaCommunication
 {
 public:
     AlicaDummyCommunication(const alica::AlicaCommunicationHandlers& callbacks);
-    virtual ~AlicaDummyCommunication();
+    ~AlicaDummyCommunication() override;
 
     void tick() override;
 

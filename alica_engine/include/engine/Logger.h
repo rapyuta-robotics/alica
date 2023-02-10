@@ -4,6 +4,7 @@
 #include "engine/IPlanTreeVisitor.h"
 #include "engine/Types.h"
 
+#include <atomic>
 #include <ctime>
 #include <fstream>
 #include <iomanip>
@@ -69,7 +70,7 @@ public:
         }
     }
 
-    void itertionStarts();
+    void iterationStarts();
     void iterationEnds(const RunningPlan* p);
     void close();
     void logToConsole(const std::string& logString);
@@ -100,7 +101,7 @@ private:
 
     bool _active;
     bool _receivedEvent;
-    bool _inIteration;
+    std::atomic<bool> _inIteration;
     bool _logging;
 };
 

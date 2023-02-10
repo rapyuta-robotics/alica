@@ -10,6 +10,7 @@
 #include "engine/teammanager/TeamManager.h"
 
 #include <algorithm>
+#include <atomic>
 #include <iostream>
 #include <list>
 #include <map>
@@ -100,7 +101,7 @@ public:
         int failCount;
         bool failHandlingNeeded;
         bool allocationNeeded;
-        mutable EvalStatus runTimeConditionStatus;
+        mutable std::atomic<EvalStatus> runTimeConditionStatus;
     };
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,

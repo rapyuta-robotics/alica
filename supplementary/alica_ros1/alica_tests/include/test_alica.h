@@ -25,6 +25,7 @@
 
 #include <csetjmp>
 #include <csignal>
+#include <mutex>
 #include <string>
 
 #define ASSERT_NO_SIGNAL ASSERT_EQ(setjmp(restore_point), 0);
@@ -121,10 +122,19 @@ public:
             : _now(AlicaClock::now())
     {
     }
-    AlicaTime now() const override { return _now; }
-    void increment(AlicaTime t) { _now += t; }
+    AlicaTime now() const override
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        return _now;
+    }
+    void increment(AlicaTime t)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _now += t;
+    }
 
 private:
+    mutable std::mutex _mutex;
     AlicaTime _now;
 };
 
