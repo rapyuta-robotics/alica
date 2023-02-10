@@ -32,6 +32,8 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
 
     std::unique_ptr<BasicPlan> createdPlan = _planCreator(context);
 
+    Logging::logDebug("DynamicLoading") << "Loaded plan " << context.planModel->getName();
+
     return createdPlan;
 }
 } // namespace alica

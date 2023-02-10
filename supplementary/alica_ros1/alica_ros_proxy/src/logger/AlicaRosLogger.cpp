@@ -14,19 +14,19 @@ AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& loc
 {
     ros::console::Level level = _verbosityRosLevelMap.at(verbosity);
 
-    std::stringstream streamName;
-    streamName << ROSCONSOLE_DEFAULT_NAME << ".[ALICA] "
-               << "[" << _localAgentId << "/" << _localAgentName << "]";
-    if (ros::console::set_logger_level(streamName.str(), level)) {
+    if (ros::console::set_logger_level(_localAgentName, level)) {
         ros::console::notifyLoggerLevelsChanged();
     }
+    ROS_INFO_STREAM_NAMED(_localAgentName, "Instantiated ROS logging for ALICA");
 }
 
 void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
     std::stringstream streamName;
-    streamName << "[ALICA] "
-               << "[" << _localAgentId << "/" << _localAgentName << "]";
+    streamName << _localAgentName;
+    if (!logSpace.empty()) {
+        streamName << "." << logSpace;
+    }
     if (verbosity == alica::Verbosity::DEBUG) {
         ROS_DEBUG_STREAM_NAMED(streamName.str(), msg);
     } else if (verbosity == alica::Verbosity::INFO) {
