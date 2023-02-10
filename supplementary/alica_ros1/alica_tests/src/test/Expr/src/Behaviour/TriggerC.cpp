@@ -1,50 +1,28 @@
 #include <alica_tests/Behaviour/TriggerC.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1428508355209) ENABLED START*/
-// Add additional includes here
-/*PROTECTED REGION END*/
-
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1428508355209) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 TriggerC::TriggerC(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1428508355209) ENABLED START*/
-    // Add additional options here
     this->callCounter = 0;
     this->initCounter = 0;
-    /*PROTECTED REGION END*/
 }
-TriggerC::~TriggerC()
-{
-    /*PROTECTED REGION ID(dcon1428508355209) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+TriggerC::~TriggerC() {}
 void TriggerC::run()
 {
-    /*PROTECTED REGION ID(run1428508355209) ENABLED START*/
-    // Add additional options here
     callCounter++;
-
-    /*PROTECTED REGION END*/
 }
 void TriggerC::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters1428508355209) ENABLED START*/
-    // Add additional options here
+
     callCounter = 0;
     initCounter++;
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods1428508355209) ENABLED START*/
-// Add additional methods here
-/*PROTECTED REGION END*/
-
+std::unique_ptr<TriggerC> TriggerC::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<TriggerC>(context);
+}
 } /* namespace alica */

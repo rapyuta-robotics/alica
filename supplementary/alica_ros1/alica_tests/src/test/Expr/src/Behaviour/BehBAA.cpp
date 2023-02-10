@@ -1,55 +1,35 @@
 #include <alica_tests/Behaviour/BehBAA.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1629895911592) ENABLED START*/
-// Add additional includes here
 #include <alica_tests/test_sched_world_model.h>
-/*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1629895911592) ENABLED START*/
-// initialise static variables here
 int BehBAA::runCount;
-/*PROTECTED REGION END*/
 
 BehBAA::BehBAA(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1629895911592) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-BehBAA::~BehBAA()
-{
-    /*PROTECTED REGION ID(dcon1629895911592) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+BehBAA::~BehBAA() {}
 void BehBAA::run()
 {
-    /*PROTECTED REGION ID(run1629895911592) ENABLED START*/
-    // Add additional options here
     ++runCount;
-    /*PROTECTED REGION END*/
 }
 void BehBAA::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters1629895911592) ENABLED START*/
-    // Add additional options here
     _wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     _wm->execOrder += "BehBAA::Init\n";
     runCount = 0;
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods1629895911592) ENABLED START*/
-// Add additional options here
 void BehBAA::onTermination()
 {
     runCount = 0;
     _wm->execOrder += "BehBAA::Term\n";
 }
-/*PROTECTED REGION END*/
+std::unique_ptr<BehBAA> BehBAA::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<BehBAA>(context);
+}
 
 } /* namespace alica */

@@ -1,45 +1,22 @@
 #include <alica_tests/Behaviour/AlwaysFail.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1532424188199) ENABLED START*/
-// Add additional includes here
-/*PROTECTED REGION END*/
-
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1532424188199) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 AlwaysFail::AlwaysFail(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1532424188199) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-AlwaysFail::~AlwaysFail()
-{
-    /*PROTECTED REGION ID(dcon1532424188199) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+AlwaysFail::~AlwaysFail() {}
 void AlwaysFail::run()
 {
-    /*PROTECTED REGION ID(run1532424188199) ENABLED START*/
-    // Add additional options here
     setFailure();
-    /*PROTECTED REGION END*/
 }
-void AlwaysFail::initialiseParameters()
+void AlwaysFail::initialiseParameters() {}
+
+std::unique_ptr<AlwaysFail> AlwaysFail::create(alica::BehaviourContext& context)
 {
-    /*PROTECTED REGION ID(initialiseParameters1532424188199) ENABLED START*/
-    // Add additional options here
-
-    /*PROTECTED REGION END*/
+    return std::make_unique<AlwaysFail>(context);
 }
-/*PROTECTED REGION ID(methods1532424188199) ENABLED START*/
-// Add additional methods here
-/*PROTECTED REGION END*/
-
 } /* namespace alica */

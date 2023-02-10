@@ -1,15 +1,13 @@
 #pragma once
 
 #include <alica_tests/DomainBehaviour.h>
-/*PROTECTED REGION ID(inc1629895901559) ENABLED START*/
-// Add additional includes here
 #include <atomic>
+#include <boost/dll/alias.hpp>
 
 namespace alica_test
 {
 class SchedWM;
 }
-/*PROTECTED REGION END*/
 
 namespace alica
 {
@@ -19,21 +17,17 @@ public:
     BehAAA(BehaviourContext& context);
     virtual ~BehAAA();
     virtual void run();
-    /*PROTECTED REGION ID(pub1629895901559) ENABLED START*/
-    // Add additional protected methods here
+    static std::unique_ptr<BehAAA> create(alica::BehaviourContext& context);
+
     static int runCount;
-    /*PROTECTED REGION END*/
+
 protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1629895901559) ENABLED START*/
-    // Add additional protected methods here
     virtual void onTermination();
-    /*PROTECTED REGION END*/
+
 private:
-    /*PROTECTED REGION ID(prv1629895901559) ENABLED START*/
-    // Add additional private methods here
     std::atomic<bool> _inRunContext;
     std::shared_ptr<alica_test::SchedWM> _wm;
-    /*PROTECTED REGION END*/
 };
+BOOST_DLL_ALIAS(alica::BehAAA::create, BehAAA)
 } /* namespace alica */

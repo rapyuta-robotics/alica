@@ -1,38 +1,18 @@
+#include "alica_tests/TestWorldModel.h"
 #include <alica_tests/Behaviour/TestInheritBlackboardBehaviour.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp831400441334251600) ENABLED START*/
-#include "alica_tests/TestWorldModel.h"
-/*PROTECTED REGION END*/
-
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars831400441334251600) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 TestInheritBlackboardBehaviour::TestInheritBlackboardBehaviour(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con831400441334251600) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-TestInheritBlackboardBehaviour::~TestInheritBlackboardBehaviour()
-{
-    /*PROTECTED REGION ID(dcon831400441334251600) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-void TestInheritBlackboardBehaviour::run()
-{
-    /*PROTECTED REGION ID(run831400441334251600) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+TestInheritBlackboardBehaviour::~TestInheritBlackboardBehaviour() {}
+void TestInheritBlackboardBehaviour::run() {}
 void TestInheritBlackboardBehaviour::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters831400441334251600) ENABLED START*/
     auto wm = LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
     LockedBlackboardRW bb(*(getBlackboard()));
     bb.set<int64_t>("masterKey", 3);
@@ -42,11 +22,10 @@ void TestInheritBlackboardBehaviour::initialiseParameters()
     } else {
         wm->passedParameters["hasBehaviorKey"] = 4;
     }
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods831400441334251600) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
+std::unique_ptr<TestInheritBlackboardBehaviour> TestInheritBlackboardBehaviour::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<TestInheritBlackboardBehaviour>(context);
+}
 
 } /* namespace alica */
