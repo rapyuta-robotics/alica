@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/dll/alias.hpp>
 #include <engine/constraintmodul/Query.h>
 #include <supplementary_tests/DomainBehaviour.h>
 #include <vector>
@@ -12,6 +13,8 @@ public:
     SolverTestBehaviour(BehaviourContext& context);
     virtual ~SolverTestBehaviour();
     virtual void run();
+    static std::unique_ptr<SolverTestBehaviour> create(alica::BehaviourContext& context);
+
     int getCallCounter();
     static std::vector<double> result;
 
@@ -22,4 +25,5 @@ protected:
 
 private:
 };
+BOOST_DLL_ALIAS(alica::SolverTestBehaviour::create, SolverTestBehaviour)
 } /* namespace alica */

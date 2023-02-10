@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/dll/alias.hpp>
 #include <engine/constraintmodul/Query.h>
 #include <mutex>
 #include <supplementary_tests/DomainBehaviour.h>
@@ -12,6 +13,7 @@ public:
     QueryBehaviour1(BehaviourContext& context);
     virtual ~QueryBehaviour1();
     virtual void run();
+    static std::unique_ptr<QueryBehaviour1> create(alica::BehaviourContext& context);
     int getCallCounter();
     void stopQueries();
 
@@ -24,4 +26,5 @@ protected:
     virtual void initialiseParameters();
     int callCounter;
 };
+BOOST_DLL_ALIAS(alica::QueryBehaviour1::create, QueryBehaviour1)
 } /* namespace alica */

@@ -32,4 +32,9 @@ int SolverTestBehaviour::getCallCounter()
     return callCounter;
 }
 
+std::unique_ptr<SolverTestBehaviour> SolverTestBehaviour::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<SolverTestBehaviour>(context);
+}
+
 } /* namespace alica */

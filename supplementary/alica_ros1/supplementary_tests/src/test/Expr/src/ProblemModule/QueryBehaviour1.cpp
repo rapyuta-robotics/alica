@@ -45,4 +45,8 @@ int QueryBehaviour1::getCallCounter()
     return callCounter;
 }
 
+std::unique_ptr<QueryBehaviour1> QueryBehaviour1::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<QueryBehaviour1>(context);
+}
 } /* namespace alica */
