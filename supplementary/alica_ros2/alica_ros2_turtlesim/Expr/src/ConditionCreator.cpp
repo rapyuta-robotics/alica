@@ -1,6 +1,4 @@
 #include <alica/ConditionCreator.h>
-#include <alica/Go2RandomPosition4085572422059465423.h>
-#include <alica/GoTo4054297592460872311.h>
 #include <alica/Master2425328142973735249.h>
 #include <alica/Move1889749086610694100.h>
 

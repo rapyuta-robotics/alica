@@ -1,34 +1,24 @@
 #include <alica/Go2RandomPosition.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp4085572422059465423) ENABLED START*/
-// Add additional includes here
 #include <alica_ros2_turtlesim/world_model.hpp>
 #include <random>
-/*PROTECTED REGION END*/
+
 
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars4085572422059465423) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con4085572422059465423) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
+
 }
 Go2RandomPosition::~Go2RandomPosition()
 {
-    /*PROTECTED REGION ID(dcon4085572422059465423) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
+
 }
 void Go2RandomPosition::run()
 {
-    /*PROTECTED REGION ID(run4085572422059465423) ENABLED START*/
     if (isSuccess()) {
         return;
     }
@@ -42,17 +32,9 @@ void Go2RandomPosition::run()
     turtlesim::ALICATurtleWorldModel::get()->turtle.teleport(dist(engine), dist(engine));
     turtlesim::ALICATurtleWorldModel::get()->setInit(false);
     setSuccess();
-    /*PROTECTED REGION END*/
 }
 void Go2RandomPosition::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters4085572422059465423) ENABLED START*/
-    // Add additional options here
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods4085572422059465423) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 
 } /* namespace alica */

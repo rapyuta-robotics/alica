@@ -2,9 +2,6 @@
 
 #include <engine/BasicBehaviour.h>
 #include <string>
-/*PROTECTED REGION ID(domainBehaviourHeaderHead) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 
 namespace alica
 {
@@ -14,8 +11,5 @@ public:
     DomainBehaviour(BehaviourContext& context);
     virtual ~DomainBehaviour();
 
-    /*PROTECTED REGION ID(domainBehaviourClassDecl) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 };
 } /* namespace alica */

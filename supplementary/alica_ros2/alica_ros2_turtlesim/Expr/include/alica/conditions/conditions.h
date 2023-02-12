@@ -1,9 +1,5 @@
 #pragma once
 
-/*PROTECTED REGION ID(conditionHeader) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
-
 namespace alica
 {
 class Blackboard;
