@@ -26,7 +26,7 @@ Build the ROS 2 packages using Colcon.
 
 ```
 source /opt/ros/[YOUR DISTRO HERE]/setup.bash
-colcon build alica_ros_turtlesim
+colcon build --continue-on-error --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
 source install/setup.bash
 ```
 
