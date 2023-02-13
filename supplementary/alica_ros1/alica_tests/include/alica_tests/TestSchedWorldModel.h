@@ -3,7 +3,7 @@
 #include <atomic>
 #include <string>
 
-namespace alica_test
+namespace alica::tests
 {
 
 class SchedWM
@@ -57,4 +57,4 @@ public:
 private:
 };
 
-} // namespace alica_test
+} // namespace alica::tests
