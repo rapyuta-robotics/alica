@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1629895911592,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
+  "name": "BehBAA",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

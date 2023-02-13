@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": true,
+  "frequency": 30,
+  "id": 1428508297492,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
+  "name": "TriggerA",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}

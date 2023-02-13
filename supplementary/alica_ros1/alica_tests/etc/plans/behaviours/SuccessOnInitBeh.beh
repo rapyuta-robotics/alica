@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "A behaviour which sets success on init",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 0,
+  "id": 3821787310391665935,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
+  "name": "SuccessOnInitBeh",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "Behaviour",
+  "runtimeCondition": null,
+  "variables": []
+}
