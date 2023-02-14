@@ -1,11 +1,9 @@
 #include <supplementary_tests/ConditionCreator.h>
 #include <supplementary_tests/GSolver/GSolverMaster1417423751087.h>
 #include <supplementary_tests/GSolver/GSolverTestPlan1417423757243.h>
-#include <supplementary_tests/GSolver/SolverTestBehaviour1417424455986.h>
 #include <supplementary_tests/ProblemModule/ProbBuildingLevel11479557378264.h>
 #include <supplementary_tests/ProblemModule/ProbBuildingLevel1_11479557664989.h>
 #include <supplementary_tests/ProblemModule/ProblemBuildingMaster1479556022226.h>
-#include <supplementary_tests/ProblemModule/QueryBehaviour11479556104511.h>
 #include <supplementary_tests/ProblemModule/QueryPlan11479556074049.h>
 #include <supplementary_tests/ProblemModule/QueryPlan21479718449392.h>
 #include <supplementary_tests/VariableHandling/Lvl11524452759599.h>

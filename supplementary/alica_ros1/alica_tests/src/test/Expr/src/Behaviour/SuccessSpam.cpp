@@ -7,39 +7,19 @@
 
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1522377401286) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 SuccessSpam::SuccessSpam(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1522377401286) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-SuccessSpam::~SuccessSpam()
-{
-    /*PROTECTED REGION ID(dcon1522377401286) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
+SuccessSpam::~SuccessSpam() {}
 void SuccessSpam::run()
 {
-    /*PROTECTED REGION ID(run1522377401286) ENABLED START*/
-    // Add additional options here
     setSuccess();
-    /*PROTECTED REGION END*/
 }
-void SuccessSpam::initialiseParameters()
+void SuccessSpam::initialiseParameters() {}
+std::unique_ptr<SuccessSpam> SuccessSpam::create(alica::BehaviourContext& context)
 {
-    /*PROTECTED REGION ID(initialiseParameters1522377401286) ENABLED START*/
-    // Add additional options here
-
-    /*PROTECTED REGION END*/
+    return std::make_unique<SuccessSpam>(context);
 }
-/*PROTECTED REGION ID(methods1522377401286) ENABLED START*/
-// Add additional methods here
-/*PROTECTED REGION END*/
-
 } /* namespace alica */

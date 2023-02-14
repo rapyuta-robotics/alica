@@ -1,11 +1,9 @@
 #pragma once
 
 #include <alica_tests/DomainBehaviour.h>
-/*PROTECTED REGION ID(inc1414068597716) ENABLED START*/
-// Add additional includes here
+#include <boost/dll/alias.hpp>
 #include <engine/constraintmodul/Query.h>
 #include <vector>
-/*PROTECTED REGION END*/
 
 namespace alica
 {
@@ -15,21 +13,14 @@ public:
     ConstraintUsingBehaviour(BehaviourContext& context);
     virtual ~ConstraintUsingBehaviour();
     virtual void run();
-    /*PROTECTED REGION ID(pub1414068597716) ENABLED START*/
-    // Add additional public methods here
+    static std::unique_ptr<ConstraintUsingBehaviour> create(alica::BehaviourContext& context);
     int getCallCounter() const;
     static std::vector<int64_t> result;
-    /*PROTECTED REGION END*/
+
 protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1414068597716) ENABLED START*/
-    // Add additional protected methods here
     Query _query;
     int _callCounter;
-    /*PROTECTED REGION END*/
-private:
-    /*PROTECTED REGION ID(prv1414068597716) ENABLED START*/
-    // Add additional private methods here
-    /*PROTECTED REGION END*/
 };
+BOOST_DLL_ALIAS(alica::ConstraintUsingBehaviour::create, ConstraintUsingBehaviour)
 } /* namespace alica */

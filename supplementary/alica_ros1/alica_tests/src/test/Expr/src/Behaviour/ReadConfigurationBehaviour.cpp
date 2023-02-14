@@ -1,46 +1,24 @@
 #include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
 #include <memory>
 
-/*PROTECTED REGION ID(inccpp1588061129360) ENABLED START*/
 #include "engine/model/Configuration.h"
 #include "engine/model/Parameter.h"
-/*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(staticVars1588061129360) ENABLED START*/
-// initialise static variables here
-/*PROTECTED REGION END*/
 
 ReadConfigurationBehaviour::ReadConfigurationBehaviour(BehaviourContext& context)
         : DomainBehaviour(context)
 {
-    /*PROTECTED REGION ID(con1588061129360) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-ReadConfigurationBehaviour::~ReadConfigurationBehaviour()
-{
-    /*PROTECTED REGION ID(dcon1588061129360) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
-}
-void ReadConfigurationBehaviour::run()
-{
-    /*PROTECTED REGION ID(run1588061129360) ENABLED START*/
-    //    std::cout << this->getName() << ": TestValue is " << testValue << std::endl;
-    /*PROTECTED REGION END*/
-}
+ReadConfigurationBehaviour::~ReadConfigurationBehaviour() {}
+void ReadConfigurationBehaviour::run() {}
 void ReadConfigurationBehaviour::initialiseParameters()
 {
-    /*PROTECTED REGION ID(initialiseParameters1588061129360) ENABLED START*/
-    // getPlanContext()->getParameter("TestValue", testValue);
     testValue = "1";
-
-    /*PROTECTED REGION END*/
 }
-/*PROTECTED REGION ID(methods1588061129360) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
-
+std::unique_ptr<ReadConfigurationBehaviour> ReadConfigurationBehaviour::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<ReadConfigurationBehaviour>(context);
+}
 } /* namespace alica */

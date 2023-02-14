@@ -1,9 +1,7 @@
 #pragma once
 
 #include <alica_tests/DomainBehaviour.h>
-/*PROTECTED REGION ID(inc1529456643148) ENABLED START*/
-// Add additional includes here
-/*PROTECTED REGION END*/
+#include <boost/dll/alias.hpp>
 
 namespace alica
 {
@@ -13,17 +11,10 @@ public:
     CountIndefinitely(BehaviourContext& context);
     virtual ~CountIndefinitely();
     virtual void run();
-    /*PROTECTED REGION ID(pub1529456643148) ENABLED START*/
-    // Add additional public methods here
-    /*PROTECTED REGION END*/
+    static std::unique_ptr<CountIndefinitely> create(alica::BehaviourContext& context);
+
 protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1529456643148) ENABLED START*/
-    // Add additional protected methods here
-    /*PROTECTED REGION END*/
-private:
-    /*PROTECTED REGION ID(prv1529456643148) ENABLED START*/
-    // Add additional private methods here
-    /*PROTECTED REGION END*/
 };
+BOOST_DLL_ALIAS(alica::CountIndefinitely::create, CountIndefinitely)
 } /* namespace alica */

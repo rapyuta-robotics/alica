@@ -1,10 +1,8 @@
 #pragma once
 
 #include <alica_tests/DomainBehaviour.h>
-/*PROTECTED REGION ID(inc1428508297492) ENABLED START*/
-// Add additional includes here
 #include <alica_tests/TestWorldModel.h>
-/*PROTECTED REGION END*/
+#include <boost/dll/alias.hpp>
 
 namespace alica
 {
@@ -14,19 +12,13 @@ public:
     TriggerA(BehaviourContext& context);
     virtual ~TriggerA();
     virtual void run();
-    /*PROTECTED REGION ID(pub1428508297492) ENABLED START*/
-    // Add additional public methods here
+    static std::unique_ptr<TriggerA> create(alica::BehaviourContext& context);
+
     int callCounter;
     int initCounter;
-    /*PROTECTED REGION END*/
+
 protected:
     virtual void initialiseParameters();
-    /*PROTECTED REGION ID(pro1428508297492) ENABLED START*/
-    // Add additional protected methods here
-    /*PROTECTED REGION END*/
-private:
-    /*PROTECTED REGION ID(prv1428508297492) ENABLED START*/
-    // Add additional private methods here
-    /*PROTECTED REGION END*/
 };
+BOOST_DLL_ALIAS(alica::TriggerA::create, TriggerA)
 } /* namespace alica */
