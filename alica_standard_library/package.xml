@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<package format="2">
+  <name>alica_standard_library</name>
+  <version>0.9.4</version>
+  <description>Standard library of plans, conditions, behaviours for alica</description>
+  <maintainer email="dale.koenig@rapyuta-robotics.com">Dale Koenig</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+  <depend>alica_engine</depend>
+  <depend>alica_solver_interface</depend>
+
+</package>
