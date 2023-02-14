@@ -18,22 +18,6 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Le
 {
     int64_t preConditionId = context.preConditionId;
     switch (preConditionId) {
-    case 1136497454350831106: {
-        PreCondition1136497454350831106 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, gb);
-        };
-    }
-    case 1597434482701133956: {
-        PreCondition1597434482701133956 preCondition;
-        return [preCondition](const Blackboard* bb, const RunningPlan* rp, const Blackboard* gb) mutable {
-            // Create shared ptr for API compatibility, use noop deleter to prevent RunningPlan deletion
-            std::shared_ptr<RunningPlan> temp(const_cast<RunningPlan*>(rp), [](RunningPlan* p) { /*Noop deleter*/ });
-            return preCondition.evaluate(temp, gb);
-        };
-    }
     default:
         std::cerr << "LegacyTransitionConditionCreator: Unknown condition id requested: " << preConditionId << std::endl;
         throw new std::exception();

@@ -20,6 +20,11 @@ find_package(autodiff REQUIRED)
 find_package(alica_solver_interface)
 find_package(ament_cmake REQUIRED)
 find_package(alica_msgs REQUIRED)
+find_package(alica_dynamic_loading REQUIRED)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+if (NOT Boost_FOUND)
+      message(FATAL_ERROR "Fatal error: Boost required.\n")
+endif (NOT Boost_FOUND)
 
 ###########
 ## Build ##
@@ -48,6 +53,9 @@ target_link_libraries(${PROJECT_NAME}
     autodiff
     alica_solver_interface
     alica_ros2_proxy
+    alica_dynamic_loading
+    Boost::system
+    Boost::filesystem
     ${turtlesim_LIBRARIES}
     ${geometry_msgs_LIBRARIES}
 )

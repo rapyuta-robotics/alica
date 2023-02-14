@@ -4,19 +4,14 @@
 #include <alica_ros2_turtlesim/world_model.hpp>
 #include <random>
 
-
 namespace alica
 {
 
 Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
-
 }
-Go2RandomPosition::~Go2RandomPosition()
-{
-
-}
+Go2RandomPosition::~Go2RandomPosition() {}
 void Go2RandomPosition::run()
 {
     if (isSuccess()) {
@@ -33,8 +28,10 @@ void Go2RandomPosition::run()
     turtlesim::ALICATurtleWorldModel::get()->setInit(false);
     setSuccess();
 }
-void Go2RandomPosition::initialiseParameters()
+void Go2RandomPosition::initialiseParameters() {}
+std::unique_ptr<Go2RandomPosition> Go2RandomPosition::create(alica::BehaviourContext& context)
 {
+    return std::make_unique<Go2RandomPosition>(context);
 }
 
 } /* namespace alica */

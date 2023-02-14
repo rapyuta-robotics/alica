@@ -8,12 +8,10 @@ namespace alica
 {
 
 GoTo::GoTo(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
 }
-GoTo::~GoTo()
-{
-}
+GoTo::~GoTo() {}
 void GoTo::run()
 {
     // solve constraints and get value
@@ -31,6 +29,10 @@ void GoTo::initialiseParameters()
     _query.clearDomainVariables();
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "x"));
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "y"));
+}
+std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)
+{
+    return std::make_unique<GoTo>(context);
 }
 
 } /* namespace alica */

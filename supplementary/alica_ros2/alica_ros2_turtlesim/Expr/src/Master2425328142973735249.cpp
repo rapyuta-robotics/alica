@@ -1,8 +1,5 @@
 #include <alica/Master2425328142973735249.h>
-/*PROTECTED REGION ID(eph2425328142973735249) ENABLED START*/
-// Add additional options here
 #include <alica_ros2_turtlesim/world_model.hpp>
-/*PROTECTED REGION END*/
 
 namespace alica
 {
@@ -15,17 +12,13 @@ namespace alica
 //   - Move (2405597980801916441)
 //   - Init (3997532517592149463)
 Master2425328142973735249::Master2425328142973735249(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
-    /*PROTECTED REGION ID(con2425328142973735249) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-Master2425328142973735249::~Master2425328142973735249()
+Master2425328142973735249::~Master2425328142973735249() {}
+std::unique_ptr<Master2425328142973735249> Master2425328142973735249::create(alica::PlanContext& context)
 {
-    /*PROTECTED REGION ID(dcon2425328142973735249) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
+    return std::make_unique<Master2425328142973735249>(context);
 }
 
 /**
@@ -33,59 +26,13 @@ Master2425328142973735249::~Master2425328142973735249()
  */
 std::shared_ptr<UtilityFunction> UtilityFunction2425328142973735249::getUtilityFunction(Plan* plan)
 {
-    /*PROTECTED REGION ID(2425328142973735249) ENABLED START*/
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-    /*PROTECTED REGION END*/
 }
 
-/**
- * Transition: 635844345274619238 (635844345274619238)
- *   - Comment:
- *   - Source2Dest: Move --> Init
- *
- * Precondition: Move2Init (1136497454350831106)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Move:
- *   - Move (1889749086610694100)
- */
-bool PreCondition1136497454350831106::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+std::shared_ptr<UtilityFunction2425328142973735249> UtilityFunction2425328142973735249::create(alica::UtilityFunctionContext&)
 {
-    /*PROTECTED REGION ID(635844345274619238) ENABLED START*/
-    std::cout << "The PreCondition 1136497454350831106 in Transition '635844345274619238' is not implement yet!" << std::endl;
-    return false;
-    /*PROTECTED REGION END*/
+    return std::make_shared<UtilityFunction2425328142973735249>();
 }
 
-/**
- * Transition: 3486027875296378577 (3486027875296378577)
- *   - Comment:
- *   - Source2Dest: Init --> Move
- *
- * Precondition: Init2Move (1597434482701133956)
- *   - Enabled: true
- *   - PluginName: DefaultPlugin
- *   - ConditionString:
- *   - Variables:
- *   - Quantifiers:
- *
- * Abstract Plans in Init:
- *   - Go2RandomPosition (4085572422059465423)
- */
-bool PreCondition1597434482701133956::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
-{
-    /*PROTECTED REGION ID(3486027875296378577) ENABLED START*/
-    std::cout << "The PreCondition 1597434482701133956 in Transition '3486027875296378577' is not implement yet!" << std::endl;
-    return false;
-    /*PROTECTED REGION END*/
-}
-
-/*PROTECTED REGION ID(methods2425328142973735249) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 } // namespace alica

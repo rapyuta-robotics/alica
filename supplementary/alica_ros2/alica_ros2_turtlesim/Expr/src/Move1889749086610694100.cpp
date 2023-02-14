@@ -1,7 +1,4 @@
 #include <alica/Move1889749086610694100.h>
-/*PROTECTED REGION ID(eph1889749086610694100) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 
 namespace alica
 {
@@ -14,19 +11,14 @@ namespace alica
 //   - AlignCircle (2299237921449867536)
 //   - Move2Center (4158797811607100614)
 Move1889749086610694100::Move1889749086610694100(PlanContext& context)
-        : DomainPlan(context)
+        : BasicPlan(context)
 {
-    /*PROTECTED REGION ID(con1889749086610694100) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
 }
-Move1889749086610694100::~Move1889749086610694100()
+Move1889749086610694100::~Move1889749086610694100() {}
+std::unique_ptr<Move1889749086610694100> Move1889749086610694100::create(alica::PlanContext& context)
 {
-    /*PROTECTED REGION ID(dcon1889749086610694100) ENABLED START*/
-    // Add additional options here
-    /*PROTECTED REGION END*/
+    return std::make_unique<Move1889749086610694100>(context);
 }
-
 // Check of RuntimeCondition - (Name): CircleRuntimeCondition, (ConditionString): , (Comment) :
 
 /**
@@ -34,9 +26,7 @@ Move1889749086610694100::~Move1889749086610694100()
  */
 bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
-    /*PROTECTED REGION ID(1288817888979746811) ENABLED START*/
     return true;
-    /*PROTECTED REGION END*/
 }
 /**
  * Task: Follower  -> EntryPoint-ID: 3277312192440194145
@@ -44,13 +34,13 @@ bool RunTimeCondition1288817888979746811::evaluate(std::shared_ptr<RunningPlan> 
  */
 std::shared_ptr<UtilityFunction> UtilityFunction1889749086610694100::getUtilityFunction(Plan* plan)
 {
-    /*PROTECTED REGION ID(1889749086610694100) ENABLED START*/
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
-    /*PROTECTED REGION END*/
 }
 
-/*PROTECTED REGION ID(methods1889749086610694100) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
+std::shared_ptr<UtilityFunction1889749086610694100> UtilityFunction1889749086610694100::create(alica::UtilityFunctionContext&)
+{
+    return std::make_shared<UtilityFunction1889749086610694100>();
+}
+
 } // namespace alica
