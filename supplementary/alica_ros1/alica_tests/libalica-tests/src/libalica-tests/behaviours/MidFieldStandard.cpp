@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/MidFieldStandard.h>
+#include <libalica-tests/behaviours/MidFieldStandard.h>
 #include <memory>
 
 namespace alica

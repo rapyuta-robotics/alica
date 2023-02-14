@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1429017274116,
   "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
   "name": "NotToTrigger",
   "postCondition": null,
   "preCondition": null,

@@ -38,6 +38,7 @@
   "frequency": 0,
   "id": 1414403413451,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "AuthorityTest",
   "preCondition": null,

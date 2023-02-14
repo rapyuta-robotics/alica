@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/DefendMid.h>
+#include <libalica-tests/behaviours/DefendMid.h>
 #include <memory>
 
 namespace alica

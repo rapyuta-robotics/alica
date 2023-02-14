@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/CountIndefinitely.h>
+#include <libalica-tests/behaviours/CountIndefinitely.h>
 #include <memory>
 
 #include <alica/test/CounterClass.h>

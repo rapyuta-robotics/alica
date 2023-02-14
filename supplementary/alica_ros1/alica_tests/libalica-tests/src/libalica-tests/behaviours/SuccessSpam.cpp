@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/SuccessSpam.h>
+#include <libalica-tests/behaviours/SuccessSpam.h>
 #include <memory>
 
 /*PROTECTED REGION ID(inccpp1522377401286) ENABLED START*/

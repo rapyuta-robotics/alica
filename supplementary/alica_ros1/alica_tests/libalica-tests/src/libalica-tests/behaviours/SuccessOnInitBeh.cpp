@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/SuccessOnInitBeh.h>
+#include <libalica-tests/behaviours/SuccessOnInitBeh.h>
 #include <memory>
 
 namespace alica

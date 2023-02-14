@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1402488696205,
   "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
   "name": "MidFieldStandard",
   "postCondition": null,
   "preCondition": null,

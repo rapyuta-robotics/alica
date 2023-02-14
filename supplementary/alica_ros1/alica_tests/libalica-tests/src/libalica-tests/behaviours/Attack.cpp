@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/Attack.h>
+#include <libalica-tests/behaviours/Attack.h>
 #include <memory>
 
 namespace alica

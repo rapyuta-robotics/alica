@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/ConstraintUsingBehaviour.h>
+#include <libalica-tests/behaviours/ConstraintUsingBehaviour.h>
 #include <memory>
 
 #include <alica_tests/ConstraintTestPlanDummySolver.h>

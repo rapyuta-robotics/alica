@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/BehBAA.h>
+#include <libalica-tests/behaviours/BehBAA.h>
 #include <memory>
 
 #include <alica_tests/test_sched_world_model.h>

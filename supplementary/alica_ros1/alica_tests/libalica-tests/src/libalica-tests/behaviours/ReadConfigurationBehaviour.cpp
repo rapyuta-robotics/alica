@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/ReadConfigurationBehaviour.h>
+#include <libalica-tests/behaviours/ReadConfigurationBehaviour.h>
 #include <memory>
 
 #include "engine/model/Configuration.h"

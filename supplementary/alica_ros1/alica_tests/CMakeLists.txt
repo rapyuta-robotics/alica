@@ -5,6 +5,10 @@ include(CTest)
 add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
 
+find_package(Boost COMPONENTS system filesystem REQUIRED)
+if (NOT Boost_FOUND)
+      message(FATAL_ERROR "Fatal error: Boost required.\n")
+endif (NOT Boost_FOUND)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
@@ -18,19 +22,23 @@ find_package(alica_engine REQUIRED)
 find_package(alica_dummy_proxy REQUIRED)
 find_package(alica_simple_solver REQUIRED)
 find_package(alica_test_utility REQUIRED)
+find_package(alica_dynamic_loading REQUIRED)
+# find_package(libalica-tests REQUIRED)
 include_directories(include)
 
 catkin_package(
     INCLUDE_DIRS include src/test/Expr/include
     LIBRARIES autogen_code_alica_tests
     CATKIN_DEPENDS    alica_ros_proxy
-    DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility
+    DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility alica_dynamic_loading
 )
 
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
-target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+
+add_subdirectory(libalica-tests)
 
 if(BUILD_TESTING)
     find_package(rostest REQUIRED)
@@ -81,5 +89,5 @@ if(BUILD_TESTING)
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_tests ${YAML_CPP_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_tests ${YAML_CPP_LIBRARIES} alica_dynamic_loading libalica-tests)
 endif()
