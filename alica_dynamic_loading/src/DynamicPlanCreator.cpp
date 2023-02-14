@@ -32,6 +32,9 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
 
     std::unique_ptr<BasicPlan> createdPlan = _planCreator(context);
 
+    // TODO: Reenable if we can avoid creating running plans every time we do an assignment evaluation
+    // Logging::logDebug("DynamicLoading") << "Loaded plan " << context.planModel->getName();
+
     return createdPlan;
 }
 } // namespace alica

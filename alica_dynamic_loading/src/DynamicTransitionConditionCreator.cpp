@@ -28,6 +28,8 @@ TransitionConditionCallback DynamicTransitionConditionCreator::createConditions(
             context.name,                                                 // symbol to import
             boost::dll::load_mode::append_decorations                     // do append extensions and prefixes
     );
+
+    Logging::logDebug("DynamicLoading") << "Loaded transition condition " << context.name;
     return fun;
 }
 
