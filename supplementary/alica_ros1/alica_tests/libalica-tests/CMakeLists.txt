@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME} SHARED
   src/libalica-tests/behaviours/TriggerA.cpp
   src/libalica-tests/behaviours/TriggerB.cpp
   src/libalica-tests/behaviours/TriggerC.cpp
+  src/libalica-tests/behaviours/TestBehaviour.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
