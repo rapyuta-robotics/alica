@@ -19,7 +19,6 @@
   <depend>alica_test_utility</depend>
   <depend>alica_ros_proxy</depend>
   <depend>alica_dynamic_loading</depend>
-  <depend>libalica-tests</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
