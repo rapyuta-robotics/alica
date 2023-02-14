@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/TestParameterPassingBehaviour.h>
+#include <libalica-tests/behaviours/TestParameterPassingBehaviour.h>
 #include <memory>
 
 #include "alica_tests/TestWorldModel.h"

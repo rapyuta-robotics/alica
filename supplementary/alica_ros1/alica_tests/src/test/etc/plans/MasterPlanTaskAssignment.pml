@@ -70,6 +70,7 @@
   "frequency": 0,
   "id": 1407152758497,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "MasterPlanTaskAssignment",
   "preCondition": null,

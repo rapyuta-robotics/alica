@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/NotToTrigger.h>
+#include <libalica-tests/behaviours/NotToTrigger.h>
 #include <memory>
 
 namespace alica

@@ -1,5 +1,6 @@
 #include "alica_tests/TestWorldModel.h"
-#include <alica_tests/Behaviour/TestInheritBlackboardBehaviour.h>
+#include <libalica-tests/behaviours/TestInheritBlackboardBehaviour.h>
+
 #include <memory>
 
 namespace alica

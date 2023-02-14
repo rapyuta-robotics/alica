@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/EmptyBehaviour.h>
+#include <libalica-tests/behaviours/EmptyBehaviour.h>
 #include <memory>
 
 #include <alica/test/CounterClass.h>

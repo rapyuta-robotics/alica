@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/TriggerB.h>
+#include <libalica-tests/behaviours/TriggerB.h>
 #include <memory>
 
 namespace alica

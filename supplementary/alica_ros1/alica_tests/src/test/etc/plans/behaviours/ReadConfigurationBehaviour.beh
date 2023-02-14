@@ -6,6 +6,7 @@
   "frequency": 1,
   "id": 1588061129360,
   "inheritBlackboard": false,
+  "libraryName": "libalica-tests",
   "name": "ReadConfigurationBehaviour",
   "postCondition": null,
   "preCondition": null,

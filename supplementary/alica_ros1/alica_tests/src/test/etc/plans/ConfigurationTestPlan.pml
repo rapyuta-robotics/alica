@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 2539111367556229723,
       "key": "numberOfCalls",
       "type": "int64"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 1588060981661,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "ConfigurationTestPlan",
   "preCondition": null,
@@ -153,7 +153,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "numberOfCalls"
+            "parentKey": "numberOfCalls",
+            "value": null
           }
         ],
         "output": []

@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1613378433623,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SchedulingTestPlan3",
   "preCondition": null,

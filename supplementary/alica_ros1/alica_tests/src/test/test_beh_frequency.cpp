@@ -1,8 +1,8 @@
 #include "test_alica.h"
 
-#include "Behaviour/Attack.h"
-#include "Behaviour/MidFieldStandard.h"
 #include <alica/test/CounterClass.h>
+#include <libalica-tests/Behaviour/Attack.h>
+#include <libalica-tests/Behaviour/MidFieldStandard.h>
 
 #include <alica/test/Util.h>
 #include <engine/AlicaClock.h>

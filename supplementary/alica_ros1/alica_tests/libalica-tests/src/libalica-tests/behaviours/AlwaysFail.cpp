@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/AlwaysFail.h>
+#include <libalica-tests/behaviours/AlwaysFail.h>
 #include <memory>
 
 namespace alica

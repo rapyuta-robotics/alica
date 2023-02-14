@@ -1,4 +1,4 @@
-#include <alica_tests/Behaviour/Tackle.h>
+#include <libalica-tests/behaviours/Tackle.h>
 #include <memory>
 
 namespace alica
