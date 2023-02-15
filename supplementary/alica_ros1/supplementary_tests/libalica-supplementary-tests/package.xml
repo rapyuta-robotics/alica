@@ -4,10 +4,8 @@
   <version>0.9.4</version>
   <description>The alica supplementary test plan lib</description>
 
-  <maintainer email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</maintainer>
-
-  <author email="stephan.opfer@rapyuta-robotics.com">Stephan Opfer</author>
-  <author>Andreas Witsch</author>
+  <maintainer>Rapyuta Robotics</maintainer>
+  <author>Rapyuta Robotics</author>
 
   <license>MIT</license>
 
