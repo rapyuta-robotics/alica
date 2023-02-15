@@ -31,6 +31,8 @@ std::shared_ptr<BasicCondition> DynamicConditionCreator::createConditions(int64_
 
     std::shared_ptr<BasicCondition> createdCondition = _conditionCreator(context);
 
+    Logging::logDebug("DynamicLoading") << "Loaded condition " << context.name;
+
     return createdCondition;
 }
 
