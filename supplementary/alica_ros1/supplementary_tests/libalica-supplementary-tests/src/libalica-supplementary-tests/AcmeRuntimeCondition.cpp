@@ -1,4 +1,4 @@
-#include "AcmeRuntimeCondition.h"
+#include "libalica-supplementary-tests/AcmeRuntimeCondition.h"
 
 namespace alica
 {

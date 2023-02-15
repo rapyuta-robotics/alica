@@ -1,4 +1,4 @@
-#include "AcmePlan.h"
+#include "libalica-supplementary-tests/AcmePlan.h"
 
 namespace alica
 {

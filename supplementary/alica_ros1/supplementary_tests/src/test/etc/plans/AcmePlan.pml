@@ -18,12 +18,12 @@
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [],
-    "libraryName": "alica_supplementary_test_library"
+    "libraryName": "libalica-supplementary-tests"
   },
   "states": [],
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
   "variables": [],
-  "libraryName": "alica_supplementary_test_library"
+  "libraryName": "libalica-supplementary-tests"
 }

@@ -24,5 +24,6 @@
       "name": "Y",
       "variableType": ""
     }
-  ]
+  ],
+  "libraryName": "libalica-supplementary-tests"
 }

@@ -1,5 +1,5 @@
+#include <libalica-supplementary-tests/GSolver/SolverTestBehaviour.h>
 #include <memory>
-#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
 
 #include <constraintsolver/CGSolver.h>
 

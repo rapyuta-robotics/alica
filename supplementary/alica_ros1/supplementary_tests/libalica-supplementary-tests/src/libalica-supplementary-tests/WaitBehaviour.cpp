@@ -1,4 +1,4 @@
-#include "WaitBehaviour.h"
+#include "libalica-supplementary-tests/WaitBehaviour.h"
 #include <thread>
 
 namespace alica
