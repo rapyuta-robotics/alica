@@ -1,7 +1,7 @@
 #include "alica/LegacyTransitionConditionCreator.h"
 
-#include <alica/Master2425328142973735249.h>
-#include <alica/Move1889749086610694100.h>
+#include <alica/Master.h>
+#include <alica/Move.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
 #include <iostream>

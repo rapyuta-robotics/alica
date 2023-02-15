@@ -1,4 +1,4 @@
-#include <alica/Master2425328142973735249.h>
+#include <alica/Master.h>
 #include <alica_ros2_turtlesim/world_model.hpp>
 
 namespace alica
@@ -11,14 +11,14 @@ namespace alica
 // States:
 //   - Move (2405597980801916441)
 //   - Init (3997532517592149463)
-Master2425328142973735249::Master2425328142973735249(PlanContext& context)
+Master::Master(PlanContext& context)
         : BasicPlan(context)
 {
 }
-Master2425328142973735249::~Master2425328142973735249() {}
-std::unique_ptr<Master2425328142973735249> Master2425328142973735249::create(alica::PlanContext& context)
+Master::~Master() {}
+std::unique_ptr<Master> Master::create(alica::PlanContext& context)
 {
-    return std::make_unique<Master2425328142973735249>(context);
+    return std::make_unique<Master>(context);
 }
 
 /**

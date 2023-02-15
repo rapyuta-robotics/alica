@@ -1,4 +1,4 @@
-#include <alica/Move1889749086610694100.h>
+#include <alica/Move.h>
 
 namespace alica
 {
@@ -10,14 +10,14 @@ namespace alica
 // States:
 //   - AlignCircle (2299237921449867536)
 //   - Move2Center (4158797811607100614)
-Move1889749086610694100::Move1889749086610694100(PlanContext& context)
+Move::Move(PlanContext& context)
         : BasicPlan(context)
 {
 }
-Move1889749086610694100::~Move1889749086610694100() {}
-std::unique_ptr<Move1889749086610694100> Move1889749086610694100::create(alica::PlanContext& context)
+Move::~Move() {}
+std::unique_ptr<Move> Move::create(alica::PlanContext& context)
 {
-    return std::make_unique<Move1889749086610694100>(context);
+    return std::make_unique<Move>(context);
 }
 // Check of RuntimeCondition - (Name): CircleRuntimeCondition, (ConditionString): , (Comment) :
 

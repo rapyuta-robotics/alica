@@ -9,14 +9,14 @@
 
 namespace alica
 {
-class Master2425328142973735249 : public BasicPlan
+class Master : public BasicPlan
 {
 public:
-    Master2425328142973735249(PlanContext& context);
-    virtual ~Master2425328142973735249();
-    static std::unique_ptr<Master2425328142973735249> create(alica::PlanContext& context);
+    Master(PlanContext& context);
+    virtual ~Master();
+    static std::unique_ptr<Master> create(alica::PlanContext& context);
 };
-BOOST_DLL_ALIAS(alica::Master2425328142973735249::create, Master2425328142973735249)
+BOOST_DLL_ALIAS(alica::Master::create, Master)
 
 class UtilityFunction2425328142973735249 : public BasicUtilityFunction
 {

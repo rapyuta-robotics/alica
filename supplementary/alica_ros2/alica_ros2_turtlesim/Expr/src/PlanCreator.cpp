@@ -1,6 +1,6 @@
 #include "engine/BasicPlan.h"
-#include <alica/Master2425328142973735249.h>
-#include <alica/Move1889749086610694100.h>
+#include <alica/Master.h>
+#include <alica/Move.h>
 #include <alica/PlanCreator.h>
 
 namespace alica
@@ -14,10 +14,10 @@ std::unique_ptr<BasicPlan> PlanCreator::createPlan(int64_t planId, PlanContext& 
 {
     switch (planId) {
     case 1889749086610694100:
-        return std::make_unique<Move1889749086610694100>(context);
+        return std::make_unique<Move>(context);
         break;
     case 2425328142973735249:
-        return std::make_unique<Master2425328142973735249>(context);
+        return std::make_unique<Master>(context);
         break;
     default:
         std::cerr << "PlanCreator: Unknown plan requested: " << planId << std::endl;

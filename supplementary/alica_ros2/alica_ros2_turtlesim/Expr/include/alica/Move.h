@@ -9,14 +9,14 @@
 
 namespace alica
 {
-class Move1889749086610694100 : public BasicPlan
+class Move : public BasicPlan
 {
 public:
-    Move1889749086610694100(PlanContext& context);
-    virtual ~Move1889749086610694100();
-    static std::unique_ptr<Move1889749086610694100> create(alica::PlanContext& context);
+    Move(PlanContext& context);
+    virtual ~Move();
+    static std::unique_ptr<Move> create(alica::PlanContext& context);
 };
-BOOST_DLL_ALIAS(alica::Move1889749086610694100::create, Move1889749086610694100)
+BOOST_DLL_ALIAS(alica::Move::create, Move)
 
 class UtilityFunction1889749086610694100 : public BasicUtilityFunction
 {
