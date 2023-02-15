@@ -40,6 +40,7 @@ catkin_package(
 include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
+add_subdirectory(libalica-supplementary-tests)
 
 target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
                                                         Boost::system
@@ -66,7 +67,5 @@ if (BUILD_TESTING)
 
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})
     target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_supplementary_tests libalica-supplementary-tests)
-
-    add_subdirectory(libalica-supplementary-tests)
 
 endif()
