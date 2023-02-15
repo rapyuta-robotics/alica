@@ -14,10 +14,10 @@ std::shared_ptr<BasicUtilityFunction> UtilityFunctionCreator::createUtility(int6
 {
     switch (utilityfunctionConfId) {
     case 1889749086610694100:
-        return std::make_shared<UtilityFunction1889749086610694100>();
+        return std::make_shared<UtilityFunctionMove>();
         break;
     case 2425328142973735249:
-        return std::make_shared<UtilityFunction2425328142973735249>();
+        return std::make_shared<UtilityFunctionMaster>();
         break;
     default:
         std::cerr << "UtilityFunctionCreator: Unknown utility requested: " << utilityfunctionConfId << std::endl;

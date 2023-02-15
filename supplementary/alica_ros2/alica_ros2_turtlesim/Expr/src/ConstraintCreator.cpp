@@ -15,7 +15,7 @@ std::shared_ptr<BasicConstraint> ConstraintCreator::createConstraint(int64_t con
 {
     switch (constraintConfId) {
     case 1288817888979746811:
-        return std::make_shared<Constraint1288817888979746811>();
+        return std::make_shared<MoveConstraint>();
         break;
     default:
         std::cerr << "ConstraintCreator: Unknown constraint requested: " << constraintConfId << std::endl;

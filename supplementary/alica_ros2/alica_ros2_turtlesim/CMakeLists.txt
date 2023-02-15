@@ -73,6 +73,8 @@ ament_export_dependencies(alica_ros2_turtlesim
     alica_ros2_proxy
 )
 
+add_subdirectory(libalica-ros2-turtlesim)
+
 #############
 ## Install ##
 #############

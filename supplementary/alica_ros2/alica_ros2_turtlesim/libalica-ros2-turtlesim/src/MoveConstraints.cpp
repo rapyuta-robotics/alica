@@ -1,12 +1,11 @@
-#include <alica/constraints/Move1889749086610694100Constraints.h>
-/*PROTECTED REGION ID(ch1889749086610694100) ENABLED START*/
-// Add additional options here
-#include <alica_ros2_turtlesim/world_model.hpp>
+#include "MoveConstraints.h"
+
+#include "world_model.hpp"
 #include <autodiff/AutoDiff.h>
 #include <engine/RunningPlan.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Task.h>
-/*PROTECTED REGION END*/
+
 
 namespace alica
 {
@@ -109,7 +108,11 @@ void MoveConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::sh
     }
 
     c->setConstraint(constraint);
-    /*PROTECTED REGION END*/
+}
+
+std::shared_ptr<MoveConstraint> MoveConstraint::create(alica::ConstraintContext&)
+{
+    return std::make_shared<MoveConstraint>();
 }
 
 // State: AlignCircle

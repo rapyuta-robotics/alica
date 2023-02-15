@@ -1,4 +1,4 @@
-#include <alica/Move.h>
+#include "Move.h"
 
 namespace alica
 {
@@ -28,6 +28,12 @@ bool MoveRunTimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Black
 {
     return true;
 }
+
+std::shared_ptr<MoveRunTimeCondition> MoveRunTimeCondition::create(alica::ConditionContext&)
+{
+    return std::make_shared<MoveRunTimeCondition>();
+}
+
 /**
  * Task: Follower  -> EntryPoint-ID: 3277312192440194145
  * Task: Leader  -> EntryPoint-ID: 4346694000146342467

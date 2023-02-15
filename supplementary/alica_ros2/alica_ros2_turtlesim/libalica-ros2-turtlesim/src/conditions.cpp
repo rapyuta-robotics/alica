@@ -1,4 +1,4 @@
-#include <alica/conditions/conditions.h>
+#include "conditions.h"
 
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
