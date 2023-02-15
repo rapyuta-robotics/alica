@@ -29,7 +29,8 @@ BOOST_DLL_ALIAS(alica::UtilityFunctionMove::create, UtilityFunctionMove)
 class MoveRunTimeCondition : public BasicCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-    public:
+
+public:
     static std::shared_ptr<MoveRunTimeCondition> create(alica::ConditionContext&);
 };
 BOOST_DLL_ALIAS(alica::MoveRunTimeCondition::create, MoveRunTimeCondition)

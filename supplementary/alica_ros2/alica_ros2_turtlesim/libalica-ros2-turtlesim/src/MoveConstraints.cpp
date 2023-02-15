@@ -6,7 +6,6 @@
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Task.h>
 
-
 namespace alica
 {
 // Plan:Move
