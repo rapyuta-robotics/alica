@@ -12,5 +12,5 @@
   "relativeDirectory": "behaviours",
   "runtimeCondition": null,
   "variables": [],
-  "libraryName": "alica_supplementary_test_library"
+  "libraryName": "libalica-supplementary-tests"
 }

@@ -1,4 +1,4 @@
-#include "conditions.h"
+#include "libalica-supplementary-tests/conditions.h"
 
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>

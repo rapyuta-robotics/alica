@@ -1,5 +1,5 @@
+#include <libalica-supplementary-tests/ProblemModule/QueryBehaviour1.h>
 #include <memory>
-#include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
 
 #include <constraintsolver/CGSolver.h>
 

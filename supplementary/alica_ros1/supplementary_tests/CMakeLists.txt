@@ -65,8 +65,8 @@ if (BUILD_TESTING)
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_supplementary_tests )
+    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_supplementary_tests libalica-supplementary-tests)
 
-    add_subdirectory(alica_supplementary_test_library)
+    add_subdirectory(libalica-supplementary-tests)
 
 endif()

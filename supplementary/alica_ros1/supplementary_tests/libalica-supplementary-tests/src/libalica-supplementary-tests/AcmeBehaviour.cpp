@@ -1,4 +1,4 @@
-#include "AcmeBehaviour.h"
+#include "libalica-supplementary-tests/AcmeBehaviour.h"
 
 namespace alica
 {
