@@ -30,6 +30,7 @@ std::unique_ptr<BasicBehaviour> DynamicBehaviourCreator::createBehaviour(int64_t
             context.behaviourModel->getName(),                          // symbol to import
             boost::dll::load_mode::append_decorations                   // do append extensions and prefixes
     );
+    Logging::logDebug("DynamicLoading") << "Loaded behavior " << context.behaviourModel->getName();
 
     std::unique_ptr<BasicBehaviour> createdBehaviour = _behaviourCreator(context);
 

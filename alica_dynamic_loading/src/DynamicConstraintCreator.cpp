@@ -31,6 +31,8 @@ std::shared_ptr<BasicConstraint> DynamicConstraintCreator::createConstraint(int6
 
     std::shared_ptr<BasicConstraint> createdConstraint = _constraintCreator(context);
 
+    Logging::logDebug("DynamicLoading") << "Loaded constraint " << context.name << "Constraint";
+
     return createdConstraint;
 }
 
