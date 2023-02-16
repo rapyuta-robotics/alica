@@ -20,10 +20,6 @@ std::shared_ptr<UtilityFunction> ProblemBuildingMasterUtilityFunction::getUtilit
     return defaultFunction;
 }
 
-void ProblemBuildingMasterPreConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
-{
-}
-
 std::unique_ptr<ProblemBuildingMaster> ProblemBuildingMaster::create(alica::PlanContext& context)
 {
     return std::make_unique<ProblemBuildingMaster>(context);
@@ -32,11 +28,6 @@ std::unique_ptr<ProblemBuildingMaster> ProblemBuildingMaster::create(alica::Plan
 std::unique_ptr<ProblemBuildingMasterUtilityFunction> ProblemBuildingMasterUtilityFunction::create(alica::UtilityFunctionContext& context)
 {
     return std::make_unique<ProblemBuildingMasterUtilityFunction>();
-}
-
-std::unique_ptr<ProblemBuildingMasterPreConditionConstraint> ProblemBuildingMasterPreConditionConstraint::create(alica::ConstraintContext& context)
-{
-    return std::make_unique<ProblemBuildingMasterPreConditionConstraint>();
 }
 
 } // namespace alica

@@ -30,12 +30,4 @@ public:
 };
 
 BOOST_DLL_ALIAS(alica::ProblemBuildingMasterUtilityFunction::create, ProblemBuildingMasterUtilityFunction)
-
-class ProblemBuildingMasterPreConditionConstraint : public BasicConstraint
-{
-public:
-    void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
-    static std::unique_ptr<ProblemBuildingMasterPreConditionConstraint> create(alica::ConstraintContext&);
-};
-BOOST_DLL_ALIAS(alica::ProblemBuildingMasterPreConditionConstraint::create, ProblemBuildingMasterPreConditionConstraint)
 } /* namespace alica */

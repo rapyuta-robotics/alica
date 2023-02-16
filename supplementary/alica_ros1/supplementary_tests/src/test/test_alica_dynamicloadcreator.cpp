@@ -132,17 +132,24 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
     std::string path = getRootPath();
 
     YAML::Node node;
+    YAML::Node condition;
     ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/conditions/ConditionRepository.cnd")));
-    ASSERT_NO_THROW((node = node["conditions"][0]));
-    // Load model
-    TransitionCondition* conditionModel = TransitionConditionFactory::create(node, nullptr);
+    TransitionCondition* conditionModel;
 
-    // Create condition form dll
-    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
+    for (size_t i = 0; i < node["conditions"].size(); i++) {
+        condition = node["conditions"][i];
+        // Load model
+        conditionModel = TransitionConditionFactory::create(condition, nullptr);
+        if (conditionModel->getName() == "VariableHandlingStart") {
+            break;
+        }
+    }
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
     TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
 
+    // Create condition from dll
+    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
     auto transitionCondition = creator->createConditions(1, ctx);
     bool res = transitionCondition(nullptr, nullptr, nullptr);
     ASSERT_EQ(false, res);

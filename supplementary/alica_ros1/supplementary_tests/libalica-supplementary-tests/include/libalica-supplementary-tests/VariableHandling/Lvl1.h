@@ -48,13 +48,4 @@ public:
     static std::unique_ptr<Lvl1RuntimeConditionConstraint> create(alica::ConstraintContext&);
 };
 BOOST_DLL_ALIAS(alica::Lvl1RuntimeConditionConstraint::create, Lvl1RuntimeConditionConstraint)
-
-class Lvl1PreConditionConstraint : public BasicConstraint
-{
-public:
-    void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
-    static std::unique_ptr<Lvl1PreConditionConstraint> create(alica::ConstraintContext&);
-};
-BOOST_DLL_ALIAS(alica::Lvl1PreConditionConstraint::create, Lvl1PreConditionConstraint)
-
 } // namespace alica
