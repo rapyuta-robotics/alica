@@ -65,20 +65,4 @@ void EntryPointFactory::attachReferences()
     Factory::epStateReferences.clear();
 }
 
-/**
- * IDLE-EntryPoint
- * @return
- */
-const EntryPoint* EntryPointFactory::generateIdleEntryPoint()
-{
-    EntryPoint* idleEP = new EntryPoint();
-    Factory::setIDLE_Attributes(idleEP, EntryPoint::IDLENAME, EntryPoint::IDLEID);
-    idleEP->_index = -42;
-    idleEP->_cardinality = Interval<int>(0, std::numeric_limits<int>::max());
-    Task* idleTask = new Task();
-    Factory::setIDLE_Attributes(idleTask, Task::IDLENAME, Task::IDLEID);
-    idleEP->setTask(idleTask);
-    return idleEP;
-}
-
 } // namespace alica
