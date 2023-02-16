@@ -37,8 +37,6 @@ public:
 private:
     std::vector<PartialAssignment> _pool;
     unsigned int _curIndex;
-    const EntryPoint* _idleEP;
-    const Task* _idleTask; // Do not move above idleEp
 };
 
 } // namespace alica
