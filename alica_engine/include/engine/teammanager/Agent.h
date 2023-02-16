@@ -44,8 +44,7 @@ public:
     void setTimeout(AlicaTime t);
 
 private:
-    Agent(const ModelManager& modelManager, const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole,
-            const AgentAnnouncement& aa);
+    Agent(const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa);
 
     AgentId _id;
     bool _active;
