@@ -28,7 +28,7 @@ TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
         // go into WaitState of subPlan before evaluating
         worldModel->setTransitionCondition1067314038887345208(false); // do not transition from WaitState to SucState in subPlan
         worldModel->setTransitionCondition1747408236004727286(true);  // transition from EntryState to WaitState in subPlan
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         if (i % 2 == 0) {
             EXPECT_TRUE(alica::test::Util::isStateActive(ae, 338845808462999166)); // is in EntryState
@@ -42,7 +42,7 @@ TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
         worldModel->setTransitionCondition1747408236004727286(false); // do not transition from EntryState to WaitState in subPlan
         worldModel->setTransitionCondition1067314038887345208(true);  // transition from WaitState to SucState in subPlan
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
 
