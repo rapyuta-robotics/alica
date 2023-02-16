@@ -1,8 +1,8 @@
-#include <libalica-supplementary-tests/VariableHandling/Lvl1.h>
-#include <engine/DefaultUtilityFunction.h>
 #include <assert.h>
 #include <autodiff/AutoDiff.h>
+#include <engine/DefaultUtilityFunction.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
+#include <libalica-supplementary-tests/VariableHandling/Lvl1.h>
 using autodiff::TermPtr;
 
 namespace alica

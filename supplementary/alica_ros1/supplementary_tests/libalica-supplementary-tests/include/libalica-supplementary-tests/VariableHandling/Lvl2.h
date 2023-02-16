@@ -1,11 +1,11 @@
 #pragma once
 
+#include <engine/BasicCondition.h>
+#include <engine/BasicConstraint.h>
 #include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
-#include <engine/BasicCondition.h>
-#include <engine/BasicConstraint.h>
 
 #include <boost/dll/alias.hpp>
 
@@ -40,7 +40,6 @@ public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
 BOOST_DLL_ALIAS(alica::Lvl2RuntimeCondition::create, Lvl2RuntimeCondition)
-
 
 class Lvl2RuntimeConditionConstraint : public BasicConstraint
 {

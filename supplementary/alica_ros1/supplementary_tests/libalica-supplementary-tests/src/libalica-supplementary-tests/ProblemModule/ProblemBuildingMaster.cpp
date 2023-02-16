@@ -1,7 +1,7 @@
-#include <libalica-supplementary-tests/ProblemModule/ProblemBuildingMaster.h>
 #include <assert.h>
 #include <autodiff/AutoDiff.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
+#include <libalica-supplementary-tests/ProblemModule/ProblemBuildingMaster.h>
 using autodiff::TermPtr;
 
 namespace alica
@@ -10,9 +10,7 @@ ProblemBuildingMaster::ProblemBuildingMaster(PlanContext& context)
         : BasicPlan(context)
 {
 }
-ProblemBuildingMaster::~ProblemBuildingMaster()
-{
-}
+ProblemBuildingMaster::~ProblemBuildingMaster() {}
 
 std::shared_ptr<UtilityFunction> ProblemBuildingMasterUtilityFunction::getUtilityFunction(Plan* plan)
 {

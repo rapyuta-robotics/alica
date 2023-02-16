@@ -5,9 +5,9 @@
 #include <DynamicBehaviourCreator.h>
 #include <DynamicConditionCreator.h>
 #include <DynamicConstraintCreator.h>
+#include <DynamicPlanCreator.h>
 #include <DynamicTransitionConditionCreator.h>
 #include <DynamicUtilityFunctionCreator.h>
-#include <DynamicPlanCreator.h>
 #include <clock/AlicaRosTimer.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
@@ -69,8 +69,8 @@ protected:
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
-                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
-                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
+                std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
@@ -130,8 +130,8 @@ protected:
 
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
-                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
-                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
+                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+                    std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));

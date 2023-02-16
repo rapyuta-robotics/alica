@@ -1,5 +1,5 @@
-#include <libalica-supplementary-tests/VariableHandling/VHMaster.h>
 #include <engine/DefaultUtilityFunction.h>
+#include <libalica-supplementary-tests/VariableHandling/VHMaster.h>
 
 namespace alica
 {
@@ -14,9 +14,7 @@ std::shared_ptr<UtilityFunction> VHMasterUtilityFunction::getUtilityFunction(Pla
     return defaultFunction;
 }
 
-void VHMasterRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
-{
-}
+void VHMasterRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {}
 
 bool VHMasterRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
@@ -26,7 +24,6 @@ bool VHMasterRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const B
 std::unique_ptr<VHMaster> VHMaster::create(PlanContext& context)
 {
     return std::make_unique<VHMaster>(context);
-
 }
 std::unique_ptr<VHMasterUtilityFunction> VHMasterUtilityFunction::create(UtilityFunctionContext& context)
 {

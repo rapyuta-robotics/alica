@@ -1,7 +1,7 @@
-#include <libalica-supplementary-tests/ProblemModule/QueryPlan1.h>
-#include <engine/DefaultUtilityFunction.h>
 #include <autodiff/AutoDiff.h>
+#include <engine/DefaultUtilityFunction.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
+#include <libalica-supplementary-tests/ProblemModule/QueryPlan1.h>
 
 namespace alica
 {

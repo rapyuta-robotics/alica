@@ -1,7 +1,7 @@
-#include <libalica-supplementary-tests/GSolver/GSolverTestPlan.h>
 #include <autodiff/AutoDiff.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <iostream>
+#include <libalica-supplementary-tests/GSolver/GSolverTestPlan.h>
 
 using namespace autodiff;
 
@@ -11,9 +11,7 @@ GSolverTestPlan::GSolverTestPlan(PlanContext& context)
         : BasicPlan(context)
 {
 }
-GSolverTestPlan::~GSolverTestPlan()
-{
-}
+GSolverTestPlan::~GSolverTestPlan() {}
 
 std::shared_ptr<UtilityFunction> GSolverTestPlanUtilityFunction::getUtilityFunction(Plan* plan)
 {

@@ -1,12 +1,12 @@
 #pragma once
 
+#include <boost/dll/alias.hpp>
+#include <engine/BasicCondition.h>
+#include <engine/BasicConstraint.h>
+#include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
-#include <engine/BasicPlan.h>
-#include <engine/BasicCondition.h>
-#include <engine/BasicConstraint.h>
-#include <boost/dll/alias.hpp>
 
 namespace alica
 {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/Query.h>
 #include <vector>
-#include <engine/BasicBehaviour.h>
 
 namespace alica
 {

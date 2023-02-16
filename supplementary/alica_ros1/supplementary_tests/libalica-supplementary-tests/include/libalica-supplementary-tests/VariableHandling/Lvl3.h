@@ -1,11 +1,11 @@
 #pragma once
 
+#include <engine/BasicCondition.h>
+#include <engine/BasicConstraint.h>
 #include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
-#include <engine/BasicCondition.h>
-#include <engine/BasicConstraint.h>
 
 #include <boost/dll/alias.hpp>
 

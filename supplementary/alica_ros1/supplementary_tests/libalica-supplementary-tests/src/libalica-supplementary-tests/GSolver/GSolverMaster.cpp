@@ -6,9 +6,7 @@ GSolverMaster::GSolverMaster(PlanContext& context)
         : BasicPlan(context)
 {
 }
-GSolverMaster::~GSolverMaster()
-{
-}
+GSolverMaster::~GSolverMaster() {}
 
 std::shared_ptr<UtilityFunction> GSolverMasterUtilityFunction::getUtilityFunction(Plan* plan)
 {
@@ -16,8 +14,14 @@ std::shared_ptr<UtilityFunction> GSolverMasterUtilityFunction::getUtilityFunctio
     return defaultFunction;
 }
 
-std::unique_ptr<GSolverMaster> GSolverMaster::create(PlanContext& context) { return std::make_unique<GSolverMaster>(context); }
+std::unique_ptr<GSolverMaster> GSolverMaster::create(PlanContext& context)
+{
+    return std::make_unique<GSolverMaster>(context);
+}
 
-std::unique_ptr<GSolverMasterUtilityFunction> GSolverMasterUtilityFunction::create(UtilityFunctionContext& context) { return std::make_unique<GSolverMasterUtilityFunction>(); }
+std::unique_ptr<GSolverMasterUtilityFunction> GSolverMasterUtilityFunction::create(UtilityFunctionContext& context)
+{
+    return std::make_unique<GSolverMasterUtilityFunction>();
+}
 
 } // namespace alica
