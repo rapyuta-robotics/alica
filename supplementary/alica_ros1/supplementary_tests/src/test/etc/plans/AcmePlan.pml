@@ -5,6 +5,7 @@
   "frequency": 0,
   "id": 2338431421577856715,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "masterPlan": false,
   "name": "AcmePlan",
   "preCondition": null,
@@ -24,6 +25,5 @@
   "synchronisations": [],
   "transitions": [],
   "utilityThreshold": 0.0,
-  "variables": [],
-  "libraryName": "libalica-supplementary-tests"
+  "variables": []
 }

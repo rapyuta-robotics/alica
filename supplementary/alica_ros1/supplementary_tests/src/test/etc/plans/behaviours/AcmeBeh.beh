@@ -6,11 +6,11 @@
   "frequency": 5,
   "id": 4027024785691951817,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "name": "AcmeBeh",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "behaviours",
   "runtimeCondition": null,
-  "variables": [],
-  "libraryName": "libalica-supplementary-tests"
+  "variables": []
 }

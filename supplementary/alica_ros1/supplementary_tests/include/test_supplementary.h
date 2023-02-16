@@ -1,14 +1,13 @@
 #pragma once
 
 #include "ConstraintTestPlanDummySolver.h"
-#include "supplementary_tests/ConditionCreator.h"
-#include "supplementary_tests/ConstraintCreator.h"
-#include "supplementary_tests/PlanCreator.h"
-#include "supplementary_tests/TransitionConditionCreator.h"
-#include "supplementary_tests/UtilityFunctionCreator.h"
-
 #include "communication/AlicaRosCommunication.h"
 #include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicConstraintCreator.h>
+#include <DynamicTransitionConditionCreator.h>
+#include <DynamicUtilityFunctionCreator.h>
+#include <DynamicPlanCreator.h>
 #include <clock/AlicaRosTimer.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
@@ -69,9 +68,9 @@ protected:
         spinner = std::make_unique<ros::AsyncSpinner>(4);
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                std::make_unique<alica::TransitionConditionCreator>()};
+        creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
+                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
@@ -130,9 +129,9 @@ protected:
         nh.param<std::string>("rootPath", path, ".");
 
         for (int i = 0; i < getAgentCount(); ++i) {
-            creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-                    std::make_unique<alica::TransitionConditionCreator>()};
+            creators = {std::make_unique<alica::DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+                    std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::DynamicPlanCreator>(),
+                    std::make_unique<alica::DynamicTransitionConditionCreator>()};
 
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));

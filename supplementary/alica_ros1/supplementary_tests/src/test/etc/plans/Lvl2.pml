@@ -38,6 +38,7 @@
   "frequency": 0,
   "id": 1524452793378,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "masterPlan": false,
   "name": "Lvl2",
   "preCondition": null,
@@ -47,7 +48,7 @@
     "conditionString": "Lvl2 Runtime Condition",
     "enabled": false,
     "id": 1524453266123,
-    "name": "NewRuntimeCondition",
+    "name": "Lvl2RuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [
       {

@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1524452721452,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "masterPlan": true,
   "name": "VHMaster",
   "preCondition": null,
@@ -31,7 +32,7 @@
     "conditionString": "VHMaster Runtime Condition",
     "enabled": false,
     "id": 1524463006078,
-    "name": "NewRuntimeCondition",
+    "name": "VHMasterRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [

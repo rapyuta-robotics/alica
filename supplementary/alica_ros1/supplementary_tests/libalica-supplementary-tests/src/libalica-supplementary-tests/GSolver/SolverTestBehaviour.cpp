@@ -9,9 +9,8 @@ namespace alica
 std::vector<double> SolverTestBehaviour::result;
 
 SolverTestBehaviour::SolverTestBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
-
     callCounter = 0;
 }
 SolverTestBehaviour::~SolverTestBehaviour() {}

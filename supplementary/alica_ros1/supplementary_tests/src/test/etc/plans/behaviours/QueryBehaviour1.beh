@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1479556104511,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "name": "QueryBehaviour1",
   "postCondition": null,
   "preCondition": null,
@@ -24,6 +25,5 @@
       "name": "QBY",
       "variableType": ""
     }
-  ],
-  "libraryName": "libalica-supplementary-tests"
+  ]
 }

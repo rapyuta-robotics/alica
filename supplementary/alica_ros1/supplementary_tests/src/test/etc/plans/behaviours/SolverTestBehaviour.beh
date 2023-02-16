@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1417424455986,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "name": "SolverTestBehaviour",
   "postCondition": null,
   "preCondition": null,
@@ -24,6 +25,5 @@
       "name": "Y",
       "variableType": ""
     }
-  ],
-  "libraryName": "libalica-supplementary-tests"
+  ]
 }

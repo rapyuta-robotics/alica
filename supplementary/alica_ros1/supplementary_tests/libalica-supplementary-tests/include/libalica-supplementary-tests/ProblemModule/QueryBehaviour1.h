@@ -3,11 +3,11 @@
 #include <boost/dll/alias.hpp>
 #include <engine/constraintmodul/Query.h>
 #include <mutex>
-#include <supplementary_tests/DomainBehaviour.h>
+#include <engine/BasicBehaviour.h>
 
 namespace alica
 {
-class QueryBehaviour1 : public DomainBehaviour
+class QueryBehaviour1 : public BasicBehaviour
 {
 public:
     QueryBehaviour1(BehaviourContext& context);

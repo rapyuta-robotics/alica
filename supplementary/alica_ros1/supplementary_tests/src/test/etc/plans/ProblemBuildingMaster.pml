@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1479556022226,
   "inheritBlackboard": false,
+  "libraryName": "libalica-supplementary-tests",
   "masterPlan": false,
   "name": "ProblemBuildingMaster",
   "preCondition": null,
