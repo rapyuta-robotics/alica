@@ -21,7 +21,6 @@ class PartialAssignmentPool
 {
 public:
     PartialAssignmentPool(int initialSize);
-    ~PartialAssignmentPool() = default;
     PartialAssignment* getNext()
     {
         PartialAssignment* pa = &_pool[_curIndex];
