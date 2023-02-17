@@ -44,7 +44,8 @@
       "id": 295816226925111421,
       "libraryName": "libalica-supplementary-tests",
       "name": "VariableHandlingStart",
-      "relativeDirectory": "conditions"
+      "relativeDirectory": "conditions",
+      "libraryName": "libalica-supplementary-tests"
     },
     {
       "blackboard": [],
@@ -53,7 +54,8 @@
       "id": 2011598442725310989,
       "libraryName": "libalica-util",
       "name": "DefaultCondition",
-      "relativeDirectory": "conditions"
+      "relativeDirectory": "conditions",
+      "libraryName": "libalica-supplementary-tests"
     }
   ],
   "id": 0,

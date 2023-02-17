@@ -33,7 +33,6 @@ public:
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
     bool idExists(const int64_t id) const;
-    const EntryPoint* generateIdleEntryPoint();
     void reload(const YAML::Node& config);
 
 private:

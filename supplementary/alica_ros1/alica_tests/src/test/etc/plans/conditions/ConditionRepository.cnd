@@ -6,7 +6,7 @@
       "comment": "AnyChildSuccess",
       "conditionRepository": 0,
       "id": 1,
-      "libraryName": "libalica-util",
+      "libraryName": "alica_standard_library",
       "name": "AnyChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -15,7 +15,7 @@
       "comment": "AllChildSuccess",
       "conditionRepository": 0,
       "id": 2,
-      "libraryName": "libalica-util",
+      "libraryName": "alica_standard_library",
       "name": "AllChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -24,7 +24,7 @@
       "comment": "AnyChildFailure",
       "conditionRepository": 0,
       "id": 3,
-      "libraryName": "libalica-util",
+      "libraryName": "alica_standard_library",
       "name": "AnyChildFailure",
       "relativeDirectory": "conditions"
     },
@@ -33,7 +33,7 @@
       "comment": "AllChildFailure",
       "conditionRepository": 0,
       "id": 4,
-      "libraryName": "libalica-util",
+      "libraryName": "alica_standard_library",
       "name": "AllChildFailure",
       "relativeDirectory": "conditions"
     },

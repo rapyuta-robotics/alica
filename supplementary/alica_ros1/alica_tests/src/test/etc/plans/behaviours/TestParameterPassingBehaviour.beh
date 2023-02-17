@@ -28,7 +28,7 @@
   "frequency": 30,
   "id": 831400441334251602,
   "inheritBlackboard": false,
-  "libraryName": "libalica-tests",
+  "libraryName": "alica-tests",
   "name": "TestParameterPassingBehaviour",
   "postCondition": null,
   "preCondition": null,

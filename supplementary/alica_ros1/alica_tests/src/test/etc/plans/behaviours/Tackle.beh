@@ -6,7 +6,7 @@
   "frequency": 30,
   "id": 1402488939130,
   "inheritBlackboard": false,
-  "libraryName": "libalica-tests",
+  "libraryName": "alica-tests",
   "name": "Tackle",
   "postCondition": null,
   "preCondition": null,

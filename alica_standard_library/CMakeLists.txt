@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(alica_dynamic_loading)
+project(alica_standard_library)
 
 # Set up utils to allow Colcon/catkin to find the packages
 include(GNUInstallDirs)
@@ -10,8 +10,8 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake_flags/cflags.cmake)
 alica_compile_flags()
 
 # Imports
-find_package(alica_solver_interface REQUIRED)
 find_package(alica_engine REQUIRED)
+find_package(alica_solver_interface REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
@@ -22,17 +22,9 @@ include_directories(
   include
 )
 
-add_library(${PROJECT_NAME}
-  src/DynamicPlanCreator.cpp
-  src/DynamicBehaviourCreator.cpp
-  src/DynamicConditionCreator.cpp
-  src/DynamicConstraintCreator.cpp
-  src/DynamicLoadingUtils.cpp
-  src/DynamicTransitionConditionCreator.cpp
-  src/DynamicUtilityFunctionCreator.cpp
-  )
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+add_library(${PROJECT_NAME} SHARED
+  src/Conditions.cpp
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -42,9 +34,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
   alica_engine
   alica_solver_interface
-  Boost::system
-  Boost::filesystem
-  ${CMAKE_DL_LIBS}
 )
 
 # Install
@@ -52,11 +41,6 @@ install(TARGETS ${PROJECT_NAME}
   EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-)
-
-install(DIRECTORY include/
-  DESTINATION include/
-  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 
 
@@ -78,13 +62,10 @@ write_basic_package_version_file(
   COMPATIBILITY SameMajorVersion
 )
 
-set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
-
 configure_package_config_file(
   ${CMAKE_PROJECT_NAME}Config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
   INSTALL_DESTINATION ${ConfigPackageLocation}
-  PATH_VARS INCLUDE_INSTALL_DIR
 )
 
 install(FILES

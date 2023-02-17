@@ -6,7 +6,7 @@
   "frequency": 30,
   "id": 1402489351885,
   "inheritBlackboard": false,
-  "libraryName": "libalica-tests",
+  "libraryName": "alica-tests",
   "name": "AttackOpp",
   "postCondition": null,
   "preCondition": null,

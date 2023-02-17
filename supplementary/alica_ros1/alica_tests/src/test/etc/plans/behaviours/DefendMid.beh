@@ -6,7 +6,7 @@
   "frequency": 30,
   "id": 1402488730695,
   "inheritBlackboard": false,
-  "libraryName": "libalica-tests",
+  "libraryName": "alica-tests",
   "name": "DefendMid",
   "postCondition": null,
   "preCondition": null,
