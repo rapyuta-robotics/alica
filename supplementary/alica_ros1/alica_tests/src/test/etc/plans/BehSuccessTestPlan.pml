@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 2189867578804904568,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "BehSuccessTestPlan",
   "preCondition": null,

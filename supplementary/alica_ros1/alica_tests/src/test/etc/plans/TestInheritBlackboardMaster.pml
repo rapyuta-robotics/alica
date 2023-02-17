@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "This is a blackboard entry for testing",
-      "defaultValue": null,
       "id": 1944554894288661764,
       "key": "masterKey",
       "type": "int64"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 1179066429431332056,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "TestInheritBlackboardMaster",
   "preCondition": null,

@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 4227261568323854459,
       "key": "aToBSwitch",
       "type": "int64"
@@ -11,7 +10,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 4460455267274597988,
       "key": "cToDSwitch",
       "type": "int64"
@@ -39,6 +37,7 @@
   "frequency": 0,
   "id": 1530004915640,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "HandleFailExplicit",
   "preCondition": null,
@@ -177,7 +176,8 @@
         "input": [
           {
             "childKey": "idx",
-            "parentKey": "aToBSwitch"
+            "parentKey": "aToBSwitch",
+            "value": null
           }
         ],
         "output": []
@@ -230,7 +230,8 @@
         "input": [
           {
             "childKey": "idx",
-            "parentKey": "cToDSwitch"
+            "parentKey": "cToDSwitch",
+            "value": null
           }
         ],
         "output": []

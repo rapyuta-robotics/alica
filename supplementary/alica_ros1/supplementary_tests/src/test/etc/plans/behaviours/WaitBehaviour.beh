@@ -1,0 +1,16 @@
+{
+  "blackboard": [],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 30,
+  "id": 1384965293178962783,
+  "inheritBlackboard": false,
+  "name": "WaitBehaviour",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "behaviours",
+  "runtimeCondition": null,
+  "variables": [],
+  "libraryName": "libalica-supplementary-tests"
+}

@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1418902217839,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "RealMasterPlanForSyncTest",
   "preCondition": null,

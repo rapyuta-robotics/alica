@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1428508768572,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "BehaviourTriggerTestPlan",
   "preCondition": null,

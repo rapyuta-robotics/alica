@@ -54,6 +54,7 @@
   "frequency": 0,
   "id": 1407153663917,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "PlanThree",
   "preCondition": null,
