@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "Subscriber topic to listen for trigger msgs to join the formation",
-      "defaultValue": null,
       "id": 4387163444028990842,
       "key": "join_formation_topic",
       "type": "std::string"
@@ -11,7 +10,6 @@
     {
       "access": "protected",
       "comment": "Subscriber topic to listen for trigger msgs to leave the formation",
-      "defaultValue": null,
       "id": 1679753874536868957,
       "key": "leave_formation_topic",
       "type": "std::string"
