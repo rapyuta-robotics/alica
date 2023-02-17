@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 1223260418939648240,
       "key": "WaitForCondState2CondSuccessState",
       "type": "bool"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 3153116020668535682,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SuccessOnCondPlan",
   "preCondition": null,
@@ -87,7 +87,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "WaitForCondState2CondSuccessState"
+            "parentKey": "WaitForCondState2CondSuccessState",
+            "value": null
           }
         ],
         "output": []

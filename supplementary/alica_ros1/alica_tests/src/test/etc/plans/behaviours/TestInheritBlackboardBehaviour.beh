@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 831400441334251600,
   "inheritBlackboard": true,
+  "libraryName": "alica-tests",
   "name": "TestInheritBlackboardBehaviour",
   "postCondition": null,
   "preCondition": null,

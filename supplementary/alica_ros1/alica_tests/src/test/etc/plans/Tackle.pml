@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1402489318663,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "Tackle",
   "preCondition": null,

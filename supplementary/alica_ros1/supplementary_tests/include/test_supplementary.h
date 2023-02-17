@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ConstraintTestPlanDummySolver.h"
-#include "supplementary_tests/BehaviourCreator.h"
 #include "supplementary_tests/ConditionCreator.h"
 #include "supplementary_tests/ConstraintCreator.h"
 #include "supplementary_tests/PlanCreator.h"
@@ -9,6 +8,7 @@
 #include "supplementary_tests/UtilityFunctionCreator.h"
 
 #include "communication/AlicaRosCommunication.h"
+#include <DynamicBehaviourCreator.h>
 #include <clock/AlicaRosTimer.h>
 #include <constraintsolver/CGSolver.h>
 #include <engine/AlicaClock.h>
@@ -70,7 +70,7 @@ protected:
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac);
@@ -131,7 +131,7 @@ protected:
 
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());

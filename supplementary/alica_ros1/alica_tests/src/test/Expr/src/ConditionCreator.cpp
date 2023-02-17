@@ -60,7 +60,6 @@
 #include <alica_tests/SuccessOnCondWrapperBPlan2869465844414224272.h>
 #include <alica_tests/SuccessOnInitPlan1863216812678266511.h>
 #include <alica_tests/Tackle1402489318663.h>
-#include <alica_tests/TestBehaviour55178365253414982.h>
 #include <alica_tests/TestInheritBlackboard1692837668719979400.h>
 #include <alica_tests/TestInheritBlackboardMaster1179066429431332056.h>
 #include <alica_tests/TestMasterPlan2521443078354411465.h>
