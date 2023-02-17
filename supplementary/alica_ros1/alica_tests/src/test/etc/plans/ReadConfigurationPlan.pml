@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1588061334567,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "ReadConfigurationPlan",
   "preCondition": null,

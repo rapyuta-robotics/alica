@@ -22,7 +22,6 @@ public:
     template <typename T>
     static T getValue(const YAML::Node& node, const std::string& key, T defaultValue);
     static bool isValid(const YAML::Node& node) { return node && YAML::NodeType::Null != node.Type(); }
-    static void setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id);
 
 protected:
     static constexpr const char* LOGNAME = "Factory";

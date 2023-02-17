@@ -21,7 +21,6 @@ class PartialAssignmentPool
 {
 public:
     PartialAssignmentPool(int initialSize);
-    ~PartialAssignmentPool();
     PartialAssignment* getNext()
     {
         PartialAssignment* pa = &_pool[_curIndex];
@@ -37,8 +36,6 @@ public:
 private:
     std::vector<PartialAssignment> _pool;
     unsigned int _curIndex;
-    const EntryPoint* _idleEP;
-    const Task* _idleTask; // Do not move above idleEp
 };
 
 } // namespace alica

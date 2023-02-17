@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 330153981060768900,
       "key": "ChooseTestState2BehSuccessTestState",
       "type": "bool"
@@ -11,7 +10,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 1487451634780526767,
       "key": "ChooseTestState2PlanSuccessTestState",
       "type": "bool"
@@ -19,7 +17,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 4512660562305170561,
       "key": "ChooseTestState2MultiPlanInstanceSuccessTestState",
       "type": "bool"
@@ -47,6 +44,7 @@
   "frequency": 0,
   "id": 2521443078354411465,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "TestMasterPlan",
   "preCondition": null,
@@ -175,7 +173,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "ChooseTestState2BehSuccessTestState"
+            "parentKey": "ChooseTestState2BehSuccessTestState",
+            "value": null
           }
         ],
         "output": []
@@ -204,7 +203,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "ChooseTestState2PlanSuccessTestState"
+            "parentKey": "ChooseTestState2PlanSuccessTestState",
+            "value": null
           }
         ],
         "output": []
@@ -233,7 +233,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "ChooseTestState2MultiPlanInstanceSuccessTestState"
+            "parentKey": "ChooseTestState2MultiPlanInstanceSuccessTestState",
+            "value": null
           }
         ],
         "output": []

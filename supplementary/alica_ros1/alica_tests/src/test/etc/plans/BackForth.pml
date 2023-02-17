@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1529456584982,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "BackForth",
   "preCondition": null,
