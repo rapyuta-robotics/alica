@@ -113,7 +113,7 @@ In this section, you will create plans using the ALICA plan designer.
 2. Enter 'Master' as the plan name and check the Master Plan checkbox at the bottom.
 3. Set the frequency of the plan to 0.
 4. Set the library name to libalica-turtlesim (Note: for all alica elements fill in the library name as libalica-turtlesim with the exceptions being:
-   Conditions- All(Any)Child(Success)Failure should have library name as libalica-utils & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
+   Conditions- All(Any)Child(Success)Failure should have library name as alica_standard_library & the behaviour WaitForTrigger should have library name as libalica-ros-utils)
 5. Click on "Create New" to create the Master Plan.
 
 On the top left you will see a tab for your newly created Master Plan.
@@ -182,7 +182,7 @@ On the top left you will see a tab for your newly created Master Plan.
 
 The logic for the plans, behaviours, conditions & constraints is implemented as part of 3 libraries -
 
-1. libalica-utils: contains utility conditions that are used to demonstrate their reuse in different alica applications
+1. alica_standard_library: contains utility conditions that can be reused in different alica applications
 2. libalica-ros-utils: contains a utility behaviour that is used to demonstrate its reuse in different alica applications
 3. libalica-turtlesim: contains the plans, behaviours, conditions & constraints used specifically by the application
 
