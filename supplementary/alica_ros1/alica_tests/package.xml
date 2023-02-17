@@ -18,6 +18,7 @@
   <depend>alica_solver_interface</depend>
   <depend>alica_test_utility</depend>
   <depend>alica_ros_proxy</depend>
+  <depend>alica_dynamic_loading</depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 

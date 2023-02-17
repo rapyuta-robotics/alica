@@ -1,6 +1,5 @@
 #pragma once
 
-#include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/ConstraintTestPlanDummySolver.h>
@@ -18,6 +17,8 @@
 #include <engine/AlicaContext.h>
 #include <engine/AlicaEngine.h>
 #include <engine/logging/AlicaDefaultLogger.h>
+
+#include <DynamicBehaviourCreator.h>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -78,7 +79,7 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
@@ -161,7 +162,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             alica::AlicaContext* ac =
@@ -253,7 +254,7 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
@@ -304,7 +305,7 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
@@ -352,7 +353,7 @@ protected:
         ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::LegacyTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
@@ -396,7 +397,7 @@ protected:
         nh.param<std::string>("/rootPath", path, ".");
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                    std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             alica::AlicaContext* ac =

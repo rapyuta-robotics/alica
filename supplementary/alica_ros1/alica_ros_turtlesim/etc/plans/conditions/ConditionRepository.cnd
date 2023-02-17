@@ -6,7 +6,7 @@
       "comment": "Is true if atleast 1 child attached to a state succeeds",
       "conditionRepository": 0,
       "id": 1,
-      "libraryName": "libalica-utils",
+      "libraryName": "alica_standard_library",
       "name": "AnyChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -15,7 +15,7 @@
       "comment": "Is true if all children attached to a state succeed",
       "conditionRepository": 0,
       "id": 2,
-      "libraryName": "libalica-utils",
+      "libraryName": "alica_standard_library",
       "name": "AllChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -24,7 +24,7 @@
       "comment": "AnyChildFailure",
       "conditionRepository": 0,
       "id": 3,
-      "libraryName": "libalica-utils",
+      "libraryName": "alica_standard_library",
       "name": "AnyChildFailure",
       "relativeDirectory": "conditions"
     },
@@ -33,7 +33,7 @@
       "comment": "AllChildFailure",
       "conditionRepository": 0,
       "id": 4,
-      "libraryName": "libalica-utils",
+      "libraryName": "alica_standard_library",
       "name": "AllChildFailure",
       "relativeDirectory": "conditions"
     },

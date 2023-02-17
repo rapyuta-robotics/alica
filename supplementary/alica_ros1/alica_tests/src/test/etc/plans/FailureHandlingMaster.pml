@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 4150733089768927549,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "FailureHandlingMaster",
   "preCondition": null,

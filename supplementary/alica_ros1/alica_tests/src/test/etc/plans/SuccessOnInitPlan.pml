@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1863216812678266511,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SuccessOnInitPlan",
   "preCondition": null,

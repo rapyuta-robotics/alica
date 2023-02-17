@@ -11,15 +11,7 @@ namespace alica
 PartialAssignmentPool::PartialAssignmentPool(int initialSize)
         : _pool(initialSize)
         , _curIndex(0)
-        , _idleEP(EntryPointFactory::generateIdleEntryPoint())
-        , _idleTask(_idleEP->getTask())
 {
-}
-
-PartialAssignmentPool::~PartialAssignmentPool()
-{
-    delete _idleEP;
-    delete _idleTask;
 }
 
 void PartialAssignmentPool::increaseSize()
