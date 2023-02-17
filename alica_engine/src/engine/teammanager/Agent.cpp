@@ -10,8 +10,7 @@
 namespace alica
 {
 
-Agent::Agent(const ModelManager& modelManager, const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole,
-        const AgentAnnouncement& aa)
+Agent::Agent(const PlanRepository& planRepository, const AlicaClock& clock, AlicaTime timeout, const std::string& defaultRole, const AgentAnnouncement& aa)
         : _id(aa.senderID)
         , _token(aa.token)
         , _name(aa.senderName)
@@ -19,7 +18,7 @@ Agent::Agent(const ModelManager& modelManager, const PlanRepository& planReposit
         , _sdk(aa.senderSdk)
         , _clock(clock)
         , _properties(defaultRole, aa)
-        , _engineData(modelManager, planRepository, aa.senderID)
+        , _engineData(planRepository, aa.senderID)
         , _timeout(timeout)
         , _active(false)
         , _ignored(false)
