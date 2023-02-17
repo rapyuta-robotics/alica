@@ -20,7 +20,8 @@
 namespace alica
 {
 
-class BlackboardUtil;
+namespace internal
+{
 
 struct BlackboardException : public std::logic_error
 {
@@ -167,8 +168,6 @@ public:
 private:
     std::unordered_map<std::string, BBValueType> _vals;
     std::unordered_map<std::string, std::string> _yamlType;
-
-    friend BlackboardUtil;
 
     template <class T>
     void setImpl(const std::string& key, T&& value)
@@ -317,13 +316,15 @@ private:
     };
 };
 
+} // namespace internal
+
 class Blackboard
 {
 public:
     Blackboard() = default;
     Blackboard(Blackboard&&) = delete;
-    Blackboard& operator&=(const Blackboard&) = delete;
-    Blackboard& operator&=(Blackboard&&) = delete;
+    Blackboard& operator=(const Blackboard&) = delete;
+    Blackboard& operator=(Blackboard&&) = delete;
     Blackboard(const BlackboardBlueprint* blueprint)
             : _impl{blueprint}
             , _mtx{}
@@ -333,12 +334,12 @@ public:
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
 
-    // Not thread safe.  Avoid for public use
-    BlackboardImpl& impl() { return _impl; }
-    const BlackboardImpl& impl() const { return _impl; }
+    // TODO: once these APIs are removed from user code, make these methods private so that only alica internal's can use them
+    [[deprecated("Use UnlockedBlackboard instead")]] internal::BlackboardImpl& impl() { return _impl; }
+    [[deprecated("Use UnlockedBlackboard instead")]] const internal::BlackboardImpl& impl() const { return _impl; }
 
 private:
-    BlackboardImpl _impl;
+    internal::BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };
 
@@ -350,9 +351,10 @@ public:
             , _impl(bb.impl())
     {
     }
-    LockedBlackboardRO& operator&=(const LockedBlackboardRO&) = delete;
-    LockedBlackboardRO& operator&=(LockedBlackboardRO&) = delete;
-    LockedBlackboardRO(LockedBlackboardRO&) = delete;
+    LockedBlackboardRO& operator=(const LockedBlackboardRO&) = delete;
+    LockedBlackboardRO& operator=(LockedBlackboardRO&&) = delete;
+    LockedBlackboardRO(const LockedBlackboardRO&) = delete;
+    LockedBlackboardRO(LockedBlackboardRO&&) = delete;
 
     bool empty() const { return _impl.empty(); }
     size_t size() const { return _impl.size(); }
@@ -366,7 +368,7 @@ public:
 
 private:
     std::shared_lock<std::shared_mutex> _lk;
-    const BlackboardImpl& _impl;
+    const internal::BlackboardImpl& _impl;
 };
 
 class LockedBlackboardRW
@@ -377,9 +379,10 @@ public:
             , _impl(bb.impl())
     {
     }
-    LockedBlackboardRW& operator&=(const LockedBlackboardRW&) = delete;
-    LockedBlackboardRW& operator&=(LockedBlackboardRW&) = delete;
-    LockedBlackboardRW(LockedBlackboardRW&) = delete;
+    LockedBlackboardRW& operator=(const LockedBlackboardRW&) = delete;
+    LockedBlackboardRW& operator=(LockedBlackboardRW&&) = delete;
+    LockedBlackboardRW(const LockedBlackboardRW&) = delete;
+    LockedBlackboardRW(LockedBlackboardRW&&) = delete;
 
     template <typename T>
     decltype(auto) get(const std::string& key) const
@@ -404,7 +407,45 @@ public:
 
 private:
     std::unique_lock<std::shared_mutex> _lk;
-    BlackboardImpl& _impl;
+    internal::BlackboardImpl& _impl;
+};
+
+class UnlockedBlackboard
+{
+public:
+    UnlockedBlackboard(Blackboard& bb)
+            : _impl(bb.impl())
+    {
+    }
+    UnlockedBlackboard(const UnlockedBlackboard&) = delete;
+    UnlockedBlackboard(UnlockedBlackboard&&) = delete;
+    UnlockedBlackboard& operator=(const UnlockedBlackboard&) = delete;
+    UnlockedBlackboard& operator=(UnlockedBlackboard&&) = delete;
+
+    template <typename T>
+    decltype(auto) get(const std::string& key) const
+    {
+        return _impl.get<T>(key);
+    }
+
+    template <typename T>
+    decltype(auto) get(const std::string& key)
+    {
+        return _impl.get<T>(key);
+    }
+
+    template <typename T>
+    void set(const std::string& key, T&& value)
+    {
+        _impl.set(key, std::forward<T>(value));
+    }
+
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
+
+private:
+    internal::BlackboardImpl& _impl;
 };
 
 } // namespace alica
