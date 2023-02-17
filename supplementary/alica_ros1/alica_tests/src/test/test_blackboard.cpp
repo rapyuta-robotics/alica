@@ -148,49 +148,49 @@ TEST_F(TestBlackboard, testWithoutPlan)
 TEST_F(TestBlackboard, testMappingFromBool)
 {
     EXPECT_TRUE((checkMapping<bool, bool>(BBType::BOOL, true, BBType::BOOL, true)));
-    EXPECT_THROW((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<bool, uint64_t>(BBType::BOOL, true, BBType::UINT64, 1u)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<bool, std::string>(BBType::BOOL, true, BBType::STRING, "true")), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<bool, int64_t>(BBType::BOOL, true, BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<bool, uint64_t>(BBType::BOOL, true, BBType::UINT64, 1u)), BlackboardException);
+    EXPECT_THROW((checkMapping<bool, double>(BBType::BOOL, true, BBType::DOUBLE, 1.0)), BlackboardException);
+    EXPECT_THROW((checkMapping<bool, std::string>(BBType::BOOL, true, BBType::STRING, "true")), BlackboardException);
     EXPECT_TRUE((checkMapping<bool, std::any>(BBType::BOOL, true, BBType::ANY, std::any{true})));
 }
 
 TEST_F(TestBlackboard, testMappingFromInt64)
 {
-    EXPECT_THROW((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<int64_t, bool>(BBType::INT64, 1, BBType::BOOL, true)), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, int64_t>(BBType::INT64, 1, BBType::INT64, 1)));
-    EXPECT_THROW((checkMapping<int64_t, uint64_t>(BBType::INT64, 1, BBType::UINT64, 1u)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<int64_t, std::string>(BBType::INT64, 1, BBType::STRING, "1")), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<int64_t, uint64_t>(BBType::INT64, 1, BBType::UINT64, 1u)), BlackboardException);
+    EXPECT_THROW((checkMapping<int64_t, double>(BBType::INT64, 1, BBType::DOUBLE, 1.0)), BlackboardException);
+    EXPECT_THROW((checkMapping<int64_t, std::string>(BBType::INT64, 1, BBType::STRING, "1")), BlackboardException);
     EXPECT_TRUE((checkMapping<int64_t, std::any>(BBType::INT64, 1, BBType::ANY, std::any{(int64_t) 1})));
 }
 
 TEST_F(TestBlackboard, testMappingFromUnsignedInt64)
 {
-    EXPECT_THROW((checkMapping<uint64_t, bool>(BBType::UINT64, 1, BBType::BOOL, true)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<uint64_t, int64_t>(BBType::UINT64, 1, BBType::INT64, 1)), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, bool>(BBType::UINT64, 1, BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, int64_t>(BBType::UINT64, 1, BBType::INT64, 1)), BlackboardException);
     EXPECT_TRUE((checkMapping<uint64_t, uint64_t>(BBType::UINT64, 1, BBType::UINT64, 1u)));
-    EXPECT_THROW((checkMapping<uint64_t, double>(BBType::UINT64, 1, BBType::DOUBLE, 1.0)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<uint64_t, std::string>(BBType::UINT64, 1, BBType::STRING, "1")), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, double>(BBType::UINT64, 1, BBType::DOUBLE, 1.0)), BlackboardException);
+    EXPECT_THROW((checkMapping<uint64_t, std::string>(BBType::UINT64, 1, BBType::STRING, "1")), BlackboardException);
     EXPECT_TRUE((checkMapping<uint64_t, std::any>(BBType::UINT64, 1, BBType::ANY, std::any{(uint64_t) 1u})));
 }
 
 TEST_F(TestBlackboard, testMappingFromDouble)
 {
-    EXPECT_THROW((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<double, uint64_t>(BBType::DOUBLE, 1.0, BBType::UINT64, 1u)), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<double, bool>(BBType::DOUBLE, 1.0, BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<double, int64_t>(BBType::DOUBLE, 1.0, BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<double, uint64_t>(BBType::DOUBLE, 1.0, BBType::UINT64, 1u)), BlackboardException);
     EXPECT_TRUE((checkMapping<double, double>(BBType::DOUBLE, 1.0, BBType::DOUBLE, 1.0)));
-    EXPECT_THROW((checkMapping<double, std::string>(BBType::DOUBLE, 1.0, BBType::STRING, "1.0")), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<double, std::string>(BBType::DOUBLE, 1.0, BBType::STRING, "1.0")), BlackboardException);
     EXPECT_TRUE((checkMapping<double, std::any>(BBType::DOUBLE, 1.0, BBType::ANY, std::any{1.0})));
 }
 
 TEST_F(TestBlackboard, testMappingFromString)
 {
-    EXPECT_THROW((checkMapping<std::string, bool>(BBType::STRING, "1", BBType::BOOL, true)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<std::string, int64_t>(BBType::STRING, "1", BBType::INT64, 1)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<std::string, uint64_t>(BBType::STRING, "1", BBType::UINT64, 1u)), internal::BlackboardException);
-    EXPECT_THROW((checkMapping<std::string, double>(BBType::STRING, "1", BBType::DOUBLE, 1.0)), internal::BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, bool>(BBType::STRING, "1", BBType::BOOL, true)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, int64_t>(BBType::STRING, "1", BBType::INT64, 1)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, uint64_t>(BBType::STRING, "1", BBType::UINT64, 1u)), BlackboardException);
+    EXPECT_THROW((checkMapping<std::string, double>(BBType::STRING, "1", BBType::DOUBLE, 1.0)), BlackboardException);
     EXPECT_TRUE((checkMapping<std::string, std::string>(BBType::STRING, "1", BBType::STRING, "1")));
     EXPECT_TRUE((checkMapping<std::string, std::any>(BBType::STRING, "1", BBType::ANY, std::any{std::string{"1"}})));
 }
@@ -202,13 +202,13 @@ TEST_F(TestBlackboard, testAccessingWithWrongType)
     bb_locked.set<int64_t>("value", 1);
 
     // throw exception because double does not match int64, even though we can cast int to double
-    EXPECT_THROW({ bb_locked.get<double>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<double>("value"); }, BlackboardException);
 
     // throw exception because string does not match int64
-    EXPECT_THROW({ bb_locked.get<std::string>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<std::string>("value"); }, BlackboardException);
 
     // throw exception because uint64 does not match int64, because signed -> unsigned conversions are not supported
-    EXPECT_THROW({ bb_locked.get<uint64_t>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<uint64_t>("value"); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
@@ -217,7 +217,7 @@ TEST_F(TestBlackboard, testAccessingWithNonExistingKey)
     auto bb_locked = LockedBlackboardRW(bb);
 
     // throw exception because key does not exist
-    EXPECT_THROW({ bb_locked.get<double>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<double>("value"); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
@@ -227,7 +227,7 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithKnownWrongType)
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
     // throw exception because type double doesnt match PlanStatus
-    EXPECT_THROW({ bb_locked.get<double>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<double>("value"); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
@@ -237,7 +237,7 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
     bb_locked.set<PlanStatus>("value", PlanStatus::Success);
 
     // throw exception because UnknownType does not match PlanStatus
-    EXPECT_THROW({ bb_locked.get<UnknownType>("value"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<UnknownType>("value"); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
@@ -264,22 +264,22 @@ TEST_F(TestBlackboard, testSetNotMatchingKnownType)
     EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
 
     // throw exception because value is not of type double, but int
-    EXPECT_THROW({ bb.set<double>("intVal", 2.7); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<double>("intVal", 2.7); }, BlackboardException);
 
     // throw exception because value is not of type string, but double
-    EXPECT_THROW({ bb.set<std::string>("doubleVal", "test"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<std::string>("doubleVal", "test"); }, BlackboardException);
 
     // throw exception because value is not of type string, but bool
-    EXPECT_THROW({ bb.set<std::string>("boolVal", "test"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<std::string>("boolVal", "test"); }, BlackboardException);
 
     // throw exception because value is not of type int64, but string
-    EXPECT_THROW({ bb.set<int64_t>("stringVal", 0); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<int64_t>("stringVal", 0); }, BlackboardException);
 
     // throw exception because value is not of type int64, but uint64
-    EXPECT_THROW({ bb.set<int64_t>("uintVal", 0); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<int64_t>("uintVal", 0); }, BlackboardException);
 
     // throw exception because value is not of type unt64, but int64
-    EXPECT_THROW({ bb.set<uint64_t>("intVal", 0); }, internal::BlackboardException);
+    EXPECT_THROW({ bb.set<uint64_t>("intVal", 0); }, BlackboardException);
 }
 
 TEST_F(TestBlackboard, testSetNotMatchingUnknownType)
@@ -337,9 +337,9 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
     EXPECT_EQ(bb_locked.get<bool>("anyType"), true);
 
     // use get with wrong type
-    EXPECT_THROW({ bb_locked.get<std::string>("knownType"); }, internal::BlackboardException);
-    EXPECT_THROW({ bb_locked.get<std::string>("unknownType"); }, internal::BlackboardException);
-    EXPECT_THROW({ bb_locked.get<std::string>("anyType"); }, internal::BlackboardException);
+    EXPECT_THROW({ bb_locked.get<std::string>("knownType"); }, BlackboardException);
+    EXPECT_THROW({ bb_locked.get<std::string>("unknownType"); }, BlackboardException);
+    EXPECT_THROW({ bb_locked.get<std::string>("anyType"); }, BlackboardException);
 
     EXPECT_EQ(std::any_cast<bool>(bb_locked.get<std::any>("anyType")), true);
 }

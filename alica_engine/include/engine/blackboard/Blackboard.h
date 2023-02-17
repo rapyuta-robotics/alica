@@ -20,9 +20,6 @@
 namespace alica
 {
 
-namespace internal
-{
-
 struct BlackboardException : public std::logic_error
 {
     static constexpr const char* BB_EXCEPTION_PREFIX = "Blackboard exception: ";
@@ -33,6 +30,9 @@ struct BlackboardException : public std::logic_error
     BlackboardException(const BlackboardException&) = default;
     BlackboardException& operator=(const BlackboardException&) = default;
 };
+
+namespace internal
+{
 
 class BlackboardImpl
 {
