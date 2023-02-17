@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "2",
       "id": 683514589549348538,
       "key": "Plan2Sub",
       "type": "int64"
@@ -11,7 +10,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "5",
       "id": 1571743223454861605,
       "key": "Init2Term",
       "type": "int64"
@@ -39,6 +37,7 @@
   "frequency": 0,
   "id": 1613378406860,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SchedulingTestPlan1",
   "preCondition": null,
@@ -136,7 +135,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "Plan2Sub"
+            "parentKey": "Plan2Sub",
+            "value": null
           }
         ],
         "output": []
@@ -170,7 +170,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "Init2Term"
+            "parentKey": "Init2Term",
+            "value": null
           }
         ],
         "output": []

@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 3392981108193862307,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "MultiPlanInstanceSuccessTestPlan",
   "preCondition": null,
