@@ -37,7 +37,10 @@ file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
 add_library(autogen_code_alica_tests ${autogen_SOURCES})
 target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
-add_subdirectory(libalica-tests)
+include_directories(libalica-tests/include)
+file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
+add_library(libalica-tests SHARED ${AlicaTestLibSources})
+target_link_libraries(libalica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
 
 if(BUILD_TESTING)
     find_package(rostest REQUIRED)
