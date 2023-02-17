@@ -17,11 +17,7 @@ public:
             return;
         }
 
-#if (defined __cplusplus && __cplusplus >= 201402L)
         _logger = std::make_unique<LoggerType>(std::forward<decltype(args)>(args)...);
-#else
-        _logger = std::unique_ptr<LoggerType>(new LoggerType(verbosity, _localAgentName, std::forward<Args>(args)...));
-#endif
     }
 
     static IAlicaLogger* instance();
