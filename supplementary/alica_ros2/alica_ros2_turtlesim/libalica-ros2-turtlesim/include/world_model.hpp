@@ -2,11 +2,10 @@
 #define ALICA_TURTLE_WORLD_MODEL_WORLD_MODEL_HPP
 
 #include "turtle.hpp"
+#include <boost/dll/alias.hpp>
 #include <engine/AlicaEngine.h>
-
-#include <std_msgs/msg/empty.hpp>
-
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/empty.hpp>
 
 namespace turtlesim
 {
@@ -36,6 +35,9 @@ private:
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _initTriggerSub; // user input for initialize,
     bool _initTrigger;                                                     // become true when /init topic published
 };
+
+BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::init, WMInit)
+BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::del, WMDel)
 
 } // namespace turtlesim
 

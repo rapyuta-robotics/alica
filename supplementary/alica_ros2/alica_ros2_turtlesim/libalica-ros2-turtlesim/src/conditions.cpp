@@ -4,7 +4,7 @@
 #include <engine/blackboard/Blackboard.h>
 #include <iostream>
 
-#include <alica_ros2_turtlesim/world_model.hpp>
+#include "world_model.hpp"
 
 namespace alica
 {

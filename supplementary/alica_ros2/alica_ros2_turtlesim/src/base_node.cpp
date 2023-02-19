@@ -6,7 +6,6 @@
 #include <rclcpp/node.hpp>
 
 #include <alica_ros2_turtlesim/base.hpp>
-#include <alica_ros2_turtlesim/world_model.hpp>
 
 using namespace std::chrono_literals;
 

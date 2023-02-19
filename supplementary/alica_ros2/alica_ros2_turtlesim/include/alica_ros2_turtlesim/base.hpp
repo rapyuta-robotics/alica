@@ -1,17 +1,20 @@
 #ifndef IO_TURTLE_BASE_BASE_HPP
 #define IO_TURTLE_BASE_BASE_HPP
 
-#include "world_model.hpp"
-
 #include <memory>
 #include <thread>
 
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
 
-namespace turtlesim
+namespace alica
 {
 class AlicaContext;
+}
+
+namespace turtlesim
+{
+
 class Base
 {
 public:
@@ -28,6 +31,9 @@ private:
     std::thread spinThread;
     std::string _name;
     rclcpp::Node::SharedPtr _nh;
+
+    void ALICATurtleWorldModelCallInit(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh);
+    void ALICATurtleWorldModelCallDel();
 };
 
 } // namespace turtlesim

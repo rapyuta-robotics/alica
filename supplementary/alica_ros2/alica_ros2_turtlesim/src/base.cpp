@@ -1,21 +1,20 @@
-#include <alica/BehaviourCreator.h>
-#include <alica/ConditionCreator.h>
-#include <alica/ConstraintCreator.h>
-#include <alica/PlanCreator.h>
-#include <alica/TransitionConditionCreator.h>
-#include <alica/UtilityFunctionCreator.h>
-#include <engine/AlicaContext.h>
-
+#include <DynamicBehaviourCreator.h>
+#include <DynamicConditionCreator.h>
+#include <DynamicConstraintCreator.h>
+#include <DynamicLoadingUtils.h>
+#include <DynamicPlanCreator.h>
+#include <DynamicTransitionConditionCreator.h>
+#include <DynamicUtilityFunctionCreator.h>
 #include <alica_ros2_turtlesim/base.hpp>
+#include <boost/dll/import.hpp> // for import_alias
 #include <constraintsolver/CGSolver.h>
+#include <engine/AlicaContext.h>
 #include <geometry_msgs/msg/twist.hpp>
+#include <rclcpp/executor.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <ros2_clock/AlicaRosTimer.h>
 #include <ros2_communication/AlicaRosCommunication.h>
 #include <ros2_logger/AlicaRosLogger.h>
-
-#include <rclcpp/executor.hpp>
-#include <rclcpp/rclcpp.hpp>
-
 #include <turtlesim/srv/kill.hpp>
 #include <turtlesim/srv/spawn.hpp>
 
@@ -29,7 +28,7 @@ Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const st
         , _name(name)
 {
     // create world model
-    ALICATurtleWorldModel::init(nh, priv_nh);
+    ALICATurtleWorldModelCallInit(nh, priv_nh);
     spinner.add_node(nh);
     spinner.add_node(priv_nh);
     // Initialize Alica
@@ -73,9 +72,9 @@ void Base::spawnMyTurtle(const std::string& name, rclcpp::Node::SharedPtr nh)
 
 void Base::start()
 {
-    alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
-            std::make_unique<alica::TransitionConditionCreator>());
+    alica::AlicaCreators creators(std::make_unique<DynamicConditionCreator>(), std::make_unique<alica::DynamicUtilityFunctionCreator>(),
+            std::make_unique<alica::DynamicConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(),
+            std::make_unique<alica::DynamicPlanCreator>(), std::make_unique<alica::DynamicTransitionConditionCreator>());
 
     killMyTurtle(_name, _nh);
     spawnMyTurtle(_name, _nh);
@@ -90,7 +89,51 @@ Base::~Base()
     spinThread.join();
     ac->terminate();
     delete ac;
-    ALICATurtleWorldModel::del();
+    ALICATurtleWorldModelCallDel();
+}
+
+void Base::ALICATurtleWorldModelCallInit(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh)
+{
+    std::vector<std::string> tmp = calculateLibraryPath();
+    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica-ros2-turtlesim");
+
+    if (libraryPath.empty()) {
+        std::cerr << "Error:"
+                  << "Lib not exists in this path:" << libraryPath << std::endl;
+        return;
+    } else {
+        std::cerr << "Debug:"
+                  << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
+    }
+
+    typedef void(InitType)(rclcpp::Node::SharedPtr&, rclcpp::Node::SharedPtr&);
+    std::function<InitType> wminit;
+    wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
+            libraryPath,                              // complete path to library also with file name
+            "WMInit",                                 // symbol to import
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
+    );
+    wminit(nh, priv_nh);
+}
+
+void Base::ALICATurtleWorldModelCallDel()
+{
+    std::vector<std::string> tmp = calculateLibraryPath();
+    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica-ros2-turtlesim");
+    if (libraryPath.empty()) {
+        std::cerr << "Error:"
+                  << "Lib not exists" << std::endl;
+        return;
+    }
+
+    typedef void(DelType)();
+    std::function<DelType> wmdel;
+    wmdel = boost::dll::import_alias<DelType>(        // type of imported symbol must be explicitly specified
+            libraryPath,                              // complete path to library also with file name
+            "ALICATurtleWorldModelDel",               // symbol to import
+            boost::dll::load_mode::append_decorations // do append extensions and prefixes
+    );
+    wmdel();
 }
 
 } // namespace turtlesim
