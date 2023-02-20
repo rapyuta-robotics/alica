@@ -8,7 +8,7 @@ namespace alica
 {
 bool conditionVariableHandlingStart(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard)
 {
-    return false;
+    return globalBlackboard->impl().get<bool>("vhStartCondition");
 }
 bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* globalBlackboard)
 {

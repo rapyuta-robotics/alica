@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1417423757243,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "GSolverTestPlan",
   "preCondition": null,
@@ -31,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1417424512343,
-    "name": "NewRuntimeCondition",
+    "name": "GSolverTestPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": [

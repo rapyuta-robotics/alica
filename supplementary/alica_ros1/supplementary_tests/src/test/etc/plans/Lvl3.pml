@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1524452836022,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "Lvl3",
   "preCondition": null,
@@ -31,7 +32,7 @@
     "conditionString": "Lvl3 Runtime Condition",
     "enabled": false,
     "id": 1524452937477,
-    "name": "NewRuntimeCondition",
+    "name": "Lvl3RuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [
       {

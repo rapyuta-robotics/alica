@@ -9,17 +9,17 @@ namespace alica
 std::vector<double> SolverTestBehaviour::result;
 
 SolverTestBehaviour::SolverTestBehaviour(BehaviourContext& context)
-        : DomainBehaviour(context)
+        : BasicBehaviour(context)
 {
-
     callCounter = 0;
 }
-SolverTestBehaviour::~SolverTestBehaviour() {}
+
 void SolverTestBehaviour::run()
 {
     callCounter++;
     _query.getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
 }
+
 void SolverTestBehaviour::initialiseParameters()
 {
     _query.clearStaticVariables();

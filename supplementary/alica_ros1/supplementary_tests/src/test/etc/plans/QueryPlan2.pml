@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1479718449392,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "QueryPlan2",
   "preCondition": null,
