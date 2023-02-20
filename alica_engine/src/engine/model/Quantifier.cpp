@@ -15,7 +15,7 @@ Quantifier::Quantifier()
 Quantifier::~Quantifier() {}
 
 /**
- * Set the scope of this quantifier, called by the ModelFactory
+ * Set the scope of this quantifier
  * @param ae An AlicaElement
  */
 void Quantifier::setScope(const AlicaElement* element)
