@@ -35,9 +35,9 @@ source install/setup.bash
 Run application with ros2 launch.
 
 - Launch turtlesim
-  `ros2 launch alica_ros_turtlesim env.launch.xml`
+  `ros2 launch alica_ros2_turtlesim env.launch.xml`
 - Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
-  `ros2 launch alica_ros_turtlesim turtle.launch.xml turtles:=2`
+  `ros2 launch alica_ros2_turtlesim turtle.launch.xml turtles:=2`
 - Start moving.
   `ros2 topic pub /init std_msgs/msg/Empty`
 
