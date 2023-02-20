@@ -16,7 +16,6 @@ class ProblemBuildingMaster : public BasicPlan
 {
 public:
     ProblemBuildingMaster(PlanContext& context);
-    virtual ~ProblemBuildingMaster();
     static std::unique_ptr<ProblemBuildingMaster> create(alica::PlanContext&);
 };
 

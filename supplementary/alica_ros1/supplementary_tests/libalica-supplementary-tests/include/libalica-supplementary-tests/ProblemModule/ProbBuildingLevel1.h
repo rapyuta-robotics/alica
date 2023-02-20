@@ -13,7 +13,6 @@ class ProbBuildingLevel1 : public BasicPlan
 {
 public:
     ProbBuildingLevel1(PlanContext& context);
-    virtual ~ProbBuildingLevel1();
     static std::unique_ptr<ProbBuildingLevel1> create(alica::PlanContext&);
 };
 

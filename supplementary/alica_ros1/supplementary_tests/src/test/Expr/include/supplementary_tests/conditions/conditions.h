@@ -1,9 +1,5 @@
 #pragma once
 
-/*PROTECTED REGION ID(conditionHeader) ENABLED START*/
-extern bool vhStartCondition;
-/*PROTECTED REGION END*/
-
 namespace alica
 {
 class Blackboard;

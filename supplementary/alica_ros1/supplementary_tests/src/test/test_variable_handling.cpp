@@ -115,7 +115,11 @@ TEST_F(AlicaVariableHandlingTest, testQueries)
     EXPECT_EQ(1, q1.getPartCount());
 
     // Cause  agent to move through transition:
-    vhStartCondition = true;
+    {
+        LockedBlackboardRW(acs[0]->editGlobalBlackboard()).set("vhStartCondition", true);
+        LockedBlackboardRW(acs[1]->editGlobalBlackboard()).set("vhStartCondition", true);
+    }
+
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 

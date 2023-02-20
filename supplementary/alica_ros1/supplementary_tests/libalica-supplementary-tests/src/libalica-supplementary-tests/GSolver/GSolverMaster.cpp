@@ -6,7 +6,6 @@ GSolverMaster::GSolverMaster(PlanContext& context)
         : BasicPlan(context)
 {
 }
-GSolverMaster::~GSolverMaster() {}
 
 std::shared_ptr<UtilityFunction> GSolverMasterUtilityFunction::getUtilityFunction(Plan* plan)
 {

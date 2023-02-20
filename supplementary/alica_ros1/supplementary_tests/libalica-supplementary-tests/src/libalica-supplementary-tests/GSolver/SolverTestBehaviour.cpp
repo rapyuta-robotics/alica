@@ -13,12 +13,13 @@ SolverTestBehaviour::SolverTestBehaviour(BehaviourContext& context)
 {
     callCounter = 0;
 }
-SolverTestBehaviour::~SolverTestBehaviour() {}
+
 void SolverTestBehaviour::run()
 {
     callCounter++;
     _query.getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
 }
+
 void SolverTestBehaviour::initialiseParameters()
 {
     _query.clearStaticVariables();

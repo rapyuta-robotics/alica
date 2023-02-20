@@ -6,7 +6,6 @@ QueryPlan2::QueryPlan2(PlanContext& context)
         : BasicPlan(context)
 {
 }
-QueryPlan2::~QueryPlan2() {}
 
 std::shared_ptr<UtilityFunction> QueryPlan2UtilityFunction::getUtilityFunction(Plan* plan)
 {

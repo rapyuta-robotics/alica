@@ -11,7 +11,6 @@ class QueryBehaviour1 : public BasicBehaviour
 {
 public:
     QueryBehaviour1(BehaviourContext& context);
-    virtual ~QueryBehaviour1();
     virtual void run();
     static std::unique_ptr<QueryBehaviour1> create(alica::BehaviourContext& context);
     int getCallCounter();

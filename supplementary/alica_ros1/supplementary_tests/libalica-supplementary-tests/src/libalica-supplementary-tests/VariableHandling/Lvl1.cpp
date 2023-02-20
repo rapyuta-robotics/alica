@@ -10,6 +10,7 @@ namespace alica
 Lvl1::Lvl1(PlanContext& context)
         : BasicPlan(context)
 {
+    getGlobalBlackboard()->impl().set("vhStartCondition", false);
 }
 
 std::shared_ptr<UtilityFunction> Lvl1UtilityFunction::getUtilityFunction(Plan* plan)

@@ -9,7 +9,6 @@ class AcmePlan : public BasicPlan
 {
 public:
     AcmePlan(PlanContext& context);
-    virtual ~AcmePlan(){};
     void run() override{};
 
     // Factory method

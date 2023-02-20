@@ -11,7 +11,6 @@ class SolverTestBehaviour : public BasicBehaviour
 {
 public:
     SolverTestBehaviour(BehaviourContext& context);
-    virtual ~SolverTestBehaviour();
     virtual void run();
     static std::unique_ptr<SolverTestBehaviour> create(alica::BehaviourContext& context);
 

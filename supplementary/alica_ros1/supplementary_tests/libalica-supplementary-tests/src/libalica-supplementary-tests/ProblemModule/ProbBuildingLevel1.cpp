@@ -6,7 +6,6 @@ ProbBuildingLevel1::ProbBuildingLevel1(PlanContext& context)
         : BasicPlan(context)
 {
 }
-ProbBuildingLevel1::~ProbBuildingLevel1() {}
 
 std::shared_ptr<UtilityFunction> ProbBuildingLevel1UtilityFunction::getUtilityFunction(Plan* plan)
 {

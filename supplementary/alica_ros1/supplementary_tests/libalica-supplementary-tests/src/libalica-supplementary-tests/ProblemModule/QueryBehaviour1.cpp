@@ -13,7 +13,7 @@ QueryBehaviour1::QueryBehaviour1(BehaviourContext& context)
 
     this->callCounter = 0;
 }
-QueryBehaviour1::~QueryBehaviour1() {}
+
 void QueryBehaviour1::run()
 {
 
@@ -24,6 +24,7 @@ void QueryBehaviour1::run()
         query->getSolution<reasoner::CGSolver, double>(getPlanContext(), result);
     }
 }
+
 void QueryBehaviour1::initialiseParameters()
 {
 

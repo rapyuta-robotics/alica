@@ -13,7 +13,6 @@ class QueryPlan2 : public BasicPlan
 {
 public:
     QueryPlan2(PlanContext& context);
-    virtual ~QueryPlan2();
     static std::unique_ptr<QueryPlan2> create(alica::PlanContext&);
 };
 

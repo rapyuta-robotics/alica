@@ -14,7 +14,6 @@ class GSolverTestPlan : public BasicPlan
 {
 public:
     GSolverTestPlan(PlanContext& context);
-    virtual ~GSolverTestPlan();
     static std::unique_ptr<GSolverTestPlan> create(alica::PlanContext& context);
 };
 

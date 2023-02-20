@@ -12,7 +12,6 @@ class GSolverMaster : public BasicPlan
 {
 public:
     GSolverMaster(PlanContext& context);
-    virtual ~GSolverMaster();
     static std::unique_ptr<GSolverMaster> create(PlanContext& context);
 };
 

@@ -11,7 +11,6 @@ GSolverTestPlan::GSolverTestPlan(PlanContext& context)
         : BasicPlan(context)
 {
 }
-GSolverTestPlan::~GSolverTestPlan() {}
 
 std::shared_ptr<UtilityFunction> GSolverTestPlanUtilityFunction::getUtilityFunction(Plan* plan)
 {

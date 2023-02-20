@@ -9,8 +9,6 @@
 
 #include <boost/dll/alias.hpp>
 
-extern bool vhStartCondition;
-
 namespace alica
 {
 class ProblemDescriptor;
