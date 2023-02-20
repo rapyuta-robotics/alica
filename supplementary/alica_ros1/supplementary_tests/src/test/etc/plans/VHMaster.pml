@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1524452721452,
   "inheritBlackboard": false,
-  "libraryName": "libalica-supplementary-tests",
+  "libraryName": "supplementary-tests",
   "masterPlan": true,
   "name": "VHMaster",
   "preCondition": null,

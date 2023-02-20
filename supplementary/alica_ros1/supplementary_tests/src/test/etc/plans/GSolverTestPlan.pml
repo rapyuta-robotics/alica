@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1417423757243,
   "inheritBlackboard": false,
-  "libraryName": "libalica-supplementary-tests",
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "GSolverTestPlan",
   "preCondition": null,

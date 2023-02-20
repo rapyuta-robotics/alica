@@ -38,7 +38,7 @@
   "frequency": 0,
   "id": 1524452793378,
   "inheritBlackboard": false,
-  "libraryName": "libalica-supplementary-tests",
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "Lvl2",
   "preCondition": null,

@@ -42,10 +42,10 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 295816226925111421,
-      "libraryName": "libalica-supplementary-tests",
+      "libraryName": "supplementary-tests",
       "name": "VariableHandlingStart",
       "relativeDirectory": "conditions",
-      "libraryName": "libalica-supplementary-tests"
+      "libraryName": "supplementary-tests"
     },
     {
       "blackboard": [],
@@ -55,7 +55,7 @@
       "libraryName": "libalica-util",
       "name": "DefaultCondition",
       "relativeDirectory": "conditions",
-      "libraryName": "libalica-supplementary-tests"
+      "libraryName": "supplementary-tests"
     }
   ],
   "id": 0,

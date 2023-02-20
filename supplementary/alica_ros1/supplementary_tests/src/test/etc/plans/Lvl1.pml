@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1524452759599,
   "inheritBlackboard": false,
-  "libraryName": "libalica-supplementary-tests",
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "Lvl1",
   "preCondition": null,
