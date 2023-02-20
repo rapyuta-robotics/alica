@@ -8,7 +8,6 @@ namespace alica
 {
 
 class TaskRepository;
-class ModelFactory;
 class TaskFactory;
 /**
  * an abstract description of parts of plans to be taken on by a set of robots
@@ -25,7 +24,6 @@ public:
     static const std::string IDLENAME;
 
 private:
-    friend ModelFactory;
     friend TaskFactory;
     const TaskRepository* _taskRepository;
 };

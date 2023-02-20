@@ -13,7 +13,6 @@ namespace alica
 
 class Plan;
 class Transition;
-class ModelFactory;
 class SynchronisationFactory;
 
 class Synchronisation : public AlicaElement
@@ -31,7 +30,6 @@ public:
     std::string toString(std::string indent = "") const override;
 
 private:
-    friend ModelFactory;
     friend SynchronisationFactory;
 
     TransitionGrp _inSync;
