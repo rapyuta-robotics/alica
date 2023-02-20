@@ -64,7 +64,6 @@ public:
     std::string getLibraryName() const { return _libraryName; };
 
 private:
-    friend ModelFactory;
     friend PlanFactory;
     friend ExpressionHandler; // TODO: get rid of this
     void setEntryPoints(const EntryPointGrp& entryPoints);

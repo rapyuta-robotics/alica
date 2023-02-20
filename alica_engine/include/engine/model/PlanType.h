@@ -11,7 +11,6 @@ namespace alica
 {
 class Plan;
 class VariableBinding;
-class ModelFactory;
 class PlanTypeFactory;
 
 class PlanType : public AbstractPlan
@@ -27,7 +26,6 @@ public:
     const Plan* getPlanById(int64_t id) const;
 
 private:
-    friend ModelFactory;
     friend PlanTypeFactory;
 
     PlanGrp _plans;

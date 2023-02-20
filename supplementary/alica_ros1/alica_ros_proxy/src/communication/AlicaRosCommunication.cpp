@@ -125,7 +125,7 @@ void AlicaRosCommunication::sendAlicaEngineInfo(const AlicaEngineInfo& bi) const
     bis.current_task = bi.currentTask;
     bis.master_plan = bi.masterPlan;
 
-    for (auto& robotID : bi.robotIDsWithMe) {
+    for (const auto& robotID : bi.robotIDsWithMe) {
         alica_msgs::AllocationAuthorityInfo::_sender_id_type rosRobotID;
         rosRobotID = robotID;
         bis.robot_ids_with_me.push_back(rosRobotID);
