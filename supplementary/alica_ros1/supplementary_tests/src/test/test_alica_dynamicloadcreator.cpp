@@ -8,6 +8,7 @@
 #include "communication/AlicaRosCommunication.h"
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/logging/Logging.h>
 #include <engine/model/RuntimeCondition.h>
@@ -133,18 +134,29 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 
     YAML::Node node;
     ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/conditions/ConditionRepository.cnd")));
-    ASSERT_NO_THROW((node = node["conditions"][0]));
-    // Load model
-    TransitionCondition* conditionModel = TransitionConditionFactory::create(node, nullptr);
+    TransitionCondition* conditionModel;
 
-    // Create condition form dll
-    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
+    for (size_t i = 0; i < node["conditions"].size(); i++) {
+        YAML::Node condition = node["conditions"][i];
+        // Load model
+        conditionModel = TransitionConditionFactory::create(condition, nullptr);
+        if (conditionModel->getName() == "VariableHandlingStart") {
+            break;
+        }
+    }
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
     TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
 
+    // Create condition from dll
+    std::unique_ptr<BlackboardBlueprint> testGlobalBlackboardBlueprint = std::make_unique<BlackboardBlueprint>();
+    testGlobalBlackboardBlueprint->addKey("vhStartCondition", "bool");
+    std::unique_ptr<Blackboard> testGlobalBlackboard = std::make_unique<Blackboard>(testGlobalBlackboardBlueprint.get());
+    testGlobalBlackboard->impl().set("vhStartCondition", false);
+
+    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
     auto transitionCondition = creator->createConditions(1, ctx);
-    bool res = transitionCondition(nullptr, nullptr, nullptr);
+    bool res = transitionCondition(nullptr, nullptr, testGlobalBlackboard.get());
     ASSERT_EQ(false, res);
 }
 

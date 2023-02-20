@@ -3,7 +3,7 @@
 #include <engine/model/Variable.h>
 #include <gtest/gtest.h>
 #include <gtest/internal/gtest-internal.h>
-#include <supplementary_tests/ProblemModule/QueryBehaviour1.h>
+#include <libalica-supplementary-tests/ProblemModule/QueryBehaviour1.h>
 #include <test_supplementary.h>
 
 #include <chrono>
