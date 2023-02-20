@@ -14,7 +14,6 @@ namespace alica
 {
 class RunningPlan;
 class SolverTerm;
-class ModelFactory;
 class QuantifierFactory;
 class ModelManager;
 
@@ -56,7 +55,6 @@ protected:
     Scope getScopeType() const { return _scopeType; }
 
 private:
-    friend ModelFactory;
     friend QuantifierFactory;
     friend ModelManager;
     void setScope(const AlicaElement* ae);

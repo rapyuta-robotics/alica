@@ -5,7 +5,6 @@
 namespace alica
 {
 
-class ModelFactory;
 class PreConditionFactory;
 
 /**
@@ -22,7 +21,6 @@ public:
     bool isEnabled() const { return _enabled; }
 
 private:
-    friend ModelFactory;
     friend PreConditionFactory;
     void setEnabled(bool enabled);
     bool _enabled;

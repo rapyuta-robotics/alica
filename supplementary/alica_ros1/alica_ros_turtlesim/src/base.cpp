@@ -27,7 +27,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-    ac->setLogger<alicaRosLogger::AlicaRosLogger>(agent_id);
+    ac->setLogger<alicaRosLogger::AlicaRosLogger>();
 }
 
 void Base::start()
