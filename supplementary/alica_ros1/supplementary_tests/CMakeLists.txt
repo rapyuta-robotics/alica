@@ -31,34 +31,27 @@ include_directories(include
 )
 
 catkin_package(
-  INCLUDE_DIRS include src/test/Expr/include
+  INCLUDE_DIRS include
   LIBRARIES autogen_code_supplementary_tests
   CATKIN_DEPENDS      alica_ros_proxy
   DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver constraintsolver alica_dynamic_loading
 )
 
-include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
-file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(autogen_code_supplementary_tests ${autogen_SOURCES};)
-target_link_libraries(autogen_code_supplementary_tests ${catkin_LIBRARIES}
-                                                        Boost::system
-                                                        Boost::filesystem
-                                                        ${CMAKE_DL_LIBS}
-                                                        ${YAML_CPP_LIBRARIES}
-                                                        alica_test_utility
-                                                        alica_dynamic_loading
-                                                        constraintsolver
-                                                        )
-
-include_directories(libalica-supplementary-tests/include)
+include_directories(libalica-supplementary-tests/include ${catkin_INCLUDE_DIRS})
 file(GLOB_RECURSE AlicaSupplementaryTestLibSources "libalica-supplementary-tests/src/*.cpp")
 add_library(supplementary-tests SHARED ${AlicaSupplementaryTestLibSources})
-target_link_libraries(supplementary-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+target_link_libraries(supplementary-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy constraintsolver)
+
+install(TARGETS supplementary-tests
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
 
 if (BUILD_TESTING)
 
     find_package(rostest REQUIRED)
     set(test_supplementary_SOURCES
+        src/ConstraintTestPlanDummySolver.cpp
         src/test_supplementary.cpp
         src/test/test_main.cpp
         src/test/test_alica_dynamicloadcreator.cpp
@@ -69,6 +62,6 @@ if (BUILD_TESTING)
     )
 
     add_rostest_gtest(${PROJECT_NAME}-test test/supplementary_tests.test ${test_supplementary_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_supplementary_tests supplementary-tests)
+    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} supplementary-tests alica_dynamic_loading)
 
 endif()
