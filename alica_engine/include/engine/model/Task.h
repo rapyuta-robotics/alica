@@ -8,6 +8,7 @@ namespace alica
 {
 
 class TaskRepository;
+
 /**
  * an abstract description of parts of plans to be taken on by a set of robots
  */

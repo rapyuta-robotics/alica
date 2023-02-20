@@ -5,7 +5,6 @@
 
 namespace alica
 {
-class ModelFactory;
 class Factory;
 /**
  * Base class of all model elements
@@ -32,7 +31,6 @@ public:
     AlicaElement& operator=(AlicaElement&&) = delete;
 
 private:
-    friend ModelFactory;
     friend Factory;
     void setId(int64_t id);
     void setName(const std::string& name);
