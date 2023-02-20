@@ -50,14 +50,16 @@ protected:
         targetBlueprint.addKey("targetKey", targetTypeName);
         Blackboard srcBB(&srcBlueprint);
         Blackboard targetBB(&targetBlueprint);
-        srcBB.impl().set("srcKey", srcValue);
-        targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
+        srcBB._impl.set("srcKey", srcValue);
+        targetBB._impl.map("srcKey", "targetKey", srcBB._impl);
         if constexpr (std::is_same_v<TargetType, std::any>) {
-            return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+            return std::any_cast<SrcType>(targetBB._impl.get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
         } else {
-            return targetBB.impl().get<TargetType>("targetKey") == targetValue;
+            return targetBB._impl.get<TargetType>("targetKey") == targetValue;
         }
     }
+
+    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
 };
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
@@ -356,21 +358,23 @@ TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
     blueprintTarget->addKey("knownTypeTarget", BBType::INT64);
     blueprintTarget->addKey("unknownTypeTarget", BBType::ANY);
 
-    alica::Blackboard srcBb = alica::Blackboard(blueprintSrc.get());
-    alica::Blackboard targetBb = alica::Blackboard(blueprintTarget.get());
+    alica::Blackboard srcBlackboard = alica::Blackboard(blueprintSrc.get());
+    auto& srcBb = getBlackboardImpl(srcBlackboard);
+    alica::Blackboard targetBlackboard = alica::Blackboard(blueprintTarget.get());
+    auto& targetBb = getBlackboardImpl(targetBlackboard);
 
-    srcBb.impl().set<int64_t>("knownTypeSrc", 1);
-    targetBb.impl().map("knownTypeSrc", "knownTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<int64_t>("knownTypeTarget"), 1.0);
+    srcBb.set<int64_t>("knownTypeSrc", 1);
+    targetBb.map("knownTypeSrc", "knownTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<int64_t>("knownTypeTarget"), 1.0);
 
-    srcBb.impl().set<alica::PlanStatus>("unknownTypeSrc", alica::PlanStatus::Success);
-    targetBb.impl().set<alica::PlanStatus>("unknownTypeTarget", alica::PlanStatus::Failed);
-    targetBb.impl().map("unknownTypeSrc", "unknownTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<alica::PlanStatus>("unknownTypeTarget"), alica::PlanStatus::Success);
+    srcBb.set<alica::PlanStatus>("unknownTypeSrc", alica::PlanStatus::Success);
+    targetBb.set<alica::PlanStatus>("unknownTypeTarget", alica::PlanStatus::Failed);
+    targetBb.map("unknownTypeSrc", "unknownTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<alica::PlanStatus>("unknownTypeTarget"), alica::PlanStatus::Success);
 
-    srcBb.impl().set<std::any>("anyTypeSrc", std::any{19L});
-    targetBb.impl().map("anyTypeSrc", "anyTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<int64_t>("anyTypeTarget"), 19L);
+    srcBb.set<std::any>("anyTypeSrc", std::any{19L});
+    targetBb.map("anyTypeSrc", "anyTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<int64_t>("anyTypeTarget"), 19L);
 }
 
 TEST_F(TestBlackboard, setWithConvertibleType)

@@ -320,6 +320,12 @@ private:
 
 class Blackboard
 {
+    friend class LockedBlackboardRW;
+    friend class LockedBlackboardRO;
+    friend class UnlockedBlackboard;
+    friend class BlackboardUtil;
+    friend class TestBlackboard;
+
 public:
     Blackboard() = default;
     Blackboard(Blackboard&&) = delete;
@@ -348,7 +354,7 @@ class LockedBlackboardRO
 public:
     LockedBlackboardRO(const Blackboard& bb)
             : _lk(bb.lockRO())
-            , _impl(bb.impl())
+            , _impl(bb._impl)
     {
     }
     LockedBlackboardRO& operator=(const LockedBlackboardRO&) = delete;
@@ -376,7 +382,7 @@ class LockedBlackboardRW
 public:
     LockedBlackboardRW(Blackboard& bb)
             : _lk(bb.lockRW())
-            , _impl(bb.impl())
+            , _impl(bb._impl)
     {
     }
     LockedBlackboardRW& operator=(const LockedBlackboardRW&) = delete;
@@ -414,7 +420,7 @@ class UnlockedBlackboard
 {
 public:
     UnlockedBlackboard(Blackboard& bb)
-            : _impl(bb.impl())
+            : _impl(bb._impl)
     {
     }
     UnlockedBlackboard(const UnlockedBlackboard&) = delete;
