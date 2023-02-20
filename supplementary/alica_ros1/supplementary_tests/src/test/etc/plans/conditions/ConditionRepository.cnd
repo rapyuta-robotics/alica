@@ -3,24 +3,62 @@
   "conditions": [
     {
       "blackboard": [],
-      "comment": "",
-      "conditionRepository": 1,
-      "id": 295816226925111421,
-      "name": "VariableHandlingStart",
-      "relativeDirectory": "conditions",
-      "libraryName": "libalica-supplementary-tests"
+      "comment": "AnyChildSuccess",
+      "conditionRepository": 0,
+      "id": 1,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildSuccess",
+      "conditionRepository": 0,
+      "id": 2,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildSuccess",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AnyChildFailure",
+      "conditionRepository": 0,
+      "id": 3,
+      "libraryName": "alica_standard_library",
+      "name": "AnyChildFailure",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "AllChildFailure",
+      "conditionRepository": 0,
+      "id": 4,
+      "libraryName": "alica_standard_library",
+      "name": "AllChildFailure",
+      "relativeDirectory": "conditions"
     },
     {
       "blackboard": [],
       "comment": "",
-      "conditionRepository": 1,
+      "conditionRepository": 0,
+      "id": 295816226925111421,
+      "libraryName": "supplementary-tests",
+      "name": "VariableHandlingStart",
+      "relativeDirectory": "conditions",
+      "libraryName": "supplementary-tests"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
       "id": 2011598442725310989,
+      "libraryName": "libalica-util",
       "name": "DefaultCondition",
       "relativeDirectory": "conditions",
-      "libraryName": "libalica-supplementary-tests"
+      "libraryName": "supplementary-tests"
     }
   ],
-  "id": 1,
+  "id": 0,
   "name": "ConditionRepository",
   "relativeDirectory": ""
 }
