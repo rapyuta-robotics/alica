@@ -6,7 +6,6 @@
 
 namespace alica
 {
-class ModelFactory;
 class RoleFactory;
 class RoleSet;
 class Task;
@@ -21,7 +20,6 @@ public:
     std::string toString(std::string indent = "") const override;
 
 private:
-    friend ModelFactory;
     friend RoleFactory;
 
     std::unordered_map<Task*, double> _taskPriorities;

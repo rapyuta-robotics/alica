@@ -6,7 +6,6 @@
 #include "engine/model/DomainVariable.h"
 #include "engine/model/ForallAgents.h"
 #include "engine/model/Quantifier.h"
-#include "engine/modelmanagement/ModelManager.h"
 #include "engine/util/HashFunctions.h"
 
 #include <assert.h>
@@ -18,9 +17,8 @@ namespace alica
 /**
  * Basic constructor
  */
-RobotEngineData::RobotEngineData(const ModelManager& modelManager, const PlanRepository& planRepository, AgentId agentId)
-        : _modelManager(modelManager)
-        , _planRepository(planRepository)
+RobotEngineData::RobotEngineData(const PlanRepository& planRepository, AgentId agentId)
+        : _planRepository(planRepository)
         , _agentId(agentId)
         , _successMarks()
 {
@@ -66,7 +64,6 @@ const DomainVariable* RobotEngineData::getDomainVariable(const std::string& name
 int64_t RobotEngineData::makeUniqueId(const std::string& s) const
 {
     int64_t ret = static_cast<int64_t>(std::hash<AgentId>()(_agentId) + std::hash<std::string>()(s));
-    assert(!_modelManager.idExists(ret));
     return ret;
 }
 

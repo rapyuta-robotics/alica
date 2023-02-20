@@ -23,7 +23,6 @@ class Condition;
 class Variable;
 class Configuration;
 class ConfAbstractPlanWrapper;
-class ModelFactory;
 class Factory;
 class ExpressionHandler;
 class ModelManager;
@@ -130,7 +129,6 @@ public:
     bool verifyPlanBase() const;
 
 private:
-    friend ModelFactory;
     friend Factory;
     friend ModelManager;
     friend ExpressionHandler;

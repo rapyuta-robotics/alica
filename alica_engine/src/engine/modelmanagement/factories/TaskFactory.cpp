@@ -6,10 +6,9 @@ namespace alica
 {
 Task* TaskFactory::create(const YAML::Node& taskNode, TaskRepository* taskRepository)
 {
-    Task* task = new Task();
+    Task* task = new Task(taskRepository);
     Factory::setAttributes(taskNode, task);
     Factory::storeElement(task, alica::Strings::task);
-    task->_taskRepository = taskRepository;
     return task;
 }
 } // namespace alica

@@ -18,7 +18,8 @@ void GoTo::run()
 {
     // solve constraints and get value
     if (!_query.getSolution<alica::reasoner::CGSolver, double>(getPlanContext(), _results)) {
-        alica::Logging::logError(alica::LOGNAME) << "Behaviour: " << getName() << ", solution to query not found";
+        alica::Logging::logWarn(alica::LOGNAME) << "Behaviour: " << getName() << " calculating ...";
+        return;
     }
     // move turtle to goal
     auto turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
