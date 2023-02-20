@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1479556074049,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "QueryPlan1",
   "preCondition": null,
@@ -31,7 +32,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1479556084493,
-    "name": "NewRuntimeCondition",
+    "name": "QueryPlan1RuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [
       {

@@ -6,11 +6,11 @@
   "frequency": 30,
   "id": 1384965293178962783,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "name": "WaitBehaviour",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "behaviours",
   "runtimeCondition": null,
-  "variables": [],
-  "libraryName": "libalica-supplementary-tests"
+  "variables": []
 }

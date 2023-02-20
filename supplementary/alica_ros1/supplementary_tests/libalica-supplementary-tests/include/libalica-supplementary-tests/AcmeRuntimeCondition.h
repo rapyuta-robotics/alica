@@ -20,7 +20,6 @@ public:
 
         return std::make_shared<AcmeRuntimeCondition>();
     }
-    ~AcmeRuntimeCondition() override{};
 };
 BOOST_DLL_ALIAS(alica::AcmeRuntimeCondition::create, AcmeRuntimeCondition)
 } // namespace alica
