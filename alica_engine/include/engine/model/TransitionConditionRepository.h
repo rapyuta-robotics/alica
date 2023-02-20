@@ -19,7 +19,6 @@ public:
     const std::string& getFileName() const;
 
 private:
-    friend ModelFactory;
     friend ModelManager;
     friend TransitionConditionRepositoryFactory;
     void setFileName(const std::string& fileName);

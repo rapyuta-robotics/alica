@@ -1,6 +1,6 @@
+#include <DynamicBehaviourCreator.h>
 #include <alica/test/TestContext.h>
 #include <alica/test/Util.h>
-#include <alica_tests/BehaviourCreator.h>
 #include <alica_tests/ConditionCreator.h>
 #include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/PlanCreator.h>
@@ -31,10 +31,10 @@ public:
         _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
         _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         _tc->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        _tc->setLogger<alicaRosLogger::AlicaRosLogger>(config["Local"]["ID"].as<int>());
+        _tc->setLogger<alicaRosLogger::AlicaRosLogger>();
         LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
         AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+                std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         _tc->init(std::move(creators));
         _tc->startEngine();

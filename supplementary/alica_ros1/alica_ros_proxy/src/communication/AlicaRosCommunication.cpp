@@ -41,36 +41,36 @@ const std::string presenceAnnouncementTopic = "/AlicaEngine/AgentAnnouncement";
 AlicaRosCommunication::AlicaRosCommunication(const AlicaCommunicationHandlers& callbacks, ros::CallbackQueue& cb_queue)
         : IAlicaCommunication(callbacks)
         , _callbackQueue(cb_queue)
+        , _nh()
+        , _isRunning(false)
 {
-    _isRunning = false;
-    _rosNode = new ros::NodeHandle();
-    _rosNode->setCallbackQueue(&_callbackQueue);
+    _nh.setCallbackQueue(&_callbackQueue);
 
-    _allocationAuthorityInfoPublisher = _rosNode->advertise<alica_msgs::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
+    _allocationAuthorityInfoPublisher = _nh.advertise<alica_msgs::AllocationAuthorityInfo>(allocationAuthorityInfoTopic, 2);
     _allocationAuthorityInfoSubscriber =
-            _rosNode->subscribe(allocationAuthorityInfoTopic, 10, &AlicaRosCommunication::handleAllocationAuthorityRos, (AlicaRosCommunication*) this);
+            _nh.subscribe(allocationAuthorityInfoTopic, 10, &AlicaRosCommunication::handleAllocationAuthorityRos, (AlicaRosCommunication*) this);
 
-    _alicaEngineInfoPublisher = _rosNode->advertise<alica_msgs::AlicaEngineInfo>(alicaEngineInfoTopic, 2);
-    _roleSwitchPublisher = _rosNode->advertise<alica_msgs::RoleSwitch>(ownRoleTopic, 10);
+    _alicaEngineInfoPublisher = _nh.advertise<alica_msgs::AlicaEngineInfo>(alicaEngineInfoTopic, 2);
+    _roleSwitchPublisher = _nh.advertise<alica_msgs::RoleSwitch>(ownRoleTopic, 10);
 
-    _planTreeInfoPublisher = _rosNode->advertise<alica_msgs::PlanTreeInfo>(planTreeInfoTopic, 10);
-    _planTreeInfoSubscriber = _rosNode->subscribe(planTreeInfoTopic, 5, &AlicaRosCommunication::handlePlanTreeInfoRos, (AlicaRosCommunication*) this);
+    _planTreeInfoPublisher = _nh.advertise<alica_msgs::PlanTreeInfo>(planTreeInfoTopic, 10);
+    _planTreeInfoSubscriber = _nh.subscribe(planTreeInfoTopic, 5, &AlicaRosCommunication::handlePlanTreeInfoRos, (AlicaRosCommunication*) this);
 
-    _syncReadyPublisher = _rosNode->advertise<alica_msgs::SyncReady>(syncReadyTopic, 10);
-    _syncReadySubscriber = _rosNode->subscribe(syncReadyTopic, 5, &AlicaRosCommunication::handleSyncReadyRos, (AlicaRosCommunication*) this);
+    _syncReadyPublisher = _nh.advertise<alica_msgs::SyncReady>(syncReadyTopic, 10);
+    _syncReadySubscriber = _nh.subscribe(syncReadyTopic, 5, &AlicaRosCommunication::handleSyncReadyRos, (AlicaRosCommunication*) this);
 
-    _syncTalkPublisher = _rosNode->advertise<alica_msgs::SyncTalk>(syncTalkTopic, 10);
-    _syncTalkSubscriber = _rosNode->subscribe(syncTalkTopic, 5, &AlicaRosCommunication::handleSyncTalkRos, (AlicaRosCommunication*) this);
+    _syncTalkPublisher = _nh.advertise<alica_msgs::SyncTalk>(syncTalkTopic, 10);
+    _syncTalkSubscriber = _nh.subscribe(syncTalkTopic, 5, &AlicaRosCommunication::handleSyncTalkRos, (AlicaRosCommunication*) this);
 
-    _solverResultPublisher = _rosNode->advertise<alica_msgs::SolverResult>(solverResultTopic, 10);
-    _solverResultSubscriber = _rosNode->subscribe(solverResultTopic, 5, &AlicaRosCommunication::handleSolverResult, (AlicaRosCommunication*) this);
+    _solverResultPublisher = _nh.advertise<alica_msgs::SolverResult>(solverResultTopic, 10);
+    _solverResultSubscriber = _nh.subscribe(solverResultTopic, 5, &AlicaRosCommunication::handleSolverResult, (AlicaRosCommunication*) this);
 
-    _presenceQueryPublisher = _rosNode->advertise<alica_msgs::AgentQuery>(presenceQueryTopic, 5, true);
-    _presenceQuerySubscriber = _rosNode->subscribe(presenceQueryTopic, 5, &AlicaRosCommunication::handleAgentQuery, (AlicaRosCommunication*) this);
+    _presenceQueryPublisher = _nh.advertise<alica_msgs::AgentQuery>(presenceQueryTopic, 5, true);
+    _presenceQuerySubscriber = _nh.subscribe(presenceQueryTopic, 5, &AlicaRosCommunication::handleAgentQuery, (AlicaRosCommunication*) this);
 
-    _presenceAnnouncementPublisher = _rosNode->advertise<alica_msgs::AgentAnnouncement>(presenceAnnouncementTopic, 5, true);
+    _presenceAnnouncementPublisher = _nh.advertise<alica_msgs::AgentAnnouncement>(presenceAnnouncementTopic, 5, true);
     _presenceAnnouncementSubscriber =
-            _rosNode->subscribe(presenceAnnouncementTopic, 50, &AlicaRosCommunication::handleAgentAnnouncement, (AlicaRosCommunication*) this);
+            _nh.subscribe(presenceAnnouncementTopic, 50, &AlicaRosCommunication::handleAgentAnnouncement, (AlicaRosCommunication*) this);
 }
 
 AlicaRosCommunication::~AlicaRosCommunication()
@@ -80,8 +80,7 @@ AlicaRosCommunication::~AlicaRosCommunication()
     _planTreeInfoSubscriber.shutdown();
     _syncReadySubscriber.shutdown();
     _syncTalkSubscriber.shutdown();
-    _rosNode->shutdown();
-    delete _rosNode;
+    _nh.shutdown();
 }
 
 void AlicaRosCommunication::tick()
@@ -126,7 +125,7 @@ void AlicaRosCommunication::sendAlicaEngineInfo(const AlicaEngineInfo& bi) const
     bis.current_task = bi.currentTask;
     bis.master_plan = bi.masterPlan;
 
-    for (auto& robotID : bi.robotIDsWithMe) {
+    for (const auto& robotID : bi.robotIDsWithMe) {
         alica_msgs::AllocationAuthorityInfo::_sender_id_type rosRobotID;
         rosRobotID = robotID;
         bis.robot_ids_with_me.push_back(rosRobotID);

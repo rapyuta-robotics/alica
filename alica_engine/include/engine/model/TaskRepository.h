@@ -19,7 +19,6 @@ public:
     std::string getFileName() const;
 
 private:
-    friend ModelFactory;
     friend ModelManager;
     friend TaskRepositoryFactory;
     void setFileName(const std::string& fileName);

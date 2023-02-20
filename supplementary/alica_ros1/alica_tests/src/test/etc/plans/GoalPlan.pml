@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1402488870347,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "GoalPlan",
   "preCondition": {

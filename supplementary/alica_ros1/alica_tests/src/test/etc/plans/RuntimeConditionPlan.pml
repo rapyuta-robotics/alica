@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1418042806575,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "RuntimeConditionPlan",
   "preCondition": null,

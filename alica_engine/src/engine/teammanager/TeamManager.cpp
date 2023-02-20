@@ -50,11 +50,9 @@ bool AgentsCache::addAgent(Agent* agent)
     return ret.second;
 }
 
-TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const ModelManager& modelManager, const PlanRepository& planRepository,
-        const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName,
-        AgentId agentID)
+TeamManager::TeamManager(ConfigChangeListener& configChangeListener, const PlanRepository& planRepository, const IAlicaCommunication& communicator,
+        const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID)
         : _localAgent(nullptr)
-        , _modelManager(modelManager)
         , _planRepository(planRepository)
         , _communicator(communicator)
         , _clock(clock)
@@ -139,7 +137,7 @@ void TeamManager::readSelfFromConfig(const YAML::Node& config)
         _localAnnouncement.capabilities.emplace_back(key, svalue);
     }
 
-    _localAgent = new Agent(_modelManager, _planRepository, _clock, _teamTimeOut, myRole, _localAnnouncement);
+    _localAgent = new Agent(_planRepository, _clock, _teamTimeOut, myRole, _localAnnouncement);
     _localAgent->setLocal(true);
     _agentsCache.addAgent(_localAgent);
 }
@@ -323,7 +321,7 @@ void TeamManager::handleAgentAnnouncement(const AgentAnnouncement& aa)
         }
     }
 
-    agentInfo = new Agent(_modelManager, _planRepository, _clock, _teamTimeOut, agentRole, aa);
+    agentInfo = new Agent(_planRepository, _clock, _teamTimeOut, agentRole, aa);
     agentInfo->setTimeLastMsgReceived(_clock.now());
     _log.eventOccurred("New Agent(", aa.senderID, ")");
     if (!_agentsCache.addAgent(agentInfo)) {

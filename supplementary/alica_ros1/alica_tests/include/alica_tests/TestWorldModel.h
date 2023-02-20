@@ -97,39 +97,39 @@ public:
     bool isTransitionCondition1023566846009251524() const;
 
 private:
-    bool transitionCondition1413201227586;
-    bool transitionCondition1413201389955;
-    bool transitionCondition1413201052549;
-    bool transitionCondition1413201367990;
-    bool transitionCondition1413201370590;
+    std::atomic<bool> transitionCondition1413201227586;
+    std::atomic<bool> transitionCondition1413201389955;
+    std::atomic<bool> transitionCondition1413201052549;
+    std::atomic<bool> transitionCondition1413201367990;
+    std::atomic<bool> transitionCondition1413201370590;
 
     // SyncTransitionTest
-    bool transitionCondition1418825427317;
-    bool transitionCondition1418825428924;
+    std::atomic<bool> transitionCondition1418825427317;
+    std::atomic<bool> transitionCondition1418825428924;
 
     // PlanTypeTest
-    bool preCondition1418042929966;
-    bool runtimeCondition1418042967134;
+    std::atomic<bool> preCondition1418042929966;
+    std::atomic<bool> runtimeCondition1418042967134;
 
     // Engine rules scheduling test
-    bool transitionCondition1625614729978;
+    std::atomic<bool> transitionCondition1625614729978;
     // Engine rules scheduling test failure transition
-    bool transitionCondition1625776897472;
+    std::atomic<bool> transitionCondition1625776897472;
     // Top level failure
-    bool transitionCondition1625783869825;
+    std::atomic<bool> transitionCondition1625783869825;
     // SubPlan
-    bool transitionCondition1625783867495;
+    std::atomic<bool> transitionCondition1625783867495;
     // master plan final transition
-    bool transitionCondition1626848015861;
+    std::atomic<bool> transitionCondition1626848015861;
 
     // tracing master plan
-    bool preCondition1840401110297459509;
+    std::atomic<bool> preCondition1840401110297459509;
 
     // Adjacent plans success test
-    bool transitionCondition1747408236004727286;
-    bool transitionCondition1067314038887345208;
+    std::atomic<bool> transitionCondition1747408236004727286;
+    std::atomic<bool> transitionCondition1067314038887345208;
 
-    bool switchEntryPoints;
+    std::atomic<bool> switchEntryPoints;
 
     // Failure handling tests
     std::atomic<int> failurePlanInitCallCounter;

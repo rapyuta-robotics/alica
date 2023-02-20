@@ -64,7 +64,6 @@ target_link_libraries(${PROJECT_NAME}
 
 add_subdirectory(libalica-turtlesim)
 add_subdirectory(libalica-ros-utils)
-add_subdirectory(libalica-utils)
 
 #############
 ## Install ##

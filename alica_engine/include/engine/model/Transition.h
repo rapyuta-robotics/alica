@@ -11,7 +11,6 @@ namespace alica
 class State;
 class Synchronisation;
 class TransitionCondition;
-class ModelFactory;
 class TransitionFactory;
 class ExpressionHandler;
 class Blackboard;
@@ -43,7 +42,6 @@ public:
     int64_t getPreConditionId() const { return _preConditionId; }
 
 private:
-    friend ModelFactory;
     friend TransitionFactory;
     friend ExpressionHandler;
     void setTransitionCondition(TransitionCondition* transitionCondition);
