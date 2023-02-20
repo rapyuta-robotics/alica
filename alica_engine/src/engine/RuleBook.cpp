@@ -69,7 +69,7 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
         AlicaEngine::abort(LOGNAME, "Masterplan does not have exactly one task!");
     }
 
-    RunningPlan* main = _pb->makeRunningPlan(masterPlan, nullptr);
+    RunningPlan* main = _pb->makeRunningPlan(masterPlan);
 
     main->setAllocationNeeded(true);
 

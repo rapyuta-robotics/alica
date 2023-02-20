@@ -315,14 +315,6 @@ bool conditionIsAnyChildStatusSuccess3604374027783683696(const Blackboard* input
     return false;
     /*PROTECTED REGION END*/
 }
-bool conditionDecision2B3684268241099966909(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    /*PROTECTED REGION ID(condition3684268241099966909) ENABLED START*/
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("2") == 0;
-    /*PROTECTED REGION END*/
-}
 bool conditionStart2Default3726136276355540527(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
 {
     /*PROTECTED REGION ID(condition3726136276355540527) ENABLED START*/
@@ -353,14 +345,6 @@ bool conditionExecBehaviour2SubPlan4244459279660861567(const Blackboard* input, 
     /*PROTECTED REGION ID(condition4244459279660861567) ENABLED START*/
     std::shared_ptr<alica_test::SchedWM> worldModel = LockedBlackboardRO(*gb).get<std::shared_ptr<alica_test::SchedWM>>("worldmodel");
     return worldModel->transitionToExecuteBehaviourInSubPlan;
-    /*PROTECTED REGION END*/
-}
-bool conditionDecision2A4281647834169813432(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
-{
-    /*PROTECTED REGION ID(condition4281647834169813432) ENABLED START*/
-    std::string value;
-    rp->getParameter("TestValue", value);
-    return value.compare("1") == 0;
     /*PROTECTED REGION END*/
 }
 bool conditionOther2NewSuccessStateOne4368560569514553226(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
