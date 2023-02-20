@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <string>
+#include <unordered_set>
 
 namespace essentials
 {
@@ -28,12 +29,11 @@ class ConfigChangeListener;
 class ModelManager
 {
 public:
-    ModelManager(ConfigChangeListener& configChangeListener, const std::string& domainConfigFolder, PlanRepository& planRepository);
+    ModelManager(ConfigChangeListener& configChangeListener, const std::unordered_set<std::string>& domainConfigFolders, PlanRepository& planRepository);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
     bool idExists(const int64_t id) const;
-    void reload(const YAML::Node& config);
 
 private:
     static constexpr const char* LOGNAME = "ModelManager";
@@ -41,10 +41,7 @@ private:
     friend Factory;
 
     ConfigChangeListener& _configChangeListener;
-    std::string domainConfigFolder;
-    std::string basePlanPath;
-    std::string baseRolePath;
-    std::string baseTaskPath;
+    const std::unordered_set<std::string> _domainConfigFolders;
     std::list<std::string> filesToParse;
     std::list<std::string> filesParsed;
 
@@ -53,9 +50,16 @@ private:
     PlanRepository& _planRepository;
 
     const AlicaElement* getElement(const int64_t id);
-    std::string getBasePath(const std::string& configKey);
+    // Recursively look for a file named <fileName> in _domainConfigFolders & return the absolute path to the file. The returned path is empty if the file is
+    // not found
+    std::string findFile(const std::string& fileName);
     AlicaElement* parseFile(const std::string& currentFile, const std::string& type);
-    std::string findDefaultRoleSet(const std::string& dir);
+    /**
+     * Searches for the default role set in _domainConfigFolders.
+     * @param dir directory to search in (not recursively)
+     * @return The first default role set it finds.
+     */
+    std::string findDefaultRoleSet();
     void attachReferences();
     void generateTemplateVariables();
     void computeReachabilities();
