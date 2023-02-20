@@ -28,12 +28,6 @@ public:
     EntryPoint(int64_t id, const Plan* p, const Task* t, const State* s);
     virtual ~EntryPoint();
 
-    /**
-     * A value encoding the do-nothing task used in loosely coupled task allocation.
-     */
-    constexpr static int64_t IDLEID = -1; // For Idle EntryPoint...
-    const static std::string IDLENAME;
-
     std::string toString(std::string indent = "") const override;
     static bool compareTo(const EntryPoint* ep1, const EntryPoint* ep2);
 
