@@ -18,20 +18,20 @@ public:
 };
 BOOST_DLL_ALIAS(alica::Move::create, Move)
 
-class UtilityFunctionMove : public BasicUtilityFunction
+class MoveUtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::shared_ptr<UtilityFunctionMove> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<MoveUtilityFunction> create(alica::UtilityFunctionContext&);
 };
-BOOST_DLL_ALIAS(alica::UtilityFunctionMove::create, UtilityFunctionMove)
+BOOST_DLL_ALIAS(alica::MoveUtilityFunction::create, MoveUtilityFunction)
 
-class MoveRunTimeCondition : public BasicCondition
+class CircleRuntimeCondition : public BasicCondition
 {
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 
 public:
-    static std::shared_ptr<MoveRunTimeCondition> create(alica::ConditionContext&);
+    static std::shared_ptr<CircleRuntimeCondition> create(alica::ConditionContext&);
 };
-BOOST_DLL_ALIAS(alica::MoveRunTimeCondition::create, MoveRunTimeCondition)
+BOOST_DLL_ALIAS(alica::CircleRuntimeCondition::create, CircleRuntimeCondition)
 } /* namespace alica */

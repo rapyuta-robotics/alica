@@ -24,15 +24,15 @@ std::unique_ptr<Master> Master::create(alica::PlanContext& context)
 /**
  * Task: DefaultTask  -> EntryPoint-ID: 2741715629576575326
  */
-std::shared_ptr<UtilityFunction> UtilityFunctionMaster::getUtilityFunction(Plan* plan)
+std::shared_ptr<UtilityFunction> MasterUtilityFunction::getUtilityFunction(Plan* plan)
 {
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 }
 
-std::shared_ptr<UtilityFunctionMaster> UtilityFunctionMaster::create(alica::UtilityFunctionContext&)
+std::shared_ptr<MasterUtilityFunction> MasterUtilityFunction::create(alica::UtilityFunctionContext&)
 {
-    return std::make_shared<UtilityFunctionMaster>();
+    return std::make_shared<MasterUtilityFunction>();
 }
 
 } // namespace alica

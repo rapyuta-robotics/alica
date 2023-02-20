@@ -1,0 +1,35 @@
+{
+  "comment": "",
+  "conditions": [
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 1,
+      "id": 748720375848597116,
+      "name": "Move2Init",
+      "libraryName": "alica_ros2_library",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 1,
+      "id": 974606107671315045,
+      "name": "Init2Move",
+      "libraryName": "alica_ros2_library",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 1,
+      "id": 2190266318562141841,
+      "name": "DefaultCondition",
+      "libraryName": "alica_ros2_library",
+      "relativeDirectory": "conditions"
+    }
+  ],
+  "id": 1,
+  "name": "ConditionRepository",
+  "relativeDirectory": ""
+}

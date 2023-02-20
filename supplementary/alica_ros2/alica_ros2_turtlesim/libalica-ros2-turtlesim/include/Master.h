@@ -18,12 +18,12 @@ public:
 };
 BOOST_DLL_ALIAS(alica::Master::create, Master)
 
-class UtilityFunctionMaster : public BasicUtilityFunction
+class MasterUtilityFunction : public BasicUtilityFunction
 {
 public:
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
-    static std::shared_ptr<UtilityFunctionMaster> create(alica::UtilityFunctionContext&);
+    static std::shared_ptr<MasterUtilityFunction> create(alica::UtilityFunctionContext&);
 };
-BOOST_DLL_ALIAS(alica::UtilityFunctionMaster::create, UtilityFunctionMaster)
+BOOST_DLL_ALIAS(alica::MasterUtilityFunction::create, MasterUtilityFunction)
 
 } /* namespace alica */

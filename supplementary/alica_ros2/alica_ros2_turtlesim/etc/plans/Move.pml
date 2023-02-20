@@ -39,7 +39,7 @@
   "id": 1889749086610694100,
   "inheritBlackboard": false,
   "masterPlan": false,
-  "libraryName": "libalica-ros2-turtlesim",
+  "libraryName": "alica-ros2-turtlesim",
   "name": "Move",
   "preCondition": null,
   "relativeDirectory": "",

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(libalica-ros2-turtlesim)
+project(alica-ros2-turtlesim)
 
 include(../../../../cmake_flags/cflags.cmake)
 alica_compile_flags()
@@ -7,6 +7,7 @@ alica_compile_flags()
 find_package(rclcpp REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
+  src/CircleRuntimeConditionConstraint.cpp  
   src/conditions.cpp
   src/Go2RandomPosition.cpp
   src/GoTo.cpp

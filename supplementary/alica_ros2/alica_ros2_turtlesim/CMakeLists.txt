@@ -36,7 +36,6 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}
-    src/turtle.cpp
     src/base_node.cpp
     src/base.cpp
 )

@@ -24,29 +24,29 @@ std::unique_ptr<Move> Move::create(alica::PlanContext& context)
 /**
  * Available Vars:
  */
-bool MoveRunTimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool CircleRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return true;
 }
 
-std::shared_ptr<MoveRunTimeCondition> MoveRunTimeCondition::create(alica::ConditionContext&)
+std::shared_ptr<CircleRuntimeCondition> CircleRuntimeCondition::create(alica::ConditionContext&)
 {
-    return std::make_shared<MoveRunTimeCondition>();
+    return std::make_shared<CircleRuntimeCondition>();
 }
 
 /**
  * Task: Follower  -> EntryPoint-ID: 3277312192440194145
  * Task: Leader  -> EntryPoint-ID: 4346694000146342467
  */
-std::shared_ptr<UtilityFunction> UtilityFunctionMove::getUtilityFunction(Plan* plan)
+std::shared_ptr<UtilityFunction> MoveUtilityFunction::getUtilityFunction(Plan* plan)
 {
     std::shared_ptr<UtilityFunction> defaultFunction = std::make_shared<DefaultUtilityFunction>(plan);
     return defaultFunction;
 }
 
-std::shared_ptr<UtilityFunctionMove> UtilityFunctionMove::create(alica::UtilityFunctionContext&)
+std::shared_ptr<MoveUtilityFunction> MoveUtilityFunction::create(alica::UtilityFunctionContext&)
 {
-    return std::make_shared<UtilityFunctionMove>();
+    return std::make_shared<MoveUtilityFunction>();
 }
 
 } // namespace alica
