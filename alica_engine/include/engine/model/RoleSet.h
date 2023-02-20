@@ -24,7 +24,6 @@ public:
     double getDefaultPriority() const { return _priorityDefault; }
 
 private:
-    friend ModelFactory;
     friend RoleSetFactory;
     void setUsableWithPlanId(int64_t usableWithPlanId);
 
