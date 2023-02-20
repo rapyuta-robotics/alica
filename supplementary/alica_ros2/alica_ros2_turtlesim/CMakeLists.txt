@@ -81,7 +81,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION include/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch Expr etc
+install(DIRECTORY launch etc
     DESTINATION share/${PROJECT_NAME}
 )
 
