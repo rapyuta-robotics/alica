@@ -7,7 +7,7 @@ alica_compile_flags()
 find_package(rclcpp REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
-  src/CircleRuntimeConditionConstraint.cpp  
+  src/CircleRuntimeConditionConstraint.cpp
   src/conditions.cpp
   src/Go2RandomPosition.cpp
   src/GoTo.cpp

@@ -12,7 +12,7 @@ class ProblemDescriptor;
 class RunningPlan;
 class CircleRuntimeConditionConstraint : public BasicConstraint
 {
-    public:
+public:
     void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
     static std::shared_ptr<CircleRuntimeConditionConstraint> create(alica::ConstraintContext&);
 };
