@@ -1,17 +1,16 @@
 #pragma once
 
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/Query.h>
 #include <mutex>
-#include <supplementary_tests/DomainBehaviour.h>
 
 namespace alica
 {
-class QueryBehaviour1 : public DomainBehaviour
+class QueryBehaviour1 : public BasicBehaviour
 {
 public:
     QueryBehaviour1(BehaviourContext& context);
-    virtual ~QueryBehaviour1();
     virtual void run();
     static std::unique_ptr<QueryBehaviour1> create(alica::BehaviourContext& context);
     int getCallCounter();

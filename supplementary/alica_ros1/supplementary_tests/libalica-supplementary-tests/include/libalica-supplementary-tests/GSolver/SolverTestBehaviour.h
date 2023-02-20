@@ -1,17 +1,16 @@
 #pragma once
 
 #include <boost/dll/alias.hpp>
+#include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/Query.h>
-#include <supplementary_tests/DomainBehaviour.h>
 #include <vector>
 
 namespace alica
 {
-class SolverTestBehaviour : public DomainBehaviour
+class SolverTestBehaviour : public BasicBehaviour
 {
 public:
     SolverTestBehaviour(BehaviourContext& context);
-    virtual ~SolverTestBehaviour();
     virtual void run();
     static std::unique_ptr<SolverTestBehaviour> create(alica::BehaviourContext& context);
 

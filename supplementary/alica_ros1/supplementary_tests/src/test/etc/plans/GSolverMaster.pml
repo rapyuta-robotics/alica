@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1417423751087,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "GSolverMaster",
   "preCondition": null,
