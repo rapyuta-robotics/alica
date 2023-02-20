@@ -57,29 +57,16 @@ public:
                 throw BlackboardException(stringify("key: ", key, " has an unsupported type"));
             }
             _yamlType.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(keyInfo.type));
-            if (keyInfo.defaultValue.has_value()) {
-                if (keyInfo.type == "std::any") {
-                    throw BlackboardException(stringify("key: ", key, " cannot have a default value because it is of type std::any"));
-                }
-                try {
-                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
-                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
-                } catch (const std::exception& ex) {
-                    throw BlackboardException(stringify("Could not set key: ", key, ", from default value: ", keyInfo.defaultValue.value(),
-                            ", type: ", keyInfo.type, ", details: ", ex.what()));
-                }
-            } else {
-                if (keyInfo.type == "std::any") {
-                    // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
-                    typeIndex = BB_VALUE_TYPE_ANY_INDEX;
-                }
-                try {
-                    // insert a default constructed value
-                    _vals.emplace(
-                            std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
-                } catch (const std::exception& ex) {
-                    throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
-                }
+
+            if (keyInfo.type == "std::any") {
+                // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
+                typeIndex = BB_VALUE_TYPE_ANY_INDEX;
+            }
+            try {
+                // insert a default constructed value
+                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+            } catch (const std::exception& ex) {
+                throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
             }
         }
     }
@@ -360,26 +347,26 @@ class LockedBlackboardRO
 public:
     LockedBlackboardRO(const Blackboard& bb)
             : _lk(bb.lockRO())
-            , _impl(&bb.impl())
+            , _impl(bb.impl())
     {
     }
     LockedBlackboardRO& operator&=(const LockedBlackboardRO&) = delete;
     LockedBlackboardRO& operator&=(LockedBlackboardRO&) = delete;
     LockedBlackboardRO(LockedBlackboardRO&) = delete;
 
-    bool empty() const { return _impl->empty(); }
-    size_t size() const { return _impl->size(); }
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
 
     template <typename T>
     decltype(auto) get(const std::string& key) const
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
-    bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
 
 private:
     std::shared_lock<std::shared_mutex> _lk;
-    const BlackboardImpl* _impl;
+    const BlackboardImpl& _impl;
 };
 
 class LockedBlackboardRW
@@ -387,7 +374,7 @@ class LockedBlackboardRW
 public:
     LockedBlackboardRW(Blackboard& bb)
             : _lk(bb.lockRW())
-            , _impl(&bb.impl())
+            , _impl(bb.impl())
     {
     }
     LockedBlackboardRW& operator&=(const LockedBlackboardRW&) = delete;
@@ -397,27 +384,27 @@ public:
     template <typename T>
     decltype(auto) get(const std::string& key) const
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
     template <typename T>
     decltype(auto) get(const std::string& key)
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
 
     template <typename T>
     void set(const std::string& key, T&& value)
     {
-        _impl->set(key, std::forward<T>(value));
+        _impl.set(key, std::forward<T>(value));
     }
 
-    bool empty() const { return _impl->empty(); }
-    size_t size() const { return _impl->size(); }
-    bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
 
 private:
     std::unique_lock<std::shared_mutex> _lk;
-    BlackboardImpl* _impl;
+    BlackboardImpl& _impl;
 };
 
 } // namespace alica

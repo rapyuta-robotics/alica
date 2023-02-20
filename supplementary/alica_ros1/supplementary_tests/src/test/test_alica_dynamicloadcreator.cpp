@@ -56,10 +56,10 @@ public:
 
 TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/behaviours/AcmeBeh.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/AcmeBeh.beh")));
 
     // Load model
     Behaviour* behaviourModel;
@@ -79,11 +79,10 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
     std::string path = getRootPath();
-    std::string libPath = getLibRootPath();
 
     YAML::Node node, globalNode;
     ASSERT_NO_THROW((globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml")));
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/AcmePlan.pml")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml")));
 
     // Load model
     ConfigChangeListener configChangeListener(globalNode);
@@ -103,10 +102,10 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
 
 TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/AcmePlan.pml")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml")));
     ASSERT_NO_THROW((node = node["runtimeCondition"]));
 
     // Load model
@@ -130,10 +129,10 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
 TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/conditions/ConditionRepository.cnd")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/conditions/ConditionRepository.cnd")));
     ASSERT_NO_THROW((node = node["conditions"][0]));
     // Load model
     TransitionCondition* conditionModel = TransitionConditionFactory::create(node, nullptr);
@@ -151,10 +150,10 @@ TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/behaviours/WaitBehaviour.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh")));
 
     // Load model
     Behaviour* behaviourModel;

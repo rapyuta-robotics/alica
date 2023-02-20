@@ -3,6 +3,8 @@
 #include "test_alica.h"
 
 #include "engine/planselector/PartialAssignment.h"
+#include <DynamicBehaviourCreator.h>
+
 namespace alica
 {
 namespace
@@ -16,7 +18,7 @@ protected:
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
@@ -28,7 +30,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", true));
@@ -48,7 +50,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
     EXPECT_FALSE(PartialAssignment::isIdlingAllowed());
 
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
     EXPECT_EQ(0, ac->init(std::move(creators), true));
     ae = AlicaTestsEngineGetter::getEngine(ac.get());
@@ -59,7 +61,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
 TEST_F(AlicaNotInitialized, TestBlockConfigUpdatesAfterInitialization)
 {
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
-            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::BehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
+            std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
             std::make_unique<alica::TransitionConditionCreator>());
 
     ac->setOption<int>("Alica.TeamTimeOut", 1000);

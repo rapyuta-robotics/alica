@@ -169,10 +169,4 @@ void Factory::storeElement(AlicaElement* ael, const std::string& type)
     }
 }
 
-void Factory::setIDLE_Attributes(AlicaElement* element, std::string name, const int64_t id)
-{
-    element->setName(name);
-    element->setId(id);
-}
-
 } // namespace alica

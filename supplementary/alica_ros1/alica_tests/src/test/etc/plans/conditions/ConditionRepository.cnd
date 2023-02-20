@@ -6,6 +6,7 @@
       "comment": "AnyChildSuccess",
       "conditionRepository": 0,
       "id": 1,
+      "libraryName": "alica_standard_library",
       "name": "AnyChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -14,6 +15,7 @@
       "comment": "AllChildSuccess",
       "conditionRepository": 0,
       "id": 2,
+      "libraryName": "alica_standard_library",
       "name": "AllChildSuccess",
       "relativeDirectory": "conditions"
     },
@@ -22,6 +24,7 @@
       "comment": "AnyChildFailure",
       "conditionRepository": 0,
       "id": 3,
+      "libraryName": "alica_standard_library",
       "name": "AnyChildFailure",
       "relativeDirectory": "conditions"
     },
@@ -30,6 +33,7 @@
       "comment": "AllChildFailure",
       "conditionRepository": 0,
       "id": 4,
+      "libraryName": "alica_standard_library",
       "name": "AllChildFailure",
       "relativeDirectory": "conditions"
     },
@@ -38,6 +42,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 19871606597697646,
+      "libraryName": "",
       "name": "Entry2Wait",
       "relativeDirectory": "conditions"
     },
@@ -46,6 +51,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 190171326790683374,
+      "libraryName": "",
       "name": "FailurePlan2FailureHandled",
       "relativeDirectory": "conditions"
     },
@@ -54,6 +60,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 330238006348384830,
+      "libraryName": "",
       "name": "isAnyChildTaskSuccessfull",
       "relativeDirectory": "conditions"
     },
@@ -62,7 +69,6 @@
         {
           "access": "input",
           "comment": "If set to true the transition will evaluate to true",
-          "defaultValue": null,
           "id": 2436156389323048245,
           "key": "trigger",
           "type": "std::any"
@@ -71,6 +77,7 @@
       "comment": "Is true only when the blackboard key `trigger` is set to true",
       "conditionRepository": 0,
       "id": 593157092542472645,
+      "libraryName": "",
       "name": "TriggerCond",
       "relativeDirectory": "conditions"
     },
@@ -79,6 +86,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 655002160731734731,
+      "libraryName": "",
       "name": "PlanB2PlanA",
       "relativeDirectory": "conditions"
     },
@@ -87,6 +95,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 682216470625774387,
+      "libraryName": "",
       "name": "PlanA2PlanB",
       "relativeDirectory": "conditions"
     },
@@ -95,6 +104,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 711536493236439192,
+      "libraryName": "",
       "name": "IsAnyChildStatusFailed",
       "relativeDirectory": "conditions"
     },
@@ -103,7 +113,6 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": null,
           "id": 2966214154645332430,
           "key": "childStatus",
           "type": "std::any"
@@ -112,6 +121,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 843443485857038179,
+      "libraryName": "",
       "name": "IsAnyChildStatus",
       "relativeDirectory": "conditions"
     },
@@ -120,6 +130,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1013158988206959873,
+      "libraryName": "",
       "name": "Default2EndTest",
       "relativeDirectory": "conditions"
     },
@@ -128,6 +139,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1221637895518338620,
+      "libraryName": "",
       "name": "SecondTaskFirstState2SecondTaskSecondState",
       "relativeDirectory": "conditions"
     },
@@ -136,6 +148,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1237521027685048666,
+      "libraryName": "",
       "name": "SecondCall2FirstCall",
       "relativeDirectory": "conditions"
     },
@@ -144,6 +157,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1291995818541962959,
+      "libraryName": "",
       "name": "Init2Fail",
       "relativeDirectory": "conditions"
     },
@@ -152,6 +166,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1311087067347475449,
+      "libraryName": "",
       "name": "Start2Init",
       "relativeDirectory": "conditions"
     },
@@ -160,6 +175,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1377356708472618789,
+      "libraryName": "",
       "name": "StateOne2StateTwo",
       "relativeDirectory": "conditions"
     },
@@ -168,6 +184,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1556522827919252115,
+      "libraryName": "",
       "name": "SwitchIsSet",
       "relativeDirectory": "conditions"
     },
@@ -176,6 +193,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1648591654803570403,
+      "libraryName": "",
       "name": "Start2Finish",
       "relativeDirectory": "conditions"
     },
@@ -184,6 +202,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1678986049909129132,
+      "libraryName": "",
       "name": "DefaultCondition",
       "relativeDirectory": "conditions"
     },
@@ -192,6 +211,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 1770682125085719690,
+      "libraryName": "",
       "name": "Fail2Failed",
       "relativeDirectory": "conditions"
     },
@@ -200,6 +220,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2019050763618766552,
+      "libraryName": "",
       "name": "StateTwo2NewSuccessStateTwo",
       "relativeDirectory": "conditions"
     },
@@ -208,7 +229,6 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": null,
           "id": 4032224399589857774,
           "key": "numberOfCalls",
           "type": "int64"
@@ -217,6 +237,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2163654295690873706,
+      "libraryName": "",
       "name": "CounterClassCalled",
       "relativeDirectory": "conditions"
     },
@@ -225,6 +246,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2171152220550556375,
+      "libraryName": "",
       "name": "FirstTaskFirstState2FirstTaskSecondState",
       "relativeDirectory": "conditions"
     },
@@ -233,6 +255,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2205566100638019970,
+      "libraryName": "",
       "name": "BehaviourSubPlan2ExecuteBehaviour",
       "relativeDirectory": "conditions"
     },
@@ -241,6 +264,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2208457928613785430,
+      "libraryName": "",
       "name": "Init2Start",
       "relativeDirectory": "conditions"
     },
@@ -249,6 +273,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2452554857659522052,
+      "libraryName": "",
       "name": "Start2ExecBehaviourTest",
       "relativeDirectory": "conditions"
     },
@@ -257,6 +282,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2619422076497988080,
+      "libraryName": "",
       "name": "Start2ExecOrderTest",
       "relativeDirectory": "conditions"
     },
@@ -265,6 +291,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2711102114821139213,
+      "libraryName": "",
       "name": "Init2End",
       "relativeDirectory": "conditions"
     },
@@ -273,6 +300,7 @@
       "comment": "A condition that is always true",
       "conditionRepository": 0,
       "id": 2872265442510628524,
+      "libraryName": "",
       "name": "AlwaysTrueCond",
       "relativeDirectory": "conditions"
     },
@@ -281,7 +309,6 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": null,
           "id": 2902028793069019089,
           "key": "numberOfCalls",
           "type": "int64"
@@ -290,6 +317,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 2901825906319407673,
+      "libraryName": "",
       "name": "CounterCalled",
       "relativeDirectory": "conditions"
     },
@@ -298,6 +326,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3016035752801585170,
+      "libraryName": "",
       "name": "SwitchIsNotSet",
       "relativeDirectory": "conditions"
     },
@@ -306,6 +335,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3517323109117319233,
+      "libraryName": "",
       "name": "Wait2Suc",
       "relativeDirectory": "conditions"
     },
@@ -314,7 +344,6 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": "false",
           "id": 924760096646037639,
           "key": "result",
           "type": "bool"
@@ -323,6 +352,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3592699233854318376,
+      "libraryName": "",
       "name": "TriggerFromInputCond",
       "relativeDirectory": "conditions"
     },
@@ -331,6 +361,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3604374027783683696,
+      "libraryName": "",
       "name": "IsAnyChildStatusSuccess",
       "relativeDirectory": "conditions"
     },
@@ -339,6 +370,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3684268241099966909,
+      "libraryName": "",
       "name": "Decision2B",
       "relativeDirectory": "conditions"
     },
@@ -347,6 +379,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3726136276355540527,
+      "libraryName": "",
       "name": "Start2Default",
       "relativeDirectory": "conditions"
     },
@@ -355,7 +388,6 @@
         {
           "access": "input",
           "comment": "",
-          "defaultValue": null,
           "id": 4313717753229417761,
           "key": "idx",
           "type": "int64"
@@ -364,6 +396,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3787001793582633602,
+      "libraryName": "",
       "name": "SimpleSwitchIsSet",
       "relativeDirectory": "conditions"
     },
@@ -372,6 +405,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 3828316183435191952,
+      "libraryName": "",
       "name": "BehaviourInSubPlan2EndTest",
       "relativeDirectory": "conditions"
     },
@@ -380,6 +414,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 4108042962123065459,
+      "libraryName": "",
       "name": "Start2ExecOrderedSchedulingTest",
       "relativeDirectory": "conditions"
     },
@@ -388,6 +423,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 4244459279660861567,
+      "libraryName": "",
       "name": "ExecBehaviour2SubPlan",
       "relativeDirectory": "conditions"
     },
@@ -396,6 +432,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 4281647834169813432,
+      "libraryName": "",
       "name": "Decision2A",
       "relativeDirectory": "conditions"
     },
@@ -404,6 +441,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 4368560569514553226,
+      "libraryName": "",
       "name": "Other2NewSuccessStateOne",
       "relativeDirectory": "conditions"
     },
@@ -412,6 +450,7 @@
       "comment": "",
       "conditionRepository": 0,
       "id": 4547372457936774346,
+      "libraryName": "",
       "name": "TestTracingMasterCondition",
       "relativeDirectory": "conditions"
     }

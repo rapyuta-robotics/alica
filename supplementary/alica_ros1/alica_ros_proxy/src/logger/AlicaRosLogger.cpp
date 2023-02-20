@@ -8,9 +8,8 @@ using namespace alica;
 
 namespace alicaRosLogger
 {
-AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName, const alica::AgentId localAgentId)
+AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& localAgentName)
         : _localAgentName(localAgentName)
-        , _localAgentId(localAgentId)
 {
     ros::console::Level level = _verbosityRosLevelMap.at(verbosity);
 

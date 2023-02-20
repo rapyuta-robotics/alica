@@ -70,6 +70,7 @@
   "frequency": 0,
   "id": 1407153703092,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "PlanFive",
   "preCondition": null,

@@ -9,7 +9,6 @@
 
 namespace alica
 {
-class ModelManager;
 class PlanRepository;
 
 /**
@@ -18,7 +17,7 @@ class PlanRepository;
 class RobotEngineData
 {
 public:
-    RobotEngineData(const ModelManager& modelManager, const PlanRepository& planRepository, AgentId agentId);
+    RobotEngineData(const PlanRepository& planRepository, AgentId agentId);
     ~RobotEngineData();
     void initDomainVariables();
 
@@ -37,7 +36,6 @@ private:
      */
     int64_t makeUniqueId(const std::string& s) const;
 
-    const ModelManager& _modelManager;
     const PlanRepository& _planRepository;
     AgentId _agentId;
     /**

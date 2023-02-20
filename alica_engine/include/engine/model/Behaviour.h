@@ -15,7 +15,6 @@ class TestContext;
 }
 
 class BasicBehaviour;
-class ModelFactory;
 class BehaviourFactory;
 class PreCondition;
 class RuntimeCondition;
@@ -42,7 +41,6 @@ public:
     std::string getLibraryName() const { return _libraryName; };
 
 private:
-    friend ModelFactory;
     friend BehaviourFactory;
     friend alica::test::TestContext;
 

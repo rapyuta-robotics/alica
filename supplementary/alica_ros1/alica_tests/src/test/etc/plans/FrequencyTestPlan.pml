@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1626848999740,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": true,
   "name": "FrequencyTestPlan",
   "preCondition": null,

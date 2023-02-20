@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1428508355209,
   "inheritBlackboard": false,
+  "libraryName": "alica-tests",
   "name": "TriggerC",
   "postCondition": null,
   "preCondition": null,

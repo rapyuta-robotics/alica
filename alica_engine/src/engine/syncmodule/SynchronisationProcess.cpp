@@ -208,7 +208,7 @@ void SynchronisationProcess::integrateSyncReady(shared_ptr<SyncReady> ready)
 {
     // every robot that has acknowledged my row needs to send me a SyncReady
     bool found = false;
-    for (std::shared_ptr<SyncReady>& sr : _receivedSyncReadys) {
+    for (const std::shared_ptr<SyncReady>& sr : _receivedSyncReadys) {
         if (sr->senderID == ready->senderID) {
             found = true;
             break;
@@ -324,7 +324,7 @@ bool SynchronisationProcess::isSyncComplete()
 std::ostream& operator<<(std::ostream& s, const SynchronisationProcess& syncProc)
 {
     s << "Matrix:" << std::endl;
-    for (SyncRow* row : syncProc._syncMatrix) {
+    for (const SyncRow* row : syncProc._syncMatrix) {
         s << *row;
     }
 

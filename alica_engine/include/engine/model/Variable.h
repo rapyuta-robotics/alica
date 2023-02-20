@@ -8,7 +8,6 @@
 
 namespace alica
 {
-class ModelFactory;
 class VariableFactory;
 /**
  * A variable is constraint by conditions, feasible values can be queried using a ConstraintQuery.
@@ -26,7 +25,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Variable& variable) { return os << variable.getName() << "(" << variable.getId() << ")"; }
 
 private:
-    friend ModelFactory;
     friend VariableFactory;
     void setType(const std::string& type);
     std::string _type;

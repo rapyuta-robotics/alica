@@ -51,7 +51,6 @@ public:
     void stopCommunication() override;
 
 private:
-    ros::NodeHandle* _rosNode;
     ros::CallbackQueue& _callbackQueue;
 
     ros::Publisher _alicaEngineInfoPublisher;
@@ -78,6 +77,7 @@ private:
     ros::Publisher _presenceAnnouncementPublisher;
     ros::Subscriber _presenceAnnouncementSubscriber;
 
+    ros::NodeHandle _nh;
     bool _isRunning;
 };
 

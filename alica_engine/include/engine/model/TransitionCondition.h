@@ -10,7 +10,6 @@
 namespace alica
 {
 class AbstractPlan;
-class ModelFactory;
 class TransitionConditionFactory;
 class BlackboardBlueprint;
 class KeyMapping;

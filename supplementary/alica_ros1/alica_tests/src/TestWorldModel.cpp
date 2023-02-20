@@ -17,18 +17,29 @@ void TestWorldModel::reset()
     transitionCondition1413201052549 = false;
     transitionCondition1413201367990 = false;
     transitionCondition1413201370590 = false;
-    preCondition1418042929966 = false;
-    runtimeCondition1418042967134 = false;
 
+    // SyncTransitionTest
     transitionCondition1418825427317 = false;
     transitionCondition1418825428924 = false;
 
+    // PlanTypeTest
+    preCondition1418042929966 = false;
+    runtimeCondition1418042967134 = false;
+
+    // Engine rules scheduling test
     transitionCondition1625614729978 = false;
     transitionCondition1625776897472 = false;
-    switchEntryPoints = false;
+    transitionCondition1625783869825 = false;
+    transitionCondition1625783867495 = false;
+    transitionCondition1626848015861 = false;
 
     preCondition1840401110297459509 = false;
 
+    // Adjacent plans success test
+    transitionCondition1747408236004727286 = false;
+    transitionCondition1067314038887345208 = false;
+
+    switchEntryPoints = false;
     x = 0;
     tracingLogs.clear();
     tracingTags.clear();

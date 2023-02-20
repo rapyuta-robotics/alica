@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "2",
       "id": 1998335174749558241,
       "key": "Sequenze2SubPlan",
       "type": "int64"
@@ -11,7 +10,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "3",
       "id": 620992452739501207,
       "key": "SubOne2SubTwo",
       "type": "int64"
@@ -19,7 +17,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": "4",
       "id": 3390934806840785672,
       "key": "InitSubThree2TermSubThree",
       "type": "int64"
@@ -47,6 +44,7 @@
   "frequency": 0,
   "id": 1614963946725,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "SchedulingTestSequencePlan1",
   "preCondition": null,
@@ -197,7 +195,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "Sequenze2SubPlan"
+            "parentKey": "Sequenze2SubPlan",
+            "value": null
           }
         ],
         "output": []
@@ -226,7 +225,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "SubOne2SubTwo"
+            "parentKey": "SubOne2SubTwo",
+            "value": null
           }
         ],
         "output": []
@@ -279,7 +279,8 @@
         "input": [
           {
             "childKey": "numberOfCalls",
-            "parentKey": "InitSubThree2TermSubThree"
+            "parentKey": "InitSubThree2TermSubThree",
+            "value": null
           }
         ],
         "output": []
