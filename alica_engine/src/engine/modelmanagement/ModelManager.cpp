@@ -87,8 +87,7 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
     std::string roleSetPath;
     if (roleSetPath = findFile(roleSetName + alica::Strings::roleset_extension); roleSetPath.empty()) {
-        Logging::logDebug(LOGNAME) << "Roleset with name " << roleSetName
-                                   << " not found, will look for any other roleset files in the given config directories";
+        Logging::logWarn(LOGNAME) << "Roleset with name " << roleSetName << " not found, will look for any other roleset files in the given config directories";
         roleSetPath = findDefaultRoleSet();
     }
 
@@ -114,11 +113,11 @@ std::string ModelManager::findDefaultRoleSet()
                 if (Factory::isValid(node[alica::Strings::defaultRoleSet]) && Factory::getValue<bool>(node, alica::Strings::defaultRoleSet)) {
                     return file;
                 } else {
-                    Logging::logInfo(LOGNAME) << "Roleset found, however it is invalid, will continue with the search for another roleset";
+                    Logging::logWarn(LOGNAME) << "Roleset found, however it is invalid, will continue with the search for another roleset";
                 }
             } catch (const YAML::BadFile& badFile) {
-                Logging::logDebug(LOGNAME) << "Roleset found, however parsing failed with exception: " << badFile.what()
-                                           << ", will continue the search for another roleset";
+                Logging::logWarn(LOGNAME) << "Roleset found, however parsing failed with exception: " << badFile.what()
+                                          << ", will continue the search for another roleset";
             }
         }
     }

@@ -57,7 +57,7 @@ int64_t Factory::getReferencedId(const std::string& idString)
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::condition_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::taskrepository_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension)) {
-            Logging::logDebug(LOGNAME) << "Unknown file extension: " << fileName;
+            Logging::logWarn(LOGNAME) << "Unknown file extension: " << fileName;
         } else if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
                    std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileName) == std::end(modelManager->filesToParse)) {
             modelManager->filesToParse.push_back(fileName);
