@@ -451,4 +451,17 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 1234);
 }
 
+TEST_F(TestBlackboard, TestUnlockedBB)
+{
+    // Test all basic operations on an unlocked blackboard
+    Blackboard blackboard;
+    UnlockedBlackboard bb{blackboard};
+    EXPECT_TRUE(bb.empty());
+    bb.set("intVal", 1234);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1234);
+    EXPECT_TRUE(bb.hasValue("intVal"));
+    EXPECT_EQ(bb.size(), 1);
+    EXPECT_FALSE(bb.empty());
+}
+
 } // namespace alica
