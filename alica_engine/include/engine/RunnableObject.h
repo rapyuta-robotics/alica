@@ -70,11 +70,11 @@ public:
 
 private:
     TracingType _tracingType;
+    bool _runTraced;
     const IAlicaTraceFactory* _tf;
     std::function<std::optional<std::string>()> _customTraceContextGetter;
     std::unique_ptr<IAlicaTrace> _trace;
     // True if the behaviour/plan's run method has already been logged in the trace
-    bool _runTraced;
     const std::string& _name;
 };
 
