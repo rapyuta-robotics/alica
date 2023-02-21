@@ -111,7 +111,7 @@ void TeamObserver::tick(RunningPlan* root)
         }
 
         if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            _logger.eventOccurred("MsgUpdate");
+            // Change in assignment (usually just a new agent in a plan)
         }
     }
 }
