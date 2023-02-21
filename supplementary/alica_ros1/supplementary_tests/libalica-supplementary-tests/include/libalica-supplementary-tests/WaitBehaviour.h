@@ -9,7 +9,6 @@ class WaitBehaviour : public BasicBehaviour
 {
 public:
     explicit WaitBehaviour(BehaviourContext& context);
-    virtual ~WaitBehaviour(){};
     void run() override;
 
     // Factory method

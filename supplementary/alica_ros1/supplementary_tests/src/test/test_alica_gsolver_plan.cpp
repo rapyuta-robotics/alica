@@ -13,7 +13,7 @@
 #include <engine/model/Plan.h>
 #include <engine/model/RuntimeCondition.h>
 #include <engine/model/State.h>
-#include <supplementary_tests/GSolver/SolverTestBehaviour.h>
+#include <libalica-supplementary-tests/GSolver/SolverTestBehaviour.h>
 #include <test_supplementary.h>
 
 #include <gtest/gtest.h>
