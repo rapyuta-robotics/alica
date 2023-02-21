@@ -10,7 +10,6 @@ class Transition;
 class AbstractPlan;
 class VariableBinding;
 class EntryPoint;
-class ModelFactory;
 class StateFactory;
 class TerminalStateFactory;
 class ModelManager;
@@ -44,7 +43,6 @@ public:
     bool isFailureState() const { return _type == FAILURE; }
 
 private:
-    friend ModelFactory;
     friend StateFactory;
     friend TerminalStateFactory;
     friend ModelManager;

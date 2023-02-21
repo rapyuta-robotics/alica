@@ -23,7 +23,6 @@ public:
     const Variable* getSubVar() const { return _subVar; }
 
 protected:
-    friend ModelFactory;
     friend VariableBindingFactory;
 
     const Variable* _var;

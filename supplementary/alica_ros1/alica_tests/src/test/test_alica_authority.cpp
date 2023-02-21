@@ -57,8 +57,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::AllocationDifference result;
     util.setReason(alica::AllocationDifference::Reason::utility);
     msg.setReason(alica::AllocationDifference::Reason::message);
-    alica::Task t1;
-    alica::Task t2;
+    alica::Task t1(nullptr);
+    alica::Task t2(nullptr);
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 

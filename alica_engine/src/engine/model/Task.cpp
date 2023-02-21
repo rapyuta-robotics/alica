@@ -4,8 +4,8 @@
 namespace alica
 {
 
-Task::Task()
-        : _taskRepository(nullptr)
+Task::Task(TaskRepository* taskRepository)
+        : _taskRepository(taskRepository)
 {
 }
 
