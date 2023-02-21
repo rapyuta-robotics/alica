@@ -47,13 +47,17 @@ int64_t Factory::getReferencedId(const std::string& idString)
     }
     std::string fileName = idString.substr(0, idxOfHashtag);
     if (!fileName.empty()) {
+        if (auto pathSeparatorPos = fileName.find_last_of(essentials::FileSystem::PATH_SEPARATOR); pathSeparatorPos != std::string::npos) {
+            Logging::logWarn(LOGNAME) << "File name expected, however path is specified, path: " << fileName << ", will only consider the file name instead";
+            fileName = fileName.substr(pathSeparatorPos + 1);
+        }
         if (!essentials::FileSystem::endsWith(fileName, alica::Strings::plan_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::behaviour_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::plantype_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::condition_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::taskrepository_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension)) {
-            Logging::logDebug("Factory") << "Unknown file extension: " << fileName;
+            Logging::logDebug(LOGNAME) << "Unknown file extension: " << fileName;
         }
 
         if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
