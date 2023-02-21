@@ -45,7 +45,7 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
         AlicaEngine::abort(LOGNAME, "Cannot find MasterPlan '", masterPlanName, "'");
     }
 
-    filesParsed.push_back(masterPlanName);
+    filesParsed.push_back(masterPlanName + alica::Strings::plan_extension);
     Plan* masterPlan = (Plan*) parseFile(masterPlanPath, alica::Strings::plan);
     while (filesToParse.size() > 0) {
         std::string fileToParse;
