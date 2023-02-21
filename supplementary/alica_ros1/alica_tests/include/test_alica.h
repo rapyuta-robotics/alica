@@ -59,18 +59,22 @@ private:
 
 protected:
     virtual bool getDelayStart() { return false; }
+    virtual std::vector<std::string> getConfigPaths() const
+    {
+        // By default, use a single path defined in the launch file
+        ros::NodeHandle nh;
+        std::string path;
+        nh.param<std::string>("/rootPath", path, ".");
+        return {path + "/etc"};
+    }
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
-        // determine the path to the test config
-        ros::NodeHandle nh;
-        std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), {path + "/etc/"}, getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getConfigPaths(), getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
