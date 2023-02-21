@@ -33,7 +33,7 @@ Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const st
     spinner.add_node(nh);
     spinner.add_node(priv_nh);
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
+    ac = new alica::AlicaContext(AlicaContextParams(name, {path + "/etc/"}, roleset, master_plan, false, agent_id));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
