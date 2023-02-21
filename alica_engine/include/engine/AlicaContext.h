@@ -27,6 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -95,12 +96,12 @@ struct AlicaContextParams
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
-     * @note The configPath is the path containing the plans, roles and tasks folder.
+     * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
-            bool stepEngine = false, const AgentId agentID = InvalidAgentID)
+    AlicaContextParams(const std::string& agentName, const std::unordered_set<std::string>& configPaths, const std::string& roleSetName,
+            const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
-            , configPath(configPath)
+            , configPaths(configPaths)
             , roleSetName(roleSetName)
             , masterPlanName(masterPlanName)
             , stepEngine(stepEngine)
@@ -116,11 +117,11 @@ struct AlicaContextParams
      * Alica.yaml config instead. If no identifier is specified in the
      * config as well, the engine will generate a random identifier.
      *
-     * @note The configPath is the path containing the plans, roles and tasks folder.
+     * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::string& configPath, const AgentId agentID = InvalidAgentID)
+    AlicaContextParams(const std::string& agentName, const std::unordered_set<std::string>& configPaths, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
-            , configPath(configPath)
+            , configPaths(configPaths)
             , roleSetName("RoleSet")
             , masterPlanName("MasterPlan")
             , stepEngine(false)
@@ -129,7 +130,7 @@ struct AlicaContextParams
     }
 
     std::string agentName;
-    std::string configPath;
+    std::unordered_set<std::string> configPaths;
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
@@ -441,12 +442,12 @@ private:
 
     /**
      * Initializes yaml configuration.
-     * @param configPath Relative path to the yaml configuration file.
+     * @param configPath Relative paths to search for the yaml configuration file.
      * @param agentName Name of the local agent.
      *
      * @return The agents config.
      */
-    YAML::Node initConfig(const std::string& configPath, const std::string& agentName);
+    YAML::Node initConfig(const std::unordered_set<std::string>& configPaths, const std::string& agentName);
 
     /**
      * Reload alica components with updated configuration.

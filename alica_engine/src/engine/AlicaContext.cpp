@@ -19,7 +19,7 @@ constexpr int ALICA_LOOP_TIME_ESTIMATE = 33; // ms
 
 AlicaContext::AlicaContext(const AlicaContextParams& alicaContextParams)
         : _validTag(ALICA_CTX_GOOD)
-        , _configRootNode(initConfig(alicaContextParams.configPath, alicaContextParams.agentName))
+        , _configRootNode(initConfig(alicaContextParams.configPaths, alicaContextParams.agentName))
         , _alicaContextParams(alicaContextParams)
         , _clock(std::make_unique<AlicaClock>())
         , _localAgentName(alicaContextParams.agentName)
@@ -131,30 +131,48 @@ VariableSyncModule& AlicaContext::editSyncModule()
     return _engine->editResultStore();
 }
 
-YAML::Node AlicaContext::initConfig(const std::string& configPath, const std::string& agentName)
+YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& configPaths, const std::string& agentName)
 {
     YAML::Node node;
-    std::string configFile;
-    try {
-        configFile = essentials::FileSystem::combinePaths(configPath, agentName);
-        configFile = essentials::FileSystem::combinePaths(configFile, "Alica.yaml");
-        node = YAML::LoadFile(configFile);
-        return node;
-    } catch (YAML::BadFile& badFile) {
-        if (Logging::isInitialized()) {
-            Logging::logWarn(LOGNAME) << "Agent wise config file could not be used, file: " << configFile << ", error details- " << badFile.msg
-                                      << ", will try to use the global config file";
-        } else {
-            std::cerr << "[WARN]" << LOGNAME << "Agent wise config file could not be used, file:  " << configFile << ", error details - " << badFile.msg
-                      << ", will try to use the global config file" << std::endl;
+    std::string configFileSearchPath, configFilePath;
+    for (const auto& folder : configPaths) {
+        configFileSearchPath = essentials::FileSystem::combinePaths(folder, agentName);
+        if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
+            try {
+                node = YAML::LoadFile(configFilePath);
+            } catch (YAML::BadFile& badFile) {
+                if (Logging::isInitialized()) {
+                    Logging::logWarn(LOGNAME) << "Agent wise config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
+                                              << ", will continue the search in the next config directory";
+                } else {
+                    std::cerr << "[WARN] " << LOGNAME << " Agent wise config file could not be parsed, file:  " << configFilePath << ", error details - "
+                              << badFile.msg << ", will continue the search in the next config directory" << std::endl;
+                }
+            }
+            return node;
         }
     }
+    if (Logging::isInitialized()) {
+        Logging::logInfo(LOGNAME) << "Agent wise config file could not be used, will look for the global config file instead";
+    } else {
+        std::cerr << "[INFO] " << LOGNAME << " Agent wise config file could not be used, will look for the global config file instead" << std::endl;
+    }
 
-    try {
-        configFile = essentials::FileSystem::combinePaths(configPath, "Alica.yaml");
-        node = YAML::LoadFile(configFile);
-    } catch (YAML::BadFile& badFile) {
-        AlicaEngine::abort(LOGNAME, "Global config file could not be used, file: ", configFile + ", error details - " + badFile.msg);
+    for (const auto& configFileSearchPath : configPaths) {
+        if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
+            try {
+                node = YAML::LoadFile(configFilePath);
+            } catch (YAML::BadFile& badFile) {
+                if (Logging::isInitialized()) {
+                    Logging::logWarn(LOGNAME) << "Global config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
+                                              << ", will continue the search in the next config directory";
+                } else {
+                    std::cerr << "[WARN] " << LOGNAME << " Global config file could not be parsed, file:  " << configFilePath << ", error details - "
+                              << badFile.msg << ", will continue the search in the next config directory" << std::endl;
+                }
+            }
+            return node;
+        }
     }
 
     return node;
