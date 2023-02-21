@@ -5,7 +5,7 @@
 
 #include <functional>
 #include <string>
-#include <unordered_set>
+#include <vector>
 
 namespace essentials
 {
@@ -29,7 +29,7 @@ class ConfigChangeListener;
 class ModelManager
 {
 public:
-    ModelManager(ConfigChangeListener& configChangeListener, const std::unordered_set<std::string>& domainConfigFolders, PlanRepository& planRepository);
+    ModelManager(ConfigChangeListener& configChangeListener, const std::vector<std::string>& domainConfigFolders, PlanRepository& planRepository);
     Plan* loadPlanTree(const std::string& masterPlanName);
     RoleSet* loadRoleSet(const std::string& roleSetName);
 
@@ -41,7 +41,7 @@ private:
     friend Factory;
 
     ConfigChangeListener& _configChangeListener;
-    const std::unordered_set<std::string> _domainConfigFolders;
+    const std::vector<std::string> _domainConfigFolders;
     std::list<std::string> filesToParse;
     std::list<std::string> filesParsed;
 

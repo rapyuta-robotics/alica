@@ -30,8 +30,7 @@
 namespace alica
 {
 
-ModelManager::ModelManager(
-        ConfigChangeListener& configChangeListener, const std::unordered_set<std::string>& domainConfigFolders, PlanRepository& planRepository)
+ModelManager::ModelManager(ConfigChangeListener& configChangeListener, const std::vector<std::string>& domainConfigFolders, PlanRepository& planRepository)
         : _configChangeListener(configChangeListener)
         , _domainConfigFolders(domainConfigFolders)
         , _planRepository(planRepository)
@@ -108,7 +107,7 @@ std::string ModelManager::findDefaultRoleSet()
         std::vector<std::string> files = essentials::FileSystem::findAllFiles(folder, alica::Strings::roleset_extension);
 
         // find default role set and return the first valid one found
-        for (std::string file : files) {
+        for (const auto& file : files) {
             YAML::Node node;
             try {
                 node = YAML::LoadFile(file);

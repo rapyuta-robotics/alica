@@ -25,7 +25,7 @@ public:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("/rootPath", path, ".");
-        _tc = std::make_unique<TestContext>("hairy", std::unordered_set<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
+        _tc = std::make_unique<TestContext>("hairy", std::vector<std::string>{path + "/etc/"}, "Roleset", "TestMasterPlan", true, 1);
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
         _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));

@@ -131,7 +131,7 @@ VariableSyncModule& AlicaContext::editSyncModule()
     return _engine->editResultStore();
 }
 
-YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& configPaths, const std::string& agentName)
+YAML::Node AlicaContext::initConfig(const std::vector<std::string>& configPaths, const std::string& agentName)
 {
     YAML::Node node;
     std::string configFileSearchPath, configFilePath;
@@ -140,6 +140,7 @@ YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& confi
         if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
             try {
                 node = YAML::LoadFile(configFilePath);
+                return node;
             } catch (YAML::BadFile& badFile) {
                 if (Logging::isInitialized()) {
                     Logging::logWarn(LOGNAME) << "Agent wise config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
@@ -149,7 +150,6 @@ YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& confi
                               << badFile.msg << ", will continue the search in the next config directory" << std::endl;
                 }
             }
-            return node;
         }
     }
     if (Logging::isInitialized()) {
@@ -162,6 +162,7 @@ YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& confi
         if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
             try {
                 node = YAML::LoadFile(configFilePath);
+                return node;
             } catch (YAML::BadFile& badFile) {
                 if (Logging::isInitialized()) {
                     Logging::logWarn(LOGNAME) << "Global config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
@@ -171,8 +172,12 @@ YAML::Node AlicaContext::initConfig(const std::unordered_set<std::string>& confi
                               << badFile.msg << ", will continue the search in the next config directory" << std::endl;
                 }
             }
-            return node;
         }
+    }
+    if (Logging::isInitialized()) {
+        Logging::logError(LOGNAME) << "Could not parse/find the agent wise config file or the global config file";
+    } else {
+        std::cerr << "[ERROR] " << LOGNAME << " Could not parse/find the agent wise config file or the global config file";
     }
 
     return node;

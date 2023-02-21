@@ -27,7 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
-#include <unordered_set>
+#include <vector>
 #include <yaml-cpp/yaml.h>
 
 namespace alica
@@ -98,7 +98,7 @@ struct AlicaContextParams
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::unordered_set<std::string>& configPaths, const std::string& roleSetName,
+    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName,
             const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
             , configPaths(configPaths)
@@ -119,7 +119,7 @@ struct AlicaContextParams
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
-    AlicaContextParams(const std::string& agentName, const std::unordered_set<std::string>& configPaths, const AgentId agentID = InvalidAgentID)
+    AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
             , configPaths(configPaths)
             , roleSetName("RoleSet")
@@ -130,7 +130,7 @@ struct AlicaContextParams
     }
 
     std::string agentName;
-    std::unordered_set<std::string> configPaths;
+    std::vector<std::string> configPaths;
     std::string masterPlanName;
     std::string roleSetName;
     bool stepEngine;
@@ -447,7 +447,7 @@ private:
      *
      * @return The agents config.
      */
-    YAML::Node initConfig(const std::unordered_set<std::string>& configPaths, const std::string& agentName);
+    YAML::Node initConfig(const std::vector<std::string>& configPaths, const std::string& agentName);
 
     /**
      * Reload alica components with updated configuration.
