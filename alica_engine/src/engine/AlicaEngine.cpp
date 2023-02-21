@@ -20,7 +20,6 @@
 #include <functional>
 #include <random>
 #include <stdlib.h>
-#include <unordered_set>
 
 namespace alica
 {
