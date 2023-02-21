@@ -113,9 +113,12 @@ std::string ModelManager::findDefaultRoleSet()
                 node = YAML::LoadFile(file);
                 if (Factory::isValid(node[alica::Strings::defaultRoleSet]) && Factory::getValue<bool>(node, alica::Strings::defaultRoleSet)) {
                     return file;
+                } else {
+                    Logging::logInfo(LOGNAME) << "Roleset found, however it is invalid, will continue with the search for another roleset";
                 }
             } catch (const YAML::BadFile& badFile) {
-                Logging::logDebug(LOGNAME) << "Roleset found, however parsing failed with exception: " << badFile.what() << ", will continue the search";
+                Logging::logDebug(LOGNAME) << "Roleset found, however parsing failed with exception: " << badFile.what()
+                                           << ", will continue the search for another roleset";
             }
         }
     }

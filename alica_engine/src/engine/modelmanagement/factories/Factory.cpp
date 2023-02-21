@@ -46,11 +46,11 @@ int64_t Factory::getReferencedId(const std::string& idString)
         return stoll(idString);
     }
     std::string fileName = idString.substr(0, idxOfHashtag);
+    if (auto pathSeparatorPos = fileName.find_last_of(essentials::FileSystem::PATH_SEPARATOR); pathSeparatorPos != std::string::npos) {
+        Logging::logWarn(LOGNAME) << "File name expected, however path is specified, path: " << fileName << ", will only consider the file name instead";
+        fileName = fileName.substr(pathSeparatorPos + 1);
+    }
     if (!fileName.empty()) {
-        if (auto pathSeparatorPos = fileName.find_last_of(essentials::FileSystem::PATH_SEPARATOR); pathSeparatorPos != std::string::npos) {
-            Logging::logWarn(LOGNAME) << "File name expected, however path is specified, path: " << fileName << ", will only consider the file name instead";
-            fileName = fileName.substr(pathSeparatorPos + 1);
-        }
         if (!essentials::FileSystem::endsWith(fileName, alica::Strings::plan_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::behaviour_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::plantype_extension) &&
@@ -58,10 +58,8 @@ int64_t Factory::getReferencedId(const std::string& idString)
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::taskrepository_extension) &&
                 !essentials::FileSystem::endsWith(fileName, alica::Strings::roleset_extension)) {
             Logging::logDebug(LOGNAME) << "Unknown file extension: " << fileName;
-        }
-
-        if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
-                std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileName) == std::end(modelManager->filesToParse)) {
+        } else if (std::find(std::begin(modelManager->filesParsed), std::end(modelManager->filesParsed), fileName) == std::end(modelManager->filesParsed) &&
+                   std::find(std::begin(modelManager->filesToParse), std::end(modelManager->filesToParse), fileName) == std::end(modelManager->filesToParse)) {
             modelManager->filesToParse.push_back(fileName);
         }
     }
