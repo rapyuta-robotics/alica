@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1479557378264,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "masterPlan": false,
   "name": "ProbBuildingLevel1",
   "preCondition": null,
