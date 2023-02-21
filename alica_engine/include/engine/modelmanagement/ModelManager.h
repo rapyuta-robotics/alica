@@ -55,8 +55,7 @@ private:
     std::string findFile(const std::string& fileName);
     AlicaElement* parseFile(const std::string& currentFile, const std::string& type);
     /**
-     * Searches for the default role set in _domainConfigFolders.
-     * @param dir directory to search in (not recursively)
+     * Searches for the default role set in _domainConfigFolders (not recursively)
      * @return The first default role set it finds.
      */
     std::string findDefaultRoleSet();
