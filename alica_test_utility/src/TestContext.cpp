@@ -13,9 +13,9 @@
 
 namespace alica::test
 {
-TestContext::TestContext(const std::string& agentName, const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName,
-        bool stepEngine, const AgentId agentID)
-        : AlicaContext(AlicaContextParams(agentName, configPath, roleSetName, masterPlanName, stepEngine, agentID))
+TestContext::TestContext(const std::string& agentName, const std::unordered_set<std::string>& configPaths, const std::string& roleSetName,
+        const std::string& masterPlanName, bool stepEngine, const AgentId agentID)
+        : AlicaContext(AlicaContextParams(agentName, configPaths, roleSetName, masterPlanName, stepEngine, agentID))
         , _initCalled(false)
 {
 }
