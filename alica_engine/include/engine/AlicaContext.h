@@ -130,8 +130,8 @@ struct AlicaContextParams
 
     std::string agentName;
     std::string configPath;
-    std::string masterPlanName;
     std::string roleSetName;
+    std::string masterPlanName;
     bool stepEngine;
     AgentId agentID;
 };
