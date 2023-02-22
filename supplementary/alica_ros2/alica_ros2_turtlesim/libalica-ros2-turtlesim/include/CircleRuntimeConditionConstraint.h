@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/BasicConstraint.h>
-#include <iostream>
 #include <memory>
 
 #include <boost/dll/alias.hpp>

@@ -2,7 +2,6 @@
 
 #include <engine/RunningPlan.h>
 #include <engine/blackboard/Blackboard.h>
-#include <iostream>
 
 #include "world_model.hpp"
 
