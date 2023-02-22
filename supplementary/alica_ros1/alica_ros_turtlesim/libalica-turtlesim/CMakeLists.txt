@@ -6,6 +6,7 @@ alica_compile_flags()
 
 add_library(${PROJECT_NAME} SHARED
   src/CircleRuntimeCondition.cpp
+  src/Idle.cpp
   src/GoTo.cpp
   src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp

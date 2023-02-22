@@ -22,8 +22,8 @@ void GoTo::initialiseParameters()
     _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
 
     alica::LockedBlackboardRW bb(*(getBlackboard()));
-    _goal_x = bb.get<double>("x");
-    _goal_y = bb.get<double>("y");
+    _goal_x = bb.get<double>("goal_x");
+    _goal_y = bb.get<double>("goal_y");
 }
 
 std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)
