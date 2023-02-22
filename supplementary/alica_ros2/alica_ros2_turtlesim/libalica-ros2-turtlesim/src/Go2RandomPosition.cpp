@@ -4,10 +4,10 @@
 #include "world_model.hpp"
 #include <random>
 
-namespace alica
+namespace turtlesim
 {
 
-Go2RandomPosition::Go2RandomPosition(BehaviourContext& context)
+Go2RandomPosition::Go2RandomPosition(alica::BehaviourContext& context)
         : BasicBehaviour(context)
 {
 }
@@ -34,4 +34,4 @@ std::unique_ptr<Go2RandomPosition> Go2RandomPosition::create(alica::BehaviourCon
     return std::make_unique<Go2RandomPosition>(context);
 }
 
-} /* namespace alica */
+} /* namespace turtlesim */

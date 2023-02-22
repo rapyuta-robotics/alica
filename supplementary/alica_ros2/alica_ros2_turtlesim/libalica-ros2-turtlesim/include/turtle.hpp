@@ -1,5 +1,4 @@
-#ifndef ALICA_TURTLE_SIM_TURTLE_HPP
-#define ALICA_TURTLE_SIM_TURTLE_HPP
+#pragma once
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -39,5 +38,3 @@ private:
     rclcpp::Node::SharedPtr _priv_nh;
 };
 } // namespace turtlesim
-
-#endif /* ALICA_TURTLE_ALICA_TURTLE_HPP */

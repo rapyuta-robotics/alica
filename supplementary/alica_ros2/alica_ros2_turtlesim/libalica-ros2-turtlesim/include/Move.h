@@ -7,31 +7,31 @@
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
 
-namespace alica
+namespace turtlesim
 {
-class Move : public BasicPlan
+class Move : public alica::BasicPlan
 {
 public:
-    Move(PlanContext& context);
+    Move(alica::PlanContext& context);
     virtual ~Move();
     static std::unique_ptr<Move> create(alica::PlanContext& context);
 };
-BOOST_DLL_ALIAS(alica::Move::create, Move)
+BOOST_DLL_ALIAS(turtlesim::Move::create, Move)
 
-class MoveUtilityFunction : public BasicUtilityFunction
+class MoveUtilityFunction : public alica::BasicUtilityFunction
 {
 public:
-    std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
+    std::shared_ptr<alica::UtilityFunction> getUtilityFunction(alica::Plan* plan);
     static std::shared_ptr<MoveUtilityFunction> create(alica::UtilityFunctionContext&);
 };
-BOOST_DLL_ALIAS(alica::MoveUtilityFunction::create, MoveUtilityFunction)
+BOOST_DLL_ALIAS(turtlesim::MoveUtilityFunction::create, MoveUtilityFunction)
 
-class CircleRuntimeCondition : public BasicCondition
+class CircleRuntimeCondition : public alica::BasicCondition
 {
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    bool evaluate(std::shared_ptr<alica::RunningPlan> rp, const alica::Blackboard* gb);
 
 public:
     static std::shared_ptr<CircleRuntimeCondition> create(alica::ConditionContext&);
 };
-BOOST_DLL_ALIAS(alica::CircleRuntimeCondition::create, CircleRuntimeCondition)
-} /* namespace alica */
+BOOST_DLL_ALIAS(turtlesim::CircleRuntimeCondition::create, CircleRuntimeCondition)
+} /* namespace turtlesim */

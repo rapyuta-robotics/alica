@@ -6,15 +6,15 @@
 
 #include <boost/dll/alias.hpp>
 
-namespace alica
+namespace turtlesim
 {
 class ProblemDescriptor;
 class RunningPlan;
-class CircleRuntimeConditionConstraint : public BasicConstraint
+class CircleRuntimeConditionConstraint : public alica::BasicConstraint
 {
 public:
-    void getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp);
+    void getConstraint(std::shared_ptr<alica::ProblemDescriptor> c, std::shared_ptr<alica::RunningPlan> rp);
     static std::shared_ptr<CircleRuntimeConditionConstraint> create(alica::ConstraintContext&);
 };
-BOOST_DLL_ALIAS(alica::CircleRuntimeConditionConstraint::create, CircleRuntimeConditionConstraint)
-} /* namespace alica */
+BOOST_DLL_ALIAS(turtlesim::CircleRuntimeConditionConstraint::create, CircleRuntimeConditionConstraint)
+} /* namespace turtlesim */

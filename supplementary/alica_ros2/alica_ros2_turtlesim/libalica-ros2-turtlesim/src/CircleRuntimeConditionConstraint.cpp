@@ -6,29 +6,9 @@
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Task.h>
 
-namespace alica
+namespace turtlesim
 {
-// Plan:Move
-/*
- * Tasks:
- * - EntryPoint:3277312192440194145 : Follower (3759439551323513525)
- * - EntryPoint:4346694000146342467 : Leader (826983480584534597)
- *
- * States:
- * - AlignCircle (2299237921449867536)
- * - Move2Center (4158797811607100614)
- *
- * Vars:
- */
-/**
- * RuntimeCondition - (Name): CircleRuntimeCondition
- * (ConditionString):
- * Static Variables:
- * Domain Variables:
- * forall agents in Move let v = [x, y]
- *
- */
-void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
+void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<alica::ProblemDescriptor> c, std::shared_ptr<alica::RunningPlan> rp)
 {
     using autodiff::TermPtr;
     autodiff::TermHolder* h = static_cast<autodiff::TermHolder*>(c->getContext());
@@ -114,6 +94,4 @@ std::shared_ptr<CircleRuntimeConditionConstraint> CircleRuntimeConditionConstrai
     return std::make_shared<CircleRuntimeConditionConstraint>();
 }
 
-// State: AlignCircle
-// State: Move2Center
-} // namespace alica
+} // namespace turtlesim

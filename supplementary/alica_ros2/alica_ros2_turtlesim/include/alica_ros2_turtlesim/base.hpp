@@ -1,5 +1,4 @@
-#ifndef IO_TURTLE_BASE_BASE_HPP
-#define IO_TURTLE_BASE_BASE_HPP
+#pragma once
 
 #include <memory>
 #include <thread>
@@ -37,5 +36,3 @@ private:
 };
 
 } // namespace turtlesim
-
-#endif /* IO_TURTLE_BASE_BASE_HPP */

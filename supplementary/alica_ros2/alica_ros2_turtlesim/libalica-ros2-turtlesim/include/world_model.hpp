@@ -1,5 +1,4 @@
-#ifndef ALICA_TURTLE_WORLD_MODEL_WORLD_MODEL_HPP
-#define ALICA_TURTLE_WORLD_MODEL_WORLD_MODEL_HPP
+#pragma once
 
 #include "turtle.hpp"
 #include <boost/dll/alias.hpp>
@@ -40,5 +39,3 @@ BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::init, WMInit)
 BOOST_DLL_ALIAS(turtlesim::ALICATurtleWorldModel::del, WMDel)
 
 } // namespace turtlesim
-
-#endif /* ALICA_TURTLE_WORLD_MODEL_WORLD_MODEL_HPP */

@@ -4,12 +4,12 @@
 #include <engine/BasicBehaviour.h>
 #include <engine/constraintmodul/Query.h>
 
-namespace alica
+namespace turtlesim
 {
-class GoTo : public BasicBehaviour
+class GoTo : public alica::BasicBehaviour
 {
 public:
-    GoTo(BehaviourContext& context);
+    GoTo(alica::BehaviourContext& context);
     virtual ~GoTo();
     virtual void run();
     static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
@@ -21,5 +21,5 @@ private:
     alica::Query _query;
     std::vector<double> _results;
 };
-BOOST_DLL_ALIAS(alica::GoTo::create, GoTo)
-} /* namespace alica */
+BOOST_DLL_ALIAS(turtlesim::GoTo::create, GoTo)
+} /* namespace turtlesim */

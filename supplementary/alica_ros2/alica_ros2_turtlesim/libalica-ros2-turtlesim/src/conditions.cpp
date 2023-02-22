@@ -6,18 +6,18 @@
 
 #include "world_model.hpp"
 
-namespace alica
+namespace turtlesim
 {
-bool conditionMove2Init(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool conditionMove2Init(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     return turtlesim::ALICATurtleWorldModel::get()->getInit();
 }
-bool conditionInit2Move(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool conditionInit2Move(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
-    return rp->isAnyChildStatus(PlanStatus::Success);
+    return rp->isAnyChildStatus(alica::PlanStatus::Success);
 }
-bool conditionDefaultCondition(const Blackboard* input, const RunningPlan* rp, const Blackboard* gb)
+bool conditionDefaultCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     return false;
 }
-} /* namespace alica */
+} /* namespace turtlesim */

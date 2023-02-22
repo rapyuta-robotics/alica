@@ -4,18 +4,18 @@
 #include "world_model.hpp"
 #include <constraintsolver/CGSolver.h>
 
-namespace alica
+namespace turtlesim
 {
 
-GoTo::GoTo(BehaviourContext& context)
-        : BasicBehaviour(context)
+GoTo::GoTo(alica::BehaviourContext& context)
+        : alica::BasicBehaviour(context)
 {
 }
 GoTo::~GoTo() {}
 void GoTo::run()
 {
     // solve constraints and get value
-    if (!_query.getSolution<reasoner::CGSolver, double>(getPlanContext(), _results)) {
+    if (!_query.getSolution<alica::reasoner::CGSolver, double>(getPlanContext(), _results)) {
         std::cout << getName() << " - Solution to query not found." << std::endl;
         return;
     }
@@ -35,4 +35,4 @@ std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)
     return std::make_unique<GoTo>(context);
 }
 
-} /* namespace alica */
+} /* namespace turtlesim */
