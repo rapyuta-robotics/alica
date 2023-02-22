@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME} SHARED
   src/GoTo.cpp
   src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp
+  src/RandomMoveTutorial.cpp
   src/Simulation.cpp
   src/SpawnTurtle.cpp
   src/SurroundLeaderTutorial.cpp

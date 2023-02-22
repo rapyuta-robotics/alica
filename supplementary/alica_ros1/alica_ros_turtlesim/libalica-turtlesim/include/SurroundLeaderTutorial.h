@@ -18,15 +18,7 @@ public:
     static std::unique_ptr<SurroundLeaderTutorial> create(alica::PlanContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::SurroundLeaderTutorial::create, SurroundLeaderTutorial)
-
-class SurroundLeaderTutorialUtilityFunction : public alica::BasicUtilityFunction
-{
-public:
-    SurroundLeaderTutorialUtilityFunction() = default;
-    std::shared_ptr<alica::UtilityFunction> getUtilityFunction(alica::Plan* plan) override;
-    static std::shared_ptr<SurroundLeaderTutorialUtilityFunction> create(alica::UtilityFunctionContext&);
-};
-BOOST_DLL_ALIAS(turtlesim::SurroundLeaderTutorialUtilityFunction::create, SurroundLeaderTutorialUtilityFunction)
+BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SurroundLeaderUtilityFunction)
 
 struct TransitionConditions
 {

@@ -24,17 +24,6 @@ std::unique_ptr<SurroundLeaderTutorial> SurroundLeaderTutorial::create(alica::Pl
     return std::make_unique<SurroundLeaderTutorial>(context);
 }
 
-std::shared_ptr<alica::UtilityFunction> SurroundLeaderTutorialUtilityFunction::getUtilityFunction(alica::Plan* plan)
-{
-    std::shared_ptr<alica::UtilityFunction> defaultFunction = std::make_shared<alica::DefaultUtilityFunction>(plan);
-    return defaultFunction;
-}
-
-std::shared_ptr<SurroundLeaderTutorialUtilityFunction> SurroundLeaderTutorialUtilityFunction::create(alica::UtilityFunctionContext&)
-{
-    return std::make_shared<SurroundLeaderTutorialUtilityFunction>();
-}
-
 namespace
 {
 
