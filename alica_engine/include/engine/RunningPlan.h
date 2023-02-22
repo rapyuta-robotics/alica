@@ -83,12 +83,12 @@ public:
     {
         PlanStatusInfo()
                 : status(PlanStatus::Running)
-                , failCount(0)
+                , active(PlanActivity::InActive)
                 , stateStartTime()
                 , planStartTime()
-                , active(PlanActivity::InActive)
-                , allocationNeeded(false)
+                , failCount(0)
                 , failHandlingNeeded(false)
+                , allocationNeeded(false)
                 , runTimeConditionStatus(EvalStatus::Unknown)
         {
         }
