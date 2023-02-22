@@ -18,7 +18,7 @@ public:
     static std::unique_ptr<SurroundLeaderTutorial> create(alica::PlanContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::SurroundLeaderTutorial::create, SurroundLeaderTutorial)
-BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SurroundLeaderUtilityFunction)
+BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SurroundLeaderTutorialUtilityFunction)
 
 struct TransitionConditions
 {
