@@ -83,36 +83,28 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Idle.beh#3461702414433362536",
+          "abstractPlan": "behaviours/SpawnTurtle.beh#1689864767393644654",
           "comment": "",
           "configuration": null,
-          "id": 2855860879038575524,
+          "id": 4460826738374715546,
           "keyMapping": {
-            "input": [
-              {
-                "childKey": "time",
-                "parentKey": "idletime",
-                "value": null
-              }
-            ],
+            "input": [],
             "output": []
           },
           "name": ""
         }
       ],
-      "entryPoint": null,
-      "id": 1353995590395471924,
-      "inTransitions": [
-        2886586164162798872
-      ],
-      "name": "Idle",
+      "entryPoint": 2483437678068619035,
+      "id": 91880666632863452,
+      "inTransitions": [],
+      "name": "SpawnTurtle",
       "outTransitions": [
-        631063377765820998
+        2520262450064953886
       ],
       "parentPlan": 2768292828182334477,
       "positionWeb": {
-        "x": 1076,
-        "y": 214
+        "x": 589,
+        "y": 408
       },
       "type": "State",
       "variableBindings": []
@@ -178,8 +170,8 @@
       "entryPoint": null,
       "id": 699418104844149540,
       "inTransitions": [
-        2520262450064953886,
-        631063377765820998
+        631063377765820998,
+        2520262450064953886
       ],
       "name": "ChooseNextDestination",
       "outTransitions": [
@@ -197,28 +189,36 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "behaviours/Idle.beh#3461702414433362536",
           "comment": "",
           "configuration": null,
-          "id": 4460826738374715546,
+          "id": 2855860879038575524,
           "keyMapping": {
-            "input": [],
+            "input": [
+              {
+                "childKey": "time",
+                "parentKey": "idletime",
+                "value": null
+              }
+            ],
             "output": []
           },
           "name": ""
         }
       ],
-      "entryPoint": 2483437678068619035,
-      "id": 91880666632863452,
-      "inTransitions": [],
-      "name": "SpawnTurtle",
+      "entryPoint": null,
+      "id": 1353995590395471924,
+      "inTransitions": [
+        2886586164162798872
+      ],
+      "name": "Idle",
       "outTransitions": [
-        2520262450064953886
+        631063377765820998
       ],
       "parentPlan": 2768292828182334477,
       "positionWeb": {
-        "x": 589,
-        "y": 408
+        "x": 1076,
+        "y": 214
       },
       "type": "State",
       "variableBindings": []
@@ -232,7 +232,18 @@
           "configuration": null,
           "id": 2017853877374759768,
           "keyMapping": {
-            "input": [],
+            "input": [
+              {
+                "childKey": "goal_x",
+                "parentKey": "x",
+                "value": null
+              },
+              {
+                "childKey": "goal_y",
+                "parentKey": "y",
+                "value": null
+              }
+            ],
             "output": []
           },
           "name": ""
@@ -258,30 +269,6 @@
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
-      "id": 2520262450064953886,
-      "inState": 91880666632863452,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 699418104844149540,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2482416891748399139,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "condition": "conditions/ConditionRepository.cnd#1",
@@ -323,6 +310,30 @@
         "conditionString": "",
         "enabled": true,
         "id": 207004019330646766,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1",
+      "id": 2520262450064953886,
+      "inState": 91880666632863452,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 699418104844149540,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2482416891748399139,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

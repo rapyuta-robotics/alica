@@ -76,69 +76,6 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Teleport.beh#4085572422059465423",
-          "comment": "",
-          "configuration": null,
-          "id": 2086117606402602846,
-          "keyMapping": {
-            "input": [
-              {
-                "childKey": "x",
-                "parentKey": "x",
-                "value": null
-              },
-              {
-                "childKey": "y",
-                "parentKey": "y",
-                "value": null
-              }
-            ],
-            "output": []
-          },
-          "name": ""
-        }
-      ],
-      "entryPoint": null,
-      "id": 1435429019417319391,
-      "inTransitions": [
-        2104406893685913076
-      ],
-      "name": "Teleport",
-      "outTransitions": [
-        3964450176861985360
-      ],
-      "parentPlan": 847199748749956244,
-      "positionWeb": {
-        "x": 651.1934161455199,
-        "y": 288.68753056297487
-      },
-      "type": "State",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [],
-      "entryPoint": null,
-      "id": 3715359869158732014,
-      "inTransitions": [
-        3964450176861985360
-      ],
-      "name": "Success",
-      "outTransitions": [],
-      "parentPlan": 847199748749956244,
-      "positionWeb": {
-        "x": 889.8200139632643,
-        "y": 289.2284770060987
-      },
-      "postCondition": null,
-      "success": true,
-      "type": "TerminalState",
-      "variableBindings": []
-    },
-    {
-      "comment": "",
-      "confAbstractPlanWrappers": [
-        {
           "abstractPlan": "behaviours/GenerateRandom.beh#3356053372497284615",
           "comment": "",
           "configuration": null,
@@ -207,34 +144,73 @@
       },
       "type": "State",
       "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [
+        {
+          "abstractPlan": "behaviours/Teleport.beh#4085572422059465423",
+          "comment": "",
+          "configuration": null,
+          "id": 2086117606402602846,
+          "keyMapping": {
+            "input": [
+              {
+                "childKey": "x",
+                "parentKey": "x",
+                "value": null
+              },
+              {
+                "childKey": "y",
+                "parentKey": "y",
+                "value": null
+              }
+            ],
+            "output": []
+          },
+          "name": ""
+        }
+      ],
+      "entryPoint": null,
+      "id": 1435429019417319391,
+      "inTransitions": [
+        2104406893685913076
+      ],
+      "name": "Teleport",
+      "outTransitions": [
+        3964450176861985360
+      ],
+      "parentPlan": 847199748749956244,
+      "positionWeb": {
+        "x": 651.1934161455199,
+        "y": 288.68753056297487
+      },
+      "type": "State",
+      "variableBindings": []
+    },
+    {
+      "comment": "",
+      "confAbstractPlanWrappers": [],
+      "entryPoint": null,
+      "id": 3715359869158732014,
+      "inTransitions": [
+        3964450176861985360
+      ],
+      "name": "Success",
+      "outTransitions": [],
+      "parentPlan": 847199748749956244,
+      "positionWeb": {
+        "x": 889.8200139632643,
+        "y": 289.2284770060987
+      },
+      "postCondition": null,
+      "success": true,
+      "type": "TerminalState",
+      "variableBindings": []
     }
   ],
   "synchronisations": [],
   "transitions": [
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
-      "id": 3964450176861985360,
-      "inState": 1435429019417319391,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 3715359869158732014,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 1374213844849286464,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
     {
       "comment": "",
       "condition": "conditions/ConditionRepository.cnd#2",
@@ -252,6 +228,30 @@
         "conditionString": "",
         "enabled": true,
         "id": 1736818635652219739,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "conditions/ConditionRepository.cnd#1",
+      "id": 3964450176861985360,
+      "inState": 1435429019417319391,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 3715359869158732014,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 1374213844849286464,
         "name": "",
         "pluginName": "DefaultPlugin",
         "quantifiers": [],

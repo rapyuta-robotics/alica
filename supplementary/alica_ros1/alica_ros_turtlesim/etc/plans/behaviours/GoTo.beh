@@ -1,5 +1,20 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 489836023935790753,
+      "key": "goal_x",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 827646288361861518,
+      "key": "goal_y",
+      "type": "double"
+    }
+  ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
