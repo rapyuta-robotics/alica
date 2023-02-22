@@ -28,7 +28,7 @@
   "frequency": 0,
   "id": 3356053372497284615,
   "inheritBlackboard": false,
-  "libraryName": "libalica-turtlesim",
+  "libraryName": "alica_standard_library",
   "name": "GenerateRandom",
   "postCondition": null,
   "preCondition": null,

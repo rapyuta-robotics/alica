@@ -3,10 +3,9 @@
     <arg name="use_gdb" default="$(optenv GDB false)"/>
     <arg name="launch_prefix" value="xterm -sl 100000 -fa 'Monospace' -fs 12 -e gdb --args" if="$(arg use_gdb)"/>
     <arg name="launch_prefix" value="" unless="$(arg use_gdb)"/>
-    <arg name="master_plan"    default="Master" />
+    <arg name="master_plan"    default="SurroundLeaderTutorial" />
     <arg name="roleset"        default="Roleset" />
     <arg name="alica_path"     default="$(find alica_ros_turtlesim)" />
-    <arg name="dynamic"        default="false" />
 
     <arg name="turtles"        default="1"/>
 
@@ -17,7 +16,6 @@
         <param name="master_plan"  value="$(arg master_plan)" />
         <param name="roleset"      value="$(arg roleset)" />
         <param name="alica_path"   value="$(arg alica_path)" />
-        <param name="dynamic"      value="$(arg dynamic)" />
     </node>
 
     <include file="$(dirname)/turtle.launch"   if="$(eval turtles > 1)">
@@ -26,7 +24,6 @@
         <arg name="master_plan"     value="$(arg master_plan)" />
         <arg name="roleset"         value="$(arg roleset)" />
         <arg name="alica_path"      value="$(arg alica_path)" />
-        <arg name="dynamic"         value="$(arg dynamic)" />
     </include>
 
 </launch>

@@ -7,11 +7,12 @@ alica_compile_flags()
 add_library(${PROJECT_NAME} SHARED
   src/CircleRuntimeCondition.cpp
   src/GoTo.cpp
+  src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp
-  src/Master.cpp
   src/Simulation.cpp
   src/SpawnTurtle.cpp
-  src/Teleport2RandomPosition.cpp
+  src/SurroundLeaderTutorial.cpp
+  src/TeleportToRandomPosition.cpp
   src/turtle.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)

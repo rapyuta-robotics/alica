@@ -1,8 +1,4 @@
 #include "GoTo.h"
-#include "turtle.hpp"
-
-#include <constraintsolver/CGSolver.h>
-#include <engine/logging/Logging.h>
 
 #include <memory>
 
@@ -16,28 +12,18 @@ GoTo::GoTo(alica::BehaviourContext& context)
 
 void GoTo::run()
 {
-    // solve constraints and get value
-    if (!_query.getSolution<alica::reasoner::CGSolver, double>(getPlanContext(), _results)) {
-        alica::Logging::logWarn(alica::LOGNAME) << "Behaviour: " << getName() << " calculating ...";
-        return;
-    }
-    // move turtle to goal
-    auto turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
-
-    if (turtle->moveTowardGoal(_results[0], _results[1])) {
+    if (_turtle->moveTowardGoal(_goal_x, _goal_y)) {
         setSuccess(); // set success if turtle reach goal
     }
 }
 
 void GoTo::initialiseParameters()
 {
-    _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "x"));
-    _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "y"));
-}
+    _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
 
-void GoTo::onTermination()
-{
-    _query.clearDomainVariables();
+    alica::LockedBlackboardRW bb(*(getBlackboard()));
+    _goal_x = bb.get<double>("x");
+    _goal_y = bb.get<double>("y");
 }
 
 std::unique_ptr<GoTo> GoTo::create(alica::BehaviourContext& context)

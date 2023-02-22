@@ -1,6 +1,6 @@
 #include "Conditions.h"
 
-namespace utils
+namespace alica_standard_library
 {
 
 bool isSuccess(const alica::RunningPlan* rp)
@@ -69,4 +69,4 @@ bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
     return true;
 }
 
-} /* namespace utils */
+} /* namespace alica_standard_library */
