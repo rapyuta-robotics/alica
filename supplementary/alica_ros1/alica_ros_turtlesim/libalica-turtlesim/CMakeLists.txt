@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME} SHARED
   src/Simulation.cpp
   src/SpawnTurtle.cpp
   src/SurroundLeaderTutorial.cpp
+  src/Teleport.cpp
   src/TeleportToRandomPosition.cpp
   src/turtle.cpp
 )

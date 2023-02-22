@@ -7,22 +7,21 @@
 namespace turtlesim
 {
 
-TeleportToRandomPosition::TeleportToRandomPosition(alica::BehaviourContext& context)
-        : alica::BasicBehaviour(context)
+TeleportToRandomPosition::TeleportToRandomPosition(alica::PlanContext& context)
+        : alica::BasicPlan(context)
 {
 }
 
-void TeleportToRandomPosition::initialiseParameters()
+void TeleportToRandomPosition::onInit()
 {
     alica::LockedBlackboardRW bb(*(getBlackboard()));
     bb.set<double>("xmin", 0.0);
     bb.set<double>("ymin", 0.0);
     bb.set<double>("xmax", 10.0);
     bb.set<double>("ymax", 10.0);
-    ROS_INFO_STREAM("initialized location to teleport to");
 }
 
-std::unique_ptr<TeleportToRandomPosition> TeleportToRandomPosition::create(alica::BehaviourContext& context)
+std::unique_ptr<TeleportToRandomPosition> TeleportToRandomPosition::create(alica::PlanContext& context)
 {
     return std::make_unique<TeleportToRandomPosition>(context);
 }

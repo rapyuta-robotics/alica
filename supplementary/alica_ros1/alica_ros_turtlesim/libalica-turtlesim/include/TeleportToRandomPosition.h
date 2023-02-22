@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/BasicBehaviour.h>
+#include <engine/BasicPlan.h>
 #include <engine/BasicUtilityFunction.h>
 
 #include <boost/dll/alias.hpp>
@@ -8,12 +8,12 @@
 namespace turtlesim
 {
 
-class TeleportToRandomPosition : public alica::BasicBehaviour
+class TeleportToRandomPosition : public alica::BasicPlan
 {
 public:
-    TeleportToRandomPosition(alica::BehaviourContext& context);
-    void initialiseParameters() override;
-    static std::unique_ptr<TeleportToRandomPosition> create(alica::BehaviourContext& context);
+    TeleportToRandomPosition(alica::PlanContext& context);
+    void onInit() override;
+    static std::unique_ptr<TeleportToRandomPosition> create(alica::PlanContext& context);
 };
 
 BOOST_DLL_ALIAS(turtlesim::TeleportToRandomPosition::create, TeleportToRandomPosition)

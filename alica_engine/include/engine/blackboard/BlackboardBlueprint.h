@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -23,6 +24,20 @@ public:
     }
     const_iterator begin() const { return _keyInfo.begin(); }
     const_iterator end() const { return _keyInfo.end(); }
+    friend std::ostream& operator<<(std::ostream& out, const BlackboardBlueprint& bpt)
+    {
+        if (bpt._keyInfo.size()) {
+            out << "{\n";
+            for (auto& [key, info] : bpt._keyInfo) {
+                out << "\t" << key << " : " << info.type << ",\n";
+            }
+            out << "}";
+        } else {
+            out << "{}";
+        }
+
+        return out;
+    }
 
 private:
     std::unordered_map<std::string, KeyInfo> _keyInfo;
