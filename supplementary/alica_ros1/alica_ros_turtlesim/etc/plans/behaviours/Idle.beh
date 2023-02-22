@@ -1,13 +1,21 @@
 {
-  "blackboard": [],
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "Time to idle in seconds",
+      "id": 2537936451223247195,
+      "key": "time",
+      "type": "double"
+    }
+  ],
   "comment": "",
   "deferring": 0,
   "eventDriven": false,
   "frequency": 30,
-  "id": 2797939494274869075,
+  "id": 3461702414433362536,
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
-  "name": "GoTo",
+  "name": "Idle",
   "postCondition": null,
   "preCondition": null,
   "relativeDirectory": "behaviours",
