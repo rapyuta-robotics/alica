@@ -6,6 +6,7 @@
 #include <random>
 
 #include "turtle_interfaces.hpp"
+#include <engine/logging/Logging.h>
 
 namespace turtlesim
 {
@@ -23,19 +24,21 @@ void SpawnTurtle::initialiseParameters()
     // TODO: Detect and fail if this behavior is called twice
     alica::LockedBlackboardRW g_bb(*getGlobalBlackboard());
     auto name = g_bb.get<std::string>("agentName");
-    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>("agentName"));
     if (g_bb.hasValue("turtle")) {
+        Logging::logWarn("SpawnTurtle") << name << " was already spawned";
         setFailure();
         return;
     }
+    g_bb.set<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle", std::make_shared<turtlesim::TurtleInterfaces>(name));
+
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
-        ROS_INFO_STREAM_NAMED(__func__, name << " was spawned");
+        Logging::logInfo("SpawnTurtle") << "SpawnTurtle", name << " was spawned";
         setSuccess();
     } else {
-        ROS_ERROR_STREAM_NAMED(__func__, "Failed to spawn " << name);
-        setFailure();
+        Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
+        setSuccess();
     }
 }
 

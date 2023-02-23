@@ -54,6 +54,7 @@ void TurtleInterfaces::poseSubCallback(const PoseConstPtr& msg)
 bool TurtleInterfaces::moveTowardPosition(float x, float y) const
 {
     if (!_currentPose) {
+        ROS_WARN_THROTTLE(5, "Waiting for valid pose");
         // Wait until we have a valid pose
         return false;
     }

@@ -13,7 +13,11 @@ GoTo::GoTo(alica::BehaviourContext& context)
 
 void GoTo::run()
 {
+    if (isSuccess()) {
+        return;
+    }
     if (_turtle->moveTowardPosition(_goal_x, _goal_y)) {
+        alica::Logging::logInfo("GoTo") << "Reached goal";
         setSuccess(); // set success if turtle reach goal
     }
 }
