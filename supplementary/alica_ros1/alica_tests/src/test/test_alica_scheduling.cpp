@@ -15,11 +15,8 @@ namespace
 class AlicaSchedulingPlan : public AlicaSchedulingTestFixture
 {
 protected:
-    const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "SchedulingTestMasterPlan"; }
     bool stepEngine() const override { return true; }
-    virtual void SetUp() override { AlicaSchedulingTestFixture::SetUp(); }
-    virtual void TearDown() override { AlicaSchedulingTestFixture::TearDown(); }
 };
 
 TEST_F(AlicaSchedulingPlan, scheduling)

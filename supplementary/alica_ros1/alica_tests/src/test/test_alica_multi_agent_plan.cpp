@@ -29,17 +29,10 @@ class AlicaMultiAgent : public AlicaTestMultiAgentFixture
 {
 protected:
     const int agentCount = 2;
-    const char* getRoleSetName() const override { return "RolesetTA"; }
+    const char* getRoleSetName(const int agentNumber) const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "MultiAgentTestMaster"; }
     int getAgentCount() const override { return agentCount; }
-    const char* getHostName(int agentNumber) const override
-    {
-        if (agentNumber) {
-            return "hairy";
-        } else {
-            return "nase";
-        }
-    }
+    const char* getHostName(int agentNumber) const override { return agentNumber ? "hairy" : "nase"; }
 };
 /**
  * Tests whether it is possible to use multiple agents.
