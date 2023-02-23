@@ -13,23 +13,20 @@ namespace turtlesim
         - ServiceClient: turtleX/teleport_absolute
         - Parameter: name
 */
-class ALICATurtle
+class TurtleInterfaces
 {
 public:
-    ALICATurtle(const std::string& name);
-    void teleport(const float x, const float y);       // teleport turtle to (x,y)
-    bool moveTowardGoal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
-    bool moveTowardGoal() const;                       // publish cmd_vel based on goal and current pose
-    Pose getCurrentPose() const { return _current; };
+    TurtleInterfaces();
+    void teleport(const float x, const float y);                  // teleport turtle to (x,y)
+    bool moveTowardPosition(const float x, const float y);        // publish cmd_vel based on input(x,y) and current pose
+    PoseConstPtr getCurrentPose() const { return _currentPose; }; // Retrieve current pose if available
 
 private:
     void poseSubCallback(const PoseConstPtr& msg); // callback of /pose from the turtlesim
-    std::string _name;                             // name of turtle
     ros::Publisher _velPub;                        // publish cmd_vel to the turtlesim
     ros::Subscriber _poseSub;                      // subscribe turtleX/pose from the turtlesim
     ros::ServiceClient _teleportClient;            // client of teleportAbsolute service
-    Pose _current;                                 // current position
-    Pose _goal;                                    // goal position
+    PoseConstPtr _currentPose;                     // current position
 };
 
 } // namespace turtlesim

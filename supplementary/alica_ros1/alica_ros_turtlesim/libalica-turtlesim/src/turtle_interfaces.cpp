@@ -6,46 +6,43 @@
 namespace turtlesim
 {
 
-ALICATurtle::ALICATurtle(const std::string& name)
-        : _name(name)
+TurtleInterfaces::TurtleInterfaces()
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");
     _velPub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    _poseSub = nh.subscribe("pose", 1, &ALICATurtle::poseSubCallback, this);
+    _poseSub = nh.subscribe("pose", 1, &TurtleInterfaces::poseSubCallback, this);
     _teleportClient = nh.serviceClient<TeleportAbsolute>("teleport_absolute");
 }
 
-void ALICATurtle::teleport(float x, float y)
+void TurtleInterfaces::teleport(float x, float y)
 {
     TeleportAbsolute srv;
     srv.request.x = x;
     srv.request.y = y;
     if (_teleportClient.waitForExistence() && _teleportClient.call(srv)) {
-        ROS_INFO_STREAM(_name << " was teleported to (" << x << ", " << y << ")");
+        ROS_INFO_STREAM("Teleported to (" << x << ", " << y << ")");
     } else {
-        ROS_ERROR_STREAM("Failed to teleport " << _name << " to (" << x << ", " << y << ")");
+        ROS_ERROR_STREAM("Failed to teleport to (" << x << ", " << y << ")");
     }
 }
 
-void ALICATurtle::poseSubCallback(const PoseConstPtr& msg)
+void TurtleInterfaces::poseSubCallback(const PoseConstPtr& msg)
 {
-    _current = *msg;
+    _currentPose = msg;
 }
 
-bool ALICATurtle::moveTowardGoal(float x, float y)
+bool TurtleInterfaces::moveTowardPosition(float x, float y) const
 {
-    _goal.x = x;
-    _goal.y = y;
-    return moveTowardGoal();
-}
-bool ALICATurtle::moveTowardGoal() const
-{
+    if (!_currentPose) {
+        // Wait until we have a valid pose
+        return false;
+    }
     // Transform goal position into coordinates of turtle body frame
-    float cosTheta = std::cos(_current.theta);
-    float sinTheta = std::sin(_current.theta);
-    float dx = _goal.x - _current.x;
-    float dy = _goal.y - _current.y;
+    float cosTheta = std::cos(_currentPose->theta);
+    float sinTheta = std::sin(_currentPose->theta);
+    float dx = x - _currentPose->x;
+    float dy = y - _currentPose->y;
 
     // Calculate goal distance and return true if reach goal
     constexpr float goalTolerance = 0.01;

@@ -16,7 +16,7 @@ add_library(${PROJECT_NAME} SHARED
   src/SurroundLeaderTutorial.cpp
   src/Teleport.cpp
   src/TeleportToRandomPosition.cpp
-  src/turtle.cpp
+  src/turtle_interfaces.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
