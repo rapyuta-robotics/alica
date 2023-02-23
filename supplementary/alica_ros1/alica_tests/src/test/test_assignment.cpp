@@ -34,7 +34,7 @@ TEST(Assignment, RobotsInserted)
     ASSERT_TRUE(robot1 > robot2);
     ASSERT_TRUE(robot1 < robot3);
 
-    auto ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
+    auto ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", "Roleset", "MasterPlan", true));
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -48,7 +48,7 @@ TEST(Assignment, RobotsInserted)
     alica::LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
 
     PlanRepository repo;
-    alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac.get());
+    alica::AlicaEngine* ae = alica::AlicaTestsEngineGetter::getEngine(ac);
     ModelManager modelManager(ae->getConfigChangeListener(), path + "/etc/", repo);
 
     const Plan* stp = modelManager.loadPlanTree("SimpleTestPlan");

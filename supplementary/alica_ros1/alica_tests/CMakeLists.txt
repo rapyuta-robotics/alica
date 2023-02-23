@@ -37,7 +37,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURC
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
 add_library(libalica-tests SHARED ${AlicaTestLibSources})
-target_link_libraries(libalica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+target_link_libraries(libalica-tests alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
 if(BUILD_TESTING)
     find_package(GTest)
@@ -91,7 +91,7 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} libalica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} libalica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES} alica_dynamic_loading)
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 

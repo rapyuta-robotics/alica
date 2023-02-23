@@ -47,7 +47,7 @@ struct AlicaTestsEngineGetter
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
-    std::unique_ptr<alica::AlicaContext> ac;
+    alica::AlicaContext* ac;
     alica::AlicaEngine* ae;
 };
 
@@ -71,7 +71,7 @@ protected:
         path += "/src/test";
 #endif
 
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -84,7 +84,7 @@ protected:
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
 
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
     }
 
@@ -105,7 +105,7 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
-    std::vector<std::unique_ptr<alica::AlicaContext>> acs;
+    std::vector<alica::AlicaContext*> acs;
     std::vector<alica::AlicaEngine*> aes;
 };
 
@@ -160,8 +160,7 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            auto ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -172,12 +171,12 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
 
-            auto ae = AlicaTestsEngineGetter::getEngine(ac.get());
+            auto ae = AlicaTestsEngineGetter::getEngine(ac);
 
             LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
-            acs.push_back(std::move(ac));
+            acs.push_back(ac);
             aes.push_back(ae);
         }
     }
@@ -202,7 +201,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -235,7 +234,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -246,9 +245,9 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
-        manageWorldModel(ac.get());
+        manageWorldModel(ac);
 
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
@@ -278,7 +277,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -290,9 +289,9 @@ protected:
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
-        manageWorldModel(ac.get());
+        manageWorldModel(ac);
 
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
@@ -322,7 +321,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -334,9 +333,9 @@ protected:
                 std::make_unique<alica::LegacyTransitionConditionCreator>()};
 
         ac->init(std::move(creators), true);
-        manageWorldModel(ac.get());
+        manageWorldModel(ac);
 
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        ae = AlicaTestsEngineGetter::getEngine(ac);
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
@@ -373,8 +372,7 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            auto ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -383,15 +381,15 @@ protected:
             ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
-            manageWorldModel(ac.get());
+            manageWorldModel(ac);
 
-            auto ae = AlicaTestsEngineGetter::getEngine(ac.get());
+            auto ae = AlicaTestsEngineGetter::getEngine(ac);
             auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
-            acs.push_back(std::move(ac));
+            acs.push_back(ac);
             aes.push_back(ae);
         }
     }
