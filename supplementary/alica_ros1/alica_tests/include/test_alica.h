@@ -312,6 +312,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
+        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
