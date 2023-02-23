@@ -8,6 +8,8 @@
 #include "turtle_interfaces.hpp"
 #include <engine/logging/Logging.h>
 
+using Logging = alica::Logging;
+
 namespace turtlesim
 {
 
@@ -34,7 +36,7 @@ void SpawnTurtle::initialiseParameters()
     auto turtleInterfaces = g_bb.get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     if (turtleInterfaces->spawn()) {
-        Logging::logInfo("SpawnTurtle") << "SpawnTurtle", name << " was spawned";
+        Logging::logInfo("SpawnTurtle") << name << " was spawned";
         setSuccess();
     } else {
         Logging::logWarn("SpawnTurtle") << "Failed to spawn " << name << ".  Succeeding anyway";
