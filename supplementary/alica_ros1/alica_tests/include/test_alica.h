@@ -219,8 +219,6 @@ protected:
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
-
-    void TearDown() override {}
 };
 
 class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
@@ -260,8 +258,6 @@ protected:
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
-
-    virtual void TearDown() override {}
 };
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
@@ -304,8 +300,6 @@ protected:
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
-
-    virtual void TearDown() override {}
 };
 
 class AlicaLegacyConditionsFixture : public AlicaTestFixtureBase
@@ -349,8 +343,6 @@ protected:
         ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
-
-    void TearDown() override {}
 };
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
@@ -405,8 +397,6 @@ protected:
             aes.push_back(ae);
         }
     }
-
-    void TearDown() override {}
 };
 } // namespace alica
 
