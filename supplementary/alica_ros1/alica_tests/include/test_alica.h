@@ -48,7 +48,7 @@ class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
     std::unique_ptr<alica::AlicaContext> ac;
-    alica::AlicaEngine* ae{nullptr};
+    std::unique_ptr<alica::AlicaEngine> ae;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -76,16 +76,14 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
-        spinner->start();
     }
 
     virtual void TearDown() override { ac->terminate(); }
@@ -105,8 +103,8 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
-    std::vector<alica::AlicaContext*> acs;
-    std::vector<alica::AlicaEngine*> aes;
+    std::vector<std::unique_ptr<alica::AlicaContext>> acs;
+    std::vector<std::unique_ptr<alica::AlicaEngine>> aes;
 };
 
 class TestClock : public AlicaClock
@@ -160,32 +158,32 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            auto ac = std::make_unique<alica::AlicaContext>(
+                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setWorldModel<alicaTests::TestWorldModel>();
             ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
                 ac->setClock<TestClock>();
             }
             ac->init(std::move(creators), getDelayStart());
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
+
+            std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
 
             LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
-
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            acs.push_back(ac);
-            aes.push_back(ae);
+
+            acs.push_back(std::move(ac));
+            aes.push_back(std::move(ae));
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* ac : acs) {
+        for (auto& ac : acs) {
             ac->terminate();
-            delete ac;
         }
     }
 };
@@ -212,12 +210,11 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alicaTests::TestWorldModel>();
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
 
-    void TearDown() override { delete ac; }
+    void TearDown() override { ac->terminate(); }
 };
 
 class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
@@ -229,6 +226,10 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual void manageWorldModel(alica::AlicaContext* ac)
+    {
+        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
+    }
     virtual void SetUp() override
     {
         // Path to test configs set by CMake
@@ -242,18 +243,15 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setWorldModel<alica_test::SchedWM>();
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
-
         ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+        manageWorldModel(ac.get());
 
-        LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
-
+        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
@@ -289,21 +287,19 @@ protected:
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         ac->init(std::move(creators), true);
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         manageWorldModel(ac.get());
+
+        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
     virtual void TearDown() override { ac->terminate(); }
-
-    std::unique_ptr<ros::AsyncSpinner> spinner;
 };
 
 class AlicaLegacyConditionsFixture : public AlicaTestFixtureBase
@@ -329,12 +325,11 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        auto ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        manageWorldModel(ac);
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -343,7 +338,8 @@ protected:
 
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
-        ae = AlicaTestsEngineGetter::getEngine(ac.get());
+
+        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
@@ -380,33 +376,33 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            auto ac = std::make_unique<alica::AlicaContext>(
+                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-            auto tf = ac->getTraceFactory();
-            auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
-            attf->setWorldModel(ac->getWorldModel());
 
             ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
-            alica::AlicaEngine* ae = AlicaTestsEngineGetter::getEngine(ac);
-            manageWorldModel(ac);
+            manageWorldModel(ac.get());
+
+            std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+            auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
-            acs.push_back(ac);
-            aes.push_back(ae);
+
+            acs.push_back(std::move(ac));
+            aes.push_back(std::move(ae));
         }
     }
 
     void TearDown() override
     {
-        for (alica::AlicaContext* ac : acs) {
+        for (auto& ac : acs) {
             ac->terminate();
-            delete ac;
         }
     }
 };

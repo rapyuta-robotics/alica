@@ -72,13 +72,13 @@ TEST_F(AlicaSyncTransition, syncTransitionTest)
             twm1->setTransitionCondition1418825428924(true);
         }
         if (i > 1 && i < 4) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1418825395940));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825404963));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1418825395940));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1418825404963));
         }
         if (i == 5) {
             //            std::cout << "TEST Iteration " << i << std::endl;
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1418825409988));
-            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1418825411686));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1418825409988));
+            EXPECT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1418825411686));
         }
     }
 }

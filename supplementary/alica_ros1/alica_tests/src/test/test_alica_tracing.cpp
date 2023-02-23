@@ -121,12 +121,12 @@ TEST_F(AlicaAuthorityTracingTest, taskAssignmentTracing)
     twm2->robotsXPos.push_back(2000);
     twm2->robotsXPos.push_back(0);
 
-    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403553717));
-    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403553717));
-    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0], 1414403553717) && alica::test::Util::isStateActive(aes[1], 1414403429950));
-    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0], 1414403553717));
-    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1], 1414403429950));
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0].get(), 1414403553717) && alica::test::Util::isStateActive(aes[1].get(), 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1414403553717));
+    STEP_ALL_UNTIL(acs, alica::test::Util::isStateActive(aes[0].get(), 1414403553717) && alica::test::Util::isStateActive(aes[1].get(), 1414403429950));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1414403553717));
+    EXPECT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1414403429950));
 
     auto logs = twm2->tracingLogs;
 
