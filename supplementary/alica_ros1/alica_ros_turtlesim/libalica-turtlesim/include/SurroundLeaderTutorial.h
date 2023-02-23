@@ -10,14 +10,7 @@
 namespace turtlesim
 {
 
-class SurroundLeaderTutorial : public alica::BasicPlan
-{
-public:
-    SurroundLeaderTutorial(alica::PlanContext& context);
-    void onInit() override;
-    static std::unique_ptr<SurroundLeaderTutorial> create(alica::PlanContext& context);
-};
-BOOST_DLL_ALIAS(turtlesim::SurroundLeaderTutorial::create, SurroundLeaderTutorial)
+BOOST_DLL_ALIAS(alica::BasicPlan::create, SurroundLeaderTutorial)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SurroundLeaderTutorialUtilityFunction)
 
 struct TransitionConditions

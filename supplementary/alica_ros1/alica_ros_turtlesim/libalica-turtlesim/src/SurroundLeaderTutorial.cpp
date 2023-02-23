@@ -4,19 +4,6 @@
 
 namespace turtlesim
 {
-
-SurroundLeaderTutorial::SurroundLeaderTutorial(alica::PlanContext& context)
-        : BasicPlan(context)
-{
-}
-
-void SurroundLeaderTutorial::onInit() {}
-
-std::unique_ptr<SurroundLeaderTutorial> SurroundLeaderTutorial::create(alica::PlanContext& context)
-{
-    return std::make_unique<SurroundLeaderTutorial>(context);
-}
-
 namespace
 {
 
