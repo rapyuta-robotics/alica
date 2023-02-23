@@ -36,8 +36,8 @@ target_compile_definitions(${PROJECT_NAME}-expr PUBLIC "PLANS=\"${CMAKE_CURRENT_
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
-add_library(${PROJECT_NAME} SHARED ${AlicaTestLibSources})
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-expr alica_solver_interface alica_simple_solver alica_engine alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+add_library(alica-tests SHARED ${AlicaTestLibSources})
+target_link_libraries(alica-tests ${PROJECT_NAME}-expr alica_solver_interface alica_simple_solver alica_engine alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
 if(BUILD_TESTING)
     find_package(GTest)
@@ -91,12 +91,12 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME}-expr ${PROJECT_NAME} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME}-expr alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 
 # Install
-install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-expr
+install(TARGETS alica-tests ${PROJECT_NAME}-expr
 EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
