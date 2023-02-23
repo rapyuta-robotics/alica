@@ -13,23 +13,21 @@
 namespace alicaTimer
 {
 
-class SyncStopTimerImpl : public std::enable_shared_from_this<SyncStopTimerImpl>
+class SyncStopTimerImpl
 {
-    using Base = std::enable_shared_from_this<SyncStopTimerImpl>;
-
 public:
     using TimerCb = std::function<void()>;
 
     SyncStopTimerImpl(TimerCb&& userCb, alica::AlicaTime period)
             : _userCb(std::move(userCb))
             , _period(period.inMilliseconds())
-            , _active(false)
+            , _isActive(false)
     {
     }
 
     ~SyncStopTimerImpl()
     {
-        if (_active) {
+        if (_isActive) {
             stop();
         }
     }
@@ -37,15 +35,15 @@ public:
     void start()
     {
 
-        if (_active) {
+        if (_isActive) {
             stop();
         }
-        _active = true;
+        _isActive = true;
         _thread = std::thread([this]() {
-            while (_active) {
+            while (_isActive) {
                 _userCb();
                 int64_t sleep_duration = _period;
-                while ((sleep_duration > 0) && _active) {
+                while ((sleep_duration > 0) && _isActive) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(std::min(int64_t(500), _period)));
                     sleep_duration -= std::min(int64_t(500), _period);
                 }
@@ -55,7 +53,7 @@ public:
 
     void stop()
     {
-        _active = false;
+        _isActive = false;
         if (_thread.joinable()) {
             _thread.join();
         }
@@ -64,7 +62,7 @@ public:
     TimerCb _userCb;
     int64_t _period;
     std::thread _thread;
-    std::atomic<bool> _active;
+    std::atomic<bool> _isActive;
 };
 
 class SyncStopTimerTest : public alica::IAlicaTimer
