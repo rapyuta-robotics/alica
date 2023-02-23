@@ -26,7 +26,6 @@ include_directories(include)
 
 include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-
 add_library(${PROJECT_NAME} SHARED ${autogen_SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -35,12 +34,16 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} alica_test_utility alica_dummy_proxy)
 target_compile_definitions(${PROJECT_NAME} PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
+include_directories(libalica-tests/include)
+file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
+add_library(libalica-tests SHARED ${AlicaTestLibSources})
+target_link_libraries(libalica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
+
 if(BUILD_TESTING)
     find_package(GTest)
     include(GoogleTest)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
-
 
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
@@ -88,12 +91,12 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} libalica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 
 # Install
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} libalica-tests
 EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
