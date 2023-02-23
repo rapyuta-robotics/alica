@@ -110,9 +110,7 @@ void TeamObserver::tick(RunningPlan* root)
             }
         }
 
-        if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            // Change in assignment (usually just a new agent in a plan)
-        }
+        root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time);
     }
 }
 
