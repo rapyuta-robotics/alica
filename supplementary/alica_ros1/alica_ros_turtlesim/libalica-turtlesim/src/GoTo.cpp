@@ -13,14 +13,14 @@ GoTo::GoTo(alica::BehaviourContext& context)
 
 void GoTo::run()
 {
-    if (_turtle->moveTowardGoal(_goal_x, _goal_y)) {
+    if (_turtle->moveTowardPosition(_goal_x, _goal_y)) {
         setSuccess(); // set success if turtle reach goal
     }
 }
 
 void GoTo::initialiseParameters()
 {
-    _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
+    _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     alica::LockedBlackboardRO bb(*(getBlackboard()));
     _goal_x = bb.get<double>("goal_x");

@@ -5,7 +5,7 @@
 
 #include <boost/dll/alias.hpp>
 
-#include "turtle.hpp"
+#include "turtle_interfaces.hpp"
 
 namespace turtlesim
 {
@@ -20,7 +20,7 @@ public:
     static std::unique_ptr<GoToCalculatedResult> create(alica::BehaviourContext& context);
 
 private:
-    std::shared_ptr<turtlesim::ALICATurtle> _turtle;
+    std::shared_ptr<turtlesim::TurtleInterfaces> _turtle;
     alica::Query _query;
     std::vector<double> _results;
 };

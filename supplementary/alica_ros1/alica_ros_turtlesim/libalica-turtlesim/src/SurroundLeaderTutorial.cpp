@@ -1,6 +1,5 @@
 #include "SurroundLeaderTutorial.h"
 
-#include "turtle.hpp"
 #include <engine/DefaultUtilityFunction.h>
 
 namespace turtlesim
@@ -11,13 +10,7 @@ SurroundLeaderTutorial::SurroundLeaderTutorial(alica::PlanContext& context)
 {
 }
 
-void SurroundLeaderTutorial::onInit()
-{
-    alica::LockedBlackboardRW bb{*getGlobalBlackboard()};
-    if (!bb.hasValue("turtle")) {
-        bb.set("turtle", std::make_shared<ALICATurtle>(bb.get<std::string>("agentName")));
-    }
-}
+void SurroundLeaderTutorial::onInit() {}
 
 std::unique_ptr<SurroundLeaderTutorial> SurroundLeaderTutorial::create(alica::PlanContext& context)
 {

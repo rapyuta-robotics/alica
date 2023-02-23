@@ -21,14 +21,14 @@ void GoToCalculatedResult::run()
         return;
     }
 
-    if (_turtle->moveTowardGoal(_results[0], _results[1])) {
+    if (_turtle->moveTowardPosition(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
 }
 
 void GoToCalculatedResult::initialiseParameters()
 {
-    _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
+    _turtle = alica::LockedBlackboardRO(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "x"));
     _query.addDomainVariable(getTeamManager().getDomainVariable(getOwnId(), "y"));
 }

@@ -1,6 +1,6 @@
 
 #include "Teleport.h"
-#include "turtle.hpp"
+#include "turtle_interfaces.hpp"
 
 #include <memory>
 #include <random>
@@ -16,7 +16,7 @@ Teleport::Teleport(alica::BehaviourContext& context)
 void Teleport::initialiseParameters()
 {
     // teleport turtle to random place
-    auto turtle = alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::ALICATurtle>>("turtle");
+    auto turtle = alica::LockedBlackboardRW(*getGlobalBlackboard()).get<std::shared_ptr<turtlesim::TurtleInterfaces>>("turtle");
 
     alica::LockedBlackboardRO bb(*(getBlackboard()));
     turtle->teleport(bb.get<double>("x"), bb.get<double>("y"));

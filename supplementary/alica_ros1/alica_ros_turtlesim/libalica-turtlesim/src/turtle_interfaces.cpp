@@ -1,29 +1,48 @@
-#include "turtle.hpp"
+#include "turtle_interfaces.hpp"
 
 #include <geometry_msgs/Twist.h>
+#include <turtlesim/Spawn.h>
 #include <turtlesim/TeleportAbsolute.h>
 
 namespace turtlesim
 {
 
-TurtleInterfaces::TurtleInterfaces()
+TurtleInterfaces::TurtleInterfaces(const std::string& name)
+        : _name(name)
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");
     _velPub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
     _poseSub = nh.subscribe("pose", 1, &TurtleInterfaces::poseSubCallback, this);
     _teleportClient = nh.serviceClient<TeleportAbsolute>("teleport_absolute");
+    _spawnClient = nh.serviceClient<Spawn>("/spawn");
 }
 
-void TurtleInterfaces::teleport(float x, float y)
+bool TurtleInterfaces::teleport(float x, float y)
 {
     TeleportAbsolute srv;
     srv.request.x = x;
     srv.request.y = y;
     if (_teleportClient.waitForExistence() && _teleportClient.call(srv)) {
         ROS_INFO_STREAM("Teleported to (" << x << ", " << y << ")");
+        return true;
     } else {
         ROS_ERROR_STREAM("Failed to teleport to (" << x << ", " << y << ")");
+        return false;
+    }
+}
+
+bool TurtleInterfaces::spawn()
+{
+    turtlesim::Spawn spawnSrv;
+    spawnSrv.request.x = 5;
+    spawnSrv.request.y = 5;
+    spawnSrv.request.theta = 0;
+    spawnSrv.request.name = _name;
+    if (_spawnClient.waitForExistence() && _spawnClient.call(spawnSrv)) {
+        return true;
+    } else {
+        return false;
     }
 }
 

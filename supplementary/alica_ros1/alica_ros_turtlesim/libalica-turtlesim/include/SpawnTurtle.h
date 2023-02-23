@@ -11,7 +11,7 @@ class SpawnTurtle : public alica::BasicBehaviour
 {
 public:
     SpawnTurtle(alica::BehaviourContext& context);
-    void run() override;
+    void initialiseParameters() override;
     static std::unique_ptr<SpawnTurtle> create(alica::BehaviourContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::SpawnTurtle::create, SpawnTurtle)
