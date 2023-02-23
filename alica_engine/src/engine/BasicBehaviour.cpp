@@ -36,7 +36,9 @@ BasicBehaviour::BasicBehaviour(BehaviourContext& context)
         setInterval(1000 / _behaviour->getFrequency());
     }
     setBlackboardBlueprint(_behaviour->getBlackboardBlueprint());
-    Logging::logDebug(LOGNAME) << "Adding blackboard blueprint for behavior " << _behaviour->getName() << " with " << *_behaviour->getBlackboardBlueprint();
+    if (_behaviour->getBlackboardBlueprint()) {
+        Logging::logDebug(LOGNAME) << "Adding blackboard blueprint for behavior " << _behaviour->getName() << " with " << *_behaviour->getBlackboardBlueprint();
+    }
 }
 
 /**
