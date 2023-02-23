@@ -110,9 +110,7 @@ void TeamObserver::tick(RunningPlan* root)
             }
         }
 
-        if (root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time)) {
-            _logger.eventOccurred("MsgUpdate");
-        }
+        root->recursiveUpdateAssignment(updatespts, activeAgents, noUpdates, time);
     }
 }
 
