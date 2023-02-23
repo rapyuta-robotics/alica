@@ -23,7 +23,7 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_001)
 
     EXPECT_TRUE(ac->setOption<bool>("Alica.SilentStart", false));
     EXPECT_EQ(0, ac->init(std::move(creators), true));
-    ae = AlicaTestsEngineGetter::getEngine(ac.get());
+    ae = (AlicaTestsEngineGetter::getEngine(ac.get()));
 
     EXPECT_TRUE(ae->maySendMessages());
 }

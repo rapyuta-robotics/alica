@@ -68,18 +68,18 @@ TEST_F(AlicaFailureHandlingEnabledFixture, redoPlanOnFailure)
     const uint64_t FAILURE_PLAN_INIT_STATE = 1171453089016322268;
     const uint64_t FAILURE_PLAN_FAIL_STATE = 3487518754011112127;
 
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
     twm1->setTransitionCondition1446293122737278544(true);
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
 
     // Transition to plan failure state, which will redo the plan & we should end up in the init state again
     twm1->setTransitionCondition1023566846009251524(true);
     twm1->setTransitionCondition1446293122737278544(false);
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
     ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
 }
 
@@ -93,27 +93,27 @@ TEST_F(AlicaFailureHandlingDisabledFixture, autoFailureHandlingDisabledTest)
     const uint64_t FAILURE_PLAN_FAILED_STATE = 3748960977005112327;
     const uint64_t FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE = 4449850763179483831;
 
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_INIT_STATE));
 
     twm1->setTransitionCondition1446293122737278544(true);
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAIL_STATE));
 
     twm1->setTransitionCondition1446293122737278544(false);
     twm1->setTransitionCondition1023566846009251524(true);
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAILED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAILED_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAILED_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
     twm1->enableTransitionCondition3194919312481305139();
-    STEP_UNTIL(test::Util::isStateActive(ae.get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(ae.get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    STEP_UNTIL(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(ae, FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
 }
 
@@ -132,27 +132,27 @@ TEST_F(AlicaFailureHandlingEnabledMultiAgentFixture, redoPlanOnFailureMultiAgent
 
     aes[0]->start();
     aes[1]->start();
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
 
     twm1->setTransitionCondition1446293122737278544(true);
     twm2->setTransitionCondition1446293122737278544(true);
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAIL_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
 
     // Transition to plan failure state, which will redo the plan for agent 0 & we should end up in the init state again
     // For agent 1 we should remain in the same state i.e. the plan redo rule should not be applied
     twm1->setTransitionCondition1023566846009251524(true);
     twm1->setTransitionCondition1446293122737278544(false);
     twm2->setTransitionCondition1446293122737278544(false);
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
     ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
     ASSERT_EQ(twm2->failurePlanInitCallCount(), 1);
 }
@@ -172,41 +172,40 @@ TEST_F(AlicaFailureHandlingDisabledMultiAgentFixture, autoFailureHandlingDisable
 
     aes[0]->start();
     aes[1]->start();
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_INIT_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_INIT_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_INIT_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_INIT_STATE));
 
     twm1->setTransitionCondition1446293122737278544(true);
     twm2->setTransitionCondition1446293122737278544(true);
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAIL_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAIL_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAIL_STATE));
 
     twm1->setTransitionCondition1446293122737278544(false);
     twm1->setTransitionCondition1023566846009251524(true);
     twm2->setTransitionCondition1446293122737278544(false);
     twm2->setTransitionCondition1023566846009251524(true);
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAILED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAILED_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAILED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAILED_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if we remain in the failed state
-    STEP_ALL_UNTIL(
-            acs, test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAILED_STATE));
+    STEP_ALL_UNTIL(acs, test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE) && test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_PLAN_FAILED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_PLAN_FAILED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_PLAN_FAILED_STATE));
 
     // Check if higher level plan can check for child failure
     twm1->enableTransitionCondition3194919312481305139();
     twm2->enableTransitionCondition3194919312481305139();
-    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0].get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[0].get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1].get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
-    ASSERT_TRUE(test::Util::isStateActive(aes[1].get(), FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    STEP_UNTIL(acs[0], test::Util::isStateActive(aes[0], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[0], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    STEP_UNTIL(acs[1], test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
+    ASSERT_TRUE(test::Util::isStateActive(aes[1], FAILURE_HANDLING_MASTER_FAILURE_HANDLED_STATE));
     ASSERT_EQ(twm1->failurePlanInitCallCount(), 1);
     ASSERT_EQ(twm2->failurePlanInitCallCount(), 1);
 }

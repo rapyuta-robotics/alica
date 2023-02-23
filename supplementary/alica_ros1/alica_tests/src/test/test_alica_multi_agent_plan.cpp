@@ -66,8 +66,8 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
         acs[1]->stepEngine();
 
         if (i < 10) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1413200842974));
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413200842974));
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413200842974));
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413200842974));
         }
         if (i == 10) {
             std::cout << "1--------- Initial State passed ---------" << std::endl;
@@ -75,14 +75,14 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             twm2->setTransitionCondition1413201227586(true);
         }
         if (i > 11 && i < 15) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1413201213955));
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201213955));
-            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0].get(), 1413200862180));
-            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1].get(), 1413200862180));
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201213955));
+            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], 1413200862180));
+            ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 1413200862180));
         }
         if (i == 15) {
-            ASSERT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0].get(), 1402488848841, 0))->callCounter, 5);
-            if (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0].get(), 1402488848841, 0))->callCounter > 3) {
+            ASSERT_GT(dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter, 5);
+            if (dynamic_cast<alica::Attack*>(alica::test::Util::getBasicBehaviour(aes[0], 1402488848841, 0))->callCounter > 3) {
                 twm1->setTransitionCondition1413201052549(true);
                 twm2->setTransitionCondition1413201052549(true);
                 twm1->setTransitionCondition1413201370590(true);
@@ -91,34 +91,32 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             std::cout << "2--------- Engagement to cooperative plan passed ---------" << std::endl;
         }
         if (i == 16) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201030936) || alica::test::Util::isStateActive(aes[0].get(), 1413201030936))
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201030936) || alica::test::Util::isStateActive(aes[0], 1413201030936))
                     << std::endl
-                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1].get(), 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
-                    << " "
-                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0].get(), 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
+                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
                     << std::endl;
 
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413807264574) || alica::test::Util::isStateActive(aes[0].get(), 1413807264574))
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
                     << std::endl
-                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1].get(), 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
-                    << " "
-                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0].get(), 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << "TCS[1] " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
+                    << "TCS[0] " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
                     << std::endl;
             twm1->setTransitionCondition1413201227586(false);
             twm2->setTransitionCondition1413201227586(false);
             std::cout << "3--------- Passed transitions in subplan passed ---------" << std::endl;
         }
         if (i >= 17 && i <= 18) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201030936) || alica::test::Util::isStateActive(aes[0].get(), 1413201030936))
-                    << "TCS[0] State: "
-                    << (alica::test::Util::isStateActive(aes[0].get(), 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << " "
-                    << "TCS[1] State: "
-                    << (alica::test::Util::isStateActive(aes[1].get(), 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive") << std::endl;
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413807264574) || alica::test::Util::isStateActive(aes[0].get(), 1413807264574))
-                    << "TCS[0] State: "
-                    << (alica::test::Util::isStateActive(aes[0].get(), 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << " "
-                    << "TCS[1] State: "
-                    << (alica::test::Util::isStateActive(aes[1].get(), 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive") << std::endl;
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201030936) || alica::test::Util::isStateActive(aes[0], 1413201030936))
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201030936) ? " 1413201030936 is active" : " 1413201030936 is inactive")
+                    << std::endl;
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413807264574) || alica::test::Util::isStateActive(aes[0], 1413807264574))
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413807264574) ? " 1413807264574 is active" : " 1413807264574 is inactive")
+                    << std::endl;
             if (i == 18) {
                 std::cout << "4--------- Stayed in these state although previous transitions are not true anymore ---------" << std::endl;
                 twm1->setTransitionCondition1413201389955(true);
@@ -126,11 +124,11 @@ TEST_F(AlicaMultiAgent, runMultiAgentPlan)
             }
         }
         if (i == 19) {
-            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201380359) && alica::test::Util::isStateActive(aes[0].get(), 1413201380359))
-                    << "TCS[0] State: "
-                    << (alica::test::Util::isStateActive(aes[0].get(), 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << " "
-                    << "TCS[1] State: "
-                    << (alica::test::Util::isStateActive(aes[1].get(), 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive") << std::endl;
+            ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201380359) && alica::test::Util::isStateActive(aes[0], 1413201380359))
+                    << "TCS[0] State: " << (alica::test::Util::isStateActive(aes[0], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive")
+                    << " "
+                    << "TCS[1] State: " << (alica::test::Util::isStateActive(aes[1], 1413201380359) ? " 1413201380359 is active" : " 1413201380359 is inactive")
+                    << std::endl;
         }
     }
 }

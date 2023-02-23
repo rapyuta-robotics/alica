@@ -77,14 +77,14 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
     getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1413201213955));
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201213955));
 
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0].get()));
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1].get()));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
-    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0].get(), 1413200862180));
-    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1].get(), 1413200862180));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], 1413200862180));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 1413200862180));
 
     ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
     ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
@@ -106,8 +106,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0].get()));
-    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1].get()));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1]));
 
     ASSERT_EQ(0u, aes[0]->getPlanBase().getRootNode()->getChildren().size());
     ASSERT_EQ(0u, aes[1]->getPlanBase().getRootNode()->getChildren().size());
@@ -133,8 +133,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0].get()));
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1].get()));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
 
     ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
     ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());

@@ -31,7 +31,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(${PROJECT_NAME} alica_test_utility alica_dummy_proxy)
+target_link_libraries(${PROJECT_NAME} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 target_compile_definitions(${PROJECT_NAME} PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 include_directories(libalica-tests/include)

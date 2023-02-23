@@ -7,12 +7,11 @@
 #include <alica_tests/TestWorldModel.h>
 #include <alica_tests/TransitionConditionCreator.h>
 #include <alica_tests/UtilityFunctionCreator.h>
-#include <clock/AlicaRosTimer.h>
 #include <communication/AlicaDummyCommunication.h>
-#include <logger/AlicaRosLogger.h>
+#include <engine/AlicaTimer.h>
+#include <engine/logging/AlicaDefaultLogger.h>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 
 namespace alica::test
 {
@@ -22,35 +21,35 @@ class TestSuccessFixture : public ::testing::Test
 public:
     virtual void SetUp() override
     {
-        ros::NodeHandle nh;
+        // Path to test configs set by CMake
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
+#if defined(PLANS)
+        path = PLANS;
+        path += "/src/test";
+#endif
         _tc = std::make_unique<TestContext>("hairy", path + "/etc/", "Roleset", "TestMasterPlan", true, 1);
         ASSERT_TRUE(_tc->isValid());
         const YAML::Node& config = _tc->getConfig();
-        _spinner = std::make_unique<ros::AsyncSpinner>(config["Alica"]["ThreadPoolSize"].as<int>(4));
+
         _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        _tc->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();
-        _tc->setLogger<alicaRosLogger::AlicaRosLogger>();
+        _tc->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        _tc->setLogger<alica::AlicaDefaultLogger>();
+
         LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));
+
         AlicaCreators creators{std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         _tc->init(std::move(creators));
         _tc->startEngine();
-        _spinner->start();
+
         STEP_UNTIL_ASSERT_TRUE(_tc, _tc->getActivePlan("TestMasterPlan")) << _tc->getLastFailure();
     }
 
-    virtual void TearDown() override
-    {
-        _spinner->stop();
-        _tc->terminate();
-    }
+    virtual void TearDown() override {}
 
 protected:
     std::unique_ptr<TestContext> _tc;
-    std::unique_ptr<ros::AsyncSpinner> _spinner;
 };
 
 TEST_F(TestSuccessFixture, behSuccessTest)
