@@ -26,18 +26,18 @@ include_directories(include)
 
 include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(${PROJECT_NAME} SHARED ${autogen_SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC
+add_library(${PROJECT_NAME}-expr SHARED ${autogen_SOURCES})
+target_include_directories(${PROJECT_NAME}-expr PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(${PROJECT_NAME} alica_test_utility alica_dummy_proxy)
-target_compile_definitions(${PROJECT_NAME} PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+target_link_libraries(${PROJECT_NAME}-expr alica_solver_interface alica_test_utility alica_engine alica_simple_solver alica_dummy_proxy alica_dynamic_loading)
+target_compile_definitions(${PROJECT_NAME}-expr PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
-add_library(libalica-tests SHARED ${AlicaTestLibSources})
-target_link_libraries(libalica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+add_library(${PROJECT_NAME} SHARED ${AlicaTestLibSources})
+target_link_libraries(${PROJECT_NAME} alica_solver_interface alica_simple_solver alica_engine alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
 if(BUILD_TESTING)
     find_package(GTest)
@@ -91,12 +91,12 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} libalica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME}-expr ${PROJECT_NAME} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 
 # Install
-install(TARGETS ${PROJECT_NAME} libalica-tests
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-expr
 EXPORT ${CMAKE_PROJECT_NAME}Targets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
