@@ -71,7 +71,7 @@ protected:
         path += "/src/test";
 #endif
 
-        ac = new alica::AlicaContext(alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -88,10 +88,7 @@ protected:
         spinner->start();
     }
 
-    virtual void TearDown() override
-    {
-        ac->terminate();
-    }
+    virtual void TearDown() override { ac->terminate(); }
 };
 
 class AlicaTestFixtureWithSolvers : public AlicaTestFixture
@@ -163,8 +160,8 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            alica::AlicaContext* ac =
-                    new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setWorldModel<alicaTests::TestWorldModel>();
@@ -210,7 +207,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -239,7 +237,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -259,10 +257,7 @@ protected:
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    virtual void TearDown() override
-    {
-        ac->terminate();
-    }
+    virtual void TearDown() override { ac->terminate(); }
 };
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
@@ -288,7 +283,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = new alica::AlicaContext(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -306,10 +301,7 @@ protected:
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    virtual void TearDown() override
-    {
-        ac->terminate();
-    }
+    virtual void TearDown() override { ac->terminate(); }
 
     std::unique_ptr<ros::AsyncSpinner> spinner;
 };
@@ -355,10 +347,7 @@ protected:
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    void TearDown() override
-    {
-        ac->terminate();
-    }
+    void TearDown() override { ac->terminate(); }
 };
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
@@ -391,8 +380,8 @@ protected:
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
-            alica::AlicaContext* ac =
-                    new alica::AlicaContext(alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+            ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
