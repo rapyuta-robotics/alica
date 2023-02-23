@@ -61,8 +61,8 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     aes[1]->editTeamManager().setTeamTimeout(AlicaTime::milliseconds(500));
     acs[0]->stepEngine();
     acs[1]->stepEngine();
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
     std::shared_ptr<alicaTests::TestWorldModel> twm1 =
             LockedBlackboardRW(acs[0]->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
@@ -74,17 +74,17 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0], 1413201213955));
-    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1], 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[0].get(), 1413201213955));
+    ASSERT_TRUE(alica::test::Util::isStateActive(aes[1].get(), 1413201213955));
 
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0].get()));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1].get()));
 
-    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0], 1413200862180));
-    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1], 1413200862180));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[0].get(), 1413200862180));
+    ASSERT_TRUE(alica::test::Util::isPlanActive(aes[1].get(), 1413200862180));
 
     ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
     ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
@@ -94,20 +94,20 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(2000));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(2000));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(2000));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(2000));
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0]));
-    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1]));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[0].get()));
+    ASSERT_EQ(1, alica::test::Util::getTeamSize(aes[1].get()));
 
     ASSERT_EQ(0u, aes[0]->getPlanBase().getRootNode()->getChildren().size());
     ASSERT_EQ(0u, aes[1]->getPlanBase().getRootNode()->getChildren().size());
@@ -115,26 +115,26 @@ TEST_F(AlicaEngineAgentDiesTest, AgentIsRemoved)
     const_cast<IAlicaCommunication&>(acs[0]->getCommunicator()).startCommunication();
     const_cast<IAlicaCommunication&>(acs[1]->getCommunicator()).startCommunication();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    getTestClock(acs[0]).increment(AlicaTime::milliseconds(50));
-    getTestClock(acs[1]).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[0].get()).increment(AlicaTime::milliseconds(50));
+    getTestClock(acs[1].get()).increment(AlicaTime::milliseconds(50));
 
     acs[0]->stepEngine();
     acs[1]->stepEngine();
 
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0]));
-    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1]));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[0].get()));
+    ASSERT_EQ(2, alica::test::Util::getTeamSize(aes[1].get()));
 
     ASSERT_EQ(2, aes[0]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());
     ASSERT_EQ(2, aes[1]->getPlanBase().getRootNode()->getChildren()[0]->getAssignment().size());

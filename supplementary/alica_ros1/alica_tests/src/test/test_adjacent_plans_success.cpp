@@ -31,12 +31,12 @@ TEST_F(AlicaAdjacentPlansSuccess, adjacentPlansPlanSuccess)
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         if (i % 2 == 0) {
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 338845808462999166)); // is in EntryState
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 338845808462999166)); // is in EntryState
         } else {
-            EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1114306208475690481)); // is in SecondState
+            EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 1114306208475690481)); // is in SecondState
         }
 
-        EXPECT_FALSE(alica::test::Util::hasPlanSucceeded(ae, 1682631238618360548)); // subPlan has not succeeded yet
+        EXPECT_FALSE(alica::test::Util::hasPlanSucceeded(ae.get(), 1682631238618360548)); // subPlan has not succeeded yet
 
         // go into SucState of subPlan, triggers transition in MasterPlan
         worldModel->setTransitionCondition1747408236004727286(false); // do not transition from EntryState to WaitState in subPlan
