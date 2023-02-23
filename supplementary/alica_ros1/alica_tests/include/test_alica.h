@@ -47,6 +47,10 @@ struct AlicaTestsEngineGetter
 class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
+    AlicaTestFixtureBase(){};
+    virtual const char* getHostName() const { return "nase"; }
+    virtual const char* getRoleSetName() const { return "Roleset"; }
+
     std::unique_ptr<alica::AlicaContext> ac;
     alica::AlicaEngine* ae;
 };
@@ -57,11 +61,11 @@ private:
     alica::AlicaCreators creators;
 
 protected:
+    AlicaTestFixture(){};
     virtual bool getDelayStart() { return false; }
-    virtual const char* getRoleSetName() const { return "Roleset"; }
+
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual const char* getHostName() const { return "nase"; }
     virtual void SetUp() override
     {
         // Path to test configs set by CMake
@@ -71,7 +75,8 @@ protected:
         path += "/src/test";
 #endif
 
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(
+                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -105,6 +110,10 @@ protected:
 class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
+    AlicaTestMultiAgentFixtureBase(){};
+    virtual const char* getHostName(int agentNumber) const = 0;
+    virtual const char* getRoleSetName(const int agentNumber) const = 0;
+
     std::vector<std::unique_ptr<alica::AlicaContext>> acs;
     std::vector<alica::AlicaEngine*> aes;
 };
@@ -138,13 +147,13 @@ private:
     alica::AlicaCreators creators;
 
 protected:
+    AlicaTestMultiAgentFixture() {}
     virtual bool getDelayStart() { return true; }
     virtual bool getUseTestClock() { return false; }
-    virtual const char* getRoleSetName() const { return "Roleset"; }
+
     virtual const char* getMasterPlanName() const = 0;
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual const char* getHostName(int agentNumber) const { return "nase"; }
     virtual alica::AlicaTime getDiscoveryTimeout() const { return alica::AlicaTime::milliseconds(100); }
 
     void SetUp() override
@@ -161,7 +170,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(i), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -191,7 +200,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     void SetUp() override
@@ -202,7 +210,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(
+                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -220,7 +229,6 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual void manageWorldModel(alica::AlicaContext* ac)
@@ -235,7 +243,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(
+                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -261,7 +270,6 @@ protected:
     alica::AlicaCreators creators;
 
 protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
     virtual void manageWorldModel(alica::AlicaContext* ac)
@@ -278,7 +286,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(
+                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -305,9 +314,9 @@ protected:
     alica::AlicaCreators creators;
 
 protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
     virtual const char* getMasterPlanName() const = 0;
     virtual bool stepEngine() const { return true; }
+    virtual const char* getHostName() const { return "nase"; }
     virtual void manageWorldModel(alica::AlicaContext* ac)
     {
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
@@ -322,7 +331,8 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(
+                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -349,11 +359,11 @@ protected:
     alica::AlicaCreators creators;
 
 protected:
-    virtual const char* getRoleSetName() const { return "Roleset"; }
+    AlicaTestMultiAgentTracingFixture(){};
+
     virtual const char* getMasterPlanName() const = 0;
     virtual int getAgentCount() const = 0;
     virtual bool stepEngine() const { return true; }
-    virtual const char* getHostName(int agentNumber) const { return "nase"; }
     virtual void manageWorldModel(alica::AlicaContext* ac)
     {
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alica_test::SchedWM>());
@@ -374,7 +384,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(i), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
