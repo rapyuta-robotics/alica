@@ -48,7 +48,7 @@ class AlicaTestFixtureBase : public ::testing::Test
 {
 protected:
     std::unique_ptr<alica::AlicaContext> ac;
-    std::unique_ptr<alica::AlicaEngine> ae;
+    alica::AlicaEngine* ae;
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -78,15 +78,17 @@ protected:
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
+
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                 std::make_unique<alica::TransitionConditionCreator>()};
         EXPECT_EQ(0, ac->init(std::move(creators), getDelayStart()));
-        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
     }
 
-    virtual void TearDown() override { ac->terminate(); }
+    virtual void TearDown() override {}
 };
 
 class AlicaTestFixtureWithSolvers : public AlicaTestFixture
@@ -104,7 +106,7 @@ class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 {
 protected:
     std::vector<std::unique_ptr<alica::AlicaContext>> acs;
-    std::vector<std::unique_ptr<alica::AlicaEngine>> aes;
+    std::vector<alica::AlicaEngine*> aes;
 };
 
 class TestClock : public AlicaClock
@@ -170,22 +172,17 @@ protected:
             }
             ac->init(std::move(creators), getDelayStart());
 
-            std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+            auto ae = AlicaTestsEngineGetter::getEngine(ac.get());
 
             LockedBlackboardRW(ac->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModel>());
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
             acs.push_back(std::move(ac));
-            aes.push_back(std::move(ae));
+            aes.push_back(ae);
         }
     }
 
-    void TearDown() override
-    {
-        for (auto& ac : acs) {
-            ac->terminate();
-        }
-    }
+    void TearDown() override {}
 };
 
 class AlicaTestNotInitializedFixture : public AlicaTestFixtureBase
@@ -214,7 +211,7 @@ protected:
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
 
-    void TearDown() override { ac->terminate(); }
+    void TearDown() override {}
 };
 
 class AlicaSchedulingTestFixture : public AlicaTestFixtureBase
@@ -251,11 +248,11 @@ protected:
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
 
-        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    virtual void TearDown() override { ac->terminate(); }
+    virtual void TearDown() override {}
 };
 
 class AlicaTestTracingFixture : public AlicaTestFixtureBase
@@ -295,11 +292,11 @@ protected:
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
 
-        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    virtual void TearDown() override { ac->terminate(); }
+    virtual void TearDown() override {}
 };
 
 class AlicaLegacyConditionsFixture : public AlicaTestFixtureBase
@@ -325,7 +322,7 @@ protected:
         path = PLANS;
         path += "/src/test";
 #endif
-        auto ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = std::make_unique<alica::AlicaContext>(alica::AlicaContextParams("nase", path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -339,11 +336,11 @@ protected:
         ac->init(std::move(creators), true);
         manageWorldModel(ac.get());
 
-        std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+        ae = AlicaTestsEngineGetter::getEngine(ac.get());
         const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
     }
 
-    void TearDown() override { ac->terminate(); }
+    void TearDown() override {}
 };
 
 class AlicaTestMultiAgentTracingFixture : public AlicaTestMultiAgentFixtureBase
@@ -388,23 +385,18 @@ protected:
             ac->init(std::move(creators), true);
             manageWorldModel(ac.get());
 
-            std::unique_ptr<alica::AlicaEngine> ae(AlicaTestsEngineGetter::getEngine(ac.get()));
+            auto ae = AlicaTestsEngineGetter::getEngine(ac.get());
             auto tf = ac->getTraceFactory();
             auto attf = dynamic_cast<alicaTestTracing::AlicaTestTraceFactory*>(tf);
             attf->setWorldModel(const_cast<alica::Blackboard*>(&ac->getGlobalBlackboard()));
             const_cast<IAlicaCommunication&>(ae->getCommunicator()).startCommunication();
 
             acs.push_back(std::move(ac));
-            aes.push_back(std::move(ae));
+            aes.push_back(ae);
         }
     }
 
-    void TearDown() override
-    {
-        for (auto& ac : acs) {
-            ac->terminate();
-        }
-    }
+    void TearDown() override {}
 };
 } // namespace alica
 

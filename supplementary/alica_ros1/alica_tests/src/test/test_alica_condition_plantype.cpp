@@ -55,17 +55,17 @@ TEST_F(AlicaConditionPlanType, conditionPlanTypeTest)
     std::shared_ptr<alicaTests::TestWorldModel> wm =
             LockedBlackboardRW(ac->editGlobalBlackboard()).get<std::shared_ptr<alicaTests::TestWorldModel>>("worldmodel");
 
-    STEP_UNTIL(alica::test::Util::isStateActive(ae.get(), 1418042819204));
-    EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 1418042819204));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
     wm->setRuntimeCondition1418042967134(true);
-    STEP_UNTIL(alica::test::Util::isStateActive(ae.get(), 1418042806576));
-    EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 1418042806576));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042806576));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042806576));
     wm->setRuntimeCondition1418042967134(false);
-    STEP_UNTIL(alica::test::Util::isStateActive(ae.get(), 1418042819204));
-    EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 1418042819204));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042819204));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042819204));
     wm->setPreCondition1418042929966(true);
-    STEP_UNTIL(alica::test::Util::isStateActive(ae.get(), 1418042796752));
-    EXPECT_TRUE(alica::test::Util::isStateActive(ae.get(), 1418042796752));
+    STEP_UNTIL(alica::test::Util::isStateActive(ae, 1418042796752));
+    EXPECT_TRUE(alica::test::Util::isStateActive(ae, 1418042796752));
 }
 } // namespace
 } // namespace alica

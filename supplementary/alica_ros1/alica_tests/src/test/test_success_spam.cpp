@@ -36,8 +36,8 @@ TEST_F(AlicaSpamSuccess, runBehaviour)
 {
     ASSERT_NO_SIGNAL
     ae->start();
-    STEP_UNTIL(alica::test::Util::isPlanActive(ae.get(), 1522377375148));
-    EXPECT_TRUE(alica::test::Util::isPlanActive(ae.get(), 1522377375148));
+    STEP_UNTIL(alica::test::Util::isPlanActive(ae, 1522377375148));
+    EXPECT_TRUE(alica::test::Util::isPlanActive(ae, 1522377375148));
 }
 } // namespace
 } // namespace alica
