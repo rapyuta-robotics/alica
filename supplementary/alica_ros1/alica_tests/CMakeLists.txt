@@ -26,13 +26,14 @@ include_directories(include)
 
 include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(alica_tests SHARED ${autogen_SOURCES})
-target_include_directories(alica_tests PUBLIC
+
+add_library(${PROJECT_NAME} SHARED ${autogen_SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(alica_tests alica_test_utility alica_dummy_proxy)
-target_compile_definitions(alica_tests PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
+target_link_libraries(${PROJECT_NAME} alica_test_utility alica_dummy_proxy)
+target_compile_definitions(${PROJECT_NAME} PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 if(BUILD_TESTING)
     find_package(GTest)
@@ -87,7 +88,7 @@ if(BUILD_TESTING)
     )
 
     add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads alica_tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME} ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
     gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
 
