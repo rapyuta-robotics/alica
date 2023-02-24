@@ -52,7 +52,7 @@ protected:
     virtual const char* getRoleSetName() const { return "Roleset"; }
 
     std::unique_ptr<alica::AlicaContext> ac;
-    alica::AlicaEngine* ae;
+    alica::AlicaEngine* ae{nullptr};
 };
 
 class AlicaTestFixture : public AlicaTestFixtureBase
@@ -190,8 +190,6 @@ protected:
             aes.push_back(ae);
         }
     }
-
-    void TearDown() override {}
 };
 
 class AlicaTestNotInitializedFixture : public AlicaTestFixtureBase

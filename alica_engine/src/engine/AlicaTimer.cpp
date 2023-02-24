@@ -1,13 +1,13 @@
 #include "engine/AlicaTimer.h"
 
+#include <thread>
+
 namespace alica
 {
 
 class AlicaSystemTimer::AlicaSystemTimerImpl
 {
 public:
-    using TimerCb = std::function<void()>;
-
     AlicaSystemTimerImpl(TimerCb&& userCb, alica::AlicaTime period)
             : _userCb(std::move(userCb))
             , _period(period.inMilliseconds())
@@ -29,11 +29,13 @@ public:
         }
         _isActive = true;
         _thread = std::thread([this]() {
+            using namespace std::chrono;
             while (_isActive) {
+                auto start = system_clock::now();
                 _userCb();
                 int64_t sleep_duration = _period;
                 while ((sleep_duration > 0) && _isActive) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(std::min(int64_t(500), _period)));
+                    std::this_thread::sleep_for(milliseconds(std::min(int64_t(500), _period)) - duration_cast<milliseconds>((system_clock::now() - start)));
                     sleep_duration -= std::min(int64_t(500), _period);
                 }
             }
@@ -55,7 +57,7 @@ public:
 };
 
 AlicaSystemTimer::AlicaSystemTimer(TimerCb&& userCb, alica::AlicaTime period)
-        : _impl(std::make_shared<AlicaSystemTimerImpl>(std::move(userCb), period))
+        : _impl(std::make_unique<AlicaSystemTimerImpl>(std::move(userCb), period))
 {
     _impl->start();
 }

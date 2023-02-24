@@ -52,7 +52,7 @@ protected:
     const char* getMasterPlanName() const override { return "FailureHandlingMaster"; }
     virtual int getAgentCount() const { return 2; }
     const char* getRoleSetName(const int agentNumber) const override { return "Roleset"; }
-    const char* getHostName(int agentNumber) const override { return agentNumber ? "hairy" : "nase"; }
+    const char* getHostName(int agentNumber) const override { return agentNumber ? "nase" : "hairy"; }
     void SetUp() override
     {
         AlicaTestMultiAgentFixture::SetUp();

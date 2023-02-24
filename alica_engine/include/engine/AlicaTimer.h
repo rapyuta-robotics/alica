@@ -4,11 +4,9 @@
 #include "engine/IAlicaTimer.h"
 
 #include <atomic>
-#include <condition_variable>
 #include <functional>
 #include <memory>
 #include <stdexcept>
-#include <thread>
 
 namespace alica
 {
@@ -23,7 +21,7 @@ public:
 
 private:
     class AlicaSystemTimerImpl;
-    std::shared_ptr<AlicaSystemTimerImpl> _impl;
+    std::unique_ptr<AlicaSystemTimerImpl> _impl;
 };
 
 template <class Timer>
@@ -32,7 +30,7 @@ class AlicaTimerFactory : public alica::IAlicaTimerFactory
     using TimerCb = typename Timer::TimerCb;
 
 public:
-    AlicaTimerFactory() {}
+    AlicaTimerFactory() = default;
 
     AlicaTimerFactory(const AlicaTimerFactory&) = delete;
     AlicaTimerFactory& operator=(const AlicaTimerFactory&) = delete;
