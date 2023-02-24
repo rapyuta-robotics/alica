@@ -5,7 +5,6 @@
 #include "engine/PlanRepository.h"
 #include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
-#include "engine/model/Configuration.h"
 #include "engine/model/Plan.h"
 #include "engine/model/PlanType.h"
 #include "engine/model/Quantifier.h"
@@ -15,7 +14,6 @@
 #include "engine/model/Variable.h"
 #include "engine/modelmanagement/Strings.h"
 #include "engine/modelmanagement/factories/BehaviourFactory.h"
-#include "engine/modelmanagement/factories/ConfigurationFactory.h"
 #include "engine/modelmanagement/factories/PlanFactory.h"
 #include "engine/modelmanagement/factories/PlanTypeFactory.h"
 #include "engine/modelmanagement/factories/RoleSetFactory.h"
@@ -152,10 +150,6 @@ AlicaElement* ModelManager::parseFile(const std::string& currentFile, const std:
         Behaviour* behaviour = BehaviourFactory::create(node);
         behaviour->setFileName(currentFile);
         return behaviour;
-    } else if (alica::Strings::configuration.compare(type) == 0) {
-        Configuration* configuration = ConfigurationFactory::create(node);
-        configuration->setFileName(currentFile);
-        return configuration;
     } else if (alica::Strings::plantype.compare(type) == 0) {
         PlanType* planType = PlanTypeFactory::create(node);
         planType->setFileName(currentFile);

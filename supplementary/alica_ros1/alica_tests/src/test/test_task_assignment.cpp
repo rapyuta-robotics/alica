@@ -80,7 +80,7 @@ TEST_F(TaskAssignmentTest, constructTaskAssignment)
     // fake inform the team observer about roles of none existing robots
     auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
             ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
-            ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+            ae->getPlanRepository().getPlans().find(1407152758497));
 
     // fake inform the team
 
@@ -136,7 +136,7 @@ TEST_F(TaskAssignmentTest, switchEntryPoints)
     // fake inform the team observer about roles of none existing robots
     auto rp = std::make_unique<RunningPlan>(ae->getConfigChangeListener(), ae->getAlicaClock(), ae->getGlobalBlackboard(),
             ae->getPlanBase().getRuntimePlanFactory(), ae->editTeamObserver(), ae->editTeamManager(), ae->getPlanRepository(), ae->editResultStore(), solvers,
-            ae->getPlanRepository().getPlans().find(1407152758497), nullptr);
+            ae->getPlanRepository().getPlans().find(1407152758497));
 
     // fake inform the team observer about roles of none existing robots
     alica::ConfAbstractPlanWrapperGrp inputWrappers;

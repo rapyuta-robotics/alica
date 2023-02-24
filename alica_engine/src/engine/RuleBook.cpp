@@ -69,7 +69,7 @@ RunningPlan* RuleBook::initialisationRule(const Plan* masterPlan)
         AlicaEngine::abort(LOGNAME, "Masterplan does not have exactly one task!");
     }
 
-    RunningPlan* main = _pb->makeRunningPlan(masterPlan, nullptr);
+    RunningPlan* main = _pb->makeRunningPlan(masterPlan);
 
     main->setAllocationNeeded(true);
 
@@ -367,11 +367,8 @@ PlanChange RuleBook::allocationRule(RunningPlan& rp)
     }
     rp.addChildren(children);
 
-    Logging::logDebug(LOGNAME) << "after add children";
-    Logging::logDebug(LOGNAME) << "PlanAlloc " << rp.getActivePlan()->getName();
-
     if (!children.empty()) {
-        _logger.eventOccurred("PAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
+        _logger.eventOccurred("PlanAlloc(", rp.getActivePlan()->getName(), " in State ", rp.getActiveState()->getName(), ")");
         return PlanChange::InternalChange;
     }
     return PlanChange::NoChange;
@@ -446,8 +443,6 @@ PlanChange RuleBook::transitionRule(RunningPlan& r)
     if (nextState == nullptr) {
         return PlanChange::NoChange;
     }
-
-    Logging::logDebug(LOGNAME) << "Transition " << r.getActivePlan()->getName();
 
     r.moveState(nextState);
 
