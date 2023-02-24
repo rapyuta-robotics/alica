@@ -431,6 +431,15 @@
       "blackboard": [],
       "comment": "",
       "conditionRepository": 0,
+      "id": 4281647834169813432,
+      "libraryName": "",
+      "name": "Decision2A",
+      "relativeDirectory": "conditions"
+    },
+    {
+      "blackboard": [],
+      "comment": "",
+      "conditionRepository": 0,
       "id": 4368560569514553226,
       "libraryName": "",
       "name": "Other2NewSuccessStateOne",

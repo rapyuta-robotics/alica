@@ -25,6 +25,7 @@ namespace alica
 class AbstractPlan;
 class BasicBehaviour;
 class BasicPlan;
+class Configuration;
 class State;
 class EntryPoint;
 class PlanType;
@@ -104,17 +105,19 @@ public:
     };
     explicit RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers);
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan);
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
+            const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt);
+            VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+            const Configuration* configuration);
     RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
             const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
             const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
-            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b);
+            const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration);
     static void init(const YAML::Node& config);
     static void setAssignmentProtectionTime(AlicaTime t);
 
@@ -225,6 +228,8 @@ public:
     bool recursiveUpdateAssignment(const std::vector<const SimplePlanTree*>& spts, AgentGrp& availableAgents, const AgentGrp& noUpdates, AlicaTime now);
     void toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, int& o_depth, int curDepth) const;
     AgentId getOwnID() const;
+    bool getParameter(const std::string& key, std::string& valueOut) const;
+    const Configuration* getConfiguration() const;
     int64_t getParentWrapperId(const RunningPlan* rp) const;
     const AlicaClock& getAlicaClock() const { return _clock; };
     VariableSyncModule& editResultStore() const { return _resultStore; }
@@ -248,6 +253,7 @@ private:
     // Status Information
     PlanStateTriple _activeTriple;
     PlanStatusInfo _status;
+    const Configuration* _configuration;
 
     std::vector<RunningPlan*> _children;
     RunningPlan* _parent;

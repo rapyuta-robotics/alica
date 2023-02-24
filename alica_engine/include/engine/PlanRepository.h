@@ -21,6 +21,7 @@ class Task;
 class Transition;
 class Condition;
 class Variable;
+class Configuration;
 class ConfAbstractPlanWrapper;
 class Factory;
 class ExpressionHandler;
@@ -112,6 +113,7 @@ public:
     {
         return Accessor<ConfAbstractPlanWrapper>(_confAbstractPlanWrapperRepository);
     }
+    const Accessor<Configuration> getConfigurations() const { return Accessor<Configuration>(_configurationRepository); }
     const Accessor<TransitionCondition> getTransitionConditions() const { return Accessor<TransitionCondition>(_transitionConditions); }
     const Accessor<TransitionConditionRepository> getTransitionConditionRepositories() const
     {
@@ -147,6 +149,7 @@ private:
     MapType<RoleSet> _roleSets;
     MapType<TaskRepository> _taskRepositories;
     MapType<ConfAbstractPlanWrapper> _confAbstractPlanWrapperRepository;
+    MapType<Configuration> _configurationRepository;
     MapType<TransitionCondition> _transitionConditions;
     MapType<TransitionConditionRepository> _transitionConditionRepositories;
 };
