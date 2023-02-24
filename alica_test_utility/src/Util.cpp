@@ -2,6 +2,7 @@
 
 #include <engine/Types.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
+#include <engine/model/Configuration.h>
 
 namespace alica::test
 {

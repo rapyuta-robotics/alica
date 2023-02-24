@@ -90,6 +90,8 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
         return std::bind(conditionTriggerFromInputCond3592699233854318376, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3604374027783683696:
         return std::bind(conditionIsAnyChildStatusSuccess3604374027783683696, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 3684268241099966909:
+        return std::bind(conditionDecision2B3684268241099966909, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3726136276355540527:
         return std::bind(conditionStart2Default3726136276355540527, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 3787001793582633602:
@@ -100,6 +102,8 @@ std::function<bool(const Blackboard*, const RunningPlan*, const Blackboard*)> Tr
         return std::bind(conditionStart2ExecOrderedSchedulingTest4108042962123065459, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4244459279660861567:
         return std::bind(conditionExecBehaviour2SubPlan4244459279660861567, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    case 4281647834169813432:
+        return std::bind(conditionDecision2A4281647834169813432, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4368560569514553226:
         return std::bind(conditionOther2NewSuccessStateOne4368560569514553226, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     case 4547372457936774346:

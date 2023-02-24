@@ -7,6 +7,7 @@
 #include <engine/IRoleAssignment.h>
 #include <engine/model/Behaviour.h>
 #include <engine/model/ConfAbstractPlanWrapper.h>
+#include <engine/model/Configuration.h>
 #include <engine/model/Transition.h>
 #include <engine/model/TransitionCondition.h>
 

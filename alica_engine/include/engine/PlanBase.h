@@ -63,9 +63,9 @@ public:
     bool isWaiting() const { return _isWaiting; }
 
     // factory functions
-    RunningPlan* makeRunningPlan(const Plan* plan);
-    RunningPlan* makeRunningPlan(const Behaviour* behaviour);
-    RunningPlan* makeRunningPlan(const PlanType* planType);
+    RunningPlan* makeRunningPlan(const Plan* plan, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration);
+    RunningPlan* makeRunningPlan(const PlanType* planType, const Configuration* configuration);
 
     void reload(const YAML::Node& config);
     void init(std::unique_ptr<IBehaviourCreator>&& behaviourCreator, std::unique_ptr<IPlanCreator>&& planCreator);
