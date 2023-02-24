@@ -81,7 +81,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
 
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
@@ -174,7 +174,7 @@ protected:
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-            ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+            ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             if (getUseTestClock()) {
                 ac->setClock<TestClock>();
@@ -216,7 +216,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
     }
 };
@@ -247,7 +247,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -289,7 +289,7 @@ protected:
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
         ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
-        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -331,7 +331,7 @@ protected:
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
         ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
         ac->setLogger<alica::AlicaDefaultLogger>();
         creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                 std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
@@ -382,7 +382,7 @@ protected:
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
             ac->setTraceFactory<alicaTestTracing::AlicaTestTraceFactory>();
 
-            ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+            ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
             ac->setLogger<alica::AlicaDefaultLogger>();
             ac->init(std::move(creators), true);
             manageWorldModel(ac.get());

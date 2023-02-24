@@ -32,7 +32,7 @@ public:
         const YAML::Node& config = _tc->getConfig();
 
         _tc->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-        _tc->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+        _tc->setTimerFactory<alica::AlicaSystemTimerFactory>();
         _tc->setLogger<alica::AlicaDefaultLogger>();
 
         LockedBlackboardRW(_tc->editGlobalBlackboard()).set("worldmodel", std::make_shared<alicaTests::TestWorldModelNew>(_tc.get()));

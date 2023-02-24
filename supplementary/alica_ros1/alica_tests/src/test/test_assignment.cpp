@@ -38,7 +38,7 @@ TEST(Assignment, RobotsInserted)
 
     ASSERT_TRUE(ac->isValid());
     ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
-    ac->setTimerFactory<alicaTimer::AlicaTestTimerFactory>();
+    ac->setTimerFactory<alica::AlicaSystemTimerFactory>();
 
     alica::AlicaCreators creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),

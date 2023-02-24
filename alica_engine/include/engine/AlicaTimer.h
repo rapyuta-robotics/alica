@@ -10,22 +10,22 @@
 #include <stdexcept>
 #include <thread>
 
-namespace alicaTimer
+namespace alica
 {
 
-class SyncStopTimerImpl
+class AlicaSystemTimerImpl
 {
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerImpl(TimerCb&& userCb, alica::AlicaTime period)
+    AlicaSystemTimerImpl(TimerCb&& userCb, alica::AlicaTime period)
             : _userCb(std::move(userCb))
             , _period(period.inMilliseconds())
             , _isActive(false)
     {
     }
 
-    ~SyncStopTimerImpl()
+    ~AlicaSystemTimerImpl()
     {
         if (_isActive) {
             stop();
@@ -65,38 +65,38 @@ public:
     std::atomic<bool> _isActive;
 };
 
-class SyncStopTimerTest : public alica::IAlicaTimer
+class AlicaSystemTimer : public alica::IAlicaTimer
 {
-    using Impl = SyncStopTimerImpl;
+    using Impl = AlicaSystemTimerImpl;
 
 public:
     using TimerCb = std::function<void()>;
 
-    SyncStopTimerTest(TimerCb&& userCb, alica::AlicaTime period)
+    AlicaSystemTimer(TimerCb&& userCb, alica::AlicaTime period)
             : _impl(std::make_shared<Impl>(std::move(userCb), period))
     {
         _impl->start();
     }
 
-    ~SyncStopTimerTest() { _impl->stop(); }
+    ~AlicaSystemTimer() { _impl->stop(); }
 
 private:
     std::shared_ptr<Impl> _impl;
 };
 
 template <class Timer>
-class TimerFactory : public alica::IAlicaTimerFactory
+class AlicaTimerFactory : public alica::IAlicaTimerFactory
 {
     using TimerCb = typename Timer::TimerCb;
 
 public:
     using TimerType = Timer;
 
-    TimerFactory() {}
+    AlicaTimerFactory() {}
 
-    TimerFactory(const TimerFactory&) = delete;
-    TimerFactory& operator=(const TimerFactory&) = delete;
-    ~TimerFactory() = default;
+    AlicaTimerFactory(const AlicaTimerFactory&) = delete;
+    AlicaTimerFactory& operator=(const AlicaTimerFactory&) = delete;
+    ~AlicaTimerFactory() = default;
 
     std::unique_ptr<alica::IAlicaTimer> createTimer(TimerCb timerCb, alica::AlicaTime period) const override
     {
@@ -109,6 +109,6 @@ public:
 private:
 };
 
-using AlicaTestTimerFactory = TimerFactory<SyncStopTimerTest>;
+using AlicaSystemTimerFactory = AlicaTimerFactory<AlicaSystemTimer>;
 
-} // namespace alicaTimer
+} // namespace alica
