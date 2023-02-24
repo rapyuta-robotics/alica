@@ -31,12 +31,17 @@ public:
         _thread = std::thread([this]() {
             using namespace std::chrono;
             while (_isActive) {
-                auto start = system_clock::now();
+                auto hasRepeatedInternalLoop = false;
+                auto startOuterLoop = system_clock::now();
                 _userCb();
                 int64_t sleep_duration = _period;
+                system_clock::time_point startInnerLoop;
                 while ((sleep_duration > 0) && _isActive) {
-                    std::this_thread::sleep_for(milliseconds(std::min(int64_t(500), _period)) - duration_cast<milliseconds>((system_clock::now() - start)));
-                    sleep_duration -= std::min(int64_t(500), _period);
+                    auto loop_duration = duration_cast<milliseconds>((system_clock::now() - (hasRepeatedInternalLoop ? startInnerLoop : startOuterLoop)));
+                    std::this_thread::sleep_for(milliseconds(std::min(int64_t(500), _period)) - loop_duration);
+                    sleep_duration -= std::max(loop_duration.count(), std::min(int64_t(500), _period));
+                    startInnerLoop = system_clock::now();
+                    hasRepeatedInternalLoop = true;
                 }
             }
         });
