@@ -14,8 +14,6 @@ namespace alica
 class AlicaSystemTimer : public alica::IAlicaTimer
 {
 public:
-    using TimerCb = std::function<void()>;
-
     AlicaSystemTimer(TimerCb&& userCb, alica::AlicaTime period);
     ~AlicaSystemTimer();
 
