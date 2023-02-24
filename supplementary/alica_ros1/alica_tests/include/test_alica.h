@@ -61,7 +61,7 @@ private:
     alica::AlicaCreators creators;
 
 protected:
-    AlicaTestFixture(){};
+    AlicaTestFixture() = default;
     virtual bool getDelayStart() { return false; }
 
     virtual const char* getMasterPlanName() const = 0;
