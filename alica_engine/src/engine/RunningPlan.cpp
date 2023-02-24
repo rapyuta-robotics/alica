@@ -19,6 +19,7 @@
 #include "engine/logging/Logging.h"
 #include "engine/model/AbstractPlan.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
+#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"
@@ -52,7 +53,7 @@ void RunningPlan::setAssignmentProtectionTime(AlicaTime t)
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Configuration* configuration)
         : _clock(clock)
         , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -65,6 +66,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _assignment()
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -77,7 +79,8 @@ RunningPlan::~RunningPlan()
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Plan* plan,
+        const Configuration* configuration)
         : _clock(clock)
         , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -91,13 +94,15 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _basicPlan(runTimePlanFactory.create(plan->getId(), plan))
         , _parent(nullptr)
+        , _configuration(configuration)
 {
     _activeTriple.abstractPlan = plan;
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
-        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt)
+        VariableSyncModule& resultStore, const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const PlanType* pt,
+        const Configuration* configuration)
         : _clock(clock)
         , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -110,13 +115,14 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _assignment()
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
 RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const AlicaClock& clock, const Blackboard& globalBlackboard,
         const RuntimePlanFactory& runTimePlanFactory, TeamObserver& teamObserver, TeamManager& teamManager, const PlanRepository& planRepository,
         const RuntimeBehaviourFactory& runTimeBehaviourFactory, VariableSyncModule& resultStore,
-        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b)
+        const std::unordered_map<size_t, std::unique_ptr<ISolverBase>>& solvers, const Behaviour* b, const Configuration* configuration)
         : _clock(clock)
         , _globalBlackboard(globalBlackboard)
         , _runTimePlanFactory(runTimePlanFactory)
@@ -131,6 +137,7 @@ RunningPlan::RunningPlan(ConfigChangeListener& configChangeListener, const Alica
         , _solvers(solvers)
         , _cycleManagement(configChangeListener, clock, teamManager, planRepository, this)
         , _parent(nullptr)
+        , _configuration(configuration)
 {
 }
 
@@ -821,6 +828,33 @@ void RunningPlan::toMessage(IdGrp& message, const RunningPlan*& o_deepestNode, i
 AgentId RunningPlan::getOwnID() const
 {
     return _teamManager.getLocalAgentID();
+}
+
+/**
+ * Tries to find a given key in the configuration of this RunningPlan and
+ * writes the corresponding value into valueOut.
+ * @param key The key to be found in the configuration.
+ * @param valueOut The value, corresponding to the given key.
+ * @return True, if the configuration and the key was present. False, otherwise.
+ */
+bool RunningPlan::getParameter(const std::string& key, std::string& valueOut) const
+{
+    if (!_configuration) {
+        return false;
+    }
+
+    const auto& parameter = _configuration->getParameters().find(key);
+    if (parameter != _configuration->getParameters().end()) {
+        valueOut = parameter->second->getValue();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const Configuration* RunningPlan::getConfiguration() const
+{
+    return _configuration;
 }
 
 std::ostream& operator<<(std::ostream& out, const RunningPlan& r)

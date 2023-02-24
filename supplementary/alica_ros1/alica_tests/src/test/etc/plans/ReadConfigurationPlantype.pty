@@ -1,0 +1,17 @@
+{
+  "annotatedPlans": [
+    {
+      "activated": true,
+      "comment": "",
+      "id": 1588252870787,
+      "name": "AnnotatedReadConfInPlantype",
+      "plan": "ReadConfInPlantype.pml#1588061801734"
+    }
+  ],
+  "comment": "",
+  "id": 1588061351007,
+  "name": "ReadConfigurationPlantype",
+  "relativeDirectory": "Configurations",
+  "variableBindings": [],
+  "variables": []
+}
