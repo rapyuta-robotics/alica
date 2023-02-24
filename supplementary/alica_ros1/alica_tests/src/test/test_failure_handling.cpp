@@ -36,7 +36,7 @@ class AlicaFailureHandlingEnabledMultiAgentFixture : public AlicaTestMultiAgentF
 protected:
     const char* getMasterPlanName() const override { return "FailureHandlingMaster"; }
     virtual int getAgentCount() const { return 2; }
-    const char* getRoleSetName(const int agentNumber) const override { return "Roleset"; }
+    const char* getRoleSetName() const override { return "Roleset"; }
     const char* getHostName(int agentNumber) const override { return agentNumber ? "hairy" : "nase"; }
     void SetUp() override
     {
@@ -51,7 +51,7 @@ class AlicaFailureHandlingDisabledMultiAgentFixture : public AlicaTestMultiAgent
 protected:
     const char* getMasterPlanName() const override { return "FailureHandlingMaster"; }
     virtual int getAgentCount() const { return 2; }
-    const char* getRoleSetName(const int agentNumber) const override { return "Roleset"; }
+    const char* getRoleSetName() const override { return "Roleset"; }
     const char* getHostName(int agentNumber) const override { return agentNumber ? "nase" : "hairy"; }
     void SetUp() override
     {

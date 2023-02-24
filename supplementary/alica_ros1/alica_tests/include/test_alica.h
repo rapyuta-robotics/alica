@@ -112,7 +112,7 @@ class AlicaTestMultiAgentFixtureBase : public ::testing::Test
 protected:
     AlicaTestMultiAgentFixtureBase(){};
     virtual const char* getHostName(int agentNumber) const = 0;
-    virtual const char* getRoleSetName(const int agentNumber) const = 0;
+    virtual const char* getRoleSetName() const = 0;
 
     std::vector<std::unique_ptr<alica::AlicaContext>> acs;
     std::vector<alica::AlicaEngine*> aes;
@@ -170,7 +170,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(i), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -374,7 +374,7 @@ protected:
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(i), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();

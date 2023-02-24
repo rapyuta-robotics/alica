@@ -28,7 +28,7 @@ class AlicaSyncTransition : public AlicaTestMultiAgentFixture
 {
 protected:
     const int agentCount = 2;
-    const char* getRoleSetName(const int agentNumber) const override { return "RolesetTA"; }
+    const char* getRoleSetName() const override { return "RolesetTA"; }
     const char* getMasterPlanName() const override { return "RealMasterPlanForSyncTest"; }
     int getAgentCount() const override { return agentCount; }
     const char* getHostName(int agentNumber) const override { return agentNumber ? "nase" : "hairy"; }

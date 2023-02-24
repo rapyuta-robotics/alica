@@ -53,7 +53,7 @@ class AlicaAuthorityTracingTest : public AlicaTestMultiAgentTracingFixture
 {
 protected:
     const int agentCount = 2;
-    const char* getRoleSetName(const int agentNumber) const override { return "Roleset"; }
+    const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "AuthorityTestMaster"; }
     int getAgentCount() const override { return agentCount; }
     void manageWorldModel(alica::AlicaContext* ac) override
