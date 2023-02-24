@@ -6,7 +6,6 @@
 #include "engine/logging/Logging.h"
 #include "engine/model/Behaviour.h"
 #include "engine/model/ConfAbstractPlanWrapper.h"
-#include "engine/model/Configuration.h"
 #include "engine/model/EntryPoint.h"
 #include "engine/model/Parameter.h"
 #include "engine/model/Plan.h"

@@ -368,24 +368,24 @@ void PlanBase::addFastPathEvent(RunningPlan* p)
     _fpEventWait.notify_all();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const Plan* plan, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(const Plan* plan)
 {
-    _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
-            _planRepository, _resultStore, _solvers, plan, configuration));
+    _runningPlans.emplace_back(new RunningPlan(
+            _configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager, _planRepository, _resultStore, _solvers, plan));
     return _runningPlans.back().get();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(const Behaviour* behaviour)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
-            _planRepository, _runTimeBehaviourFactory, _resultStore, _solvers, behaviour, configuration));
+            _planRepository, _runTimeBehaviourFactory, _resultStore, _solvers, behaviour));
     return _runningPlans.back().get();
 }
 
-RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType, const Configuration* configuration)
+RunningPlan* PlanBase::makeRunningPlan(const PlanType* planType)
 {
     _runningPlans.emplace_back(new RunningPlan(_configChangeListener, _clock, _globalBlackboard, _runTimePlanFactory, _teamObserver, _teamManager,
-            _planRepository, _resultStore, _solvers, planType, configuration));
+            _planRepository, _resultStore, _solvers, planType));
     return _runningPlans.back().get();
 }
 
