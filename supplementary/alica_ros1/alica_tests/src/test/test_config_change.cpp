@@ -42,11 +42,12 @@ TEST_F(AlicaNotInitialized, TestUpdatingComponents_002)
 
 TEST_F(AlicaNotInitialized, TestUpdatingComponents_003)
 {
-    PartialAssignment::allowIdling(false);
+    EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", false));
+    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
     // Some options can be set but become available only after init
     EXPECT_TRUE(ac->setOption<bool>("Alica.AllowIdling", true));
-    EXPECT_FALSE(PartialAssignment::isIdlingAllowed());
+    EXPECT_TRUE(PartialAssignment::isIdlingAllowed());
 
     alica::AlicaCreators creators(std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
             std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
