@@ -36,6 +36,9 @@ public:
                 _userCb();
                 int64_t sleep_duration = _period;
                 system_clock::time_point startInnerLoop;
+                // This second while is a trick loop more than once while we wait for sleep_duration milliseconds.
+                // This allows us to exit this loop earlier without having to wait for teh full duration
+                // when we Ctrl+C and kill this process.
                 while ((sleep_duration > 0) && _isActive) {
                     auto loop_duration = duration_cast<milliseconds>((system_clock::now() - (hasRepeatedInternalLoop ? startInnerLoop : startOuterLoop)));
                     std::this_thread::sleep_for(milliseconds(std::min(int64_t(500), _period)) - loop_duration);
