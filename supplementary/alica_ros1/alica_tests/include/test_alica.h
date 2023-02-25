@@ -44,10 +44,26 @@ struct AlicaTestsEngineGetter
     static alica::AlicaEngine* getEngine(alica::AlicaContext* ac) { return ac->_engine.get(); }
 };
 
-class AlicaTestFixtureBase : public ::testing::Test
+class AlicaTestBase
+{
+public:
+    AlicaTestBase()
+#if defined(PLANS)
+            : _testFolderPath(std::string(PLANS) + "/src/test")
+#endif
+    {
+    }
+
+    std::string getTestFolderPath() const { return _testFolderPath; }
+
+private:
+    std::string _testFolderPath;
+};
+
+class AlicaTestFixtureBase : public ::testing::Test, public AlicaTestBase
 {
 protected:
-    AlicaTestFixtureBase(){};
+    AlicaTestFixtureBase() = default;
     virtual const char* getHostName() const { return "nase"; }
     virtual const char* getRoleSetName() const { return "Roleset"; }
 
@@ -107,7 +123,7 @@ protected:
     void TearDown() override { AlicaTestFixture::TearDown(); }
 };
 
-class AlicaTestMultiAgentFixtureBase : public ::testing::Test
+class AlicaTestMultiAgentFixtureBase : public ::testing::Test, public AlicaTestBase
 {
 protected:
     AlicaTestMultiAgentFixtureBase(){};
@@ -158,19 +174,13 @@ protected:
 
     void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
@@ -202,14 +212,8 @@ protected:
     virtual bool stepEngine() const { return true; }
     void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -233,14 +237,8 @@ protected:
     }
     virtual void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -273,15 +271,8 @@ protected:
 
     virtual void SetUp() override
     {
-
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -317,14 +308,8 @@ protected:
     // same setup as AlicaSchedulingTestFixture, but use LegacyTransitionConditionCreator instead of TransitionConditionCreator
     virtual void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         ac = std::make_unique<alica::AlicaContext>(
-                alica::AlicaContextParams(getHostName(), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                alica::AlicaContextParams(getHostName(), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
         ASSERT_TRUE(ac->isValid());
         const YAML::Node& config = ac->getConfig();
@@ -362,19 +347,13 @@ protected:
 
     void SetUp() override
     {
-        // Path to test configs set by CMake
-        std::string path;
-#if defined(PLANS)
-        path = PLANS;
-        path += "/src/test";
-#endif
         for (int i = 0; i < getAgentCount(); ++i) {
             creators = {std::make_unique<alica::ConditionCreator>(), std::make_unique<alica::UtilityFunctionCreator>(),
                     std::make_unique<alica::ConstraintCreator>(), std::make_unique<alica::DynamicBehaviourCreator>(), std::make_unique<alica::PlanCreator>(),
                     std::make_unique<alica::TransitionConditionCreator>()};
 
             auto ac = std::make_unique<alica::AlicaContext>(
-                    alica::AlicaContextParams(getHostName(i), path + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    alica::AlicaContextParams(getHostName(i), getTestFolderPath() + "/etc/", getRoleSetName(), getMasterPlanName(), stepEngine()));
 
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaDummyProxy::AlicaDummyCommunication>();
