@@ -1,4 +1,5 @@
 #include "turtle.hpp"
+#include "world_model.hpp"
 
 #include <rclcpp/logging.hpp>
 
@@ -12,16 +13,27 @@ using namespace std::chrono_literals;
 namespace turtlesim
 {
 
-ALICATurtle::ALICATurtle(rclcpp::Node::SharedPtr priv_nh)
+ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
+        : _wm(wm)
+        , spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 1))
 {
-    rclcpp::CallbackGroup::SharedPtr teleportCallback = priv_nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    priv_nh->get_parameter("name", _name);
-    _priv_nh = priv_nh;
+    _priv_nh = rclcpp::Node::make_shared("b");
+    spinner.add_node(_priv_nh);
+    _priv_nh->declare_parameter("name", "Hello!");
+
+    rclcpp::CallbackGroup::SharedPtr teleportCallback = _priv_nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    _priv_nh->get_parameter("name", _name);
+
     // initialize publisher, subscriber and service client.
-    _vel_pub = priv_nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
-    _pose_sub = priv_nh->create_subscription<turtlesim::msg::Pose>(
+    _vel_pub = _priv_nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
+    _initTriggerSub = _priv_nh->create_subscription<std_msgs::msg::Empty>("/init", 1, [&](const std_msgs::msg::Empty& msg) {
+        _wm->_initTrigger = true;
+    });
+    _pose_sub = _priv_nh->create_subscription<turtlesim::msg::Pose>(
             "/" + _name + "/pose", 1, std::bind(&ALICATurtle::pose_sub_callback, this, std::placeholders::_1));
-    _teleport_client = priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
+    _teleport_client = _priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
+
+    spinThread = std::thread([this]() { spinner.spin(); });
 }
 
 void ALICATurtle::teleport(float x, float y)
@@ -45,6 +57,7 @@ bool ALICATurtle::move_toward_goal(float x, float y)
     _goal.y = y;
     return move_toward_goal();
 }
+
 bool ALICATurtle::move_toward_goal() const
 {
     // Transform goal position into coordinates of turtle body frame

@@ -5,6 +5,7 @@
 
 #include <rclcpp/executors.hpp>
 #include <rclcpp/node.hpp>
+#include <std_msgs/msg/empty.hpp>
 
 namespace alica
 {
@@ -17,7 +18,7 @@ namespace turtlesim
 class Base
 {
 public:
-    Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
+    Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_id, const std::string& roleset,
             const std::string& master_plan, const std::string& path);
     ~Base();
     void start();
@@ -31,7 +32,7 @@ private:
     std::string _name;
     rclcpp::Node::SharedPtr _nh;
 
-    void ALICATurtleWorldModelCallInit(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh);
+    void ALICATurtleWorldModelCallInit();
     void ALICATurtleWorldModelCallDel();
 };
 

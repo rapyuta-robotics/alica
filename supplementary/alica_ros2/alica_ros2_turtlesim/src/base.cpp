@@ -21,16 +21,17 @@
 namespace turtlesim
 {
 
-Base::Base(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh, const std::string& name, const int agent_id, const std::string& roleset,
+Base::Base(rclcpp::Node::SharedPtr nh,  const std::string& name, const int agent_id, const std::string& roleset,
         const std::string& master_plan, const std::string& path)
-        : spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 2))
+        : spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 1))
         , _nh(nh)
         , _name(name)
 {
     // create world model
-    ALICATurtleWorldModelCallInit(nh, priv_nh);
+    //ALICATurtleWorldModelCallInit( );
     spinner.add_node(nh);
-    spinner.add_node(priv_nh);
+
+    //spinner.add_node(priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
@@ -89,10 +90,10 @@ Base::~Base()
     spinThread.join();
     ac->terminate();
     delete ac;
-    ALICATurtleWorldModelCallDel();
+    //ALICATurtleWorldModelCallDel();
 }
 
-void Base::ALICATurtleWorldModelCallInit(rclcpp::Node::SharedPtr nh, rclcpp::Node::SharedPtr priv_nh)
+void Base::ALICATurtleWorldModelCallInit()
 {
     std::vector<std::string> tmp = calculateLibraryPath();
     std::string libraryPath = calculateLibraryCompleteName(tmp, "alica-ros2-turtlesim");
@@ -106,14 +107,14 @@ void Base::ALICATurtleWorldModelCallInit(rclcpp::Node::SharedPtr nh, rclcpp::Nod
                   << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
     }
 
-    typedef void(InitType)(rclcpp::Node::SharedPtr&, rclcpp::Node::SharedPtr&);
+    typedef void(InitType)();
     std::function<InitType> wminit;
     wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
             libraryPath,                              // complete path to library also with file name
             "WMInit",                                 // symbol to import
             boost::dll::load_mode::append_decorations // do append extensions and prefixes
     );
-    wminit(nh, priv_nh);
+    wminit();
 }
 
 void Base::ALICATurtleWorldModelCallDel()

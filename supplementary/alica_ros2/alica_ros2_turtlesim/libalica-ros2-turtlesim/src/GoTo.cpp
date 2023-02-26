@@ -20,7 +20,7 @@ void GoTo::run()
         return;
     }
     // move turtle to goal
-    if (turtlesim::ALICATurtleWorldModel::get()->turtle.move_toward_goal(_results[0], _results[1])) {
+    if (turtlesim::ALICATurtleWorldModel::get()->turtle->move_toward_goal(_results[0], _results[1])) {
         setSuccess(); // set success if turtle reach goal
     }
 }

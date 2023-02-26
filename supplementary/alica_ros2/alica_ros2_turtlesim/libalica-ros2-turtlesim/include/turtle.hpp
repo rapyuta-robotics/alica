@@ -2,12 +2,19 @@
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <functional>
 #include <geometry_msgs/msg/twist.hpp>
+#include <std_msgs/msg/empty.hpp>
 #include <turtlesim/msg/pose.hpp>
 #include <turtlesim/srv/teleport_absolute.hpp>
 
+using namespace std::placeholders;
+
 namespace turtlesim
 {
+
+class ALICATurtleWorldModel;
+
 /*
     ALICATurtleWoroldModel
     - Turtle control classfor ALICA ros turtlesim which interface between ALICA and ROS.
@@ -21,7 +28,7 @@ namespace turtlesim
 class ALICATurtle
 {
 public:
-    ALICATurtle(rclcpp::Node::SharedPtr priv_nh);
+    ALICATurtle(ALICATurtleWorldModel* wm);
     void teleport(const float x, const float y);         // teleport turtle to (x,y)
     bool move_toward_goal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
     bool move_toward_goal() const;                       // publish cmd_vel based on goal and current pose
@@ -35,6 +42,10 @@ private:
     rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleport_client; // client of teleportAbsolute service
     msg::Pose _current;                                                // current position
     msg::Pose _goal;                                                   // goal position
+    rclcpp::executors::MultiThreadedExecutor spinner;
     rclcpp::Node::SharedPtr _priv_nh;
+    ALICATurtleWorldModel* _wm;
+    rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _initTriggerSub; // user input for initialize,
+    std::thread spinThread;
 };
 } // namespace turtlesim

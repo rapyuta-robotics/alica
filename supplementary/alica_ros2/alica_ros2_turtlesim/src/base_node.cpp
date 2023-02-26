@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     std::string name, roleset, master_plan, alica_path;
     int agent_id;
 
-    rclcpp::Node::SharedPtr nh = rclcpp::Node::make_shared("alica_ros2_turtlesim");
+    rclcpp::Node::SharedPtr nh = rclcpp::Node::make_shared("a");
 
     nh->declare_parameter("name", "Hello!");
     nh->declare_parameter("roleset", "Default");
@@ -29,9 +29,6 @@ int main(int argc, char** argv)
     nh->get_parameter("alica_path", alica_path);
     nh->get_parameter("agent_id", agent_id);
 
-    rclcpp::Node::SharedPtr priv_nh = rclcpp::Node::make_shared("ros2_turtlesim");
-    priv_nh->declare_parameter("name", "Hello!");
-
     RCLCPP_INFO(nh->get_logger(), "HostName    : %s", name.c_str());
     RCLCPP_INFO(nh->get_logger(), "Roleset     : %s", (roleset.empty() ? "Default" : roleset.c_str()));
     RCLCPP_INFO(nh->get_logger(), "Master Plan : %s", master_plan.c_str());
@@ -44,7 +41,7 @@ int main(int argc, char** argv)
     }
 
     RCLCPP_INFO(nh->get_logger(), "Creating ALICA turtle Base.......");
-    turtlesim::Base base(nh, priv_nh, name, agent_id, roleset, master_plan, alica_path);
+    turtlesim::Base base(nh, name, agent_id, roleset, master_plan, alica_path);
 
     RCLCPP_INFO(nh->get_logger(), "Starting ALICA turtle Base.......");
     base.start();
