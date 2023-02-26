@@ -21,17 +21,15 @@
 namespace turtlesim
 {
 
-Base::Base(rclcpp::Node::SharedPtr nh,  const std::string& name, const int agent_id, const std::string& roleset,
-        const std::string& master_plan, const std::string& path)
+Base::Base(rclcpp::Node::SharedPtr nh, const std::string& name, const int agent_id, const std::string& roleset, const std::string& master_plan,
+        const std::string& path)
         : spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 1))
         , _nh(nh)
         , _name(name)
 {
     // create world model
-    //ALICATurtleWorldModelCallInit( );
     spinner.add_node(nh);
 
-    //spinner.add_node(priv_nh);
     // Initialize Alica
     ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
 
@@ -90,51 +88,6 @@ Base::~Base()
     spinThread.join();
     ac->terminate();
     delete ac;
-    //ALICATurtleWorldModelCallDel();
-}
-
-void Base::ALICATurtleWorldModelCallInit()
-{
-    std::vector<std::string> tmp = calculateLibraryPath();
-    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica-ros2-turtlesim");
-
-    if (libraryPath.empty()) {
-        std::cerr << "Error:"
-                  << "Lib not exists in this path:" << libraryPath << std::endl;
-        return;
-    } else {
-        std::cerr << "Debug:"
-                  << "Lib exists in this path:" << libraryPath << " for ALICATurtleWorldModelInit" << std::endl;
-    }
-
-    typedef void(InitType)();
-    std::function<InitType> wminit;
-    wminit = boost::dll::import_alias<InitType>(      // type of imported symbol must be explicitly specified
-            libraryPath,                              // complete path to library also with file name
-            "WMInit",                                 // symbol to import
-            boost::dll::load_mode::append_decorations // do append extensions and prefixes
-    );
-    wminit();
-}
-
-void Base::ALICATurtleWorldModelCallDel()
-{
-    std::vector<std::string> tmp = calculateLibraryPath();
-    std::string libraryPath = calculateLibraryCompleteName(tmp, "alica-ros2-turtlesim");
-    if (libraryPath.empty()) {
-        std::cerr << "Error:"
-                  << "Lib not exists" << std::endl;
-        return;
-    }
-
-    typedef void(DelType)();
-    std::function<DelType> wmdel;
-    wmdel = boost::dll::import_alias<DelType>(        // type of imported symbol must be explicitly specified
-            libraryPath,                              // complete path to library also with file name
-            "ALICATurtleWorldModelDel",               // symbol to import
-            boost::dll::load_mode::append_decorations // do append extensions and prefixes
-    );
-    wmdel();
 }
 
 } // namespace turtlesim

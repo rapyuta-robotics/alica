@@ -24,7 +24,6 @@ void Master::onTerminate()
     ALICATurtleWorldModel::del();
 }
 
-
 std::shared_ptr<alica::UtilityFunction> MasterUtilityFunction::getUtilityFunction(alica::Plan* plan)
 {
     std::shared_ptr<alica::UtilityFunction> defaultFunction = std::make_shared<alica::DefaultUtilityFunction>(plan);

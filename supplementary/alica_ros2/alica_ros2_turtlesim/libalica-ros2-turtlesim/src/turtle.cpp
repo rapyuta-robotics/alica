@@ -26,9 +26,7 @@ ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
 
     // initialize publisher, subscriber and service client.
     _vel_pub = _priv_nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
-    _initTriggerSub = _priv_nh->create_subscription<std_msgs::msg::Empty>("/init", 1, [&](const std_msgs::msg::Empty& msg) {
-        _wm->_initTrigger = true;
-    });
+    _initTriggerSub = _priv_nh->create_subscription<std_msgs::msg::Empty>("/init", 1, [&](const std_msgs::msg::Empty& msg) { _wm->_initTrigger = true; });
     _pose_sub = _priv_nh->create_subscription<turtlesim::msg::Pose>(
             "/" + _name + "/pose", 1, std::bind(&ALICATurtle::pose_sub_callback, this, std::placeholders::_1));
     _teleport_client = _priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
