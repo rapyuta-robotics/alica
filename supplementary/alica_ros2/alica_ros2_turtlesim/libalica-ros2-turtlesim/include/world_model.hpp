@@ -19,13 +19,9 @@ public:
     static ALICATurtleWorldModel* get(); // return instance
     static void init();                  // create instance
     static void del();
-    bool getInit() const { return _initTrigger; };
-    void setInit(const bool input) { _initTrigger = input; };
 
     static ALICATurtleWorldModel* instance;
-    std::unique_ptr<ALICATurtle> turtle;
-
-    bool _initTrigger; // become true when /init topic published
+    std::unique_ptr<ALICATurtle> _turtle;
 
 private:
     ALICATurtleWorldModel();

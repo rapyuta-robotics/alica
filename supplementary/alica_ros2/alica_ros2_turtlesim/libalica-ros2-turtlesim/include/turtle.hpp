@@ -34,6 +34,9 @@ public:
     bool move_toward_goal() const;                       // publish cmd_vel based on goal and current pose
     msg::Pose get_current_pose() const { return _current; };
 
+    bool getInit() const { return _initTrigger; };
+    void setInit(const bool input) { _initTrigger = input; };
+
 private:
     void pose_sub_callback(const msg::Pose::ConstSharedPtr msg);       // callback of /pose from the turtlesim
     std::string _name;                                                 // name of turtle
@@ -43,9 +46,11 @@ private:
     msg::Pose _current;                                                // current position
     msg::Pose _goal;                                                   // goal position
     rclcpp::executors::MultiThreadedExecutor spinner;
+    std::thread spinThread;
     rclcpp::Node::SharedPtr _priv_nh;
     ALICATurtleWorldModel* _wm;
+
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _initTriggerSub; // user input for initialize,
-    std::thread spinThread;
+    bool _initTrigger;                                                     // become true when /init topic published
 };
 } // namespace turtlesim

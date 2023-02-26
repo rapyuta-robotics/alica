@@ -24,10 +24,7 @@ void ALICATurtleWorldModel::del()
 
 ALICATurtleWorldModel::ALICATurtleWorldModel()
 {
-    turtle = std::make_unique<ALICATurtle>(this);
-
-    // initialize attribute.
-    _initTrigger = false;
+    _turtle = std::make_unique<ALICATurtle>(this);
 }
 
 ALICATurtleWorldModel::~ALICATurtleWorldModel() {}

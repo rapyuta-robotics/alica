@@ -9,7 +9,7 @@ namespace turtlesim
 {
 bool conditionMove2Init(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
-    return turtlesim::ALICATurtleWorldModel::get()->getInit();
+    return turtlesim::ALICATurtleWorldModel::get()->_turtle->getInit();
 }
 bool conditionInit2Move(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
