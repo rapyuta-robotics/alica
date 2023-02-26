@@ -31,9 +31,6 @@ private:
     std::thread spinThread;
     std::string _name;
     rclcpp::Node::SharedPtr _nh;
-
-    void ALICATurtleWorldModelCallInit();
-    void ALICATurtleWorldModelCallDel();
 };
 
 } // namespace turtlesim
