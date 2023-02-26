@@ -75,4 +75,9 @@ int64_t BasicPlan::getId() const
     return _plan->getId();
 }
 
+std::unique_ptr<BasicPlan> BasicPlan::create(PlanContext& context)
+{
+    return std::make_unique<BasicPlan>(context);
+}
+
 } // namespace alica
