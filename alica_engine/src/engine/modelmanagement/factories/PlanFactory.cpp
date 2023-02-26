@@ -108,6 +108,7 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
         if (Factory::isValid(node[alica::Strings::blackboard])) {
             plan->_blackboardBlueprint = BlackboardBlueprintFactory::create(node[alica::Strings::blackboard]);
         } else {
+            Logging::logError(LOGNAME) << "Invalid blackboard blueprint";
             plan->_blackboardBlueprint = BlackboardBlueprintFactory::createEmpty();
         }
     } else {
