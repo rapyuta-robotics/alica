@@ -32,9 +32,11 @@ public:
             using namespace std::chrono;
             auto inner_loop_duration = milliseconds(std::min(int64_t(500), _period));
             while (_isActive) {
-                auto now = system_clock::now().time_since_epoch();
+                auto end_time = system_clock::now().time_since_epoch() + milliseconds(_period);
+
                 _userCb();
-                auto end_time = now + milliseconds(_period);
+
+                auto now = system_clock::now().time_since_epoch();
                 // This second while is a trick to loop more than once, in 500ms intervals,
                 // while we wait for _period milliseconds. This allows us to exit this
                 // loop earlier without having to wait for the full duration when we Ctrl+C and kill this process.
