@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1414068524245,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ConstraintTestPlan",
   "preCondition": null,

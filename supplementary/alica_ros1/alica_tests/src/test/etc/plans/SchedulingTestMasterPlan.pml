@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1613378382024,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "SchedulingTestMasterPlan",
   "preCondition": null,

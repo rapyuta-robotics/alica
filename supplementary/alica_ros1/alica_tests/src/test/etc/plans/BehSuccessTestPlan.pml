@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 2189867578804904568,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "BehSuccessTestPlan",
   "preCondition": null,

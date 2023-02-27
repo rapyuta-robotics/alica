@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 1529456584982,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "BackForth",
   "preCondition": null,

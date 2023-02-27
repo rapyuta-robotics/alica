@@ -30,7 +30,7 @@
   "frequency": 0,
   "id": 3288843407985944525,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "ParallelSuccessOnCondPlan",
   "preCondition": null,

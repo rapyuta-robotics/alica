@@ -22,7 +22,7 @@
   "frequency": 0,
   "id": 4150733089768927549,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "FailureHandlingMaster",
   "preCondition": null,

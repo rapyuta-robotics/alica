@@ -38,7 +38,7 @@
   "frequency": 0,
   "id": 1402488770050,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": false,
   "name": "MidFieldPlayPlan",
   "preCondition": null,

@@ -70,7 +70,7 @@
   "frequency": 0,
   "id": 1407152758497,
   "inheritBlackboard": false,
-  "libraryName": "",
+  "libraryName": "alica-tests",
   "masterPlan": true,
   "name": "MasterPlanTaskAssignment",
   "preCondition": null,
