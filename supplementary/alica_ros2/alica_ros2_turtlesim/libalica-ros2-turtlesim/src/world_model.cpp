@@ -20,7 +20,7 @@ void ALICATurtleWorldModel::init()
 void ALICATurtleWorldModel::del()
 {
     delete instance;
-    instance=nullptr;
+    instance = nullptr;
 }
 
 ALICATurtleWorldModel::ALICATurtleWorldModel()

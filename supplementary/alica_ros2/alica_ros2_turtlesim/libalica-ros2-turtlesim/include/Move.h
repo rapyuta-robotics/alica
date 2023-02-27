@@ -13,7 +13,7 @@ class Move : public alica::BasicPlan
 {
 public:
     Move(alica::PlanContext& context);
-    virtual ~Move();
+    ~Move() override;
     static std::unique_ptr<Move> create(alica::PlanContext& context);
 };
 BOOST_DLL_ALIAS(turtlesim::Move::create, Move)

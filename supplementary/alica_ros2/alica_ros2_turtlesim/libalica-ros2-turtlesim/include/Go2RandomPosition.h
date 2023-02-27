@@ -9,7 +9,7 @@ class Go2RandomPosition : public alica::BasicBehaviour
 {
 public:
     Go2RandomPosition(alica::BehaviourContext& context);
-    virtual ~Go2RandomPosition();
+    ~Go2RandomPosition() override;
     virtual void run();
     static std::unique_ptr<Go2RandomPosition> create(alica::BehaviourContext& context);
 

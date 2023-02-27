@@ -27,7 +27,7 @@ class ALICATurtle
 {
 public:
     ALICATurtle(ALICATurtleWorldModel* wm);
-    void teleport(const float x, const float y);         // teleport turtle to (x,y)
+    void teleport(const float x, const float y);       // teleport turtle to (x,y)
     bool moveTowardGoal(const float x, const float y); // publish cmd_vel based on input(x,y) and current pose
     bool moveTowardGoal() const;                       // publish cmd_vel based on goal and current pose
 
@@ -35,12 +35,12 @@ public:
     void setInit(const bool input) { _initTrigger = input; };
 
 private:
-    std::string _name;                                                 // name of turtle
+    std::string _name;                                                // name of turtle
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr _velPub;  // publish cmd_vel to the turtlesim
     rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr _poseSub;   // subscribe turtleX/pose from the turtlesim
     rclcpp::Client<srv::TeleportAbsolute>::SharedPtr _teleportClient; // client of teleportAbsolute service
-    msg::Pose _current;                                                // current position
-    msg::Pose _goal;                                                   // goal position
+    msg::Pose _current;                                               // current position
+    msg::Pose _goal;                                                  // goal position
     rclcpp::executors::MultiThreadedExecutor _spinner;
     std::thread _spinThread;
     rclcpp::Node::SharedPtr _nh;

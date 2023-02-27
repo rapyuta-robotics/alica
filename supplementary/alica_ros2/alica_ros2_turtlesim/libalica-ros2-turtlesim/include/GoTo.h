@@ -10,7 +10,7 @@ class GoTo : public alica::BasicBehaviour
 {
 public:
     GoTo(alica::BehaviourContext& context);
-    virtual ~GoTo();
+    ~GoTo() override;
     virtual void run();
     static std::unique_ptr<GoTo> create(alica::BehaviourContext& context);
 

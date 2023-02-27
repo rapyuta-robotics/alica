@@ -13,7 +13,7 @@ class Master : public alica::BasicPlan
 {
 public:
     Master(alica::PlanContext& context);
-    virtual ~Master();
+    ~Master() override;
     static std::unique_ptr<Master> create(alica::PlanContext& context);
 
     void onInit() override;
