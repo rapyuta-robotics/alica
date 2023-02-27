@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     std::string name, roleset, master_plan, alica_path;
     int agent_id;
 
-    rclcpp::Node::SharedPtr nh = rclcpp::Node::make_shared("a");
+    rclcpp::Node::SharedPtr nh = rclcpp::Node::make_shared("alica_ros2_turtlesim");
 
     nh->declare_parameter("name", "Hello!");
     nh->declare_parameter("roleset", "Default");

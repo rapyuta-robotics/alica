@@ -28,7 +28,7 @@ void Go2RandomPosition::run()
     turtlesim::ALICATurtleWorldModel::get()->_turtle->setInit(false);
     setSuccess();
 }
-void Go2RandomPosition::initialiseParameters() {}
+
 std::unique_ptr<Go2RandomPosition> Go2RandomPosition::create(alica::BehaviourContext& context)
 {
     return std::make_unique<Go2RandomPosition>(context);

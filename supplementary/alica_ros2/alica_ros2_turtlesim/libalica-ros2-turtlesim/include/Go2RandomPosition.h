@@ -13,9 +13,6 @@ public:
     virtual void run();
     static std::unique_ptr<Go2RandomPosition> create(alica::BehaviourContext& context);
 
-protected:
-    virtual void initialiseParameters();
-
 private:
 };
 BOOST_DLL_ALIAS(turtlesim::Go2RandomPosition::create, Go2RandomPosition)

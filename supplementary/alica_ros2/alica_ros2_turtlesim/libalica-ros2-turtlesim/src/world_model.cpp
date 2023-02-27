@@ -20,6 +20,7 @@ void ALICATurtleWorldModel::init()
 void ALICATurtleWorldModel::del()
 {
     delete instance;
+    instance=nullptr;
 }
 
 ALICATurtleWorldModel::ALICATurtleWorldModel()
@@ -27,6 +28,9 @@ ALICATurtleWorldModel::ALICATurtleWorldModel()
     _turtle = std::make_unique<ALICATurtle>(this);
 }
 
-ALICATurtleWorldModel::~ALICATurtleWorldModel() {}
+ALICATurtleWorldModel::~ALICATurtleWorldModel()
+{
+    ALICATurtleWorldModel::del();
+}
 
 } // namespace turtlesim
