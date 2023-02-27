@@ -31,20 +31,18 @@ public:
         _thread = std::thread([this]() {
             using namespace std::chrono;
             while (_isActive) {
-                auto hasRepeatedInternalLoop = false;
                 auto startOuterLoop = system_clock::now();
                 _userCb();
                 int64_t sleep_duration = _period;
-                system_clock::time_point startInnerLoop;
+                system_clock::time_point startInnerLoop = startOuterLoop;
                 // This second while is a trick to loop more than once, in 500ms intervals,
                 // while we wait for sleep_duration milliseconds. This allows us to exit this
                 // loop earlier without having to wait for the full duration when we Ctrl+C and kill this process.
                 while ((sleep_duration > 0) && _isActive) {
-                    auto loop_duration = duration_cast<milliseconds>((system_clock::now() - (hasRepeatedInternalLoop ? startInnerLoop : startOuterLoop)));
+                    auto loop_duration = duration_cast<milliseconds>(system_clock::now() - startInnerLoop);
                     std::this_thread::sleep_for(milliseconds(std::min(int64_t(500), _period)) - loop_duration);
-                    sleep_duration -= std::max(loop_duration.count(), std::min(int64_t(500), _period));
                     startInnerLoop = system_clock::now();
-                    hasRepeatedInternalLoop = true;
+                    sleep_duration -= std::max(loop_duration.count(), std::min(int64_t(500), _period));
                 }
             }
         });
