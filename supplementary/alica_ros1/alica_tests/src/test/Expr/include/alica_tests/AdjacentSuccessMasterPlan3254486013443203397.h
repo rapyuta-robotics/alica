@@ -2,34 +2,18 @@
 
 #include <alica_tests/DomainCondition.h>
 #include <alica_tests/DomainPlan.h>
+#include <boost/dll/alias.hpp>
 #include <engine/BasicUtilityFunction.h>
 #include <engine/DefaultUtilityFunction.h>
 #include <engine/UtilityFunction.h>
-/*PROTECTED REGION ID(incl3254486013443203397) ENABLED START*/
-// Add additional includes here
-/*PROTECTED REGION END*/
 
 namespace alica
 {
-/*PROTECTED REGION ID(meth3254486013443203397) ENABLED START*/
-// Add additional options here
-/*PROTECTED REGION END*/
 class AdjacentSuccessMasterPlan3254486013443203397 : public DomainPlan
 {
 public:
     AdjacentSuccessMasterPlan3254486013443203397(PlanContext& context);
     virtual ~AdjacentSuccessMasterPlan3254486013443203397();
-    /*PROTECTED REGION ID(pub3254486013443203397) ENABLED START*/
-    // Add additional public methods here
-    /*PROTECTED REGION END*/
-protected:
-    /*PROTECTED REGION ID(pro3254486013443203397) ENABLED START*/
-    // Add/Override protected methods here
-    /*PROTECTED REGION END*/
-private:
-    /*PROTECTED REGION ID(prv3254486013443203397) ENABLED START*/
-    // Add additional private methods here
-    /*PROTECTED REGION END*/
 };
 
 class UtilityFunction3254486013443203397 : public BasicUtilityFunction
@@ -46,4 +30,7 @@ class PreCondition289358204208851392 : public DomainCondition
 public:
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
 };
+
+BOOST_DLL_ALIAS(alica::BasicPlan::create, AdjacentSuccessMasterPlan3254486013443203397)
+BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, AdjacentSuccessMasterPlan3254486013443203397UtilityFunction)
 } /* namespace alica */
