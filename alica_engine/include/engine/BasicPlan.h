@@ -47,6 +47,8 @@ public:
     void traceAssignmentChange(const std::string& assignedEntryPoint, double oldUtility, double newUtility, size_t numberOfAgents);
     int64_t getId() const;
 
+    static std::unique_ptr<BasicPlan> create(PlanContext& context);
+
 protected:
     using RunnableObject::getTraceFactory;
 
