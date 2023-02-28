@@ -1,38 +1,15 @@
-#include <alica/constraints/Move1889749086610694100Constraints.h>
-/*PROTECTED REGION ID(ch1889749086610694100) ENABLED START*/
-// Add additional options here
-#include <alica_ros2_turtlesim/world_model.hpp>
+#include "CircleRuntimeConditionConstraint.h"
+
+#include "world_model.hpp"
 #include <autodiff/AutoDiff.h>
 #include <engine/RunningPlan.h>
 #include <engine/constraintmodul/ProblemDescriptor.h>
 #include <engine/model/Task.h>
-/*PROTECTED REGION END*/
 
-namespace alica
+namespace turtlesim
 {
-// Plan:Move
-/*
- * Tasks:
- * - EntryPoint:3277312192440194145 : Follower (3759439551323513525)
- * - EntryPoint:4346694000146342467 : Leader (826983480584534597)
- *
- * States:
- * - AlignCircle (2299237921449867536)
- * - Move2Center (4158797811607100614)
- *
- * Vars:
- */
-/**
- * RuntimeCondition - (Name): CircleRuntimeCondition
- * (ConditionString):
- * Static Variables:
- * Domain Variables:
- * forall agents in Move let v = [x, y]
- *
- */
-void Constraint1288817888979746811::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp)
+void CircleRuntimeConditionConstraint::getConstraint(std::shared_ptr<alica::ProblemDescriptor> c, std::shared_ptr<alica::RunningPlan> rp)
 {
-    /*PROTECTED REGION ID(cc1288817888979746811) ENABLED START*/
     using autodiff::TermPtr;
     autodiff::TermHolder* h = static_cast<autodiff::TermHolder*>(c->getContext());
     TermPtr constraint = h->trueConstant();
@@ -110,9 +87,11 @@ void Constraint1288817888979746811::getConstraint(std::shared_ptr<ProblemDescrip
     }
 
     c->setConstraint(constraint);
-    /*PROTECTED REGION END*/
 }
 
-// State: AlignCircle
-// State: Move2Center
-} // namespace alica
+std::shared_ptr<CircleRuntimeConditionConstraint> CircleRuntimeConditionConstraint::create(alica::ConstraintContext&)
+{
+    return std::make_shared<CircleRuntimeConditionConstraint>();
+}
+
+} // namespace turtlesim
