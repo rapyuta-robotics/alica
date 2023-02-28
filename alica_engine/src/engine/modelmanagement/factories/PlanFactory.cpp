@@ -33,6 +33,9 @@ Plan* PlanFactory::create(ConfigChangeListener& configChangeListener, const YAML
     if (Factory::isValid(node[alica::Strings::libraryName])) {
         plan->_libraryName = Factory::getValue<std::string>(node, alica::Strings::libraryName, "");
     }
+    if (Factory::isValid(node[alica::Strings::implementationName])) {
+        plan->_implementationName = Factory::getValue<std::string>(node, alica::Strings::implementationName, "");
+    }
     if (Factory::isValid(node[alica::Strings::masterPlan])) {
         plan->_masterPlan = node[alica::Strings::masterPlan].as<bool>();
     }

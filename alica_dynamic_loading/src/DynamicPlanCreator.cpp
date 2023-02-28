@@ -26,7 +26,7 @@ std::unique_ptr<BasicPlan> DynamicPlanCreator::createPlan(int64_t planId, PlanCo
     }
     _planCreator = boost::dll::import_alias<PlanCreatorType>( // type of imported symbol must be explicitly specified
             completeLibraryName,                              // complete path to library also with file name
-            context.planModel->getName(),                     // symbol to import
+            context.planModel->getImplementationName(),       // symbol to import
             boost::dll::load_mode::append_decorations         // do append extensions and prefixes
     );
 
