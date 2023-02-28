@@ -27,7 +27,6 @@ class ConfigChangeListener;
 class PlanRepository;
 class IAlicaCommunication;
 class Logger;
-class ModelManager;
 
 // A read optimized cache for multi writer and readers.
 class AgentsCache
@@ -50,9 +49,8 @@ private:
 class TeamManager
 {
 public:
-    TeamManager(ConfigChangeListener& configChangeListener, const ModelManager& modelManager, const PlanRepository& planRepository,
-            const IAlicaCommunication& communicator, const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId,
-            const std::string& localAgentName, AgentId agentID);
+    TeamManager(ConfigChangeListener& configChangeListener, const PlanRepository& planRepository, const IAlicaCommunication& communicator,
+            const AlicaClock& clock, Logger& log, int version, uint64_t masterPlanId, const std::string& localAgentName, AgentId agentID);
     virtual ~TeamManager();
 
     void reload(const YAML::Node& config);
@@ -99,7 +97,6 @@ private:
 
     Agent* _localAgent;
     AgentsCache _agentsCache;
-    const ModelManager& _modelManager;
     const PlanRepository& _planRepository;
     const IAlicaCommunication& _communicator;
     const AlicaClock& _clock;

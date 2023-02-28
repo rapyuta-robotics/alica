@@ -3,7 +3,6 @@
     {
       "access": "protected",
       "comment": "",
-      "defaultValue": null,
       "id": 3797646244448202675,
       "key": "WaitForTriggerState2ParallelExecState",
       "type": "bool"
@@ -31,6 +30,7 @@
   "frequency": 0,
   "id": 3288843407985944525,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "ParallelSuccessOnCondPlan",
   "preCondition": null,
@@ -154,7 +154,8 @@
         "input": [
           {
             "childKey": "result",
-            "parentKey": "WaitForTriggerState2ParallelExecState"
+            "parentKey": "WaitForTriggerState2ParallelExecState",
+            "value": null
           }
         ],
         "output": []

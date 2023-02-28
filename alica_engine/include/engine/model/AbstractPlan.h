@@ -13,7 +13,6 @@ namespace alica
 
 class Variable;
 class UtilityFunction;
-class ModelFactory;
 class ExpressionHandler;
 class ModelManager;
 class AbstractPlanFactory;
@@ -38,7 +37,6 @@ public:
     const std::string& getFileName() const { return _fileName; }
 
 private:
-    friend ModelFactory;
     friend ModelManager;
     friend AbstractPlanFactory;
     friend ExpressionHandler;

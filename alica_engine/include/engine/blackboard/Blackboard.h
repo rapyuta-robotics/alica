@@ -20,8 +20,6 @@
 namespace alica
 {
 
-class BlackboardUtil;
-
 struct BlackboardException : public std::logic_error
 {
     static constexpr const char* BB_EXCEPTION_PREFIX = "Blackboard exception: ";
@@ -32,6 +30,9 @@ struct BlackboardException : public std::logic_error
     BlackboardException(const BlackboardException&) = default;
     BlackboardException& operator=(const BlackboardException&) = default;
 };
+
+namespace internal
+{
 
 class BlackboardImpl
 {
@@ -57,29 +58,16 @@ public:
                 throw BlackboardException(stringify("key: ", key, " has an unsupported type"));
             }
             _yamlType.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(keyInfo.type));
-            if (keyInfo.defaultValue.has_value()) {
-                if (keyInfo.type == "std::any") {
-                    throw BlackboardException(stringify("key: ", key, " cannot have a default value because it is of type std::any"));
-                }
-                try {
-                    _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key),
-                            std::forward_as_tuple(makeBBValueForIndex<true>::make(typeIndex.value(), keyInfo.defaultValue.value())));
-                } catch (const std::exception& ex) {
-                    throw BlackboardException(stringify("Could not set key: ", key, ", from default value: ", keyInfo.defaultValue.value(),
-                            ", type: ", keyInfo.type, ", details: ", ex.what()));
-                }
-            } else {
-                if (keyInfo.type == "std::any") {
-                    // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
-                    typeIndex = BB_VALUE_TYPE_ANY_INDEX;
-                }
-                try {
-                    // insert a default constructed value
-                    _vals.emplace(
-                            std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
-                } catch (const std::exception& ex) {
-                    throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
-                }
+
+            if (keyInfo.type == "std::any") {
+                // explicitly set the index for std::any, since getTypeIndex() returns empty for std::any
+                typeIndex = BB_VALUE_TYPE_ANY_INDEX;
+            }
+            try {
+                // insert a default constructed value
+                _vals.emplace(std::piecewise_construct, std::forward_as_tuple(key), std::forward_as_tuple(makeBBValueForIndex<false>::make(typeIndex.value())));
+            } catch (const std::exception& ex) {
+                throw BlackboardException(stringify("Could not initialize key: ", key, " with value of type: ", keyInfo.type, ", details: ", ex.what()));
             }
         }
     }
@@ -180,8 +168,6 @@ public:
 private:
     std::unordered_map<std::string, BBValueType> _vals;
     std::unordered_map<std::string, std::string> _yamlType;
-
-    friend BlackboardUtil;
 
     template <class T>
     void setImpl(const std::string& key, T&& value)
@@ -330,13 +316,21 @@ private:
     };
 };
 
+} // namespace internal
+
 class Blackboard
 {
+    friend class LockedBlackboardRW;
+    friend class LockedBlackboardRO;
+    friend class UnlockedBlackboard;
+    friend class BlackboardUtil;
+    friend class TestBlackboard;
+
 public:
     Blackboard() = default;
     Blackboard(Blackboard&&) = delete;
-    Blackboard& operator&=(const Blackboard&) = delete;
-    Blackboard& operator&=(Blackboard&&) = delete;
+    Blackboard& operator=(const Blackboard&) = delete;
+    Blackboard& operator=(Blackboard&&) = delete;
     Blackboard(const BlackboardBlueprint* blueprint)
             : _impl{blueprint}
             , _mtx{}
@@ -346,12 +340,12 @@ public:
     std::shared_lock<std::shared_mutex> lockRO() const { return std::shared_lock(_mtx); }
     std::unique_lock<std::shared_mutex> lockRW() { return std::unique_lock(_mtx); }
 
-    // Not thread safe.  Avoid for public use
-    BlackboardImpl& impl() { return _impl; }
-    const BlackboardImpl& impl() const { return _impl; }
+    // TODO: once these APIs are removed from user code, make these methods private so that only alica internal's can use them
+    [[deprecated("Use UnlockedBlackboard instead")]] internal::BlackboardImpl& impl() { return _impl; }
+    [[deprecated("Use UnlockedBlackboard instead")]] const internal::BlackboardImpl& impl() const { return _impl; }
 
 private:
-    BlackboardImpl _impl;
+    internal::BlackboardImpl _impl;
     mutable std::shared_mutex _mtx;
 };
 
@@ -360,26 +354,27 @@ class LockedBlackboardRO
 public:
     LockedBlackboardRO(const Blackboard& bb)
             : _lk(bb.lockRO())
-            , _impl(&bb.impl())
+            , _impl(bb._impl)
     {
     }
-    LockedBlackboardRO& operator&=(const LockedBlackboardRO&) = delete;
-    LockedBlackboardRO& operator&=(LockedBlackboardRO&) = delete;
-    LockedBlackboardRO(LockedBlackboardRO&) = delete;
+    LockedBlackboardRO& operator=(const LockedBlackboardRO&) = delete;
+    LockedBlackboardRO& operator=(LockedBlackboardRO&&) = delete;
+    LockedBlackboardRO(const LockedBlackboardRO&) = delete;
+    LockedBlackboardRO(LockedBlackboardRO&&) = delete;
 
-    bool empty() const { return _impl->empty(); }
-    size_t size() const { return _impl->size(); }
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
 
     template <typename T>
     decltype(auto) get(const std::string& key) const
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
-    bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
 
 private:
     std::shared_lock<std::shared_mutex> _lk;
-    const BlackboardImpl* _impl;
+    const internal::BlackboardImpl& _impl;
 };
 
 class LockedBlackboardRW
@@ -387,37 +382,76 @@ class LockedBlackboardRW
 public:
     LockedBlackboardRW(Blackboard& bb)
             : _lk(bb.lockRW())
-            , _impl(&bb.impl())
+            , _impl(bb._impl)
     {
     }
-    LockedBlackboardRW& operator&=(const LockedBlackboardRW&) = delete;
-    LockedBlackboardRW& operator&=(LockedBlackboardRW&) = delete;
-    LockedBlackboardRW(LockedBlackboardRW&) = delete;
+    LockedBlackboardRW& operator=(const LockedBlackboardRW&) = delete;
+    LockedBlackboardRW& operator=(LockedBlackboardRW&&) = delete;
+    LockedBlackboardRW(const LockedBlackboardRW&) = delete;
+    LockedBlackboardRW(LockedBlackboardRW&&) = delete;
 
     template <typename T>
     decltype(auto) get(const std::string& key) const
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
     template <typename T>
     decltype(auto) get(const std::string& key)
     {
-        return _impl->get<T>(key);
+        return _impl.get<T>(key);
     }
 
     template <typename T>
     void set(const std::string& key, T&& value)
     {
-        _impl->set(key, std::forward<T>(value));
+        _impl.set(key, std::forward<T>(value));
     }
 
-    bool empty() const { return _impl->empty(); }
-    size_t size() const { return _impl->size(); }
-    bool hasValue(const std::string& key) const { return _impl->hasValue(key); }
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
 
 private:
     std::unique_lock<std::shared_mutex> _lk;
-    BlackboardImpl* _impl;
+    internal::BlackboardImpl& _impl;
+};
+
+class UnlockedBlackboard
+{
+public:
+    UnlockedBlackboard(Blackboard& bb)
+            : _impl(bb._impl)
+    {
+    }
+    UnlockedBlackboard(const UnlockedBlackboard&) = delete;
+    UnlockedBlackboard(UnlockedBlackboard&&) = delete;
+    UnlockedBlackboard& operator=(const UnlockedBlackboard&) = delete;
+    UnlockedBlackboard& operator=(UnlockedBlackboard&&) = delete;
+
+    template <typename T>
+    decltype(auto) get(const std::string& key) const
+    {
+        return _impl.get<T>(key);
+    }
+
+    template <typename T>
+    decltype(auto) get(const std::string& key)
+    {
+        return _impl.get<T>(key);
+    }
+
+    template <typename T>
+    void set(const std::string& key, T&& value)
+    {
+        _impl.set(key, std::forward<T>(value));
+    }
+
+    bool empty() const { return _impl.empty(); }
+    size_t size() const { return _impl.size(); }
+    bool hasValue(const std::string& key) const { return _impl.hasValue(key); }
+
+private:
+    internal::BlackboardImpl& _impl;
 };
 
 } // namespace alica

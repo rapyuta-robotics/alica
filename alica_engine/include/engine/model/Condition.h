@@ -13,7 +13,6 @@ class BasicCondition;
 class BasicConstraint;
 class RunningPlan;
 class ProblemDescriptor;
-class ModelFactory;
 class ConditionFactory;
 class ExpressionHandler;
 class Blackboard;
@@ -47,7 +46,6 @@ public:
     std::string getLibraryName() const;
 
 private:
-    friend ModelFactory;
     friend ConditionFactory;
     friend ExpressionHandler;
 

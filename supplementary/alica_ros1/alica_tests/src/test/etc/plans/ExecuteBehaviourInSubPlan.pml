@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 3172561495666303184,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "ExecuteBehaviourInSubPlan",
   "preCondition": null,

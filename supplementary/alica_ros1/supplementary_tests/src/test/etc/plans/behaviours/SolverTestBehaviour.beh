@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 1417424455986,
   "inheritBlackboard": false,
+  "libraryName": "supplementary-tests",
   "name": "SolverTestBehaviour",
   "postCondition": null,
   "preCondition": null,
@@ -24,5 +25,6 @@
       "name": "Y",
       "variableType": ""
     }
-  ]
+  ],
+  "libraryName": "supplementary-tests"
 }

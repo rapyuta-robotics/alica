@@ -1,13 +1,7 @@
 #include "test_alica.h"
 
-#include <alica_tests/BehaviourCreator.h>
-#include <alica_tests/ConditionCreator.h>
-#include <alica_tests/ConstraintCreator.h>
 #include <alica_tests/DummyTestSummand.h>
-#include <alica_tests/PlanCreator.h>
 #include <alica_tests/TestWorldModel.h>
-#include <alica_tests/TransitionConditionCreator.h>
-#include <alica_tests/UtilityFunctionCreator.h>
 
 #include <engine/PlanBase.h>
 #include <engine/PlanRepository.h>
@@ -63,8 +57,8 @@ TEST(AllocationDifference, MessageCancelsUtil)
     alica::AllocationDifference result;
     util.setReason(alica::AllocationDifference::Reason::utility);
     msg.setReason(alica::AllocationDifference::Reason::message);
-    alica::Task t1;
-    alica::Task t2;
+    alica::Task t1(nullptr);
+    alica::Task t2(nullptr);
     alica::EntryPoint e1(1, nullptr, &t1, nullptr);
     alica::EntryPoint e2(2, nullptr, &t2, nullptr);
 

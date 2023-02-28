@@ -130,8 +130,8 @@ struct AlicaContextParams
 
     std::string agentName;
     std::string configPath;
-    std::string masterPlanName;
     std::string roleSetName;
+    std::string masterPlanName;
     bool stepEngine;
     AgentId agentID;
 };
@@ -479,11 +479,7 @@ void AlicaContext::setClock(Args&&... args)
     }
 
     static_assert(std::is_base_of<AlicaClock, ClockType>::value, "Must be derived from AlicaClock");
-#if (defined __cplusplus && __cplusplus >= 201402L)
     _clock = std::make_unique<ClockType>(std::forward<Args>(args)...);
-#else
-    _clock = std::unique_ptr<ClockType>(new ClockType(std::forward<Args>(args)...));
-#endif
 }
 
 template <class CommunicatorType, class... Args>
@@ -496,22 +492,14 @@ void AlicaContext::setCommunicator(Args&&... args)
 
     static_assert(std::is_base_of<IAlicaCommunication, CommunicatorType>::value, "Must be derived from IAlicaCommunication");
     AlicaCommunicationHandlers callbacks = getCommunicationHandlers();
-#if (defined __cplusplus && __cplusplus >= 201402L)
     _communicator = std::make_unique<CommunicatorType>(callbacks, std::forward<Args>(args)...);
-#else
-    _communicator = std::unique_ptr<CommunicatorType>(new CommunicatorType(callbacks, std::forward<Args>(args)...));
-#endif
 }
 
 template <class SolverType, class... Args>
 void AlicaContext::addSolver(Args&&... args)
 {
     static_assert(std::is_base_of<ISolverBase, SolverType>::value, "Must be derived from ISolverBase");
-#if (defined __cplusplus && __cplusplus >= 201402L)
     _solvers.emplace(typeid(SolverType).hash_code(), std::make_unique<SolverType>(&editSyncModule(), std::forward<Args>(args)...));
-#else
-    _solvers.emplace(typeid(SolverType).hash_code(), std::unique_ptr<SolverType>(new SolverType(&editSyncModule(), std::forward<Args>(args)...)));
-#endif
 }
 
 template <class SolverType>
@@ -538,11 +526,7 @@ void AlicaContext::setTimerFactory(Args&&... args)
     }
 
     static_assert(std::is_base_of<IAlicaTimerFactory, TimerFactoryType>::value, "Must be derived from IAlicaTimerFactory");
-#if (defined __cplusplus && __cplusplus >= 201402L)
     _timerFactory = std::make_unique<TimerFactoryType>(std::forward<Args>(args)...);
-#else
-    _timerFactory = std::unique_ptr<TimerFactoryType>(new TimerFactoryType(std::forward<Args>(args)...));
-#endif
 }
 
 template <class TraceFactoryType, class... Args>
@@ -554,11 +538,8 @@ void AlicaContext::setTraceFactory(Args&&... args)
     }
 
     static_assert(std::is_base_of<IAlicaTraceFactory, TraceFactoryType>::value, "Must be derived from IAlicaTraceFactory");
-#if (defined __cplusplus && __cplusplus >= 201402L)
+
     _traceFactory = std::make_unique<TraceFactoryType>(std::forward<Args>(args)...);
-#else
-    _traceFactory = std::unique_ptr<TraceFactoryType>(new TraceFactoryType(std::forward<Args>(args)...));
-#endif
 }
 
 template <class LoggerType, class... Args>

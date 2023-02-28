@@ -118,7 +118,8 @@ void UtilityFunction::init(const RoleSet* roleSet, const IRoleAssignment& roleAs
             }
         }
         // Add Priority for Idle-EntryPoint
-        _priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(Task::IDLEID, roleId), 0.0));
+        static constexpr int64_t IDLEID = -1; // For Task Id of an Idle EntryPoint...
+        _priorityMatrix.insert(std::pair<TaskRoleStruct, double>(TaskRoleStruct(IDLEID, roleId), 0.0));
     }
 }
 

@@ -52,7 +52,7 @@ public:
             : _isRunning(true)
             , _commModules(cModules)
     {
-        _cbThread = new std::thread(&InProcQueue::run, this);
+        _cbThread = std::thread(&InProcQueue::run, this);
     }
 
     ~InProcQueue()
@@ -62,8 +62,7 @@ public:
             _isRunning = false;
         }
         _qcondition.notify_one();
-        _cbThread->join();
-        delete _cbThread;
+        _cbThread.join();
     }
 
     void push(const T& data)
@@ -95,7 +94,7 @@ private:
     }
 
     void process(std::unique_ptr<T>& first);
-    std::thread* _cbThread;
+    std::thread _cbThread;
     std::mutex _qmutex;
     std::condition_variable _qcondition;
     std::queue<std::unique_ptr<T>> _q;

@@ -22,6 +22,7 @@
   "frequency": 0,
   "id": 1418042796751,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "PreConditionPlan",
   "preCondition": {

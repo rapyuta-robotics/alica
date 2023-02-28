@@ -38,6 +38,7 @@
   "frequency": 0,
   "id": 1418825395939,
   "inheritBlackboard": false,
+  "libraryName": "",
   "masterPlan": false,
   "name": "MasterSyncTransition",
   "preCondition": null,

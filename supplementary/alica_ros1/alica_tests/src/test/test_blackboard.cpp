@@ -7,8 +7,6 @@
 
 namespace alica
 {
-namespace
-{
 
 struct BBType
 {
@@ -47,19 +45,21 @@ protected:
     bool checkMapping(const std::string& srcTypeName, const SrcType& srcValue, const std::string& targetTypeName, const TargetType& targetValue)
     {
         BlackboardBlueprint srcBlueprint;
-        srcBlueprint.addKey("srcKey", srcTypeName, {});
+        srcBlueprint.addKey("srcKey", srcTypeName);
         BlackboardBlueprint targetBlueprint;
-        targetBlueprint.addKey("targetKey", targetTypeName, {});
+        targetBlueprint.addKey("targetKey", targetTypeName);
         Blackboard srcBB(&srcBlueprint);
         Blackboard targetBB(&targetBlueprint);
-        srcBB.impl().set("srcKey", srcValue);
-        targetBB.impl().map("srcKey", "targetKey", srcBB.impl());
+        srcBB._impl.set("srcKey", srcValue);
+        targetBB._impl.map("srcKey", "targetKey", srcBB._impl);
         if constexpr (std::is_same_v<TargetType, std::any>) {
-            return std::any_cast<SrcType>(targetBB.impl().get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
+            return std::any_cast<SrcType>(targetBB._impl.get<TargetType>("targetKey")) == std::any_cast<SrcType>(targetValue);
         } else {
-            return targetBB.impl().get<TargetType>("targetKey") == targetValue;
+            return targetBB._impl.get<TargetType>("targetKey") == targetValue;
         }
     }
+
+    alica::internal::BlackboardImpl& getBlackboardImpl(alica::Blackboard& bb) { return bb._impl; }
 };
 
 TEST_F(TestBlackboard, testJsonTwoBehaviorKeyMapping)
@@ -245,13 +245,19 @@ TEST_F(TestBlackboard, testAccessUnknownTypeWithUnknownWrongType)
 TEST_F(TestBlackboard, testSetNotMatchingKnownType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64, "14");
-    blueprint->addKey("uintVal", BBType::UINT64, "15");
-    blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
-    blueprint->addKey("boolVal", BBType::BOOL, "true");
-    blueprint->addKey("stringVal", BBType::STRING, "test string");
+    blueprint->addKey("intVal", BBType::INT64);
+    blueprint->addKey("uintVal", BBType::UINT64);
+    blueprint->addKey("doubleVal", BBType::DOUBLE);
+    blueprint->addKey("boolVal", BBType::BOOL);
+    blueprint->addKey("stringVal", BBType::STRING);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
+
+    bb.set<int64_t>("intVal", 14);
+    bb.set<uint64_t>("uintVal", 15u);
+    bb.set<double>("doubleVal", 2.7);
+    bb.set<bool>("boolVal", true);
+    bb.set<std::string>("stringVal", "test string");
 
     EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
     EXPECT_EQ(bb.get<uint64_t>("uintVal"), 15u);
@@ -314,104 +320,12 @@ TEST_F(TestBlackboard, testSetAnyWithDifferentType)
     EXPECT_EQ(bb_locked.get<int64_t>("value"), 2);
 }
 
-TEST_F(TestBlackboard, testInitWithUnsupportedType)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("unknown", "UnknownType", std::nullopt);
-    // throw exception because UnknownType is not supported and can not be used as a default value type
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithDefaultValueForAny)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyWithDefault", BBType::ANY, "defaultValue");
-    // throw exception because std::any type can not have a default value
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithWrongDefaultValueType)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyWithDefault", BBType::INT64, "defaultValue");
-    // throw exception because "defaultValue" is not of type int64
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithNonConstructable)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyWithDefault", "NonConstructable", std::nullopt);
-    // throw exception because NonConstructable is not constructable with a default value
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithDefaultValue)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64, "14");
-    blueprint->addKey("uintVal", BBType::UINT64, "15");
-    blueprint->addKey("doubleVal", BBType::DOUBLE, "2.7");
-    blueprint->addKey("boolVal", BBType::BOOL, "true");
-    blueprint->addKey("stringVal", BBType::STRING, "test string");
-    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
-    alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
-
-    EXPECT_EQ(bb.get<int64_t>("intVal"), 14);
-    EXPECT_EQ(bb.get<uint64_t>("uintVal"), 15u);
-    EXPECT_EQ(bb.get<double>("doubleVal"), 2.7);
-    EXPECT_EQ(bb.get<bool>("boolVal"), true);
-    EXPECT_EQ(bb.get<std::string>("stringVal"), "test string");
-}
-
-TEST_F(TestBlackboard, testInitWithoutDefaultValue)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64, std::nullopt);
-    blueprint->addKey("uintVal", BBType::UINT64, std::nullopt);
-    blueprint->addKey("doubleVal", BBType::DOUBLE, std::nullopt);
-    blueprint->addKey("boolVal", BBType::BOOL, std::nullopt);
-    blueprint->addKey("stringVal", BBType::STRING, std::nullopt);
-    alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
-    alica::LockedBlackboardRO bb = LockedBlackboardRO(blackboard);
-
-    EXPECT_EQ(bb.get<int64_t>("intVal"), int64_t());
-    EXPECT_EQ(bb.get<uint64_t>("uintVal"), uint64_t());
-    EXPECT_EQ(bb.get<double>("doubleVal"), double());
-    EXPECT_EQ(bb.get<bool>("boolVal"), false);
-    EXPECT_EQ(bb.get<std::string>("stringVal"), "");
-}
-
-TEST_F(TestBlackboard, testInitWithConvertibleIntDefaultValue)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64, "14.7");
-    // throw exception because "14.7" is not of type int64
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithConvertibleBoolDefaultValue)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("boolVal", BBType::BOOL, "1");
-    // throw exception because "1" is not of type bool
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
-TEST_F(TestBlackboard, testInitWithConvertibleDoubleDefaultValue)
-{
-    std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("doubleVal", BBType::DOUBLE, "false");
-    // throw exception, because of "false" is not of type double
-    EXPECT_THROW({ alica::Blackboard(blueprint.get()); }, BlackboardException);
-}
-
 TEST_F(TestBlackboard, testAnyWithDifferentTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("anyType", BBType::ANY, std::nullopt);
-    blueprint->addKey("knownType", BBType::ANY, std::nullopt);
-    blueprint->addKey("unknownType", BBType::ANY, std::nullopt);
+    blueprint->addKey("anyType", BBType::ANY);
+    blueprint->addKey("knownType", BBType::ANY);
+    blueprint->addKey("unknownType", BBType::ANY);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     LockedBlackboardRW bb_locked = LockedBlackboardRW(blackboard);
 
@@ -435,39 +349,40 @@ TEST_F(TestBlackboard, testAnyWithDifferentTypes)
 TEST_F(TestBlackboard, testMappingWithDifferentPMLTypes)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprintSrc = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintSrc->addKey("anyTypeSrc", BBType::ANY, std::nullopt);
-    blueprintSrc->addKey("knownTypeSrc", BBType::INT64, std::nullopt);
-    blueprintSrc->addKey("unknownTypeSrc", BBType::ANY, std::nullopt);
+    blueprintSrc->addKey("anyTypeSrc", BBType::ANY);
+    blueprintSrc->addKey("knownTypeSrc", BBType::INT64);
+    blueprintSrc->addKey("unknownTypeSrc", BBType::ANY);
 
     std::unique_ptr<alica::BlackboardBlueprint> blueprintTarget = std::make_unique<alica::BlackboardBlueprint>();
-    blueprintTarget->addKey("anyTypeTarget", BBType::ANY, std::nullopt);
-    blueprintTarget->addKey("knownTypeTarget", BBType::INT64, std::nullopt);
-    blueprintTarget->addKey("unknownTypeTarget", BBType::ANY, std::nullopt);
+    blueprintTarget->addKey("anyTypeTarget", BBType::ANY);
+    blueprintTarget->addKey("knownTypeTarget", BBType::INT64);
+    blueprintTarget->addKey("unknownTypeTarget", BBType::ANY);
 
-    alica::Blackboard srcBb = alica::Blackboard(blueprintSrc.get());
-    alica::Blackboard targetBb = alica::Blackboard(blueprintTarget.get());
+    alica::Blackboard srcBlackboard = alica::Blackboard(blueprintSrc.get());
+    auto& srcBb = getBlackboardImpl(srcBlackboard);
+    alica::Blackboard targetBlackboard = alica::Blackboard(blueprintTarget.get());
+    auto& targetBb = getBlackboardImpl(targetBlackboard);
 
-    srcBb.impl().set<int64_t>("knownTypeSrc", 1);
-    targetBb.impl().map("knownTypeSrc", "knownTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<int64_t>("knownTypeTarget"), 1.0);
+    srcBb.set<int64_t>("knownTypeSrc", 1);
+    targetBb.map("knownTypeSrc", "knownTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<int64_t>("knownTypeTarget"), 1.0);
 
-    srcBb.impl().set<alica::PlanStatus>("unknownTypeSrc", alica::PlanStatus::Success);
-    targetBb.impl().set<alica::PlanStatus>("unknownTypeTarget", alica::PlanStatus::Failed);
-    targetBb.impl().map("unknownTypeSrc", "unknownTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<alica::PlanStatus>("unknownTypeTarget"), alica::PlanStatus::Success);
+    srcBb.set<alica::PlanStatus>("unknownTypeSrc", alica::PlanStatus::Success);
+    targetBb.set<alica::PlanStatus>("unknownTypeTarget", alica::PlanStatus::Failed);
+    targetBb.map("unknownTypeSrc", "unknownTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<alica::PlanStatus>("unknownTypeTarget"), alica::PlanStatus::Success);
 
-    srcBb.impl().set<std::any>("anyTypeSrc", std::any{19L});
-    targetBb.impl().map("anyTypeSrc", "anyTypeTarget", srcBb.impl());
-    EXPECT_EQ(targetBb.impl().get<int64_t>("anyTypeTarget"), 19L);
+    srcBb.set<std::any>("anyTypeSrc", std::any{19L});
+    targetBb.map("anyTypeSrc", "anyTypeTarget", srcBb);
+    EXPECT_EQ(targetBb.get<int64_t>("anyTypeTarget"), 19L);
 }
 
 TEST_F(TestBlackboard, setWithConvertibleType)
 {
     std::unique_ptr<alica::BlackboardBlueprint> blueprint = std::make_unique<alica::BlackboardBlueprint>();
-    blueprint->addKey("intVal", BBType::INT64, "14");
-    blueprint->addKey("uintVal", BBType::UINT64, "15");
-    blueprint->addKey("decimal", BBType::DOUBLE, "1.0");
-    blueprint->addKey("string", BBType::STRING, "str");
+    blueprint->addKey("intVal", BBType::INT64);
+    blueprint->addKey("uintVal", BBType::UINT64);
+    blueprint->addKey("decimal", BBType::DOUBLE);
     alica::Blackboard blackboard = alica::Blackboard(blueprint.get());
     alica::LockedBlackboardRW bb = LockedBlackboardRW(blackboard);
 
@@ -536,5 +451,17 @@ TEST_F(TestBlackboard, setWithoutSpecifyingType)
     EXPECT_EQ(bb.get<UnknownType>("unknownType").value, 1234);
 }
 
-} // namespace
+TEST_F(TestBlackboard, TestUnlockedBB)
+{
+    // Test all basic operations on an unlocked blackboard
+    Blackboard blackboard;
+    UnlockedBlackboard bb{blackboard};
+    EXPECT_TRUE(bb.empty());
+    bb.set("intVal", 1234);
+    EXPECT_EQ(bb.get<int64_t>("intVal"), 1234);
+    EXPECT_TRUE(bb.hasValue("intVal"));
+    EXPECT_EQ(bb.size(), 1);
+    EXPECT_FALSE(bb.empty());
+}
+
 } // namespace alica

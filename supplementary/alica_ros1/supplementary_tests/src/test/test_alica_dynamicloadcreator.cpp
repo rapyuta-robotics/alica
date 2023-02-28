@@ -8,6 +8,7 @@
 #include "communication/AlicaRosCommunication.h"
 #include <engine/BasicBehaviour.h>
 #include <engine/BasicPlan.h>
+#include <engine/blackboard/Blackboard.h>
 #include <engine/logging/AlicaDefaultLogger.h>
 #include <engine/logging/Logging.h>
 #include <engine/model/RuntimeCondition.h>
@@ -56,10 +57,10 @@ public:
 
 TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/behaviours/AcmeBeh.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/AcmeBeh.beh")));
 
     // Load model
     Behaviour* behaviourModel;
@@ -79,11 +80,10 @@ TEST_F(AlicaDynamicLoading, simple_behaviour_load)
 TEST_F(AlicaDynamicLoading, simple_plan_load)
 {
     std::string path = getRootPath();
-    std::string libPath = getLibRootPath();
 
     YAML::Node node, globalNode;
     ASSERT_NO_THROW((globalNode = YAML::LoadFile(path + "/etc/hairy/Alica.yaml")));
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/AcmePlan.pml")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml")));
 
     // Load model
     ConfigChangeListener configChangeListener(globalNode);
@@ -103,10 +103,10 @@ TEST_F(AlicaDynamicLoading, simple_plan_load)
 
 TEST_F(AlicaDynamicLoading, simple_condition_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/AcmePlan.pml")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/AcmePlan.pml")));
     ASSERT_NO_THROW((node = node["runtimeCondition"]));
 
     // Load model
@@ -130,31 +130,42 @@ TEST_F(AlicaDynamicLoading, simple_condition_load)
 
 TEST_F(AlicaDynamicLoading, simple_transition_condition_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/conditions/ConditionRepository.cnd")));
-    ASSERT_NO_THROW((node = node["conditions"][0]));
-    // Load model
-    TransitionCondition* conditionModel = TransitionConditionFactory::create(node, nullptr);
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/conditions/ConditionRepository.cnd")));
+    TransitionCondition* conditionModel;
 
-    // Create condition form dll
-    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
+    for (size_t i = 0; i < node["conditions"].size(); i++) {
+        YAML::Node condition = node["conditions"][i];
+        // Load model
+        conditionModel = TransitionConditionFactory::create(condition, nullptr);
+        if (conditionModel->getName() == "VariableHandlingStart") {
+            break;
+        }
+    }
 
     ASSERT_EQ(conditionModel->getName(), "VariableHandlingStart");
     TransitionConditionContext ctx{conditionModel->getName(), conditionModel->getLibraryName(), 0, 0};
 
+    // Create condition from dll
+    std::unique_ptr<BlackboardBlueprint> testGlobalBlackboardBlueprint = std::make_unique<BlackboardBlueprint>();
+    testGlobalBlackboardBlueprint->addKey("vhStartCondition", "bool");
+    std::unique_ptr<Blackboard> testGlobalBlackboard = std::make_unique<Blackboard>(testGlobalBlackboardBlueprint.get());
+    testGlobalBlackboard->impl().set("vhStartCondition", false);
+
+    auto creator = std::make_unique<alica::DynamicTransitionConditionCreator>();
     auto transitionCondition = creator->createConditions(1, ctx);
-    bool res = transitionCondition(nullptr, nullptr, nullptr);
+    bool res = transitionCondition(nullptr, nullptr, testGlobalBlackboard.get());
     ASSERT_EQ(false, res);
 }
 
 TEST_F(AlicaDynamicLoading, simple_waitbehaviour_load)
 {
-    std::string libPath = getLibRootPath();
+    std::string path = getRootPath();
 
     YAML::Node node;
-    ASSERT_NO_THROW((node = YAML::LoadFile(libPath + "/etc/plans/behaviours/WaitBehaviour.beh")));
+    ASSERT_NO_THROW((node = YAML::LoadFile(path + "/etc/plans/behaviours/WaitBehaviour.beh")));
 
     // Load model
     Behaviour* behaviourModel;
