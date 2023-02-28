@@ -133,14 +133,12 @@ VariableSyncModule& AlicaContext::editSyncModule()
 
 YAML::Node AlicaContext::initConfig(const std::vector<std::string>& configPaths, const std::string& agentName)
 {
-    YAML::Node node;
     std::string configFileSearchPath, configFilePath;
     for (const auto& folder : configPaths) {
         configFileSearchPath = essentials::FileSystem::combinePaths(folder, agentName);
         if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
             try {
-                node = YAML::LoadFile(configFilePath);
-                return node;
+                return YAML::LoadFile(configFilePath);
             } catch (YAML::BadFile& badFile) {
                 if (Logging::isInitialized()) {
                     Logging::logWarn(LOGNAME) << "Agent wise config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
@@ -161,8 +159,7 @@ YAML::Node AlicaContext::initConfig(const std::vector<std::string>& configPaths,
     for (const auto& configFileSearchPath : configPaths) {
         if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
             try {
-                node = YAML::LoadFile(configFilePath);
-                return node;
+                return YAML::LoadFile(configFilePath);
             } catch (YAML::BadFile& badFile) {
                 if (Logging::isInitialized()) {
                     Logging::logWarn(LOGNAME) << "Global config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
@@ -180,7 +177,7 @@ YAML::Node AlicaContext::initConfig(const std::vector<std::string>& configPaths,
         std::cerr << "[ERROR] " << LOGNAME << " Could not parse/find the agent wise config file or the global config file";
     }
 
-    return node;
+    return YAML::Node{};
 }
 
 void AlicaContext::getVersion(int& major, int& minor, int& patch)

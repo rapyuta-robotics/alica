@@ -52,13 +52,13 @@ private:
     const AlicaElement* getElement(const int64_t id);
     // Recursively look for a file named <fileName> in _domainConfigFolders & return the absolute path to the file. The returned path is empty if the file is
     // not found
-    std::string findFile(const std::string& fileName);
+    std::string findFile(const std::string& fileName) const;
     AlicaElement* parseFile(const std::string& currentFile, const std::string& type);
     /**
      * Searches for the default role set in _domainConfigFolders (not recursively)
      * @return The first default role set it finds.
      */
-    std::string findDefaultRoleSet();
+    std::string findDefaultRoleSet() const;
     void attachReferences();
     void generateTemplateVariables();
     void computeReachabilities();

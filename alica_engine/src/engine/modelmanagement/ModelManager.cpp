@@ -100,16 +100,15 @@ RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
     return roleSet;
 }
 
-std::string ModelManager::findDefaultRoleSet()
+std::string ModelManager::findDefaultRoleSet() const
 {
     for (const auto& folder : _domainConfigFolders) {
         std::vector<std::string> files = essentials::FileSystem::findAllFiles(folder, alica::Strings::roleset_extension);
 
         // find default role set and return the first valid one found
         for (const auto& file : files) {
-            YAML::Node node;
             try {
-                node = YAML::LoadFile(file);
+                auto node = YAML::LoadFile(file);
                 if (Factory::isValid(node[alica::Strings::defaultRoleSet]) && Factory::getValue<bool>(node, alica::Strings::defaultRoleSet)) {
                     return file;
                 } else {
@@ -125,7 +124,7 @@ std::string ModelManager::findDefaultRoleSet()
     return std::string{};
 }
 
-std::string ModelManager::findFile(const std::string& fileName)
+std::string ModelManager::findFile(const std::string& fileName) const
 {
     std::string filePath;
     for (const auto& folder : _domainConfigFolders) {
