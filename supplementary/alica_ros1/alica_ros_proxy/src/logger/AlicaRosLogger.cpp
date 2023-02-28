@@ -22,21 +22,16 @@ AlicaRosLogger::AlicaRosLogger(const Verbosity verbosity, const std::string& loc
 
 void AlicaRosLogger::log(const std::string& msg, const Verbosity verbosity, const std::string& logSpace)
 {
-    std::stringstream streamName;
-    streamName << _localAgentName;
-    if (!logSpace.empty()) {
-        streamName << "." << logSpace;
-    }
     if (verbosity == alica::Verbosity::DEBUG) {
-        ROS_DEBUG_STREAM_NAMED(streamName.str(), msg);
+        ROS_DEBUG_STREAM_NAMED(_localAgentName, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::INFO) {
-        ROS_INFO_STREAM_NAMED(streamName.str(), msg);
+        ROS_INFO_STREAM_NAMED(_localAgentName, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::WARNING) {
-        ROS_WARN_STREAM_NAMED(streamName.str(), msg);
+        ROS_WARN_STREAM_NAMED(_localAgentName, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::ERROR) {
-        ROS_ERROR_STREAM_NAMED(streamName.str(), msg);
+        ROS_ERROR_STREAM_NAMED(_localAgentName, "[" << logSpace << "] " << msg);
     } else if (verbosity == alica::Verbosity::FATAL) {
-        ROS_FATAL_STREAM_NAMED(streamName.str(), msg);
+        ROS_FATAL_STREAM_NAMED(_localAgentName, "[" << logSpace << "] " << msg);
     }
 }
 
