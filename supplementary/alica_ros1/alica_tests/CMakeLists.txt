@@ -4,16 +4,15 @@ include(CTest)
 
 add_compile_options(-std=c++17)
 set(CMAKE_BUILD_TYPE Debug)
+# Set up utils to allow Colcon/catkin to find the packages
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/${CMAKE_PROJECT_NAME}/cmake)
 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 if (NOT Boost_FOUND)
       message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif (NOT Boost_FOUND)
-
-find_package(catkin REQUIRED COMPONENTS
-    roscpp
-    alica_ros_proxy
-)
 
 # #Yaml
 find_package(yaml-cpp REQUIRED)
@@ -25,31 +24,26 @@ find_package(alica_test_utility REQUIRED)
 find_package(alica_dynamic_loading REQUIRED)
 include_directories(include)
 
-catkin_package(
-    INCLUDE_DIRS include src/test/Expr/include
-    LIBRARIES autogen_code_alica_tests
-    CATKIN_DEPENDS    alica_ros_proxy
-    DEPENDS alica_solver_interface alica_engine alica_dummy_proxy alica_simple_solver alica_test_utility alica_dynamic_loading
-)
-
-include_directories(include src/test/Expr/include ${catkin_INCLUDE_DIRS})
+include_directories(include src/test/Expr/include)
 file(GLOB_RECURSE autogen_SOURCES "src/test/Expr/src/*.cpp")
-add_library(autogen_code_alica_tests ${autogen_SOURCES})
-target_link_libraries(autogen_code_alica_tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy alica_dynamic_loading)
+add_library(${PROJECT_NAME}-expr SHARED ${autogen_SOURCES})
+target_include_directories(${PROJECT_NAME}-expr PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(${PROJECT_NAME}-expr alica_solver_interface alica_test_utility alica_engine alica_simple_solver alica_dummy_proxy alica_dynamic_loading)
+target_compile_definitions(${PROJECT_NAME}-expr PUBLIC "PLANS=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 
 include_directories(libalica-tests/include)
 file(GLOB_RECURSE AlicaTestLibSources "libalica-tests/src/*.cpp")
 add_library(alica-tests SHARED ${AlicaTestLibSources})
-target_link_libraries(alica-tests ${catkin_LIBRARIES} alica_test_utility alica_dummy_proxy)
-
-install(TARGETS autogen_code_alica_tests alica-tests
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-)
-
+target_link_libraries(alica-tests ${PROJECT_NAME}-expr alica_solver_interface alica_simple_solver alica_engine alica_test_utility alica_dummy_proxy alica_dynamic_loading)
 
 if(BUILD_TESTING)
-    find_package(rostest REQUIRED)
+    find_package(GTest)
+    include(GoogleTest)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
 
     set(test_alica_SOURCES
         src/ConstraintTestPlanDummySolver.cpp
@@ -96,6 +90,53 @@ if(BUILD_TESTING)
         src/test/test_success.cpp
     )
 
-    add_rostest_gtest(${PROJECT_NAME}-test test/alica_tests.test ${test_alica_SOURCES})
-    target_link_libraries(${PROJECT_NAME}-test ${catkin_LIBRARIES} autogen_code_alica_tests ${YAML_CPP_LIBRARIES} alica_dynamic_loading alica-tests)
+    add_executable(${PROJECT_NAME}-test ${test_alica_SOURCES})
+    target_link_libraries(${PROJECT_NAME}-test PRIVATE Threads::Threads ${PROJECT_NAME}-expr alica-tests ${YAML_CPP_LIBRARIES} ${GTEST_LIBRARIES})
+    gtest_discover_tests(${PROJECT_NAME}-test)
 endif()
+
+# Install
+install(TARGETS alica-tests ${PROJECT_NAME}-expr
+EXPORT ${CMAKE_PROJECT_NAME}Targets
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)
+
+# Export targets to make package libraries
+export(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake
+)
+
+install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+  FILE ${CMAKE_PROJECT_NAME}Targets.cmake
+  DESTINATION ${ConfigPackageLocation}
+)
+
+
+# Installing files to make a find_package()-able package
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  VERSION 0.9.4
+  COMPATIBILITY SameMajorVersion
+)
+
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+
+configure_package_config_file(
+  ${CMAKE_PROJECT_NAME}Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${ConfigPackageLocation}
+  PATH_VARS INCLUDE_INSTALL_DIR
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${ConfigPackageLocation}
+)
