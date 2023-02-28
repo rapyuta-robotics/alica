@@ -7,6 +7,7 @@
       "conditionRepository": 1,
       "id": 748720375848597116,
       "name": "Move2Init",
+      "libraryName": "alica-ros2-turtlesim",
       "relativeDirectory": "conditions"
     },
     {
@@ -15,6 +16,7 @@
       "conditionRepository": 1,
       "id": 974606107671315045,
       "name": "Init2Move",
+      "libraryName": "alica-ros2-turtlesim",
       "relativeDirectory": "conditions"
     },
     {
@@ -23,6 +25,7 @@
       "conditionRepository": 1,
       "id": 2190266318562141841,
       "name": "DefaultCondition",
+      "libraryName": "alica-ros2-turtlesim",
       "relativeDirectory": "conditions"
     }
   ],

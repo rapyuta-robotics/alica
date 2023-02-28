@@ -1,4 +1,5 @@
-#include "alica_ros2_turtlesim/turtle.hpp"
+#include "turtle.hpp"
+#include "world_model.hpp"
 
 #include <rclcpp/logging.hpp>
 
@@ -12,16 +13,26 @@ using namespace std::chrono_literals;
 namespace turtlesim
 {
 
-ALICATurtle::ALICATurtle(rclcpp::Node::SharedPtr priv_nh)
+ALICATurtle::ALICATurtle(ALICATurtleWorldModel* wm)
+        : _wm(wm)
+        , _spinner(rclcpp::executors::MultiThreadedExecutor(rclcpp::ExecutorOptions(), 1))
 {
-    rclcpp::CallbackGroup::SharedPtr teleportCallback = priv_nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
-    priv_nh->get_parameter("name", _name);
-    _priv_nh = priv_nh;
+    _initTrigger = false;
+
+    _nh = rclcpp::Node::make_shared("ros2_turtlesim");
+    _spinner.add_node(_nh);
+    _nh->declare_parameter("name", "Hello!");
+
+    rclcpp::CallbackGroup::SharedPtr teleportCallback = _nh->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+    _nh->get_parameter("name", _name);
+
     // initialize publisher, subscriber and service client.
-    _vel_pub = priv_nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
-    _pose_sub = priv_nh->create_subscription<turtlesim::msg::Pose>(
-            "/" + _name + "/pose", 1, std::bind(&ALICATurtle::pose_sub_callback, this, std::placeholders::_1));
-    _teleport_client = priv_nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
+    _velPub = _nh->create_publisher<geometry_msgs::msg::Twist>("/" + _name + "/cmd_vel", 1);
+    _initTriggerSub = _nh->create_subscription<std_msgs::msg::Empty>("/init", 1, [&](const std_msgs::msg::Empty& msg) { _initTrigger = true; });
+    _poseSub = _nh->create_subscription<turtlesim::msg::Pose>("/" + _name + "/pose", 1, [&](const msg::Pose::ConstSharedPtr msg) { _current = *msg; });
+    _teleportClient = _nh->create_client<turtlesim::srv::TeleportAbsolute>("/" + _name + "/teleport_absolute", rmw_qos_profile_default, teleportCallback);
+
+    _spinThread = std::thread([this]() { _spinner.spin(); });
 }
 
 void ALICATurtle::teleport(float x, float y)
@@ -30,22 +41,18 @@ void ALICATurtle::teleport(float x, float y)
     request->x = x;
     request->y = y;
 
-    RCLCPP_INFO(_priv_nh->get_logger(), "teleport req to x: %f, y: %f", x, y);
-    auto result = _teleport_client->async_send_request(request);
+    RCLCPP_INFO(_nh->get_logger(), "teleport req to x: %f, y: %f", x, y);
+    auto result = _teleportClient->async_send_request(request);
 }
 
-void ALICATurtle::pose_sub_callback(const msg::Pose::ConstSharedPtr msg)
-{
-    _current = *msg;
-}
-
-bool ALICATurtle::move_toward_goal(float x, float y)
+bool ALICATurtle::moveTowardGoal(float x, float y)
 {
     _goal.x = x;
     _goal.y = y;
-    return move_toward_goal();
+    return moveTowardGoal();
 }
-bool ALICATurtle::move_toward_goal() const
+
+bool ALICATurtle::moveTowardGoal() const
 {
     // Transform goal position into coordinates of turtle body frame
     float cos_theta = std::cos(_current.theta);
@@ -77,7 +84,7 @@ bool ALICATurtle::move_toward_goal() const
     auto msg = geometry_msgs::msg::Twist();
     msg.linear.x = linear_x;
     msg.angular.z = angular;
-    _vel_pub->publish(msg);
+    _velPub->publish(msg);
 
     return is_reachGoal;
 }

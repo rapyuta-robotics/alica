@@ -23,6 +23,7 @@
   "id": 2425328142973735249,
   "inheritBlackboard": false,
   "masterPlan": true,
+  "libraryName": "alica-ros2-turtlesim",
   "name": "Master",
   "preCondition": null,
   "relativeDirectory": "",
