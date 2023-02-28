@@ -98,6 +98,31 @@ struct AlicaContextParams
      *
      * @note The configPaths are the paths containing the plans, roles and tasks.
      */
+    [[deprecated("Use AlicaContextParams(agentName, configPaths, ...) instead")]] AlicaContextParams(const std::string& agentName,
+            const std::string& configPath, const std::string& roleSetName, const std::string& masterPlanName, bool stepEngine = false,
+            const AgentId agentID = InvalidAgentID)
+            : agentName(agentName)
+            , configPaths{configPath}
+            , roleSetName(roleSetName)
+            , masterPlanName(masterPlanName)
+            , stepEngine(stepEngine)
+            , agentID(agentID)
+    {
+    }
+
+    /**
+     * @param agentName Name of the local agent.
+     * @param configPaths Paths to the configuration folders.
+     * @param roleSetName Name of the roleSet.
+     * @param masterPlanName Name of the masterPlan
+     * @param stepEngine Signify engine is trigger based. Defaults to false.
+     * @param agentID Identifier of the local Agent. If no identifier is given,
+     * the engine will try to read the local agent's identifier from the
+     * Alica.yaml config instead. If no identifier is specified in the
+     * config as well, the engine will generate a random identifier.
+     *
+     * @note The configPaths are the paths containing the plans, roles and tasks.
+     */
     AlicaContextParams(const std::string& agentName, const std::vector<std::string>& configPaths, const std::string& roleSetName,
             const std::string& masterPlanName, bool stepEngine = false, const AgentId agentID = InvalidAgentID)
             : agentName(agentName)
