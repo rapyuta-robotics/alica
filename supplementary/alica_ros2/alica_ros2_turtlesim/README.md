@@ -26,7 +26,7 @@ Build the ROS 2 packages using Colcon.
 
 ```
 source /opt/ros/[YOUR DISTRO HERE]/setup.bash
-colcon build alica_ros_turtlesim
+colcon build --packages-skip alica_ros_proxy alica_tracing alica_ros_turtlesim alica_tests supplementary_tests
 source install/setup.bash
 ```
 
@@ -35,9 +35,9 @@ source install/setup.bash
 Run application with ros2 launch.
 
 - Launch turtlesim
-  `ros2 launch alica_ros_turtlesim env.launch.xml`
+  `ros2 launch alica_ros2_turtlesim env.launch.xml`
 - Turtle node (you can launch multiple turtles by setting the `turtles` launch arg)
-  `ros2 launch alica_ros_turtlesim turtle.launch.xml turtles:=2`
+  `ros2 launch alica_ros2_turtlesim turtle.launch.xml turtles:=2`
 - Start moving.
   `ros2 topic pub /init std_msgs/msg/Empty`
 

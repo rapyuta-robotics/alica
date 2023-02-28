@@ -29,6 +29,7 @@ add_library(${PROJECT_NAME} SHARED
   src/engine/AlicaClock.cpp
   src/engine/AlicaContext.cpp
   src/engine/AlicaEngine.cpp
+  src/engine/AlicaTimer.cpp
   src/engine/Assignment.cpp
   src/engine/BasicBehaviour.cpp
   src/engine/BasicCondition.cpp
