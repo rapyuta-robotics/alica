@@ -579,12 +579,7 @@ bool AlicaContext::setOption(const std::string& path, const T& value, bool reloa
         }
         currentNode = value;
     } catch (const YAML::Exception& e) {
-        if (!Logging::isInitialized()) {
-            std::cerr << LOGNAME << ": Could not set config value: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
-        } else {
-            Logging::logWarn(LOGNAME) << "Could not set config value: " << e.msg;
-        }
-
+        Logging::logWarn(LOGNAME) << "Could not set config value: " << e.msg;
         return false;
     }
     if (reload && _initialized) {
@@ -616,12 +611,7 @@ bool AlicaContext::setOptions(const std::vector<std::pair<std::string, T>>& keyV
             oldKeyValuePairs.push_back(oldKeyValuePair);
         }
     } catch (const YAML::Exception& e) {
-        if (!Logging::isInitialized()) {
-            std::cerr << LOGNAME << ": Could not set config values: " << e.msg << "\nLogging to console since logger is not initialized" << std::endl;
-        } else {
-            Logging::logWarn(LOGNAME) << "Could not set config values: " << e.msg;
-        }
-
+        Logging::logWarn(LOGNAME) << "Could not set config values: " << e.msg;
         // revert changes
         for (const auto& keyValuePair : oldKeyValuePairs) {
             setOption<T>(keyValuePair.first, keyValuePair.second, false);

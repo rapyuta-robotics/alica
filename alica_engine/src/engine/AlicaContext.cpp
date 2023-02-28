@@ -140,42 +140,25 @@ YAML::Node AlicaContext::initConfig(const std::vector<std::string>& configPaths,
             try {
                 return YAML::LoadFile(configFilePath);
             } catch (YAML::BadFile& badFile) {
-                if (Logging::isInitialized()) {
-                    Logging::logWarn(LOGNAME) << "Agent wise config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
-                                              << ", will continue the search in the next config directory";
-                } else {
-                    std::cerr << "[WARN] " << LOGNAME << " Agent wise config file could not be parsed, file:  " << configFilePath << ", error details - "
-                              << badFile.msg << ", will continue the search in the next config directory" << std::endl;
-                }
+                Logging::logWarn(LOGNAME) << "Agent wise config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
+                                          << ", will continue the search in the next config directory";
             }
         }
     }
-    if (Logging::isInitialized()) {
-        Logging::logInfo(LOGNAME) << "Agent wise config file could not be used, will look for the global config file instead";
-    } else {
-        std::cerr << "[INFO] " << LOGNAME << " Agent wise config file could not be used, will look for the global config file instead" << std::endl;
-    }
+
+    Logging::logInfo(LOGNAME) << "Agent wise config file could not be used, will look for the global config file instead";
 
     for (const auto& configFileSearchPath : configPaths) {
         if (essentials::FileSystem::findFile(configFileSearchPath, "Alica.yaml", configFilePath)) {
             try {
                 return YAML::LoadFile(configFilePath);
             } catch (YAML::BadFile& badFile) {
-                if (Logging::isInitialized()) {
-                    Logging::logWarn(LOGNAME) << "Global config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
-                                              << ", will continue the search in the next config directory";
-                } else {
-                    std::cerr << "[WARN] " << LOGNAME << " Global config file could not be parsed, file:  " << configFilePath << ", error details - "
-                              << badFile.msg << ", will continue the search in the next config directory" << std::endl;
-                }
+                Logging::logWarn(LOGNAME) << "Global config file could not be parsed, file: " << configFilePath << ", error details- " << badFile.msg
+                                          << ", will continue the search in the next config directory";
             }
         }
     }
-    if (Logging::isInitialized()) {
-        Logging::logError(LOGNAME) << "Could not parse/find the agent wise config file or the global config file";
-    } else {
-        std::cerr << "[ERROR] " << LOGNAME << " Could not parse/find the agent wise config file or the global config file";
-    }
+    Logging::logError(LOGNAME) << "Could not parse/find the agent wise config file or the global config file";
 
     return YAML::Node{};
 }
