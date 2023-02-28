@@ -54,7 +54,7 @@ public:
     {
     }
 
-    std::vector<std::string> getTestFolderPaths() const { return {_testFolderPath + "/etc/"}; }
+    virtual std::vector<std::string> getTestFolderPaths() const { return {_testFolderPath + "/etc/"}; }
 
 private:
     std::string _testFolderPath;

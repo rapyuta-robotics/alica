@@ -577,11 +577,12 @@ protected:
 class MultiConfigFolderTest : public AlicaEngineTest
 {
 protected:
-    std::vector<std::string> getConfigPaths() const override
+    std::vector<std::string> getTestFolderPaths() const override
     {
-        ros::NodeHandle nh;
         std::string path;
-        nh.param<std::string>("/rootPath", path, ".");
+#if defined(PLANS)
+        path = std::string{PLANS} + "/src/test";
+#endif
         path += "/etc";
 
         // Use the sub-folders in the etc folder as separate config folders
