@@ -6,6 +6,7 @@
   "frequency": 30,
   "id": 4054297592460872311,
   "inheritBlackboard": false,
+  "libraryName": "alica-ros2-turtlesim",
   "name": "GoTo",
   "postCondition": null,
   "preCondition": null,

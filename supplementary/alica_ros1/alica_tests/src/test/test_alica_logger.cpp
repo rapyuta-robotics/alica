@@ -1,7 +1,5 @@
 #include "test_alica.h"
 
-#include <logger/AlicaRosLogger.h>
-
 #include <gtest/gtest.h>
 
 namespace alica

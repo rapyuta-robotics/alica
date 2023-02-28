@@ -7,7 +7,6 @@
 #include <engine/AlicaEngine.h>
 
 #include <gtest/gtest.h>
-#include <ros/ros.h>
 
 #include <csetjmp>
 #include <csignal>
