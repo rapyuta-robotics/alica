@@ -39,6 +39,7 @@ public:
     const PostCondition* getPostCondition() const { return _postCondition; }
     const BlackboardBlueprint* getBlackboardBlueprint() const { return _blackboardBlueprint.get(); }
     std::string getLibraryName() const { return _libraryName; };
+    std::string getImplementationName() const { return !_implementationName.empty() ? _implementationName : getName(); }
 
 private:
     friend BehaviourFactory;
@@ -81,6 +82,7 @@ private:
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 
     std::string _libraryName;
+    std::string _implementationName; // Name of actual implementation file.  If empty, just use the behaviour name
 };
 
 } // namespace alica

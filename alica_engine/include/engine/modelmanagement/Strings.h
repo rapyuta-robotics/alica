@@ -99,6 +99,7 @@ static const std::string key = "key";
 static const std::string transitionCondition = "transitionCondition";
 static const std::string transitionConditionRepository = "transitionConditionRepository";
 static const std::string libraryName = "libraryName";
+static const std::string implementationName = "implementationName";
 
 } // namespace Strings
 } // namespace alica

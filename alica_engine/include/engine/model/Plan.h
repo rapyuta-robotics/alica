@@ -62,6 +62,7 @@ public:
     void reload(const YAML::Node& config);
 
     std::string getLibraryName() const { return _libraryName; };
+    std::string getImplementationName() const { return !_implementationName.empty() ? _implementationName : getName(); }
 
 private:
     friend PlanFactory;
@@ -117,6 +118,7 @@ private:
     std::unique_ptr<BlackboardBlueprint> _blackboardBlueprint;
 
     std::string _libraryName;
+    std::string _implementationName; // Name of actual implementation file.  If empty, just use the plan name
 
     // TODO: move this to the authority module
     mutable AlicaTime _authorityTimeInterval;
