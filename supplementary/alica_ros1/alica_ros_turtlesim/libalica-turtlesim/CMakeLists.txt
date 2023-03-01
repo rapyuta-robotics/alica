@@ -6,13 +6,17 @@ alica_compile_flags()
 
 add_library(${PROJECT_NAME} SHARED
   src/CircleRuntimeCondition.cpp
+  src/Idle.cpp
   src/GoTo.cpp
+  src/GoToCalculatedResult.cpp
   src/MakeFormation.cpp
-  src/Master.cpp
+  src/RandomMoveTutorial.cpp
   src/Simulation.cpp
   src/SpawnTurtle.cpp
-  src/Teleport2RandomPosition.cpp
-  src/turtle.cpp
+  src/SurroundLeaderTutorial.cpp
+  src/Teleport.cpp
+  src/TeleportToRandomPosition.cpp
+  src/turtle_interfaces.cpp
 )
 target_link_libraries(${PROJECT_NAME} alica_engine constraintsolver)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")

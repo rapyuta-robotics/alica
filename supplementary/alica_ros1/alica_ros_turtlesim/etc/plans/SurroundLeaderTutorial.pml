@@ -24,7 +24,7 @@
   "inheritBlackboard": false,
   "libraryName": "libalica-turtlesim",
   "masterPlan": true,
-  "name": "Master",
+  "name": "SurroundLeaderTutorial",
   "preCondition": null,
   "relativeDirectory": "",
   "runtimeCondition": null,
@@ -33,7 +33,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
           "comment": "",
           "configuration": null,
           "id": 4220525235259193568,
@@ -94,7 +94,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2190266318562141841",
+      "condition": "ConditionRepository.cnd#2190266318562141841",
       "id": 1701344904592867727,
       "inState": 1256477521278293720,
       "keyMapping": {

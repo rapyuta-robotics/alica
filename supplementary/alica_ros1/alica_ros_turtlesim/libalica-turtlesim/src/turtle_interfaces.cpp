@@ -1,51 +1,68 @@
-#include "turtle.hpp"
+#include "turtle_interfaces.hpp"
 
 #include <geometry_msgs/Twist.h>
+#include <turtlesim/Spawn.h>
 #include <turtlesim/TeleportAbsolute.h>
 
 namespace turtlesim
 {
 
-ALICATurtle::ALICATurtle(const std::string& name)
+TurtleInterfaces::TurtleInterfaces(const std::string& name)
         : _name(name)
 {
     // initialize publisher, subscriber and service client.
     ros::NodeHandle nh("~");
     _velPub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    _poseSub = nh.subscribe("pose", 1, &ALICATurtle::poseSubCallback, this);
+    _poseSub = nh.subscribe("pose", 1, &TurtleInterfaces::poseSubCallback, this);
     _teleportClient = nh.serviceClient<TeleportAbsolute>("teleport_absolute");
+    _spawnClient = nh.serviceClient<Spawn>("/spawn");
 }
 
-void ALICATurtle::teleport(float x, float y)
+bool TurtleInterfaces::teleport(float x, float y)
 {
     TeleportAbsolute srv;
     srv.request.x = x;
     srv.request.y = y;
     if (_teleportClient.waitForExistence() && _teleportClient.call(srv)) {
-        ROS_INFO_STREAM(_name << " was teleported to (" << x << ", " << y << ")");
+        ROS_INFO_STREAM("Teleported to (" << x << ", " << y << ")");
+        return true;
     } else {
-        ROS_ERROR_STREAM("Failed to teleport " << _name << " to (" << x << ", " << y << ")");
+        ROS_ERROR_STREAM("Failed to teleport to (" << x << ", " << y << ")");
+        return false;
     }
 }
 
-void ALICATurtle::poseSubCallback(const PoseConstPtr& msg)
+bool TurtleInterfaces::spawn()
 {
-    _current = *msg;
+    turtlesim::Spawn spawnSrv;
+    spawnSrv.request.x = 5;
+    spawnSrv.request.y = 5;
+    spawnSrv.request.theta = 0;
+    spawnSrv.request.name = _name;
+    if (_spawnClient.waitForExistence() && _spawnClient.call(spawnSrv)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-bool ALICATurtle::moveTowardGoal(float x, float y)
+void TurtleInterfaces::poseSubCallback(const PoseConstPtr& msg)
 {
-    _goal.x = x;
-    _goal.y = y;
-    return moveTowardGoal();
+    _currentPose = msg;
 }
-bool ALICATurtle::moveTowardGoal() const
+
+bool TurtleInterfaces::moveTowardPosition(float x, float y) const
 {
+    if (!_currentPose) {
+        ROS_WARN_THROTTLE(5, "Waiting for valid pose");
+        // Wait until we have a valid pose
+        return false;
+    }
     // Transform goal position into coordinates of turtle body frame
-    float cosTheta = std::cos(_current.theta);
-    float sinTheta = std::sin(_current.theta);
-    float dx = _goal.x - _current.x;
-    float dy = _goal.y - _current.y;
+    float cosTheta = std::cos(_currentPose->theta);
+    float sinTheta = std::sin(_currentPose->theta);
+    float dx = x - _currentPose->x;
+    float dy = y - _currentPose->y;
 
     // Calculate goal distance and return true if reach goal
     constexpr float goalTolerance = 0.01;

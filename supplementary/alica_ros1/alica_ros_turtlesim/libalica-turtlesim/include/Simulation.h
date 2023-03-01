@@ -19,14 +19,7 @@ public:
 };
 BOOST_DLL_ALIAS(turtlesim::Simulation::create, Simulation)
 
-class SimulationUtilityFunction : public alica::BasicUtilityFunction
-{
-public:
-    SimulationUtilityFunction() = default;
-    std::shared_ptr<alica::UtilityFunction> getUtilityFunction(alica::Plan* plan) override;
-    static std::shared_ptr<SimulationUtilityFunction> create(alica::UtilityFunctionContext&);
-};
-BOOST_DLL_ALIAS(turtlesim::SimulationUtilityFunction::create, SimulationUtilityFunction)
+BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SimulationUtilityFunction)
 
 struct TransitionConditions
 {

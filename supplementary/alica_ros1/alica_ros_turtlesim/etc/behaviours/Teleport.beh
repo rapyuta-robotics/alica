@@ -1,0 +1,31 @@
+{
+  "blackboard": [
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2249915898478593688,
+      "key": "x",
+      "type": "double"
+    },
+    {
+      "access": "input",
+      "comment": "",
+      "id": 2065859497513016259,
+      "key": "y",
+      "type": "double"
+    }
+  ],
+  "comment": "",
+  "deferring": 0,
+  "eventDriven": false,
+  "frequency": 0,
+  "id": 4085572422059465423,
+  "inheritBlackboard": false,
+  "libraryName": "libalica-turtlesim",
+  "name": "Teleport",
+  "postCondition": null,
+  "preCondition": null,
+  "relativeDirectory": "",
+  "runtimeCondition": null,
+  "variables": []
+}

@@ -24,17 +24,6 @@ std::unique_ptr<Simulation> Simulation::create(alica::PlanContext& context)
     return std::make_unique<Simulation>(context);
 }
 
-std::shared_ptr<alica::UtilityFunction> SimulationUtilityFunction::getUtilityFunction(alica::Plan* plan)
-{
-    std::shared_ptr<alica::UtilityFunction> defaultFunction = std::make_shared<alica::DefaultUtilityFunction>(plan);
-    return defaultFunction;
-}
-
-std::shared_ptr<SimulationUtilityFunction> SimulationUtilityFunction::create(alica::UtilityFunctionContext&)
-{
-    return std::make_shared<SimulationUtilityFunction>();
-}
-
 namespace
 {
 
