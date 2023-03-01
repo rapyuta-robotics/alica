@@ -25,6 +25,7 @@ protected:
     const char* getRoleSetName() const override { return "Roleset"; }
     const char* getMasterPlanName() const override { return "BehaviourTriggerTestPlan"; }
     bool stepEngine() const override { return false; }
+    bool getDelayStart() override { return true; }
 };
 
 TEST_F(AlicaBehaviourTrigger, triggerTest)

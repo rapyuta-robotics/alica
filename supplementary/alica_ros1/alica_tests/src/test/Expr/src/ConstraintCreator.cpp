@@ -1,8 +1,8 @@
 #include <alica_tests/ConstraintCreator.h>
 
-#include <alica_tests/constraints/AttackPlan1402488634525Constraints.h>
-#include <alica_tests/constraints/ConstraintTestPlan1414068524245Constraints.h>
-#include <alica_tests/constraints/GoalPlan1402488870347Constraints.h>
+#include <alica_tests/constraints/AttackPlanConstraints.h>
+#include <alica_tests/constraints/ConstraintTestPlanConstraints.h>
+#include <alica_tests/constraints/GoalPlanConstraints.h>
 
 #include <iostream>
 
