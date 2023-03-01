@@ -23,7 +23,7 @@ Base::Base(ros::NodeHandle& nh, ros::NodeHandle& privNh, const std::string& name
         : spinner(0)
 {
     // Initialize Alica
-    ac = new alica::AlicaContext(AlicaContextParams(name, path + "/etc/", roleset, master_plan, false, agent_id));
+    ac = new alica::AlicaContext(AlicaContextParams(name, {path + "/etc/"}, roleset, master_plan, false, agent_id));
 
     ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
     ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>();

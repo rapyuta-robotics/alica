@@ -63,7 +63,7 @@ protected:
         ros::NodeHandle nh;
         std::string path;
         nh.param<std::string>("rootPath", path, ".");
-        ac = new alica::AlicaContext(AlicaContextParams("nase", path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
+        ac = new alica::AlicaContext(AlicaContextParams("nase", {path + "/etc"}, getRoleSetName(), getMasterPlanName(), stepEngine()));
         ASSERT_TRUE(ac->isValid());
         spinner = std::make_unique<ros::AsyncSpinner>(4);
         ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>();
@@ -136,7 +136,7 @@ protected:
             cbQueues.emplace_back(std::make_unique<ros::CallbackQueue>());
             spinners.emplace_back(std::make_unique<ros::AsyncSpinner>(4, cbQueues.back().get()));
             alica::AlicaContext* ac =
-                    new alica::AlicaContext(AlicaContextParams(getHostName(i), path + "/etc", getRoleSetName(), getMasterPlanName(), stepEngine()));
+                    new alica::AlicaContext(AlicaContextParams(getHostName(i), {path + "/etc"}, getRoleSetName(), getMasterPlanName(), stepEngine()));
             ASSERT_TRUE(ac->isValid());
             ac->setCommunicator<alicaRosProxy::AlicaRosCommunication>(*cbQueues.back());
             ac->setTimerFactory<alicaRosTimer::AlicaRosTimerFactory>(*cbQueues.back());
