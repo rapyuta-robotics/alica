@@ -15,7 +15,7 @@ bool AlwaysTrueCond(const alica::Blackboard* input, const alica::RunningPlan* rp
 bool DefaultCondition(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* globalBlackboard);
 
 bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
-bool isAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
+bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 bool IsAnyChildStatus(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb);
 
@@ -27,7 +27,7 @@ BOOST_DLL_ALIAS(utils::AlwaysTrueCond, AlwaysTrueCond)
 BOOST_DLL_ALIAS(utils::DefaultCondition, DefaultCondition)
 
 BOOST_DLL_ALIAS(utils::IsAnyChildStatusSuccess, IsAnyChildStatusSuccess)
-BOOST_DLL_ALIAS(utils::isAnyChildTaskSuccessfull, isAnyChildTaskSuccessfull)
+BOOST_DLL_ALIAS(utils::IsAnyChildTaskSuccessfull, IsAnyChildTaskSuccessfull)
 BOOST_DLL_ALIAS(utils::IsAnyChildStatusFailed, IsAnyChildStatusFailed)
 BOOST_DLL_ALIAS(utils::IsAnyChildStatus, IsAnyChildStatus)
 

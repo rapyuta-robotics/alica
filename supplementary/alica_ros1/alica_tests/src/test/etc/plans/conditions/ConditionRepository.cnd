@@ -61,7 +61,7 @@
       "conditionRepository": 0,
       "id": 330238006348384830,
       "libraryName": "alica_standard_library",
-      "name": "isAnyChildTaskSuccessfull",
+      "name": "IsAnyChildTaskSuccessfull",
       "relativeDirectory": "conditions"
     },
     {

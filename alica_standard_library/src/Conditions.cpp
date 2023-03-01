@@ -71,7 +71,7 @@ bool AllChildFailure(const alica::Blackboard* input, const alica::RunningPlan* r
 
 bool IsAnyChildStatusSuccess(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
-    return false;
+    return rp->isAnyChildStatus(alica::PlanStatus::Success);
 }
 
 bool AlwaysTrueCond(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
@@ -95,7 +95,7 @@ bool IsAnyChildStatusFailed(const alica::Blackboard* input, const alica::Running
     return rp->isAnyChildStatus(alica::PlanStatus::Failed);
 }
 
-bool isAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
+bool IsAnyChildTaskSuccessfull(const alica::Blackboard* input, const alica::RunningPlan* rp, const alica::Blackboard* gb)
 {
     return rp->isAnyChildTaskSuccessful();
 }
