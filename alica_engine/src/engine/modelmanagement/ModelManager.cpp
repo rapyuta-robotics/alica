@@ -85,8 +85,8 @@ Plan* ModelManager::loadPlanTree(const std::string& masterPlanName)
 
 RoleSet* ModelManager::loadRoleSet(const std::string& roleSetName)
 {
-    std::string roleSetPath;
-    if (roleSetPath = findFile(roleSetName + alica::Strings::roleset_extension); roleSetPath.empty()) {
+    std::string roleSetPath = findFile(roleSetName + alica::Strings::roleset_extension);
+    if (roleSetPath.empty()) {
         Logging::logWarn(LOGNAME) << "Roleset with name " << roleSetName << " not found, will look for any other roleset files in the given config directories";
         roleSetPath = findDefaultRoleSet();
     }
