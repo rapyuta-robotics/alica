@@ -48,7 +48,7 @@
     "conditionString": "",
     "enabled": false,
     "id": 1402489260911,
-    "name": "NewRuntimeCondition",
+    "name": "MidFieldPlayPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []

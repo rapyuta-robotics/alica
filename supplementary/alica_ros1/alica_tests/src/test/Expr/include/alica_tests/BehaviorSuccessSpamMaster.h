@@ -16,17 +16,6 @@ public:
     BehaviorSuccessSpamMaster(PlanContext& context);
 };
 
-class PreCondition1522377944921 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1522377946607 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::BasicPlan::create, BehaviorSuccessSpamMaster)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, BehaviorSuccessSpamMasterUtilityFunction)
 } /* namespace alica */

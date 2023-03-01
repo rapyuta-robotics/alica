@@ -18,21 +18,28 @@ public:
 protected:
     virtual void onInit() override;
 };
-class PreCondition1412781707952 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class RunTimeCondition1412781693884 : public DomainCondition
-{
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition1412761926856 : public DomainCondition
+class SimpleTestPlanPreCondition : public DomainCondition
 {
 public:
+    SimpleTestPlanPreCondition(ConditionContext& context)
+            : DomainCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    static std::unique_ptr<SimpleTestPlanPreCondition> create(ConditionContext& context) { return std::make_unique<SimpleTestPlanPreCondition>(context); };
+};
+class SimpleTestPlanRuntimeCondition : public DomainCondition
+{
+public:
+    SimpleTestPlanRuntimeCondition(ConditionContext& context)
+            : DomainCondition(){};
+    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    static std::unique_ptr<SimpleTestPlanRuntimeCondition> create(ConditionContext& context)
+    {
+        return std::make_unique<SimpleTestPlanRuntimeCondition>(context);
+    };
 };
 
 BOOST_DLL_ALIAS(alica::SimpleTestPlan::create, SimpleTestPlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, SimpleTestPlanUtilityFunction)
-
+BOOST_DLL_ALIAS(alica::SimpleTestPlanPreCondition::create, SimpleTestPlanPreCondition)
+BOOST_DLL_ALIAS(alica::SimpleTestPlanRuntimeCondition::create, SimpleTestPlanRuntimeCondition)
 } /* namespace alica */

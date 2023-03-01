@@ -7,18 +7,20 @@ GoalPlan::GoalPlan(PlanContext& context)
 {
 }
 
-bool PreCondition1402489131988::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool GoalPlanPreCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return true;
 }
 
-bool RunTimeCondition1403773741874::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool GoalPlanRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return true;
 }
 
-bool PostCondition1402489620773::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool GoalPlanPostCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return false;
 }
+
+void GoalPlanRuntimeConditionConstraint::getConstraint(std::shared_ptr<ProblemDescriptor> c, std::shared_ptr<RunningPlan> rp) {}
 } // namespace alica

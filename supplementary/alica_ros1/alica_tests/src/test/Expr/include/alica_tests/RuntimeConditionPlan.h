@@ -23,11 +23,19 @@ public:
             : AlicaTestsUtilityFunction(context){};
     std::shared_ptr<UtilityFunction> getUtilityFunction(Plan* plan);
 };
-class RunTimeCondition1418042967134 : public DomainCondition
+class RuntimeConditionPlanRuntimeCondition : public DomainCondition
 {
+public:
+    RuntimeConditionPlanRuntimeCondition(ConditionContext& context)
+            : DomainCondition(){};
     bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
+    static std::unique_ptr<RuntimeConditionPlanRuntimeCondition> create(ConditionContext& context)
+    {
+        return std::make_unique<RuntimeConditionPlanRuntimeCondition>(context);
+    };
 };
 
 BOOST_DLL_ALIAS(alica::BasicPlan::create, RuntimeConditionPlan)
 BOOST_DLL_ALIAS(alica::RuntimeConditionPlanUtilityFunction::create, RuntimeConditionPlanUtilityFunction)
+BOOST_DLL_ALIAS(alica::RuntimeConditionPlanRuntimeCondition::create, RuntimeConditionPlanRuntimeCondition)
 } /* namespace alica */

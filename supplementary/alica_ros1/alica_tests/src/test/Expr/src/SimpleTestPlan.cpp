@@ -8,12 +8,12 @@ SimpleTestPlan::SimpleTestPlan(PlanContext& context)
 {
 }
 
-bool PreCondition1412781707952::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool SimpleTestPlanPreCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return true;
 }
 
-bool RunTimeCondition1412781693884::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool SimpleTestPlanRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     CounterClass::called++;
     return true;

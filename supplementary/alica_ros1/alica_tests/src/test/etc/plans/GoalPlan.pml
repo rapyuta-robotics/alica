@@ -30,7 +30,7 @@
     "conditionString": "",
     "enabled": true,
     "id": 1402489131988,
-    "name": "PreCondition",
+    "name": "GoalPlanPreCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [],
     "variables": []
@@ -41,7 +41,7 @@
     "conditionString": "test",
     "enabled": false,
     "id": 1403773741874,
-    "name": "NewRuntimeCondition",
+    "name": "GoalPlanRuntimeCondition",
     "pluginName": "DefaultPlugin",
     "quantifiers": [
       {

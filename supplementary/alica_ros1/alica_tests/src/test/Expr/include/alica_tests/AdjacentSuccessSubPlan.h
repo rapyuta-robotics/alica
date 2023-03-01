@@ -15,17 +15,6 @@ public:
     AdjacentSuccessSubPlan(PlanContext& context);
 };
 
-class PreCondition1067314038887345208 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-class PreCondition597347780541336226 : public DomainCondition
-{
-public:
-    bool evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb);
-};
-
 BOOST_DLL_ALIAS(alica::BasicPlan::create, AdjacentSuccessSubPlan)
 BOOST_DLL_ALIAS(alica::BasicUtilityFunction::create, AdjacentSuccessSubPlanUtilityFunction)
 } /* namespace alica */

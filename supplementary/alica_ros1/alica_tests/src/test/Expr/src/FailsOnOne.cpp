@@ -7,7 +7,7 @@ FailsOnOne::FailsOnOne(PlanContext& context)
         : DomainPlan(context)
 {
 }
-bool RunTimeCondition1530069251117::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
+bool FailsOnOneRuntimeCondition::evaluate(std::shared_ptr<RunningPlan> rp, const Blackboard* gb)
 {
     return !SimpleSwitches::isSet(1);
 }
