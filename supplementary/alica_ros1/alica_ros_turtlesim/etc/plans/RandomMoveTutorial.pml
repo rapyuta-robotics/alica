@@ -83,7 +83,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/SpawnTurtle.beh#1689864767393644654",
+          "abstractPlan": "SpawnTurtle.beh#1689864767393644654",
           "comment": "",
           "configuration": null,
           "id": 4460826738374715546,
@@ -113,7 +113,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GenerateRandom.beh#3356053372497284615",
+          "abstractPlan": "GenerateRandom.beh#3356053372497284615",
           "comment": "",
           "configuration": null,
           "id": 1234100471240263183,
@@ -162,7 +162,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/Idle.beh#3461702414433362536",
+          "abstractPlan": "Idle.beh#3461702414433362536",
           "comment": "",
           "configuration": null,
           "id": 2855860879038575524,
@@ -200,7 +200,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GoTo.beh#2797939494274869075",
+          "abstractPlan": "GoTo.beh#2797939494274869075",
           "comment": "",
           "configuration": null,
           "id": 2017853877374759768,
@@ -243,7 +243,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GenerateRandom.beh#3356053372497284615",
+          "abstractPlan": "GenerateRandom.beh#3356053372497284615",
           "comment": "",
           "configuration": null,
           "id": 982385114375549551,
@@ -292,7 +292,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
+      "condition": "ConditionRepository.cnd#1",
       "id": 631063377765820998,
       "inState": 1353995590395471924,
       "keyMapping": {
@@ -316,55 +316,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
-      "id": 2520262450064953886,
-      "inState": 91880666632863452,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 699418104844149540,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2482416891748399139,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
-      "id": 2886586164162798872,
-      "inState": 1474370998699018467,
-      "keyMapping": {
-        "input": [],
-        "output": []
-      },
-      "name": "",
-      "outState": 1353995590395471924,
-      "pointsWeb": [],
-      "preCondition": {
-        "comment": "",
-        "conditionString": "",
-        "enabled": true,
-        "id": 2472540819854080245,
-        "name": "",
-        "pluginName": "DefaultPlugin",
-        "quantifiers": [],
-        "variables": []
-      },
-      "synchronisation": null
-    },
-    {
-      "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
+      "condition": "ConditionRepository.cnd#1",
       "id": 1753701729918088411,
       "inState": 2696970137074258240,
       "keyMapping": {
@@ -388,7 +340,55 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 2520262450064953886,
+      "inState": 91880666632863452,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 699418104844149540,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2482416891748399139,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
+      "id": 2886586164162798872,
+      "inState": 1474370998699018467,
+      "keyMapping": {
+        "input": [],
+        "output": []
+      },
+      "name": "",
+      "outState": 1353995590395471924,
+      "pointsWeb": [],
+      "preCondition": {
+        "comment": "",
+        "conditionString": "",
+        "enabled": true,
+        "id": 2472540819854080245,
+        "name": "",
+        "pluginName": "DefaultPlugin",
+        "quantifiers": [],
+        "variables": []
+      },
+      "synchronisation": null
+    },
+    {
+      "comment": "",
+      "condition": "ConditionRepository.cnd#1",
       "id": 4482352928621881699,
       "inState": 699418104844149540,
       "keyMapping": {

@@ -48,7 +48,7 @@
       "comment": "Make the formation. Leave the state if a trigger to do so is received",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/WaitForTrigger.beh#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.beh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 428513459178575844,
@@ -97,7 +97,7 @@
       "comment": "Wait until a trigger to join the formation is received",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/WaitForTrigger.beh#1320667069122998665",
+          "abstractPlan": "WaitForTrigger.beh#1320667069122998665",
           "comment": "",
           "configuration": null,
           "id": 569238231169711866,
@@ -168,7 +168,7 @@
   "transitions": [
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#1",
+      "condition": "ConditionRepository.cnd#1",
       "id": 478458671918151236,
       "inState": 2405597980801916441,
       "keyMapping": {
@@ -192,7 +192,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#2",
+      "condition": "ConditionRepository.cnd#2",
       "id": 721746124359822922,
       "inState": 3997532517592149463,
       "keyMapping": {
@@ -216,7 +216,7 @@
     },
     {
       "comment": "",
-      "condition": "conditions/ConditionRepository.cnd#974606107671315045",
+      "condition": "ConditionRepository.cnd#974606107671315045",
       "id": 2899549957744653913,
       "inState": 3064881354318777214,
       "keyMapping": {

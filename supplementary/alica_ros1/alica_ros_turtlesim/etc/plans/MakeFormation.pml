@@ -70,7 +70,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GoToCalculatedResult.beh#4054297592460872311",
+          "abstractPlan": "GoToCalculatedResult.beh#4054297592460872311",
           "comment": "",
           "configuration": null,
           "id": 3768390995110815611,
@@ -98,7 +98,7 @@
       "comment": "",
       "confAbstractPlanWrappers": [
         {
-          "abstractPlan": "behaviours/GoToCalculatedResult.beh#4054297592460872311",
+          "abstractPlan": "GoToCalculatedResult.beh#4054297592460872311",
           "comment": "",
           "configuration": null,
           "id": 139589851715028435,
